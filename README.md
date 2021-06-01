@@ -1,37 +1,43 @@
-# applications_launcher
+# Launcher<a name="EN-US_TOPIC_0000001103554544"></a>
 
-#### 介绍
-Launcher system app | 系统桌面
+-   [Introduction](#section11660541593)
+    -   [Architecture](#section78574815486)
 
-#### 软件架构
-软件架构说明
+-   [Directory Structure](#section161941989596)
+-   [Repositories Involved](#section1371113476307)
 
+## Introduction<a name="section11660541593"></a>
 
-#### 安装教程
+The home screen launcher provides a main entry to human-machine interactions. It displays app icons for users to start or uninstall the apps, and allows users to set the home screen layout and manage recent tasks.
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+### Architecture<a name="section78574815486"></a>
 
-#### 使用说明
+![](figures/launcherl2-en.png)
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+## Directory Structure<a name="section161941989596"></a>
 
-#### 参与贡献
+```
+/applications/standard/launcher/
+├── figures                  # Architecture figures
+├── launcher                 # Main ability of the home screen, which provides the functions of displaying app icons, starting and uninstalling apps, and setting the home screen layout.
+│   └── src
+│       └── main
+│           ├── config.json  # Global configuration files
+│           ├── js           # JavaScript code
+│           └── resources    # Resource configuration files
+├── recents                  # Ability for managing recent tasks
+│   └── src
+│       └── main
+│           ├── config.json  # Global configuration files
+│           ├── js           # JavaScript code
+│           └── resources    # Resource configuration files
+├── signature                # Certificate files
+├── LICENSE                  # License files
+```
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+## Repositories Involved<a name="section1371113476307"></a>
 
+System apps
 
-#### 特技
+**applications\_standard\_launcher**
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)

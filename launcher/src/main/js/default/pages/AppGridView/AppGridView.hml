@@ -1,0 +1,65 @@
+<!--
+/*
+ * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+
+<element src="../../common/component/AppIcon/AppIcon.hml" name="appicon"></element>
+<element src="../../common/component/GridName/GridName.hml" name="appName"></element>
+
+<div class="container" onlongpress="intoSetting()">
+    <swiper class="pageView" loop="false" index="{{ index }}" onchange="pageChange">
+        <div class="body" for="{{ appArray }}">
+            <div for="{{ $item }}" class="row">
+                <div for="{{ $item }}" style="visibility : {{ $item.visibility }};" class="app-box"
+                     onclick="openApplication({{ $item.bundleName }})"
+                     onlongpress="longPress({{ $item.AppId }},{{ $item.bundleName }},{{ $item.System }})">
+                    <appicon id="icon-{{ $item.bundleName }}" item-app-icon="{{ $item.AppIcon }}"
+                             item-app-id="{{ $item.AppId }}" item-bundle-name="{{ $item.bundleName }}">
+                    </appicon>
+                    <appname id="name-{{ $item.bundleName }}" item-app-id="{{ $item.AppId }}"
+                             item-label-id="{{ $item.labelId }}"
+                             item-bundle-name="{{ $item.bundleName }}" item-app-name="{{ $item.AppName }}">
+                    </appname>
+                </div>
+            </div>
+            <div style="height : 30px;"></div>
+        </div>
+    </swiper>
+    <div class="systemApp">
+        <div class="app-box" for="{{ bottomBar }}" onclick="openApplication({{ $item.AppId }})">
+            <div class="image-box">
+                <image class="app-icon-img" src="{{ $item.AppIcon }}"></image>
+            </div>
+            <text class="app-name">
+                {{ $item.AppName }}
+            </text>
+        </div>
+    </div>
+    <dialog id="simpleDialog" class="dialog-main" oncancel="cancelDialog">
+        <div class="dialog-div">
+            <div class="inner-txt">
+                <text class="txt">{{ $t('strings.do_you_want_to_uninstall_start') }}{{ uninstallAppName }}{{
+                    $t('strings.do_you_want_to_uninstall_end') }}
+                </text>
+            </div>
+            <div class="inner-btn">
+                <button type="capsule" value="{{ $t('strings.cancel') }}" onclick="cancelSchedule"
+                        class="btn-txt"></button>
+                <button type="capsule" value="{{ $t('strings.uninstall') }}" onclick="uninstallApplication"
+                        class="btn-txt"></button>
+            </div>
+        </div>
+    </dialog>
+</div>

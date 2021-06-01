@@ -1,0 +1,61 @@
+<!--
+/*
+ * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+
+<element src="../../common/component/AppIcon/AppIcon.hml" name="appicon"></element>
+<element src="../../common/component/ListName/AppName.hml" name="appName"></element>
+
+<div class="container">
+    <list class="list" onlongpress="toSetting">
+        <list-item class="list-item" for="{{ appList }}" focusable="true" onfocus="focus({{ $idx }})"
+                   onkey="onAppListKeyEvent"
+                   onlongpress="longPress({{ $item.AppId }},{{ $item.bundleName }},{{ $item.System }})">
+            <div class="appitem" focusable="true" onclick="openApplication({{ $item.bundleName }})">
+                <appicon id="icon{{ $idx }}" item-app-icon="{{ $item.AppIcon }}" item-app-id="{{ $item.AppId }}"
+                         item-bundle-name="{{ $item.bundleName }}">
+                </appicon>
+                <appname id="name{{ $idx }}" item-app-id="{{ $item.AppId }}" item-label-id="{{ $item.labelId }}"
+                         item-bundle-name="{{ $item.bundleName }}" item-app-name="{{ $item.AppName }}">
+                </appname>
+            </div>
+        </list-item>
+    </list>
+    <dialog id="chooseDialog" class="dialog-main">
+        <div class="dialog-div">
+            <div class="inner-btn">
+                <button type="capsule" value="{{ $t('strings.launcher_settings') }}" onclick="chooseSettings"
+                        class="btn-txt"></button>
+                <button type="capsule" value="{{ $t('strings.uninstall_app') }}" onclick="chooseUninstall"
+                        class="btn-txt"></button>
+            </div>
+        </div>
+    </dialog>
+    <dialog id="simpleDialog" class="dialog-main" oncancel="cancelDialog">
+        <div class="dialog-div">
+            <div class="inner-txt">
+                <text class="txt">{{ $t('strings.do_you_want_to_uninstall_start') }}{{ uninstallAppName }}{{
+                    $t('strings.do_you_want_to_uninstall_end') }}
+                </text>
+            </div>
+            <div class="inner-btn">
+                <button type="capsule" value="{{ $t('strings.cancel') }}" onclick="cancelSchedule"
+                        class="btn-txt"></button>
+                <button type="capsule" value="{{ $t('strings.uninstall') }}" onclick="uninstallApplication"
+                        class="btn-txt"></button>
+            </div>
+        </div>
+    </dialog>
+</div>

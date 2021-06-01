@@ -1,0 +1,22 @@
+apply plugin: 'com.huawei.ohos.hap'
+ohos {
+    compileSdkVersion 6
+    defaultConfig {
+        compatibleSdkVersion 6
+    }
+    supportSystem "standard"
+    buildTypes {
+        release {
+            proguardOpt {
+                proguardEnabled false
+                rulesFiles 'proguard-rules.pro'
+            }
+        }
+    }
+    entryModules "launcher"
+}
+
+dependencies {
+    entryImplementation project(':launcher')
+}
+
