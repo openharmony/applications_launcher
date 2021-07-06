@@ -39,5 +39,5 @@ The home screen launcher provides a main entry to human-machine interactions. It
 
 System apps
 
-**applications\_standard\_launcher**
+**applications\_launcher**
 
