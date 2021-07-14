@@ -22,17 +22,17 @@
     justify-content: center;
 }
 
-.app-icon-img{
+.app-icon-img {
     border-radius: 20px;
     width: 110px;
     height: 110px;
 }
 
-.app-icon-img:active{
+.app-icon-img:active {
     width: 105px;
     height: 105px;
 }
 
-.app-name{
+.app-name {
     color: black;
 }

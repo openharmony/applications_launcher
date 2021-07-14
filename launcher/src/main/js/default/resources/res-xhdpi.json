@@ -1,0 +1,8 @@
+{
+  "image": {
+    "icon_default": "common/pics/icon_default.png",
+    "img_return": "common/pics/img_return.png",
+    "img_to_detail": "common/pics/img_to_detail.png",
+    "img_wallpaper_default": "common/pics/img_wallpaper_default.jpg"
+  }
+}

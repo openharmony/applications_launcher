@@ -15,14 +15,21 @@
 
 import RecentsPresenter from '../../presenter/recent/RecentsPresenter.js';
 
-var mRecentsPresenter;
+const APP_INFO_REFRESH_DELAY = 500;
+const DISPLAY_NONE = 'none';
+const DISPLAY_FLEX = 'flex';
+
+let mRecentsPresenter;
 
 export default {
     data: {
-        recentProcessList: []
+        recentProcessList: [],
+        recentProcessListDisplay: DISPLAY_NONE,
+        emptyMsgDisplay: DISPLAY_FLEX
     },
     onInit() {
         console.info("Launcher recents  onInit start");
+        globalThis.$globalR = this.$r.bind(this);
         console.info("Launcher recents  onInit end");
     },
 
@@ -31,13 +38,23 @@ export default {
         mRecentsPresenter = new RecentsPresenter(this.$app.$def.data.recentsModel);
         mRecentsPresenter.getRecentProcessList((data) => {
             this.recentProcessList = data;
+            if (this.recentProcessList.length == 0) {
+                this.recentProcessListDisplay = DISPLAY_NONE;
+                this.emptyMsgDisplay = DISPLAY_FLEX;
+                return;
+            }
+            this.recentProcessListDisplay = DISPLAY_FLEX;
+            this.emptyMsgDisplay = DISPLAY_NONE;
             console.info("Launcher recents  onShow getRecentProcessList this.recentProcessList = " + JSON.stringify(this.recentProcessList));
+            this.updateAppInfos();
         });
         console.info("Launcher recents  onShow end");
     },
 
     onHide() {
         console.info("Launcher recents  onHide start");
+        this.recentProcessListDisplay = DISPLAY_NONE;
+        this.emptyMsgDisplay = DISPLAY_NONE;
         this.recentProcessList = [];
         console.info("Launcher recents  onHide end");
     },
@@ -52,6 +69,12 @@ export default {
         console.info("Launcher recents  clearAll end");
     },
 
+    /**
+     * Remove recent process.
+     *
+     * @param {string} missionId - the missionId of recent process.
+     * @param {object} e - the event form pre page.
+     */
     clearApp(missionId, e) {
         console.info("Launcher recents  clearApp start missionId = " + missionId + " e.direction = " + e.direction);
         if (e.direction == "up") {
@@ -61,9 +84,28 @@ export default {
         console.info("Launcher recents  clearApp end");
     },
 
+    /**
+     * Hot start app.
+     *
+     * @param {object} appInfo - the app info.
+     */
     startUp(appInfo) {
         console.info("Launcher recents  startUp start appInfo = " + JSON.stringify(appInfo));
         mRecentsPresenter.startUpApp(appInfo);
         console.info("Launcher recents  startUp end");
+    },
+
+    /**
+     * Update app information.
+     */
+    updateAppInfos() {
+        console.info("Launcher recents updateAppInfos setTimeout this.recentProcessList.length = " + this.recentProcessList.length);
+        setTimeout(() => {
+            for(let i = 0; i < this.recentProcessList.length; i++) {
+                console.info("Launcher recents updateAppInfos setTimeout in i = " + i);
+                this.$child('icon' + i).updateIcon();
+                this.$child('name' + i).updateName();
+            }
+        }, APP_INFO_REFRESH_DELAY);
     }
 }

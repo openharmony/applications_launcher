@@ -13,7 +13,10 @@
  * limitations under the License.
  */
 
-var SystemApplication = {
+/**
+ * Records the system app that will not be displayed in Launcher.
+ */
+const SystemApplication = {
     SystemApplicationName: 'com.ohos.launcher,com.ohos.systemui'
 }
 

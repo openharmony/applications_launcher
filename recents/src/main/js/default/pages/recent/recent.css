@@ -16,7 +16,6 @@
 @import '../../common/css/CommonPageStyle.css';
 
 .container {
-    background-image: url("common/pics/ic_wallpaper_recent.jpg");
     background-size: cover;
 }
 
@@ -65,9 +64,23 @@
 .piece {
     height: 20%;
     width: 100%;
-    display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.no-recent {
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-recent-text {
+    color: white;
+    font-size: 30px;
+    height: 60px;
+    line-height: 60px;
+    align-items: center;
 }
 
 .clear {

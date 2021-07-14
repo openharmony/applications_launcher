@@ -14,9 +14,8 @@
  */
 
 @import '../../css/CommonPageStyle.css';
+
 .image-box{
-    height: 110px;
-    width: 110px;
     display: flex;
     align-items: center;
     justify-content: center;

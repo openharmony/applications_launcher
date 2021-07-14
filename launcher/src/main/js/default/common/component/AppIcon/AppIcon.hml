@@ -15,6 +15,6 @@
  */
 -->
 
-<div class="image-box">
-    <image class="app-icon-img" src="{{appIcon}}"></image>
+<div class="image-box" focusable = "true">
+    <image class="app-icon-img" src="{{appIcon}}" focusable = "true"></image>
 </div>

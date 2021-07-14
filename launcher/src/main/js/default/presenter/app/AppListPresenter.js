@@ -15,8 +15,27 @@
 
 import BaseAppPresenter from './base/BaseAppPresenter.js';
 
+/**
+ * Presenter of launcher list view.
+ *
+ * @extends BaseAppPresenter.
+ */
 export default class AppListPresenter extends BaseAppPresenter {
-    constructor(AppModel) {
-        super(AppModel);
+    constructor(AppModel, MMIModel, SettingsModel, AppListInfoCacheManager) {
+        super(AppModel, MMIModel, SettingsModel, AppListInfoCacheManager);
+    }
+
+    /**
+     * Adapt bundleInfo data to in list view.
+     *
+     * @param {object} callbackList - BundleInfo list get from cache.
+     * @return {object} The regrouped list.
+     */
+    regroupDataAfterInstall(callbackList) {
+        return callbackList.sort(
+            function compareFunction(param1, param2) {
+                return param1.AppName.localeCompare(param2.AppName, "zh");
+            }
+        );
     }
 }

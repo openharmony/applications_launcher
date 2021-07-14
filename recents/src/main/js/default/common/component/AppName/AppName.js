@@ -13,9 +13,7 @@
  * limitations under the License.
  */
 
-import ResourceManager from '../../model/ResourceManager.js';
-
-var mResourceManager;
+let mResourceManager;
 
 export default {
     props: ['itemAppId', 'itemLabelId', 'itemBundleName', 'itemAppName'],
@@ -28,19 +26,25 @@ export default {
         };
     },
     onInit() {
-        this.$watch('itemLabelId', 'appIconWatcher');
-        mResourceManager = new ResourceManager();
-        mResourceManager.getAppName(this.itemLabelId, this.itemBundleName, this.itemAppName, this.iconLoadCallback);
+        console.info("Launcher recents  AppName onInit start");
+        mResourceManager = this.$app.$def.data.resourceManager;
+        console.info("Launcher recents  AppName onInit end");
     },
-    onShow() {
 
-    },
-    appIconWatcher(newV, oldV) {
-        if (newV != null && newV != undefined) {
-            mResourceManager.getAppName(this.itemLabelId, this.itemBundleName, this.itemAppName, this.iconLoadCallback);
-        }
-    },
+    /**
+     * Set app name.
+     *
+     * @param {string} name - the name of app.
+     */
     iconLoadCallback(name) {
         this.appName = name;
+    },
+
+    /**
+     * Update name.
+     */
+    updateName() {
+        console.info("Launcher AppName updateName in bundleName = " + this.itemBundleName);
+        mResourceManager.getAppName(this.itemLabelId,this.itemBundleName,this.itemAppName,this.iconLoadCallback);
     }
 }

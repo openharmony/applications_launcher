@@ -17,31 +17,34 @@
 
 <element src="../../common/component/AppIcon/AppIcon.hml" name="appIcon"></element>
 <element src="../../common/component/AppName/AppName.hml" name="appName"></element>
-<div class="container">
-    <div class="body">
+<div class="container" style="background-image: {{ $r('image.ic_wallpaper_recent') }}">
+    <div style="display:{{recentProcessListDisplay}}" class="body">
         <list class="list">
             <list-item class="list-item" for="{{ recentProcessList }}">
                 <div class="app-item">
                     <div class="app-icon">
-                        <appicon item-app-icon="{{ $item.iconId }}" item-app-id="{{ $item.AppId }}"
+                        <appicon id="icon{{$idx}}" item-app-icon="{{ $item.iconId }}" item-app-id="{{ $item.AppId }}"
                                  item-bundle-name="{{ $item.bundleName }}">
                         </appicon>
-                        <appname item-app-id="{{ $item.AppId }}" item-label-id="{{ $item.labelId }}"
+                        <appname id="name{{$idx}}" item-app-id="{{ $item.AppId }}" item-label-id="{{ $item.labelId }}"
                                  item-bundle-name="{{ $item.bundleName }}" item-app-name="{{ $item.AppName }}">
                         </appname>
                     </div>
-                    <image class="app-img" src="/common/pics/img_app_default.png"
+                    <image class="app-img" src="{{ $r('image.img_app_default') }}"
                            onswipe="clearApp({{ $item.missionId }})" direction="up" onclick="startUp({{ $item }})">
                     </image>
                 </div>
             </list-item>
         </list>
     </div>
-    <div class="piece">
+    <div style="display:{{recentProcessListDisplay}}" class="piece">
         <div class="clear" onclick="clearAll">
-            <image class="clear-img" src="common/pics/ic_recent_delete.png">
+            <image class="clear-img" src="{{ $r('image.ic_recent_delete') }}">
             </image>
         </div>
+    </div>
+    <div style="display:{{emptyMsgDisplay}}" class="no-recent">
+        <text class="no-recent-text" >{{$t('strings.no_recent')}}</text>
     </div>
 
 </div>

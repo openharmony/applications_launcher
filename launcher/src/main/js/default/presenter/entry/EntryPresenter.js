@@ -20,13 +20,20 @@ import PageData from '../../common/constants/PageData.js';
 const GRID = LayoutConstants.Grid;
 const GRID_APP_VIEW = PageData.GRID_APP_PAGE;
 const LIST_APP_VIEW = PageData.LIST_APP_PAGE;
-var mSettingsModel;
 
+let mSettingsModel;
+
+/**
+ * Presenter of entry view.
+ */
 export default class EntryPresenter {
     constructor(settingsModel) {
         mSettingsModel = settingsModel;
     }
 
+    /**
+     * Entry the launcher grid view or list view.
+     */
     startAppListView() {
         console.info("Launcher EntryPresenter startAppListView start");
         let data = mSettingsModel.getAppPageStartConfig();

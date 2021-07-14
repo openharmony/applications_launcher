@@ -13,9 +13,8 @@
  * limitations under the License.
  */
 
-import ResourceManager from '../../model/ResourceManager.js';
-
-var mResourceManager;
+let mResourceManager;
+let mDefaultAppIcon;
 
 export default {
     props: ['itemAppId', 'itemAppIcon', 'itemBundleName'],
@@ -27,21 +26,26 @@ export default {
         };
     },
     onInit() {
-        console.info("Launcher recents  AppIcon onInit start")
-        this.$watch('itemAppIcon', 'appIconWatcher');
-        mResourceManager = new ResourceManager();
-        mResourceManager.getAppIcon(this.itemAppIcon, this.itemBundleName, this.iconLoadCallback);
+        console.info("Launcher recents  AppIcon onInit start");
+        mDefaultAppIcon = globalThis.$globalR('image.icon_default');
+        mResourceManager = this.$app.$def.data.resourceManager;
         console.info("Launcher recents  AppIcon onInit end")
     },
-    onShow() {
 
-    },
-    appIconWatcher(newV, oldV) {
-        if (newV != null && newV != undefined) {
-            mResourceManager.getAppIcon(this.itemAppIcon, this.itemBundleName, this.iconLoadCallback);
-        }
-    },
+    /**
+     * Set image.
+     *
+     * @param {object} image - the image.
+     */
     iconLoadCallback(image) {
         this.appIcon = image;
+    },
+
+    /**
+     * Update icon.
+     */
+    updateIcon() {
+        console.info("Launcher AppIcon updateIcon in bundleName = " + this.itemBundleName);
+        mResourceManager.getAppIcon(this.itemAppIcon,this.itemBundleName,this.iconLoadCallback, mDefaultAppIcon);
     }
 }
