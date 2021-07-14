@@ -14,9 +14,11 @@
  */
 
 import EntryPresenter from '../../presenter/entry/EntryPresenter.js'
+import Device from '@system.device';
 
-var mEntryPresenter;
 const timeout = 1000;
+
+let mEntryPresenter;
 
 export default {
     onInit() {
@@ -26,13 +28,27 @@ export default {
     },
 
     onShow() {
-        setTimeout(() => {
-            console.info("Launcher EntryView onShow start");
-            mEntryPresenter.startAppListView();
-            console.info("Launcher EntryView onShow end");
-        }, timeout);
-
+        Device.getInfo({
+            success: (data) => {
+                this.$app.$def.data.screenHeight = data.windowHeight;
+                this.$app.$def.data.screenWidth = data.windowWidth;
+                setTimeout(() => {
+                    console.info("Launcher EntryView onShow start");
+                    mEntryPresenter.startAppListView();
+                    console.info("Launcher EntryView onShow end");
+                }, timeout);
+            },
+            fail: (data, code) => {
+                console.info('Launcher Failed to obtain Device information. Error code:'+ code + '; Error information: ' + data);
+                //Fake data
+                this.$app.$def.data.screenHeight = 1240;
+                this.$app.$def.data.screenWidth = 720;
+                setTimeout(() => {
+                    console.info("Launcher EntryView onShow start");
+                    mEntryPresenter.startAppListView();
+                    console.info("Launcher EntryView onShow end");
+                }, timeout);
+            }
+        })
     },
-
-    fun(){}
 }

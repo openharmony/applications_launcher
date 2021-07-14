@@ -15,18 +15,30 @@
 
 import AppModel from './common/model/AppModel.js'
 import SettingsModel from './common/model/SettingsModel.js'
+import MMIModel from './common/model/MMIModel.js'
+import ResourceManager from './common/model/ResourceManager.js'
+import AppListInfoCacheManager from './common/cache/AppListInfoCacheManager.js'
 
 export default {
-    data: {
+    data:{
         appModel: new AppModel(),
-        settingsModel: new SettingsModel()
+        settingsModel: new SettingsModel(),
+        mmiModel: new MMIModel(),
+        resourceManager: new ResourceManager(),
+        appListInfoCacheManager: new AppListInfoCacheManager(),
+        screenHeight: 0,
+        screenWidth: 0
     },
 
     onCreate() {
-        console.info("Application onCreate");
+        console.info("Launcher app Application onCreate");
+        this.data.appModel.registerAppListEvent();
     },
 
     onDestroy() {
-        console.info("Application onDestroy");
+        console.info("Launcher app Application onDestroy");
+        this.data.resourceManager.clearCache();
+        this.data.appListInfoCacheManager.clearCache();
+        this.data.appModel.unregisterAppListEvent();
     }
 };

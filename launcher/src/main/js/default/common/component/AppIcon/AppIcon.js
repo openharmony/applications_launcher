@@ -13,10 +13,12 @@
  * limitations under the License.
  */
 
-import ResourceManager from '../../model/ResourceManager.js';
+let mResourceManager;
+let mDefaultAppIcon;
 
-var mResourceManager;
-
+/**
+ * A page element that display app icon.
+ */
 export default {
     props: ['itemAppId', 'itemAppIcon', 'itemBundleName'],
 
@@ -30,23 +32,35 @@ export default {
 
     onInit() {
         this.$watch('itemBundleName','appIconWatcher');
-        mResourceManager = new ResourceManager();
-        mResourceManager.getAppIcon(this.itemAppIcon, this.itemBundleName, this.iconLoadCallback);
+        mDefaultAppIcon = globalThis.$globalR('image.icon_default');
+        mResourceManager = this.$app.$def.data.resourceManager;
+        mResourceManager.getAppIcon(this.itemAppIcon, this.itemBundleName, this.iconLoadCallback, mDefaultAppIcon);
     },
 
-    onShow() {
-    },
-
+    /**
+     * Watch the value of appIcon, called when the value changed.
+     *
+     * @param {object} newV - New value of appIcon
+     * @param {object} oldV - Old value of appIcon
+     */
     appIconWatcher(newV, oldV) {
         if (newV != null && newV != undefined) {
             mResourceManager.getAppIcon(this.itemAppIcon, this.itemBundleName, this.iconLoadCallback);
         }
     },
 
+    /**
+     * Callback function when appIcon loaded from the resource manager.
+     *
+     * @param {string} image - App icon base64.
+     */
     iconLoadCallback(image) {
         this.appIcon = image;
     },
 
+    /**
+     * Reload the app icon base64 from resource manager.
+     */
     updateIcon() {
         console.info("Launcher AppIcon updateIcon in bundleName = " + this.itemBundleName);
         mResourceManager.getAppIcon(this.itemAppIcon, this.itemBundleName, this.iconLoadCallback);

@@ -15,26 +15,42 @@
 
 import ILayoutConfig from './ILayoutConfig.js';
 import DefaultLayoutConfig from '../../common/configs/DefaultLayoutConfig.js';
-import storage from '@ohos.data.storage';
+import Storage from '@ohos.data.storage';
 
 const APP_PAGE_START_CONFIG = 'AppStartPageType';
 const GRID_CONFIG = "GridConfig";
 const RECENT_PROCESS_LIMIT = "RecentProcessLimit";
+const GRID_LAYOUT_INFO = "GridLayoutInfo";
 const PREFERENCES_PATH = '/data/accounts/account_0/appdata/com.ohos.launcher/sharedPreference/LauncherPreference';
-var mPreferences = storage.getStorageSync(PREFERENCES_PATH);
 
+let mPreferences = Storage.getStorageSync(PREFERENCES_PATH);
+
+/**
+ * A class that stores layout information.
+ * @extends ILayoutConfig
+ */
 export default class StorageLayoutConfig extends ILayoutConfig {
     constructor() {
         super();
     }
 
+    /**
+     * Load the launcher layout view type.
+     *
+     * @return {string} Layout view type , should one of 'Grid' or 'List' which is stored in LayoutConstants class.
+     */
     loadAppPageStartConfig() {
         console.info('Launcher mPreferences get APP_PAGE_START_CONFIG');
-        var data = mPreferences.getSync(APP_PAGE_START_CONFIG, DefaultLayoutConfig.DefaultAppPageStartConfig);
+        let data = mPreferences.getSync(APP_PAGE_START_CONFIG, DefaultLayoutConfig.DefaultAppPageStartConfig);
         console.info('Launcher mPreferences get' + data);
         return data;
     }
 
+    /**
+     * Save the launcher layout view type.
+     *
+     * @param {string} type - View type , should one of 'Grid' or 'List' which is stored in LayoutConstants class.
+     */
     saveAppPageStartConfig(type) {
         console.info('Launcher mPreferences put type' + type);
         mPreferences.putSync(APP_PAGE_START_CONFIG, type);
@@ -42,13 +58,23 @@ export default class StorageLayoutConfig extends ILayoutConfig {
         console.info('Launcher mPreferences put type flush');
     }
 
+    /**
+     * Load the launcher grid view layout config id.
+     *
+     * @return {number} id - Config id.
+     */
     loadGridConfig() {
         console.info('Launcher mPreferences get GRID_CONFIG');
-        var data = mPreferences.getSync(GRID_CONFIG, DefaultLayoutConfig.DefaultGridConfig);
+        let data = mPreferences.getSync(GRID_CONFIG, DefaultLayoutConfig.DefaultGridConfig);
         console.info('Launcher mPreferences get' + data);
         return data;
     }
 
+    /**
+     * Save the launcher grid view layout config id.
+     *
+     * @param {string} id - View type , should one of 'Grid' or 'List' which is stored in LayoutConstants class.
+     */
     saveGridConfig(id) {
         console.info('Launcher mPreferences put id' + id);
         mPreferences.putSync(GRID_CONFIG, id);
@@ -56,17 +82,64 @@ export default class StorageLayoutConfig extends ILayoutConfig {
         console.info('Launcher mPreferences put id flush');
     }
 
+    /**
+     * Load the recent process max limit.
+     *
+     * @return {number} Recent process max limit.
+     */
     loadRecentProcessLimit() {
         console.info('Launcher mPreferences get');
-        var data = mPreferences.getSync(RECENT_PROCESS_LIMIT, DefaultLayoutConfig.DefaultRecentProcessLimit);
+        let data = mPreferences.getSync(RECENT_PROCESS_LIMIT, DefaultLayoutConfig.DefaultRecentProcessLimit);
         console.info('Launcher mPreferences get' + data);
         return data;
     }
 
+    /**
+     * Save the recent process max limit.
+     *
+     * @param {number} num - Recent process max limit.
+     */
     saveRecentProcessLimit(num) {
         console.info('Launcher mPreferences put num' + num);
         mPreferences.putSync(RECENT_PROCESS_LIMIT, num);
         mPreferences.flushSync();
         console.info('Launcher mPreferences put num flush');
+    }
+
+    /**
+     * Load the layout information of grid view.
+     *
+     * @return {object} The layout information data.
+     */
+    loadGridLayoutInfo() {
+        console.info('Launcher StorageLayoutConfig loadGridLayoutInfo start');
+        let data = mPreferences.getSync(GRID_LAYOUT_INFO, '');
+        console.info('Launcher StorageLayoutConfig loadGridLayoutInfo ' + data);
+        if(data == ''){
+            return [];
+        }else{
+            return JSON.parse(data);
+        }
+    }
+
+    /**
+     * Load the layout information of grid view.
+     *
+     * @return {object} The layout information data.
+     */
+    saveGridLayoutInfo(layoutInfo) {
+        console.info('Launcher StorageLayoutConfig saveGridLayoutInfo start');
+        mPreferences.putSync(GRID_LAYOUT_INFO, JSON.stringify(layoutInfo));
+        mPreferences.flushSync();
+        console.info('Launcher StorageLayoutConfig saveGridLayoutInfo end');
+    }
+
+    /**
+     * Remove layout information of grid view in preferences.
+     */
+    removeGridLayoutInfo() {
+        console.info('Launcher StorageLayoutConfig removeGridLayoutInfo start');
+        mPreferences.deleteSync(GRID_LAYOUT_INFO);
+        console.info('Launcher StorageLayoutConfig removeGridLayoutInfo start');
     }
 }

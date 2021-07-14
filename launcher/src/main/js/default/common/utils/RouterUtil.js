@@ -13,26 +13,54 @@
  * limitations under the License.
  */
 
-import router from '@system.router';
+/**
+ * An util that encapsulates methods from @system.router.
+ */
+import Router from '@system.router';
 
-var Router = function () {
+let RouterUtil = function () {
     return {
-        push: function (uri, papams) {
-            router.push({
+
+        /**
+         * Push the page into the Router stack.
+         *
+         * @param {string} uri - uri of the page
+         * @param {object} params - params while opening the page
+         */
+        push: function (uri, params) {
+            Router.push({
                 uri: uri,
-                params: papams
+                params: params
             })
-        }, replace: function (uri, papams) {
-            router.replace({
+        },
+
+         /**
+         * Replace original page to the current page.
+         *
+         * @param {string} uri - uri of the page
+         * @param {object} params - params while opening the page
+         */
+        replace: function (uri, params) {
+            Router.replace({
                 uri: uri,
-                params: papams
+                params: params
             })
-        }, back: function () {
-            router.back();
-        }, clear: function () {
-            router.clear();
+        },
+
+        /**
+         * Back to previous page and pop current page.
+         */
+        back: function () {
+            Router.back();
+        },
+
+        /**
+         * Clear router stack.
+         */
+        clear: function () {
+            Router.clear();
         }
     }
 }();
 
-export default Router;
+export default RouterUtil;

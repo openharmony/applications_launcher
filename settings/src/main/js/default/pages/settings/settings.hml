@@ -1,0 +1,136 @@
+<!--
+/*
+ * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+
+<div class="container">
+    <div class="top-bar">
+        <div class="return-icon" style="background-image: {{ $r('image.img_return') }}" onclick="returnToDesktop"></div>
+        <text class="top-bar-text" >
+            {{$t('strings.launcher_settings')}}
+        </text>
+    </div>
+    <div class="settings-box">
+        <div class="settings-box-bar">
+            <text class="settings-box-bar-text">
+                {{$t('strings.layout')}}
+            </text>
+        </div>
+        <div class="settings-list-box">
+            <div class="settings-list-bar" onclick="showLayoutStyleDialog" >
+                <div class="settings-list-title">
+                    <text class="settings-list-title-text">
+                        {{$t('strings.layout_style')}}
+                    </text>
+                </div>
+                <div class="settings-list-layout">
+                    <text class="settings-list-layout-text">
+                        {{layoutStyle}}
+                    </text>
+                    <div class="to-setting-detail-icon" style="background-image: {{ $r('image.img_to_detail') }}"></div>
+                </div>
+            </div>
+            <div if="{{!checked}}" class="settings-list-bar" onclick="showLauncherLayoutDialog" >
+                <div class="settings-list-title">
+                    <text class="settings-list-title-text">
+                        {{$t('strings.launcher_layout')}}
+                    </text>
+                </div>
+                <div class="settings-list-layout">
+                    <text class="settings-list-layout-text">
+                        {{launcherLayout}}
+                    </text>
+                    <div class="to-setting-detail-icon" style="background-image: {{ $r('image.img_to_detail') }}"></div>
+                </div>
+            </div>
+            <div class="settings-list-bar" onclick="showRecentTasksDialog">
+                <div class="settings-list-title">
+                    <text class="settings-list-title-text">
+                        {{$t('strings.recent_tasks_settings')}}
+                    </text>
+                </div>
+                <div class="settings-list-layout">
+                    <text class="settings-list-layout-text" >
+                        {{recentProcessLimit}}
+                    </text>
+                    <div class="to-setting-detail-icon" style="background-image: {{ $r('image.img_to_detail') }}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <dialog id="dialog-layout-style-setting" class="dialog-setting-detail">
+        <div class="dialog-setting-box">
+            <div class="dialog-setting-bar">
+                <text class="dialog-setting-bar-text">
+                    {{$t('strings.layout_style')}}
+                </text>
+            </div>
+            <div class="dialog-setting-options-box" for="{{layoutStyleTable}}" onclick="changeLayoutStyle({{$item.layout}})">
+                <text class="dialog-setting-option-text">
+                    {{$item.layoutChinese}}
+                </text>
+                <input type="radio" name="dialog-layout-style-radio" class="dialog-setting-option-radio"
+                       value="{{$item.layout}}" checked="{{$item.checked}}" onclick="changeLayoutStyle({{$item.layout}})"/>
+            </div>
+            <div class="dialog-settings-cancel-bar" onclick="hideLayoutStyleDialog">
+                <text class="dialog-settings-cancel-text">
+                    {{$t('strings.cancel')}}
+                </text>
+            </div>
+        </div>
+    </dialog>
+    <dialog if="{{!checked}}" id="dialog-launcher-layout-setting" class="dialog-setting-detail">
+        <div class="dialog-setting-box">
+            <div class="dialog-setting-bar">
+                <text class="dialog-setting-bar-text">
+                    {{$t('strings.launcher_layout')}}
+                </text>
+            </div>
+            <div class="dialog-setting-options-box" for="{{gridLayoutTable}}" onclick="changeLauncherLayout({{$item.id}})">
+                <text class="dialog-setting-option-text">
+                    {{$item.layout}}
+                </text>
+                <input type="radio" name="dialog-launcher-layout-radio" class="dialog-setting-option-radio"
+                       value="{{$item.id}}" checked="{{layoutButtonStyle[$item.id].checked}}" onclick="changeLauncherLayout({{$item.id}})"/>
+            </div>
+            <div class="dialog-settings-cancel-bar" onclick="hideLauncherLayoutDialog">
+                <text class="dialog-settings-cancel-text">
+                    {{$t('strings.cancel')}}
+                </text>
+            </div>
+        </div>
+    </dialog>
+    <dialog id="dialog-recent-tasks-setting" class="dialog-setting-detail">
+        <div class="dialog-setting-box">
+            <div class="dialog-setting-bar">
+                <text class="dialog-setting-bar-text">
+                    {{$t('strings.recent_tasks_settings')}}
+                </text>
+            </div>
+            <div class="dialog-setting-options-box" for="{{recentProcessLimitArray}}" onclick="changeRecentProcessLimit({{$item.limit}})">
+                <text class="dialog-setting-option-text">
+                    {{$item.limit}}
+                </text>
+                <input type="radio" name="dialog-recent-tasks-setting-radio" class="dialog-setting-option-radio"
+                       value="{{$item.limit}}" checked="{{$item.checked}}" onclick="changeRecentProcessLimit({{$item.limit}})"/>
+            </div>
+            <div class="dialog-settings-cancel-bar" onclick="hideRecentTasksDialog">
+                <text class="dialog-settings-cancel-text">
+                    {{$t('strings.cancel')}}
+                </text>
+            </div>
+        </div>
+    </dialog>
+</div>

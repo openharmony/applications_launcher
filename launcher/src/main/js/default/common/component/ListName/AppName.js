@@ -13,10 +13,11 @@
  * limitations under the License.
  */
 
-import ResourceManager from '../../model/ResourceManager.js';
+let mResourceManager;
 
-var mResourceManager;
-
+/**
+ * A page element that display app name in ListView.
+ */
 export default {
     props: ['itemAppId', 'itemLabelId', 'itemBundleName', 'itemAppName'],
 
@@ -30,26 +31,37 @@ export default {
     },
 
     onInit() {
-        this.$watch('itemBundleName','appIconWatcher');
-        mResourceManager = new ResourceManager();
-        mResourceManager.getAppName(this.itemLabelId, this.itemBundleName, this.itemAppName, this.iconLoadCallback);
+        this.$watch('itemBundleName','appNameWatcher');
+        mResourceManager = this.$app.$def.data.resourceManager;
+        mResourceManager.getAppName(this.itemLabelId, this.itemBundleName, this.itemAppName, this.appNameLoadCallback);
     },
 
-    onShow() {
-    },
-
-    appIconWatcher(newV, oldV) {
+    /**
+     * Watch the value of appName, called when the value changed.
+     *
+     * @param {object} newV - New value of appName
+     * @param {object} oldV - Old value of appName
+     */
+    appNameWatcher(newV, oldV) {
         if (newV != null && newV != undefined) {
-            mResourceManager.getAppName(this.itemLabelId, this.itemBundleName, this.itemAppName, this.iconLoadCallback);
+            mResourceManager.getAppName(this.itemLabelId, this.itemBundleName, this.itemAppName, this.appNameLoadCallback);
         }
     },
 
-    iconLoadCallback(name) {
+    /**
+     * Callback function when appName loaded from the resource manager.
+     *
+     * @param {string} name - App name.
+     */
+    appNameLoadCallback(name) {
         this.appName = name;
     },
 
+    /**
+     * Reload the app name from resource manager.
+     */
     updateName() {
-        console.info("Launcher AppIcon updateIcon in bundleName = " + this.itemBundleName);
-        mResourceManager.getAppName(this.itemLabelId, this.itemBundleName, this.itemAppName, this.iconLoadCallback);
+        console.info("Launcher AppName updateName in bundleName = " + this.itemBundleName);
+        mResourceManager.getAppName(this.itemLabelId, this.itemBundleName, this.itemAppName, this.appNameLoadCallback);
     }
 }

@@ -13,12 +13,20 @@
  * limitations under the License.
  */
 
-import router from '@system.router';
+import Router from '@system.router';
 
-var mRecentsModel;
-var mRecentsLimit;
+let mRecentsModel;
+let mRecentsLimit;
 
+/**
+ * Class RecentsPresenter.
+ */
 export default class RecentsPresenter {
+    /**
+     * Constructor of RecentsPresenter.
+     *
+     * @param {object} recentsModel - the model of recentPresenter.
+     */
     constructor(recentsModel) {
         console.info("Launcher recents  RecentsPresenter constructor start");
         mRecentsModel = recentsModel;
@@ -26,6 +34,11 @@ export default class RecentsPresenter {
         console.info("Launcher recents  RecentsPresenter constructor end");
     }
 
+    /**
+     * Callback function of getRecentProcessList.
+     *
+     * @param {object} callback - the callback from view.
+     */
     getRecentProcessList(callback) {
         console.info("Launcher recents  RecentsPresenter getRecentProcessList start")
         mRecentsModel.getRecentProcessList((data) => {
@@ -46,6 +59,11 @@ export default class RecentsPresenter {
         console.info("Launcher recents  RecentsPresenter clearRecentProcess end");
     }
 
+    /**
+     * Remove recent process.
+     *
+     * @param {string} missionId - the missionId of recent process.
+     */
     removeRecentProcess(missionId) {
         console.info("Launcher recents  RecentsPresenter removeRecentProcess start missionId = " + missionId);
         mRecentsModel.removeRecentProcess(missionId);
@@ -54,10 +72,15 @@ export default class RecentsPresenter {
 
     back() {
         console.info("Launcher recents  RecentsPresenter back start");
-        router.back();
+        Router.back();
         console.info("Launcher recents  RecentsPresenter back end");
     }
 
+    /**
+     * Hot start app.
+     *
+     * @param {object} appInfo - the app info .
+     */
     startUpApp(appInfo) {
         console.info("Launcher recents  RecentsPresenter startUpApp start appInfo = " + JSON.stringify(appInfo));
         mRecentsModel.hotStartUpApp(appInfo);

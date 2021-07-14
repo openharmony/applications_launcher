@@ -18,12 +18,13 @@
 <element src="../../common/component/AppIcon/AppIcon.hml" name="appicon"></element>
 <element src="../../common/component/ListName/AppName.hml" name="appName"></element>
 
-<div class="container">
+<div class="container" style="background-image: {{ $r('image.img_wallpaper_default') }}">
     <list class="list" onlongpress="toSetting">
-        <list-item class="list-item" for="{{ appList }}" focusable="true" onfocus="focus({{ $idx }})"
+        <list-item class="list-item" for="{{ appList }}" focusable="false" onfocus="focus({{ $idx }})"
                    onkey="onAppListKeyEvent"
                    onlongpress="longPress({{ $item.AppId }},{{ $item.bundleName }},{{ $item.System }})">
-            <div class="appitem" focusable="true" onclick="openApplication({{ $item.bundleName }})">
+            <div class="appitem" style="transform : scale({{ listItemScales[$idx] }}, {{ listItemScales[$idx] }});"
+                 focusable="false" onclick="openApplication({{ $item.abilityName}}, {{ $item.bundleName }})">
                 <appicon id="icon{{ $idx }}" item-app-icon="{{ $item.AppIcon }}" item-app-id="{{ $item.AppId }}"
                          item-bundle-name="{{ $item.bundleName }}">
                 </appicon>

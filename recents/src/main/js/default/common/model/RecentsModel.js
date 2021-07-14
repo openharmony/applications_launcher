@@ -13,32 +13,47 @@
  * limitations under the License.
  */
 
-import napiAbilityManager from '@ohos.napi_ability_manager';
-import featureAbility from '@ohos.feature_ability';
-import storage from '@ohos.data.storage';
-import bundle_mgr from '@ohos.bundle_mgr';
-import feature_ability from '@ohos.feature_ability';
+import NapiAbilityManager from '@ohos.app.abilitymanager';
+import Storage from '@ohos.data.storage';
+import BundleMgr from '@ohos.bundle';
+import FeatureAbility from '@ohos.ability.featureability';
 
-var RECENT_PROCESS_LIMIT_KEY = 'RecentProcessLimit';
 const PREFERENCES_PATH = '/data/accounts/account_0/appdata/com.ohos.launcher/sharedPreference/LauncherPreference';
-var mRecentList = [];
-var DEFAULT_RECENT_PROCESS_LIMIT = 10;
-var INCLUDE_SYSTEM_APP = 0;
-var EXCLUDE_SYSTEM_APP = 1;
-var mIconResultCount = 0;
-var mPreferences = storage.getStorageSync(PREFERENCES_PATH);
+const MAX_NUM = 20;
+const PERMISSION_NUM = 8;
+const NON = 0;
+const RECENT_PROCESS_LIMIT_KEY = 'RecentProcessLimit';
+const DEFAULT_RECENT_PROCESS_LIMIT = 10;
 
+let mRecentList = [];
+let mIconResultCount = 0;
+let mPreferences = Storage.getStorageSync(PREFERENCES_PATH);
+
+/**
+ * Class RecentsModel.
+ */
 export default class RecentsModel {
+
+    /**
+     * Get recent process list.
+     *
+     * @param {object} callback - the callback from presenter.
+     */
     getRecentProcessList(callback) {
-        console.info("Launcher recents RecentsModel getRecentProcessList start")
+        console.info("Launcher recents  RecentsModel getRecentProcessList start");
         mRecentList = [];
         mIconResultCount = 0;
-        console.info("Launcher recents RecentsModel napiAbilityManager.queryRecentAbilityMissionInfos start")
-        napiAbilityManager.queryRecentAbilityMissionInfos().then((data) => {
-            console.info("Launcher recents RecentsModel napiAbilityManager.queryRecentAbilityMissionInfos() callback")
-            console.info('Launcher recents queryRecentAbilityMissionInfos data length [' + data.length + ']');
-            console.info('Launcher recents queryRecentAbilityMissionInfos data = ' + JSON.stringify(data));
-            for (var i = 0; i < data.length; i++) {
+        console.info("Launcher recents  RecentsModel NapiAbilityManager.queryRecentAbilityMissionInfos start")
+        NapiAbilityManager.queryRunningAbilityMissionInfos(MAX_NUM).then((data) => {
+            console.info("Launcher recents  RecentsModel NapiAbilityManager.queryRecentAbilityMissionInfos() callback")
+            console.info('Launcher recents  queryRecentAbilityMissionInfos data length [' + data.length + ']');
+            console.info('Launcher recents  queryRecentAbilityMissionInfos data = ' + JSON.stringify(data));
+            if(data.length == 0) {
+                console.info('Launcher recents data empty');
+                callback(mRecentList);
+                return;
+            }
+            for (let i = 0; i < data.length; i++) {
                 let recentTaskInfo = {
                     AppName: data[i].missionDescription.label,
                     AppId: data[i].topAbility.bundleName,
@@ -50,72 +65,89 @@ export default class RecentsModel {
                 }
                 mRecentList.push(recentTaskInfo);
             }
-            console.info('Launcher recents RecentsModel queryRecentAbilityMissionInfos mRecentList = ' + JSON.stringify(mRecentList));
+            console.info('Launcher recents  RecentsModel queryRecentAbilityMissionInfos mRecentList = ' + JSON.stringify(mRecentList));
             for (let element of mRecentList) {
-                console.info('Launcher recents RecentsModel bundle_mgr.getApplicationInfo element of mRecentList = ' + JSON.stringify(element));
-                bundle_mgr.getApplicationInfo(element.AppId).then(data => {
-                    console.info('Launcher recents bundle_mgr.getApplicationInfo data = ' + JSON.stringify(data));
+                console.info('Launcher recents  RecentsModel  bundle_mgr.getApplicationInfo element of mRecentList = ' + JSON.stringify(element));
+                BundleMgr.getApplicationInfo(element.AppId, PERMISSION_NUM, NON).then(data => {
+                    console.info('Launcher recents  bundle_mgr.getApplicationInfo data = ' + JSON.stringify(data));
                     let recentTaskInfo = mRecentList.find((recentItem) => {
-                        if (recentItem.AppId == data.bundleName) return recentItem;
+                        if (recentItem.AppId == data.name) return recentItem;
                     });
                     recentTaskInfo.iconId = data.iconId;
                     recentTaskInfo.labelId = data.labelId;
                     mIconResultCount++;
-                    console.info('Launcher recents getApplicationInfo mIconResultCount = ' + mIconResultCount);
-                    console.info('Launcher recents getApplicationInfo mRecentList.length = ' + mRecentList.length);
+                    console.info('Launcher recents  getApplicationInfo mIconResultCount = ' + mIconResultCount);
+                    console.info('Launcher recents  getApplicationInfo mRecentList.length = ' + mRecentList.length);
                     if (mIconResultCount == mRecentList.length) {
                         callback(mRecentList);
                     }
-                });
+                }).catch(error =>
+                    console.error("Launcher recents RecentsModel getRecentProcessList promise::catch : " + JSON.stringify(error))
+                );
             }
-        });
-        console.info("Launcher recents RecentsModel getRecentProcessList end")
+        }).catch(error =>
+            console.error("Launcher recents RecentsModel getRecentProcessList promise::catch : " + JSON.stringify(error))
+        );
+        console.info("Launcher recents  RecentsModel getRecentProcessList end")
     }
 
+    /**
+     * Clear recent process list.
+     *
+     */
     clearRecentProcess() {
-        console.info("Launcher recents RecentsModel clearRecentProcess start")
+        console.info("Launcher recents  RecentsModel clearRecentProcess start")
         while (mRecentList.length > 0) {
             mRecentList.pop();
         }
-        console.info("Launcher recents RecentsModel napiAbilityManager.removeStack start")
-        napiAbilityManager.removeStack(EXCLUDE_SYSTEM_APP).then((data) => {
-            console.info('Launcher recents removeStack data [' + data + ']');
+        console.info("Launcher recents  RecentsModel NapiAbilityManager.removeStack start")
+        NapiAbilityManager.clearMissions().then((data) => {
         });
 
         setTimeout(() => {
-            console.info("Launcher recents RecentsModel feature_ability.terminateAbility start")
-            feature_ability.terminateAbility()
-                .then(data => console.info("Launcher recents terminateAbility promise::then : " + data))
-                .catch(error => console.info("Launcher recents terminateAbility promise::catch : " + error));
+            console.info("Launcher recents  RecentsModel feature_ability.terminateAbility start")
+            FeatureAbility.terminateAbility()
+                .then(data => console.info("Launcher recents  terminateAbility promise::then : " + data))
+                .catch(error => console.info("Launcher recents  terminateAbility promise::catch : " + error));
         }, 1000);
 
-        console.info("Launcher recents RecentsModel clearRecentProcess end")
+        console.info("Launcher recents  RecentsModel clearRecentProcess end")
     }
 
+    /**
+     * Remove recent process list.
+     *
+     * @param {string} missionId - the missionId of recent process.
+     */
     removeRecentProcess(missionId) {
-        console.info("Launcher recents RecentsModel removeRecentProcess start")
-        for (var idx = 0; idx < mRecentList.length; idx++) {
+        console.info("Launcher recents  RecentsModel removeRecentProcess start")
+        for (let idx = 0; idx < mRecentList.length; idx++) {
             if (mRecentList[idx].missionId == missionId) {
                 mRecentList.splice(idx, 1);
                 break;
             }
         }
-        console.info("Launcher recents RecentsModel napiAbilityManager.removeMission start")
-        napiAbilityManager.removeMission(missionId).then((data) => {
+        console.info("Launcher recents  RecentsModel NapiAbilityManager.removeMission start")
+        NapiAbilityManager.removeMission(missionId).then((data) => {
             console.info('removeMission data [' + data + ']');
         });
 
         if (mRecentList.length == 0) {
             setTimeout(() => {
-                console.info("Launcher recents RecentsModel feature_ability.terminateAbility start")
-                feature_ability.terminateAbility()
-                    .then(data => console.info("Launcher recents terminateAbility promise::then : " + data))
-                    .catch(error => console.info("Launcher recents terminateAbility promise::catch : " + error));
+                console.info("Launcher recents  RecentsModel feature_ability.terminateAbility start")
+                FeatureAbility.terminateAbility()
+                    .then(data => console.info("Launcher recents  terminateAbility promise::then : " + data))
+                    .catch(error => console.info("Launcher recents  terminateAbility promise::catch : " + error));
             }, 1000);
         }
-        console.info("Launcher recents RecentsModel removeRecentProcess end")
+        console.info("Launcher recents  RecentsModel removeRecentProcess end")
     }
 
+    /**
+     * Get recent process list.
+     *
+     * @return {number} - the number of recent process.
+     */
     getRecentProcessLimit() {
         console.info("Launcher recents RecentsModel getRecentProcessLimit start");
         let limit = DEFAULT_RECENT_PROCESS_LIMIT;
@@ -126,35 +158,35 @@ export default class RecentsModel {
         return limit;
     }
 
+    /**
+     * Hot start app.
+     *
+     * @param {object} appInfo - the app info.
+     */
     hotStartUpApp(appInfo) {
-        console.info('Launcher recents hotStartUpApp start');
+        console.info('Launcher recents  hotStartUpApp start');
         this.startAbility(appInfo);
-        console.info('Launcher recents hotStartUpApp end');
+        console.info('Launcher recents  hotStartUpApp end');
     }
 
+    /**
+     * Start ability.
+     *
+     * @param {object} appInfo - the app info.
+     */
     startAbility(appInfo) {
-        console.info("Launcher recents startAbility start");
-        console.info("Launcher recents featureAbility.startAbility appId = " + JSON.stringify(appInfo));
-        featureAbility.startAbility({
-            bundleName: appInfo.AppId,
-            abilityName: appInfo.abilityName,
-            requestCode: 1,
-            abilityType: "PageAbility",
+        // promise
+        console.info('Launcher startApplication abilityname');
+        let result = FeatureAbility.startAbility({
             want: {
-                action: "action1",
-                entities: ["entity1"],
-                type: "PageAbility",
-                flags: 2,
-                elementName: {
-                    deviceId: "deviceId",
-                    bundleName: appInfo.AppId,
-                    abilityName: appInfo.abilityName,
-                },
-            },
-            syncOption: 1
+                bundleName: appInfo.AppId,
+                abilityName: appInfo.abilityName
+            }
         }).then(data =>
-        console.info("Launcher recents promise::then : " + data)).catch(error =>
-        console.info("Launcher recents promise::catch : " + error));
-        console.info("Launcher recents startAbility end");
+        console.info("Launcher promise::then : " + JSON.stringify(data))
+        ).catch(error =>
+        console.info("Launcher promise::catch : " + JSON.stringify(error))
+        );
+        console.info("Launcher AceApplication : startAbility : " + result);
     }
 }

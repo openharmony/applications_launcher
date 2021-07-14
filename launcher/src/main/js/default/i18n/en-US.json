@@ -13,6 +13,12 @@
     "launcher_settings": "Launcher settings",
     "uninstall_app": "Uninstall App",
     "layout": "Layout",
-    "recent_tasks_settings": "Recent tasks settings"
+    "recent_tasks_settings": "Recent tasks settings",
+    "layout_style": "Layout style",
+    "launcher_layout": "Launcher layout",
+    "layout_grid": "grid",
+    "layout_list": "list",
+    "add_blank_page" : "Add blank page",
+    "delete_blank_page" : "delete blank page"
   }
 }

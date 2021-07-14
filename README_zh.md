@@ -39,4 +39,4 @@
 
 系统应用
 
-**applications\_launcher**
+**applications\_standard\_launcher**
