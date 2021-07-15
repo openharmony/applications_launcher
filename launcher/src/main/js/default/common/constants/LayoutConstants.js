@@ -13,9 +13,12 @@
  * limitations under the License.
  */
 
-var LayoutContants = {
+/**
+ * A Constant class includes layout type Strings.
+ */
+const LayoutConstants = {
     Grid: "Grid",
     List: "List"
 }
 
-export default LayoutContants;
+export default LayoutConstants;

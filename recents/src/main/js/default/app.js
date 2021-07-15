@@ -14,14 +14,18 @@
  */
 
 import RecentsModel from './common/model/RecentsModel.js'
+import ResourceManager from './common/model/ResourceManager.js'
 
 export default {
     data: {
         recentsModel: new RecentsModel(),
+        resourceManager: new ResourceManager()
     },
+
     onCreate() {
         console.info('Launcher recents  AceApplication onCreate');
     },
+
     onDestroy() {
         console.info('Launcher recents  AceApplication onDestroy');
     }

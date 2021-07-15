@@ -13,7 +13,10 @@
  * limitations under the License.
  */
 
-var PageData = {
+/**
+ * Pages' uri that will be used as a param of RouterUtil.
+ */
+const PageData = {
     GRID_APP_PAGE: 'pages/AppGridView/AppGridView',
     LIST_APP_PAGE: 'pages/AppListView/AppListView'
 }

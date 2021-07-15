@@ -15,6 +15,11 @@
 
 import StorageLayoutConfig from './StorageLayoutConfig.js'
 
+/**
+ * The factory function of producing the class to operate layout config.
+ *
+ * @return {object} The class to operate layout config.
+ */
 export function getLayoutConfig() {
     return new StorageLayoutConfig();
 }

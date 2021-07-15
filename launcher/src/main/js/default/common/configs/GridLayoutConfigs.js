@@ -13,11 +13,31 @@
  * limitations under the License.
  */
 
-var GridLayoutConfigs = {
+/**
+ * Configuration of different layouts.
+ */
+const GridLayoutConfigs = {
     GridLayoutTable: [
-        {id:0, layout:'5X4', row:5, column:4},
-        {id:1, layout:'4X4', row:4, column:4},
-        {id:2, layout:'6X4', row:6, column:4},
+        {
+            id: 0,
+            layout: '4X4',
+            row: 4,
+            column: 4
+        },
+
+        {
+            id: 1,
+            layout: '5X4',
+            row: 5,
+            column: 4
+        },
+
+        {
+            id: 2,
+            layout: '6X4',
+            row: 6,
+            column: 4
+        },
     ]
 }
 

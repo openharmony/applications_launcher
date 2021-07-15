@@ -13,6 +13,12 @@
     "launcher_settings": "桌面设置",
     "uninstall_app": "应用卸载",
     "layout": "布局",
-    "recent_tasks_settings": "最近任务设置"
+    "recent_tasks_settings": "最近任务数",
+    "layout_style": "布局样式",
+    "launcher_layout": "桌面布局",
+    "layout_grid": "网格",
+    "layout_list": "列表",
+    "add_blank_page" : "添加空白页",
+    "delete_blank_page" : "删除空白页"
   }
 }

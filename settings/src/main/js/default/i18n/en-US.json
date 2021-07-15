@@ -1,0 +1,22 @@
+{
+  "strings": {
+    "loading": "Loading...",
+    "cancelled": "Cancelled",
+    "uninstall_succeeded": "Successfully uninstalled",
+    "uninstall": "Uninstall",
+    "cancel": "Cancel",
+    "prohibited": "Uninstall prohibited ",
+    "settings": "Settings",
+    "carry_out": "Finish",
+    "do_you_want_to_uninstall_start": "Are you sure uninstall",
+    "do_you_want_to_uninstall_end": "?",
+    "launcher_settings": "Launcher settings",
+    "uninstall_app": "Uninstall App",
+    "layout": "Layout",
+    "recent_tasks_settings": "Recent tasks settings",
+    "layout_style": "Layout style",
+    "launcher_layout": "Launcher layout",
+    "layout_grid": "grid",
+    "layout_list": "list"
+  }
+}

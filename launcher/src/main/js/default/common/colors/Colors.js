@@ -13,7 +13,10 @@
  * limitations under the License.
  */
 
-var Colors = {
+/**
+ * Description: Color data.
+ */
+const Colors = {
     bgSelectedColor: "#FF008000",
     bgUnselectedColor: "white",
     fontSelectedColor: "white",

@@ -3,8 +3,8 @@
     "bundleName": "com.ohos.launcher",
     "vendor": "ohos",
     "version": {
-      "code": 1,
-      "name": "1.0"
+      "code": 1000000,
+      "name": "1.0.0"
     },
     "apiVersion": {
       "compatible": 5,

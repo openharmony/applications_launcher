@@ -18,46 +18,70 @@
 <element src="../../common/component/AppIcon/AppIcon.hml" name="appicon"></element>
 <element src="../../common/component/GridName/GridName.hml" name="appName"></element>
 
-<div class="container" onlongpress="intoSetting()">
-    <swiper class="pageView" loop="false" index="{{ index }}" onchange="pageChange">
-        <div class="body" for="{{ appArray }}">
-            <div for="{{ $item }}" class="row">
-                <div for="{{ $item }}" style="visibility : {{ $item.visibility }};" class="app-box"
-                     onclick="openApplication({{ $item.bundleName }})"
-                     onlongpress="longPress({{ $item.AppId }},{{ $item.bundleName }},{{ $item.System }})">
-                    <appicon id="icon-{{ $item.bundleName }}" item-app-icon="{{ $item.AppIcon }}"
-                             item-app-id="{{ $item.AppId }}" item-bundle-name="{{ $item.bundleName }}">
-                    </appicon>
-                    <appname id="name-{{ $item.bundleName }}" item-app-id="{{ $item.AppId }}"
-                             item-label-id="{{ $item.labelId }}"
-                             item-bundle-name="{{ $item.bundleName }}" item-app-name="{{ $item.AppName }}">
-                    </appname>
-                </div>
+<div class="container" style="background-image: {{ $r('image.img_wallpaper_default') }}" onlongpress="onPageLongPress" ontouchstart="touchStart" ontouchmove="touchMove"
+     ontouchend="touchEnd">
+    <swiper class="pageView" loop="false" index="{{ index }}" onchange="pageChange" disabled="{{ disabled }}">
+        <div class="body" for="{{ gridAppsInfos }}" style="display : flex; flex-direction : column;">
+            <div for="{{ (itmInx,itmVal) in $item }}" style="display : flex; flex-direction : column; position : absolute;
+                    width : {{ itmVal.wPosition }} px; opacity : {{ itmVal.opacity }};
+                    top : {{ itmVal.y }}; left : {{ itmVal.x }}; transform: scale({{ itmVal.scale }}, {{ itmVal.scale}});"
+                 onclick="openApplication({{ itmVal.abilityName }}, {{ itmVal.bundleName }})" onlongpress="longPress({{ itmVal }},{{ itmInx }})" focusable="false" onfocus="focus({{$idx}},{{ itmInx }})"
+                 onkey="onAppGridKeyEvent">
+                <appicon id="icon-{{ itmVal.bundleName }}" item-app-icon="{{ itmVal.AppIcon }}"
+                         item-app-id="{{ itmVal.AppId }}" item-bundle-name="{{ itmVal.bundleName }}"
+                         style="width : {{ itmVal.wPixel }} px; height : {{ itmVal.wPixel }} px; margin-left: {{ itmVal.marginPosition }} px;">
+                </appicon>
+                <appname id="name-{{ itmVal.bundleName }}" item-app-id="{{ itmVal.AppId }}"
+                         item-label-id="{{ itmVal.labelId }}"
+                         item-bundle-name="{{ itmVal.bundleName }}" item-app-name="{{ itmVal.AppName }}">
+                </appname>
             </div>
-            <div style="height : 30px;"></div>
         </div>
     </swiper>
     <div class="systemApp">
-        <div class="app-box" for="{{ bottomBar }}" onclick="openApplication({{ $item.AppId }})">
-            <div class="image-box">
-                <image class="app-icon-img" src="{{ $item.AppIcon }}"></image>
-            </div>
-            <text class="app-name">
-                {{ $item.AppName }}
-            </text>
+        <div class="app-box" for="{{ bottomBar }}" onclick="openApplication({{ $item.abilityName }}, {{ $item.bundleName }})"
+             onlongpress="longPress({{ $item }},{{ $idx }})" style="position : absolute;
+                width : {{ $item.wPosition }} px; opacity : {{ $item.opacity }};
+                left : {{ $item.x }}; transform: scale({{ $item.scale }}, {{ $item.scale}});"
+                focusable="false" onfocus="focus({{ BOTTOM_BAR_FOCUS_PAGE }},{{ $idx }})">
+            <appicon id="icon-{{ $item.bundleName }}" item-app-icon="{{ $item.AppIcon }}"
+                     item-app-id="{{ $item.AppId }}" item-bundle-name="{{ $item.bundleName }}"
+                     style="width : {{ $item.wPixel }} px; height : {{ $item.wPixel }} px; margin-left: {{ $item.marginPosition }} px;">
+            </appicon>
+            <appname id="name-{{ $item.bundleName }}" item-app-id="{{ $item.AppId }}"
+                     item-label-id="{{ $item.labelId }}"
+                     item-bundle-name="{{ $item.bundleName }}" item-app-name="{{ $item.AppName }}">
+            </appname>
         </div>
     </div>
+    <div style="display : {{ movingAppInfo.display }}; flex-direction : column; left : {{ movingAppInfo.left }} px;
+            top : {{ movingAppInfo.top }} px; position : absolute; height : {{ pageCoordinateData.cellHeight }} px;
+            width : {{ pageCoordinateData.cellWidth }} px;" if = 'disabled'>
+        <appicon id="icon-{{ selectedAppItem.bundleName }}" item-app-icon="{{ selectedAppItem.AppIcon }}"
+                 item-app-id="{{ selectedAppItem.AppId }}" item-bundle-name="{{ selectedAppItem.bundleName }}"
+                 style="width : {{ selectedAppItem.wPixel }} px; height : {{ selectedAppItem.wPixel }} px;">
+        </appicon>
+    </div>
+    <dialog id="chooseDialog" class="dialog-main">
+        <div class="dialog-div">
+            <div class="inner-btn">
+                <button type="capsule" value="{{$t('strings.launcher_settings')}}" onclick="intoSetting"
+                        class="btn-txt"></button>
+                <button type="capsule" value="{{chooseDialogRightBtnStr}}" onclick="addOrDeleteBlankPage"
+                        class="btn-txt"></button>
+            </div>
+        </div>
+    </dialog>
     <dialog id="simpleDialog" class="dialog-main" oncancel="cancelDialog">
         <div class="dialog-div">
             <div class="inner-txt">
-                <text class="txt">{{ $t('strings.do_you_want_to_uninstall_start') }}{{ uninstallAppName }}{{
-                    $t('strings.do_you_want_to_uninstall_end') }}
+                <text class="txt">{{$t('strings.do_you_want_to_uninstall_start')}}{{$t('strings.do_you_want_to_uninstall_end')}}
                 </text>
             </div>
             <div class="inner-btn">
-                <button type="capsule" value="{{ $t('strings.cancel') }}" onclick="cancelSchedule"
+                <button type="capsule" value="{{$t('strings.cancel')}}" onclick="cancelSchedule"
                         class="btn-txt"></button>
-                <button type="capsule" value="{{ $t('strings.uninstall') }}" onclick="uninstallApplication"
+                <button type="capsule" value="{{$t('strings.uninstall')}}" onclick="uninstallApplication"
                         class="btn-txt"></button>
             </div>
         </div>

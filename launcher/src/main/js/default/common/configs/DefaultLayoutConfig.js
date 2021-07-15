@@ -13,10 +13,14 @@
  * limitations under the License.
  */
 
-var DefaultLayoutConfig = {
+/**
+ * Default configuration of page layout and recent.
+ */
+const DefaultLayoutConfig = {
     DefaultAppPageStartConfig: 'Grid',
-    DefaultGridConfig: 0,
-    DefaultRecentProcessLimit: 6
+    DefaultGridConfig: 1,
+    DefaultRecentProcessLimit: 20,
+    DefaultRecentProcessLimitArray: [5,10,15,20],
 }
 
 export default DefaultLayoutConfig;
