@@ -41,6 +41,7 @@ let mCommonEventSubscribeInfo = {
  * Model class, get data from system API.
  */
 export default class AppModel {
+
     /**
      * Get app information list from system by @ohos.bundle
      *

@@ -44,7 +44,7 @@ export default {
         console.info("Launcher AppListView onInit");
         globalThis.$globalR = this.$r.bind(this);
         mAppListPresenter = new AppListPresenter(this.$app.$def.data.appModel, this.$app.$def.data.mmiModel,
-            this.$app.$def.data.settingsModel, this.$app.$def.data.appListInfoCacheManager);
+            this.$app.$def.data.settingsModel, this.$app.$def.data.appListInfoCacheManager, this.$app.$def.data.resourceManager);
         mAppListPresenter.registerAppListChangeCallback(this.getListCallback.bind(this));
     },
 

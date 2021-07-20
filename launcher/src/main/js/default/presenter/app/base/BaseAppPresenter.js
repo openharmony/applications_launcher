@@ -16,12 +16,14 @@
 import RouterUtil from '../../../common/utils/RouterUtil.js';
 import LayoutConstants from '../../../common/constants/LayoutConstants.js';
 import PageData from '../../../common/constants/PageData.js';
+import PinyinSort from '../../../common/utils/PinyinSort.js';
 
 const UNINSTALL_SUCCESS = true;
 const UNINSTALL_PROHIBITED = "UNINSTALL_PROHIBITED";
 const SETTING_BUNDLE = 'com.ohos.launcher';
 const SETTING_ABILITY = 'com.ohos.launcher.settings.MainAbility';
 const KEY_APP_LIST = "appListInfo";
+const KEY_NAME = "name";
 
 let mViewCallback;
 let mUninstallCallback;
@@ -29,19 +31,22 @@ let mAppListChangeCallback;
 let mAppListInstallListener;
 let mAppListUninstallListener;
 let mAppListChangeListener;
+let mPinyinSort;
 
 /**
  * Base class of list view presenter and grid view presenter.
  */
 export default class BaseAppPresenter {
-    constructor(AppModel, MMIModel, SettingsModel, AppListInfoCacheManager) {
+    constructor(AppModel, MMIModel, SettingsModel, AppListInfoCacheManager, ResourceManager) {
         this.appModel = AppModel;
         this.mmiModel = MMIModel;
         this.settingModel = SettingsModel;
         this.appListInfoCacheManager =AppListInfoCacheManager;
+        this.resourceManager = ResourceManager;
         mAppListInstallListener = this.appListInstallListener.bind(this);
         mAppListUninstallListener = this.appListUninstallListener.bind(this);
         mAppListChangeListener = this.appListChangeListener.bind(this);
+        mPinyinSort = new PinyinSort();
     }
 
     /**
@@ -60,13 +65,17 @@ export default class BaseAppPresenter {
      * @param {object} list - app data.
      */
     getListCallback(list) {
-        let callbacklist = list.sort(
-            function compareFunction(param1, param2) {
-                return param1.AppName.localeCompare(param2.AppName, "zh");
+        for (let item of list) {
+            let appName = this.resourceManager.getAppResourceCache(item.bundleName, KEY_NAME);
+            console.info("Launcher baseAppPresenter getListCallback + appName = " + appName);
+            if(appName == undefined || appName == null || appName == '' || appName === -1) {
+                break;
             }
-        );
+            item.AppName = appName;
+        }
+        let callbackList = list.sort(mPinyinSort.sortByAppName.bind(mPinyinSort));
         this.appListInfoCacheManager.setCache(KEY_APP_LIST, list);
-        mViewCallback(callbacklist);
+        mViewCallback(callbackList);
     }
 
     /**
@@ -281,6 +290,7 @@ export default class BaseAppPresenter {
         console.info("Launcher AppListPresenter appListChangeListener + " + JSON.stringify(item));
         let currentCacheList = this.appListInfoCacheManager.getCache(KEY_APP_LIST);
         method(currentCacheList, item);
+        currentCacheList.sort(mPinyinSort.sortByAppName.bind(mPinyinSort));
         this.appListInfoCacheManager.setCache(KEY_APP_LIST, currentCacheList);
         let callbackList = this.regroupDataAfterInstall(currentCacheList);
         mAppListChangeCallback(callbackList);

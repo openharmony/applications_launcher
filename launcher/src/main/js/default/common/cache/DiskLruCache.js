@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import FileUtils from "../utils/FileUtils.js";
+import DiskLruFileUtils from "./DiskLruFileUtils.js";
 
 /**
  * A class provides persistent operation for memory cache.
@@ -31,7 +31,7 @@ export default class DiskLruCache {
     initMap() {
         console.info("Launcher DiskLruCache initMap start execution");
         try {
-            let arr = FileUtils.readJournal().split("\n").reverse();
+            let arr = DiskLruFileUtils.readJournal().split("\n").reverse();
             let len = arr.length >= this.capacity ? this.capacity : arr.length;
             for (let i = 0;i < len; i++) {
                 this.cache.set(arr[i], arr[i]);
@@ -56,8 +56,8 @@ export default class DiskLruCache {
             //update the cache to recent use
             this.cache.set(key, temp);
             //update local cache to recent use
-            FileUtils.writeJournal(key);
-            return FileUtils.readJsonObj(key)[key];
+            DiskLruFileUtils.writeJournal(key);
+            return DiskLruFileUtils.readJsonObj(key)[key];
         }
         return -1;
     }
@@ -79,8 +79,8 @@ export default class DiskLruCache {
         //update the cache to recent use
         this.cache.set(key, value);
         //update local cache to recent use
-        FileUtils.writeJournal(key);
-        FileUtils.writeJsonObj({
+        DiskLruFileUtils.writeJournal(key);
+        DiskLruFileUtils.writeJsonObj({
             [key] : value
         }, key);
     }
@@ -92,7 +92,7 @@ export default class DiskLruCache {
      */
     remove(key) {
         this.cache.delete(key);
-        FileUtils.removeFile(key);
+        DiskLruFileUtils.removeFile(key);
     }
 
     /**
@@ -100,7 +100,7 @@ export default class DiskLruCache {
      */
     clear() {
         this.cache.forEach(function (value, key) {
-            FileUtils.removeFile(key);
+            DiskLruFileUtils.removeFile(key);
         });
         this.cache.clear();
     }

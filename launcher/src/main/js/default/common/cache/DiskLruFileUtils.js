@@ -13,21 +13,34 @@
  * limitations under the License.
  */
 
-/**
- * An util that provides io functionality between file and JSON object.
- */
 import Fileio from '@ohos.fileio';
 
 const writeFilePath = "/data/accounts/account_0/appdata/com.ohos.launcher/cache/";
+const journalPath = "/data/accounts/account_0/appdata/com.ohos.launcher/cache/journal.txt";
 const READ_DATA_SIZE = 4096;
 
-export default class FileUtils {
+/**
+ * An util that provides io functionality which is used by DiskLruCache.
+ */
+export default class DiskLruFileUtils {
+
+    /**
+     * Read Json file from disk by bundleName.
+     *
+     * @param {string} bundleName - bundleName of the target file
+     * @return {object} read object from file
+     */
+    static readJsonObj(bundleName) {
+        console.info("Launcher FileUtil readJsonObj start execution");
+        let filePath = writeFilePath + bundleName + ".json";
+        return this.readJsonFile(filePath);
+    }
 
     /**
      * Read Json file from disk by file path.
      *
      * @param {string} path - path of the target file.
-     * @return {object} - read object from file
+     * @return {object} read object from file
      */
     static readJsonFile(path) {
         console.info("Launcher FileUtil readJsonFile start execution");
@@ -45,45 +58,62 @@ export default class FileUtils {
     }
 
     /**
-     * Read String from disk by bundleName.
+     * Write Json object to a file.
      *
-     * @param {string} bundleName - bundleName as target file name
-     * @return {string} - read string from file
+     * @param {object} jsonObj - target JSON object will be written
+     * @param {string} bundleName - use bundleName as target file name
      */
-    static readStringFromFile(bundleName) {
-        console.info("Launcher FileUtil readStringFromFile start execution");
+    static writeJsonObj(jsonObj, bundleName) {
+        console.info("Launcher FileUtil writeJsonObj start execution");
         let filePath = writeFilePath + bundleName + ".json";
-        let readStreamSync = null;
+        let content = JSON.stringify(jsonObj);
+        let writeStreamSync = null;
         try {
-            readStreamSync = Fileio.createStreamSync(filePath, "r");
-            let content = this.getContent(readStreamSync);
-            console.info("Launcher FileUtil readStringFromFile finish execution" + content);
-            return content;
+            writeStreamSync = Fileio.createStreamSync(filePath, "w+");
+            writeStreamSync.writeSync(content);
         } catch (e) {
-            console.info("Launcher FileUtil readStringFromFile " + e);
+            console.info("Launcher FileUtil writeJsonObj error: " + e);
         } finally {
-            readStreamSync.closeSync();
+            writeStreamSync.closeSync();
+            console.info("Launcher FileUtil writeJsonObj close sync");
         }
     }
 
     /**
-     * Write string to a file.
+     * Record a key that maps the image as value.
      *
-     * @param {string} string - target string will be written to file
-     * @param {string} bundleName - bundleName as target file name
+     * @param {string} content - the key maps the image file
      */
-    static writeStringToFile(string, bundleName) {
-        console.info("Launcher FileUtil writeStringToFile start execution");
-        let filePath = writeFilePath + bundleName + ".json";
+    static writeJournal(content) {
         let writeStreamSync = null;
         try {
-            writeStreamSync = Fileio.createStreamSync(filePath, "w+");
-            writeStreamSync.writeSync(string);
+            console.info("Launcher FileUtil writeJournal start");
+            writeStreamSync = Fileio.createStreamSync(journalPath, "a+");
+            writeStreamSync.writeSync(content + "\n");
         } catch (e) {
-            console.info("Launcher FileUtil writeStringToFile error: " + e);
+            console.info("Launcher FileUtil writeJournal error: " + e);
         } finally {
             writeStreamSync.closeSync();
-            console.info("Launcher FileUtil writeStringToFile close sync");
+            console.info("Launcher FileUtil writeJournal close sync");
+        }
+    }
+
+    /**
+     * Get the keys that map the images.
+     *
+     * @return {object} object read from file
+     */
+    static readJournal() {
+        console.info("Launcher FileUtil readJournal start execution");
+        let readStreamSync = null;
+        try {
+            readStreamSync = Fileio.createStreamSync(journalPath, "r");
+            return this.getContent(readStreamSync);
+        } catch (e) {
+            console.info("Launcher FileUtil readJournal error: " + e);
+        } finally {
+            readStreamSync.closeSync();
+            console.info("Launcher FileUtil readJournal closeSync");
         }
     }
 
@@ -91,7 +121,7 @@ export default class FileUtils {
      * Read JSON object from a file.
      *
      * @param {object} readStreamSync - stream of target file
-     * @return {object} - object read from file stream
+     * @return {object} object read from file stream
      */
     static getContent(readStreamSync) {
         console.info("Launcher FileUtil getContent start");
@@ -124,5 +154,19 @@ export default class FileUtils {
         return content;
     }
 
+    /**
+     * Remove file.
+     *
+     * @param {string} bundleName - bundleName as target file name
+     */
+    static removeFile(bundleName) {
+        try {
+            console.info("Launcher FileUtil removeFile")
+            //remove file,key : bundlename
+            Fileio.unlinkSync(writeFilePath + bundleName + ".json")
+        } catch (e) {
+            console.error("Launcher FileUtil removeFile delete has failed for " + e)
+        }
+    }
 }
  

@@ -13,11 +13,12 @@
  * limitations under the License.
  */
 
+
+import Router from '@system.router';
+
 /**
  * An util that encapsulates methods from @system.router.
  */
-import Router from '@system.router';
-
 let RouterUtil = function () {
     return {
 
