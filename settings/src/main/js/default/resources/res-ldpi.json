@@ -1,6 +1,8 @@
 {
   "image": {
-    "img_return": "common/pics/img_return.png",
-    "img_to_detail": "common/pics/img_to_detail.png"
+    "svg": {
+      "img_return": "common/pics/ic_back.svg",
+      "img_to_detail": "common/pics/ic_settings_arrow.svg"
+    }
   }
 }

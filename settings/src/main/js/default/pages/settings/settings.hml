@@ -17,7 +17,7 @@
 
 <div class="container">
     <div class="top-bar">
-        <div class="return-icon" style="background-image: {{ $r('image.img_return') }}" onclick="returnToDesktop"></div>
+        <image class="return-icon" src="{{ $r('image.svg.img_return') }}" onclick="returnToDesktop"></image>
         <text class="top-bar-text" >
             {{$t('strings.launcher_settings')}}
         </text>
@@ -39,7 +39,7 @@
                     <text class="settings-list-layout-text">
                         {{layoutStyle}}
                     </text>
-                    <div class="to-setting-detail-icon" style="background-image: {{ $r('image.img_to_detail') }}"></div>
+                    <image class="to-setting-detail-icon" src="{{ $r('image.svg.img_to_detail') }}"></image>
                 </div>
             </div>
             <div if="{{!checked}}" class="settings-list-bar" onclick="showLauncherLayoutDialog" >
@@ -52,7 +52,7 @@
                     <text class="settings-list-layout-text">
                         {{launcherLayout}}
                     </text>
-                    <div class="to-setting-detail-icon" style="background-image: {{ $r('image.img_to_detail') }}"></div>
+                    <image class="to-setting-detail-icon" src="{{ $r('image.svg.img_to_detail') }}"></image>
                 </div>
             </div>
             <div class="settings-list-bar" onclick="showRecentTasksDialog">
@@ -65,7 +65,7 @@
                     <text class="settings-list-layout-text" >
                         {{recentProcessLimit}}
                     </text>
-                    <div class="to-setting-detail-icon" style="background-image: {{ $r('image.img_to_detail') }}"></div>
+                    <image class="to-setting-detail-icon" src="{{ $r('image.svg.img_to_detail') }}"></image>
                 </div>
             </div>
         </div>

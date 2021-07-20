@@ -98,7 +98,7 @@ export default {
         globalThis.$globalR = this.$r.bind(this);
         mResourceManager = this.$app.$def.data.resourceManager;
         mAppGridPresenter = new AppGridPresenter(this.$app.$def.data.appModel, this.$app.$def.data.mmiModel,
-            this.$app.$def.data.settingsModel, this.$app.$def.data.appListInfoCacheManager);
+            this.$app.$def.data.settingsModel, this.$app.$def.data.appListInfoCacheManager, this.$app.$def.data.resourceManager);
         mAppGridPresenter.registerAppListChangeCallback(this.getGridListCallback.bind(this));
         mScreenHeight = this.$app.$def.data.screenHeight * PROPORTION;
         mScreenWidth = this.$app.$def.data.screenWidth;

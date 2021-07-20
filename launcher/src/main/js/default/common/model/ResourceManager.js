@@ -76,6 +76,7 @@ export default class ResourceManager {
     getAppName(labelId, bundleName, appName, callback) {
         if (labelId == null || labelId == undefined || labelId == "" || labelId <= 0) {
             console.info('Launcher ResourceManager getAppName callback ' + appName);
+            this.#appResourceCacheManager.setCache(bundleName, KEY_NAME, appName);
             callback(appName);
         } else {
             let name = this.#appResourceCacheManager.getCache(bundleName, KEY_NAME);

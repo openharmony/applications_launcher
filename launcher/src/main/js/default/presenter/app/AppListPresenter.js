@@ -21,8 +21,8 @@ import BaseAppPresenter from './base/BaseAppPresenter.js';
  * @extends BaseAppPresenter.
  */
 export default class AppListPresenter extends BaseAppPresenter {
-    constructor(AppModel, MMIModel, SettingsModel, AppListInfoCacheManager) {
-        super(AppModel, MMIModel, SettingsModel, AppListInfoCacheManager);
+    constructor(AppModel, MMIModel, SettingsModel, AppListInfoCacheManager, ResourceManager) {
+        super(AppModel, MMIModel, SettingsModel, AppListInfoCacheManager, ResourceManager);
     }
 
     /**
