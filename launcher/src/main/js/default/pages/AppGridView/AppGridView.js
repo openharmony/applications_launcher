@@ -193,21 +193,20 @@ export default {
      *
      * @param {object} callback - Uninstall result.
      */
-    getUninstallApp(callback) {
-        console.info("Launcher AppGridView getUninstallApp");
-        let success = callback;
-        if (success == UNINSTALL_PROHIBITED) {
+    getUninstallApp(result) {
+        console.info("Launcher AppGridView getUninstallApp callback = " + result);
+        if (result == UNINSTALL_PROHIBITED) {
             Prompt.showToast({
                 message: this.$t('strings.prohibited')
             });
-        } else if (success == UNINSTALL_SUCCESS) {
+        } else if (result == UNINSTALL_SUCCESS) {
             Prompt.showToast({
                 message: this.$t('strings.uninstall_succeeded')
             });
             mAppListInfo = [];
             this.gridAppsInfos = [];
             mAppGridPresenter.getGridList(this.getGridListCallback.bind(this));
-        } else if (success == UNINSTALL_FAILED) {
+        } else if (result == UNINSTALL_FAILED) {
             Prompt.showToast({
                 message: this.$t('strings.uninstall_failed')
             });

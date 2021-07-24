@@ -3,6 +3,7 @@
     "loading": "加载中...",
     "cancelled": "已取消",
     "uninstall_succeeded": "卸载成功",
+    "uninstall_failed": "卸载失败",
     "uninstall": "卸载",
     "cancel": "取消",
     "prohibited": "禁止卸载",

@@ -28,7 +28,7 @@ let mBundleInfoList = [];
 let mAppListInstallListener = [];
 let mAppListUninstallListener = [];
 let mAppListChangeListener = [];
-let installCallback;
+let mUninstallCallback;
 let systemApplicationName = SystemApplication.SystemApplicationName;
 let mCommonEventSubscriber = null;
 let mCommonEventSubscribeInfo = {
@@ -89,7 +89,7 @@ export default class AppModel {
      */
     uninstallApp(uninstallBundleName, callback) {
         console.info('Launcher AppModel uninstallApp appId' + uninstallBundleName);
-        installCallback = callback;
+        mUninstallCallback = callback;
         let result = BundleMgr.getBundleInstaller().then((data) => {
             if (CheckEmptyUtils.isEmpty(data)) {
                 console.error("Launcher AppModel uninstallApp getBundleInstaller ERROR");
@@ -99,7 +99,7 @@ export default class AppModel {
                     userId: 0,
                     isKeepData: false
                 }
-            }, this.#OnReceiveinstallEvent);
+            }, this.#uninstallCallback);
         }).catch(error =>
         console.info("Launcher AppModel uninstall err " + error));
     }
@@ -109,14 +109,14 @@ export default class AppModel {
      *
      * @param {object} data - uninstall result data
      */
-    #OnReceiveinstallEvent = (data) => {
-        console.info('Launcher AppModel OnReceiveinstallEvent ' + data);
+    #uninstallCallback = (err, data) => {
+        console.info('Launcher AppModel uninstallCallback ' + JSON.stringify(data));
         if (data.statusMessage == "SUCCESS") {
-            installCallback(UNINSTALL_SUCCESS);
+            mUninstallCallback(UNINSTALL_SUCCESS);
         } else {
-            installCallback(UNINSTALL_FAILED);
+            mUninstallCallback(UNINSTALL_FAILED);
         }
-        console.info('Launcher AppModel OnReceiveinstallEvent ');
+        console.info('Launcher AppModel uninstallCallback ');
     }
 
     /**
