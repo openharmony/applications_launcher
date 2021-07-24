@@ -3,6 +3,7 @@
     "loading": "Loading...",
     "cancelled": "Cancelled",
     "uninstall_succeeded": "Successfully uninstalled",
+    "uninstall_failed": "Uninstall failed",
     "uninstall": "Uninstall",
     "cancel": "Cancel",
     "prohibited": "Uninstall prohibited ",
