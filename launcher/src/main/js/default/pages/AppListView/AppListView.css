@@ -32,6 +32,10 @@
     justify-content: center;
 }
 
+.list-item:focus {
+    transform: scale(1.05,1.05);
+}
+
 .appitem {
     background-color: #66123456;
     border-radius: 20px;

@@ -16,6 +16,7 @@
 import BaseAppPresenter from './base/BaseAppPresenter.js';
 
 const KEY_APP_LIST = "appListInfo";
+const BOTTOM_BAR_FLAG = -1;
 
 let mGridConfig;
 let mViewCallback;
@@ -43,26 +44,184 @@ export default class AppGridPresenter extends BaseAppPresenter {
     }
 
     /**
-     * Change the application position after move it.
+     * Move icon from swiper to bottomBar.
      *
-     * @param {object} startInfo - Starting position.
-     * @param {object} endInfo - Ending posiition.
+     * @param {object} startInfo - TouchStart icon information.
+     * @param {object} endInfo - TouchEnd position information.
+     * @param {object} bottomBar - BottomBar information.
+     *
      * @return {object} Application layout information.
      */
-    layoutAdjustment(startInfo, endInfo) {
+    topToBottomAdjustment(startInfo, endInfo, bottomBar) {
         let info = mSettingsModel.getLayoutInfo();
         let layoutInfo = info.layoutInfo;
-        mBundleInfoList = this.appListInfoCacheManager.getCache(KEY_APP_LIST);
-        if (endInfo.row == -1) {
-            this.#moveBottomLayout(startInfo, endInfo, layoutInfo);
-            info.layoutInfo = layoutInfo;
-            mSettingsModel.setLayoutInfo(info);
-            return this.#pagingFiltering();
+        let bottomBarInfo = info.bottomBarInfo;
+        let moveItem = {
+            bundleName: "",
+            type: 0,
+            page: 0,
+            row: 0,
+            column: 0
+        };
+        for (let i = layoutInfo.length - 1; i >= 0; i--) {
+            if (layoutInfo[i].page == startInfo.page && layoutInfo[i].row == startInfo.row && layoutInfo[i].column == startInfo.column) {
+                moveItem.bundleName = layoutInfo[i].bundleName;
+                moveItem.type = layoutInfo[i].type;
+                moveItem.page = layoutInfo[i].page;
+                moveItem.row = layoutInfo[i].row;
+                moveItem.column = layoutInfo[i].column;
+                layoutInfo.splice(i, 1);
+            }
         }
+        if (bottomBar.length == 0) {
+            bottomBarInfo.push(moveItem);
+        } else if (bottomBar.length > 0 && bottomBar.length < 5) {
+            for (let i = 0; i < bottomBar.length; i++) {
+                if (i != bottomBar.length - 1 && bottomBar[i].x < endInfo.endX && bottomBar[i + 1].x > endInfo.endX){
+                    bottomBarInfo.splice(i + 1,0,moveItem);
+                    break;
+                } else if (i == 0 && endInfo.endX < bottomBar[i].x) {
+                    bottomBarInfo.splice(i,0,moveItem);
+                    break;
+                } else if (i == bottomBar.length - 1 && endInfo.endX > bottomBar[i].x) {
+                    bottomBarInfo.push(moveItem);
+                    break;
+                }
+            }
+        } else if (bottomBar.length >= 5) {
+            this.#swapAppIcon(moveItem, endInfo, bottomBar, bottomBarInfo);
+            layoutInfo.push(moveItem);
+        }
+        info.layoutInfo = layoutInfo;
+        info.bottomBarInfo = bottomBarInfo;
+        mSettingsModel.setLayoutInfo(info);
+        return this.#pagingFiltering();
+    }
+
+    /**
+     * Move icon from bottombar to bottomBar.
+     *
+     * @param {object} startInfo - TouchStart position information.
+     * @param {object} endInfo - TouchEnd position information.
+     * @param {object} bottomBar - BottomBar information.
+     *
+     * @return {object} Application layout information.
+     */
+    bottomToBottomAdjustment(startInfo, endInfo, bottomBar) {
+        let info = mSettingsModel.getLayoutInfo();
+        let bottomBarInfo = info.bottomBarInfo;
+        let moveItem = {
+            bundleName: "",
+            type: 0,
+            page: 0,
+            row: 0,
+            column: 0,
+        }
+        for (let i = bottomBar.length - 1; i >= 0; i--) {
+            if (startInfo.startX >= bottomBar[i].x && startInfo.startX < bottomBar[i].x + bottomBar[i].wPixel) {
+                moveItem.bundleName = bottomBarInfo[i].bundleName;
+                moveItem.type = bottomBarInfo[i].type;
+                moveItem.page = bottomBarInfo[i].page;
+                moveItem.row = bottomBarInfo[i].row;
+                moveItem.column = bottomBarInfo[i].column;
+                bottomBarInfo.splice(i,1);
+            }
+        }
+        for (let i = 0; i < bottomBar.length; i++) {
+            if (i == 0 && endInfo.endX < bottomBar[i].x) {
+                bottomBarInfo.splice(i,0,moveItem);
+                break;
+            } else if (i != bottomBar.length - 1 && endInfo.endX >= bottomBar[i].x && endInfo.endX < bottomBar[i + 1].x) {
+                bottomBarInfo.splice(i,0,moveItem);
+                break;
+            } else if (i == bottomBar.length - 1 && endInfo.endX >= bottomBar[i].x) {
+                bottomBarInfo.push(moveItem);
+                break;
+            }
+        }
+        info.bottomBarInfo = bottomBarInfo;
+        mSettingsModel.setLayoutInfo(info);
+        return this.#pagingFiltering();
+    }
+
+    /**
+     * Move icon from bottombar to swiper.
+     *
+     * @param {object} startInfo - TouchStart position information.
+     * @param {object} endInfo - TouchEnd position information.
+     * @param {object} bottomBar - BottomBar information.
+     *
+     * @return {object} Application layout information.
+     */
+    bottomToTopAdjustment(startInfo, endInfo, bottomBar) {
+        let info = mSettingsModel.getLayoutInfo();
+        let layoutInfo = info.layoutInfo;
+        let bottomBarInfo = info.bottomBarInfo;
+        let moveItem = {
+            bundleName: "",
+            type: 0,
+            page: -1,
+            row: -1,
+            column: -1
+        }
+        for (let i = bottomBar.length - 1; i >= 0; i--) {
+            if (startInfo.startX >= bottomBar[i].x && startInfo.startX < bottomBar[i].x + bottomBar[i].wPixel) {
+                moveItem.bundleName = bottomBarInfo[i].bundleName;
+                moveItem.type = bottomBarInfo[i].type;
+                bottomBarInfo.splice(i,1);
+                layoutInfo.push(moveItem);
+                break;
+            }
+        }
+        this.#moveLayout(moveItem, endInfo, layoutInfo, moveItem);
+        for (let i = layoutInfo.length - 1; i >= 0; i--) {
+            if (layoutInfo[i].page == -1 && layoutInfo[i].column == -1 && layoutInfo[i].row == -1) {
+                layoutInfo.splice(i,1);
+                break;
+            }
+        }
+        info.layoutInfo = layoutInfo;
+        info.bottomBarInfo = bottomBarInfo;
+        mSettingsModel.setLayoutInfo(info);
+        return this.#pagingFiltering();
+    }
+
+    /**
+     * Move icon from swiper to swiper.
+     *
+     * @param {object} startInfo - TouchStart position information.
+     * @param {object} endInfo - TouchEnd position information.
+     *
+     * @return {object} Application layout information.
+     */
+    topToTopAdjustment(startInfo, endInfo) {
+        let info = mSettingsModel.getLayoutInfo();
+        let layoutInfo = info.layoutInfo;
         this.#moveLayout(startInfo, endInfo, layoutInfo, startInfo);
         info.layoutInfo = layoutInfo;
         mSettingsModel.setLayoutInfo(info);
         return this.#pagingFiltering();
+    }
+
+    /**
+     * Move icon.
+     *
+     * @param {object} startInfo - Starting position.
+     * @param {object} endInfo - Ending posiition.
+     * @param {object} bottomBar - BottomBar information.
+     *
+     * @return {object} Application layout information.
+     */
+    layoutAdjustment(startInfo, endInfo, bottomBar) {
+        if (startInfo.row == BOTTOM_BAR_FLAG && endInfo.row != BOTTOM_BAR_FLAG) {
+            return this.bottomToTopAdjustment(startInfo, endInfo, bottomBar);
+        } else if (startInfo.row == BOTTOM_BAR_FLAG && endInfo.row == BOTTOM_BAR_FLAG) {
+            return this.bottomToBottomAdjustment(startInfo, endInfo, bottomBar);
+        } else if (startInfo.row != BOTTOM_BAR_FLAG && endInfo.row == BOTTOM_BAR_FLAG) {
+            return this.topToBottomAdjustment(startInfo, endInfo, bottomBar);
+        }else {
+            return this.topToTopAdjustment(startInfo, endInfo);
+        }
     }
 
     /**
@@ -158,8 +317,11 @@ export default class AppGridPresenter extends BaseAppPresenter {
      */
     #pagingFiltering = () => {
         let appListInfo = [];
+        let appBottomBarInfo = [];
+        let appInfo = {};
         let info = this.#getLayoutInfo();
         let layoutInfo = info.layoutInfo;
+        let bottomInfo = info.bottomBarInfo;
         for (let i = 0;i < layoutInfo.length; i++) {
             for (let j = 0; j < mBundleInfoList.length; j++) {
                 if (layoutInfo[i].bundleName == mBundleInfoList[j].bundleName) {
@@ -182,7 +344,27 @@ export default class AppGridPresenter extends BaseAppPresenter {
                 }
             }
         }
-        return appListInfo;
+        for (let i = 0;i < bottomInfo.length; i++) {
+            for (let j = 0; j < mBundleInfoList.length; j++) {
+                if (bottomInfo[i].bundleName == mBundleInfoList[j].bundleName) {
+                    appBottomBarInfo.push(
+                        {
+                            System: mBundleInfoList[j].System,
+                            AppName: mBundleInfoList[j].AppName,
+                            AppId: mBundleInfoList[j].AppId,
+                            AppIcon: mBundleInfoList[j].AppIcon,
+                            bundleName: mBundleInfoList[j].bundleName,
+                            labelId: mBundleInfoList[j].labelId,
+                            abilityName: mBundleInfoList[j].abilityName,
+                            type: 0
+                        }
+                    );
+                }
+            }
+        }
+        appInfo.appListInfo = appListInfo;
+        appInfo.appBottomBarInfo = appBottomBarInfo;
+        return appInfo;
     }
 
     /**
@@ -191,33 +373,43 @@ export default class AppGridPresenter extends BaseAppPresenter {
      * @param {object} info - The info which is needed to be verify.
      * @return {boolean} Verify result.
      */
-    #ifRationality = (info) => {
+    #ifLayoutRationality = (info) => {
         let column = mGridConfig.column;
         let row = mGridConfig.row;
         //verify whether the info is null.
-        if(this.#ifInfoIsNull(info)) {
+        if (this.#ifInfoIsNull(info)) {
             return false;
         }
         let layoutDescription = info.layoutDescription;
         //verify whether the layoutDescription is diffrent.
-        if(this.#ifDescriptionIsDiffrent(layoutDescription, row, column)) {
+        if (this.#ifDescriptionIsDiffrent(layoutDescription, row, column)) {
             return false;
         }
         let layoutInfo = info.layoutInfo;
         //verify whether the layoutInfo's row and column is more than standard.
-        if(this.#ifColumnOrRowAreBigger(layoutInfo, row, column)) {
-            return false;
-        }
-        //verify whether the bottomBar's position is duplicated.
-        if(this.#ifDuplicateBottomBarPosition(layoutInfo)) {
+        if (this.#ifColumnOrRowAreBigger(layoutInfo, row, column)) {
             return false;
         }
         //verify whether the layoutInfo's position is duplicated.
-        if(this.#ifDuplicatePosition(layoutInfo)) {
+        if (this.#ifDuplicatePosition(layoutInfo)) {
             return false;
         }
         //verify whether the layoutInfo's bundleName is duplicated.
-        if(this.#ifDuplicateBundleName(layoutInfo)) {
+        if (this.#ifDuplicateBundleName(layoutInfo)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Verify whether the info is legal.
+     *
+     * @param {object} bottomBarInfo - The bottomBarInfo which is needed to be verify.
+     * @return {boolean} Verify result.
+     */
+    #ifBottomBarRationality = (bottomBarInfo) => {
+        //verify whether the bottomBar's length is more than standard.
+        if (bottomBarInfo == undefined || this.#ifBottomBarIsBigger(bottomBarInfo)) {
             return false;
         }
         return true;
@@ -230,7 +422,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
      * @return {boolean} Verify result.
      */
     #ifInfoIsNull = (info) => {
-        if(info == undefined || info == '' || info == {} || info == null) {
+        if (info == undefined || info == '' || info == {} || info == null) {
             return true;
         }
         return false;
@@ -270,22 +462,14 @@ export default class AppGridPresenter extends BaseAppPresenter {
     }
 
     /**
-     * Verify whether the bottomBar's position is duplicated.
+     * Verify whether the bottomBar's length is more than standard.
      *
-     * @param {object} layoutInfo - The layoutInfo which is needed to be verify.
+     * @param {object} bottomBarInfo - The bottomBarInfo which is needed to be verify.
      * @return {boolean} Verify result.
      */
-    #ifDuplicateBottomBarPosition = (layoutInfo) => {
-        for (let i = 0; i < layoutInfo.length; i++) {
-            if (layoutInfo[i].row < 0) {
-                for (let j = layoutInfo.length - 1; j > 0 && j > i; j--) {
-                    if (i != j && layoutInfo[j].row < 0) {
-                        if (layoutInfo[i].column == layoutInfo[j].column) {
-                         return true;
-                        }
-                    }
-                }
-            }
+    #ifBottomBarIsBigger = (bottomBarInfo) => {
+        if (bottomBarInfo.length > 5) {
+            return true;
         }
         return false;
     }
@@ -360,6 +544,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
     #updateLayoutInfo = (info) => {
         let layoutDescription = info.layoutDescription;
         let layoutInfo = info.layoutInfo;
+        let bottomBarInfo = info.bottomBarInfo;
         let column = mGridConfig.column;
         let row = mGridConfig.row;
         let newApp = [];
@@ -378,6 +563,18 @@ export default class AppGridPresenter extends BaseAppPresenter {
                 newApp.push(mBundleInfoList[i]);
             }
         }
+        for (let i = newApp.length - 1; i >= 0; i--) {
+            let sign  = false;
+            for (let j = 0; j < bottomBarInfo.length; j++) {
+                if (newApp[i].bundleName == bottomBarInfo[j].bundleName) {
+                    sign = true;
+                    break;
+                }
+            }
+            if (sign) {
+                newApp.splice(i, 1);
+            }
+        }
         //Detect uninstalled apps
         for (let i in layoutInfo) {
             let sign = false;
@@ -391,6 +588,19 @@ export default class AppGridPresenter extends BaseAppPresenter {
                 layoutInfo.splice(i, 1);
             }
         }
+        for (let i in bottomBarInfo) {
+            let sign  = false;
+            for (let j in mBundleInfoList) {
+                if (bottomBarInfo[i].bundleName == mBundleInfoList[j].bundleName) {
+                    sign = true;
+                    break;
+                }
+            }
+            if (!sign) {
+                bottomBarInfo.splice(i, 1);
+            }
+        }
+
         //The latest info position in the page
         let existNumber = this.#getExistNumber(layoutInfo);
         //Add new app
@@ -406,6 +616,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
         }
        info.layoutDescription = layoutDescription;
        info.layoutInfo = layoutInfo;
+       info.bottomBarInfo = bottomBarInfo;
         return info;
     }
 
@@ -415,30 +626,39 @@ export default class AppGridPresenter extends BaseAppPresenter {
      * @return {object} Layout information.
      */
     #getLayoutInfo = () => {
-        let layoutInfo = [];
-        layoutInfo = mSettingsModel.getLayoutInfo();
-        let isLegal = this.#ifRationality(layoutInfo);
-        if (isLegal) {
-            layoutInfo = this.#updateLayoutInfo(layoutInfo);
-        } else if (this.#ifRationality(mSettingsModel.getDefaultLayoutInfo())) {
-            layoutInfo = this.#updateLayoutInfo(mSettingsModel.getDefaultLayoutInfo());
-        } else {
-            layoutInfo = this.#updateLayoutInfo(this.#createNewLayoutInfo());
+        let info = {};
+        info = mSettingsModel.getLayoutInfo();
+        let bottomBarInfo = info.bottomBarInfo;
+        let isBottomBarLegal = this.#ifBottomBarRationality(bottomBarInfo);
+        let isLegal = this.#ifLayoutRationality(info);
+        if (isLegal && isBottomBarLegal) {
+            info = this.#updateLayoutInfo(info);
+        } else if (!isBottomBarLegal) {
+            let defaultInfo = mSettingsModel.getDefaultLayoutInfo();
+            let defaultBottomBarInfo = defaultInfo.bottomBarInfo;
+            let isDefaultLayoutLegal = this.#ifLayoutRationality(defaultInfo);
+            let isDefaultBottomBarLegal = this.#ifBottomBarRationality(defaultBottomBarInfo);
+            if (isDefaultLayoutLegal && isDefaultBottomBarLegal) {
+                info = this.#updateLayoutInfo(mSettingsModel.getDefaultLayoutInfo());
+            } else {
+                info = this.#updateLayoutInfo(this.#createNewInfo());
+            }
+        } else if (isBottomBarLegal && !isLegal) {
+                info = this.#updateLayoutInfo(this.#createNewLayoutInfo());
         }
-        mSettingsModel.setLayoutInfo(layoutInfo);
-        return layoutInfo;
+        mSettingsModel.setLayoutInfo(info);
+        return info;
     }
 
     /**
-     * Create a new layout information.
+     * Create a new layout information(include bottomBar).
      *
      * @return {object} New layout information.
      */
-    #createNewLayoutInfo = () => {
-        let layoutInfo = mSettingsModel.getLayoutInfo();
+    #createNewInfo = () => {
         let column = mGridConfig.column;
         let row = mGridConfig.row;
-        let layoutNum = layoutInfo.layoutInfo.length;
+        let layoutNum = mBundleInfoList.length;
         let maxPerPage = column * row;
         let pageNum = Math.ceil(layoutNum/maxPerPage);
         let newLayoutInfo = {};
@@ -448,60 +668,35 @@ export default class AppGridPresenter extends BaseAppPresenter {
             "column" : column,
         }
         newLayoutInfo.layoutInfo = [];
+        newLayoutInfo.bottomBarInfo = [];
         return newLayoutInfo;
     }
 
     /**
-     * Move application to bottomBar.
+     * Create a new layout information.
+     *
+     * @return {object} New layout information.
      */
-    #moveBottomLayout = (startInfo, endInfo, layoutInfo) => {
+    #createNewLayoutInfo = () => {
+        let info = mSettingsModel.getLayoutInfo();
         let column = mGridConfig.column;
-        let bottomBarLayoutInfo = [];
-        let moveItem = {
-            bundleName: "",
-            type: 0,
-            page: 0,
-            row: 0,
-            column: 0,
-        };
-        for (let i = layoutInfo.length - 1; i >= 0; i--) {
-            if (layoutInfo[i].page == startInfo.page && layoutInfo[i].row == startInfo.row && layoutInfo[i].column == startInfo.column) {
-                moveItem.bundleName = layoutInfo[i].bundleName;
-                moveItem.type = layoutInfo[i].type;
-                moveItem.page = layoutInfo[i].page;
-                moveItem.row = layoutInfo[i].row;
-                moveItem.column = layoutInfo[i].column;
-                layoutInfo.splice(i, 1);
-            }
+        let row = mGridConfig.row;
+        let layoutNum = info.layoutInfo.length;
+        let maxPerPage = column * row;
+        let pageNum = Math.ceil(layoutNum/maxPerPage);
+        let newLayoutInfo = {};
+        newLayoutInfo.layoutDescription = {
+            "pageCount" : pageNum,
+            "row" : row,
+            "column" : column
         }
-        for (let i = layoutInfo.length - 1; i >= 0; i--) {
-            if (layoutInfo[i].row == -1) {
-                bottomBarLayoutInfo.push(layoutInfo[i]);
-                layoutInfo.splice(i, 1);
-            }
-        }
-
-        if (bottomBarLayoutInfo.length >= column) {
-            this.#swapAppIcon(moveItem, endInfo, bottomBarLayoutInfo);
+        newLayoutInfo.layoutInfo = [];
+        if (info.bottomBarInfo == undefined) {
+            newLayoutInfo.bottomBarInfo = [];
         } else {
-            if (this.#isBottomEndPositionEmpty(endInfo, bottomBarLayoutInfo)) {
-                moveItem.page = endInfo.page;
-                moveItem.row = endInfo.row;
-                moveItem.column = endInfo.column;
-            } else {
-                if (this.#isBottomEmptyPositionAtForward(endInfo, bottomBarLayoutInfo)) {
-                    this.#moveBottomLayoutForward(moveItem, endInfo, bottomBarLayoutInfo);
-                } else {
-                    this.#moveBottomLayoutBackward(moveItem, endInfo, bottomBarLayoutInfo);
-                }
-            }
+            newLayoutInfo.bottomBarInfo = info.bottomBarInfo;
         }
-
-        bottomBarLayoutInfo.push(moveItem);
-
-        for (let i = 0;i < bottomBarLayoutInfo.length; i++) {
-            layoutInfo.push(bottomBarLayoutInfo[i]);
-        }
+        return newLayoutInfo;
     }
 
     /**
@@ -509,123 +704,43 @@ export default class AppGridPresenter extends BaseAppPresenter {
      *
      * @param {object} moveItem - Started application information.
      * @param {object} endInfo - Ended application information.
-     * @param {object} bottomBarLayoutInfo - BottomBar layout information.
+     * @param {object} bottomBarInfo - BottomBar layout information.
      */
-    #swapAppIcon = (moveItem, endInfo, bottomBarLayoutInfo) => {
-        let tmp = {
-            page: 0,
-            row: 0,
-            column: 0
-        };
-        for (let i = 0;i < bottomBarLayoutInfo.length; i++) {
-            if (bottomBarLayoutInfo[i].row == endInfo.row && bottomBarLayoutInfo[i].column == endInfo.column) {
-                tmp.page = bottomBarLayoutInfo[i].page;
-                tmp.row = bottomBarLayoutInfo[i].row;
-                tmp.column = bottomBarLayoutInfo[i].column;
-                bottomBarLayoutInfo[i].page = moveItem.page;
-                bottomBarLayoutInfo[i].row = moveItem.row;
-                bottomBarLayoutInfo[i].column = moveItem.column;
-                moveItem.page = tmp.page;
-                moveItem.row = tmp.row;
-                moveItem.column = tmp.column;
-            }
+    #swapAppIcon = (moveItem, endInfo, bottomBar, bottomBarInfo) => {
+        let tempInfo = {
+            bundleName: moveItem.bundleName,
+            type: moveItem.type,
+            page: moveItem.page,
+            row: moveItem.row,
+            column: moveItem.column
         }
-    }
-
-    /**
-     * Verify whether the moveEnd position is null while the moveEnd position is in bottomBar.
-     *
-     * @param {object} endInfo -  MoveEnd position information.
-     * @param {object} bottomBarLayoutInfo - BottomBar layout information.
-     * @return {boolean} Verify result.
-     */
-    #isBottomEndPositionEmpty = (endInfo, bottomBarLayoutInfo) => {
-        let isEndPositionEmpty = true;
-        for (let i = 0;i < bottomBarLayoutInfo.length; i++) {
-            if (bottomBarLayoutInfo[i].row == endInfo.row && bottomBarLayoutInfo[i].column == endInfo.column) {
-                isEndPositionEmpty = false;
+        for (let i = 0; i < bottomBar.length; i++) {
+            if (endInfo.endX < bottomBar[i].x && i == 0) {
+                moveItem.bundleName = bottomBarInfo[i].bundleName;
+                moveItem.type = bottomBarInfo[i].type;
+                bottomBarInfo[i].bundleName = tempInfo.bundleName;
+                bottomBarInfo[i].type = tempInfo.type;
+                bottomBarInfo[i].page = tempInfo.page;
+                bottomBarInfo[i].row = tempInfo.row;
+                bottomBarInfo[i].column = tempInfo.column;
                 break;
-            }
-        }
-        return isEndPositionEmpty;
-    }
-
-    /**
-     * Verify whether there is an empty position in front of the moveEnd position.
-     *
-     * @param {object} endInfo -  MoveEnd position information.
-     * @param {object} bottomBarLayoutInfo - BottomBar layout information.
-     * @return {boolean} Verify result.
-     */
-    #isBottomEmptyPositionAtForward = (endInfo, bottomBarLayoutInfo) => {
-        let isEmptyPositionAtForward = true;
-        for (let i = endInfo.column;i < mGridConfig.column; i++) {
-            isEmptyPositionAtForward = true;
-            for (let j = 0;j < bottomBarLayoutInfo.length; j++) {
-                if (bottomBarLayoutInfo[j].column == i) {
-                    isEmptyPositionAtForward = false;
-                }
-            }
-            if (isEmptyPositionAtForward) {
+            } else if (i != bottomBar.length - 1 && endInfo.endX >= bottomBar[i].x && endInfo.endX < bottomBar[i + 1].x) {
+                moveItem.bundleName = bottomBarInfo[i].bundleName;
+                moveItem.type = bottomBarInfo[i].type;
+                bottomBarInfo[i].bundleName = tempInfo.bundleName;
+                bottomBarInfo[i].type = tempInfo.type;
+                bottomBarInfo[i].page = tempInfo.page;
+                bottomBarInfo[i].row = tempInfo.row;
+                bottomBarInfo[i].column = tempInfo.column;
                 break;
-            }
-        }
-        return isEmptyPositionAtForward;
-    }
-
-    /**
-     * The icons go forwards.
-     *
-     * @param {object} moveItem - The moving item.
-     * @param {object} endInfo - MoveEnd position information.
-     * @param {object} bottomBarLayoutInfo - BottomBar layout information.
-     */
-    #moveBottomLayoutForward = (moveItem, endInfo, bottomBarLayoutInfo) => {
-        moveItem.page = endInfo.page;
-        moveItem.row = endInfo.row;
-        moveItem.column = endInfo.column;
-        let cTmp = [];
-        for (let j = 0;j < bottomBarLayoutInfo.length; j++) {
-            cTmp.push(bottomBarLayoutInfo[j].column);
-        }
-        for (let i = endInfo.column;i < mGridConfig.column; i++) {
-            let isColumnEmpty = true;
-            for (let j = 0;j < bottomBarLayoutInfo.length; j++) {
-                if (cTmp[j] == i) {
-                    isColumnEmpty = false;
-                    bottomBarLayoutInfo[j].column = cTmp[j] + 1;
-                }
-            }
-            if (isColumnEmpty) {
-                break;
-            }
-        }
-    }
-
-    /**
-     * The icons go backwards.
-     *
-     * @param {object} moveItem - Moving item information.
-     * @param {object} endInfo - MoveEnd position information.
-     * @param {object} bottomBarLayoutInfo - BottomBar layout information.
-     */
-    #moveBottomLayoutBackward = (moveItem, endInfo, bottomBarLayoutInfo) => {
-        moveItem.page = endInfo.page;
-        moveItem.row = endInfo.row;
-        moveItem.column = endInfo.column;
-        let cTmp = [];
-        for (let j = 0;j < bottomBarLayoutInfo.length; j++) {
-            cTmp.push(bottomBarLayoutInfo[j].column);
-        }
-        for (let i = endInfo.column;i >= 0; i--) {
-            let isColumnEmpty = true;
-            for (let j = 0;j < bottomBarLayoutInfo.length; j++) {
-                if (cTmp[j] == i) {
-                    isColumnEmpty = false;
-                    bottomBarLayoutInfo[j].column = cTmp[j] - 1;
-                }
-            }
-            if (isColumnEmpty) {
+            } else if (i == bottomBar.length - 1 && endInfo.endX >= bottomBar[i].x) {
+                moveItem.bundleName = bottomBarInfo[i].bundleName;
+                moveItem.type = bottomBarInfo[i].type;
+                bottomBarInfo[i].bundleName = tempInfo.bundleName;
+                bottomBarInfo[i].type = tempInfo.type;
+                bottomBarInfo[i].page = tempInfo.page;
+                bottomBarInfo[i].row = tempInfo.row;
+                bottomBarInfo[i].column = tempInfo.column;
                 break;
             }
         }
@@ -664,7 +779,6 @@ export default class AppGridPresenter extends BaseAppPresenter {
         });
 
         if (endLayoutInfo != undefined && !(endLayoutInfo.page == startInfo.page && endLayoutInfo.row == startInfo.row && endLayoutInfo.column == startInfo.column)) {
-
             if (endLayoutInfo.row == mGridConfig.row - 1 && endLayoutInfo.column == mGridConfig.column - 1) {
                 return false;
             }

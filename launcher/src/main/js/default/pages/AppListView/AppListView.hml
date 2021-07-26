@@ -23,7 +23,7 @@
         <list-item class="list-item" for="{{ appList }}" focusable="false" onfocus="focus({{ $idx }})"
                    onkey="onAppListKeyEvent"
                    onlongpress="longPress({{ $item.AppId }},{{ $item.bundleName }},{{ $item.System }})">
-            <div class="appitem" style="transform : scale({{ listItemScales[$idx] }}, {{ listItemScales[$idx] }});"
+            <div class="appitem"
                  focusable="false" onclick="openApplication({{ $item.abilityName}}, {{ $item.bundleName }})">
                 <appicon id="icon{{ $idx }}" item-app-icon="{{ $item.AppIcon }}" item-app-id="{{ $item.AppId }}"
                          item-bundle-name="{{ $item.bundleName }}">

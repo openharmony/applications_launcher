@@ -29,9 +29,9 @@ const KEY_ICON = "icon";
 const KEY_NAME = "name";
 const BOTTOM_BAR = 1;
 const NO_FOCUS_INDEX = [-1, -1];
-const FOCUSED_ITEM_SCALE = 1.05;
-const UNFOCUSED_ITEM_SCALE = 1;
 const BOTTOM_BAR_FOCUS_PAGE = -1;
+const BOTTOM_BAR_COLUMN = -1;
+const BOTTOM_BAR_ROW = -1;
 const KEY_CODE_CONFIRM_ON_TV_REMOTE = 23;
 const KEY_CODE_CONFIRM_ON_KEYBOARD_ENTER = 66;
 const KEY_CODE_CONFIRM_ON_NUMERIC_KEYBOARD_ENTER = 160;
@@ -39,7 +39,7 @@ const APP_NAME_HEIGHT = 40;
 const POSITION_WIDTH_RATIO = 0.85;
 
 let mAppGridPresenter;
-let mAppListInfo = [];
+let mAppListInfo = {};
 let mGridConfig;
 let mPageCoordinateData = {
     numberOfRows: 0,
@@ -78,6 +78,7 @@ export default {
         disabled: false,
         isSwappingPage: false,
         bottomBar: [],
+        bottomBarWidth: 0,
         pageCoordinateData: {},
         gridAppsInfos: [],
         chooseDialogRightBtnStr: "",
@@ -89,8 +90,7 @@ export default {
             left: 0
         },
         selectedAppItem: {},
-        focusItemIndex: NO_FOCUS_INDEX,
-        BOTTOM_BAR_FOCUS_PAGE: BOTTOM_BAR_FOCUS_PAGE
+        focusItemIndex: NO_FOCUS_INDEX
     },
 
     onInit() {
@@ -142,6 +142,15 @@ export default {
     openApplication(abilityName, bundleName) {
         console.info("Launcher openApplication " + bundleName + " + " + abilityName);
         mAppGridPresenter.jumpTo(abilityName, bundleName);
+    },
+
+    /**
+     * Open the application which is in the bottomBar.
+     *
+     * @param {object} e - Event.
+     */
+    openApplicationBottomBar(e) {
+        this.openApplication(e.detail.abilityName, e.detail.bundleName);
     },
 
     /**
@@ -203,7 +212,7 @@ export default {
             Prompt.showToast({
                 message: this.$t('strings.uninstall_succeeded')
             });
-            mAppListInfo = [];
+            mAppListInfo = {};
             this.gridAppsInfos = [];
             mAppGridPresenter.getGridList(this.getGridListCallback.bind(this));
         } else if (result == UNINSTALL_FAILED) {
@@ -230,9 +239,9 @@ export default {
     getGridListCallback(callbackData) {
         console.info("Launcher AppGridView getGridListCallback");
         mAppListInfo = callbackData;
-        console.info("Launcher AppGridView getGridListCallback this.appList.length = " + mAppListInfo.length);
+        console.info("Launcher AppGridView getGridListCallback this.appList.length = " + mAppListInfo.appListInfo.length);
+        console.info("Launcher AppGridView getGridListCallback this.bottomBar.length = " + mAppListInfo.appBottomBarInfo.length);
         this.integrateData();
-        this.initFocus();
         this.updateAppInfos();
     },
 
@@ -254,8 +263,8 @@ export default {
             console.info("Launcher AppGridView updateAppInfos bottomBar.length = " + this.bottomBar.length);
             for (let i = 0; i < this.bottomBar.length; i++) {
                 let element = this.bottomBar[i];
-                this.$child('icon-' + element.bundleName).updateIcon();
-                this.$child('name-' + element.bundleName).updateName();
+                this.$child('bottomBarCon').$child('icon-' + element.bundleName).updateIcon();
+                this.$child('bottomBarCon').$child('name-' + element.bundleName).updateName();
             }
         }, APP_INFO_REFRESH_DELAY);
     },
@@ -276,6 +285,15 @@ export default {
         mLongPress = true;
         this.disabled = true;
         this.$element('simpleDialog').show();
+    },
+
+    /**
+     * LongPress event for applications in the bottomBar.
+     *
+     * @param {object} e - Event.
+     */
+    longPressBottomBar(e) {
+        this.longPress(e.detail.appItem, e.detail.index);
     },
 
     /**
@@ -332,50 +350,11 @@ export default {
         this.movingAppInfo.display = 'none';
         mTouchPointCoordinate.endX = e.changedTouches[0].globalX;
         mTouchPointCoordinate.endY = e.changedTouches[0].globalY;
-        let startColumn = 0, startRow = 0, startPage = this.index;
-        let endColumn = 0, endRow = 0;
-        let appInfo = mAppListInfo.find(item => {
-            return item.bundleName == mSelectedAppItem.bundleName;
-        });
-        if (appInfo != '' && appInfo != undefined && appInfo != null) {
-            startColumn = appInfo.column;
-            startRow = appInfo.row;
-            startPage = appInfo.page;
-        }
-        if (mTouchPointCoordinate.endY > mPageCoordinateData.bottom_y_axis[0]) {
-            endRow = -1;
-        } else {
-            for (let i = 0; i < mPageCoordinateData.numberOfRows; i++) {
-                if (mTouchPointCoordinate.endY < mPageCoordinateData.grid_y_axis[i]) {
-                    endRow = i - 1;
-                    break;
-                } else {
-                    endRow = mPageCoordinateData.numberOfRows - 1;
-                }
-            }
-        }
-        for (let i = 0; i < mPageCoordinateData.numberOfColumns; i++) {
-            if (mTouchPointCoordinate.endX < mPageCoordinateData.grid_x_axis[i]) {
-                endColumn = i - 1;
-                break;
-            } else {
-                endColumn = mPageCoordinateData.numberOfColumns - 1;
-            }
-        }
         if (mLongPress) {
-            let startInfo = {
-                page: startPage,
-                row: startRow,
-                column: startColumn
-            }
-            let endInfo = {
-                page: this.index,
-                row: endRow,
-                column: endColumn
-            }
-            mAppListInfo = mAppGridPresenter.layoutAdjustment(startInfo, endInfo);
+            let startInfo = this.getStartInfo();
+            let endInfo = this.getEndInfo();
+            mAppListInfo = mAppGridPresenter.layoutAdjustment(startInfo, endInfo, this.bottomBar);
             this.integrateData();
-            this.initFocus();
             this.updateAppInfos();
         }
         mLongPress = false;
@@ -383,57 +362,180 @@ export default {
     },
 
     /**
+     * Get touchStart information for touchEnd event.
+     *
+     * @return {object} Start position information.
+     */
+    getStartInfo() {
+        let startColumn = 0, startRow = 0, startPage = this.index;
+        let appInfo = mAppListInfo.appListInfo.find(item => {
+            return item.bundleName == mSelectedAppItem.bundleName;
+        });
+        if (appInfo != '' && appInfo != undefined && appInfo != null) {
+            startColumn = appInfo.column;
+            startRow = appInfo.row;
+            startPage = appInfo.page;
+        }
+        let startInfo = {};
+        if (mTouchPointCoordinate.startY >= mPageCoordinateData.bottom_y_axis[0]) {
+            startInfo = {
+                page: BOTTOM_BAR_FOCUS_PAGE,
+                row: BOTTOM_BAR_ROW,
+                column: BOTTOM_BAR_COLUMN,
+                startX: mTouchPointCoordinate.startX,
+                startY: mTouchPointCoordinate.startY
+            }
+        } else {
+            startInfo = {
+                page: this.index,
+                row: startRow,
+                column: startColumn,
+                startX: mTouchPointCoordinate.startX,
+                startY: mTouchPointCoordinate.startY
+            }
+        }
+        return startInfo;
+    },
+
+    /**
+     * Get touchEnd information for touchEnd event.
+     *
+     * @return {object} End position information.
+     */
+    getEndInfo() {
+        let endRow = 0, endColumn = 0;
+        let endInfo = {};
+        if (mTouchPointCoordinate.endY > mPageCoordinateData.bottom_y_axis[0]) {
+            endInfo = {
+                page: BOTTOM_BAR_FOCUS_PAGE,
+                row: BOTTOM_BAR_ROW,
+                column: BOTTOM_BAR_COLUMN,
+                endX: mTouchPointCoordinate.endX,
+                endY: mTouchPointCoordinate.endY
+            }
+        } else {
+            for (let i = 0; i < mPageCoordinateData.numberOfRows; i++) {
+                if (mTouchPointCoordinate.endY < mPageCoordinateData.grid_y_axis[i]) {
+                    endRow = i - 1;
+                    break;
+                }
+            }
+            for (let i = 0; i < mPageCoordinateData.numberOfColumns; i++) {
+                if (mTouchPointCoordinate.endX < mPageCoordinateData.grid_x_axis[i]) {
+                    endColumn = i - 1;
+                    break;
+                }
+            }
+            endInfo = {
+                page: this.index,
+                row: endRow,
+                column: endColumn,
+                endX: mTouchPointCoordinate.endX,
+                endY: mTouchPointCoordinate.endY
+            }
+        }
+        return endInfo;
+    },
+
+    /**
      * Integrate applications' information.
      */
     integrateData() {
         console.info("Launcher AppGridView integrateData");
+        this.integrateSwiper();
+        this.integrateBottomBar();
+    },
+
+    /**
+     * Integrate swiper's information.
+     */
+    integrateSwiper() {
         mPageCount = mAppGridPresenter.getGridPageCount();
         let pageMax = 0;
-        for (let i = 0;i < mAppListInfo.length; i++) {
-            if (pageMax < mAppListInfo[i].page) {
-                pageMax = mAppListInfo[i].page;
+        let appListInfo = mAppListInfo.appListInfo;
+        for (let i = 0;i < appListInfo.length; i++) {
+            if (pageMax < appListInfo[i].page) {
+                pageMax = appListInfo[i].page;
             }
         }
         if (mPageCount < pageMax + 1) {
             mPageCount = pageMax + 1;
         }
-        let maxColumn = mGridConfig.column;
-        this.bottomBar = [];
         let page = [];
         for (let i = 0;i < mPageCount; i++) {
             page.push([]);
         }
         this.gridAppsInfos = page;
-        for (let i = 0;i < mAppListInfo.length; i++) {
+        for (let i = 0;i < appListInfo.length; i++) {
             let iconInfo = {
-                AppId: mAppListInfo[i].AppId,
-                labelId: mAppListInfo[i].labelId,
-                AppName: mAppListInfo[i].AppName,
-                AppIcon: mAppListInfo[i].AppIcon,
-                bundleName: mAppListInfo[i].bundleName,
-                System: mAppListInfo[i].System,
-                abilityName: mAppListInfo[i].abilityName,
+                AppId: appListInfo[i].AppId,
+                labelId: appListInfo[i].labelId,
+                AppName: appListInfo[i].AppName,
+                AppIcon: appListInfo[i].AppIcon,
+                bundleName: appListInfo[i].bundleName,
+                System: appListInfo[i].System,
+                abilityName: appListInfo[i].abilityName,
                 type: 0,
-                page: mAppListInfo[i].page,
+                page: appListInfo[i].page,
                 wPixel: mPageCoordinateData.cellWidth,
                 hPixel: mPageCoordinateData.cellHeight,
                 wPosition: mPageCoordinateData.positionWidth,
                 marginPosition: mPageCoordinateData.positionMargin,
-                x: mPageCoordinateData.x_axis[mAppListInfo[i].column],
-                y: mPageCoordinateData.y_axis[mAppListInfo[i].row],
+                x: mPageCoordinateData.x_axis[appListInfo[i].column],
+                y: mPageCoordinateData.y_axis[appListInfo[i].row],
                 opacity: 1,
                 scale: 1,
                 bottomBarFlag:0
             }
-            if (mAppListInfo[i].row == -1) {
-                if (this.bottomBar.length < maxColumn) {
-                    iconInfo.y = mPageCoordinateData.bottom_y_axis[0];
-                    iconInfo.bottomBarFlag = 1;
-                    this.bottomBar.push(iconInfo);
+            this.gridAppsInfos[appListInfo[i].page].push(iconInfo);
+        }
+    },
+
+    /**
+     * Integrate bottomBar's information.
+     */
+    integrateBottomBar() {
+        let appBottomBarInfo = mAppListInfo.appBottomBarInfo;
+        this.bottomBar = [];
+        let bottomBarLength = appBottomBarInfo.length;
+        if (bottomBarLength == 0) {
+            this.bottomBarWidth = mScreenWidth;
+        } else {
+            for (let i = 0; i < appBottomBarInfo.length; i++) {
+                let iconInfo = {
+                    AppId: appBottomBarInfo[i].AppId,
+                    labelId: appBottomBarInfo[i].labelId,
+                    AppName: appBottomBarInfo[i].AppName,
+                    AppIcon: appBottomBarInfo[i].AppIcon,
+                    bundleName: appBottomBarInfo[i].bundleName,
+                    System: appBottomBarInfo[i].System,
+                    abilityName: appBottomBarInfo[i].abilityName,
+                    type: appBottomBarInfo[i].type,
+                    wPixel: mPageCoordinateData.cellWidth,
+                    hPixel: mPageCoordinateData.cellHeight,
+                    opacity: 1,
+                    scale: 1,
+                    bottomBarFlag: BOTTOM_BAR
                 }
-                continue;
+                if (bottomBarLength == 1) {
+                    this.bottomBarWidth = mPageCoordinateData.cellWidth;
+                    iconInfo.wPosition = mPageCoordinateData.cellWidth;
+                    iconInfo.x = (mScreenWidth - mPageCoordinateData.cellWidth) / 2;
+                } else if (bottomBarLength == 2) {
+                    this.bottomBarWidth = (mPageCoordinateData.cellWidth + mPageCoordinateData.columnSpacing * 2) * 2;
+                    iconInfo.wPosition = mPageCoordinateData.cellWidth + mPageCoordinateData.columnSpacing * 2;
+                    iconInfo.x = (mScreenWidth - mPageCoordinateData.cellWidth * 2 - mPageCoordinateData.columnSpacing * 2) / 2 + i * (mPageCoordinateData.cellWidth + mPageCoordinateData.columnSpacing * 2);
+                } else if (bottomBarLength == 3) {
+                    this.bottomBarWidth = ((mScreenWidth - mPageCoordinateData.cellWidth * bottomBarLength) / (bottomBarLength + 1) + mPageCoordinateData.cellWidth) * 3;
+                    iconInfo.wPosition = (mScreenWidth - mPageCoordinateData.cellWidth * bottomBarLength) / (bottomBarLength + 1) + mPageCoordinateData.cellWidth;
+                    iconInfo.x = (mScreenWidth - mPageCoordinateData.cellWidth * bottomBarLength) / (bottomBarLength + 1) * (i + 1) + mPageCoordinateData.cellWidth * i;
+                } else if (bottomBarLength > 3) {
+                    this.bottomBarWidth = mScreenWidth;
+                    iconInfo.wPosition = mScreenWidth / bottomBarLength;
+                    iconInfo.x = (mScreenWidth / bottomBarLength - mPageCoordinateData.cellWidth) / 2 + mScreenWidth / bottomBarLength * i;
+                }
+                this.bottomBar.push(iconInfo);
             }
-            this.gridAppsInfos[mAppListInfo[i].page].push(iconInfo);
         }
     },
 
@@ -482,7 +584,6 @@ export default {
         console.info("Launcher AppGridView addBlankPage");
         mAppGridPresenter.setGridPageCount(mPageCount + 1);
         this.integrateData();
-        this.initFocus();
         this.index = mPageCount - 1;
     },
 
@@ -498,7 +599,6 @@ export default {
         mAppGridPresenter.setGridPageCount(mPageCount - 1);
         mAppListInfo = mAppGridPresenter.getAppListInfo();
         this.integrateData();
-        this.initFocus();
     },
 
     /**
@@ -518,32 +618,15 @@ export default {
      * @param {number} idx - The index of the application in the page.
      */
     focus(page, idx) {
-        if (!(CheckArray.arrayEqual(this.focusItemIndex, NO_FOCUS_INDEX))) {
-            this.gridAppsInfos[this.focusItemIndex[0]][this.focusItemIndex[1]].scale = UNFOCUSED_ITEM_SCALE;
-        }
         this.focusItemIndex = [page, idx];
-        if (page == BOTTOM_BAR_FOCUS_PAGE) {
-            this.bottomBar[idx].scale = FOCUSED_ITEM_SCALE;
-        } else {
-            this.gridAppsInfos[page][idx].scale = FOCUSED_ITEM_SCALE;
-        }
     },
 
     /**
-     * Init the focus status.
+     * Focus event for bottomBar application icon.
+     * @param {object} e - Event.
      */
-    initFocus() {
-        if (!(CheckArray.arrayEqual(this.focusItemIndex, NO_FOCUS_INDEX))) {
-            if (this.focusItemIndex[0] != BOTTOM_BAR_FOCUS_PAGE) {
-                if (this.gridAppsInfos[this.focusItemIndex[0]][this.focusItemIndex[1]] != undefined) {
-                    this.gridAppsInfos[this.focusItemIndex[0]][this.focusItemIndex[1]].scale = FOCUSED_ITEM_SCALE;
-                }
-            } else {
-                if (this.bottomBar[this.focusItemIndex[1]] != undefined) {
-                    this.bottomBar[this.focusItemIndex[1]].scale = FOCUSED_ITEM_SCALE;
-                }
-            }
-        }
+    focusBottomBar(e) {
+        this.focus(e.detail.page, e.detail.idx);
     },
 
     /**
@@ -557,7 +640,15 @@ export default {
             case KEY_CODE_CONFIRM_ON_TV_REMOTE:
             case KEY_CODE_CONFIRM_ON_KEYBOARD_ENTER:
             case KEY_CODE_CONFIRM_ON_NUMERIC_KEYBOARD_ENTER:
-                this.openApplication(mAppListInfo[this.focusItemIndex[0][this.focusItemIndex[1]]].bundleName);
+                    if (!(CheckArray.arrayEqual(this.focusItemIndex, NO_FOCUS_INDEX))) {
+                        if (this.focusItemIndex[0] == BOTTOM_BAR_FOCUS_PAGE) {
+                            let focusIcon = this.bottomBar[this.focusItemIndex[1]];
+                            this.openApplication(focusIcon.bundleName,focusIcon.abilityName);
+                        } else {
+                            let focusIcon = this.gridAppsInfos[this.focusItemIndex[0]][this.focusItemIndex[1]];
+                            this.openApplication(focusIcon.bundleName,focusIcon.abilityName);
+                        }
+                    }
                 break;
             default:
                 break;
