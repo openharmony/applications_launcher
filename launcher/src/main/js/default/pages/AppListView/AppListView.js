@@ -18,8 +18,6 @@ import LayoutConstants from '../../common/constants/LayoutConstants.js';
 import Prompt from '@system.prompt';
 
 const NO_FOCUS_INDEX = -1;
-const FOCUSED_ITEM_SCALE = 1.05;
-const UNFOCUSED_ITEM_SCALE = 1;
 const KEY_CODE_CONFIRM_ON_TV_REMOTE = 23;
 const KEY_CODE_CONFIRM_ON_KEYBOARD_ENTER = 66;
 const KEY_CODE_CONFIRM_ON_NUMERIC_KEYBOARD_ENTER = 160;
@@ -73,7 +71,6 @@ export default {
             return;
         }
         this.appList = list;
-        this.initListFocus();
         this.updateAppInfos();
     },
 
@@ -193,11 +190,7 @@ export default {
      * @param {string} idx - the index of list item to be focused.
      */
     focus(idx) {
-        if (this.focusItemIndex != NO_FOCUS_INDEX) {
-            this.listItemScales.splice(this.focusItemIndex, 1, UNFOCUSED_ITEM_SCALE);
-        }
         this.focusItemIndex = idx;
-        this.listItemScales.splice(idx, 1, FOCUSED_ITEM_SCALE);
     },
 
     /**
@@ -219,17 +212,6 @@ export default {
         }
     },
 
-    /**
-     * Initial list focus status.
-     */
-    initListFocus() {
-        for (let i = 0; i < this.appList.length; i++) {
-            this.listItemScales.push(UNFOCUSED_ITEM_SCALE);
-        }
-        if (this.focusItemIndex != NO_FOCUS_INDEX) {
-            this.listItemScales[this.focusItemIndex] = FOCUSED_ITEM_SCALE;
-        }
-    },
 
     /**
      * Update application icon and name when application data changed.
