@@ -48,12 +48,12 @@ let mPageCoordinateData = {
     rowSpacing: 0,
     cellHeight: 0,
     cellWidth: 0,
-    x_axis: [],
-    y_axis: [],
-    grid_x_axis: [],
-    grid_y_axis: [],
-    bottom_x_axis: [],
-    bottom_y_axis: []
+    xAxis: [],
+    yAxis: [],
+    gridXAxis: [],
+    gridYAxis: [],
+    bottomXAxis: [],
+    bottomYAxis: []
 };
 let mTouchPointCoordinate = {
     startX: 0,
@@ -90,7 +90,8 @@ export default {
             left: 0
         },
         selectedAppItem: {},
-        focusItemIndex: NO_FOCUS_INDEX
+        focusItemIndex: NO_FOCUS_INDEX,
+        uninstallAppName: ''
     },
 
     onInit() {
@@ -98,7 +99,8 @@ export default {
         globalThis.$globalR = this.$r.bind(this);
         mResourceManager = this.$app.$def.data.resourceManager;
         mAppGridPresenter = new AppGridPresenter(this.$app.$def.data.appModel, this.$app.$def.data.mmiModel,
-            this.$app.$def.data.settingsModel, this.$app.$def.data.appListInfoCacheManager, this.$app.$def.data.resourceManager);
+            this.$app.$def.data.settingsModel, this.$app.$def.data.appListInfoCacheManager,
+            this.$app.$def.data.resourceManager);
         mAppGridPresenter.registerAppListChangeCallback(this.getGridListCallback.bind(this));
         mScreenHeight = this.$app.$def.data.screenHeight * PROPORTION;
         mScreenWidth = this.$app.$def.data.screenWidth;
@@ -147,7 +149,7 @@ export default {
     /**
      * Open the application which is in the bottomBar.
      *
-     * @param {object} e - Event.
+     * @param {Object} e - Event.
      */
     openApplicationBottomBar(e) {
         this.openApplication(e.detail.abilityName, e.detail.bundleName);
@@ -165,57 +167,58 @@ export default {
     /**
      * Open uninstall dialog.
      *
-     * @param {object} e - Event.
+     * @param {Object} e - Event.
      */
     cancelDialog(e) {
         Prompt.showToast({
             message: 'Dialog cancelled'
-        })
+        });
     },
 
     /**
      * Close uninstall dialog.
      *
-     * @param {object} e - Event.
+     * @param {Object} e - Event.
      */
     cancelSchedule(e) {
         this.$element('simpleDialog').close();
         Prompt.showToast({
             message: this.$t('strings.cancelled')
-        })
+        });
     },
 
     /**
      * Uninstall the choosen application and close the dialog.
      *
-     * @param {object} e - Event.
+     * @param {Object} e - Event.
      */
     uninstallApplication(e) {
         this.$element('simpleDialog').close();
         if (this.selectedAppItem.bundleName != null) {
-            mAppGridPresenter.uninstallApp(this.selectedAppItem.bundleName, this.selectedAppItem.System, this.getUninstallApp.bind(this));
+            mAppGridPresenter.uninstallApp(this.selectedAppItem.bundleName, this.selectedAppItem.System,
+                this.getUninstallApp.bind(this));
         }
     },
 
     /**
      * Get the result after uninstall application.
      *
-     * @param {object} callback - Uninstall result.
+     * @param {Object} result - Uninstall result.
      */
     getUninstallApp(result) {
         console.info("Launcher AppGridView getUninstallApp callback = " + result);
-        if (result == UNINSTALL_PROHIBITED) {
+        if (result === UNINSTALL_PROHIBITED) {
             Prompt.showToast({
                 message: this.$t('strings.prohibited')
             });
-        } else if (result == UNINSTALL_SUCCESS) {
+        } else if (result === UNINSTALL_SUCCESS) {
             Prompt.showToast({
                 message: this.$t('strings.uninstall_succeeded')
             });
             mAppListInfo = {};
             this.gridAppsInfos = [];
             mAppGridPresenter.getGridList(this.getGridListCallback.bind(this));
-        } else if (result == UNINSTALL_FAILED) {
+        } else if (result === UNINSTALL_FAILED) {
             Prompt.showToast({
                 message: this.$t('strings.uninstall_failed')
             });
@@ -225,7 +228,7 @@ export default {
     /**
      * Change index after swipe page.
      *
-     * @param {object} e - Event.
+     * @param {Object} e - Event.
      */
     pageChange(e) {
         this.index = e.index;
@@ -234,13 +237,15 @@ export default {
     /**
      * Get grid applications' information and show them.
      *
-     * @param {object} callbackData - Grid applications' information.
+     * @param {Object} callbackData - Grid applications' information.
      */
     getGridListCallback(callbackData) {
         console.info("Launcher AppGridView getGridListCallback");
         mAppListInfo = callbackData;
-        console.info("Launcher AppGridView getGridListCallback this.appList.length = " + mAppListInfo.appListInfo.length);
-        console.info("Launcher AppGridView getGridListCallback this.bottomBar.length = " + mAppListInfo.appBottomBarInfo.length);
+        console.info("Launcher AppGridView getGridListCallback this.appList.length = "
+            + mAppListInfo.appListInfo.length);
+        console.info("Launcher AppGridView getGridListCallback this.bottomBar.length = "
+            + mAppListInfo.appBottomBarInfo.length);
         this.integrateData();
         this.updateAppInfos();
     },
@@ -250,7 +255,8 @@ export default {
      */
     updateAppInfos() {
         setTimeout(() => {
-            console.info("Launcher AppGridView getGridListCallback setTimeout this.appList.length = " + this.gridAppsInfos.length);
+            console.info("Launcher AppGridView getGridListCallback setTimeout this.appList.length = "
+                + this.gridAppsInfos.length);
             for (let i = 0; i < this.gridAppsInfos.length; i++) {
                 let page = this.gridAppsInfos[i];
                 console.info("Launcher AppGridView getGridListCallback setTimeout page = " + i);
@@ -272,7 +278,7 @@ export default {
     /**
      * LongPress event for application.
      *
-     * @param {object} appItem - The pressed application.
+     * @param {Object} appItem - The pressed application.
      * @param {number} index - The application's index in the page.
      */
     longPress(appItem, index) {
@@ -284,13 +290,16 @@ export default {
         mSelectedAppIndex = index;
         mLongPress = true;
         this.disabled = true;
-        this.$element('simpleDialog').show();
+        this.uninstallAppName = mAppGridPresenter.getAppName(appItem.bundleName);
+        setTimeout(() => {
+            this.$element('simpleDialog').show();
+        }, APP_INFO_REFRESH_DELAY)
     },
 
     /**
      * LongPress event for applications in the bottomBar.
      *
-     * @param {object} e - Event.
+     * @param {Object} e - Event.
      */
     longPressBottomBar(e) {
         this.longPress(e.detail.appItem, e.detail.index);
@@ -299,12 +308,13 @@ export default {
     /**
      * Touchstart event for launcher.
      *
-     * @param {object} e - Event.
+     * @param {Object} e - Event.
      */
     touchStart(e) {
-        console.info("Launcher AppGridView touchStart globalX = " + e.touches[0].globalX + " globalY = " + e.touches[0].globalY);
-        mTouchPointCoordinate.startX = e.touches[0].globalX,
-        mTouchPointCoordinate.startY = e.touches[0].globalY,
+        console.info("Launcher AppGridView touchStart globalX = " + e.touches[0].globalX + " globalY = "
+            + e.touches[0].globalY);
+        mTouchPointCoordinate.startX = e.touches[0].globalX;
+        mTouchPointCoordinate.startY = e.touches[0].globalY;
         this.movingAppInfo.top = e.touches[0].globalY;
         this.movingAppInfo.left = e.touches[0].globalX;
     },
@@ -312,26 +322,28 @@ export default {
     /**
      * Touchmove event for launcher.
      *
-     * @param {object} e - Event.
+     * @param {Object} e - Event.
      */
     touchMove(e) {
-        if(!mLongPress) {
+        if (!mLongPress) {
             return;
         }
         this.$element('simpleDialog').close();
         this.movingAppInfo.display = 'flex';
-        if (this.selectedAppItem.bottomBarFlag == BOTTOM_BAR) {
+        if (this.selectedAppItem.bottomBarFlag === BOTTOM_BAR) {
             this.bottomBar[mSelectedAppIndex].opacity = 0;
         } else {
             this.gridAppsInfos[mSelectedAppItem.page][mSelectedAppIndex].opacity = 0;
         }
         this.movingAppInfo.top = e.touches[0].globalY - mPageCoordinateData.cellWidth / 2;
         this.movingAppInfo.left = e.touches[0].globalX - mPageCoordinateData.cellWidth / 2;
-        if (this.movingAppInfo.left < 0 && !this.isSwappingPage && this.index > 0 && this.movingAppInfo.top < mScreenHeight) {
+        if (this.movingAppInfo.left < 0 && !this.isSwappingPage && this.index > 0 && this.movingAppInfo.top
+            < mScreenHeight) {
             this.index -= 1;
             this.movingIconSwapPageDelay();
-        } else if (this.movingAppInfo.left + mPageCoordinateData.cellWidth > 720 && !this.isSwappingPage && this.movingAppInfo.top < mScreenHeight) {
-            if (this.index == mPageCount - 1) {
+        } else if (this.movingAppInfo.left + mPageCoordinateData.cellWidth > 720 && !this.isSwappingPage
+                    && this.movingAppInfo.top < mScreenHeight) {
+            if (this.index === mPageCount - 1) {
                 this.addBlankPage();
             } else {
                 this.index += 1;
@@ -343,10 +355,11 @@ export default {
     /**
      * Touchend event for launcher.
      *
-     * @param {object} e - Event.
+     * @param {Object} e - Event.
      */
     touchEnd(e) {
-        console.info("Launcher AppGridView touchEnd globalX = " + e.changedTouches[0].globalX + " globalY = " + e.changedTouches[0].globalY);
+        console.info("Launcher AppGridView touchEnd globalX = "
+            + e.changedTouches[0].globalX + " globalY = " + e.changedTouches[0].globalY);
         this.movingAppInfo.display = 'none';
         mTouchPointCoordinate.endX = e.changedTouches[0].globalX;
         mTouchPointCoordinate.endY = e.changedTouches[0].globalY;
@@ -364,35 +377,37 @@ export default {
     /**
      * Get touchStart information for touchEnd event.
      *
-     * @return {object} Start position information.
+     * @return {Object} Start position information.
      */
     getStartInfo() {
-        let startColumn = 0, startRow = 0, startPage = this.index;
+        let startColumn = 0;
+        let startRow = 0;
+        let startPage = this.index;
         let appInfo = mAppListInfo.appListInfo.find(item => {
-            return item.bundleName == mSelectedAppItem.bundleName;
+            return item.bundleName === mSelectedAppItem.bundleName;
         });
-        if (appInfo != '' && appInfo != undefined && appInfo != null) {
+        if (appInfo !== '' && appInfo != undefined && appInfo != null) {
             startColumn = appInfo.column;
             startRow = appInfo.row;
             startPage = appInfo.page;
         }
         let startInfo = {};
-        if (mTouchPointCoordinate.startY >= mPageCoordinateData.bottom_y_axis[0]) {
+        if (mTouchPointCoordinate.startY >= mPageCoordinateData.bottomYAxis[0]) {
             startInfo = {
                 page: BOTTOM_BAR_FOCUS_PAGE,
                 row: BOTTOM_BAR_ROW,
                 column: BOTTOM_BAR_COLUMN,
                 startX: mTouchPointCoordinate.startX,
                 startY: mTouchPointCoordinate.startY
-            }
+            };
         } else {
             startInfo = {
-                page: this.index,
+                page: startPage,
                 row: startRow,
                 column: startColumn,
                 startX: mTouchPointCoordinate.startX,
                 startY: mTouchPointCoordinate.startY
-            }
+            };
         }
         return startInfo;
     },
@@ -400,28 +415,29 @@ export default {
     /**
      * Get touchEnd information for touchEnd event.
      *
-     * @return {object} End position information.
+     * @return {Object} End position information.
      */
     getEndInfo() {
-        let endRow = 0, endColumn = 0;
+        let endRow = 0;
+        let endColumn = 0;
         let endInfo = {};
-        if (mTouchPointCoordinate.endY > mPageCoordinateData.bottom_y_axis[0]) {
+        if (mTouchPointCoordinate.endY > mPageCoordinateData.bottomYAxis[0]) {
             endInfo = {
                 page: BOTTOM_BAR_FOCUS_PAGE,
                 row: BOTTOM_BAR_ROW,
                 column: BOTTOM_BAR_COLUMN,
                 endX: mTouchPointCoordinate.endX,
                 endY: mTouchPointCoordinate.endY
-            }
+            };
         } else {
             for (let i = 0; i < mPageCoordinateData.numberOfRows; i++) {
-                if (mTouchPointCoordinate.endY < mPageCoordinateData.grid_y_axis[i]) {
+                if (mTouchPointCoordinate.endY < mPageCoordinateData.gridYAxis[i]) {
                     endRow = i - 1;
                     break;
                 }
             }
             for (let i = 0; i < mPageCoordinateData.numberOfColumns; i++) {
-                if (mTouchPointCoordinate.endX < mPageCoordinateData.grid_x_axis[i]) {
+                if (mTouchPointCoordinate.endX < mPageCoordinateData.gridXAxis[i]) {
                     endColumn = i - 1;
                     break;
                 }
@@ -432,7 +448,7 @@ export default {
                 column: endColumn,
                 endX: mTouchPointCoordinate.endX,
                 endY: mTouchPointCoordinate.endY
-            }
+            };
         }
         return endInfo;
     },
@@ -453,7 +469,7 @@ export default {
         mPageCount = mAppGridPresenter.getGridPageCount();
         let pageMax = 0;
         let appListInfo = mAppListInfo.appListInfo;
-        for (let i = 0;i < appListInfo.length; i++) {
+        for (let i = 0; i < appListInfo.length; i++) {
             if (pageMax < appListInfo[i].page) {
                 pageMax = appListInfo[i].page;
             }
@@ -462,11 +478,11 @@ export default {
             mPageCount = pageMax + 1;
         }
         let page = [];
-        for (let i = 0;i < mPageCount; i++) {
+        for (let i = 0; i < mPageCount; i++) {
             page.push([]);
         }
         this.gridAppsInfos = page;
-        for (let i = 0;i < appListInfo.length; i++) {
+        for (let i = 0; i < appListInfo.length; i++) {
             let iconInfo = {
                 AppId: appListInfo[i].AppId,
                 labelId: appListInfo[i].labelId,
@@ -481,12 +497,12 @@ export default {
                 hPixel: mPageCoordinateData.cellHeight,
                 wPosition: mPageCoordinateData.positionWidth,
                 marginPosition: mPageCoordinateData.positionMargin,
-                x: mPageCoordinateData.x_axis[appListInfo[i].column],
-                y: mPageCoordinateData.y_axis[appListInfo[i].row],
+                x: mPageCoordinateData.xAxis[appListInfo[i].column],
+                y: mPageCoordinateData.yAxis[appListInfo[i].row],
                 opacity: 1,
                 scale: 1,
-                bottomBarFlag:0
-            }
+                bottomBarFlag: 0
+            };
             this.gridAppsInfos[appListInfo[i].page].push(iconInfo);
         }
     },
@@ -498,7 +514,7 @@ export default {
         let appBottomBarInfo = mAppListInfo.appBottomBarInfo;
         this.bottomBar = [];
         let bottomBarLength = appBottomBarInfo.length;
-        if (bottomBarLength == 0) {
+        if (bottomBarLength === 0) {
             this.bottomBarWidth = mScreenWidth;
         } else {
             for (let i = 0; i < appBottomBarInfo.length; i++) {
@@ -516,23 +532,29 @@ export default {
                     opacity: 1,
                     scale: 1,
                     bottomBarFlag: BOTTOM_BAR
-                }
-                if (bottomBarLength == 1) {
+                };
+                if (bottomBarLength === 1) {
                     this.bottomBarWidth = mPageCoordinateData.cellWidth;
                     iconInfo.wPosition = mPageCoordinateData.cellWidth;
                     iconInfo.x = (mScreenWidth - mPageCoordinateData.cellWidth) / 2;
-                } else if (bottomBarLength == 2) {
+                } else if (bottomBarLength === 2) {
                     this.bottomBarWidth = (mPageCoordinateData.cellWidth + mPageCoordinateData.columnSpacing * 2) * 2;
                     iconInfo.wPosition = mPageCoordinateData.cellWidth + mPageCoordinateData.columnSpacing * 2;
-                    iconInfo.x = (mScreenWidth - mPageCoordinateData.cellWidth * 2 - mPageCoordinateData.columnSpacing * 2) / 2 + i * (mPageCoordinateData.cellWidth + mPageCoordinateData.columnSpacing * 2);
-                } else if (bottomBarLength == 3) {
-                    this.bottomBarWidth = ((mScreenWidth - mPageCoordinateData.cellWidth * bottomBarLength) / (bottomBarLength + 1) + mPageCoordinateData.cellWidth) * 3;
-                    iconInfo.wPosition = (mScreenWidth - mPageCoordinateData.cellWidth * bottomBarLength) / (bottomBarLength + 1) + mPageCoordinateData.cellWidth;
-                    iconInfo.x = (mScreenWidth - mPageCoordinateData.cellWidth * bottomBarLength) / (bottomBarLength + 1) * (i + 1) + mPageCoordinateData.cellWidth * i;
+                    iconInfo.x = (mScreenWidth - mPageCoordinateData.cellWidth * 2
+                                - mPageCoordinateData.columnSpacing * 2) / 2 + i * (mPageCoordinateData.cellWidth
+                                + mPageCoordinateData.columnSpacing * 2);
+                } else if (bottomBarLength === 3) {
+                    this.bottomBarWidth = ((mScreenWidth - mPageCoordinateData.cellWidth * bottomBarLength)
+                                         / (bottomBarLength + 1) + mPageCoordinateData.cellWidth) * 3;
+                    iconInfo.wPosition = (mScreenWidth - mPageCoordinateData.cellWidth * bottomBarLength)
+                                        / (bottomBarLength + 1) + mPageCoordinateData.cellWidth;
+                    iconInfo.x = (mScreenWidth - mPageCoordinateData.cellWidth * bottomBarLength)
+                                / (bottomBarLength + 1) * (i + 1) + mPageCoordinateData.cellWidth * i;
                 } else if (bottomBarLength > 3) {
                     this.bottomBarWidth = mScreenWidth;
                     iconInfo.wPosition = mScreenWidth / bottomBarLength;
-                    iconInfo.x = (mScreenWidth / bottomBarLength - mPageCoordinateData.cellWidth) / 2 + mScreenWidth / bottomBarLength * i;
+                    iconInfo.x = (mScreenWidth / bottomBarLength - mPageCoordinateData.cellWidth) / 2
+                                + mScreenWidth / bottomBarLength * i;
                 }
                 this.bottomBar.push(iconInfo);
             }
@@ -562,7 +584,7 @@ export default {
      * @return {boolean} Verify result.
      */
     isBlankPage() {
-        return this.gridAppsInfos[this.index].length == 0;
+        return this.gridAppsInfos[this.index].length === 0;
     },
 
     /**
@@ -593,7 +615,7 @@ export default {
     deleteBlankPage() {
         console.info("Launcher AppGridView deleteBlankPage");
         mAppGridPresenter.deleteGridPage(this.index);
-        if (this.index == this.gridAppsInfos.length - 1) {
+        if (this.index === this.gridAppsInfos.length - 1) {
             this.index = this.index - 1;
         }
         mAppGridPresenter.setGridPageCount(mPageCount - 1);
@@ -608,7 +630,7 @@ export default {
         this.isSwappingPage = true;
         setTimeout(() => {
             this.isSwappingPage = false;
-        }, 1000);
+        }, APP_INFO_REFRESH_DELAY);
     },
 
     /**
@@ -623,7 +645,7 @@ export default {
 
     /**
      * Focus event for bottomBar application icon.
-     * @param {object} e - Event.
+     * @param {Object} e - Event.
      */
     focusBottomBar(e) {
         this.focus(e.detail.page, e.detail.idx);
@@ -632,7 +654,7 @@ export default {
     /**
      * Key event of the application icon.
      *
-     * @param {object} KeyEvent - Event.
+     * @param {Object} KeyEvent - Event.
      */
     onAppGridKeyEvent(KeyEvent) {
         console.info("Launcher AppGridView onAppGridKeyEvent KeyEvent: " + KeyEvent);
@@ -640,26 +662,26 @@ export default {
             case KEY_CODE_CONFIRM_ON_TV_REMOTE:
             case KEY_CODE_CONFIRM_ON_KEYBOARD_ENTER:
             case KEY_CODE_CONFIRM_ON_NUMERIC_KEYBOARD_ENTER:
-                    if (!(CheckArray.arrayEqual(this.focusItemIndex, NO_FOCUS_INDEX))) {
-                        if (this.focusItemIndex[0] == BOTTOM_BAR_FOCUS_PAGE) {
-                            let focusIcon = this.bottomBar[this.focusItemIndex[1]];
-                            this.openApplication(focusIcon.bundleName,focusIcon.abilityName);
-                        } else {
-                            let focusIcon = this.gridAppsInfos[this.focusItemIndex[0]][this.focusItemIndex[1]];
-                            this.openApplication(focusIcon.bundleName,focusIcon.abilityName);
-                        }
+                if (!(CheckArray.arrayEqual(this.focusItemIndex, NO_FOCUS_INDEX))) {
+                    if (this.focusItemIndex[0] === BOTTOM_BAR_FOCUS_PAGE) {
+                        let focusIcon = this.bottomBar[this.focusItemIndex[1]];
+                        this.openApplication(focusIcon.bundleName, focusIcon.abilityName);
+                    } else {
+                        let focusIcon = this.gridAppsInfos[this.focusItemIndex[0]][this.focusItemIndex[1]];
+                        this.openApplication(focusIcon.bundleName, focusIcon.abilityName);
                     }
+                }
                 break;
             default:
                 break;
         }
     },
-}
+};
 
 /**
  * Calculate the coordinate.
  *
- * @return {object} Coordinate information.
+ * @return {Object} Coordinate information.
  */
 function getPageCoordinateData() {
     let column = mGridConfig.column;
@@ -678,32 +700,35 @@ function getPageCoordinateData() {
         mPageCoordinateData.columnSpacing = (mScreenWidth - (mPageCoordinateData.cellWidth * column)) / (column * 2);
         mPageCoordinateData.cellHeight = mScreenHeight / row;
         mPageCoordinateData.rowSpacing = (mScreenHeight - (mPageCoordinateData.cellHeight * row)) / (row * 2);
-        mPageCoordinateData.positionWidth = (mScreenWidth / column) * POSITION_WIDTH_RATIO > mPageCoordinateData.cellWidth ? (mScreenWidth / column) * POSITION_WIDTH_RATIO : mPageCoordinateData.cellWidth;
+        mPageCoordinateData.positionWidth =
+            (mScreenWidth / column) * POSITION_WIDTH_RATIO > mPageCoordinateData.cellWidth ?
+            (mScreenWidth / column) * POSITION_WIDTH_RATIO : mPageCoordinateData.cellWidth;
         mPageCoordinateData.positionMargin = (mPageCoordinateData.positionWidth - mPageCoordinateData.cellWidth) / 2;
     }
-    mPageCoordinateData.x_axis = [],
-    mPageCoordinateData.y_axis = [],
-    mPageCoordinateData.grid_x_axis = [],
-    mPageCoordinateData.grid_y_axis = [],
-    mPageCoordinateData.bottom_x_axis = [],
-    mPageCoordinateData.bottom_y_axis = []
+    mPageCoordinateData.xAxis = [];
+    mPageCoordinateData.yAxis = [];
+    mPageCoordinateData.gridXAxis = [];
+    mPageCoordinateData.gridYAxis = [];
+    mPageCoordinateData.bottomXAxis = [];
+    mPageCoordinateData.bottomYAxis = [];
     for (let i = 0; i < row; i++) {
         let iconPositioningY = (i * 2 + 1) * mPageCoordinateData.rowSpacing + i * mPageCoordinateData.cellHeight;
         let touchPositioningY = i * (mPageCoordinateData.rowSpacing * 2 + mPageCoordinateData.cellHeight);
-        mPageCoordinateData.y_axis.push(iconPositioningY);
-        mPageCoordinateData.grid_y_axis.push(touchPositioningY);
+        mPageCoordinateData.yAxis.push(iconPositioningY);
+        mPageCoordinateData.gridYAxis.push(touchPositioningY);
     }
 
     for (let i = 0; i < column; i++) {
-        let iconPositioningX = (i * 2 + 1) * mPageCoordinateData.columnSpacing + i * mPageCoordinateData.cellWidth - mPageCoordinateData.positionMargin;
+        let iconPositioningX = (i * 2 + 1) * mPageCoordinateData.columnSpacing
+            + i * mPageCoordinateData.cellWidth - mPageCoordinateData.positionMargin;
         let touchPositioningX = i * (mPageCoordinateData.columnSpacing * 2 + mPageCoordinateData.cellWidth);
-        mPageCoordinateData.x_axis.push(iconPositioningX);
-        mPageCoordinateData.grid_x_axis.push(touchPositioningX);
-        mPageCoordinateData.bottom_x_axis.push(iconPositioningX);
+        mPageCoordinateData.xAxis.push(iconPositioningX);
+        mPageCoordinateData.gridXAxis.push(touchPositioningX);
+        mPageCoordinateData.bottomXAxis.push(iconPositioningX);
     }
 
     for (let i = 0; i < column; i++) {
-        mPageCoordinateData.bottom_y_axis.push(mScreenBottomBarTop);
+        mPageCoordinateData.bottomYAxis.push(mScreenBottomBarTop);
     }
 
     return mPageCoordinateData;

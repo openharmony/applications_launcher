@@ -32,7 +32,7 @@ export default {
     },
 
     onInit() {
-        this.$watch('itemBottomBar','bottomBarWatcher');
+        this.$watch('itemBottomBar', 'bottomBarWatcher');
     },
 
     /**
@@ -42,17 +42,17 @@ export default {
      * @param {string} bundleName - Bundlename of the application.
      */
     openApplicationBottomBar(abilityName, bundleName) {
-        this.$emit('openApplicationBottomBar',{abilityName:abilityName,bundleName:bundleName});
+        this.$emit('openApplicationBottomBar', {abilityName: abilityName, bundleName: bundleName});
     },
 
     /**
      * LongPress event for application.
      *
-     * @param {object} appItem - The pressed application.
+     * @param {Object} appItem - The pressed application.
      * @param {number} index - The application's index in the page.
      */
     longPressBottomBar(appItem, index) {
-        this.$emit('longPressBottomBar',{appItem:appItem,index:index});
+        this.$emit('longPressBottomBar', {appItem: appItem, index: index});
     },
 
     /**
@@ -62,7 +62,7 @@ export default {
      * @param {number} idx - The index of the application in the page.
      */
     focusBottomBar(page, idx) {
-        this.$emit('focusBottomBar',{page:page,idx:idx});
+        this.$emit('focusBottomBar', {page: page, idx: idx});
     }
 
-}
+};
