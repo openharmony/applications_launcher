@@ -17,6 +17,7 @@ import BaseAppPresenter from './base/BaseAppPresenter.js';
 
 const KEY_APP_LIST = "appListInfo";
 const BOTTOM_BAR_FLAG = -1;
+const KEY_NAME = "name";
 
 let mGridConfig;
 let mViewCallback;
@@ -503,10 +504,8 @@ export default class AppGridPresenter extends BaseAppPresenter {
         for(let i = 0; i < layoutInfo.length; i++) {
             if(count[layoutInfo[i].bundleName] == undefined || count[layoutInfo[i].bundleName] == null || count[layoutInfo[i].bundleName] == '') {
                 count[layoutInfo[i].bundleName] = 0;
-            }else{
-                if(++ count[layoutInfo[i].bundleName] > 1) {
-                    return true;
-                }
+            } else if (++ count[layoutInfo[i].bundleName] > 1) {
+                return true;
             }
         }
         return false;
@@ -844,6 +843,16 @@ export default class AppGridPresenter extends BaseAppPresenter {
     regroupDataAfterInstall(callbackList) {
         mBundleInfoList = callbackList;
         return this.#pagingFiltering();
+    }
+
+    /**
+     * Get real appName from cache.
+     *
+     * @param {string} keyName - Application's bundleName.
+     * @return {string} Application's name.
+     */
+    getAppName(keyName) {
+        return this.resourceManager.getAppResourceCache(keyName, KEY_NAME);;
     }
 }
 

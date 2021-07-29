@@ -64,7 +64,7 @@
     <dialog id="simpleDialog" class="dialog-main" oncancel="cancelDialog">
         <div class="dialog-div">
             <div class="inner-txt">
-                <text class="txt">{{$t('strings.do_you_want_to_uninstall_start')}}{{$t('strings.do_you_want_to_uninstall_end')}}
+                <text class="txt">{{$t('strings.do_you_want_to_uninstall_start')}}"{{ uninstallAppName }}"{{$t('strings.do_you_want_to_uninstall_end')}}
                 </text>
             </div>
             <div class="inner-btn">

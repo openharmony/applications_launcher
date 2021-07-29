@@ -153,13 +153,12 @@
     justify-content: space-between;
     flex-direction: row;
     align-items: center;
-    margin-top: 10px;
 }
 
 .dialog-setting-option-text {
     display: flex;
-    height: 40px;
-    line-height: 40px;
+    height: 50px;
+    line-height: 50px;
     font-size: 25px;
     align-items: center;
     color: #696969;
@@ -181,6 +180,7 @@
     width: 100%;
     color: #3366ff;
     font-size: 25px;
-    margin-top: 10px;
+    height: 50px;
+    line-height: 50px;
     text-align: center;
 }
