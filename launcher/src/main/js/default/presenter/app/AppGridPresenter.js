@@ -484,7 +484,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
     #ifDuplicatePosition = (layoutInfo) => {
         for (let i = 0; i < layoutInfo.length; i++) {
             for (let j = layoutInfo.length - 1; j > 0 && j > i; j--) {
-                if (layoutInfo[i].row == layoutInfo[j].row && layoutInfo[i].column == layoutInfo[j].column) {
+                if (layoutInfo[i].page == layoutInfo[j].page && layoutInfo[i].row == layoutInfo[j].row && layoutInfo[i].column == layoutInfo[j].column) {
                     return true;
                 }
 
@@ -613,9 +613,10 @@ export default class AppGridPresenter extends BaseAppPresenter {
                 column: Math.floor((i + existNumber) % (column * row) % column),
             });
         }
-       info.layoutDescription = layoutDescription;
-       info.layoutInfo = layoutInfo;
-       info.bottomBarInfo = bottomBarInfo;
+        layoutDescription.pageCount = Math.ceil((newApp.length + existNumber) / (column * row));
+        info.layoutDescription = layoutDescription;
+        info.layoutInfo = layoutInfo;
+        info.bottomBarInfo = bottomBarInfo;
         return info;
     }
 
