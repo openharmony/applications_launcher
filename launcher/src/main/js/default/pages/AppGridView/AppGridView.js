@@ -120,6 +120,10 @@ export default {
         }
     },
 
+    onBackPress() {
+        this.$element('simpleDialog').close();
+    },
+
     /**
      * Load application data for grid layout.
      */

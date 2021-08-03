@@ -60,6 +60,10 @@ export default {
         mAppListPresenter.unregisterAppListChangeCallback();
     },
 
+    onBackPress() {
+        this.$element('simpleDialog').close();
+    },
+
     /**
      * Callback function of get application list.
      *
