@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import Resmgr from '@ohos.resmgr';
+import Resmgr from '@ohos.resourceManager';
 
 /**
  * A manager class provide app icon and name from cache or system API.

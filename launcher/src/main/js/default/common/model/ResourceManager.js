@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import Resmgr from '@ohos.resmgr';
+import Resmgr from '@ohos.resourceManager';
 import AppResourceCacheManager from '../cache/AppResourceCacheManager.js'
 import CheckEmptyUtils from '../../common/utils/CheckEmptyUtils.js';
 
