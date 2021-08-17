@@ -41,7 +41,7 @@ export default class BaseAppPresenter {
         this.appModel = AppModel;
         this.mmiModel = MMIModel;
         this.settingModel = SettingsModel;
-        this.appListInfoCacheManager =AppListInfoCacheManager;
+        this.appListInfoCacheManager = AppListInfoCacheManager;
         this.resourceManager = ResourceManager;
         mAppListInstallListener = this.appListInstallListener.bind(this);
         mAppListUninstallListener = this.appListUninstallListener.bind(this);
@@ -65,16 +65,27 @@ export default class BaseAppPresenter {
      * @param {object} list - app data.
      */
     getListCallback(list) {
+        let hasNameCache = true;
+        let callbackList;
         for (let item of list) {
             let appName = this.resourceManager.getAppResourceCache(item.bundleName, KEY_NAME);
             console.info("Launcher baseAppPresenter getListCallback + appName = " + appName);
-            if(appName == undefined || appName == null || appName == '' || appName === -1) {
+            if (appName == undefined || appName == null || appName == '' || appName === -1) {
+                hasNameCache = false;
                 break;
             }
             item.AppName = appName;
         }
-        let callbackList = list.sort(mPinyinSort.sortByAppName.bind(mPinyinSort));
-        this.appListInfoCacheManager.setCache(KEY_APP_LIST, list);
+        if (!hasNameCache) {
+            callbackList = this.appListInfoCacheManager.getCache(KEY_APP_LIST);
+            if (callbackList == null || callbackList == undefined || callbackList == '' || callbackList == -1) {
+                callbackList = list;
+                this.appListInfoCacheManager.setCache(KEY_APP_LIST, list);
+            }
+        } else {
+            callbackList = list.sort(mPinyinSort.sortByAppName.bind(mPinyinSort));
+            this.appListInfoCacheManager.setCache(KEY_APP_LIST, list);
+        }
         mViewCallback(callbackList);
     }
 
@@ -212,7 +223,11 @@ export default class BaseAppPresenter {
      * @param {object} bundleInfo - BundleInfo of installed application.
      */
     appListInstallListener(bundleInfo) {
-        this.modifyItemList(this.appendItem, bundleInfo);
+        let nameCallback = (appName) => {
+            bundleInfo.AppName = appName;
+            this.modifyItemList(this.appendItem, bundleInfo);
+        }
+        this.resourceManager.getAppName(bundleInfo.labelId, bundleInfo.bundleName, bundleInfo.AppName, nameCallback);
     }
 
     /**
@@ -290,8 +305,6 @@ export default class BaseAppPresenter {
         console.info("Launcher AppListPresenter appListChangeListener + " + JSON.stringify(item));
         let currentCacheList = this.appListInfoCacheManager.getCache(KEY_APP_LIST);
         method(currentCacheList, item);
-        currentCacheList.sort(mPinyinSort.sortByAppName.bind(mPinyinSort));
-        this.appListInfoCacheManager.setCache(KEY_APP_LIST, currentCacheList);
         let callbackList = this.regroupDataAfterInstall(currentCacheList);
         mAppListChangeCallback(callbackList);
     }
@@ -303,6 +316,5 @@ export default class BaseAppPresenter {
      * @param {object} callbackList - BundleInfo list get from cache.
      */
     regroupDataAfterInstall(callbackList) {
-
     }
 }
