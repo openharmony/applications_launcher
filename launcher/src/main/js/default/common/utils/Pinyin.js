@@ -925,7 +925,7 @@ class Pinyin {
             let strlen = str.length;
             if (strlen == 1) {
                 for (let j = 0; j < result.length; j++) {
-                    result[k] += str;
+                    result[j] += str;
                 }
             } else {
                 let swap1 = result.slice(0);

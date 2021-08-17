@@ -843,6 +843,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
      */
     regroupDataAfterInstall(callbackList) {
         mBundleInfoList = callbackList;
+        this.appListInfoCacheManager.setCache(KEY_APP_LIST, callbackList);
         return this.#pagingFiltering();
     }
 

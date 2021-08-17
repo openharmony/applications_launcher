@@ -14,6 +14,12 @@
  */
 
 import BaseAppPresenter from './base/BaseAppPresenter.js';
+import PinyinSort from '../../common/utils/PinyinSort.js';
+
+const KEY_NAME = "name";
+const KEY_APP_LIST = "appListInfo";
+
+let mPinyinSort;
 
 /**
  * Presenter of launcher list view.
@@ -23,6 +29,8 @@ import BaseAppPresenter from './base/BaseAppPresenter.js';
 export default class AppListPresenter extends BaseAppPresenter {
     constructor(AppModel, MMIModel, SettingsModel, AppListInfoCacheManager, ResourceManager) {
         super(AppModel, MMIModel, SettingsModel, AppListInfoCacheManager, ResourceManager);
+        this.resourceManager = ResourceManager;
+        mPinyinSort = new PinyinSort();
     }
 
     /**
@@ -32,10 +40,13 @@ export default class AppListPresenter extends BaseAppPresenter {
      * @return {object} The regrouped list.
      */
     regroupDataAfterInstall(callbackList) {
-        return callbackList.sort(
-            function compareFunction(param1, param2) {
-                return param1.AppName.localeCompare(param2.AppName, "zh");
-            }
-        );
+        for (let item of callbackList) {
+            let appName = this.resourceManager.getAppResourceCache(item.bundleName, KEY_NAME);
+            console.info("Launcher AppListPresenter regroupDataAfterInstall + appName = " + appName);
+            item.AppName = appName;
+        }
+        callbackList.sort(mPinyinSort.sortByAppName.bind(mPinyinSort));
+        this.appListInfoCacheManager.setCache(KEY_APP_LIST, callbackList);
+        return callbackList;
     }
 }
