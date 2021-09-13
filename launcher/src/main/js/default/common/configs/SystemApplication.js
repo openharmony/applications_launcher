@@ -17,7 +17,7 @@
  * Records the system app that will not be displayed in Launcher.
  */
 const SystemApplication = {
-    SystemApplicationName: 'com.ohos.launcher,com.ohos.systemui'
+    SystemApplicationName: 'com.ohos.launcher,com.ohos.systemui,com.ohos.devicemanagerui'
 }
 
 export default SystemApplication;
