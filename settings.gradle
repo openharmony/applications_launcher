@@ -13,5 +13,5 @@
  * limitations under the License.
  */
 
-include ':launcher', ':recents', ':settings'
-
+include ':phone', ':common', ':feature:recents', ':feature:settings', ':feature:layoutmanager'
+project(':phone').projectDir = new File('./product/phone')
