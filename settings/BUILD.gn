@@ -19,7 +19,7 @@ ohos_hap("ark_launcher_settings") {
     ":launcher_settings_js_assets",
     ":launcher_settings_resources",
   ]
-  js2abc = true
+  js2abc = false
   shared_libraries = [ "//third_party/libpng:libpng" ]
   certificate_profile = "../signature/launcher.p7b"
   hap_name = "ark_launcher_settings"
