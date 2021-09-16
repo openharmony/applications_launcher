@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-import NapiAbilityManager from '@ohos.app.abilitymanager';
+import NapiAbilityManager from '@ohos.app.abilityManager';
 import Storage from '@ohos.data.storage';
 import BundleMgr from '@ohos.bundle';
-import FeatureAbility from '@ohos.ability.featureability';
+import FeatureAbility from '@ohos.ability.featureAbility';
 
 const PREFERENCES_PATH: string = '/data/accounts/account_0/appdata/com.ohos.launcher/sharedPreference/LauncherPreference';
 const MAX_NUM: number = 20;

@@ -27,7 +27,7 @@ export default class RecentsPresenter {
   /**
    * Return an instance of RecentsPresenter.
    */
-  public static getInstance(): RecentsPresenter{
+  public static getInstance(): RecentsPresenter {
     return this.recentsPresenter;
   }
 

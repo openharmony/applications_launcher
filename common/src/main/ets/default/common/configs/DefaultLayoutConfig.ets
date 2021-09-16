@@ -14,14 +14,14 @@
  */
 const DefaultLayoutConfig = {
   DefaultAppPageStartConfig: 'Grid',
-  DefaultLayoutOptions: [{ name: 'List', value: 'List', checked: 'false' }, { name: 'Grid', value: 'Grid', checked: 'false' }],
+  DefaultLayoutOptions: [{ name: 'List', value: 'List', checked: false }, { name: 'Grid', value: 'Grid', checked: false }],
   DefaultGridConfig: 1,
   DefaultRecentProcessLimit: 20,
   DefaultRecentProcessLimitArray: [
-    { name: '5', value: 5, checked: 'false' },
-    { name: '10', value: 10, checked: 'false' },
-    { name: '15', value: 15, checked: 'false' },
-    { name: '20', value: 20, checked: 'false' }
+    { name: '5', value: 5, checked: false },
+    { name: '10', value: 10, checked: false },
+    { name: '15', value: 15, checked: false },
+    { name: '20', value: 20, checked: false }
   ],
 }
 

@@ -16,7 +16,7 @@ import GridLayoutConfigs from '../configs/GridLayoutConfigs.ets'
 import LayoutConfigManager from '../../manager/LayoutConfigManager.ets'
 import FileUtils from '../../utils/FileUtils.ets'
 import ILayoutConfig from './ILayoutConfig.ets'
-import FeatureAbility from '@ohos.ability.featureability';
+import FeatureAbility from '@ohos.ability.featureAbility';
 
 const defaultLayoutInfoFilePath = "/data/accounts/account_0/applications/com.ohos.launcher/com.ohos.launcher/assets/launcher/resources/rawfile/layoutInfo.json";
 

@@ -31,11 +31,10 @@ struct ListLayout {
   }
 
   dialogController: CustomDialogController = new CustomDialogController({
-    builder: ShowDialog({action: this.openUninstallDialog}),
+    builder: ShowDialog({ action: this.openUninstallDialog }),
     cancel: this.cancelDialog,
     autoCancel: true
   });
-
   uninstallDialogController: CustomDialogController = new CustomDialogController({
     builder: UninstallDialog(),
     cancel: this.cancelDialog,
@@ -76,12 +75,15 @@ struct ListLayout {
               this.dialogController.open();
             })
           )
+          .onClick(() => {
+            mAppListPresenter.openApplication(item.abilityName, item.bundleName);
+          })
           .width(DefaultConstants.PERCENTAGE_100)
-          .height(80)
-          .backgroundColor('#3c000000')
-          .borderRadius(20)
-          .padding({ left: 5 })
-          .margin({ top: 5, left: 30, bottom: 5, right: 30 })
+          .height(DefaultConstants.DEFAULT_80)
+          .backgroundColor(DefaultConstants.LIGHT_BLACK)
+          .borderRadius(DefaultConstants.DEFAULT_20)
+          .padding({ left: DefaultConstants.DEFAULT_5 })
+          .margin({ top: DefaultConstants.DEFAULT_5, left: DefaultConstants.DEFAULT_30, bottom: DefaultConstants.DEFAULT_5, right: DefaultConstants.DEFAULT_30 })
         }
       })
     }
@@ -91,8 +93,8 @@ struct ListLayout {
         mAppListPresenter.intoSetting();
       })
     )
-    .width('100%')
-    .height('100%')
+    .width(DefaultConstants.PERCENTAGE_100)
+    .height(DefaultConstants.PERCENTAGE_100)
   }
 }
 
@@ -107,11 +109,12 @@ struct ShowDialog {
     Row() {
       Button() {
         Text($r('app.string.intoSettings'))
+          .height(DefaultConstants.PERCENTAGE_100)
           .fontColor(Color.White)
-          .fontSize(15)
+          .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
       }
-      .width('200px')
-      .height('50px')
+      .width(DefaultConstants.PIXEL_200)
+      .height(DefaultConstants.PIXEL_50)
       .backgroundColor(Color.Blue)
       .onClick(() => {
         mAppListPresenter.intoSetting();
@@ -120,17 +123,18 @@ struct ShowDialog {
 
       Button() {
         Text($r('app.string.uninstall'))
+          .height(DefaultConstants.PERCENTAGE_100)
           .fontColor(Color.White)
-          .fontSize(15)
+          .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
       }
-      .width('200px')
-      .height('50px')
+      .width(DefaultConstants.PIXEL_200)
+      .height(DefaultConstants.PIXEL_50)
       .backgroundColor(Color.Blue)
       .onClick(() => {
         mAppListPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
         this.controller.close();
       })
-    }.padding(20)
+    }.padding(DefaultConstants.DEFAULT_20)
   }
 }
 
@@ -147,15 +151,16 @@ struct UninstallDialog {
         Text($r('app.string.uninstall'))
         Text(this.AppInfo.AppName + ' ?')
       }
+
       Row() {
         Button() {
           Text($r('app.string.submit'))
             .fontColor(Color.White)
-            .fontSize(15)
+            .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
         }
-        .margin({ right: 20 })
-        .width('150px')
-        .height('50px')
+        .margin({ right: DefaultConstants.DEFAULT_20 })
+        .width(DefaultConstants.PIXEL_150)
+        .height(DefaultConstants.PIXEL_50)
         .backgroundColor(Color.Blue)
         .onClick(() => {
           mAppListPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
@@ -165,18 +170,18 @@ struct UninstallDialog {
         Button() {
           Text($r('app.string.cancel'))
             .fontColor(Color.White)
-            .fontSize(15)
+            .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
         }
-        .margin({ left: 20 })
-        .width('150px')
-        .height('50px')
+        .margin({ left: DefaultConstants.DEFAULT_20 })
+        .width(DefaultConstants.PIXEL_150)
+        .height(DefaultConstants.PIXEL_50)
         .backgroundColor(Color.Blue)
         .onClick(() => {
           this.controller.close();
         })
       }
-      .margin({ top: 20 })
-      .padding(20)
-    }.padding(20)
+      .margin({ top: DefaultConstants.DEFAULT_20 })
+      .padding(DefaultConstants.DEFAULT_20)
+    }.padding(DefaultConstants.DEFAULT_20)
   }
 }
