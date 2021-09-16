@@ -51,8 +51,7 @@ struct Recent {
     }
     .width(this.size)
     .height(this.size)
-//    .backgroundImage(DefaultConstants.DEFAULT_BACKGROUND_IMAGE_RECENT)
-    .backgroundImage($m('app.media.ic_wallpaper_recent.jpg'))
+    .backgroundImage(DefaultConstants.DEFAULT_BACKGROUND_IMAGE_RECENT)
   }
 }
 
@@ -100,7 +99,7 @@ struct recentProcessListDisplay {
                   .height(DefaultConstants.APP_IMAGE_HEIGHT)
               }
               .width(DefaultConstants.APP_IMAGE_WIDTH)
-              .height('100%')
+              .height(DefaultConstants.PERCENTAGE_100)
               .margin({ right: this.margin })
               .onClick(() => {
                 mRecentsPresenter.startUpApp(item)
@@ -119,7 +118,7 @@ struct recentProcessListDisplay {
         }.height(this.appHeightSize)
         .scrollable(ScrollDirection.Horizontal)
       }
-      .width('100%')
+      .width(DefaultConstants.PERCENTAGE_100)
       .height(this.appHeightSize)
 
       Column() {
@@ -132,7 +131,7 @@ struct recentProcessListDisplay {
           mRecentsPresenter.clearRecentProcess();
         }))
       }.alignItems(HorizontalAlign.Center)
-      .width('100%')
+      .width(DefaultConstants.PERCENTAGE_100)
       .height(this.deleteHeightSize)
     }
   }
@@ -144,9 +143,9 @@ struct emptyMsgDisplay {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
       Text($r('app.string.No_running_apps_recently'))
         .fontColor(DefaultConstants.DEFAULT_FONT_COLOR)
-        .fontSize(20)
+        .fontSize(DefaultConstants.DEFAULT_NUMBER)
     }
-    .width('100%')
-    .height('100%')
+    .width(DefaultConstants.PERCENTAGE_100)
+    .height(DefaultConstants.PERCENTAGE_100)
   }
 }

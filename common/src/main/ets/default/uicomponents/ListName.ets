@@ -43,7 +43,7 @@ struct ListName {
       Text(this.name)
         .fontSize(this.nameSize)
         .fontColor(DefaultConstants.DEFAULT_FONT_COLOR)
-        .margin({ left: 20 })
+        .margin({ left: DefaultConstants.DEFAULT_NUMBER })
     }
   }
 }

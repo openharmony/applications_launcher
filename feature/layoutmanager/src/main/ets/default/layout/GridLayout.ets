@@ -377,27 +377,32 @@ struct ShowDialog {
     Row() {
       Button() {
         Text($r('app.string.intoSettings'))
-          .fontSize(15)
+          .height(DefaultConstants.PERCENTAGE_100)
+          .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
         .fontColor(Color.White)
       }
-      .width('200px')
-      .height('50px')
+      .width(DefaultConstants.PIXEL_200)
+      .height(DefaultConstants.PIXEL_50)
       .backgroundColor(Color.Blue)
       .onClick(() => {
         mAppGridPresenter.intoSetting();
         this.controller.close();
       })
 
-      Button(this.buttonText)
-        .borderRadius('25px')
-        .width('200px')
-        .height('50px')
+      Button(){
+        Text(this.buttonText)
+          .height(DefaultConstants.PERCENTAGE_100)
+          .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
+          .fontColor(Color.White)
+      }
+        .width(DefaultConstants.PIXEL_200)
+        .height(DefaultConstants.PIXEL_50)
         .backgroundColor(Color.Blue)
         .onClick(() => {
         mAppGridPresenter.addOrDeleteBlankPage();
         this.controller.close();
       })
-    }.padding(20)
+    }.padding(DefaultConstants.DEFAULT_20)
   }
 }
 
@@ -417,11 +422,12 @@ struct UninstallDialog {
       Row() {
         Button() {
           Text($r('app.string.submit'))
-            .fontSize(25)
+            .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
+            .fontColor(Color.White)
         }
-        .margin({ right: 20 })
-        .width('150px')
-        .height('50px')
+        .margin({ right: DefaultConstants.DEFAULT_20 })
+        .width(DefaultConstants.PIXEL_150)
+        .height(DefaultConstants.PIXEL_50)
         .backgroundColor(Color.Blue)
         .onClick(() => {
           mAppGridPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
@@ -430,19 +436,20 @@ struct UninstallDialog {
 
         Button() {
           Text($r('app.string.cancel'))
-            .fontSize(25)
+            .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
+            .fontColor(Color.White)
         }
-        .margin({ left: 20 })
-        .width('150px')
-        .height('50px')
+        .margin({ left: DefaultConstants.DEFAULT_20 })
+        .width(DefaultConstants.PIXEL_150)
+        .height(DefaultConstants.PIXEL_50)
         .backgroundColor(Color.Blue)
         .onClick(() => {
           this.controller.close();
         })
       }
-      .margin({ top: 20 })
-      .padding(20)
+      .margin({ top: DefaultConstants.DEFAULT_20 })
+      .padding(DefaultConstants.DEFAULT_20)
     }
-    .padding(20)
+    .padding(DefaultConstants.DEFAULT_20)
   }
 }

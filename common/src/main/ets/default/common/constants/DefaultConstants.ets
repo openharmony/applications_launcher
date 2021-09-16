@@ -27,4 +27,5 @@ export default class StyleConstants {
   public static DEFAULT_BACKGROUND_IMAGE_RECENT:string = '/common/pics/ic_wallpaper_recent.jpg'
   public static APP_IMAGE_WIDTH: number = 240
   public static APP_IMAGE_HEIGHT: number = 430
+  public static DEFAULT_NUMBER: number = 20
 }

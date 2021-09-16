@@ -79,4 +79,15 @@ export default class AppListPresenter extends BaseAppPresenter {
     console.info("Launcher AppListView intoSetting");
     this.jumpToSetting();
   }
+
+  /**
+   * Open application function.
+   *
+   * @param {string} abilityName - ability name of the application to be jump to.
+   * @param {string} bundleName - bundle name of the application to be jump to.
+   */
+  public openApplication(abilityName, bundleName) {
+    console.info("Launcher AppListView openApplication abilityName:" + abilityName);
+    this.jumpTo(abilityName, bundleName);
+  }
 }

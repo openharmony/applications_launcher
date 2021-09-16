@@ -24,7 +24,7 @@
     "abilities": [
       {
         "visible": true,
-        "name": "com.ohos.launcher.MainAbility",
+        "name": "com.ohos.launcher.recents.MainAbility",
         "icon": "$media:icon",
         "description": "$string:mainability_description",
         "label": "$string:recents_MainAbility",

@@ -23,4 +23,12 @@ export default class StyleConstants {
   public static PERCENTAGE_85: string = '85%'
   public static PERCENTAGE_25: string = '25%'
   public static PERCENTAGE_15: string = '15%'
+  public static PIXEL_200: string = '200px'
+  public static PIXEL_150: string = '150px'
+  public static PIXEL_50: string = '50px'
+  public static LIGHT_BLACK: string = '#3c000000'
+  public static DEFAULT_20: number = 20
+  public static DEFAULT_80: number = 80
+  public static DEFAULT_5: number = 5
+  public static DEFAULT_30: number = 30
 }
