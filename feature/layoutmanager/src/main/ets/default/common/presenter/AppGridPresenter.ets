@@ -209,6 +209,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   ifLayoutRationality = (info) => {
+    this.mGridConfig = this.mSettingsModel.getGridConfig();
     let column = this.mGridConfig.column;
     let row = this.mGridConfig.row;
     //verify whether the info is null.
@@ -288,6 +289,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
     let layoutDescription = info.layoutDescription;
     let layoutInfo = info.layoutInfo;
     let bottomBarInfo = info.bottomBarInfo;
+    this.mGridConfig = this.mSettingsModel.getGridConfig();
     let column = this.mGridConfig.column;
     let row = this.mGridConfig.row;
     let newApp = [];
@@ -371,6 +373,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   private getExistNumber(layoutInfo) {
+    this.mGridConfig = this.mSettingsModel.getGridConfig();
     let column = this.mGridConfig.column;
     let row = this.mGridConfig.row;
     let existNumber = 0;
@@ -387,6 +390,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   private createNewInfo() {
+    this.mGridConfig = this.mSettingsModel.getGridConfig();
     let column = this.mGridConfig.column;
     let row = this.mGridConfig.row;
     let layoutNum = this.mBundleInfoList.length;
@@ -409,6 +413,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
 
   private createNewLayoutInfo() {
     let info = this.mSettingsModel.getLayoutInfo();
+    this.mGridConfig = this.mSettingsModel.getGridConfig();
     let column = this.mGridConfig.column;
     let row = this.mGridConfig.row;
     let layoutNum = info.layoutInfo.length;
@@ -483,10 +488,10 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   public isBlankPage() {
-    if (this.mGridAppsInfos[this.pageIndex].length == undefined ) {
+    if (this.mGridAppsInfos[this.pageIndex].length == undefined) {
       return true;
     }
-    if(this.mGridAppsInfos[this.pageIndex].length === 0) {
+    if (this.mGridAppsInfos[this.pageIndex].length === 0) {
       return true;
     }
     return false;
@@ -765,7 +770,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
      * @return {boolean} Move result.
      */
   private moveLayoutForward = (source, destination, layoutInfo, startInfo) => {
-
+    this.mGridConfig = this.mSettingsModel.getGridConfig();
     let startLayoutInfo = layoutInfo.find(item => {
       return item.page == source.page && item.row == source.row && item.column == source.column;
     });
@@ -802,7 +807,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
      * @return {boolean} Move result.
      */
   private moveLayoutBackward = (source, destination, layoutInfo, startInfo) => {
-
+    this.mGridConfig = this.mSettingsModel.getGridConfig();
     let startLayoutInfo = layoutInfo.find(item => {
       return item.page == source.page && item.row == source.row && item.column == source.column;
     });
@@ -832,9 +837,9 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   public calculateCoordinate(): void{
+    this.mGridConfig = this.mSettingsModel.getGridConfig();
     let column = this.mGridConfig.column;
     let row = this.mGridConfig.row;
-
     this.mPageCoordinateData.gridXAxis = [];
     this.mPageCoordinateData.gridYAxis = [];
     this.mPageCoordinateData.bottomXAxis = [];
@@ -916,5 +921,10 @@ export default class AppGridPresenter extends BaseAppPresenter {
       position.row = BOTTOM_BAR_ROW;
     }
     return position
+  }
+
+  public setEquipment(EType) {
+    this.mSettingsModel.setEquipment(EType);
+    this.mGridConfig = this.mSettingsModel.getGridConfig();
   }
 }

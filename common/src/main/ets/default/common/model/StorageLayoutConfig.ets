@@ -16,6 +16,7 @@ import ILayoutConfig from './ILayoutConfig.ets'
 import Storage from '@ohos.data.storage';
 import DefaultLayoutConfig from '../configs/DefaultLayoutConfig.ets'
 
+const QEUIPMENT_TYPE = 'EquipmentType';
 const APP_PAGE_START_CONFIG = 'AppStartPageType';
 const GRID_CONFIG = "GridConfig";
 const RECENT_PROCESS_LIMIT = "RecentProcessLimit";
@@ -129,5 +130,19 @@ export default class StorageLayoutConfig extends ILayoutConfig {
     console.info('Launcher StorageLayoutConfig removeGridLayoutInfo start');
     mPreferences.deleteSync(GRID_LAYOUT_INFO);
     console.info('Launcher StorageLayoutConfig removeGridLayoutInfo start');
+  }
+
+  saveEquipmentType(Etype) {
+    console.info('Launcher StorageLayoutConfig saveEquipmentType start');
+    mPreferences.putSync(QEUIPMENT_TYPE, Etype);
+    mPreferences.flushSync();
+    console.info('Launcher StorageLayoutConfig saveEquipmentType end');
+  }
+
+  loadEquipmentType(): string {
+    console.info('Launcher settings StorageLayoutConfig loadEquipmentType  mPreferences get');
+    let data = mPreferences.getSync(QEUIPMENT_TYPE, 'phone');
+    console.info('Launcher settings StorageLayoutConfig loadEquipmentType mPreferences get' + data);
+    return data;
   }
 }

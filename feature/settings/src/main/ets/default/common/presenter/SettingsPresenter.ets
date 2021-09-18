@@ -74,6 +74,7 @@ export default class SettingsPresenter {
     */
   constructor() {
     mSettingsModel = new SettingsModel();
+    this.gridSettingsList[1].valueList = mSettingsModel.getGridLayoutTable();
   }
 
   /**
@@ -92,14 +93,36 @@ export default class SettingsPresenter {
     */
   public getSettingList() {
     let layout = mSettingsModel.getAppPageStartConfig();
+    for (let i = 0; i < this.gridSettingsList[0].valueList.length; i++) {
+      if (this.gridSettingsList[0].valueList[i].name == layout) {
+        this.gridSettingsList[0].valueList[i].checked = true;
+        this.listSettingsList[0].valueList[i].checked = true;
+        break;
+      }
+    }
+    let gridLayout = mSettingsModel.getGridConfig().layout;
+    for (let i = 0; i < this.gridSettingsList[1].valueList.length; i++) {
+      if (this.gridSettingsList[1].valueList[i].name == gridLayout) {
+        this.gridSettingsList[1].valueList[i].checked = true;
+        break;
+      }
+    }
+    let Limit = mSettingsModel.getRecentProcessLimit().toString();
+    for (let i = 0; i < this.gridSettingsList[2].valueList.length; i++) {
+      if (this.gridSettingsList[2].valueList[i].name == Limit) {
+        this.gridSettingsList[2].valueList[i].checked = true;
+        this.listSettingsList[1].valueList[i].checked = true;
+        break;
+      }
+    }
     if (layout == 'Grid') {
       this.gridSettingsList[0].settingValue = layout;
-      this.gridSettingsList[1].settingValue = mSettingsModel.getGridConfig().layout;
-      this.gridSettingsList[2].settingValue = mSettingsModel.getRecentProcessLimit().toString();
+      this.gridSettingsList[1].settingValue = gridLayout;
+      this.gridSettingsList[2].settingValue = Limit;
       return this.gridSettingsList;
     } else {
       this.listSettingsList[0].settingValue = layout;
-      this.listSettingsList[1].settingValue = mSettingsModel.getRecentProcessLimit().toString();
+      this.listSettingsList[1].settingValue = Limit;
       return this.listSettingsList;
     }
   }

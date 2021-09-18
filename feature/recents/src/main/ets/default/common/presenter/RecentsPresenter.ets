@@ -12,22 +12,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import Router from '@system.router';
 import RecentsModel from '../model/RecentsModel.ets';
-let mRecentsModel: RecentsModel = RecentsModel.getInstance();
-let mRecentsLimit: number = mRecentsModel.getRecentProcessLimit();
-let recentProcessList = [];
 
 /**
  * Class RecentsPresenter.
  */
 export default class RecentsPresenter {
   private static recentsPresenter: RecentsPresenter = new RecentsPresenter();
+  private mRecentsModel: RecentsModel;
+  private mRecentsLimit: number;
+  private recentProcessList = [];
 
+  private constructor() {
+    this.mRecentsModel = new RecentsModel();
+    this.mRecentsLimit = this.mRecentsModel.getRecentProcessLimit();
+  }
   /**
    * Return an instance of RecentsPresenter.
    */
-  public static getInstance(): RecentsPresenter{
+  public static getInstance(): RecentsPresenter {
     return this.recentsPresenter;
   }
 
@@ -36,14 +41,15 @@ export default class RecentsPresenter {
    */
   getRecentProcessList() {
     console.info("Launcher recents  RecentsPresenter getRecentProcessList start");
-    mRecentsModel.getRecentProcessList((data) => {
-      let recentProcessList = data;
-      if (recentProcessList.length > mRecentsLimit) {
-        recentProcessList.splice(0, recentProcessList.length - mRecentsLimit);
+    this.mRecentsModel.getRecentProcessList((data) => {
+      this.recentProcessList = data;
+      if (this.recentProcessList.length > this.mRecentsLimit) {
+        this.recentProcessList.splice(-1, this.recentProcessList.length - this.mRecentsLimit);
       }
-      console.info("Launcher recents  RecentsPresenter mRecentsModel.getRecentProcessList getRecentProcessList recentProcessList = " + JSON.stringify(recentProcessList));
+      AppStorage.SetOrCreate('recentProcessList', this.recentProcessList);
+      console.info("Launcher recents  RecentsPresenter getRecentProcessList recentProcessList" + JSON.stringify(this.recentProcessList));
     });
-    console.info("Launcher recents  RecentsPresenter getRecentProcessList end")
+    console.info("Launcher recents  RecentsPresenter getRecentProcessList end");
   }
 
   /**
@@ -51,8 +57,7 @@ export default class RecentsPresenter {
    */
   clearRecentProcess() {
     console.info("Launcher recents  RecentsPresenter clearRecentProcess start");
-    mRecentsModel.clearRecentProcess();
-    console.log("Launcher recents  RecentsPresenter clearRecentProcess recentProcessList" + JSON.stringify(recentProcessList));
+    this.mRecentsModel.clearRecentProcess();
     console.info("Launcher recents  RecentsPresenter clearRecentProcess end");
   }
 
@@ -62,8 +67,9 @@ export default class RecentsPresenter {
    * @param {string} missionId - The missionId of recent process.
    */
   removeRecentProcess(missionId) {
+    console.info("Launcher recents  RecentsPresenter removeRecentProcess start");
     console.info("Launcher recents  RecentsPresenter removeRecentProcess start missionId = " + missionId);
-    mRecentsModel.removeRecentProcess(missionId);
+    this.mRecentsModel.removeRecentProcess(missionId);
     console.info("Launcher recents  RecentsPresenter removeRecentProcess end");
   }
 
@@ -81,9 +87,9 @@ export default class RecentsPresenter {
    *
    * @param {object} appInfo - The app info.
    */
-  startUpApp(appInfo) {
-    console.info("Launcher recents  RecentsPresenter startUpApp start appInfo = " + JSON.stringify(appInfo));
-    mRecentsModel.startAbility(appInfo);
+  startUpApp(abilityName, bundleName) {
+    console.info("Launcher recents  RecentsPresenter startUpApp start appInfo = " + JSON.stringify(abilityName, bundleName));
+    this.mRecentsModel.startAbility(abilityName, bundleName);
     console.info("Launcher recents  RecentsPresenter startUpApp end ");
   }
 }

@@ -15,29 +15,46 @@
 const GridLayoutConfigs = {
   GridLayoutTable: [
     {
-      id: 0,
+      id: 1,
       layout: '4X4',
+      name: '4X4',
+      value: 0,
       row: 4,
       column: 4,
-      checked: 'false'
+      checked: false
     },
 
     {
-      id: 1,
+      id: 0,
       layout: '5X4',
+      name: '5X4',
+      value: 1,
       row: 5,
       column: 4,
-      checked: 'false'
+      checked: false
     },
 
     {
       id: 2,
       layout: '6X4',
+      name: '6X4',
+      value: 2,
       row: 6,
       column: 4,
-      checked: 'false'
+      checked: false
     },
-  ]
+  ],
+  GridLayoutTableHorizontal: [
+    {
+      id: 0,
+      layout: '2X6',
+      name: '2X6',
+      value: 0,
+      row: 2,
+      column: 6,
+      checked: false
+    },
+  ],
 }
 
 export default GridLayoutConfigs;

@@ -23,6 +23,7 @@ struct AppIcon {
   @Prop bundleName: string;
   @Prop labelId: string;
   @State icon: string = ' ';
+  @State useCache: boolean = true;
   private mResourceManager;
   private mDefaultAppIcon;
 
@@ -30,7 +31,11 @@ struct AppIcon {
     this.mDefaultAppIcon = DefaultConstants.DEFAULT_ICON;
     this.icon = this.mDefaultAppIcon;
     this.mResourceManager = ResourceManager.getInstance();
-    this.mResourceManager.getAppIcon(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    if (this.useCache) {
+      this.mResourceManager.getAppIconWithCache(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    } else {
+      this.mResourceManager.getAppIcon(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    }
   }
 
   public iconLoadCallback(image) {
@@ -38,7 +43,11 @@ struct AppIcon {
   }
 
   public updateIcon() {
-    this.mResourceManager.getAppIcon(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    if (this.useCache) {
+      this.mResourceManager.getAppIconWithCache(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    } else {
+      this.mResourceManager.getAppIcon(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    }
   }
 
   build() {

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 import BundleMgr from '@ohos.bundle';
-import FeatureAbility from '@ohos.ability.featureability';
+import FeatureAbility from '@ohos.ability.featureAbility';
 import Subscriber from '@ohos.commonevent';
 import SystemApplication from '../configs/SystemApplication.ets';
 import CheckEmptyUtils from '../../utils/CheckEmptyUtils.ets';
@@ -49,12 +49,12 @@ export default class AppModel {
   getAppList(callback) {
     this.mBundleInfoList = [];
     console.info('Launcher AppModel getAppIcon getAppList');
-    BundleMgr.getBundleInfos(IF_GET_ABILITY)
+    BundleMgr.getAllBundleInfo(IF_GET_ABILITY)
       .then((data) => {
       if (CheckEmptyUtils.isEmpty(data)) {
-        console.error("Launcher AppModel getAppList getBundleInfos ERROR");
+        console.error("Launcher AppModel getAppList getAllBundleInfo ERROR");
       }
-      console.info('Launcher AppModel getBundleInfos >' + JSON.stringify(data));
+      console.info('Launcher AppModel getAllBundleInfo >' + JSON.stringify(data));
       for (let i = 0; i < data.length; i++) {
         if (this.systemApplicationName.indexOf(data[i].name) > -1) {
         } else {
@@ -88,6 +88,7 @@ export default class AppModel {
       data.uninstall(uninstallBundleName, {
         param: {
           userId: 0,
+          installFlag: 0,
           isKeepData: false
         }
       }, this.uninstallCallback.bind(this));
