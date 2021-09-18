@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 const SystemApplication = {
-  SystemApplicationName: 'com.ohos.launcher,com.ohos.systemui,com.ohos.devicemanagerui'
+  SystemApplicationName: 'com.ohos.launcher,com.ohos.systemui,com.ohos.devicemanagerui,com.ohos.callui'
 }
 
 export default SystemApplication;

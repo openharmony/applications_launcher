@@ -21,14 +21,20 @@ const KEY_NAME = "name";
 
 export default class ResourceManager {
   private static resourceManager: ResourceManager = new ResourceManager();
-  private mAppResourceCacheManager: AppResourceCacheManager;
+  private mAppResourceCacheManager: AppResourceCacheManager = null;
 
   private constructor() {
-    this.mAppResourceCacheManager = new AppResourceCacheManager();
   }
 
   public static getInstance(): ResourceManager{
     return this.resourceManager;
+  }
+
+  private getAppResourceCacheManager() {
+    if (this.mAppResourceCacheManager == null) {
+      this.mAppResourceCacheManager = new AppResourceCacheManager();
+    }
+    return this.mAppResourceCacheManager;
   }
 
   getAppIcon(path, bundleName, callback, defaultAppIcon) {
@@ -36,7 +42,35 @@ export default class ResourceManager {
       console.info('Launcher ResourceManager getAppIcon iconId > ' + defaultAppIcon);
       callback(defaultAppIcon);
     } else {
-      let iconBase64 = this.mAppResourceCacheManager.getCache(bundleName, KEY_ICON);
+      Resmgr.getResourceManager(bundleName)
+        .then(item => {
+        if (CheckEmptyUtils.isEmpty(item)) {
+          console.error("Launcher ResourceManager getAppIcon getResourceManager ERROR! item is empty");
+        }
+        console.info('Launcher ResourceManager getAppIcon  data>' + item);
+        item.getMediaBase64(path, (error, value) => {
+          console.info('Launcher ResourceManager getAppIcon getMediaBase64 value>' + value);
+          if (value != null) {
+            callback(value);
+          }
+          else {
+            callback(defaultAppIcon);
+          }
+        });
+      })
+        .catch(e => {
+        console.error("Launcher ResourceManager getAppIcon error ");
+        callback(defaultAppIcon);
+      });
+    }
+  }
+
+  getAppIconWithCache(path, bundleName, callback, defaultAppIcon) {
+    if (path == null || path == undefined || path == "" || path <= 0) {
+      console.info('Launcher ResourceManager getAppIcon iconId > ' + defaultAppIcon);
+      callback(defaultAppIcon);
+    } else {
+      let iconBase64 = this.getAppResourceCacheManager().getCache(bundleName, KEY_ICON);
       if (iconBase64 == undefined || iconBase64 == null || iconBase64 == '') {
         Resmgr.getResourceManager(bundleName)
           .then(item => {
@@ -47,7 +81,7 @@ export default class ResourceManager {
           item.getMediaBase64(path, (error, value) => {
             console.info('Launcher ResourceManager getAppIcon getMediaBase64 value>' + value);
             if (value != null) {
-              this.mAppResourceCacheManager.setCache(bundleName, KEY_ICON, value);
+              this.getAppResourceCacheManager().setCache(bundleName, KEY_ICON, value);
               callback(value);
             }
             else {
@@ -68,10 +102,36 @@ export default class ResourceManager {
   getAppName(labelId, bundleName, appName, callback) {
     if (labelId == null || labelId == undefined || labelId == "" || labelId <= 0) {
       console.info('Launcher ResourceManager getAppName callback ' + appName);
-      this.mAppResourceCacheManager.setCache(bundleName, KEY_NAME, appName);
       callback(appName);
     } else {
-      let name = this.mAppResourceCacheManager.getCache(bundleName, KEY_NAME);
+      Resmgr.getResourceManager(bundleName)
+        .then(item => {
+        console.info('Launcher ResourceManager getAppName getResourceManager labelId' + labelId);
+        item.getString(labelId, (error, value) => {
+          if (CheckEmptyUtils.checkStrIsEmpty(value)) {
+            console.error("Launcher AppModel getAppName getString ERROR! value is empty");
+          }
+          console.info('Launcher ResourceManager getAppName  getString value>' + value);
+          if (value != null) {
+            callback(value);
+          } else {
+            callback(appName);
+          }
+        });
+      })
+        .catch(e => {
+        console.error("Launcher ResourceManager getAppName error ")
+        callback(appName);
+      });
+    }
+  }
+
+  getAppNameWithCache(labelId, bundleName, appName, callback) {
+    if (labelId == null || labelId == undefined || labelId == "" || labelId <= 0) {
+      console.info('Launcher ResourceManager getAppName callback ' + appName);
+      callback(appName);
+    } else {
+      let name = this.getAppResourceCacheManager().getCache(bundleName, KEY_NAME);
       if (name == undefined || name == null || name == '') {
         Resmgr.getResourceManager(bundleName)
           .then(item => {
@@ -82,7 +142,7 @@ export default class ResourceManager {
             }
             console.info('Launcher ResourceManager getAppName  getString value>' + value);
             if (value != null) {
-              this.mAppResourceCacheManager.setCache(bundleName, KEY_NAME, value);
+              this.getAppResourceCacheManager().setCache(bundleName, KEY_NAME, value);
               callback(value);
             } else {
               callback(appName);
@@ -106,6 +166,6 @@ export default class ResourceManager {
      * @param {string} key - key of the cache
      */
   getAppResourceCache(bundleName, key) {
-    return this.mAppResourceCacheManager.getCache(bundleName, key);
+    return this.getAppResourceCacheManager().getCache(bundleName, key);
   }
 }

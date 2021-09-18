@@ -15,7 +15,7 @@
 const DefaultLayoutConfig = {
   DefaultAppPageStartConfig: 'Grid',
   DefaultLayoutOptions: [{ name: 'List', value: 'List', checked: false }, { name: 'Grid', value: 'Grid', checked: false }],
-  DefaultGridConfig: 1,
+  DefaultGridConfig: 0,
   DefaultRecentProcessLimit: 20,
   DefaultRecentProcessLimitArray: [
     { name: '5', value: 5, checked: false },

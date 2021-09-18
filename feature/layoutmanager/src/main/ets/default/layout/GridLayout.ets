@@ -41,7 +41,12 @@ struct GridLayout {
   @State moveAppY: number = 0;
   @State moveAppShow: boolean = false;
   @State moveAppInfo: any = {};
-  @State ScreenMagnification: number = 1;
+  @Prop@Watch('changeGridConfig') gridConfig: string;
+  @Prop equipment: string;
+  @State ScreenMagnification: number = 1.0;
+  @Prop SwiperProportion: string;
+  @Prop BottomBarProportion: string;
+
   dialogController: CustomDialogController = new CustomDialogController({
     builder: ShowDialog(),
     cancel: this.cancelDialog,
@@ -56,11 +61,17 @@ struct GridLayout {
     mSHeight = this.mScreenHeight * PROPORTION;
     mScreenMagnification = this.ScreenMagnification;
     mAppGridPresenter = AppGridPresenter.getInstance();
+    mAppGridPresenter.setEquipment(this.equipment);
     mAppGridPresenter.setScreenHeight(this.mScreenHeight);
     mAppGridPresenter.setScreenWidth(this.mScreenWidth);
     mAppGridPresenter.calculateCoordinate();
     mAppGridPresenter.getGridList();
     mAppGridPresenter.registerAppListChangeCallback()
+  }
+
+  public changeGridConfig() {
+    mAppGridPresenter.calculateCoordinate();
+    mAppGridPresenter.getGridList();
   }
 
   build() {
@@ -72,11 +83,12 @@ struct GridLayout {
           moveAppX: $moveAppX,
           moveAppY: $moveAppY,
           moveAppShow: $moveAppShow,
-          moveAppInfo: $moveAppInfo
+          moveAppInfo: $moveAppInfo,
+          gridConfig: this.gridConfig
         })
       }
       .width(DefaultConstants.PERCENTAGE_100)
-      .height(DefaultConstants.PERCENTAGE_85)
+      .height(this.SwiperProportion)
 
       Column() {
         BottomBar({
@@ -88,7 +100,7 @@ struct GridLayout {
         })
       }
       .width(DefaultConstants.PERCENTAGE_100)
-      .height(DefaultConstants.PERCENTAGE_15)
+      .height(this.BottomBarProportion)
 
       if (this.moveAppShow) {
         Stack() {
@@ -129,6 +141,7 @@ struct GridSwiper {
   @Link moveAppShow: boolean;
   @Link moveAppInfo: any;
   @StorageLink('pageIndex') PageIndex: number = 0;
+  @Prop gridConfig: string;
   private mAppGridInfo;
   private mAppBottomBarInfo;
 
@@ -145,7 +158,8 @@ struct GridSwiper {
             moveAppX: $moveAppX,
             moveAppY: $moveAppY,
             moveAppShow: $moveAppShow,
-            moveAppInfo: $moveAppInfo
+            moveAppInfo: $moveAppInfo,
+            gridConfig: this.gridConfig
           })
         })
       }
@@ -170,13 +184,24 @@ struct SwiperPage {
   @Link moveAppY: number;
   @Link moveAppShow: boolean;
   @Link moveAppInfo: any;
+  @Prop@Watch('changeColumnAndRow') gridConfig: string;
   private mAppBottomBarInfo;
   private mAppListInfo;
 
   private aboutToAppear(): void  {
+    this.changeConfig();
+  }
+
+  public changeColumnAndRow() {
+    this.changeConfig();
+  }
+
+  public changeConfig() {
     let mGridConfig = mAppGridPresenter.getGridConfig();
     let column = mGridConfig.column;
     let row = mGridConfig.row;
+    this.ColumnsTemplate = '';
+    this.RowsTemplate = '';
     for (let i = 0;i < column; i++) {
       this.ColumnsTemplate += '1fr '
     }
@@ -379,7 +404,7 @@ struct ShowDialog {
         Text($r('app.string.intoSettings'))
           .height(DefaultConstants.PERCENTAGE_100)
           .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
-        .fontColor(Color.White)
+          .fontColor(Color.White)
       }
       .width(DefaultConstants.PIXEL_200)
       .height(DefaultConstants.PIXEL_50)
@@ -389,16 +414,16 @@ struct ShowDialog {
         this.controller.close();
       })
 
-      Button(){
+      Button() {
         Text(this.buttonText)
           .height(DefaultConstants.PERCENTAGE_100)
           .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
           .fontColor(Color.White)
       }
-        .width(DefaultConstants.PIXEL_200)
-        .height(DefaultConstants.PIXEL_50)
-        .backgroundColor(Color.Blue)
-        .onClick(() => {
+      .width(DefaultConstants.PIXEL_200)
+      .height(DefaultConstants.PIXEL_50)
+      .backgroundColor(Color.Blue)
+      .onClick(() => {
         mAppGridPresenter.addOrDeleteBlankPage();
         this.controller.close();
       })

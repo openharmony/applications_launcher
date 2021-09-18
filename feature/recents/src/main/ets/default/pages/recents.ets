@@ -21,33 +21,33 @@ let mRecentsPresenter: RecentsPresenter;
 @Entry
 @Component
 struct Recent {
-  @StorageLink('recentProcessList') mRecentProcessList: [] = []
-  @State size: string = '100%'
+  @StorageLink('recentProcessList') mRecentProcessList: [] = [];
+  @State size: string = DefaultConstants.PERCENTAGE_100;
 
   aboutToAppear() {
     console.log("Launcher recents  aboutToAppear start");
-    mRecentsPresenter = RecentsPresenter.getInstance()
     console.log("Launcher recents  aboutToAppear end");
   }
 
   onPageShow() {
     console.log("Launcher recents  onPageShow start");
+    mRecentsPresenter = RecentsPresenter.getInstance();
     mRecentsPresenter.getRecentProcessList();
     console.log("Launcher recents  onPageShow end");
   }
 
   onPageHide() {
     console.info("Launcher recents  onPageHide start");
-    this.mRecentProcessList = []
+    this.mRecentProcessList = [];
     console.info("Launcher recents  onPageHide end");
   }
 
   build() {
     Column() {
       if (this.mRecentProcessList.length === 0) {
-        emptyMsgDisplay()
+        emptyMsgDisplay();
       }
-      recentProcessListDisplay({ recentProcessList: $mRecentProcessList })
+      recentProcessListDisplay({ recentProcessList: $mRecentProcessList });
     }
     .width(this.size)
     .height(this.size)
@@ -57,17 +57,18 @@ struct Recent {
 
 @Component
 struct recentProcessListDisplay {
-  @Link recentProcessList: []
-  scroller: Scroller = new Scroller()
-  @State AppIconSize: number = 55
+  @Link recentProcessList: [];
+  scroller: Scroller = new Scroller();
+  @State AppIconSize: number = 55;
   @State AppItemHeight: number = DefaultConstants.DEFAULT_APP_ITEM_HEIGHT;
   @State AppItemWidth: number = DefaultConstants.DEFAULT_APP_ITEM_WIDTH;
-  @State appHeightSize: string = '85%'
-  @State deleteHeightSize: string = '15%'
-  @State AppborderRadius: number  = 10
-  @State DeleteImageSize: number = 50
-  @State DeleteOpacity: number = 0.5
-  @State margin: number = 10
+  @State heightSize: string = DefaultConstants.PERCENTAGE_100;
+  @State appHeightSize: string = DefaultConstants.PERCENTAGE_85;
+  @State deleteHeightSize: string = DefaultConstants.PERCENTAGE_15;
+  @State AppborderRadius: number  = 10;
+  @State DeleteImageSize: number = 50;
+  @State DeleteOpacity: number = 0.5;
+  @State margin: number = 10;
 
   build() {
     Column() {
@@ -81,34 +82,34 @@ struct recentProcessListDisplay {
                     iconSize: this.AppIconSize,
                     appIcon: item.iconId,
                     bundleName: item.bundleName,
-                    labelId: item.labelId
+                    labelId: item.labelId,
+                    useCache: false
                   })
                   GridName({
                     appName: item.AppName,
                     nameHeight: this.AppItemHeight - this.AppItemWidth,
                     nameWidth: this.AppItemWidth,
                     bundleName: item.bundleName,
-                    labelId: item.labelId
+                    labelId: item.labelId,
+                    useCache: false
                   })
                 }
                 .margin({ bottom: this.margin })
-
                 Image(DefaultConstants.DEFAULT_APP_IMAGE)
                   .borderRadius(this.AppborderRadius)
-                  .width('100%')
+                  .width(this.heightSize)
                   .height(DefaultConstants.APP_IMAGE_HEIGHT)
               }
               .width(DefaultConstants.APP_IMAGE_WIDTH)
-              .height(DefaultConstants.PERCENTAGE_100)
+              .height(this.heightSize)
               .margin({ right: this.margin })
               .onClick(() => {
-                mRecentsPresenter.startUpApp(item)
+                mRecentsPresenter.startUpApp(item.abilityName, item.bundleName);
               })
               .gesture(
-                PanGesture({ fingers: 1, direction: PanDirection.Vertical, distance: 5 }) //
-                .onActionEnd((e) => {
+                PanGesture({ fingers: 1, direction: PanDirection.Vertical, distance: 5 })
+                  .onActionEnd((e) => {
                   let mOffectWidth = (DefaultConstants.APP_IMAGE_WIDTH) / 2;
-                  console.log('e.offsetX, Y' + e.offsetX + e.offsetY)
                   if (e.offsetY < -50 && e.offsetX <= mOffectWidth && -mOffectWidth <= e.offsetX) {
                     mRecentsPresenter.removeRecentProcess(item.missionId);
                   }
@@ -118,7 +119,7 @@ struct recentProcessListDisplay {
         }.height(this.appHeightSize)
         .scrollable(ScrollDirection.Horizontal)
       }
-      .width(DefaultConstants.PERCENTAGE_100)
+      .width(this.heightSize)
       .height(this.appHeightSize)
 
       Column() {
@@ -129,9 +130,13 @@ struct recentProcessListDisplay {
           .align(Alignment.Bottom)
           .onClick(() => {
           mRecentsPresenter.clearRecentProcess();
+          setTimeout(() => {
+            console.info("Launcher recents  clearAll this.mRecentsPresenter.back()");
+            mRecentsPresenter.back();
+          }, 1500);
         }))
       }.alignItems(HorizontalAlign.Center)
-      .width(DefaultConstants.PERCENTAGE_100)
+      .width(this.heightSize)
       .height(this.deleteHeightSize)
     }
   }
@@ -139,13 +144,14 @@ struct recentProcessListDisplay {
 
 @Component
 struct emptyMsgDisplay {
+  @State size:string = DefaultConstants.PERCENTAGE_100;
   build() {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
       Text($r('app.string.No_running_apps_recently'))
         .fontColor(DefaultConstants.DEFAULT_FONT_COLOR)
         .fontSize(DefaultConstants.DEFAULT_NUMBER)
     }
-    .width(DefaultConstants.PERCENTAGE_100)
-    .height(DefaultConstants.PERCENTAGE_100)
+    .width(this.size)
+    .height(this.size)
   }
 }
