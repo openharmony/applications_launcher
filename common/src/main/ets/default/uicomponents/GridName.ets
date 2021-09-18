@@ -23,13 +23,18 @@ struct GridName {
   @Prop nameWidth: number;
   @Prop @Watch("updateName") appName: string;
   @State name: string = ' '
+  @State useCache: boolean = true;
   @Prop bundleName: string;
   @Prop labelId: string;
   private mResourceManager;
 
   public aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
-    this.mResourceManager.getAppName(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
+    if (this.useCache) {
+      this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
+    } else {
+      this.mResourceManager.getAppName(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
+    }
   }
 
   public appNameLoadCallback(name: string) {
@@ -37,7 +42,11 @@ struct GridName {
   }
 
   public updateName() {
-    this.mResourceManager.getAppName(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
+    if (this.useCache) {
+      this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
+    } else {
+      this.mResourceManager.getAppName(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
+    }
   }
 
   build() {

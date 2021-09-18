@@ -93,6 +93,14 @@ export default class ILayoutConfig {
     this.removeGridLayoutInfo();
   }
 
+  setEquipmentType(Etype) {
+    this.saveEquipmentType(Etype);
+  }
+
+  getEquipmentType(): string {
+    return this.loadEquipmentType();
+  }
+
   /**
      * Should overridden by sub-classes , load the launcher layout view type.
      */
@@ -145,5 +153,11 @@ export default class ILayoutConfig {
      * Should overridden by sub-classes , remove layout information of grid view.
      */
   public removeGridLayoutInfo() {
+  }
+
+  saveEquipmentType(Etype) {
+  }
+
+  loadEquipmentType(): any{
   }
 }

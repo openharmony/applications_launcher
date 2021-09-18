@@ -15,7 +15,7 @@
 const GridLayoutConfigs = {
   GridLayoutTable: [
     {
-      id: 0,
+      id: 1,
       layout: '4X4',
       name: '4X4',
       value: 0,
@@ -25,7 +25,7 @@ const GridLayoutConfigs = {
     },
 
     {
-      id: 1,
+      id: 0,
       layout: '5X4',
       name: '5X4',
       value: 1,
@@ -43,7 +43,18 @@ const GridLayoutConfigs = {
       column: 4,
       checked: false
     },
-  ]
+  ],
+  GridLayoutTableHorizontal: [
+    {
+      id: 0,
+      layout: '2X6',
+      name: '2X6',
+      value: 0,
+      row: 2,
+      column: 6,
+      checked: false
+    },
+  ],
 }
 
 export default GridLayoutConfigs;

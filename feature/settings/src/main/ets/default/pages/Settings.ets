@@ -179,6 +179,7 @@ struct SettingsDialog {
             .fontSize(DefaultConstants.DEFAULT_PIXEL_30)
             .fontColor(DefaultConstants.DEFAULT_DIALOG_FONT_COLOR)
           Radio({ value: item.value })
+            .enabled(false)
             .checked(item.checked)
             .width(DefaultConstants.DEFAULT_PIXEL_30)
             .height(DefaultConstants.DEFAULT_PIXEL_30)

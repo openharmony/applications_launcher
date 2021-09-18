@@ -17,35 +17,68 @@ import GridLayout from '../../../../../../../feature/layoutmanager/src/main/ets/
 import ListLayout from '../../../../../../../feature/layoutmanager/src/main/ets/default/layout/ListLayout.ets'
 import AppModel from '../../../../../../../common/src/main/ets/default/common/model/AppModel.ets'
 import SettingsModel from '../../../../../../../common/src/main/ets/default/common/model/SettingsModel.ets'
+import display from '@ohos.display';
+
+const SYSTEM_UI_HEIGHT = 134;
+const DESIGN_WIDTH = 720.0;
+const HORIZONTAL = 0.7;
 
 @Entry
 @Component
 struct LayoutManager {
-  private mAppPageStartConfig;
+  @State mAppPageStartConfig: string = '';
   private mAppModel: AppModel;
   private mSettingsModel: SettingsModel;
+  @State proportion: number = 0;
   @State mScreenHeight: number = 0;
   @State mScreenWidth: number = 0;
+  @State gridConfig: string = '';
+  @State equipment: string = 'phone';
+  @State show: boolean = false;
+  @State SwiperProportion: string = '85%';
+  @State BottomBarProportion: string = '15%';
 
   private aboutToAppear(): void  {
     this.mAppModel = AppModel.getInstance()
     this.mSettingsModel = new SettingsModel();
     this.mAppPageStartConfig = this.mSettingsModel.getAppPageStartConfig();
     this.mAppModel.registerAppListEvent();
-    this.mScreenHeight = 1240;
-    this.mScreenWidth = 720;
+    display.getDefaultDisplay().then(dis => {
+      this.proportion = DESIGN_WIDTH / dis.width;
+      this.mScreenHeight = (dis.height - SYSTEM_UI_HEIGHT) * this.proportion;
+      this.mScreenWidth = DESIGN_WIDTH;
+      if (this.mScreenHeight < this.mScreenWidth) {
+        this.equipment = 'smartVision';
+        this.SwiperProportion = '75%';
+        this.BottomBarProportion = '25%';
+      }
+      this.show = true;
+      console.info("Launcher EntryView onShow end");
+    })
+
   }
 
   onPageShow() {
     this.mAppPageStartConfig = this.mSettingsModel.getAppPageStartConfig();
+    this.gridConfig = this.mSettingsModel.getGridConfig().layout;
   }
 
   build() {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-      if (this.mAppPageStartConfig === 'Grid') {
-        GridLayout({ mScreenHeight: this.mScreenHeight, mScreenWidth: this.mScreenWidth, ScreenMagnification: 1.5 });
-      } else {
-        ListLayout();
+      if (this.show == true) {
+        if (this.mAppPageStartConfig === 'Grid') {
+          GridLayout({
+            equipment: this.equipment,
+            mScreenHeight: this.mScreenHeight,
+            mScreenWidth: this.mScreenWidth,
+            ScreenMagnification: this.proportion,
+            SwiperProportion: this.SwiperProportion,
+            BottomBarProportion: this.BottomBarProportion,
+            gridConfig: this.gridConfig
+          });
+        } else {
+          ListLayout();
+        }
       }
     }
     .backgroundImage(DefaultConstants.DEFAULT_BACKGROUND_IMAGE)

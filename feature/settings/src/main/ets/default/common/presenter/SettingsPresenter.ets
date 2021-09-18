@@ -74,6 +74,7 @@ export default class SettingsPresenter {
     */
   constructor() {
     mSettingsModel = new SettingsModel();
+    this.gridSettingsList[1].valueList = mSettingsModel.getGridLayoutTable();
   }
 
   /**
