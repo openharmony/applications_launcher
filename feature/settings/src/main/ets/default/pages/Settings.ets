@@ -173,20 +173,17 @@ struct SettingsDialog {
       ForEach(this.valueList, (item: any) => {
         Row() {
           Text(item.name)
-            .margin({ left: 10 })
+            .margin({ left: DefaultConstants.DEFAULT_PIXEL_10 })
             .align(Alignment.Start)
             .width(DefaultConstants.PERCENTAGE_85)
             .fontSize(DefaultConstants.DEFAULT_PIXEL_30)
             .fontColor(DefaultConstants.DEFAULT_DIALOG_FONT_COLOR)
           Radio({ value: item.value })
+            .enabled(false)
+            .checked(item.checked)
             .width(DefaultConstants.DEFAULT_PIXEL_30)
             .height(DefaultConstants.DEFAULT_PIXEL_30)
-            .onChange((isChecked)=>{
-              mSettingsPresenter.changeSettingValue(this.ida, item.name);
-              mSettingsPresenter.setSettingsValue(this.ida, item.value);
-              this.controller.close();
-              this.action();
-            })
+            .onChange((isChecked) => {})
         }.width(DefaultConstants.PERCENTAGE_100)
         .height(DefaultConstants.DEFAULT_PIXEL_80)
         .onClick(() => {

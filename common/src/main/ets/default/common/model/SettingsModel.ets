@@ -16,7 +16,7 @@ import GridLayoutConfigs from '../configs/GridLayoutConfigs.ets'
 import LayoutConfigManager from '../../manager/LayoutConfigManager.ets'
 import FileUtils from '../../utils/FileUtils.ets'
 import ILayoutConfig from './ILayoutConfig.ets'
-import FeatureAbility from '@ohos.ability.featureability';
+import FeatureAbility from '@ohos.ability.featureAbility';
 
 const defaultLayoutInfoFilePath = "/data/accounts/account_0/applications/com.ohos.launcher/com.ohos.launcher/assets/launcher/resources/rawfile/layoutInfo.json";
 
@@ -27,6 +27,12 @@ export default class SettingsModel {
 
   constructor() {
     this.mLayoutConfig = LayoutConfigManager.getLayoutConfig();
+    let Etype = this.mLayoutConfig.getEquipmentType();
+    if (Etype == 'phone') {
+      this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
+    } else {
+      this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTableHorizontal;
+    }
   }
 
   /**
@@ -54,7 +60,14 @@ export default class SettingsModel {
      */
   public getGridConfig(): any {
     this.mGridConfig = this.mLayoutConfig.getGridConfig();
-    return this.mGridLayoutTable[this.mGridConfig];
+    let gridLayout = this.mGridLayoutTable[0];
+    for(let i = 0; i < this.mGridLayoutTable.length; i++) {
+      if(this.mGridLayoutTable[i].id == this.mGridConfig) {
+        gridLayout = this.mGridLayoutTable[i];
+        break;
+      }
+    }
+    return gridLayout;
   }
 
   /**
@@ -134,5 +147,14 @@ export default class SettingsModel {
       .then(data => console.info("Launcher settings SettingsModel closeSettings promise::then : " + data))
       .catch(error => console.info("Launcher settings SettingsModel closeSettings promise::catch : " + error));
     console.info("Launcher settings SettingsModel closeSettings end ");
+  }
+
+  public setEquipment(EType) {
+    if (EType == 'phone') {
+      this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
+    } else {
+      this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTableHorizontal;
+    }
+    this.mLayoutConfig.setEquipmentType(EType);
   }
 }
