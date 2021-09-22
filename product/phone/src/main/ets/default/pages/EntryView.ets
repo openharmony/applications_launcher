@@ -59,8 +59,10 @@ struct LayoutManager {
   }
 
   onPageShow() {
-    this.mAppPageStartConfig = this.mSettingsModel.getAppPageStartConfig();
-    this.gridConfig = this.mSettingsModel.getGridConfig().layout;
+    if (this.mSettingsModel != undefined) {
+        this.mAppPageStartConfig = this.mSettingsModel.getAppPageStartConfig();
+        this.gridConfig = this.mSettingsModel.getGridConfig().layout;
+    }
   }
 
   build() {
