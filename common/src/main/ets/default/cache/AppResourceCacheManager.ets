@@ -42,7 +42,9 @@ export default class AppResourceCacheManager {
     let cache = this.getCacheFromMemory(bundleName, key);
     if (cache == undefined || cache == null || cache == '') {
       if (key === KEY_ICON) {
-        return this.getCacheFromDisk(bundleName, key);
+        let cacheFromDisk = this.getCacheFromDisk(bundleName, key);
+        this.setCacheToMemory(bundleName, key, cacheFromDisk);
+        return cacheFromDisk;
       }
       return null;
     } else {

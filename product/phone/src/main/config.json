@@ -41,6 +41,8 @@
         "label": "$string:entry_MainAbility",
         "type": "page",
         "launchType": "singleton",
+        "srcPath": "default",
+        "srcLanguage": "ets",
         "metaData": {
           "customizeData": [
             {
