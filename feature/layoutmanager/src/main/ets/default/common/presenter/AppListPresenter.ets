@@ -43,6 +43,19 @@ export default class AppListPresenter extends BaseAppPresenter {
   }
 
   public getListCallback(list) {
+    let count = 0;
+    for (let item of list) {
+      let appName = this.mResourceManager.getAppResourceCache(item.bundleName, KEY_NAME);
+      console.info("Launcher AppListPresenter regroupDataAfterInstall + appName = " + appName);
+      if (appName != null) {
+        count++;
+        item.AppName = appName;
+      }
+    }
+    if (count == 0) {
+      list = this.mAppListInfoCacheManager.getCache(KEY_APP_LIST);
+    }
+    list.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
     this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, list);
     AppStorage.SetOrCreate('listInfo', list);
   }
@@ -51,7 +64,9 @@ export default class AppListPresenter extends BaseAppPresenter {
     for (let item of callbackList) {
       let appName = this.mResourceManager.getAppResourceCache(item.bundleName, KEY_NAME);
       console.info("Launcher AppListPresenter regroupDataAfterInstall + appName = " + appName);
-      item.AppName = appName;
+      if (appName != null) {
+        item.AppName = appName;
+      }
     }
     callbackList.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
     this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, callbackList);

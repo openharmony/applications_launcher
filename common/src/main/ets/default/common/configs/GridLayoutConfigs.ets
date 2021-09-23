@@ -18,7 +18,7 @@ const GridLayoutConfigs = {
       id: 1,
       layout: '4X4',
       name: '4X4',
-      value: 0,
+      value: 1,
       row: 4,
       column: 4,
       checked: false
@@ -28,7 +28,7 @@ const GridLayoutConfigs = {
       id: 0,
       layout: '5X4',
       name: '5X4',
-      value: 1,
+      value: 0,
       row: 5,
       column: 4,
       checked: false
