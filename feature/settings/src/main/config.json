@@ -29,7 +29,9 @@
         "description": "$string:mainability_description",
         "label": "$string:settings_MainAbility",
         "type": "page",
-        "launchType": "singleton"
+        "launchType": "singleton",
+        "srcPath": "default",
+        "srcLanguage": "ets"
       }
     ],
     "js": [
