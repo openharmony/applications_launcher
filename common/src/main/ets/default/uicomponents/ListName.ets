@@ -12,8 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import ResourceManager from '../manager/ResourceManager.ets'
 import DefaultConstants from '../common/constants/DefaultConstants.ets'
+
+const LOOP_TIME = 500;
 
 @Component
 export default
@@ -28,6 +31,9 @@ struct ListName {
   public aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
     this.mResourceManager.getAppName(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
+    setInterval(() => {
+      this.updateName();
+    }, LOOP_TIME);
   }
 
   public appNameLoadCallback(name: string) {

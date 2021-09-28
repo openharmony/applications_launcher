@@ -12,12 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import display from '@ohos.display';
 import DefaultConstants from '../common/constants/DefaultConstants.ets'
 import GridLayout from '../../../../../../../feature/layoutmanager/src/main/ets/default/layout/GridLayout.ets'
 import ListLayout from '../../../../../../../feature/layoutmanager/src/main/ets/default/layout/ListLayout.ets'
 import AppModel from '../../../../../../../common/src/main/ets/default/common/model/AppModel.ets'
 import SettingsModel from '../../../../../../../common/src/main/ets/default/common/model/SettingsModel.ets'
-import display from '@ohos.display';
 
 const SYSTEM_UI_HEIGHT = 134;
 const DESIGN_WIDTH = 720.0;
@@ -27,8 +28,6 @@ const HORIZONTAL = 0.7;
 @Component
 struct LayoutManager {
   @State mAppPageStartConfig: string = '';
-  private mAppModel: AppModel;
-  private mSettingsModel: SettingsModel;
   @State proportion: number = 0;
   @State mScreenHeight: number = 0;
   @State mScreenWidth: number = 0;
@@ -37,6 +36,8 @@ struct LayoutManager {
   @State show: boolean = false;
   @State SwiperProportion: string = '85%';
   @State BottomBarProportion: string = '15%';
+  private mAppModel: AppModel;
+  private mSettingsModel: SettingsModel;
 
   private aboutToAppear(): void  {
     this.mAppModel = AppModel.getInstance()
@@ -55,7 +56,6 @@ struct LayoutManager {
       this.show = true;
       console.info("Launcher EntryView onShow end");
     })
-
   }
 
   onPageShow() {

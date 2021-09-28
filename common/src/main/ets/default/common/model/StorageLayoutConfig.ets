@@ -12,8 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import ILayoutConfig from './ILayoutConfig.ets'
+
 import Storage from '@ohos.data.storage';
+import ILayoutConfig from './ILayoutConfig.ets'
 import DefaultLayoutConfig from '../configs/DefaultLayoutConfig.ets'
 
 const QEUIPMENT_TYPE = 'EquipmentType';
@@ -40,8 +41,8 @@ export default class StorageLayoutConfig extends ILayoutConfig {
   }
 
   /**
-     * Should overridden by sub-classes , load the launcher layout view type.
-     */
+   * Should overridden by sub-classes , load the launcher layout view type.
+   */
   public loadAppPageStartConfig() {
     console.info('Launcher mPreferences get APP_PAGE_START_CONFIG');
     let data = mPreferences.getSync(APP_PAGE_START_CONFIG, DefaultLayoutConfig.DefaultAppPageStartConfig);
@@ -50,8 +51,8 @@ export default class StorageLayoutConfig extends ILayoutConfig {
   }
 
   /**
-     * Should overridden by sub-classes , save the launcher layout view type.
-     */
+   * Should overridden by sub-classes , save the launcher layout view type.
+   */
   public saveAppPageStartConfig(type) {
     console.info('Launcher mPreferences put type' + type);
     mPreferences.putSync(APP_PAGE_START_CONFIG, type);
@@ -60,8 +61,8 @@ export default class StorageLayoutConfig extends ILayoutConfig {
   }
 
   /**
-     * Should overridden by sub-classes , load the launcher grid view layout config id.
-     */
+   * Should overridden by sub-classes , load the launcher grid view layout config id.
+   */
   public loadGridConfig() {
     console.info('Launcher mPreferences get GRID_CONFIG');
     let data = mPreferences.getSync(GRID_CONFIG, DefaultLayoutConfig.DefaultGridConfig);
@@ -70,8 +71,8 @@ export default class StorageLayoutConfig extends ILayoutConfig {
   }
 
   /**
-     * Should overridden by sub-classes , save the launcher grid view layout config id.
-     */
+   * Should overridden by sub-classes , save the launcher grid view layout config id.
+   */
   public saveGridConfig(id) {
     console.info('Launcher mPreferences put id' + id);
     mPreferences.putSync(GRID_CONFIG, id);
@@ -80,8 +81,8 @@ export default class StorageLayoutConfig extends ILayoutConfig {
   }
 
   /**
-     * Should overridden by sub-classes , load the recent process max limit.
-     */
+   * Should overridden by sub-classes , load the recent process max limit.
+   */
   public loadRecentProcessLimit() {
     console.info('Launcher mPreferences get');
     let data = mPreferences.getSync(RECENT_PROCESS_LIMIT, DefaultLayoutConfig.DefaultRecentProcessLimit);
@@ -90,8 +91,8 @@ export default class StorageLayoutConfig extends ILayoutConfig {
   }
 
   /**
-     * Should overridden by sub-classes , save the recent process max limit.
-     */
+   * Should overridden by sub-classes , save the recent process max limit.
+   */
   public saveRecentProcessLimit(num) {
     console.info('Launcher mPreferences put num' + num);
     mPreferences.putSync(RECENT_PROCESS_LIMIT, num);
@@ -100,8 +101,8 @@ export default class StorageLayoutConfig extends ILayoutConfig {
   }
 
   /**
-     * Should overridden by sub-classes , load the layout information of grid view.
-     */
+   * Should overridden by sub-classes , load the layout information of grid view.
+   */
   public loadGridLayoutInfo() {
     console.info('Launcher StorageLayoutConfig loadGridLayoutInfo start');
     let data: any = mPreferences.getSync(GRID_LAYOUT_INFO, '');
@@ -114,8 +115,8 @@ export default class StorageLayoutConfig extends ILayoutConfig {
   }
 
   /**
-     * Should overridden by sub-classes , save the layout information of grid view.
-     */
+   * Should overridden by sub-classes , save the layout information of grid view.
+   */
   public saveGridLayoutInfo(layoutInfo) {
     console.info('Launcher StorageLayoutConfig saveGridLayoutInfo start');
     mPreferences.putSync(GRID_LAYOUT_INFO, JSON.stringify(layoutInfo));
@@ -124,8 +125,8 @@ export default class StorageLayoutConfig extends ILayoutConfig {
   }
 
   /**
-     * Should overridden by sub-classes , remove layout information of grid view.
-     */
+   * Should overridden by sub-classes , remove layout information of grid view.
+   */
   public removeGridLayoutInfo() {
     console.info('Launcher StorageLayoutConfig removeGridLayoutInfo start');
     mPreferences.deleteSync(GRID_LAYOUT_INFO);

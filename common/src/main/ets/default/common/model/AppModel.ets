@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import BundleMgr from '@ohos.bundle';
 import FeatureAbility from '@ohos.ability.featureAbility';
 import Subscriber from '@ohos.commonevent';
@@ -114,10 +115,10 @@ export default class AppModel {
   }
 
   /**
-     * Unregister install listener.
-     *
-     * @param {object} listener - install listener
-     */
+   * Unregister install listener.
+   *
+   * @param {object} listener - install listener
+   */
   unregisterAppListInstallListener(listener) {
     let index = this.mAppListInstallListener.indexOf(listener);
     if (index != -1) {
@@ -126,10 +127,10 @@ export default class AppModel {
   }
 
   /**
-     * Register uninstall listener.
-     *
-     * @param {object} listener - uninstall listener
-     */
+   * Register uninstall listener.
+   *
+   * @param {object} listener - uninstall listener
+   */
   registerAppListUninstallListener(listener) {
     if (this.mAppListUninstallListener.indexOf(listener) == -1) {
       this.mAppListUninstallListener.push(listener);
@@ -137,10 +138,10 @@ export default class AppModel {
   }
 
   /**
-     * Unregister uninstall listener.
-     *
-     * @param {object} listener - uninstall listener
-     */
+   * Unregister uninstall listener.
+   *
+   * @param {object} listener - uninstall listener
+   */
   unregisterAppListUninstallListener(listener) {
     let index = this.mAppListUninstallListener.indexOf(listener);
     if (index != -1) {
@@ -149,10 +150,10 @@ export default class AppModel {
   }
 
   /**
-     * Register change listener.
-     *
-     * @param {object} listener - uninstall listener
-     */
+   * Register change listener.
+   *
+   * @param {object} listener - uninstall listener
+   */
   registerAppListChangeListener(listener) {
     if (this.mAppListChangeListener.indexOf(listener) == -1) {
       this.mAppListChangeListener.push(listener);
@@ -160,10 +161,10 @@ export default class AppModel {
   }
 
   /**
-     * Unregister change listener.
-     *
-     * @param {object} listener - change listener
-     */
+   * Unregister change listener.
+   *
+   * @param {object} listener - change listener
+   */
   unregisterAppListChangeListener(listener) {
     let index = this.mAppListChangeListener.indexOf(listener);
     if (index != -1) {
@@ -201,7 +202,8 @@ export default class AppModel {
         this.reportAppInstallEvent(callbackData.event, callbackData);
         return;
       }
-      BundleMgr.getBundleInfo(callbackData.bundleName, IF_GET_ABILITY).then(data => {
+      BundleMgr.getBundleInfo(callbackData.bundleName, IF_GET_ABILITY)
+        .then(data => {
         console.info('Launcher AppModel installation subscriber getBundleInfo ' + JSON.stringify(data));
         let bundleInfo = {
           System: data.appInfo.systemApp,
@@ -213,7 +215,8 @@ export default class AppModel {
           abilityName: data.abilityInfos[0].name,
         };
         this.reportAppInstallEvent(callbackData.event, bundleInfo);
-      }).catch(e => {
+      })
+        .catch(e => {
         console.error("Launcher AppModel installation subscriber getBundleInfo error ");
       });
     } else {

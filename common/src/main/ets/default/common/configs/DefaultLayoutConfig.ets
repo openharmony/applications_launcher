@@ -12,9 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 const DefaultLayoutConfig = {
   DefaultAppPageStartConfig: 'Grid',
-  DefaultLayoutOptions: [{ name: 'List', value: 'List', checked: false }, { name: 'Grid', value: 'Grid', checked: false }],
+  DefaultLayoutOptions: [
+    { name: 'List', value: 'List', checked: false },
+    { name: 'Grid', value: 'Grid', checked: false }
+  ],
   DefaultGridConfig: 0,
   DefaultRecentProcessLimit: 20,
   DefaultRecentProcessLimitArray: [

@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import DefaultConstants from '../common/constants/DefaultConstants.ets'
 import SettingsPresenter from '../common/presenter/SettingsPresenter.ets'
 

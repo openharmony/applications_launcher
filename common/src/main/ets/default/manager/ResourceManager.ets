@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import Resmgr from '@ohos.resourceManager';
 import AppResourceCacheManager from '../cache/AppResourceCacheManager.ets'
 import CheckEmptyUtils from '../utils/CheckEmptyUtils.ets'

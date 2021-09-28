@@ -32,11 +32,11 @@ export default class AppResourceCacheManager {
   }
 
   /**
-     * Get cache from disk or memory.
-     *
-     * @param {string} key - key of the cache map
-     * @return {object} - cache get from memory or disk
-     */
+   * Get cache from disk or memory.
+   *
+   * @param {string} key - key of the cache map
+   * @return {object} - cache get from memory or disk
+   */
   getCache(bundleName, key) {
     console.info("Launcher AppResourceCacheManager getCache bundleName = " + bundleName + " key = " + key);
     let cache = this.getCacheFromMemory(bundleName, key);
@@ -53,11 +53,11 @@ export default class AppResourceCacheManager {
   }
 
   /**
-     * Set cache to disk or memory.
-     *
-     * @param {string} key - key of the cache map
-     * @param {object} value - value of the cache map
-     */
+   * Set cache to disk or memory.
+   *
+   * @param {string} key - key of the cache map
+   * @param {object} value - value of the cache map
+   */
   setCache(bundleName, key, value) {
     console.info("Launcher AppResourceCacheManager setCache bundleName = " + bundleName + " key = " + key);
     this.setCacheToMemory(bundleName, key, value);
@@ -67,8 +67,8 @@ export default class AppResourceCacheManager {
   }
 
   /**
-     * Clear cache of both disk and memory.
-     */
+   * Clear cache of both disk and memory.
+   */
   clearCache() {
     console.info("Launcher AppResourceCacheManager clearCache");
     this.memoryCache.clear();
