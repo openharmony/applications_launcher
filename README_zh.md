@@ -445,11 +445,7 @@ DevEco Studio 支持 debug 与 release 两种打包类型。可以在 OhosBuild 
 
 ![](./figures/screenshot-20210521-111223.png)
 
-重启电脑使环境变量生效
-
-***T.B.D 是否真的需要重启电脑？***
-
-连接开发板，打开cmd命令窗口，执行`hdc list targets`，弹出窗口如下：
+连接开发板，打开一个新的cmd命令窗口，执行`hdc list targets`，弹出窗口如下：
 
 ![](./figures/cmd1.png)
 
