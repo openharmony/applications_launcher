@@ -20,12 +20,13 @@ import Pinyin from './Pinyin.ets'
  */
 export default class PinyinSort {
   private pinyin;
+
   /**
-     * Constructor.
-     *
-     * @param {boolean} checkPolyphone - Whether to check for polyphonic words.
-     * @param {number} charCase - Output pinyin case mode, 0- first letter capitalization; 1- All lowercase; 2 - all uppercase.
-     */
+   * Constructor.
+   *
+   * @param {boolean} checkPolyphone - Whether to check for polyphonic words.
+   * @param {number} charCase - Output pinyin case mode, 0- first letter capitalization; 1- All lowercase; 2 - all uppercase.
+   */
   constructor(checkPolyphone = false, charCase = 1) {
     this.pinyin = new Pinyin({
       checkPolyphone: checkPolyphone,
@@ -34,21 +35,21 @@ export default class PinyinSort {
   }
 
   /**
-     * Sort data for appinfo,compared by appName.
-     *
-     * @param {object} a - appinfo for compare.
-     * @return {object} b - appinfo for compare.
-     */
+   * Sort data for appinfo,compared by appName.
+   *
+   * @param {object} a - appinfo for compare.
+   * @return {object} b - appinfo for compare.
+   */
   sortByAppName(a, b) {
     return this.getChar(a.AppName) - this.getChar(b.AppName);
   }
 
   /**
-     * Get first char for pinyin.
-     *
-     * @param {string} str - chinese string.
-     * @return {char} charCode.
-     */
+   * Get first char for pinyin.
+   *
+   * @param {string} str - chinese string.
+   * @return {char} charCode.
+   */
   private getChar(str) {
     return this.pinyin.getFullChars(str).charCodeAt(0);
   }

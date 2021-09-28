@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 const SystemApplication = {
   SystemApplicationName: 'com.ohos.launcher,com.ohos.systemui,com.ohos.devicemanagerui,com.ohos.callui,com.example.kikakeyboard'
 }

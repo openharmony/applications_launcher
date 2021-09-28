@@ -12,11 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import FeatureAbility from '@ohos.ability.featureAbility';
 import GridLayoutConfigs from '../configs/GridLayoutConfigs.ets'
 import LayoutConfigManager from '../../manager/LayoutConfigManager.ets'
 import FileUtils from '../../utils/FileUtils.ets'
 import ILayoutConfig from './ILayoutConfig.ets'
-import FeatureAbility from '@ohos.ability.featureAbility';
 
 const defaultLayoutInfoFilePath = "/data/accounts/account_0/applications/com.ohos.launcher/com.ohos.launcher/assets/launcher/resources/rawfile/layoutInfo.json";
 
@@ -36,33 +37,33 @@ export default class SettingsModel {
   }
 
   /**
-     * Get the grid view presetting collection of layout config information table.
-     *
-     * @return {object} Grid view presetting collection object.
-     */
+   * Get the grid view presetting collection of layout config information table.
+   *
+   * @return {object} Grid view presetting collection object.
+   */
   public getGridLayoutTable(): any {
     return this.mGridLayoutTable;
   }
 
   /**
-     * Get default layout information of grid view.
-     *
-     * @return {object} Default layout information of grid view.
-     */
+   * Get default layout information of grid view.
+   *
+   * @return {object} Default layout information of grid view.
+   */
   public getDefaultLayoutInfo(): any {
     return FileUtils.readJsonFile(defaultLayoutInfoFilePath);
   }
 
   /**
-     * Get layout config of grid view.
-     *
-     * @return {object} Layout config of grid view.
-     */
+   * Get layout config of grid view.
+   *
+   * @return {object} Layout config of grid view.
+   */
   public getGridConfig(): any {
     this.mGridConfig = this.mLayoutConfig.getGridConfig();
     let gridLayout = this.mGridLayoutTable[0];
-    for(let i = 0; i < this.mGridLayoutTable.length; i++) {
-      if(this.mGridLayoutTable[i].id == this.mGridConfig) {
+    for (let i = 0; i < this.mGridLayoutTable.length; i++) {
+      if (this.mGridLayoutTable[i].id == this.mGridConfig) {
         gridLayout = this.mGridLayoutTable[i];
         break;
       }
@@ -71,76 +72,76 @@ export default class SettingsModel {
   }
 
   /**
-     * Set layout config id of grid view.
-     *
-     * @param {string} id - Layout config id of grid view.
-     */
+   * Set layout config id of grid view.
+   *
+   * @param {string} id - Layout config id of grid view.
+   */
   public setGridConfig(id) {
     this.mLayoutConfig.setGridConfig(id);
   }
 
   /**
-     * Get recent process max limit.
-     *
-     * @return {number} recent process max limit.
-     */
+   * Get recent process max limit.
+   *
+   * @return {number} recent process max limit.
+   */
   public getRecentProcessLimit(): any {
     return this.mLayoutConfig.getRecentProcessLimit();
   }
 
   /**
-     * Set recent process max limit.
-     *
-     * @param {number} num - Recent process max limit.
-     */
+   * Set recent process max limit.
+   *
+   * @param {number} num - Recent process max limit.
+   */
   public setRecentProcessLimit(num) {
     this.mLayoutConfig.setRecentProcessLimit(num);
   }
 
   /**
-     * Get the layout view type.
-     *
-     * @return {string} Layout view type, should one of 'Grid' or 'List' which is stored in LayoutConstants class.
-     */
+   * Get the layout view type.
+   *
+   * @return {string} Layout view type, should one of 'Grid' or 'List' which is stored in LayoutConstants class.
+   */
   public getAppPageStartConfig(): any {
     return this.mLayoutConfig.getAppPageStartConfig();
   }
 
   /**
-     * Set the layout view type.
-     *
-     * @param {string} type - Layout view type, should one of 'Grid' or 'List' which is stored in LayoutConstants class.
-     */
+   * Set the layout view type.
+   *
+   * @param {string} type - Layout view type, should one of 'Grid' or 'List' which is stored in LayoutConstants class.
+   */
   public setAppPageStartConfig(type) {
     this.mLayoutConfig.setAppPageStartConfig(type);
   }
 
   /**
-     * Get layout information of grid view.
-     *
-     * @return {object} layout information.
-     */
+   * Get layout information of grid view.
+   *
+   * @return {object} layout information.
+   */
   public getLayoutInfo(): any {
     return this.mLayoutConfig.getGridLayoutInfo();
   }
 
   /**
-     * Set layout information of grid view.
-     */
+   * Set layout information of grid view.
+   */
   public setLayoutInfo(layoutInfo) {
     this.mLayoutConfig.setGridLayoutInfo(layoutInfo);
   }
 
   /**
-     * Remove layout information of grid view.
-     */
+   * Remove layout information of grid view.
+   */
   public deleteLayoutInfo() {
     this.mLayoutConfig.deleteGridLayoutInfo();
   }
 
   /**
-     * Close settings.
-     */
+   * Close settings.
+   */
   closeSettings() {
     console.info("Launcher settings SettingsModel  closeSettings start")
     FeatureAbility.terminateAbility()

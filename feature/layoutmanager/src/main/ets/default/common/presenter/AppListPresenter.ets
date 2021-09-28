@@ -12,9 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import Prompt from '@ohos.prompt';
 import BaseAppPresenter from '../../../../../../../../common/src/main/ets/default/base/BaseAppPresenter.ets';
 import PinyinSort from '../../../../../../../../common/src/main/ets/default/utils/PinyinSort.ets'
-import Prompt from '@ohos.prompt';
 
 const PROHIBITED = '禁止卸载'
 const UNINSTALL_SUCCEEDED = '卸载成功'
@@ -43,20 +44,21 @@ export default class AppListPresenter extends BaseAppPresenter {
   }
 
   public getListCallback(list) {
-    let count = 0;
+    let cached = true;
     for (let item of list) {
       let appName = this.mResourceManager.getAppResourceCache(item.bundleName, KEY_NAME);
       console.info("Launcher AppListPresenter regroupDataAfterInstall + appName = " + appName);
       if (appName != null) {
-        count++;
+        cached = false;
         item.AppName = appName;
       }
     }
-    if (count == 0) {
+    if (cached) {
       list = this.mAppListInfoCacheManager.getCache(KEY_APP_LIST);
+    } else {
+      list.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
+      this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, list);
     }
-    list.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
-    this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, list);
     AppStorage.SetOrCreate('listInfo', list);
   }
 
