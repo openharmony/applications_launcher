@@ -25,11 +25,11 @@ const READ_DATA_SIZE = 4096;
 export default class DiskLruFileUtils {
 
   /**
-     * Read Json file from disk by bundleName.
-     *
-     * @param {string} bundleName - bundleName of the target file
-     * @return {object} read object from file
-     */
+   * Read Json file from disk by bundleName.
+   *
+   * @param {string} bundleName - bundleName of the target file
+   * @return {object} read object from file
+   */
   static readJsonObj(bundleName) {
     console.info("Launcher FileUtil readJsonObj start execution");
     let filePath = writeFilePath + bundleName + ".json";
@@ -37,11 +37,11 @@ export default class DiskLruFileUtils {
   }
 
   /**
-     * Read Json file from disk by file path.
-     *
-     * @param {string} path - path of the target file.
-     * @return {object} read object from file
-     */
+   * Read Json file from disk by file path.
+   *
+   * @param {string} path - path of the target file.
+   * @return {object} read object from file
+   */
   static readJsonFile(path) {
     console.info("Launcher FileUtil readJsonFile start execution");
     let readStreamSync = null;
@@ -58,11 +58,11 @@ export default class DiskLruFileUtils {
   }
 
   /**
-     * Write Json object to a file.
-     *
-     * @param {object} jsonObj - target JSON object will be written
-     * @param {string} bundleName - use bundleName as target file name
-     */
+   * Write Json object to a file.
+   *
+   * @param {object} jsonObj - target JSON object will be written
+   * @param {string} bundleName - use bundleName as target file name
+   */
   static writeJsonObj(jsonObj, bundleName) {
     console.info("Launcher FileUtil writeJsonObj start execution");
     let filePath = writeFilePath + bundleName + ".json";
@@ -80,10 +80,10 @@ export default class DiskLruFileUtils {
   }
 
   /**
-     * Record a key that maps the image as value.
-     *
-     * @param {string} content - the key maps the image file
-     */
+   * Record a key that maps the image as value.
+   *
+   * @param {string} content - the key maps the image file
+   */
   static writeJournal(content) {
     let writeStreamSync = null;
     try {
@@ -99,10 +99,10 @@ export default class DiskLruFileUtils {
   }
 
   /**
-     * Get the keys that map the images.
-     *
-     * @return {object} object read from file
-     */
+   * Get the keys that map the images.
+   *
+   * @return {object} object read from file
+   */
   static readJournal() {
     console.info("Launcher FileUtil readJournal start execution");
     let readStreamSync = null;
@@ -118,11 +118,11 @@ export default class DiskLruFileUtils {
   }
 
   /**
-     * Read JSON object from a file.
-     *
-     * @param {object} readStreamSync - stream of target file
-     * @return {object} object read from file stream
-     */
+   * Read JSON object from a file.
+   *
+   * @param {object} readStreamSync - stream of target file
+   * @return {object} object read from file stream
+   */
   static getContent(readStreamSync) {
     console.info("Launcher FileUtil getContent start");
     let bufArray = [];
@@ -155,10 +155,10 @@ export default class DiskLruFileUtils {
   }
 
   /**
-     * Remove file.
-     *
-     * @param {string} bundleName - bundleName as target file name
-     */
+   * Remove file.
+   *
+   * @param {string} bundleName - bundleName as target file name
+   */
   static removeFile(bundleName) {
     try {
       console.info("Launcher FileUtil removeFile")

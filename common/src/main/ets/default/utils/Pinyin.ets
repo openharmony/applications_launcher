@@ -27,7 +27,6 @@ class Pinyin {
   private full_dict;
   private polyphone;
 
-
   /**
    * Constructor.
    *
@@ -889,7 +888,6 @@ class Pinyin {
         {};
     return result;
   }
-
 
   getFullChar(ch) {
     for (let key in this.full_dict) {

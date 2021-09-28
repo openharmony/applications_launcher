@@ -12,12 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import GridName from '../../../../../../../common/src/main/ets/default/uicomponents/GridName.ets'
 import AppIcon from '../../../../../../../common/src/main/ets/default/uicomponents/AppIcon.ets'
 import DefaultConstants from '../../../../../../../common/src/main/ets/default/common/constants/DefaultConstants.ets'
 import RecentsPresenter from '../common/presenter/RecentsPresenter.ets';
 
 let mRecentsPresenter: RecentsPresenter;
+
 @Entry
 @Component
 struct Recent {
@@ -95,10 +97,11 @@ struct recentProcessListDisplay {
                   })
                 }
                 .margin({ bottom: this.margin })
+
                 Image(DefaultConstants.DEFAULT_APP_IMAGE)
                   .borderRadius(this.AppborderRadius)
-                  .width(this.heightSize)
-                  .height(DefaultConstants.APP_IMAGE_HEIGHT)
+                  .width(DefaultConstants.PERCENTAGE_100)
+                  .height(DefaultConstants.PERCENTAGE_70)
               }
               .width(DefaultConstants.APP_IMAGE_WIDTH)
               .height(this.heightSize)
@@ -144,7 +147,8 @@ struct recentProcessListDisplay {
 
 @Component
 struct emptyMsgDisplay {
-  @State size:string = DefaultConstants.PERCENTAGE_100;
+  @State size: string = DefaultConstants.PERCENTAGE_100;
+
   build() {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
       Text($r('app.string.No_running_apps_recently'))

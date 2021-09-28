@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 export default class StyleConstants {
   public static DEFAULT_LAYOUT_FONT_COLOR: string = '#696969';
   public static DEFAULT_BACKGROUND_COLOR: string = '#F0EEEE';

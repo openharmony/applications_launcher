@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import AppGridPresenter from '../common/presenter/AppGridPresenter.ets'
 import GridName from '../../../../../../../common/src/main/ets/default/uicomponents/GridName.ets'
 import AppIcon from '../../../../../../../common/src/main/ets/default/uicomponents/AppIcon.ets'
@@ -41,12 +42,11 @@ struct GridLayout {
   @State moveAppY: number = 0;
   @State moveAppShow: boolean = false;
   @State moveAppInfo: any = {};
-  @Prop@Watch('changeGridConfig') gridConfig: string;
+  @Prop @Watch('changeGridConfig') gridConfig: string;
   @Prop equipment: string;
   @State ScreenMagnification: number = 1.0;
   @Prop SwiperProportion: string;
   @Prop BottomBarProportion: string;
-
   dialogController: CustomDialogController = new CustomDialogController({
     builder: ShowDialog(),
     cancel: this.cancelDialog,
@@ -184,7 +184,7 @@ struct SwiperPage {
   @Link moveAppY: number;
   @Link moveAppShow: boolean;
   @Link moveAppInfo: any;
-  @Prop@Watch('changeColumnAndRow') gridConfig: string;
+  @Prop @Watch('changeColumnAndRow') gridConfig: string;
   private mAppBottomBarInfo;
   private mAppListInfo;
 
@@ -299,12 +299,13 @@ struct AppItem {
     .gesture(
       LongPressGesture({ repeat: false })
         .onAction((event: GestureEvent) => {
-        this.item.AppName = mAppGridPresenter.getAppName(this.item.bundleName);
+        let appName = mAppGridPresenter.getAppName(this.item.bundleName);
+        if(appName != null){
+          this.item.AppName = appName;
+        }
         AppStorage.SetOrCreate('uninstallAppInfo', this.item)
         this.dialogController.open();
         this.isLongPress = true;
-        this.moveAppShow = true;
-        this.isShow = false;
       })
     )
     .onTouch((event: TouchEvent) => {
@@ -327,6 +328,8 @@ struct AppItem {
       if (event.type == 2 && this.isLongPress) {
 
         this.dialogController.close();
+        this.moveAppShow = true;
+        this.isShow = false;
         this.moveAppX = event.touches[0].screenX;
         this.moveAppY = event.touches[0].screenY;
         let moveX = this.moveAppX * mScreenMagnification;
@@ -444,6 +447,7 @@ struct UninstallDialog {
         Text($r('app.string.uninstall'))
         Text(this.AppInfo.AppName + ' ?')
       }
+
       Row() {
         Button() {
           Text($r('app.string.submit'))

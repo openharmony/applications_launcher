@@ -29,8 +29,8 @@ export default class DiskLruCache {
   }
 
   /**
-     * Init the cache whether the file has data.
-     */
+   * Init the cache whether the file has data.
+   */
   initMap() {
     console.info("Launcher DiskLruCache initMap start execution");
     try {
@@ -45,11 +45,11 @@ export default class DiskLruCache {
   }
 
   /**
-     * Get cache from disk.
-     *
-     * @param {string} key - key of the cache map
-     * @return {object} - target cache object
-     */
+   * Get cache from disk.
+   *
+   * @param {string} key - key of the cache map
+   * @return {object} - target cache object
+   */
   getCache(key) {
     if (this.cache.has(key)) {
       // exist and update
@@ -66,11 +66,11 @@ export default class DiskLruCache {
   }
 
   /**
-     * Put cache to disk.
-     *
-     * @param {string} key - key of the cache map
-     * @param {object} value - value of the cache map
-     */
+   * Put cache to disk.
+   *
+   * @param {string} key - key of the cache map
+   * @param {object} value - value of the cache map
+   */
   putCache(key, value) {
     if (this.cache.has(key)) {
       // exist and update
@@ -89,18 +89,18 @@ export default class DiskLruCache {
   }
 
   /**
-     * Remove cache of corresponding key.
-     *
-     * @param {string} key - key of the cache map
-     */
+   * Remove cache of corresponding key.
+   *
+   * @param {string} key - key of the cache map
+   */
   remove(key) {
     this.cache.delete(key);
     DiskLruFileUtils.removeFile(key);
   }
 
   /**
-     * Clear cache of disk.
-     */
+   * Clear cache of disk.
+   */
   clear() {
     this.cache.forEach(function (value, key) {
       DiskLruFileUtils.removeFile(key);

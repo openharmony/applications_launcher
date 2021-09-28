@@ -12,8 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import BaseAppPresenter from '../../../../../../../../common/src/main/ets/default/base/BaseAppPresenter.ets';
+
 import Prompt from '@ohos.prompt';
+import BaseAppPresenter from '../../../../../../../../common/src/main/ets/default/base/BaseAppPresenter.ets';
 
 const PROHIBITED = '禁止卸载'
 const UNINSTALL_SUCCEEDED = '卸载成功'
@@ -359,7 +360,6 @@ export default class AppGridPresenter extends BaseAppPresenter {
         column: Math.floor((i + existNumber) % (column * row) % column),
       });
     }
-    //    layoutDescription.pageCount = Math.ceil((newApp.length + existNumber) / (column * row));
     let pageCount = Math.ceil((newApp.length + existNumber) / (column * row));
     if (pageCount < this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount) {
       layoutDescription.pageCount = this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount;
@@ -472,17 +472,17 @@ export default class AppGridPresenter extends BaseAppPresenter {
 
 
   /**
-       * Longpress event for launcher.
-       */
+   * Longpress event for launcher.
+   */
   public onPageLongPress() {
     AppStorage.SetOrCreate('blankPageBtnText', this.getBlankPageBtnStr());
   }
 
   /**
-       * Get strings for addBlankPageButton.
-       *
-       * @return {string} AddBlankPageButton Strings.
-       */
+   * Get strings for addBlankPageButton.
+   *
+   * @return {string} AddBlankPageButton Strings.
+   */
   public getBlankPageBtnStr() {
     return this.isBlankPage() ? $r('app.string.deleteBlankPage') : $r('app.string.addBlankPage');
   }
@@ -507,8 +507,8 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   /**
-       * Add or delete the choosen blank page.
-       */
+   * Add or delete the choosen blank page.
+   */
   public addOrDeleteBlankPage() {
     if (this.isBlankPage()) {
       this.deleteBlankPage();
@@ -518,8 +518,8 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   /**
-     * Add a blank page.
-     */
+   * Add a blank page.
+   */
   public addBlankPage() {
     console.info("Launcher AppGridView addBlankPage");
     let allPageCount = this.getGridPageCount() + 1;
@@ -530,19 +530,19 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   /**
-     * Get pageCount.
-     *
-     * @return {number} PageCount.
-     */
+   * Get pageCount.
+   *
+   * @return {number} PageCount.
+   */
   public getGridPageCount() {
     return this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount;
   }
 
   /**
-     * Set pageCount.
-     *
-     * @param {number} pageCount - PageCount.
-     */
+   * Set pageCount.
+   *
+   * @param {number} pageCount - PageCount.
+   */
   private setGridPageCount(pageCount) {
     let gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
     gridLayoutInfo.layoutDescription.pageCount = pageCount;
@@ -550,8 +550,8 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   /**
-     * Delete the choosen blank page.
-     */
+   * Delete the choosen blank page.
+   */
   private deleteBlankPage() {
     console.info("Launcher AppGridView deleteBlankPage");
     this.deleteGridPage(this.pageIndex);
@@ -562,10 +562,10 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   /**
-     * Delete blank page.
-     *
-     * @param {number} pageIndex - Index of the page which is to be deleted.
-     */
+   * Delete blank page.
+   *
+   * @param {number} pageIndex - Index of the page which is to be deleted.
+   */
   private deleteGridPage(pageIndex) {
     let info = this.mSettingsModel.getLayoutInfo();
     let layoutInfo = info.layoutInfo;
@@ -761,14 +761,14 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   /**
-     * Icons go forwards.
-     *
-     * @param {object} source - Start position information.
-     * @param {object} destination - End position information.
-     * @param {object} layoutInfo - Current layout information.
-     * @param {object} startInfo - Recursion start position information.
-     * @return {boolean} Move result.
-     */
+   * Icons go forwards.
+   *
+   * @param {object} source - Start position information.
+   * @param {object} destination - End position information.
+   * @param {object} layoutInfo - Current layout information.
+   * @param {object} startInfo - Recursion start position information.
+   * @return {boolean} Move result.
+   */
   private moveLayoutForward = (source, destination, layoutInfo, startInfo) => {
     this.mGridConfig = this.mSettingsModel.getGridConfig();
     let startLayoutInfo = layoutInfo.find(item => {
@@ -798,14 +798,14 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   /**
-     * Icons go backwards.
-     *
-     * @param {object} source - Start position information.
-     * @param {object} destination - End position information.
-     * @param {object} layoutInfo - Current layout information.
-     * @param {object} startInfo - Recursion start position information.
-     * @return {boolean} Move result.
-     */
+   * Icons go backwards.
+   *
+   * @param {object} source - Start position information.
+   * @param {object} destination - End position information.
+   * @param {object} layoutInfo - Current layout information.
+   * @param {object} startInfo - Recursion start position information.
+   * @return {boolean} Move result.
+   */
   private moveLayoutBackward = (source, destination, layoutInfo, startInfo) => {
     this.mGridConfig = this.mSettingsModel.getGridConfig();
     let startLayoutInfo = layoutInfo.find(item => {

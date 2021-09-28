@@ -13,55 +13,54 @@
  * limitations under the License.
  */
 
-
 import Router from '@system.router';
 
 /**
  * An util that encapsulates methods from @system.router.
  */
 let RouterUtil = function () {
-    return {
+  return {
 
-        /**
-         * Push the page into the Router stack.
-         *
-         * @param {string} uri - uri of the page
-         * @param {object} params - params while opening the page
-         */
-        push: function (uri, params) {
-            Router.push({
-                uri: uri,
-                params: params
-            })
-        },
+    /**
+     * Push the page into the Router stack.
+     *
+     * @param {string} uri - uri of the page
+     * @param {object} params - params while opening the page
+     */
+    push: function (uri, params) {
+      Router.push({
+        uri: uri,
+        params: params
+      })
+    },
 
-         /**
-         * Replace original page to the current page.
-         *
-         * @param {string} uri - uri of the page
-         * @param {object} params - params while opening the page
-         */
-        replace: function (uri, params) {
-            Router.replace({
-                uri: uri,
-                params: params
-            })
-        },
+    /**
+     * Replace original page to the current page.
+     *
+     * @param {string} uri - uri of the page
+     * @param {object} params - params while opening the page
+     */
+    replace: function (uri, params) {
+      Router.replace({
+        uri: uri,
+        params: params
+      })
+    },
 
-        /**
-         * Back to previous page and pop current page.
-         */
-        back: function () {
-            Router.back();
-        },
+    /**
+     * Back to previous page and pop current page.
+     */
+    back: function () {
+      Router.back();
+    },
 
-        /**
-         * Clear router stack.
-         */
-        clear: function () {
-            Router.clear();
-        }
+    /**
+     * Clear router stack.
+     */
+    clear: function () {
+      Router.clear();
     }
+  }
 }();
 
 export default RouterUtil;

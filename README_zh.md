@@ -5,66 +5,72 @@ Launcher 采用纯 JS 语言开发，开发过程中不涉及任何 Java 部分�
 ## 2. 工程结构
 ### 目录结构
 ```
-/applications/standard/launcher/
-├── launcher        # 主launcher模块目录
+/applications
+├── common        # 公共模块目录
 │   └── src
 │       └── main
-│           ├── js  # JS代码目录
+│           ├── ets  # ets代码目录
 │               ├── default
-│                   ├── common   # JS代码目录
-│                       ├── cache      # 缓存目录
-│                       ├── colors     # 颜色目录
-│                       ├── component  # 自定义组件目录
-│                       ├── configs    # 应用配置对象目录
-│                       ├── constants  # 应用常量对象目录
-│                       ├── css        # 样式目录
-│                       ├── model      # Model层代码目录
-│                       ├── pics       # 应用图片目录
-│                       ├── utils      # 工具类代码目录
-│                   ├── i18n     # 国际化目录
-│                   ├── pages    # 业务特性的View层目录
-│                       ├── AppGridView   # 图标网格的View目录
-│                       ├── AppListView   # 图标列表的View目录
-│                       ├── EntryView     # 应用入口的View目录
-│                   ├── presenter # presenter层代码目录
-│                       ├── app      # 应用管理业务代码目录
-│                       ├── entry    # 应用入口业务代码目录
+│                   ├── base           # 公共presenter层代码目录
+│                   ├── cache          # 缓存目录
+│                   ├── common         # ets代码目录
+│                       ├── configs       # 应用配置对象目录
+│                       ├── constants     # 应用常量对象目录
+│                       ├── model         # Model层代码目录
+│                   ├── manager        # manager代码目录
+│                   ├── uicomponents   # 自定义组件目录
+│                   ├── utils          # 工具类代码目录
 │           ├── resources  # 资源目录
 │           ├── config.json  # 项目配置信息
-├── recents        # 最近任务模块目录
-│   └── src
-│       └── main
-│           ├── js  # JS代码目录
-│               ├── default
-│                   ├── common   # JS代码目录
-│                       ├── component  # 自定义组件目录
-│                       ├── css        # 样式目录
-│                       ├── model      # Model层代码目录
-│                       ├── pics       # 应用图片目录
-│                   ├── i18n     # 国际化目录
-│                   ├── pages    # 业务特性的View层目录
-│                       ├── recent   # 最近任务的View目录
-│                   ├── presenter # presenter层代码目录
-│                       ├── recent   # 最近任务业务代码目录
-│           ├── resources  # 最近任务模块资源目录
-│           ├── config.json  # 项目配置信息
-├── settings        # 桌面设置模块目录
-│   └── src
-│       └── main
-│           ├── js  # JS代码目录
-│               ├── default
-│                   ├── common   # JS代码目录
-│                       ├── configs    # 应用配置对象目录
-│                       ├── constants  # 应用常量对象目录
-│                       ├── model      # Model层代码目录
-│                       ├── pics       # 应用图片目录
-│                   ├── i18n     # 国际化目录
-│                   ├── pages    # 业务特性的View层目录
-│                       ├── settings   # 最近任务的View目录
-│                   ├── presenter # presenter层代码目录
-│                       ├── settings   # 最近任务业务代码目录
-│           ├── resources  # 最近任务模块资源目录
-│           ├── config.json  # 项目配置信息
+├── feature        # feature层模块目录
+│   └── layoutmanager        # 主launcher模块目录
+│       └── src
+│           └── main
+│               ├── ets  # ets代码目录
+│                   ├── default
+│                       ├── common      # ets代码目录
+│                           ├── configs    # 应用配置对象目录
+│                           ├── constants  # 应用常量对象目录
+│                           ├── presenter  # presenter层代码目录
+│                       ├── layout      # 业务特性的View层目录
+│              ├── resources  # 资源目录
+│              ├── config.json  # 项目配置信息
+│   └── recents        # 最近任务模块目录
+│       └── src
+│           └── main
+│               ├── ets  # ets代码目录
+│                   ├── default
+│                       ├── common      # ets代码目录
+│                           ├── model      # Model层代码目录
+│                           ├── pics       # 应用图片目录
+│                           ├── presenter  # presenter层代码目录
+│                       ├── pages       # 业务特性的View层目录
+│               ├── resources  # 资源目录
+│               ├── config.json  # 项目配置信息
+│   └── settings        # 桌面设置模块目录
+│       └── src
+│           └── main
+│               ├── ets  # ets代码目录
+│                   ├── default
+│                       ├── common      # ets代码目录
+│                           ├── constants  # 应用常量对象目录
+│                           ├── presenter  # presenter层代码目录
+│                       ├── pages       # 业务特性的View层目录
+│               ├── resources  # 资源目录
+│               ├── config.json  # 项目配置信息
+├── product             # 产品层模块目录
+│   └── phone        # phone模式模块目录
+│       └── src
+│           └── main
+│               ├── ets  # ets代码目录
+│                   ├── default
+│                       ├── common      # ets代码目录
+│                           ├── configs    # 应用配置对象目录
+│                           ├── constants  # 应用常量对象目录
+│                           ├── pics       # 应用图片目录
+│                       ├── pages      # 业务特性的View层目录
+│               ├── resources  # 资源目录
+│               ├── config.json  # 项目配置信息
 ```
 ### 整体架构
 ![](./figures/launcherl2-en.png)
@@ -95,80 +101,8 @@ Launcher 整体以 OpenHarmony 既有的 MVVM 的 App 架构设计为基础，�
 |settings|展现层|SettingsPresenter|设置桌面画面的业务逻辑类，主要职责是处理来自视图层的请求，业务逻辑处理后实现功能或者向模型层发送请求。|
 |settings|模型层|SettingsModel|接收展现层EntryPresenter和SettingsPresenter发送过来的请求，为其提供所需要的数据或实现其请求的功能。|
 
-## 3. 代码使用
-### 代码下载
-基于L2的 Launcher 代码可以采用从码云上克隆的方式下载。  
-[下载地址](https://gitee.com/openharmony/applications_launcher)
-#### 从码云克隆代码
-##### 1.配置SSH公钥
-1. 通过[登录网址](https://gitee.com/login)登录码云
-2. 在码云的个人设置中设置SSH公钥
-   1. 生成SSH公私钥  
-   在命令窗口输入以下命令，邮箱地址替换为自己的邮箱地址，一直回车直至完成为止。
-    ```
-    ssh-keygen -t rsa -C "xxxx@xxxx.com"
-    ```
-    > 执行完成后，会在用户目录下的.ssh文件夹内生成 `id_rsa` 与 `id_rsa.pub` 两个文件，其中的 `id_rsa.pub` 即为生成的 SSH公钥  
-    > ![](./figures/git_ssh_pub_key.png)
-   2. 复制公钥内容  
-   输入`cat .ssh/id_rsa.pub`，复制打印内容。
-   ![](./figures/git_ssh_pub_key_content.png)
-   3. 在设置->安全设置->SSH公钥 中设置 SSH公钥  
-   将第二步中复制的内容按照画面提示粘贴到码云上相应的内容区域，并点击确定。
-   ![](./figures/gitee_ssh_key_setting.png)
-   > 注意，在码云中，添加SSH公钥之后，需要进行账号的密码验证，验证通过才能成功添加。
-##### 2.下载代码
-1. 浏览器打开[下载地址](https://gitee.com/openharmony/applications_launcher)。
-2. 点击“克隆/下载”按钮，选择 SSH，点击“复制”按钮。
-   ![](./figures/source_download_1.png)
-3. 在本地新建 Launcher 目录，在 Launcher 目录中执行如下命令
-   ```
-   git clone 步骤2中复制的地址
-   ```
-   ![](./figures/git_clone_done.png)
-### 环境搭建
-#### 1. 下载安装 DevEco Studio
-Launcher 使用 DevEco Studio 进行开发，开发前需要下载 DevEco Studio 。  
 
-**下载**  
-
-在下载页面下载 DevEco Studio 的安装包压缩文件（[下载地址](https://developer.harmonyos.com/cn/develop/deveco-studio#download)）。
-下载页面如下：
-
-![](./figures/ds_download.png)
-
-> 注：下载 DevEco Studio 需要注册华为账号。
-> ![](figures/hw_register.png)
-
-**安装**
-
-将下载下来的压缩包解压，得到安装文件如图：
-
-![](./figures/ds_exe.png)
-
-双击安装文件进行安装，安装过程如图所示：
-
-![](./figures/ds_install_1.png)
-
-![](./figures/ds_install_2.png)
-
-#### 2. 安装开发 SDK
-DevEco Studio 在安装完成之后会自动下载开发 SDK 下载过程如下图所示：
-
-![](./figures/sdk_downloading.png) 
-
-
-File → Open 选择工程目录，点击 OK。
-
-![](./figures/ds_import_project.png)
-
-![](./figures/ds_import_project_ok.png)
-
-选择Build → Build Haps(s)/APP(s) → Build Hap(s)
-
-![](./figures/ds_build_haps.png)
-
-## 4. 基础开发说明
+## 3. 基础开发说明
 ### 异步回调的使用
 在JS工程中，异步回调的使用是一个非常常见的编码需求，在 OpenHarmony 的开发中也不例外，这里以获取应用列表信息为例，演示如何在 OpenHarmony 的应用开发中使用回调方法。
 
@@ -184,7 +118,7 @@ export default class AppModel {
    getApplicationInfos(callback) {
       
       // callback 为传入的异步回调方法
-      BundleMgr.getBundleInfos().then(data => {
+      BundleMgr.getAllBundleInfo().then(data => {
          
          // 在获取数据成功后，执行回调方法
          callback(data);
@@ -234,46 +168,19 @@ export default {
 
 这样，在 `AppModel.js` 中获取数据的方法 `getApplicationInfos` 异步执行成功后，就会将数据通过我们绑定的回调方法，回传到 `AppView.js` 中。
 
-### 多语言支持
+### 资源引用
 #### 定义资源文件
-- 在 `src/main/js/default/i18n/`目录下，根据不同的语言定义 `.json` 资源文件。
-  ![](./figures/ds_i18n_files.png)
+- 在 `src/main/resources/`目录下，根据不同的资源类型，定义资源文件。
 #### 引用资源
-- 在有对应page的js文件中，可直接通过`$t()`引用。
+- 在有对应page的js文件中，可直接通过`$r()`引用。
   ```` JavaScript
-  this.title = this.$t('strings.world');
+  this.title = this.$r('app.string.title');
 
   ````
-- 在没有对应page的js文件中，需要参考如下代码，通过有对应page的js文件引用。
-   ```` JavaScript
-   // 在page页面中定义 globalThis.$globalT
-
-   globalThis.$globalT =null;
-   export default {
-      data: {
-         title: 'World'
-      },
-      onInit(){
-         globalThis.$globalT =this.$t.bind(this);
-      }
-   }
-
-   ````
-   ```` JavaScript
-   // 在非page页面使用方式
-
-   globalThis.$globalT =null;
-   export default class TestClass {
-      constructor{
-         this.title = globalThis.$globalT('strings.world');
-      }
-   }
-
-   ````
-## 5. 典型接口的使用
+## 4. 典型接口的使用
 1. 启动 Ability
 ```JS
-import FeatureAbility from '@ohos.ability.featureability';
+import FeatureAbility from '@ohos.ability.featureAbility';
 //参数paramAbilityname, paramBundleName 是对应应用的abilityname，bundleName
 startAbility(paramAbilityname, paramBundleName) {
    FeatureAbility.startAbility({
@@ -320,8 +227,8 @@ getBundleInfo(bundleName) {
 import BundleMgr from '@ohos.bundle';
 
 getApplicationInfos() {
-   BundleMgr.getBundleInfos().then((data) => {
-      console.info('Launcher getApplicationInfos '+JSON.stringify(data));
+   BundleMgr.getAllBundleInfo().then((data) => {
+      console.info('Launcher getAllBundleInfo '+JSON.stringify(data));
    });
 }
 ```
@@ -334,6 +241,7 @@ uninstallApp(bundleName) {
       data.uninstall(bundleName,{
          param: {
             userId: 0,
+            installFlag: 0,
             isKeepData: false
          }
       })
@@ -362,7 +270,7 @@ get() {
 
 6. 获取最近任务列表
 ```JS
-import NapiAbilityManager from '@ohos.app.abilitymanager';
+import NapiAbilityManager from '@ohos.app.abilityManager';
 
 getRecentMissions() {
    NapiAbilityManager.queryRunningAbilityMissionInfos().then((data) => {
@@ -373,7 +281,7 @@ getRecentMissions() {
 
 7. 移除指定任务
 ```JS
-import NapiAbilityManager from '@ohos.app.abilitymanager';
+import NapiAbilityManager from '@ohos.app.abilityManager';
 //参数missionId是所选择的最近任务的missionId
 removeMission() {
    NapiAbilityManager.removeMission(missionId).then((data) => {
@@ -382,7 +290,7 @@ removeMission() {
 }
 ```
 
-## 6. 签名打包
+## 5. 签名打包
 ### 签名
 #### 签名文件的获取
 1. 拷贝 OpenHarmony 标准版的 prebuilts\signcenter 目录到操作目录。
@@ -406,19 +314,6 @@ DevEco Studio 支持 debug 与 release 两种打包类型。可以在 OhosBuild 
 
  ![](./figures/ds_ohosbuild_variants.png)
 
-#### debug打包
-1. 代码准备完成后，在 OhosBuild Variants 窗口的 Selected Variant 中选择 debug。   
-   
-   ![](./figures/ds_ohosbuild_variants_debug.png)
-
-2. 选择Build → Build Haps(s)/APP(s) → Build Hap(s)
-
-   ![](./figures/ds_build_haps.png)
-
-3. 编译完成后，hap包会生成在工程目录下的 `\build\outputs\hap\debug\phone\`路径下（如果没有配置签名，则只会生成未签名的hap包）
-   
-   ![](./figures/ds_ohosbuild_output_dir_debug.png)
-
 #### release打包
 1. 代码准备完成后，在 OhosBuild Variants 窗口的 Selected Variant 中选择 release   
    
@@ -428,22 +323,22 @@ DevEco Studio 支持 debug 与 release 两种打包类型。可以在 OhosBuild 
 
    ![](./figures/ds_build_haps.png)
 
-3. 编译完成后，hap包会生成在工程目录下的 `\build\outputs\hap\debug\phone\`路径下（如果没有配置签名，则只会生成未签名的hap包）
+3. 编译完成后，hap包会生成在工程目录下的 `\build\outputs\hap\release\`路径下（如果没有配置签名，则只会生成未签名的hap包）
    
-   ![](./figures/ds_ohosbuild_output_dir_debug.png)
+   ![](./figures/ds_ohosbuild_output_dir_release.png)
 
 
-## 7. 安装、运行、调试
+## 6. 安装、运行、调试
 ### 应用安装
 配置 hdc：
 进入SDK目录中的toolchains文件夹下，获取文件路径：
 
-![](./figures/screenshot-20210521-105407.png)
+![](./figures/sdk_catalogue.png)
 
 
 并将此路径配置到环境变量中：
 
-![](./figures/screenshot-20210521-111223.png)
+![](./figures/sdk_environment_variable.png)
 
 重启电脑使环境变量生效
 
@@ -464,10 +359,8 @@ DevEco Studio 支持 debug 与 release 两种打包类型。可以在 OhosBuild 
 获取 root 权限与读写权限：
 
 ```
-hdc smode 
 hdc target mount
 ```
-> hdc smode 命令的作用是获取 root 权限，但是该命令在当前版本下可能仍不稳定，执行此命令可能导致后续的 hdc target mount 失败，在这里为可选命令
 
 ***T.B.D smode 不执行的情况下，hdc target mount 能否正常执行？***
 
@@ -540,7 +433,7 @@ hilog | grep 过滤信息
 ```
 hilog | grep Label
 ```
-## 8. 贡献代码
+## 7. 贡献代码
 ### Fork 代码仓库
 1. 在码云上打开 Launcher 代码仓库（[仓库地址](https://gitee.com/openharmony/applications_launcher)）。
 2. 点击仓库右上角的 Forked 按钮
