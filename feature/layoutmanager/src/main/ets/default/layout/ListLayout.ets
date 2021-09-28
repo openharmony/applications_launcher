@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import AppListPresenter from '../common/presenter/AppListPresenter.ets'
 import ListName from '../../../../../../../common/src/main/ets/default/uicomponents/ListName.ets'
 import AppIcon from '../../../../../../../common/src/main/ets/default/uicomponents/AppIcon.ets'
@@ -83,7 +84,12 @@ struct ListLayout {
           .backgroundColor(DefaultConstants.LIGHT_BLACK)
           .borderRadius(DefaultConstants.DEFAULT_20)
           .padding({ left: DefaultConstants.DEFAULT_5 })
-          .margin({ top: DefaultConstants.DEFAULT_5, left: DefaultConstants.DEFAULT_30, bottom: DefaultConstants.DEFAULT_5, right: DefaultConstants.DEFAULT_30 })
+          .margin({
+            top: DefaultConstants.DEFAULT_5,
+            left: DefaultConstants.DEFAULT_30,
+            bottom: DefaultConstants.DEFAULT_5,
+            right: DefaultConstants.DEFAULT_30
+          })
         }
       })
     }

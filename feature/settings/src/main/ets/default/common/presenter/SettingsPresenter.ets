@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import DefaultLayoutConfig from '../../../../../../../../common/src/main/ets/default/common/configs/DefaultLayoutConfig.ets'
 import GridLayoutConfigs from '../../../../../../../../common/src/main/ets/default/common/configs/GridLayoutConfigs.ets'
 import SettingsModel from '../../../../../../../../common/src/main/ets/default/common/model/SettingsModel.ets'
@@ -24,10 +25,11 @@ let mSettingsModel: SettingsModel;
 export default class SettingsPresenter {
   private static settingPresenter: SettingsPresenter = new SettingsPresenter();
   private callbackList = [];
+
   /**
-    * Grid settingList.
-    *
-    */
+   * Grid settingList.
+   *
+   */
   private gridSettingsList = [
     {
       ida: 0,
@@ -48,10 +50,11 @@ export default class SettingsPresenter {
       valueList: DefaultLayoutConfig.DefaultRecentProcessLimitArray
     }
   ]
+
   /**
-    * List settingList.
-    *
-    */
+   * List settingList.
+   *
+   */
   private listSettingsList = [
     {
       ida: 0,
@@ -68,29 +71,29 @@ export default class SettingsPresenter {
   ]
 
   /**
-    * Constructor.
-    *
-    * @param {object} settingsModel - model of setting.
-    */
+   * Constructor.
+   *
+   * @param {object} settingsModel - model of setting.
+   */
   constructor() {
     mSettingsModel = new SettingsModel();
     this.gridSettingsList[1].valueList = mSettingsModel.getGridLayoutTable();
   }
 
   /**
-    * Get settingsPresenter instance.
-    *
-    * @return {settingPresenter} - settingPresenter.
-    */
+   * Get settingsPresenter instance.
+   *
+   * @return {settingPresenter} - settingPresenter.
+   */
   public static getInstance(): SettingsPresenter{
     return this.settingPresenter;
   }
 
   /**
-    * Get setting list.
-    *
-    * @return [settingList] - setting list.
-    */
+   * Get setting list.
+   *
+   * @return [settingList] - setting list.
+   */
   public getSettingList() {
     let layout = mSettingsModel.getAppPageStartConfig();
     for (let i = 0; i < this.gridSettingsList[0].valueList.length; i++) {
@@ -128,11 +131,11 @@ export default class SettingsPresenter {
   }
 
   /**
-    * Set system setting value.
-    *
-    * @param {string} settingsName - setting name.
-    * @param {string} settingValue - setting value.
-    */
+   * Set system setting value.
+   *
+   * @param {string} settingsName - setting name.
+   * @param {string} settingValue - setting value.
+   */
   setSettingsValue(ida, settingValue) {
     if (ida == 0) {
       this.setAppPageStartConfig(settingValue);
@@ -145,54 +148,54 @@ export default class SettingsPresenter {
   }
 
   /**
-    * Set app start config.
-    *
-    * @param {string} type - the type of config.
-    */
+   * Set app start config.
+   *
+   * @param {string} type - the type of config.
+   */
   setAppPageStartConfig(type) {
     mSettingsModel.setAppPageStartConfig(type);
   }
 
   /**
-    * Update setting.
-    *
-    */
+   * Update setting.
+   *
+   */
   settingUpdate() {
     mSettingsModel.closeSettings();
   }
 
   /**
-    * Set grid config.
-    *
-    * @param {string} id - the id of grid config.
-    */
+   * Set grid config.
+   *
+   * @param {string} id - the id of grid config.
+   */
   setGridConfig(id) {
     mSettingsModel.setGridConfig(id);
   }
 
   /**
-    * Set recent process.
-    *
-    * @param {number} num - the num of recent process.
-    */
+   * Set recent process.
+   *
+   * @param {number} num - the num of recent process.
+   */
   setRecentProcessLimit(num) {
     mSettingsModel.setRecentProcessLimit(num);
   }
 
   /**
-    * Back to the desktop interface.
-    *
-    */
+   * Back to the desktop interface.
+   *
+   */
   backToTheDesktop() {
     this.settingUpdate();
   }
 
   /**
-    * Register value callback.
-    *
-    * @param {string} settingsName - setting name.
-    * @param {function()} settingValue - setting value.
-    */
+   * Register value callback.
+   *
+   * @param {string} settingsName - setting name.
+   * @param {function()} settingValue - setting value.
+   */
   registerValueCallback(ida, settingValue) {
     this.callbackList.push({
       id: ida,
@@ -201,11 +204,11 @@ export default class SettingsPresenter {
   }
 
   /**
-    * Change page setting value.
-    *
-    * @param {string} settingsName - setting name.
-    * @param {string} settingValue - setting value.
-    */
+   * Change page setting value.
+   *
+   * @param {string} settingsName - setting name.
+   * @param {string} settingValue - setting value.
+   */
   changeSettingValue(ida, settingValue) {
     for (let i = 0;i < this.callbackList.length; i++) {
       if (this.callbackList[i].id == ida) {

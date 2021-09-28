@@ -26,11 +26,11 @@ export default class LruCache {
   }
 
   /**
-     * Get cache from memory.
-     *
-     * @param {string} key - key of the cache map
-     * @return {object} - cache from memory
-     */
+   * Get cache from memory.
+   *
+   * @param {string} key - key of the cache map
+   * @return {object} - cache from memory
+   */
   getCache(key) {
     if (this.cache.has(key)) {
       // exist and update
@@ -45,11 +45,11 @@ export default class LruCache {
   }
 
   /**
-     * Put cache to disk.
-     *
-     * @param {string} key - key of the cache map
-     * @param {object} value - value of the cache map
-     */
+   * Put cache to disk.
+   *
+   * @param {string} key - key of the cache map
+   * @param {object} value - value of the cache map
+   */
   putCache(key, value) {
     if (this.cache.has(key)) {
       // exist and update
@@ -63,17 +63,17 @@ export default class LruCache {
   }
 
   /**
-     * Remove cache of corresponding key.
-     *
-     * @param {string} key - key of the cache map
-     */
+   * Remove cache of corresponding key.
+   *
+   * @param {string} key - key of the cache map
+   */
   remove(key) {
     this.cache.delete(key);
   }
 
   /**
-     * Clear cache of memory.
-     */
+   * Clear cache of memory.
+   */
   clear() {
     this.cache.clear();
   }

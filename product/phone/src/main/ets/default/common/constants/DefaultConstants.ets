@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 export default class StyleConstants {
   public static DEFAULT_BACKGROUND_IMAGE: string = '/common/pics/img_wallpaper_default.jpg'
 }

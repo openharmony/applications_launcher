@@ -29,11 +29,11 @@ export default class AppListInfoCacheManager {
   }
 
   /**
-     * Get cache from disk or memory.
-     *
-     * @param {string} key - key of the cache map
-     * @return {object} - cache get from the memory or disk
-     */
+   * Get cache from disk or memory.
+   *
+   * @param {string} key - key of the cache map
+   * @return {object} - cache get from the memory or disk
+   */
   getCache(key) {
     console.info("Launcher AppListInfoCacheManager getCache key = " + key);
     let cache = this.lruCache.getCache(key);
@@ -45,11 +45,11 @@ export default class AppListInfoCacheManager {
   }
 
   /**
-     * Set cache to disk or memory.
-     *
-     * @param {string} key - key of the cache map
-     * @param {object} value - value of the cache map
-     */
+   * Set cache to disk or memory.
+   *
+   * @param {string} key - key of the cache map
+   * @param {object} value - value of the cache map
+   */
   setCache(key, value) {
     console.info("Launcher AppListInfoCacheManager setCache key = " + key + " value = " + value);
     this.lruCache.putCache(key, value);
@@ -57,8 +57,8 @@ export default class AppListInfoCacheManager {
   }
 
   /**
-     * Clear cache of both disk and memory.
-     */
+   * Clear cache of both disk and memory.
+   */
   clearCache() {
     console.info("Launcher AppListInfoCacheManager clearCache");
     this.lruCache.clear();

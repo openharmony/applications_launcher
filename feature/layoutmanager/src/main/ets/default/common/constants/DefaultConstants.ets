@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 export default class StyleConstants {
   public static DEFAULT_FONT_COLOR: string = '#ffffff'
   public static DEFAULT_ICON: string = '/common/pics/icon.png'
