@@ -6,6 +6,7 @@ ohos {
     defaultConfig {
         compatibleSdkVersion 6
     }
+    supportSystem "standard"
 }
 
 buildscript {
@@ -22,7 +23,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.huawei.ohos:hap:3.0.1.6'
+        classpath 'com.huawei.ohos:hap:3.0.3.2'
     }
 }
 
