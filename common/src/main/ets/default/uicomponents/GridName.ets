@@ -19,8 +19,7 @@ import DefaultConstants from '../common/constants/DefaultConstants.ets'
 const LOOP_TIME = 500;
 
 @Component
-export default
-struct GridName {
+export default struct GridName {
   @State nameSize: number = 20;
   @Prop nameHeight: number;
   @Prop nameWidth: number;

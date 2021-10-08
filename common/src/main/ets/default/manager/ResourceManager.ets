@@ -143,7 +143,8 @@ export default class ResourceManager {
             }
             console.info('Launcher ResourceManager getAppName  getString value>' + value);
             if (value != null) {
-              this.getAppResourceCacheManager().setCache(bundleName, KEY_NAME, value);
+              this.getAppResourceCacheManager()
+                .setCache(bundleName, KEY_NAME, value);
               callback(value);
             } else {
               callback(appName);

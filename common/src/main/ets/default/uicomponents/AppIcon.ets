@@ -19,8 +19,7 @@ import DefaultConstants from '../common/constants/DefaultConstants.ets'
 const LOOP_TIME = 500;
 
 @Component
-export default
-struct AppIcon {
+export default struct AppIcon {
   @Prop iconSize: number;
   @Prop @Watch("updateIcon") appIcon: string;
   @Prop bundleName: string;
