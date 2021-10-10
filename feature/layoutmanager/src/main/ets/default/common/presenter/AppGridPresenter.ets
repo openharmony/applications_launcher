@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import PresetFormCard from '../../../../../../../../common/src/main/ets/default/common/configs/PresetFormCard.ets';
 import Prompt from '@ohos.prompt';
 import BaseAppPresenter from '../../../../../../../../common/src/main/ets/default/base/BaseAppPresenter.ets';
 
@@ -33,6 +34,8 @@ const BOTTOM_BAR_ROW = -1;
 
 export default class AppGridPresenter extends BaseAppPresenter {
   private static appGridPresenter: AppGridPresenter = new AppGridPresenter();
+  private mAppInfoList;
+  private mFormInfoList;
   private mBundleInfoList;
   private mGridConfig;
   private mScreenBottomBarTop = 0;
@@ -57,7 +60,19 @@ export default class AppGridPresenter extends BaseAppPresenter {
   }
 
   public getGridList() {
-    this.mAppModel.getAppList(this.getGridListCallback.bind(this));
+    this.mFormModel.getFormList(this.getFormListCallback.bind(this));
+  }
+
+  public getAppListCallback(appList) {
+    this.mAppInfoList = appList;
+    let bundleInfoList = [];
+    bundleInfoList = bundleInfoList.concat(this.mFormInfoList).concat(this.mAppInfoList);
+    this.getGridListCallback(bundleInfoList);
+  }
+
+  public getFormListCallback(formList) {
+    this.mFormInfoList = formList;
+    this.mAppModel.getAppList(this.getAppListCallback.bind(this));
   }
 
   public getGridListCallback(list) {
@@ -83,24 +98,43 @@ export default class AppGridPresenter extends BaseAppPresenter {
 
     for (let i = 0;i < layoutInfo.length; i++) {
       for (let j = 0; j < this.mBundleInfoList.length; j++) {
-        if (layoutInfo[i].bundleName == this.mBundleInfoList[j].bundleName) {
-          appListInfo.push(
-            {
-              System: this.mBundleInfoList[j].System,
-              AppName: this.mBundleInfoList[j].AppName,
-              AppId: this.mBundleInfoList[j].AppId,
-              AppIcon: this.mBundleInfoList[j].AppIcon,
-              bundleName: this.mBundleInfoList[j].bundleName,
-              labelId: this.mBundleInfoList[j].labelId,
-              abilityName: this.mBundleInfoList[j].abilityName,
-              type: 0,
-              area: layoutInfo[i].area,
-              page: layoutInfo[i].page,
-              row: layoutInfo[i].row,
-              column: layoutInfo[i].column,
-              x: 0,
-            }
-          );
+        if (layoutInfo[i].bundleName == this.mBundleInfoList[j].bundleName
+        && layoutInfo[i].type == this.mBundleInfoList[j].type) {
+          if (this.mBundleInfoList[j].type == 0) {
+            appListInfo.push(
+              {
+                System: this.mBundleInfoList[j].System,
+                AppName: this.mBundleInfoList[j].AppName,
+                AppId: this.mBundleInfoList[j].AppId,
+                AppIcon: this.mBundleInfoList[j].AppIcon,
+                bundleName: this.mBundleInfoList[j].bundleName,
+                labelId: this.mBundleInfoList[j].labelId,
+                abilityName: this.mBundleInfoList[j].abilityName,
+                type: this.mBundleInfoList[j].type,
+                area: layoutInfo[i].area,
+                page: layoutInfo[i].page,
+                row: layoutInfo[i].row,
+                column: layoutInfo[i].column,
+                x: 0,
+              }
+            );
+          } else {
+            appListInfo.push(
+              {
+                moduleName: this.mBundleInfoList[j].moduleName,
+                bundleName: this.mBundleInfoList[j].bundleName,
+                abilityName: this.mBundleInfoList[j].abilityName,
+                dimension: this.mBundleInfoList[j].dimension,
+                name: this.mBundleInfoList[j].name,
+                type: this.mBundleInfoList[j].type,
+                area: layoutInfo[i].area,
+                page: layoutInfo[i].page,
+                row: layoutInfo[i].row,
+                column: layoutInfo[i].column,
+                x: 0,
+              }
+            );
+          }
         }
       }
     }
@@ -279,7 +313,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
     for (let i = 0; i < layoutInfo.length; i++) {
       if (count[layoutInfo[i].bundleName] == undefined || count[layoutInfo[i].bundleName] == null || count[layoutInfo[i].bundleName] == '') {
         count[layoutInfo[i].bundleName] = 0;
-      } else if (++ count[layoutInfo[i].bundleName] > 1) {
+      } else if (layoutInfo[i].type == 0 && ++ count[layoutInfo[i].bundleName] > 1) {
         return true;
       }
     }
@@ -300,7 +334,8 @@ export default class AppGridPresenter extends BaseAppPresenter {
     for (let i in this.mBundleInfoList) {
       let sign = false;
       for (let j in layoutInfo) {
-        if (this.mBundleInfoList[i].bundleName == layoutInfo[j].bundleName) {
+        if (this.mBundleInfoList[i].type == layoutInfo[j].type
+        && this.mBundleInfoList[i].bundleName == layoutInfo[j].bundleName) {
           sign = true;
           break;
         }
@@ -347,24 +382,14 @@ export default class AppGridPresenter extends BaseAppPresenter {
       }
     }
 
-    //The latest info position in the page
-    let existNumber = this.getExistNumber(layoutInfo);
+  
     //Add new app
     for (let i = 0; i < newApp.length; i++) {
-      layoutInfo.push({
-        bundleName: newApp[i].bundleName,
-        type: 0,
-        area: [1, 1],
-        page: Math.floor((i + existNumber) / (column * row)),
-        row: Math.floor((i + existNumber) % (column * row) / column),
-        column: Math.floor((i + existNumber) % (column * row) % column),
-      });
-    }
-    let pageCount = Math.ceil((newApp.length + existNumber) / (column * row));
-    if (pageCount < this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount) {
-      layoutDescription.pageCount = this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount;
-    } else {
-      layoutDescription.pageCount = pageCount;
+      if (newApp[i].type == 0) {
+        this.updateAppItemLayoutInfo(info, layoutDescription, newApp[i]);
+      } else {
+        this.updateCardItemLayoutInfo(info, layoutDescription, newApp[i]);
+      }
     }
     info.layoutDescription = layoutDescription;
     info.layoutInfo = layoutInfo;
@@ -372,21 +397,99 @@ export default class AppGridPresenter extends BaseAppPresenter {
     return info;
   }
 
-  private getExistNumber(layoutInfo) {
-    this.mGridConfig = this.mSettingsModel.getGridConfig();
-    let column = this.mGridConfig.column;
-    let row = this.mGridConfig.row;
-    let existNumber = 0;
-    for (let i = 0; i < layoutInfo.length; i++) {
-      let Page = layoutInfo[i].page;
-      let Row = layoutInfo[i].row;
-      let Column = layoutInfo[i].column;
-      let result = (Page * column * row) + (Row * column) + (Column + 1);
-      if (result > existNumber) {
-        existNumber = result;
+  private updateCardItemLayoutInfo(info, layoutDescription, item) {
+    let layoutInfo = info.layoutInfo;
+    for (let presetFormInfo of PresetFormCard) {
+      if (presetFormInfo.moduleName == item.moduleName
+      && presetFormInfo.bundleName == item.bundleName
+      && presetFormInfo.abilityName == item.abilityName) {
+        layoutInfo.push({
+          bundleName: presetFormInfo.bundleName,
+          type: 1,
+          area: presetFormInfo.area,
+          page: presetFormInfo.page,
+          column: presetFormInfo.column,
+          row: presetFormInfo.row,
+        });
+        if (presetFormInfo.page >= layoutDescription.pageCount) {
+          layoutDescription.pageCount = presetFormInfo.page + 1;
+        }
       }
     }
-    return existNumber;
+  }
+
+  private updateAppItemLayoutInfo(info, layoutDescription, item) {
+    let pageCount = info.layoutDescription.pageCount;
+    let row = info.layoutDescription.row;
+    let column = info.layoutDescription.column;
+    let layoutInfo = info.layoutInfo;
+    //current page has space
+    let isNeedNewPage = true;
+    for (let i = 0; i < pageCount; i++) {
+      for (let y = 0; y < row; y++) {
+        for (let x = 0; x < column; x++) {
+          if (!isNeedNewPage) {
+            break;
+          }
+          if (this.isPositionValid(info, item, i, x, y)) {
+            isNeedNewPage = false;
+            layoutInfo.push({
+              bundleName: item.bundleName,
+              type: item.type,
+              area: item.area,
+              page: i,
+              column: x,
+              row: y
+            });
+          }
+        }
+      }
+    }
+    if (isNeedNewPage) {
+      layoutInfo.push({
+        bundleName: item.bundleName,
+        type: item.type,
+        area: item.area,
+        page: pageCount,
+        column: 0,
+        row: 0
+      });
+      layoutDescription.pageCount = layoutDescription.pageCount + 1;
+    }
+  }
+
+  private isPositionValid(info, item, page, startColumn, startRow) {
+    let row = info.layoutDescription.row;
+    let column = info.layoutDescription.column;
+    if ((startColumn + item.area[0]) > column || (startRow + item.area[1]) > row) {
+      return false;
+    }
+    let isValid = true;
+    for (let x = startColumn; x < startColumn + item.area[0]; x++) {
+      for (let y = startRow; y < startRow + item.area[1]; y++) {
+        if (this.isPositionOccupied(info, page, x, y)) {
+          isValid = false;
+          break;
+        }
+      }
+    }
+    return isValid;
+  }
+
+  private isPositionOccupied(info, page, column, row) {
+    let pageCount = info.layoutDescription.pageCount;
+    let layoutInfo = info.layoutInfo;
+    // current page has space
+    for (let layout of layoutInfo) {
+      if (layout.page == page) {
+        let xMatch = (column >= layout.column) && (column < layout.column + layout.area[0]);
+        let yMatch = (row >= layout.row) && (row < layout.row + layout.area[1]);
+        if (xMatch && yMatch) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private createNewInfo() {

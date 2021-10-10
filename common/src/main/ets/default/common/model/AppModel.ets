@@ -61,6 +61,7 @@ export default class AppModel {
         } else {
           this.mBundleInfoList.push(
             {
+              type: 0,
               System: data[i].appInfo.systemApp,
               AppName: data[i].appInfo.label,
               AppId: data[i].appId,
@@ -68,6 +69,7 @@ export default class AppModel {
               bundleName: data[i].name,
               labelId: data[i].appInfo.labelId,
               abilityName: data[i].abilityInfos[0].name,
+              area: [1, 1]
             }
           )
         }

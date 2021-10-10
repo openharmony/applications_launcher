@@ -21,8 +21,7 @@ import DefaultConstants from '../common/constants/DefaultConstants.ets'
 let mAppListPresenter: AppListPresenter;
 
 @Component
-export default
-struct ListLayout {
+export default struct ListLayout {
   @StorageLink('listInfo') AppListInfo: [] = [];
 
   private aboutToAppear(): void  {

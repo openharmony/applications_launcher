@@ -19,8 +19,7 @@ import DefaultConstants from '../common/constants/DefaultConstants.ets'
 const LOOP_TIME = 500;
 
 @Component
-export default
-struct ListName {
+export default struct ListName {
   @State nameSize: number = 20;
   @Prop @Watch("updateName") appName: string;
   @State name: string = ''

@@ -27,8 +27,7 @@ let mSHeight = 0;
 let mScreenMagnification = 0;
 
 @Component
-export default
-struct GridLayout {
+export default struct GridLayout {
   @State AppItemHeight: number = DefaultConstants.DEFAULT_APP_ITEM_HEIGHT;
   @State AppItemWidth: number = DefaultConstants.DEFAULT_APP_ITEM_WIDTH;
   @State AppNameSize: number = DefaultConstants.DEFAULT_APP_NAME_SIZE;
@@ -66,7 +65,7 @@ struct GridLayout {
     mAppGridPresenter.setScreenWidth(this.mScreenWidth);
     mAppGridPresenter.calculateCoordinate();
     mAppGridPresenter.getGridList();
-    mAppGridPresenter.registerAppListChangeCallback()
+    mAppGridPresenter.registerAppListChangeCallback();
   }
 
   public changeGridConfig() {
@@ -214,19 +213,25 @@ struct SwiperPage {
     Grid() {
       ForEach(this.mAppListInfo, (item) => {
         GridItem() {
-          AppItem({
-            mAppBottomBarInfo: this.mAppBottomBarInfo
-            item: item,
-            moveAppX: $moveAppX,
-            moveAppY: $moveAppY,
-            moveAppShow: $moveAppShow,
-            moveAppInfo: $moveAppInfo
-          })
+          if (item.type == 0) {
+            AppItem({
+              mAppBottomBarInfo: this.mAppBottomBarInfo
+              item: item,
+              moveAppX: $moveAppX,
+              moveAppY: $moveAppY,
+              moveAppShow: $moveAppShow,
+              moveAppInfo: $moveAppInfo
+            })
+          } else {
+            FormCard({
+              formItem: item
+            })
+          }
         }
         .rowStart(item.row)
         .columnStart(item.column)
-        .rowEnd(item.row)
-        .columnEnd(item.column)
+        .rowEnd(item.row + item.area[1] - 1)
+        .columnEnd(item.column + item.area[0] - 1)
       })
     }
     .columnsTemplate(this.ColumnsTemplate)
@@ -355,6 +360,43 @@ struct AppItem {
 }
 
 @Component
+struct FormCard {
+  @State allowUpdate: boolean = true;
+  private formItem: any;
+  @State isShow: boolean = true;
+
+  build() {
+    Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceAround }) {
+      if (this.isShow) {
+        Column() {
+          FormComponent({
+            id: 0,
+            name: this.formItem.name,
+            bundle: this.formItem.bundleName,
+            ability: this.formItem.abilityName,
+            module: this.formItem.moduleName,
+            dimension: this.formItem.dimension
+          })
+            .allowUpdate(this.allowUpdate)
+            .visibility(this.isShow ? Visibility.Visible : Visibility.Hidden)
+            .onAcquired((form) => {
+            console.info(' FormComponent card id is:' + form.id);
+          })
+            .onError((error) => {
+            console.info(' FormComponent error msg:' + error.msg)
+          })
+        }
+        .onClick(() => {
+          mAppGridPresenter.openApplication(this.formItem.abilityName, this.formItem.bundleName);
+        })
+      }
+    }
+    .width(DefaultConstants.PERCENTAGE_100)
+    .height(DefaultConstants.PERCENTAGE_100)
+  }
+}
+
+@Component
 struct BottomBar {
   @State AppItemHeight: number = DefaultConstants.DEFAULT_APP_ITEM_HEIGHT;
   @State AppItemWidth: number = DefaultConstants.DEFAULT_APP_ITEM_WIDTH;
@@ -375,7 +417,7 @@ struct BottomBar {
         ForEach(this.mAppBottomBarInfo, (item) => {
           Column() {
             AppItem({
-              mAppBottomBarInfo: this.mAppBottomBarInfo
+              mAppBottomBarInfo: this.mAppBottomBarInfo,
               item: item,
               moveAppX: $moveAppX,
               moveAppY: $moveAppY,
