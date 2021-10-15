@@ -27,7 +27,7 @@ const IF_GET_ABILITY = 1;
 export default class AppModel {
   private static appModel = new AppModel();
   private mBundleInfoList = [];
-  private systemApplicationName = SystemApplication.SystemApplicationName;
+  private systemApplicationName = [];
   private mCommonEventSubscriber = null;
   private mAppListInstallListener = [];
   private mAppListUninstallListener = [];
@@ -41,6 +41,7 @@ export default class AppModel {
   };
 
   private constructor() {
+    this.systemApplicationName = SystemApplication.SystemApplicationName.split(",");
   }
 
   public static getInstance(): AppModel{
