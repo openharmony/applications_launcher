@@ -59,6 +59,10 @@ export default struct GridName {
       Text(this.name)
         .fontSize(this.nameSize)
         .fontColor(DefaultConstants.DEFAULT_FONT_COLOR)
+        .width(this.nameWidth)
+        .height(this.nameHeight)
+        .textOverflow({overflow: TextOverflow.Ellipsis})
+        .textAlign(TextAlign.Center)
     }
     .width(this.nameWidth)
     .height(this.nameHeight)

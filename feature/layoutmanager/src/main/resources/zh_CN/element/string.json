@@ -31,6 +31,10 @@
     {
       "name": "cancel",
       "value": "取消"
+    },
+    {
+      "name": "launcherEdit",
+      "value": "桌面编辑"
     }
   ]
 }

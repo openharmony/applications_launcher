@@ -111,35 +111,49 @@ struct ShowDialog {
   action: () => void;
 
   build() {
-    Row() {
-      Button() {
-        Text($r('app.string.intoSettings'))
-          .height(DefaultConstants.PERCENTAGE_100)
-          .fontColor(Color.White)
-          .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
+    Column() {
+      Row() {
+        Text($r('app.string.launcherEdit'))
       }
-      .width(DefaultConstants.PIXEL_200)
-      .height(DefaultConstants.PIXEL_50)
-      .backgroundColor(Color.Blue)
-      .onClick(() => {
-        mAppListPresenter.intoSetting();
-        this.controller.close();
-      })
+      Row() {
+        Button() {
+          Text($r('app.string.intoSettings'))
+            .height(DefaultConstants.PERCENTAGE_100)
+            .fontColor(Color.Blue)
+            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+        }
+        .width(DefaultConstants.PIXEL_200)
+        .height(DefaultConstants.PIXEL_50)
+        .backgroundColor(Color.White)
+        .onClick(() => {
+          mAppListPresenter.intoSetting();
+          this.controller.close();
+        })
 
-      Button() {
-        Text($r('app.string.uninstall'))
-          .height(DefaultConstants.PERCENTAGE_100)
-          .fontColor(Color.White)
-          .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
-      }
-      .width(DefaultConstants.PIXEL_200)
-      .height(DefaultConstants.PIXEL_50)
-      .backgroundColor(Color.Blue)
-      .onClick(() => {
-        mAppListPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
-        this.controller.close();
-      })
-    }.padding(DefaultConstants.DEFAULT_20)
+        Divider()
+          .vertical(true)
+          .color(DefaultConstants.DEFAULT_DIVIDER_COLOR)
+          .height(DefaultConstants.DEFAULT_40)
+          .margin({top: DefaultConstants.DEFAULT_0, right: DefaultConstants.DEFAULT_10, bottom: DefaultConstants.DEFAULT_0, left: DefaultConstants.DEFAULT_10})
+
+        Button() {
+          Text($r('app.string.uninstall'))
+            .height(DefaultConstants.PERCENTAGE_100)
+            .fontColor(Color.Red)
+            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+        }
+        .width(DefaultConstants.PIXEL_200)
+        .height(DefaultConstants.PIXEL_50)
+        .backgroundColor(Color.White)
+        .onClick(() => {
+          mAppListPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
+          this.controller.close();
+        })
+      }.padding(DefaultConstants.DEFAULT_20)
+    }
+    .padding({top: DefaultConstants.DEFAULT_25, right: DefaultConstants.DEFAULT_5, bottom: DefaultConstants.DEFAULT_15, left: DefaultConstants.DEFAULT_5})
+
+
   }
 }
 
@@ -159,7 +173,7 @@ struct UninstallDialog {
 
       Row() {
         Button() {
-          Text($r('app.string.submit'))
+          Text($r('app.string.uninstall'))
             .fontColor(Color.White)
             .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
         }

@@ -47,6 +47,10 @@
     {
       "name": "submit",
       "value": "Submit"
+    },
+    {
+      "name": "launcherEdit",
+      "value": "launcherEdit"
     }
   ]
 }
