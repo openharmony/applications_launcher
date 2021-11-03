@@ -97,7 +97,6 @@ struct SettingPage {
       bottom: DefaultConstants.DEFAULT_PIXEL_10,
       left: DefaultConstants.DEFAULT_PIXEL_30,
       right: DefaultConstants.DEFAULT_PIXEL_30 })
-    .height(DefaultConstants.PERCENTAGE_100)
     .padding(DefaultConstants.DEFAULT_PIXEL_20)
     .borderRadius(DefaultConstants.DEFAULT_PIXEL_30)
     .backgroundColor(DefaultConstants.DEFAULT_SETTING_PAGE_COLOR)

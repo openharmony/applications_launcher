@@ -47,6 +47,10 @@
     {
       "name": "submit",
       "value": "确认"
+    },
+    {
+      "name": "launcherEdit",
+      "value": "桌面编辑"
     }
   ]
 }

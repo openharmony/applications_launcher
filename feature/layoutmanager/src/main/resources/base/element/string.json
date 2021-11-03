@@ -31,6 +31,10 @@
     {
       "name": "cancel",
       "value": "Cancel"
+    },
+    {
+      "name": "launcherEdit",
+      "value": "launcherEdit"
     }
   ]
 }

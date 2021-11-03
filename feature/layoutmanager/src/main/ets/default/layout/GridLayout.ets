@@ -444,35 +444,47 @@ struct ShowDialog {
   @StorageLink('blankPageBtnText') buttonText: string = '';
 
   build() {
-    Row() {
-      Button() {
-        Text($r('app.string.intoSettings'))
-          .height(DefaultConstants.PERCENTAGE_100)
-          .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
-          .fontColor(Color.White)
+    Column() {
+      Row() {
+        Text($r('app.string.launcherEdit'))
       }
-      .width(DefaultConstants.PIXEL_200)
-      .height(DefaultConstants.PIXEL_50)
-      .backgroundColor(Color.Blue)
-      .onClick(() => {
-        mAppGridPresenter.intoSetting();
-        this.controller.close();
-      })
+      Row() {
+        Button() {
+          Text($r('app.string.intoSettings'))
+            .height(DefaultConstants.PERCENTAGE_100)
+            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+            .fontColor(Color.Blue)
+        }
+        .width(DefaultConstants.PIXEL_200)
+        .height(DefaultConstants.PIXEL_50)
+        .backgroundColor(Color.White)
+        .onClick(() => {
+          mAppGridPresenter.intoSetting();
+          this.controller.close();
+        })
 
-      Button() {
-        Text(this.buttonText)
-          .height(DefaultConstants.PERCENTAGE_100)
-          .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
-          .fontColor(Color.White)
-      }
-      .width(DefaultConstants.PIXEL_200)
-      .height(DefaultConstants.PIXEL_50)
-      .backgroundColor(Color.Blue)
-      .onClick(() => {
-        mAppGridPresenter.addOrDeleteBlankPage();
-        this.controller.close();
-      })
-    }.padding(DefaultConstants.DEFAULT_20)
+        Divider()
+          .vertical(true)
+          .color(DefaultConstants.DEFAULT_DIVIDER_COLOR)
+          .height(DefaultConstants.DEFAULT_40)
+          .margin({top: DefaultConstants.DEFAULT_0, right: DefaultConstants.DEFAULT_10, bottom: DefaultConstants.DEFAULT_0, left: DefaultConstants.DEFAULT_10})
+
+        Button() {
+          Text(this.buttonText)
+            .height(DefaultConstants.PERCENTAGE_100)
+            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+            .fontColor(Color.Blue)
+        }
+        .width(DefaultConstants.PIXEL_200)
+        .height(DefaultConstants.PIXEL_50)
+        .backgroundColor(Color.White)
+        .onClick(() => {
+          mAppGridPresenter.addOrDeleteBlankPage();
+          this.controller.close();
+        })
+      }.padding(DefaultConstants.DEFAULT_20)
+    }
+    .padding({top: DefaultConstants.DEFAULT_25, right: DefaultConstants.DEFAULT_0, bottom: DefaultConstants.DEFAULT_15, left: DefaultConstants.DEFAULT_0})
   }
 }
 
@@ -492,35 +504,40 @@ struct UninstallDialog {
 
       Row() {
         Button() {
-          Text($r('app.string.submit'))
-            .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
-            .fontColor(Color.White)
+          Text($r('app.string.cancel'))
+            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+            .fontColor(Color.Blue)
+        }
+        .margin({ left: DefaultConstants.DEFAULT_20 })
+        .width(DefaultConstants.PIXEL_200)
+        .height(DefaultConstants.PIXEL_50)
+        .backgroundColor(Color.White)
+        .onClick(() => {
+          this.controller.close();
+        })
+
+        Divider()
+          .vertical(true)
+          .color(DefaultConstants.DEFAULT_DIVIDER_COLOR)
+          .height(DefaultConstants.DEFAULT_40)
+          .margin({top: DefaultConstants.DEFAULT_0, right: DefaultConstants.DEFAULT_10, bottom: DefaultConstants.DEFAULT_0, left: DefaultConstants.DEFAULT_10})
+
+        Button() {
+          Text($r('app.string.uninstall'))
+            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+            .fontColor(Color.Red)
         }
         .margin({ right: DefaultConstants.DEFAULT_20 })
-        .width(DefaultConstants.PIXEL_150)
+        .width(DefaultConstants.PIXEL_200)
         .height(DefaultConstants.PIXEL_50)
-        .backgroundColor(Color.Blue)
+        .backgroundColor(Color.White)
         .onClick(() => {
           mAppGridPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
           this.controller.close();
         })
-
-        Button() {
-          Text($r('app.string.cancel'))
-            .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
-            .fontColor(Color.White)
-        }
-        .margin({ left: DefaultConstants.DEFAULT_20 })
-        .width(DefaultConstants.PIXEL_150)
-        .height(DefaultConstants.PIXEL_50)
-        .backgroundColor(Color.Blue)
-        .onClick(() => {
-          this.controller.close();
-        })
       }
       .margin({ top: DefaultConstants.DEFAULT_20 })
-      .padding(DefaultConstants.DEFAULT_20)
     }
-    .padding(DefaultConstants.DEFAULT_20)
+    .padding({top: DefaultConstants.DEFAULT_25, right: DefaultConstants.DEFAULT_20, bottom: DefaultConstants.DEFAULT_15, left: DefaultConstants.DEFAULT_20})
   }
 }
