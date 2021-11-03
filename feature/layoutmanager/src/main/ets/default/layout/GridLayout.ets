@@ -160,7 +160,7 @@ struct GridSwiper {
             moveAppInfo: $moveAppInfo,
             gridConfig: this.gridConfig
           })
-        })
+        },(item) => JSON.stringify(item))
       }
       .height(DefaultConstants.PERCENTAGE_100)
       .width(DefaultConstants.PERCENTAGE_100)
@@ -232,7 +232,7 @@ struct SwiperPage {
         .columnStart(item.column)
         .rowEnd(item.row + item.area[1] - 1)
         .columnEnd(item.column + item.area[0] - 1)
-      })
+      },(item) => JSON.stringify(item))
     }
     .columnsTemplate(this.ColumnsTemplate)
     .rowsTemplate(this.RowsTemplate)
@@ -427,7 +427,7 @@ struct BottomBar {
           }
           .height(DefaultConstants.PERCENTAGE_100)
           .width(this.ItemWidth)
-        })
+        },(item) => JSON.stringify(item))
       }
       .height(DefaultConstants.PERCENTAGE_100)
     }

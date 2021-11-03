@@ -42,6 +42,7 @@ struct Index {
         SettingPage()
       }
     }.width(DefaultConstants.PERCENTAGE_100)
+    .height(DefaultConstants.PERCENTAGE_100)
     .backgroundColor(DefaultConstants.DEFAULT_BACKGROUND_COLOR)
   }
 }
@@ -91,7 +92,7 @@ struct SettingPage {
           settingValue: item.settingValue,
           valueList: item.valueList,
         })
-      })
+      },(item: any) => JSON.stringify(item))
     }
     .margin({ top: DefaultConstants.DEFAULT_PIXEL_10,
       bottom: DefaultConstants.DEFAULT_PIXEL_10,
@@ -192,7 +193,7 @@ struct SettingsDialog {
           this.controller.close();
           this.action();
         })
-      })
+      },(item: any) => JSON.stringify(item))
       Text($r('app.string.cancel'))
         .textAlign(TextAlign.Center)
         .height(DefaultConstants.DEFAULT_PIXEL_80)
