@@ -90,7 +90,7 @@ export default struct ListLayout {
             right: DefaultConstants.DEFAULT_30
           })
         }
-      })
+      },(item) => JSON.stringify(item))
     }
     .gesture(
       LongPressGesture({ repeat: false })
