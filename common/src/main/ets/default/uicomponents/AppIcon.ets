@@ -16,8 +16,6 @@
 import ResourceManager from '../manager/ResourceManager.ets'
 import DefaultConstants from '../common/constants/DefaultConstants.ets'
 
-const LOOP_TIME = 500;
-
 @Component
 export default struct AppIcon {
   @Prop iconSize: number;
@@ -38,9 +36,6 @@ export default struct AppIcon {
     } else {
       this.mResourceManager.getAppIcon(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
     }
-    setInterval(() => {
-      this.updateIcon();
-    }, LOOP_TIME);
   }
 
   public iconLoadCallback(image) {

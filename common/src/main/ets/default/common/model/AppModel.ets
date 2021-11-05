@@ -209,6 +209,7 @@ export default class AppModel {
         .then(data => {
         console.info('Launcher AppModel installation subscriber getBundleInfo ' + JSON.stringify(data));
         let bundleInfo = {
+          type: 0,
           System: data.appInfo.systemApp,
           AppName: data.appInfo.label,
           AppId: data.appId,
@@ -216,6 +217,7 @@ export default class AppModel {
           bundleName: data.name,
           labelId: data.appInfo.labelId,
           abilityName: data.abilityInfos[0].name,
+          area: [1, 1]
         };
         this.reportAppInstallEvent(callbackData.event, bundleInfo);
       })
