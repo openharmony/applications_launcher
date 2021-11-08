@@ -16,8 +16,6 @@
 import ResourceManager from '../manager/ResourceManager.ets'
 import DefaultConstants from '../common/constants/DefaultConstants.ets'
 
-const LOOP_TIME = 500;
-
 @Component
 export default
 struct GridName {
@@ -38,9 +36,6 @@ struct GridName {
     } else {
       this.mResourceManager.getAppName(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
     }
-    setInterval(() => {
-      this.updateName();
-    }, LOOP_TIME);
   }
 
   public appNameLoadCallback(name: string) {

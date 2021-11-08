@@ -117,7 +117,7 @@ struct recentProcessListDisplay {
                     mRecentsPresenter.removeRecentProcess(item.missionId);
                   }
                 }))
-            })
+            }, (item) => JSON.stringify(item))
           }
         }.height(this.appHeightSize)
         .scrollable(ScrollDirection.Horizontal)
