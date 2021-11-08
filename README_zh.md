@@ -304,6 +304,7 @@ removeMission() {
 ![](./figures/signature_1.png)
 
 选择 Modules → Signing Configs，将对应的签名文件配置如下，完成后点击Apply，再点击OK。
+密码为生成签名文件时的密码，如果使用默认的签名文件，则使用默认密码123456。
 
 ![](./figures/signature_2.png)
 
@@ -439,11 +440,11 @@ hilog | grep Label
 3. 在弹出的画面中，选择将仓库 fork 到哪里，点击确认。
    ![](./figures/commit_source_fork_confirm.png)
 4. Fork 成功之后，会在自己的账号下看见 fork 的代码仓库。
-   ![](img/commit_source_forked_repo.png)
+   ![](./figures/commit_source_forked_repo.png)
 
 ### 提交代码
 1. 访问我们自己在码云账号上 fork 的代码仓库，点击“克隆/下载”按钮，选择 SSH，点击“复制”按钮。
-   ![](img/commit_source_clone_page.png)
+   ![](./figures/commit_source_clone_page.png)
 
 2. 在本地新建 Launcher 目录，在 Launcher 目录中执行如下命令
    ```
