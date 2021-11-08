@@ -295,6 +295,7 @@ removeMission() {
 #### 签名文件的获取
 1. 拷贝 OpenHarmony 标准版的 prebuilts\signcenter 目录到操作目录。
 2. 拷贝Launcher工程的 signature\launcher.p7b 到该目录下。
+
 备注：如果需要生成并使用自己的签名文件可参考https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/quick-start/configuring-openharmony-app-signature.md
 
 #### 签名文件的配置
