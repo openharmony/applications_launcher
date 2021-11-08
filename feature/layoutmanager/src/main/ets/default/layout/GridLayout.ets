@@ -161,7 +161,7 @@ struct GridSwiper {
             moveAppInfo: $moveAppInfo,
             gridConfig: this.gridConfig
           })
-        })
+        }, (item) => JSON.stringify(item))
       }
       .height(DefaultConstants.PERCENTAGE_100)
       .width(DefaultConstants.PERCENTAGE_100)
@@ -215,7 +215,7 @@ struct SwiperPage {
       ForEach(this.mAppListInfo, (item) => {
         GridItem() {
           AppItem({
-            mAppBottomBarInfo: this.mAppBottomBarInfo
+            mAppBottomBarInfo: this.mAppBottomBarInfo,
             item: item,
             moveAppX: $moveAppX,
             moveAppY: $moveAppY,
@@ -227,7 +227,7 @@ struct SwiperPage {
         .columnStart(item.column)
         .rowEnd(item.row)
         .columnEnd(item.column)
-      })
+      }, (item) => JSON.stringify(item))
     }
     .columnsTemplate(this.ColumnsTemplate)
     .rowsTemplate(this.RowsTemplate)
@@ -375,7 +375,7 @@ struct BottomBar {
         ForEach(this.mAppBottomBarInfo, (item) => {
           Column() {
             AppItem({
-              mAppBottomBarInfo: this.mAppBottomBarInfo
+              mAppBottomBarInfo: this.mAppBottomBarInfo,
               item: item,
               moveAppX: $moveAppX,
               moveAppY: $moveAppY,
@@ -385,7 +385,7 @@ struct BottomBar {
           }
           .height(DefaultConstants.PERCENTAGE_100)
           .width(this.ItemWidth)
-        })
+        }, (item) => JSON.stringify(item))
       }
       .height(DefaultConstants.PERCENTAGE_100)
     }
