@@ -14,7 +14,7 @@
  */
 
 import ResourceManager from '../manager/ResourceManager.ets'
-import DefaultConstants from '../common/constants/DefaultConstants.ets'
+import StyleConstants from '../constants/StyleConstants.ets'
 
 @Component
 export default struct GridName {
@@ -53,7 +53,7 @@ export default struct GridName {
     Column() {
       Text(this.name)
         .fontSize(this.nameSize)
-        .fontColor(DefaultConstants.DEFAULT_FONT_COLOR)
+        .fontColor(StyleConstants.DEFAULT_FONT_COLOR)
         .width(this.nameWidth)
         .height(this.nameHeight)
         .textOverflow({overflow: TextOverflow.Ellipsis})

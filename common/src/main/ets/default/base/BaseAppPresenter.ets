@@ -13,9 +13,8 @@
  * limitations under the License.
  */
 
-import AppModel from '../common/model/AppModel.ets'
-import FormModel from '../common/model/FormModel.ets'
-import SettingsModel from '../common/model/SettingsModel.ets'
+import AppModel from '../model/AppModel.ets'
+import SettingsModel from '../model/SettingsModel.ets'
 import AppListInfoCacheManager from '../cache/AppListInfoCacheManager.ets'
 import ResourceManager from '../manager/ResourceManager.ets'
 
@@ -28,7 +27,6 @@ const SETTING_ABILITY = 'com.ohos.launcher.settings.MainAbility';
 
 export default class BaseAppPresenter {
   protected mAppModel: AppModel;
-  protected mFormModel: FormModel;
   protected mSettingsModel: SettingsModel;
   protected mAppListInfoCacheManager: AppListInfoCacheManager;
   protected mResourceManager: ResourceManager;
@@ -40,7 +38,6 @@ export default class BaseAppPresenter {
 
   protected constructor() {
     this.mAppModel = AppModel.getInstance();
-    this.mFormModel = FormModel.getInstance();
     this.mSettingsModel = new SettingsModel();
     this.mAppListInfoCacheManager = new AppListInfoCacheManager();
     this.mResourceManager = ResourceManager.getInstance();

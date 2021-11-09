@@ -16,7 +16,7 @@
 import AppListPresenter from '../common/presenter/AppListPresenter.ets'
 import ListName from '../../../../../../../common/src/main/ets/default/uicomponents/ListName.ets'
 import AppIcon from '../../../../../../../common/src/main/ets/default/uicomponents/AppIcon.ets'
-import DefaultConstants from '../common/constants/DefaultConstants.ets'
+import StyleConstants from '../common/constants/StyleConstants.ets'
 
 let mAppListPresenter: AppListPresenter;
 
@@ -56,14 +56,14 @@ export default struct ListLayout {
         ListItem() {
           Row() {
             AppIcon({
-              iconSize: DefaultConstants.DEFAULT_APP_ITEM_WIDTH,
+              iconSize: StyleConstants.DEFAULT_APP_ITEM_WIDTH,
               appIcon: item.AppIcon,
               bundleName: item.bundleName,
               labelId: item.labelId
             })
             ListName({
               appName: item.AppName,
-              nameSize: DefaultConstants.DEFAULT_APP_NAME_SIZE,
+              nameSize: StyleConstants.DEFAULT_APP_NAME_SIZE,
               bundleName: item.bundleName,
               labelId: item.labelId
             })
@@ -78,16 +78,16 @@ export default struct ListLayout {
           .onClick(() => {
             mAppListPresenter.openApplication(item.abilityName, item.bundleName);
           })
-          .width(DefaultConstants.PERCENTAGE_100)
-          .height(DefaultConstants.DEFAULT_80)
-          .backgroundColor(DefaultConstants.LIGHT_BLACK)
-          .borderRadius(DefaultConstants.DEFAULT_20)
-          .padding({ left: DefaultConstants.DEFAULT_5 })
+          .width(StyleConstants.PERCENTAGE_100)
+          .height(StyleConstants.DEFAULT_80)
+          .backgroundColor(StyleConstants.LIGHT_BLACK)
+          .borderRadius(StyleConstants.DEFAULT_20)
+          .padding({ left: StyleConstants.DEFAULT_5 })
           .margin({
-            top: DefaultConstants.DEFAULT_5,
-            left: DefaultConstants.DEFAULT_30,
-            bottom: DefaultConstants.DEFAULT_5,
-            right: DefaultConstants.DEFAULT_30
+            top: StyleConstants.DEFAULT_5,
+            left: StyleConstants.DEFAULT_30,
+            bottom: StyleConstants.DEFAULT_5,
+            right: StyleConstants.DEFAULT_30
           })
         }
       },(item) => JSON.stringify(item))
@@ -98,8 +98,8 @@ export default struct ListLayout {
         mAppListPresenter.intoSetting();
       })
     )
-    .width(DefaultConstants.PERCENTAGE_100)
-    .height(DefaultConstants.PERCENTAGE_100)
+    .width(StyleConstants.PERCENTAGE_100)
+    .height(StyleConstants.PERCENTAGE_100)
   }
 }
 
@@ -118,12 +118,12 @@ struct ShowDialog {
       Row() {
         Button() {
           Text($r('app.string.intoSettings'))
-            .height(DefaultConstants.PERCENTAGE_100)
+            .height(StyleConstants.PERCENTAGE_100)
             .fontColor(Color.Blue)
-            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+            .fontSize(StyleConstants.DEFAULT_BUTTON_TEXT_SIZE)
         }
-        .width(DefaultConstants.PIXEL_200)
-        .height(DefaultConstants.PIXEL_50)
+        .width(StyleConstants.PIXEL_200)
+        .height(StyleConstants.PIXEL_50)
         .backgroundColor(Color.White)
         .onClick(() => {
           mAppListPresenter.intoSetting();
@@ -132,26 +132,26 @@ struct ShowDialog {
 
         Divider()
           .vertical(true)
-          .color(DefaultConstants.DEFAULT_DIVIDER_COLOR)
-          .height(DefaultConstants.DEFAULT_40)
-          .margin({top: DefaultConstants.DEFAULT_0, right: DefaultConstants.DEFAULT_10, bottom: DefaultConstants.DEFAULT_0, left: DefaultConstants.DEFAULT_10})
+          .color(StyleConstants.DEFAULT_DIVIDER_COLOR)
+          .height(StyleConstants.DEFAULT_40)
+          .margin({top: StyleConstants.DEFAULT_0, right: StyleConstants.DEFAULT_10, bottom: StyleConstants.DEFAULT_0, left: StyleConstants.DEFAULT_10})
 
         Button() {
           Text($r('app.string.uninstall'))
-            .height(DefaultConstants.PERCENTAGE_100)
+            .height(StyleConstants.PERCENTAGE_100)
             .fontColor(Color.Red)
-            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+            .fontSize(StyleConstants.DEFAULT_BUTTON_TEXT_SIZE)
         }
-        .width(DefaultConstants.PIXEL_200)
-        .height(DefaultConstants.PIXEL_50)
+        .width(StyleConstants.PIXEL_200)
+        .height(StyleConstants.PIXEL_50)
         .backgroundColor(Color.White)
         .onClick(() => {
           mAppListPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
           this.controller.close();
         })
-      }.padding(DefaultConstants.DEFAULT_20)
+      }.padding(StyleConstants.DEFAULT_20)
     }
-    .padding({top: DefaultConstants.DEFAULT_25, right: DefaultConstants.DEFAULT_5, bottom: DefaultConstants.DEFAULT_15, left: DefaultConstants.DEFAULT_5})
+    .padding({top: StyleConstants.DEFAULT_25, right: StyleConstants.DEFAULT_5, bottom: StyleConstants.DEFAULT_15, left: StyleConstants.DEFAULT_5})
 
 
   }
@@ -175,11 +175,11 @@ struct UninstallDialog {
         Button() {
           Text($r('app.string.uninstall'))
             .fontColor(Color.White)
-            .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
+            .fontSize(StyleConstants.DEFAULT_APP_NAME_SIZE)
         }
-        .margin({ right: DefaultConstants.DEFAULT_20 })
-        .width(DefaultConstants.PIXEL_150)
-        .height(DefaultConstants.PIXEL_50)
+        .margin({ right: StyleConstants.DEFAULT_20 })
+        .width(StyleConstants.PIXEL_150)
+        .height(StyleConstants.PIXEL_50)
         .backgroundColor(Color.Blue)
         .onClick(() => {
           mAppListPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
@@ -189,18 +189,18 @@ struct UninstallDialog {
         Button() {
           Text($r('app.string.cancel'))
             .fontColor(Color.White)
-            .fontSize(DefaultConstants.DEFAULT_APP_NAME_SIZE)
+            .fontSize(StyleConstants.DEFAULT_APP_NAME_SIZE)
         }
-        .margin({ left: DefaultConstants.DEFAULT_20 })
-        .width(DefaultConstants.PIXEL_150)
-        .height(DefaultConstants.PIXEL_50)
+        .margin({ left: StyleConstants.DEFAULT_20 })
+        .width(StyleConstants.PIXEL_150)
+        .height(StyleConstants.PIXEL_50)
         .backgroundColor(Color.Blue)
         .onClick(() => {
           this.controller.close();
         })
       }
-      .margin({ top: DefaultConstants.DEFAULT_20 })
-      .padding(DefaultConstants.DEFAULT_20)
-    }.padding(DefaultConstants.DEFAULT_20)
+      .margin({ top: StyleConstants.DEFAULT_20 })
+      .padding(StyleConstants.DEFAULT_20)
+    }.padding(StyleConstants.DEFAULT_20)
   }
 }
