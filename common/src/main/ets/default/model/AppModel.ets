@@ -17,7 +17,7 @@ import BundleMgr from '@ohos.bundle';
 import FeatureAbility from '@ohos.ability.featureAbility';
 import Subscriber from '@ohos.commonevent';
 import SystemApplication from '../configs/SystemApplication.ets';
-import CheckEmptyUtils from '../../utils/CheckEmptyUtils.ets';
+import CheckEmptyUtils from '../utils/CheckEmptyUtils.ets';
 import EventConstants from '../constants/EventConstants.ets';
 
 const UNINSTALL_SUCCESS = "UNINSTALL_SUCCESS";
