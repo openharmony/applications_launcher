@@ -14,11 +14,11 @@
  */
 
 import display from '@ohos.display';
-import DefaultConstants from '../common/constants/DefaultConstants.ets'
+import StyleConstants from '../common/constants/StyleConstants.ets'
 import GridLayout from '../../../../../../../feature/layoutmanager/src/main/ets/default/layout/GridLayout.ets'
 import ListLayout from '../../../../../../../feature/layoutmanager/src/main/ets/default/layout/ListLayout.ets'
-import AppModel from '../../../../../../../common/src/main/ets/default/common/model/AppModel.ets'
-import SettingsModel from '../../../../../../../common/src/main/ets/default/common/model/SettingsModel.ets'
+import AppModel from '../../../../../../../common/src/main/ets/default/model/AppModel.ets'
+import SettingsModel from '../../../../../../../common/src/main/ets/default/model/SettingsModel.ets'
 
 const SYSTEM_UI_HEIGHT = 134;
 const DESIGN_WIDTH = 720.0;
@@ -83,7 +83,7 @@ struct LayoutManager {
         }
       }
     }
-    .backgroundImage(DefaultConstants.DEFAULT_BACKGROUND_IMAGE)
+    .backgroundImage(StyleConstants.DEFAULT_BACKGROUND_IMAGE)
     .backgroundImageSize(ImageSize.Cover)
   }
 }

@@ -13,9 +13,10 @@
  * limitations under the License.
  */
 
-import PresetFormCard from '../../../../../../../../common/src/main/ets/default/common/configs/PresetFormCard.ets';
+import PresetFormCard from '../../../../../../../../common/src/main/ets/default/configs/PresetFormCard.ets';
 import Prompt from '@ohos.prompt';
 import BaseAppPresenter from '../../../../../../../../common/src/main/ets/default/base/BaseAppPresenter.ets';
+import FormModel from '../../../../../../../../common/src/main/ets/default/model/FormModel.ets'
 
 const PROHIBITED = '禁止卸载'
 const UNINSTALL_SUCCEEDED = '卸载成功'
@@ -34,6 +35,7 @@ const BOTTOM_BAR_ROW = -1;
 
 export default class AppGridPresenter extends BaseAppPresenter {
   private static appGridPresenter: AppGridPresenter = new AppGridPresenter();
+  private mFormModel: FormModel;
   private mAppInfoList;
   private mFormInfoList;
   private mBundleInfoList;
@@ -51,6 +53,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
 
   private constructor() {
     super()
+    this.mFormModel = FormModel.getInstance();
     this.mGridConfig = this.mSettingsModel.getGridConfig();
     AppStorage.SetOrCreate('pageIndex', this.pageIndex);
   }

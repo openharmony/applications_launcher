@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-import DefaultLayoutConfig from '../../../../../../../../common/src/main/ets/default/common/configs/DefaultLayoutConfig.ets'
-import GridLayoutConfigs from '../../../../../../../../common/src/main/ets/default/common/configs/GridLayoutConfigs.ets'
-import SettingsModel from '../../../../../../../../common/src/main/ets/default/common/model/SettingsModel.ets'
+import DefaultLayoutConfig from '../../../../../../../../common/src/main/ets/default/configs/DefaultLayoutConfig.ets'
+import GridLayoutConfigs from '../../../../../../../../common/src/main/ets/default/configs/GridLayoutConfigs.ets'
+import SettingsModel from '../../../../../../../../common/src/main/ets/default/model/SettingsModel.ets'
 
 let mSettingsModel: SettingsModel;
 

@@ -14,7 +14,7 @@
  */
 
 import ResourceManager from '../manager/ResourceManager.ets'
-import DefaultConstants from '../common/constants/DefaultConstants.ets'
+import StyleConstants from '../constants/StyleConstants.ets'
 
 @Component
 export default struct ListName {
@@ -42,8 +42,8 @@ export default struct ListName {
     Column() {
       Text(this.name)
         .fontSize(this.nameSize)
-        .fontColor(DefaultConstants.DEFAULT_FONT_COLOR)
-        .margin({ left: DefaultConstants.DEFAULT_NUMBER })
+        .fontColor(StyleConstants.DEFAULT_FONT_COLOR)
+        .margin({ left: StyleConstants.DEFAULT_NUMBER })
     }
   }
 }

@@ -14,7 +14,7 @@
  */
 
 import ResourceManager from '../manager/ResourceManager.ets'
-import DefaultConstants from '../common/constants/DefaultConstants.ets'
+import StyleConstants from '../constants/StyleConstants.ets'
 
 @Component
 export default struct AppIcon {
@@ -28,7 +28,7 @@ export default struct AppIcon {
   private mDefaultAppIcon;
 
   public aboutToAppear(): void  {
-    this.mDefaultAppIcon = DefaultConstants.DEFAULT_ICON;
+    this.mDefaultAppIcon = StyleConstants.DEFAULT_ICON;
     this.icon = this.mDefaultAppIcon;
     this.mResourceManager = ResourceManager.getInstance();
     if (this.useCache) {

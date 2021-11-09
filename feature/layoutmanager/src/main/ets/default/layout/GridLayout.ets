@@ -16,21 +16,21 @@
 import AppGridPresenter from '../common/presenter/AppGridPresenter.ets'
 import GridName from '../../../../../../../common/src/main/ets/default/uicomponents/GridName.ets'
 import AppIcon from '../../../../../../../common/src/main/ets/default/uicomponents/AppIcon.ets'
-import DefaultConstants from '../common/constants/DefaultConstants.ets'
+import StyleConstants from '../common/constants/StyleConstants.ets'
 
 let mAppGridPresenter: AppGridPresenter;
 const DESIGN_WIDTH = 720;
 const APP_INFO_REFRESH_DELAY = 500;
-const CELLWIDTH = DefaultConstants.DEFAULT_APP_ITEM_WIDTH;
+const CELLWIDTH = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
 const PROPORTION = 0.85;
 let mSHeight = 0;
 let mScreenMagnification = 0;
 
 @Component
 export default struct GridLayout {
-  @State AppItemHeight: number = DefaultConstants.DEFAULT_APP_ITEM_HEIGHT;
-  @State AppItemWidth: number = DefaultConstants.DEFAULT_APP_ITEM_WIDTH;
-  @State AppNameSize: number = DefaultConstants.DEFAULT_APP_NAME_SIZE;
+  @State AppItemHeight: number = StyleConstants.DEFAULT_APP_ITEM_HEIGHT;
+  @State AppItemWidth: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
+  @State AppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
   @StorageLink('appListInfo') AppListInfo: {
     appGridInfo: [[]],
     appBottomBarInfo: []
@@ -86,7 +86,7 @@ export default struct GridLayout {
           gridConfig: this.gridConfig
         })
       }
-      .width(DefaultConstants.PERCENTAGE_100)
+      .width(StyleConstants.PERCENTAGE_100)
       .height(this.SwiperProportion)
 
       Column() {
@@ -98,7 +98,7 @@ export default struct GridLayout {
           moveAppInfo: $moveAppInfo
         })
       }
-      .width(DefaultConstants.PERCENTAGE_100)
+      .width(StyleConstants.PERCENTAGE_100)
       .height(this.BottomBarProportion)
 
       if (this.moveAppShow) {
@@ -115,8 +115,8 @@ export default struct GridLayout {
         .height(this.AppItemHeight)
         .width(this.AppItemWidth)
         .position({
-          x: this.moveAppX - (DefaultConstants.DEFAULT_APP_ITEM_WIDTH / 2),
-          y: this.moveAppY - (DefaultConstants.DEFAULT_APP_ITEM_WIDTH / 2)
+          x: this.moveAppX - (StyleConstants.DEFAULT_APP_ITEM_WIDTH / 2),
+          y: this.moveAppY - (StyleConstants.DEFAULT_APP_ITEM_WIDTH / 2)
         })
       }
 
@@ -128,8 +128,8 @@ export default struct GridLayout {
         this.dialogController.open();
       })
     )
-    .width(DefaultConstants.PERCENTAGE_100)
-    .height(DefaultConstants.PERCENTAGE_100)
+    .width(StyleConstants.PERCENTAGE_100)
+    .height(StyleConstants.PERCENTAGE_100)
   }
 }
 
@@ -162,16 +162,16 @@ struct GridSwiper {
           })
         },(item) => JSON.stringify(item))
       }
-      .height(DefaultConstants.PERCENTAGE_100)
-      .width(DefaultConstants.PERCENTAGE_100)
+      .height(StyleConstants.PERCENTAGE_100)
+      .width(StyleConstants.PERCENTAGE_100)
       .loop(false)
       .index(this.PageIndex)
       .onChange((index) => {
         mAppGridPresenter.changeIndex(index);
       })
     }
-    .height(DefaultConstants.PERCENTAGE_100)
-    .width(DefaultConstants.PERCENTAGE_100)
+    .height(StyleConstants.PERCENTAGE_100)
+    .width(StyleConstants.PERCENTAGE_100)
   }
 }
 
@@ -242,9 +242,9 @@ struct SwiperPage {
 
 @Component
 struct AppItem {
-  @State AppItemHeight: number = DefaultConstants.DEFAULT_APP_ITEM_HEIGHT;
-  @State AppItemWidth: number = DefaultConstants.DEFAULT_APP_ITEM_WIDTH;
-  @State AppNameSize: number = DefaultConstants.DEFAULT_APP_NAME_SIZE;
+  @State AppItemHeight: number = StyleConstants.DEFAULT_APP_ITEM_HEIGHT;
+  @State AppItemWidth: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
+  @State AppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
   @State isShow: boolean = true;
   @State isLongPress: boolean = false;
   @Link moveAppX: number;
@@ -354,8 +354,8 @@ struct AppItem {
         }
       }
     })
-    .width(DefaultConstants.PERCENTAGE_100)
-    .height(DefaultConstants.PERCENTAGE_100)
+    .width(StyleConstants.PERCENTAGE_100)
+    .height(StyleConstants.PERCENTAGE_100)
   }
 }
 
@@ -391,17 +391,17 @@ struct FormCard {
         })
       }
     }
-    .width(DefaultConstants.PERCENTAGE_100)
-    .height(DefaultConstants.PERCENTAGE_100)
+    .width(StyleConstants.PERCENTAGE_100)
+    .height(StyleConstants.PERCENTAGE_100)
   }
 }
 
 @Component
 struct BottomBar {
-  @State AppItemHeight: number = DefaultConstants.DEFAULT_APP_ITEM_HEIGHT;
-  @State AppItemWidth: number = DefaultConstants.DEFAULT_APP_ITEM_WIDTH;
-  @State AppNameSize: number = DefaultConstants.DEFAULT_APP_NAME_SIZE;
-  @StorageLink('BottomBarItemWidth') ItemWidth: string = DefaultConstants.PERCENTAGE_25;
+  @State AppItemHeight: number = StyleConstants.DEFAULT_APP_ITEM_HEIGHT;
+  @State AppItemWidth: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
+  @State AppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
+  @StorageLink('BottomBarItemWidth') ItemWidth: string = StyleConstants.PERCENTAGE_25;
   @Link moveAppX: number;
   @Link moveAppY: number;
   @Link moveAppShow: boolean;
@@ -425,14 +425,14 @@ struct BottomBar {
               moveAppInfo: $moveAppInfo
             })
           }
-          .height(DefaultConstants.PERCENTAGE_100)
+          .height(StyleConstants.PERCENTAGE_100)
           .width(this.ItemWidth)
         },(item) => JSON.stringify(item))
       }
-      .height(DefaultConstants.PERCENTAGE_100)
+      .height(StyleConstants.PERCENTAGE_100)
     }
-    .height(DefaultConstants.PERCENTAGE_100)
-    .width(DefaultConstants.PERCENTAGE_100)
+    .height(StyleConstants.PERCENTAGE_100)
+    .width(StyleConstants.PERCENTAGE_100)
   }
 }
 
@@ -451,12 +451,12 @@ struct ShowDialog {
       Row() {
         Button() {
           Text($r('app.string.intoSettings'))
-            .height(DefaultConstants.PERCENTAGE_100)
-            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+            .height(StyleConstants.PERCENTAGE_100)
+            .fontSize(StyleConstants.DEFAULT_BUTTON_TEXT_SIZE)
             .fontColor(Color.Blue)
         }
-        .width(DefaultConstants.PIXEL_200)
-        .height(DefaultConstants.PIXEL_50)
+        .width(StyleConstants.PIXEL_200)
+        .height(StyleConstants.PIXEL_50)
         .backgroundColor(Color.White)
         .onClick(() => {
           mAppGridPresenter.intoSetting();
@@ -465,26 +465,26 @@ struct ShowDialog {
 
         Divider()
           .vertical(true)
-          .color(DefaultConstants.DEFAULT_DIVIDER_COLOR)
-          .height(DefaultConstants.DEFAULT_40)
-          .margin({top: DefaultConstants.DEFAULT_0, right: DefaultConstants.DEFAULT_10, bottom: DefaultConstants.DEFAULT_0, left: DefaultConstants.DEFAULT_10})
+          .color(StyleConstants.DEFAULT_DIVIDER_COLOR)
+          .height(StyleConstants.DEFAULT_40)
+          .margin({top: StyleConstants.DEFAULT_0, right: StyleConstants.DEFAULT_10, bottom: StyleConstants.DEFAULT_0, left: StyleConstants.DEFAULT_10})
 
         Button() {
           Text(this.buttonText)
-            .height(DefaultConstants.PERCENTAGE_100)
-            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+            .height(StyleConstants.PERCENTAGE_100)
+            .fontSize(StyleConstants.DEFAULT_BUTTON_TEXT_SIZE)
             .fontColor(Color.Blue)
         }
-        .width(DefaultConstants.PIXEL_200)
-        .height(DefaultConstants.PIXEL_50)
+        .width(StyleConstants.PIXEL_200)
+        .height(StyleConstants.PIXEL_50)
         .backgroundColor(Color.White)
         .onClick(() => {
           mAppGridPresenter.addOrDeleteBlankPage();
           this.controller.close();
         })
-      }.padding(DefaultConstants.DEFAULT_20)
+      }.padding(StyleConstants.DEFAULT_20)
     }
-    .padding({top: DefaultConstants.DEFAULT_25, right: DefaultConstants.DEFAULT_0, bottom: DefaultConstants.DEFAULT_15, left: DefaultConstants.DEFAULT_0})
+    .padding({top: StyleConstants.DEFAULT_25, right: StyleConstants.DEFAULT_0, bottom: StyleConstants.DEFAULT_15, left: StyleConstants.DEFAULT_0})
   }
 }
 
@@ -505,12 +505,12 @@ struct UninstallDialog {
       Row() {
         Button() {
           Text($r('app.string.cancel'))
-            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+            .fontSize(StyleConstants.DEFAULT_BUTTON_TEXT_SIZE)
             .fontColor(Color.Blue)
         }
-        .margin({ left: DefaultConstants.DEFAULT_20 })
-        .width(DefaultConstants.PIXEL_200)
-        .height(DefaultConstants.PIXEL_50)
+        .margin({ left: StyleConstants.DEFAULT_20 })
+        .width(StyleConstants.PIXEL_200)
+        .height(StyleConstants.PIXEL_50)
         .backgroundColor(Color.White)
         .onClick(() => {
           this.controller.close();
@@ -518,26 +518,26 @@ struct UninstallDialog {
 
         Divider()
           .vertical(true)
-          .color(DefaultConstants.DEFAULT_DIVIDER_COLOR)
-          .height(DefaultConstants.DEFAULT_40)
-          .margin({top: DefaultConstants.DEFAULT_0, right: DefaultConstants.DEFAULT_10, bottom: DefaultConstants.DEFAULT_0, left: DefaultConstants.DEFAULT_10})
+          .color(StyleConstants.DEFAULT_DIVIDER_COLOR)
+          .height(StyleConstants.DEFAULT_40)
+          .margin({top: StyleConstants.DEFAULT_0, right: StyleConstants.DEFAULT_10, bottom: StyleConstants.DEFAULT_0, left: StyleConstants.DEFAULT_10})
 
         Button() {
           Text($r('app.string.uninstall'))
-            .fontSize(DefaultConstants.DEFAULT_BUTTON_TEXT_SIZE)
+            .fontSize(StyleConstants.DEFAULT_BUTTON_TEXT_SIZE)
             .fontColor(Color.Red)
         }
-        .margin({ right: DefaultConstants.DEFAULT_20 })
-        .width(DefaultConstants.PIXEL_200)
-        .height(DefaultConstants.PIXEL_50)
+        .margin({ right: StyleConstants.DEFAULT_20 })
+        .width(StyleConstants.PIXEL_200)
+        .height(StyleConstants.PIXEL_50)
         .backgroundColor(Color.White)
         .onClick(() => {
           mAppGridPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
           this.controller.close();
         })
       }
-      .margin({ top: DefaultConstants.DEFAULT_20 })
+      .margin({ top: StyleConstants.DEFAULT_20 })
     }
-    .padding({top: DefaultConstants.DEFAULT_25, right: DefaultConstants.DEFAULT_20, bottom: DefaultConstants.DEFAULT_15, left: DefaultConstants.DEFAULT_20})
+    .padding({top: StyleConstants.DEFAULT_25, right: StyleConstants.DEFAULT_20, bottom: StyleConstants.DEFAULT_15, left: StyleConstants.DEFAULT_20})
   }
 }

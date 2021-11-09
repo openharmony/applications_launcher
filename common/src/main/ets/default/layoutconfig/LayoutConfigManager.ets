@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import StorageLayoutConfig from '../common/model/StorageLayoutConfig.ets'
+import StorageLayoutConfig from './StorageLayoutConfig.ets'
 
 export default class LayoutConfigManager {
   public static getLayoutConfig() {
