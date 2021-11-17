@@ -13,21 +13,22 @@
  * limitations under the License.
  */
 
-const DefaultLayoutConfig = {
-  DefaultAppPageStartConfig: 'Grid',
-  DefaultLayoutOptions: [
-    { name: 'List', value: 'List', checked: false },
-    { name: 'Grid', value: 'Grid', checked: false }
-  ],
-  DefaultGridConfig: 0,
-  DefaultRecentProcessLimit: 20,
-  DefaultRecentProcessLimitArray: [
-    { name: '5', value: 5, checked: false },
-    { name: '10', value: 10, checked: false },
-    { name: '15', value: 15, checked: false },
-    { name: '20', value: 20, checked: false }
-  ],
-  DefaultEquipmentType: 'phone',
-}
+/**
+ * Stage基类
+ */
+export default class BaseStage {
+  public constructor() {
+  }
 
-export default DefaultLayoutConfig;
+  /**
+   * Stage启动时的回调
+   */
+  public onCreate(): void {
+  }
+
+  /**
+   * Stage退出时的回调
+   */
+  public onDestroy(): void {
+  }
+}

@@ -15,7 +15,8 @@
 
 import Prompt from '@ohos.prompt';
 import BaseAppPresenter from '../../../../../../../../common/src/main/ets/default/base/BaseAppPresenter.ets';
-import PinyinSort from '../../../../../../../../common/src/main/ets/default/utils/PinyinSort.ets'
+import PinyinSort from '../../../../../../../../common/src/main/ets/default/utils/PinyinSort.ets';
+import CommonConstants from '../../../../../../../../common/src/main/ets/default/constants/CommonConstants.ets';
 
 const PROHIBITED = '禁止卸载'
 const UNINSTALL_SUCCEEDED = '卸载成功'
@@ -27,7 +28,7 @@ const UNINSTALL_PROHIBITED = "UNINSTALL_PROHIBITED";
 const KEY_NAME = "name";
 
 export default class AppListPresenter extends BaseAppPresenter {
-  private static appListPresenter: AppListPresenter = new AppListPresenter();
+  private static sAppListPresenter: AppListPresenter = null;
   private mPinyinSort: PinyinSort;
 
   private constructor() {
@@ -36,21 +37,21 @@ export default class AppListPresenter extends BaseAppPresenter {
   }
 
   public static getInstance(): AppListPresenter {
-    return this.appListPresenter;
+    if (AppListPresenter.sAppListPresenter == null) {
+      AppListPresenter.sAppListPresenter = new AppListPresenter();
+    }
+    return AppListPresenter.sAppListPresenter;
   }
 
-  public getAppList() {
-    this.mAppModel.getAppList(this.getListCallback.bind(this));
-  }
-
-  public getListCallback(list) {
+  public async getAppList() {
+    let list = await this.mAppModel.getAppList();
     let cached = true;
     for (let item of list) {
       let appName = this.mResourceManager.getAppResourceCache(item.bundleName, KEY_NAME);
-      console.info("Launcher AppListPresenter regroupDataAfterInstall + appName = " + appName);
+      console.info("Launcher AppListPresenter regroupDataAppListChange + appName = " + appName);
       if (appName != null) {
         cached = false;
-        item.AppName = appName;
+        item.appName = appName;
       }
     }
     if (cached) {
@@ -62,12 +63,12 @@ export default class AppListPresenter extends BaseAppPresenter {
     AppStorage.SetOrCreate('listInfo', list);
   }
 
-  public regroupDataAfterInstall(callbackList) {
+  public regroupDataAppListChange(callbackList) {
     for (let item of callbackList) {
       let appName = this.mResourceManager.getAppResourceCache(item.bundleName, KEY_NAME);
-      console.info("Launcher AppListPresenter regroupDataAfterInstall + appName = " + appName);
+      console.info("Launcher AppListPresenter regroupDataAppListChange + appName = " + appName);
       if (appName != null) {
-        item.AppName = appName;
+        item.appName = appName;
       }
     }
     callbackList.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
@@ -75,17 +76,17 @@ export default class AppListPresenter extends BaseAppPresenter {
     AppStorage.SetOrCreate('listInfo', callbackList);
   }
 
-  public regroupDataAfterUnInstall(result) {
-    console.info("Launcher AppListView getUninstallApp uninstallationResult:" + result);
-    if (result == UNINSTALL_PROHIBITED) {
+  public informUninstallResult(resultCode) {
+    console.info("Launcher AppGridView getUninstallApp informUninstallResult:" + resultCode);
+    if (resultCode === CommonConstants.UNINSTALL_FORBID) {
       Prompt.showToast({
         message: PROHIBITED
-      })
-    } else if (result == UNINSTALL_SUCCESS) {
+      });
+    } else if (resultCode === CommonConstants.UNINSTALL_SUCCESS) {
       Prompt.showToast({
         message: UNINSTALL_SUCCEEDED
       });
-    } else if (result == UNINSTALL_FAILED) {
+    } else {
       Prompt.showToast({
         message: UNINSTALL_DAILED
       });

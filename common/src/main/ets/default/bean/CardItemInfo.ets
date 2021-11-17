@@ -13,21 +13,47 @@
  * limitations under the License.
  */
 
-const DefaultLayoutConfig = {
-  DefaultAppPageStartConfig: 'Grid',
-  DefaultLayoutOptions: [
-    { name: 'List', value: 'List', checked: false },
-    { name: 'Grid', value: 'Grid', checked: false }
-  ],
-  DefaultGridConfig: 0,
-  DefaultRecentProcessLimit: 20,
-  DefaultRecentProcessLimitArray: [
-    { name: '5', value: 5, checked: false },
-    { name: '10', value: 10, checked: false },
-    { name: '15', value: 15, checked: false },
-    { name: '20', value: 20, checked: false }
-  ],
-  DefaultEquipmentType: 'phone',
-}
+/**
+ * 卡片信息
+ */
+export default class CardItemInfo {
+  /**
+   * 卡片id
+   */
+  public cardId: number;
 
-export default DefaultLayoutConfig;
+  /**
+   * 卡片包名
+   */
+  public bundleName: string;
+
+  /**
+   * 卡片对应的Ability名
+   */
+  public abilityName: string;
+
+  /**
+   * 卡片对应的模块名
+   */
+  public moduleName: string;
+
+  /**
+   * 卡片名
+   */
+  public cardName: string;
+
+  /**
+   * 卡片的尺寸
+   */
+  public cardDimension: number;
+
+  /**
+   * 卡片的大小
+   */
+  public cardSize: Array<number>;
+
+  /**
+   * 卡片对应的跳转链接
+   */
+  public deepLink: string;
+}

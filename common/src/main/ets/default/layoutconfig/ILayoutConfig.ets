@@ -13,152 +13,75 @@
  * limitations under the License.
  */
 
-export default class ILayoutConfig {
-  constructor() {
+import storage from '@ohos.data.storage';
+
+/**
+ * 布局配置基类，定义所有的配置对象需要实现的接口
+ */
+export default abstract class ILayoutConfig {
+  private static PREFERENCES_PATH = '/data/accounts/account_0/appdata/com.ohos.launcher/sharedPreference/LauncherPreference';
+
+  protected mPreferences = null;
+
+  protected constructor() {
+    this.mPreferences = storage.getStorageSync(ILayoutConfig.PREFERENCES_PATH);
   }
 
   /**
-   * Get the layout view type.
-   *
-   * @return {string} Layout view type, should one of 'Grid' or 'List' which is stored in LayoutConstants class.
+   * 初始化配置，每个配置必须重新此函数
    */
-  public getAppPageStartConfig() {
-    return this.loadAppPageStartConfig();
+  public abstract initConfig(): void;
+
+  /**
+   * 当前配置级别，每个配置必须重新此函数
+   */
+  public abstract getConfigLevel(): string;
+
+  /**
+   * 当前配置类型，每个配置必须重新此函数
+   */
+  public abstract getConfigType(): number;
+
+  /**
+   * 当前配置名，每个配置必须重新此函数
+   */
+  public abstract getConfigName(): string;
+
+
+  /**
+   * 当前配置对应的JSON字串
+   */
+  protected abstract getPersistConfigJson(): string;
+
+  /**
+   * 从持久化文件里面配置加载配置
+   */
+  protected loadPresistConfig(): any {
+    let defaultConfig = this.getPersistConfigJson();
+    let config = this.mPreferences.getSync(this.getConfigName(), defaultConfig);
+    return JSON.parse(config);
   }
 
   /**
-   * Set the layout view type.
-   *
-   * @param {string} type - Layout view type, should one of 'Grid' or 'List' which is stored in LayoutConstants class.
+   * 强制重新加载配置值
    */
-  public setAppPageStartConfig(type) {
-    this.saveAppPageStartConfig(type);
+  public forceReloadConfig() {
+    this.initConfig();
   }
 
   /**
-   * Get grid layout config id.
-   *
-   * @return {number} grid layout config id.
+   * 持久化配置值
    */
-  public getGridConfig(): number {
-    return this.loadGridConfig();
+  public persistConfig(): void {
+    let currentConfig = this.getPersistConfigJson();
+    this.mPreferences.putSync(this.getConfigName(), currentConfig);
+    this.mPreferences.flushSync();
   }
 
   /**
-   * Set grid layout config id.
-   *
-   * @param {number} id - layout config id.
+   * 删除配置值
    */
-  public setGridConfig(id) {
-    this.saveGridConfig(id);
-  }
-
-  /**
-   * Get recent process max limit.
-   *
-   * @return {number} recent process max limit.
-   */
-  public getRecentProcessLimit() {
-    return this.loadRecentProcessLimit();
-  }
-
-  /**
-   * Set recent process max limit.
-   *
-   * @param {number} num - Recent process max limit.
-   */
-  public setRecentProcessLimit(num) {
-    this.saveRecentProcessLimit(num);
-  }
-
-  /**
-   * Get layout information of grid view.
-   *
-   * @return {object} layout information.
-   */
-  public getGridLayoutInfo() {
-    return this.loadGridLayoutInfo();
-  }
-
-  /**
-   * Set layout information of grid view.
-   */
-  public setGridLayoutInfo(layoutInfo) {
-    this.saveGridLayoutInfo(layoutInfo);
-  }
-
-  /**
-   * Remove layout information of grid view.
-   */
-  public deleteGridLayoutInfo() {
-    this.removeGridLayoutInfo();
-  }
-
-  setEquipmentType(Etype) {
-    this.saveEquipmentType(Etype);
-  }
-
-  getEquipmentType(): string {
-    return this.loadEquipmentType();
-  }
-
-  /**
-   * Should overridden by sub-classes , load the launcher layout view type.
-   */
-  public loadAppPageStartConfig() {
-  }
-
-  /**
-   * Should overridden by sub-classes , save the launcher layout view type.
-   */
-  public saveAppPageStartConfig(type) {
-  }
-
-  /**
-   * Should overridden by sub-classes , load the launcher grid view layout config id.
-   */
-  public loadGridConfig(): any {
-  }
-
-  /**
-   * Should overridden by sub-classes , save the launcher grid view layout config id.
-   */
-  public saveGridConfig(id) {
-  }
-
-  /**
-   * Should overridden by sub-classes , load the recent process max limit.
-   */
-  public loadRecentProcessLimit() {
-  }
-
-  /**
-   * Should overridden by sub-classes , save the recent process max limit.
-   */
-  public saveRecentProcessLimit(num) {
-  }
-
-  /**
-   * Should overridden by sub-classes , load the layout information of grid view.
-   */
-  public loadGridLayoutInfo() {
-  }
-
-  /**
-   * Should overridden by sub-classes , save the layout information of grid view.
-   */
-  public saveGridLayoutInfo(layoutInfo) {
-  }
-
-  /**
-   * Should overridden by sub-classes , remove layout information of grid view.
-   */
-  public removeGridLayoutInfo() {
-  }
-
-  saveEquipmentType(Etype) {
-  }
-
-  loadEquipmentType(): any{
+  public deleteConfig() {
+    this.mPreferences.deleteSync(this.getConfigName());
   }
 }

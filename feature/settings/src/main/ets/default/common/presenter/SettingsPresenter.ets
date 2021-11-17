@@ -13,22 +13,21 @@
  * limitations under the License.
  */
 
+import featureAbility from '@ohos.ability.featureAbility';
 import DefaultLayoutConfig from '../../../../../../../../common/src/main/ets/default/configs/DefaultLayoutConfig.ets'
 import GridLayoutConfigs from '../../../../../../../../common/src/main/ets/default/configs/GridLayoutConfigs.ets'
 import SettingsModel from '../../../../../../../../common/src/main/ets/default/model/SettingsModel.ets'
-
-let mSettingsModel: SettingsModel;
 
 /**
  * Class SettingsPresenter.
  */
 export default class SettingsPresenter {
-  private static settingPresenter: SettingsPresenter = new SettingsPresenter();
+  private static sSettingPresenter: SettingsPresenter = null;
+  private mSettingsModel: SettingsModel = null;
   private callbackList = [];
 
   /**
    * Grid settingList.
-   *
    */
   private gridSettingsList = [
     {
@@ -53,7 +52,6 @@ export default class SettingsPresenter {
 
   /**
    * List settingList.
-   *
    */
   private listSettingsList = [
     {
@@ -76,8 +74,8 @@ export default class SettingsPresenter {
    * @param {object} settingsModel - model of setting.
    */
   constructor() {
-    mSettingsModel = new SettingsModel();
-    this.gridSettingsList[1].valueList = mSettingsModel.getGridLayoutTable();
+    this.mSettingsModel = new SettingsModel();
+    this.gridSettingsList[1].valueList = this.mSettingsModel.getGridLayoutTable();
   }
 
   /**
@@ -85,8 +83,11 @@ export default class SettingsPresenter {
    *
    * @return {settingPresenter} - settingPresenter.
    */
-  public static getInstance(): SettingsPresenter{
-    return this.settingPresenter;
+  public static getInstance(): SettingsPresenter {
+    if (SettingsPresenter.sSettingPresenter == null) {
+      SettingsPresenter.sSettingPresenter = new SettingsPresenter();
+    }
+    return SettingsPresenter.sSettingPresenter;
   }
 
   /**
@@ -95,7 +96,7 @@ export default class SettingsPresenter {
    * @return [settingList] - setting list.
    */
   public getSettingList() {
-    let layout = mSettingsModel.getAppPageStartConfig();
+    let layout = this.mSettingsModel.getAppPageStartConfig();
     for (let i = 0; i < this.gridSettingsList[0].valueList.length; i++) {
       if (this.gridSettingsList[0].valueList[i].name == layout) {
         this.gridSettingsList[0].valueList[i].checked = true;
@@ -103,14 +104,14 @@ export default class SettingsPresenter {
         break;
       }
     }
-    let gridLayout = mSettingsModel.getGridConfig().layout;
+    let gridLayout = this.mSettingsModel.getGridConfig().layout;
     for (let i = 0; i < this.gridSettingsList[1].valueList.length; i++) {
       if (this.gridSettingsList[1].valueList[i].name == gridLayout) {
         this.gridSettingsList[1].valueList[i].checked = true;
         break;
       }
     }
-    let Limit = mSettingsModel.getRecentProcessLimit().toString();
+    let Limit = this.mSettingsModel.getRecentProcessLimit().toString();
     for (let i = 0; i < this.gridSettingsList[2].valueList.length; i++) {
       if (this.gridSettingsList[2].valueList[i].name == Limit) {
         this.gridSettingsList[2].valueList[i].checked = true;
@@ -136,7 +137,7 @@ export default class SettingsPresenter {
    * @param {string} settingsName - setting name.
    * @param {string} settingValue - setting value.
    */
-  setSettingsValue(ida, settingValue) {
+  public setSettingsValue(ida, settingValue) {
     if (ida == 0) {
       this.setAppPageStartConfig(settingValue);
     } else if (ida == 1) {
@@ -152,16 +153,19 @@ export default class SettingsPresenter {
    *
    * @param {string} type - the type of config.
    */
-  setAppPageStartConfig(type) {
-    mSettingsModel.setAppPageStartConfig(type);
+  public setAppPageStartConfig(type) {
+    this.mSettingsModel.setAppPageStartConfig(type);
   }
 
   /**
    * Update setting.
-   *
    */
-  settingUpdate() {
-    mSettingsModel.closeSettings();
+  public settingUpdate() {
+    console.info("Launcher settings SettingsModel settingsUpdate start");
+    featureAbility.terminateAbility()
+      .then(data => console.info("Launcher settings terminateAbility promise::then : " + data))
+      .catch(error => console.info("Launcher settings terminateAbility promise::catch : " + error));
+    console.info("Launcher settings terminateAbility end ");
   }
 
   /**
@@ -169,8 +173,8 @@ export default class SettingsPresenter {
    *
    * @param {string} id - the id of grid config.
    */
-  setGridConfig(id) {
-    mSettingsModel.setGridConfig(id);
+  public setGridConfig(id) {
+    this.mSettingsModel.setGridConfig(id);
   }
 
   /**
@@ -178,15 +182,14 @@ export default class SettingsPresenter {
    *
    * @param {number} num - the num of recent process.
    */
-  setRecentProcessLimit(num) {
-    mSettingsModel.setRecentProcessLimit(num);
+  public setRecentProcessLimit(num) {
+    this.mSettingsModel.setRecentProcessLimit(num);
   }
 
   /**
    * Back to the desktop interface.
-   *
    */
-  backToTheDesktop() {
+  public backToTheDesktop() {
     this.settingUpdate();
   }
 
@@ -196,7 +199,7 @@ export default class SettingsPresenter {
    * @param {string} settingsName - setting name.
    * @param {function()} settingValue - setting value.
    */
-  registerValueCallback(ida, settingValue) {
+  public registerValueCallback(ida, settingValue) {
     this.callbackList.push({
       id: ida,
       fun: settingValue
@@ -209,8 +212,8 @@ export default class SettingsPresenter {
    * @param {string} settingsName - setting name.
    * @param {string} settingValue - setting value.
    */
-  changeSettingValue(ida, settingValue) {
-    for (let i = 0;i < this.callbackList.length; i++) {
+  public changeSettingValue(ida, settingValue) {
+    for (let i = 0; i < this.callbackList.length; i++) {
       if (this.callbackList[i].id == ida) {
         this.callbackList[i].fun(settingValue);
         break;

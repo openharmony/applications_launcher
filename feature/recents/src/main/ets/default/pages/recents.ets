@@ -13,10 +13,11 @@
  * limitations under the License.
  */
 
-import GridName from '../../../../../../../common/src/main/ets/default/uicomponents/GridName.ets'
-import AppIcon from '../../../../../../../common/src/main/ets/default/uicomponents/AppIcon.ets'
-import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants.ets'
+import GridName from '../../../../../../../common/src/main/ets/default/uicomponents/GridName.ets';
+import AppIcon from '../../../../../../../common/src/main/ets/default/uicomponents/AppIcon.ets';
+import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants.ets';
 import RecentsPresenter from '../common/presenter/RecentsPresenter.ets';
+import RecentsStage from '../common/RecentsStage.ets';
 
 let mRecentsPresenter: RecentsPresenter;
 
@@ -25,23 +26,19 @@ let mRecentsPresenter: RecentsPresenter;
 struct Recent {
   @StorageLink('recentProcessList') mRecentProcessList: [] = [];
   @State size: string = StyleConstants.PERCENTAGE_100;
-
-  aboutToAppear() {
-    console.log("Launcher recents  aboutToAppear start");
-    console.log("Launcher recents  aboutToAppear end");
-  }
+  private mRecentsStage = new RecentsStage();
 
   onPageShow() {
-    console.log("Launcher recents  onPageShow start");
+    console.log("Launcher recents  onPageShow");
+    this.mRecentsStage.onCreate();
     mRecentsPresenter = RecentsPresenter.getInstance();
     mRecentsPresenter.getRecentProcessList();
-    console.log("Launcher recents  onPageShow end");
   }
 
   onPageHide() {
-    console.info("Launcher recents  onPageHide start");
+    console.info("Launcher recents  onPageHide");
     this.mRecentProcessList = [];
-    console.info("Launcher recents  onPageHide end");
+    this.mRecentsStage.onDestroy();
   }
 
   build() {
@@ -82,17 +79,17 @@ struct recentProcessListDisplay {
                 Column() {
                   AppIcon({
                     iconSize: this.AppIconSize,
-                    appIcon: item.iconId,
+                    appIcon: item.appIconId,
                     bundleName: item.bundleName,
-                    labelId: item.labelId,
+                    labelId: item.appLabelId,
                     useCache: false
                   })
                   GridName({
-                    appName: item.AppName,
+                    appName: item.appName,
                     nameHeight: this.AppItemHeight - this.AppItemWidth,
                     nameWidth: this.AppItemWidth,
                     bundleName: item.bundleName,
-                    labelId: item.labelId,
+                    labelId: item.appLabelId,
                     useCache: false
                   })
                 }
@@ -132,12 +129,12 @@ struct recentProcessListDisplay {
           .opacity(this.DeleteOpacity)
           .align(Alignment.Bottom)
           .onClick(() => {
-          mRecentsPresenter.clearRecentProcess();
-          setTimeout(() => {
-            console.info("Launcher recents  clearAll this.mRecentsPresenter.back()");
-            mRecentsPresenter.back();
-          }, 1500);
-        }))
+            mRecentsPresenter.clearRecentProcess();
+            setTimeout(() => {
+              console.info("Launcher recents  clearAll this.mRecentsPresenter.back()");
+              mRecentsPresenter.back();
+            }, 1500);
+          })
       }.alignItems(HorizontalAlign.Center)
       .width(this.heightSize)
       .height(this.deleteHeightSize)
