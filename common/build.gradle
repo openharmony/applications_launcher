@@ -5,8 +5,7 @@ ohos {
     defaultConfig {
         compatibleSdkVersion 4
     }
-    arkEnabled false
-    
+
     buildTypes {
         release {
             proguardOpt {
