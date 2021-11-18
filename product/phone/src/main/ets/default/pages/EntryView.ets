@@ -14,11 +14,12 @@
  */
 
 import display from '@ohos.display';
-import StyleConstants from '../common/constants/StyleConstants.ets'
-import GridLayout from '../../../../../../../feature/layoutmanager/src/main/ets/default/layout/GridLayout.ets'
-import ListLayout from '../../../../../../../feature/layoutmanager/src/main/ets/default/layout/ListLayout.ets'
-import AppModel from '../../../../../../../common/src/main/ets/default/model/AppModel.ets'
-import SettingsModel from '../../../../../../../common/src/main/ets/default/model/SettingsModel.ets'
+import StyleConstants from '../common/constants/StyleConstants.ets';
+import GridLayout from '../../../../../../../feature/layoutmanager/src/main/ets/default/layout/GridLayout.ets';
+import ListLayout from '../../../../../../../feature/layoutmanager/src/main/ets/default/layout/ListLayout.ets';
+import AppModel from '../../../../../../../common/src/main/ets/default/model/AppModel.ets';
+import SettingsModel from '../../../../../../../common/src/main/ets/default/model/SettingsModel.ets';
+import PhoneStage from '../common/PhoneStage.ets';
 
 const SYSTEM_UI_HEIGHT = 134;
 const DESIGN_WIDTH = 720.0;
@@ -36,11 +37,13 @@ struct LayoutManager {
   @State show: boolean = false;
   @State SwiperProportion: string = '85%';
   @State BottomBarProportion: string = '15%';
+  private mStage = new PhoneStage();
   private mAppModel: AppModel;
   private mSettingsModel: SettingsModel;
 
   private aboutToAppear(): void  {
-    this.mAppModel = AppModel.getInstance()
+    this.mStage.onCreate();
+    this.mAppModel = AppModel.getInstance();
     this.mSettingsModel = new SettingsModel();
     this.mAppPageStartConfig = this.mSettingsModel.getAppPageStartConfig();
     this.mAppModel.registerAppListEvent();
@@ -58,10 +61,16 @@ struct LayoutManager {
     })
   }
 
+  private aboutToDisappear() {
+    this.mStage.onDestroy();
+    this.mAppModel.unregisterAppListEvent();
+  }
+
   onPageShow() {
     if (this.mSettingsModel != undefined) {
-        this.mAppPageStartConfig = this.mSettingsModel.getAppPageStartConfig();
-        this.gridConfig = this.mSettingsModel.getGridConfig().layout;
+      this.mSettingsModel.forceReloadConfig();
+      this.mAppPageStartConfig = this.mSettingsModel.getAppPageStartConfig();
+      this.gridConfig = this.mSettingsModel.getGridConfig().layout;
     }
   }
 

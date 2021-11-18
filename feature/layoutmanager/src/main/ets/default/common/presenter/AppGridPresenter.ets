@@ -16,7 +16,9 @@
 import PresetFormCard from '../../../../../../../../common/src/main/ets/default/configs/PresetFormCard.ets';
 import Prompt from '@ohos.prompt';
 import BaseAppPresenter from '../../../../../../../../common/src/main/ets/default/base/BaseAppPresenter.ets';
-import FormModel from '../../../../../../../../common/src/main/ets/default/model/FormModel.ets'
+import FormModel from '../../../../../../../../common/src/main/ets/default/model/FormModel.ets';
+import SettingsModel from '../../../../../../../../common/src/main/ets/default/model/SettingsModel.ets';
+import CommonConstants from '../../../../../../../../common/src/main/ets/default/constants/CommonConstants.ets';
 
 const PROHIBITED = '禁止卸载'
 const UNINSTALL_SUCCEEDED = '卸载成功'
@@ -32,10 +34,12 @@ const KEY_NAME = "name";
 const BOTTOM_BAR = 1;
 const BOTTOM_BAR_ROW = -1;
 
-
 export default class AppGridPresenter extends BaseAppPresenter {
-  private static appGridPresenter: AppGridPresenter = new AppGridPresenter();
+  private static sAppGridPresenter: AppGridPresenter = null;
   private mFormModel: FormModel;
+  private mSettingsModel: SettingsModel;
+  private mScreenHeight: number = 0;
+  private mScreenWidth: number = 0;
   private mAppInfoList;
   private mFormInfoList;
   private mBundleInfoList;
@@ -54,37 +58,63 @@ export default class AppGridPresenter extends BaseAppPresenter {
   private constructor() {
     super()
     this.mFormModel = FormModel.getInstance();
+    this.mSettingsModel = new SettingsModel();
     this.mGridConfig = this.mSettingsModel.getGridConfig();
     AppStorage.SetOrCreate('pageIndex', this.pageIndex);
   }
 
-  public static getInstance(): AppGridPresenter{
-    return this.appGridPresenter;
+  public static getInstance(): AppGridPresenter {
+    if (AppGridPresenter.sAppGridPresenter == null) {
+      AppGridPresenter.sAppGridPresenter = new AppGridPresenter();
+    }
+    return AppGridPresenter.sAppGridPresenter;
   }
 
-  public getGridList() {
-    this.mFormModel.getFormList(this.getFormListCallback.bind(this));
+  /**
+   * 设置屏幕高度，用于进行布局计算
+   *
+   * @param height 屏幕高度
+   */
+  public setScreenHeight(height: number): void {
+    this.mScreenHeight = height;
   }
 
-  public getAppListCallback(appList) {
-    this.mAppInfoList = appList;
-    let bundleInfoList = [];
-    bundleInfoList = bundleInfoList.concat(this.mFormInfoList).concat(this.mAppInfoList);
-    this.getGridListCallback(bundleInfoList);
+  /**
+   * 设置屏幕宽度，用于进行布局计算
+   *
+   * @param width 屏幕宽度
+   */
+  public setScreenWidth(width: number): void {
+    this.mScreenWidth = width;
   }
 
-  public getFormListCallback(formList) {
-    this.mFormInfoList = formList;
-    this.mAppModel.getAppList(this.getAppListCallback.bind(this));
-  }
-
-  public getGridListCallback(list) {
-    this.mBundleInfoList = list;
-    this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, list);
+  public async getGridList() {
+    this.mBundleInfoList = [];
+    let appInfoList = await this.mAppModel.getAppList();
+    this.appendAppData(appInfoList);
+    let formInfoList = await this.mFormModel.getFormList();
+    this.appendFormData(formInfoList);
+    this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, this.mBundleInfoList);
     this.pagingFiltering();
   }
 
-  getGridConfig() {
+  private appendAppData(appInfoList) {
+    for (let i = 0; i < appInfoList.length; i++) {
+      appInfoList[i].type = CommonConstants.TYPE_APP;
+      appInfoList[i].area = [1, 1];
+      this.mBundleInfoList.push(appInfoList[i]);
+    }
+  }
+
+  private appendFormData(formInfoList) {
+    for (let i = 0; i < formInfoList.length; i++) {
+      formInfoList[i].type = CommonConstants.TYPE_CARD;
+      formInfoList[i].area = formInfoList[i].cardSize;
+      this.mBundleInfoList.push(formInfoList[i]);
+    }
+  }
+
+  public getGridConfig() {
     return this.mSettingsModel.getGridConfig();
   }
 
@@ -99,68 +129,28 @@ export default class AppGridPresenter extends BaseAppPresenter {
     let layoutInfo = info.layoutInfo;
     let bottomInfo = info.bottomBarInfo;
 
-    for (let i = 0;i < layoutInfo.length; i++) {
+    for (let i = 0; i < layoutInfo.length; i++) {
       for (let j = 0; j < this.mBundleInfoList.length; j++) {
         if (layoutInfo[i].bundleName == this.mBundleInfoList[j].bundleName
         && layoutInfo[i].type == this.mBundleInfoList[j].type) {
-          if (this.mBundleInfoList[j].type == 0) {
-            appListInfo.push(
-              {
-                System: this.mBundleInfoList[j].System,
-                AppName: this.mBundleInfoList[j].AppName,
-                AppId: this.mBundleInfoList[j].AppId,
-                AppIcon: this.mBundleInfoList[j].AppIcon,
-                bundleName: this.mBundleInfoList[j].bundleName,
-                labelId: this.mBundleInfoList[j].labelId,
-                abilityName: this.mBundleInfoList[j].abilityName,
-                type: this.mBundleInfoList[j].type,
-                area: layoutInfo[i].area,
-                page: layoutInfo[i].page,
-                row: layoutInfo[i].row,
-                column: layoutInfo[i].column,
-                x: 0,
-              }
-            );
-          } else {
-            appListInfo.push(
-              {
-                moduleName: this.mBundleInfoList[j].moduleName,
-                bundleName: this.mBundleInfoList[j].bundleName,
-                abilityName: this.mBundleInfoList[j].abilityName,
-                dimension: this.mBundleInfoList[j].dimension,
-                name: this.mBundleInfoList[j].name,
-                type: this.mBundleInfoList[j].type,
-                area: layoutInfo[i].area,
-                page: layoutInfo[i].page,
-                row: layoutInfo[i].row,
-                column: layoutInfo[i].column,
-                x: 0,
-              }
-            );
-          }
+          this.mBundleInfoList[j].area = layoutInfo[i].area;
+          this.mBundleInfoList[j].page = layoutInfo[i].page;
+          this.mBundleInfoList[j].row = layoutInfo[i].row;
+          this.mBundleInfoList[j].column = layoutInfo[i].column;
+          this.mBundleInfoList[j].x = 0;
+          appListInfo.push(this.mBundleInfoList[j]);
         }
       }
     }
-    for (let i = 0;i < bottomInfo.length; i++) {
+    for (let i = 0; i < bottomInfo.length; i++) {
       for (let j = 0; j < this.mBundleInfoList.length; j++) {
         if (bottomInfo[i].bundleName == this.mBundleInfoList[j].bundleName) {
-          appBottomBarInfo.push(
-            {
-              System: this.mBundleInfoList[j].System,
-              AppName: this.mBundleInfoList[j].AppName,
-              AppId: this.mBundleInfoList[j].AppId,
-              AppIcon: this.mBundleInfoList[j].AppIcon,
-              bundleName: this.mBundleInfoList[j].bundleName,
-              labelId: this.mBundleInfoList[j].labelId,
-              abilityName: this.mBundleInfoList[j].abilityName,
-              type: 0,
-              area: bottomInfo[i].area,
-              page: bottomInfo[i].page,
-              row: bottomInfo[i].row,
-              column: bottomInfo[i].column,
-              x: 0,
-            }
-          );
+          this.mBundleInfoList[j].area = bottomInfo[i].area;
+          this.mBundleInfoList[j].page = bottomInfo[i].page;
+          this.mBundleInfoList[j].row = bottomInfo[i].row;
+          this.mBundleInfoList[j].column = bottomInfo[i].column;
+          this.mBundleInfoList[j].x = 0;
+          appBottomBarInfo.push(this.mBundleInfoList[j]);
         }
       }
     }
@@ -173,17 +163,17 @@ export default class AppGridPresenter extends BaseAppPresenter {
     let gridAppsInfos = [];
     let allPageCount = this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount;
     let max = allPageCount;
-    for (let i = 0;i < list.length; i++) {
+    for (let i = 0; i < list.length; i++) {
       if (max < list[i].page) {
         max = list[i].page;
       }
     }
 
-    for (let i = 0;i < max; i++) {
+    for (let i = 0; i < max; i++) {
       gridAppsInfos.push([]);
     }
 
-    for (let i = 0;i < list.length; i++) {
+    for (let i = 0; i < list.length; i++) {
       gridAppsInfos[list[i].page].push(list[i]);
     }
     this.mGridAppsInfos = gridAppsInfos;
@@ -198,7 +188,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
     } else {
       AppStorage.SetOrCreate('BottomBarItemWidth', '25%');
     }
-    for (let i = 0;i < list.length; i++) {
+    for (let i = 0; i < list.length; i++) {
       list[i].x = this.mPageCoordinateData.bottomXAxis[list.length - 1][i];
     }
     return list;
@@ -316,7 +306,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
     for (let i = 0; i < layoutInfo.length; i++) {
       if (count[layoutInfo[i].bundleName] == undefined || count[layoutInfo[i].bundleName] == null || count[layoutInfo[i].bundleName] == '') {
         count[layoutInfo[i].bundleName] = 0;
-      } else if (layoutInfo[i].type == 0 && ++ count[layoutInfo[i].bundleName] > 1) {
+      } else if (layoutInfo[i].type == CommonConstants.TYPE_APP && ++ count[layoutInfo[i].bundleName] > 1) {
         return true;
       }
     }
@@ -385,10 +375,9 @@ export default class AppGridPresenter extends BaseAppPresenter {
       }
     }
 
-  
     //Add new app
     for (let i = 0; i < newApp.length; i++) {
-      if (newApp[i].type == 0) {
+      if (newApp[i].type == CommonConstants.TYPE_APP) {
         this.updateAppItemLayoutInfo(info, layoutDescription, newApp[i]);
       } else {
         this.updateCardItemLayoutInfo(info, layoutDescription, newApp[i]);
@@ -408,7 +397,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
       && presetFormInfo.abilityName == item.abilityName) {
         layoutInfo.push({
           bundleName: presetFormInfo.bundleName,
-          type: 1,
+          type: CommonConstants.TYPE_CARD,
           area: presetFormInfo.area,
           page: presetFormInfo.page,
           column: presetFormInfo.column,
@@ -426,7 +415,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
     let row = info.layoutDescription.row;
     let column = info.layoutDescription.column;
     let layoutInfo = info.layoutInfo;
-    //current page has space
+    // current page has space
     let isNeedNewPage = true;
     for (let i = 0; i < pageCount; i++) {
       for (let y = 0; y < row; y++) {
@@ -544,23 +533,21 @@ export default class AppGridPresenter extends BaseAppPresenter {
     return newLayoutInfo;
   }
 
-  public regroupDataAfterInstall(callbackList) {
-    this.mBundleInfoList = callbackList;
-    this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, callbackList);
-    this.pagingFiltering();
+  public regroupDataAppListChange(callbackList) {
+    this.getGridList();
   }
 
-  public regroupDataAfterUnInstall(result) {
-    console.info("Launcher AppGridView getUninstallApp callback = " + result);
-    if (result === UNINSTALL_PROHIBITED) {
+  public informUninstallResult(resultCode) {
+    console.info("Launcher AppGridView getUninstallApp resultCode = " + resultCode);
+    if (resultCode === CommonConstants.UNINSTALL_FORBID) {
       Prompt.showToast({
         message: PROHIBITED
       });
-    } else if (result === UNINSTALL_SUCCESS) {
+    } else if (resultCode === CommonConstants.UNINSTALL_SUCCESS) {
       Prompt.showToast({
         message: UNINSTALL_SUCCEEDED
       });
-    } else if (result === UNINSTALL_FAILED) {
+    } else {
       Prompt.showToast({
         message: UNINSTALL_DAILED
       });
@@ -702,7 +689,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
     let bottomBarInfo = info.bottomBarInfo;
     let moveItem = {
       bundleName: "",
-      type: 0,
+      type: CommonConstants.TYPE_APP,
       page: -1,
       row: -1,
       column: -1
@@ -734,7 +721,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
     let bottomBarInfo = info.bottomBarInfo;
     let moveItem = {
       bundleName: "",
-      type: 0,
+      type: CommonConstants.TYPE_APP,
       page: 0,
       row: 0,
       column: 0,
@@ -772,7 +759,7 @@ export default class AppGridPresenter extends BaseAppPresenter {
     let bottomBarInfo = info.bottomBarInfo;
     let moveItem = {
       bundleName: "",
-      type: 0,
+      type: CommonConstants.TYPE_APP,
       page: 0,
       row: 0,
       column: 0

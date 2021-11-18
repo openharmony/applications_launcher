@@ -17,8 +17,11 @@ import FeatureAbility from '@ohos.ability.featureAbility';
 import formManager from '@ohos.ability.formmanager';
 import PresetFormCard from '../configs/PresetFormCard.ets';
 
+/**
+ * 桌面卡片信息数据模型
+ */
 export default class FormModel {
-  private static formModel = new FormModel();
+  private static sFormModel = new FormModel();
   private mFormInfoList = [];
 
   private constructor() {
@@ -28,38 +31,26 @@ export default class FormModel {
     *获取卡片管理类对象
     */
   public static getInstance(): FormModel{
-    return this.formModel;
+    return this.sFormModel;
   }
 
-  getFormList(callback) {
+  /**
+   * 获取桌面显示的卡片列表
+   */
+  public async getFormList() {
     this.mFormInfoList = [];
     console.info('Launcher FormModel getFormList');
-    formManager.getAllFormsInfo()
-      .then((data) => {
-      console.info('Launcher FormModel ' + JSON.stringify(data));
-      for (let i = 0; i < data.length; i++) {
-        for (let info of PresetFormCard) {
-          if (info.moduleName == data[i].moduleName
-          && info.bundleName == data[i].bundleName
-          && info.abilityName == data[i].abilityName
-          && info.name == data[i].name) {
-            let cardInfo = {
-              type: 1,
-              moduleName: data[i].moduleName,
-              bundleName: data[i].bundleName,
-              abilityName: data[i].abilityName,
-              name: data[i].name,
-              dimension: info.dimension,
-              area: info.area
-            };
-            this.mFormInfoList.push(cardInfo);
-          }
+    let allFormList = await formManager.getAllFormsInfo();
+    for (let i = 0; i < allFormList.length; i++) {
+      for (let info of PresetFormCard) {
+        if (info.moduleName == allFormList[i].moduleName
+        && info.bundleName == allFormList[i].bundleName
+        && info.abilityName == allFormList[i].abilityName
+        && info.name == allFormList[i].cardName) {
+          this.mFormInfoList.push(allFormList[i]);
         }
       }
-      if (callback) {
-        console.info('Launcher FormModel formInfoList:' + JSON.stringify(this.mFormInfoList));
-        callback(this.mFormInfoList);
-      }
-    });
+    }
+    return this.mFormInfoList;
   }
 }

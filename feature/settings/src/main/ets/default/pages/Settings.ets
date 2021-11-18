@@ -13,16 +13,24 @@
  * limitations under the License.
  */
 
-import StyleConstants from '../common/constants/StyleConstants.ets'
-import SettingsPresenter from '../common/presenter/SettingsPresenter.ets'
+import StyleConstants from '../common/constants/StyleConstants.ets';
+import SettingsPresenter from '../common/presenter/SettingsPresenter.ets';
+import SettingsStage from '../common/SettingsStage.ets';
 
 let mSettingsPresenter: SettingsPresenter;
 
 @Entry
 @Component
 struct Index {
-  private aboutToAppear(): void  {
+  private mSettingsStage = new SettingsStage();
+
+  aboutToAppear(): void {
+    this.mSettingsStage.onCreate();
     mSettingsPresenter = SettingsPresenter.getInstance();
+  }
+
+  aboutToDisappear() {
+    this.mSettingsStage.onDestroy();
   }
 
   build() {

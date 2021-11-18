@@ -57,15 +57,15 @@ export default struct ListLayout {
           Row() {
             AppIcon({
               iconSize: StyleConstants.DEFAULT_APP_ITEM_WIDTH,
-              appIcon: item.AppIcon,
+              appIcon: item.appIconId,
               bundleName: item.bundleName,
-              labelId: item.labelId
+              labelId: item.appLabelId
             })
             ListName({
-              appName: item.AppName,
+              appName: item.appName,
               nameSize: StyleConstants.DEFAULT_APP_NAME_SIZE,
               bundleName: item.bundleName,
-              labelId: item.labelId
+              labelId: item.appLabelId
             })
           }
           .gesture(
@@ -105,7 +105,7 @@ export default struct ListLayout {
 
 @CustomDialog
 struct ShowDialog {
-  @StorageLink('uninstallAppInfo') AppInfo: any = {};
+  @StorageLink('uninstallAppInfo') appInfo: any = {};
   controller: CustomDialogController;
   cancel: () => void;
   action: () => void;
@@ -146,14 +146,12 @@ struct ShowDialog {
         .height(StyleConstants.PIXEL_50)
         .backgroundColor(Color.White)
         .onClick(() => {
-          mAppListPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
+          mAppListPresenter.uninstallApp(this.appInfo.bundleName, this.appInfo.isSystemApp);
           this.controller.close();
         })
       }.padding(StyleConstants.DEFAULT_20)
     }
     .padding({top: StyleConstants.DEFAULT_25, right: StyleConstants.DEFAULT_5, bottom: StyleConstants.DEFAULT_15, left: StyleConstants.DEFAULT_5})
-
-
   }
 }
 
@@ -162,13 +160,13 @@ struct UninstallDialog {
   controller: CustomDialogController;
   cancel: () => void;
   action: () => void;
-  @StorageLink('uninstallAppInfo') AppInfo: any = {};
+  @StorageLink('uninstallAppInfo') appInfo: any = {};
 
   build() {
     Column() {
       Row() {
         Text($r('app.string.uninstall'))
-        Text(this.AppInfo.AppName + ' ?')
+        Text(this.appInfo.appName + ' ?')
       }
 
       Row() {
@@ -182,7 +180,7 @@ struct UninstallDialog {
         .height(StyleConstants.PIXEL_50)
         .backgroundColor(Color.Blue)
         .onClick(() => {
-          mAppListPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
+          mAppListPresenter.uninstallApp(this.appInfo.bundleName, this.appInfo.isSystemApp);
           this.controller.close();
         })
 

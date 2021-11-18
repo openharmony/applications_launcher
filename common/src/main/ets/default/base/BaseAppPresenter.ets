@@ -13,136 +13,84 @@
  * limitations under the License.
  */
 
-import AppModel from '../model/AppModel.ets'
-import SettingsModel from '../model/SettingsModel.ets'
-import AppListInfoCacheManager from '../cache/AppListInfoCacheManager.ets'
-import ResourceManager from '../manager/ResourceManager.ets'
+import launcherAbilityManager from '../manager/LauncherAbilityManager.ets';
+import AppModel from '../model/AppModel.ets';
+import AppListInfoCacheManager from '../cache/AppListInfoCacheManager.ets';
+import ResourceManager from '../manager/ResourceManager.ets';
+import CommonConstants from '../constants/CommonConstants.ets';
 
-const KEY_APP_LIST = "appListInfo";
-const UNINSTALL_SUCCESS = true;
 const KEY_NAME = "name";
-const UNINSTALL_PROHIBITED = "UNINSTALL_PROHIBITED";
-const SETTING_BUNDLE = 'com.ohos.launcher';
-const SETTING_ABILITY = 'com.ohos.launcher.settings.MainAbility';
 
+/**
+ * 应用列表管理基类
+ */
 export default class BaseAppPresenter {
   protected mAppModel: AppModel;
-  protected mSettingsModel: SettingsModel;
   protected mAppListInfoCacheManager: AppListInfoCacheManager;
   protected mResourceManager: ResourceManager;
-  protected mScreenHeight: number = 0;
-  protected mScreenWidth: number = 0;
-  private mAppListInstallListener;
-  private mAppListUninstallListener;
-  private mAppListChangeListener;
 
   protected constructor() {
     this.mAppModel = AppModel.getInstance();
-    this.mSettingsModel = new SettingsModel();
     this.mAppListInfoCacheManager = new AppListInfoCacheManager();
     this.mResourceManager = ResourceManager.getInstance();
-    this.mAppListInstallListener = this.appListInstallListener.bind(this);
-    this.mAppListUninstallListener = this.appListUninstallListener.bind(this);
-    this.mAppListChangeListener = this.appListChangeListener.bind(this);
   }
 
-  public setScreenHeight(height: number): void{
-    this.mScreenHeight = height;
+
+  /**
+   * 启动应用
+   *
+   * @param bundleName 应用包名
+   * @param abilityName ability名
+   */
+  public jumpTo(abilityName, bundleName) {
+    launcherAbilityManager.startLauncherAbility(abilityName, bundleName);
   }
 
-  public setScreenWidth(width: number): void{
-    this.mScreenWidth = width;
+  /**
+   * 启动桌面设置
+   */
+  public jumpToSetting() {
+    this.jumpTo(CommonConstants.SETTING_ABILITY, CommonConstants.LAUNCHER_BUNDLE);
   }
 
-  jumpTo(abilityName, bundleName) {
-    this.mAppModel.startApplication(abilityName, bundleName);
-  }
-
-  jumpToSetting() {
-    this.mAppModel.startApplication(SETTING_ABILITY, SETTING_BUNDLE);
-  }
-
-  uninstallApp(uninstallBundleName, ifSystem) {
-    if (ifSystem == UNINSTALL_SUCCESS) {
-      this.regroupDataAfterUnInstall(UNINSTALL_PROHIBITED);
+  /**
+   * 卸载应用
+   *
+   * @params uninstallBundleName 卸载应用的包名
+   * @params ifSystem 是否系统应用
+   */
+  public uninstallApp(uninstallBundleName, ifSystem) {
+    if (ifSystem) {
+      this.informUninstallResult(CommonConstants.UNINSTALL_FORBID);
     } else {
-      this.mAppModel.uninstallApp(uninstallBundleName, this.uninstallAppCallback.bind(this));
+      launcherAbilityManager.uninstallLauncherAbility(uninstallBundleName, this.uninstallAppCallback.bind(this));
     }
   }
 
-  uninstallAppCallback(callback) {
-    this.regroupDataAfterUnInstall(callback);
+  private uninstallAppCallback(resultData) {
+    this.informUninstallResult(resultData.code);
   }
 
-  registerAppListChangeCallback() {
-    this.mAppModel.registerAppListInstallListener(this.mAppListInstallListener);
-    this.mAppModel.registerAppListUninstallListener(this.mAppListUninstallListener);
-    this.mAppModel.registerAppListChangeListener(this.mAppListChangeListener);
+  public registerAppListChangeCallback() {
+    this.mAppModel.registerStateChangeListener(this.appListChangeListener.bind(this));
   }
 
-  unregisterAppListChangeCallback() {
+  public unregisterAppListChangeCallback() {
     console.info("Launcher appPresenter unregisterAppListChangeCallback");
-    this.mAppModel.unregisterAppListInstallListener(this.mAppListInstallListener);
-    this.mAppModel.unregisterAppListUninstallListener(this.mAppListUninstallListener);
-    this.mAppModel.unregisterAppListChangeListener(this.mAppListChangeListener);
+    this.mAppModel.unregisterAppStateChangeListener(this.appListChangeListener.bind(this));
   }
 
-  public appListInstallListener(bundleInfo) {
-    let nameCallback = (appName) => {
-      bundleInfo.AppName = appName;
-      this.modifyItemList(this.appendItem, bundleInfo);
-    }
-    this.mResourceManager.getAppName(bundleInfo.labelId, bundleInfo.bundleName, bundleInfo.AppName, nameCallback);
+  public appListChangeListener(appList) {
+    this.regroupDataAppListChange(appList);
   }
 
-  private appendItem(list, item) {
-    list.push(item);
-    return list;
+  public regroupDataAppListChange(callbackList) {
   }
 
-  public appListUninstallListener(bundleInfo) {
-    this.modifyItemList(this.removeItem, bundleInfo);
+  public informUninstallResult(resultCode) {
   }
 
-  private removeItem(list, item) {
-    for (let listItem of list) {
-      if (listItem.bundleName == item.bundleName) {
-        let index = list.indexOf(listItem);
-        list.splice(index, 1);
-      }
-    }
-    return list;
-  }
-
-  public appListChangeListener(bundleInfo) {
-    this.modifyItemList(this.replaceItem, bundleInfo);
-  }
-
-  private replaceItem(list, item) {
-    for (let listItem of list) {
-      console.info("Launcher replaceCache + " + listItem.bundleName + " + " + item.bundleName);
-      if (listItem.bundleName == item.bundleName) {
-        let index = list.indexOf(listItem);
-        list.splice(index, 1, item);
-      }
-    }
-    return list;
-  }
-
-  private modifyItemList(method, item) {
-    console.info("Launcher AppListPresenter appListChangeListener + " + JSON.stringify(item));
-    let currentCacheList = this.mAppListInfoCacheManager.getCache(KEY_APP_LIST);
-    method(currentCacheList, item);
-    this.regroupDataAfterInstall(currentCacheList);
-  }
-
-  public regroupDataAfterInstall(callbackList) {
-  }
-
-  public regroupDataAfterUnInstall(result) {
-  }
-
-  getAppName(keyName) {
-    return this.mResourceManager.getAppResourceCache(keyName, KEY_NAME);
+  public getAppName(keyName) {
+    return this.mResourceManager.getAppResourceCache(keyName, KEY_NAME)
   }
 }

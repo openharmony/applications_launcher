@@ -13,26 +13,46 @@
  * limitations under the License.
  */
 
-import FeatureAbility from '@ohos.ability.featureAbility';
-import GridLayoutConfigs from '../configs/GridLayoutConfigs.ets'
-import LayoutConfigManager from '../layoutconfig/LayoutConfigManager.ets'
-import FileUtils from '../utils/FileUtils.ets'
-import ILayoutConfig from '../layoutconfig/ILayoutConfig.ets'
+import CommonConstants from '../constants/CommonConstants.ets';
+import GridLayoutConfigs from '../configs/GridLayoutConfigs.ets';
+import LayoutConfigManager from '../layoutconfig/LayoutConfigManager.ets';
+import FileUtils from '../utils/FileUtils.ets';
+import WorkSpaceModeConfig from '../layoutconfig/WorkSpaceModeConfig.ets';
+import WorkSpaceLayoutConfig from '../layoutconfig/WorkSpaceLayoutConfig.ets';
+import RecentModeConfig from '../layoutconfig/RecentModeConfig.ets';
 
 const defaultLayoutInfoFilePath = "/data/accounts/account_0/applications/com.ohos.launcher/com.ohos.launcher/assets/launcher/resources/rawfile/layoutInfo.json";
 
+/**
+ * 桌面设置数据模型
+ */
 export default class SettingsModel {
-  private mLayoutConfig: ILayoutConfig;
+  private mWorkSpaceModeConfig: WorkSpaceModeConfig;
+  private mWorkSpaceLayoutConfig: WorkSpaceLayoutConfig;
+  private mRecentModeConfig: RecentModeConfig;
   private mGridConfig = 1;
   private mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
 
   constructor() {
-    this.mLayoutConfig = LayoutConfigManager.getLayoutConfig();
-    let Etype = this.mLayoutConfig.getEquipmentType();
-    if (Etype == 'phone') {
+    this.mWorkSpaceModeConfig = LayoutConfigManager.getModeConfig(WorkSpaceModeConfig.WORKSPACE_MODE_CONFIG);
+    let equipmentType = this.mWorkSpaceModeConfig.getEquipmentType();
+    if (equipmentType == CommonConstants.DEFAULT_EQUIPMENT_TYPE) {
       this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
     } else {
       this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTableHorizontal;
+    }
+    this.mWorkSpaceLayoutConfig = LayoutConfigManager.getFunctionConfig(WorkSpaceLayoutConfig.GRID_LAYOUT_INFO);
+    this.mRecentModeConfig = LayoutConfigManager.getModeConfig(RecentModeConfig.RECENT_MODE_CONFIG);
+  }
+
+  /**
+   * force reload all config from disk
+   */
+  public forceReloadConfig(): void {
+    this.mWorkSpaceModeConfig.forceReloadConfig();
+    this.mWorkSpaceLayoutConfig.forceReloadConfig();
+    if (this.mRecentModeConfig != null) {
+      this.mRecentModeConfig.forceReloadConfig();
     }
   }
 
@@ -60,7 +80,7 @@ export default class SettingsModel {
    * @return {object} Layout config of grid view.
    */
   public getGridConfig(): any {
-    this.mGridConfig = this.mLayoutConfig.getGridConfig();
+    this.mGridConfig = this.mWorkSpaceModeConfig.getGridConfig();
     let gridLayout = this.mGridLayoutTable[0];
     for (let i = 0; i < this.mGridLayoutTable.length; i++) {
       if (this.mGridLayoutTable[i].id == this.mGridConfig) {
@@ -74,28 +94,10 @@ export default class SettingsModel {
   /**
    * Set layout config id of grid view.
    *
-   * @param {string} id - Layout config id of grid view.
+   * @param gridConfig - Layout config id of grid view.
    */
-  public setGridConfig(id) {
-    this.mLayoutConfig.setGridConfig(id);
-  }
-
-  /**
-   * Get recent process max limit.
-   *
-   * @return {number} recent process max limit.
-   */
-  public getRecentProcessLimit(): any {
-    return this.mLayoutConfig.getRecentProcessLimit();
-  }
-
-  /**
-   * Set recent process max limit.
-   *
-   * @param {number} num - Recent process max limit.
-   */
-  public setRecentProcessLimit(num) {
-    this.mLayoutConfig.setRecentProcessLimit(num);
+  public setGridConfig(gridConfig) {
+    this.mWorkSpaceModeConfig.updateGridConfig(gridConfig);
   }
 
   /**
@@ -104,7 +106,7 @@ export default class SettingsModel {
    * @return {string} Layout view type, should one of 'Grid' or 'List' which is stored in LayoutConstants class.
    */
   public getAppPageStartConfig(): any {
-    return this.mLayoutConfig.getAppPageStartConfig();
+    return this.mWorkSpaceModeConfig.getAppStartPageType();
   }
 
   /**
@@ -113,7 +115,21 @@ export default class SettingsModel {
    * @param {string} type - Layout view type, should one of 'Grid' or 'List' which is stored in LayoutConstants class.
    */
   public setAppPageStartConfig(type) {
-    this.mLayoutConfig.setAppPageStartConfig(type);
+    this.mWorkSpaceModeConfig.updateAppStartPageType(type);
+  }
+
+  /**
+   * Set the equipment type.
+   *
+   * @param {string} equipmentType - equipment type.
+   */
+  public setEquipment(equipmentType) {
+    if (equipmentType == CommonConstants.DEFAULT_EQUIPMENT_TYPE) {
+      this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
+    } else {
+      this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTableHorizontal;
+    }
+    this.mWorkSpaceModeConfig.updateEquipmentType(equipmentType);
   }
 
   /**
@@ -122,40 +138,38 @@ export default class SettingsModel {
    * @return {object} layout information.
    */
   public getLayoutInfo(): any {
-    return this.mLayoutConfig.getGridLayoutInfo();
+    return this.mWorkSpaceLayoutConfig.getGridLayoutInfo();
   }
 
   /**
    * Set layout information of grid view.
    */
   public setLayoutInfo(layoutInfo) {
-    this.mLayoutConfig.setGridLayoutInfo(layoutInfo);
+    this.mWorkSpaceLayoutConfig.updateGridLayoutInfo(layoutInfo);
   }
 
   /**
    * Remove layout information of grid view.
    */
   public deleteLayoutInfo() {
-    this.mLayoutConfig.deleteGridLayoutInfo();
+    this.mWorkSpaceLayoutConfig.deleteConfig();
   }
 
   /**
-   * Close settings.
+   * Get recent process max limit.
+   *
+   * @return {number} recent process max limit.
    */
-  closeSettings() {
-    console.info("Launcher settings SettingsModel  closeSettings start")
-    FeatureAbility.terminateAbility()
-      .then(data => console.info("Launcher settings SettingsModel closeSettings promise::then : " + data))
-      .catch(error => console.info("Launcher settings SettingsModel closeSettings promise::catch : " + error));
-    console.info("Launcher settings SettingsModel closeSettings end ");
+  public getRecentProcessLimit(): any {
+    return this.mRecentModeConfig.getRecentProcessLimit();
   }
 
-  public setEquipment(EType) {
-    if (EType == 'phone') {
-      this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
-    } else {
-      this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTableHorizontal;
-    }
-    this.mLayoutConfig.setEquipmentType(EType);
+  /**
+   * Set recent process max limit.
+   *
+   * @param {number} num - Recent process max limit.
+   */
+  public setRecentProcessLimit(num) {
+    this.mRecentModeConfig.updateRecentProcessLimit(num);
   }
 }

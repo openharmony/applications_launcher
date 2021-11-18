@@ -27,7 +27,7 @@ export default class ResourceManager {
   private constructor() {
   }
 
-  public static getInstance(): ResourceManager{
+  public static getInstance(): ResourceManager {
     return this.resourceManager;
   }
 

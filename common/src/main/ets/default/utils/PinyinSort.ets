@@ -41,7 +41,7 @@ export default class PinyinSort {
    * @return {object} b - appinfo for compare.
    */
   sortByAppName(a, b) {
-    return this.getChar(a.AppName) - this.getChar(b.AppName);
+    return this.getChar(a.appName) - this.getChar(b.appName);
   }
 
   /**

@@ -13,21 +13,37 @@
  * limitations under the License.
  */
 
-const DefaultLayoutConfig = {
-  DefaultAppPageStartConfig: 'Grid',
-  DefaultLayoutOptions: [
-    { name: 'List', value: 'List', checked: false },
-    { name: 'Grid', value: 'Grid', checked: false }
-  ],
-  DefaultGridConfig: 0,
-  DefaultRecentProcessLimit: 20,
-  DefaultRecentProcessLimitArray: [
-    { name: '5', value: 5, checked: false },
-    { name: '10', value: 10, checked: false },
-    { name: '15', value: 15, checked: false },
-    { name: '20', value: 20, checked: false }
-  ],
-  DefaultEquipmentType: 'phone',
-}
+/**
+ * 最近任务信息
+ */
+export default class RecentTaskInfo {
+  /**
+   * 当前任务id
+   */
+  public missionId: string;
 
-export default DefaultLayoutConfig;
+  /**
+   * 应用名
+   */
+  public appName: string;
+
+  /**
+   * 应用图标资源id
+   */
+  public appIconId: string;
+
+  /**
+   * 应用名称资源id
+   */
+  public appLabelId: string;
+
+  /**
+   * 应用包名
+   */
+  public bundleName: string;
+
+  /**
+   * ability组件名
+   */
+  public abilityName: string;
+}

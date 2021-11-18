@@ -13,21 +13,31 @@
  * limitations under the License.
  */
 
-const DefaultLayoutConfig = {
-  DefaultAppPageStartConfig: 'Grid',
-  DefaultLayoutOptions: [
-    { name: 'List', value: 'List', checked: false },
-    { name: 'Grid', value: 'Grid', checked: false }
-  ],
-  DefaultGridConfig: 0,
-  DefaultRecentProcessLimit: 20,
-  DefaultRecentProcessLimitArray: [
-    { name: '5', value: 5, checked: false },
-    { name: '10', value: 10, checked: false },
-    { name: '15', value: 15, checked: false },
-    { name: '20', value: 20, checked: false }
-  ],
-  DefaultEquipmentType: 'phone',
-}
+/**
+ * 模块初始化加载器基类
+ * 进行配置和数据的提前加载
+ */
+export default abstract class BaseModulePreLoader {
+  /**
+   * 执行初始化加载动作
+   */
+  public load(): void {
+    this.loadConfig();
+    this.loadData();
+  }
 
-export default DefaultLayoutConfig;
+  /**
+   * 初始化加载配置
+   */
+  protected abstract loadConfig(): void;
+
+  /**
+   * 初始化加载数据
+   */
+  protected abstract loadData(): void;
+
+  /**
+   * 模块释放
+   */
+  public abstract releaseConfigAndData(): void;
+}

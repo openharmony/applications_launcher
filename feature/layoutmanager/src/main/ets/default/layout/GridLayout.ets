@@ -106,9 +106,9 @@ export default struct GridLayout {
           Column() {
             AppIcon({
               iconSize: this.AppItemWidth,
-              appIcon: this.moveAppInfo.AppIcon,
+              appIcon: this.moveAppInfo.appIconId,
               bundleName: this.moveAppInfo.bundleName,
-              labelId: this.moveAppInfo.labelId
+              labelId: this.moveAppInfo.appLabelId
             })
           }
         }
@@ -283,17 +283,17 @@ struct AppItem {
         Column() {
           AppIcon({
             iconSize: this.AppItemWidth,
-            appIcon: this.item.AppIcon,
+            appIcon: this.item.appIconId,
             bundleName: this.item.bundleName,
-            labelId: this.item.labelId
+            labelId: this.item.appLabelId
           })
           GridName({
             nameHeight: this.AppItemHeight - this.AppItemWidth,
             nameWidth: this.AppItemWidth,
-            appName: this.item.AppName,
+            appName: this.item.appName,
             nameSize: this.AppNameSize,
             bundleName: this.item.bundleName,
-            labelId: this.item.labelId
+            labelId: this.item.appLabelId
           })
         }
         .onClick(() => {
@@ -306,7 +306,7 @@ struct AppItem {
         .onAction((event: GestureEvent) => {
         let appName = mAppGridPresenter.getAppName(this.item.bundleName);
         if(appName != null){
-          this.item.AppName = appName;
+          this.item.appName = appName;
         }
         AppStorage.SetOrCreate('uninstallAppInfo', this.item)
         this.dialogController.open();
@@ -371,11 +371,11 @@ struct FormCard {
         Column() {
           FormComponent({
             id: 0,
-            name: this.formItem.name,
+            name: this.formItem.cardName,
             bundle: this.formItem.bundleName,
             ability: this.formItem.abilityName,
             module: this.formItem.moduleName,
-            dimension: this.formItem.dimension
+            dimension: this.formItem.cardDimension
           })
             .allowUpdate(this.allowUpdate)
             .visibility(this.isShow ? Visibility.Visible : Visibility.Hidden)
@@ -493,13 +493,13 @@ struct UninstallDialog {
   controller: CustomDialogController;
   cancel: () => void;
   action: () => void;
-  @StorageLink('uninstallAppInfo') AppInfo: any = {};
+  @StorageLink('uninstallAppInfo') appInfo: any = {};
 
   build() {
     Column() {
       Row() {
         Text($r('app.string.uninstall'))
-        Text(this.AppInfo.AppName + ' ?')
+        Text(this.appInfo.appName + ' ?')
       }
 
       Row() {
@@ -532,7 +532,7 @@ struct UninstallDialog {
         .height(StyleConstants.PIXEL_50)
         .backgroundColor(Color.White)
         .onClick(() => {
-          mAppGridPresenter.uninstallApp(this.AppInfo.bundleName, this.AppInfo.System);
+          mAppGridPresenter.uninstallApp(this.appInfo.bundleName, this.appInfo.System);
           this.controller.close();
         })
       }

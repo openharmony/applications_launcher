@@ -13,266 +13,165 @@
  * limitations under the License.
  */
 
-import BundleMgr from '@ohos.bundle';
-import FeatureAbility from '@ohos.ability.featureAbility';
 import Subscriber from '@ohos.commonevent';
+import launcherAbilityManager from '../manager/LauncherAbilityManager.ets';
 import SystemApplication from '../configs/SystemApplication.ets';
 import CheckEmptyUtils from '../utils/CheckEmptyUtils.ets';
+import CommonConstants from '../constants/CommonConstants.ets';
 import EventConstants from '../constants/EventConstants.ets';
 
-const UNINSTALL_SUCCESS = "UNINSTALL_SUCCESS";
-const UNINSTALL_FAILED = "UNINSTALL_FAILED";
-const IF_GET_ABILITY = 1;
-
+/**
+ * 桌面应用信息数据模型
+ */
 export default class AppModel {
-  private static appModel = new AppModel();
+  private static sAppModel = new AppModel();
   private mBundleInfoList = [];
-  private systemApplicationName = [];
+  private mSystemApplicationName = [];
   private mCommonEventSubscriber = null;
-  private mAppListInstallListener = [];
-  private mAppListUninstallListener = [];
-  private mAppListChangeListener = [];
-  private mUninstallCallback;
+  private mAppStateChangeListener = [];
   private mCommonEventSubscribeInfo = {
     events: [
       EventConstants.EVENT_PACKAGE_ADDED,
       EventConstants.EVENT_PACKAGE_CHANGED,
-      EventConstants.EVENT_PACKAGE_REMOVED]
+      EventConstants.EVENT_PACKAGE_REMOVED
+    ]
   };
 
   private constructor() {
-    this.systemApplicationName = SystemApplication.SystemApplicationName.split(",");
+    this.mSystemApplicationName = SystemApplication.SystemApplicationName.split(",");
   }
 
+  /**
+   * 获取应用数据模型对象
+   *
+   * @return 应用数据模型单例
+   */
   public static getInstance(): AppModel{
-    return this.appModel;
+    return this.sAppModel;
   }
 
-  getAppList(callback) {
-    this.mBundleInfoList = [];
+  /**
+   * 获取桌面显示的应用列表
+   */
+  public async getAppList() {
     console.info('Launcher AppModel getAppIcon getAppList');
-    BundleMgr.getAllBundleInfo(IF_GET_ABILITY)
-      .then((data) => {
-      if (CheckEmptyUtils.isEmpty(data)) {
-        console.error("Launcher AppModel getAppList getAllBundleInfo ERROR");
-      }
-      console.info('Launcher AppModel getAllBundleInfo >' + JSON.stringify(data));
-      for (let i = 0; i < data.length; i++) {
-        if (this.systemApplicationName.indexOf(data[i].name) > -1) {
-        } else {
-          this.mBundleInfoList.push(
-            {
-              type: 0,
-              System: data[i].appInfo.systemApp,
-              AppName: data[i].appInfo.label,
-              AppId: data[i].appId,
-              AppIcon: data[i].appInfo.iconId,
-              bundleName: data[i].name,
-              labelId: data[i].appInfo.labelId,
-              abilityName: data[i].abilityInfos[0].name,
-              area: [1, 1]
-            }
-          )
+    if (CheckEmptyUtils.isEmptyArr(this.mBundleInfoList)) {
+      let allAbilityList= await launcherAbilityManager.getLauncherAbilityList();
+      for (let i = 0; i < allAbilityList.length; i++) {
+        if (this.mSystemApplicationName.indexOf(allAbilityList[i].bundleName) == CommonConstants.INVALID_VALUE) {
+          this.mBundleInfoList.push(allAbilityList[i])
         }
       }
-      let appArrayLength = this.mBundleInfoList.length;
-      console.info('Launcher AppModel mBundleInfoList' + JSON.stringify(this.mBundleInfoList));
-      callback(this.mBundleInfoList);
-    });
-  }
-
-  uninstallApp(uninstallBundleName, callback) {
-    console.info('Launcher AppModel uninstallApp appId' + uninstallBundleName);
-    this.mUninstallCallback = callback;
-    let result = BundleMgr.getBundleInstaller()
-      .then((data) => {
-      if (CheckEmptyUtils.isEmpty(data)) {
-        console.error("Launcher AppModel uninstallApp getBundleInstaller ERROR");
-      }
-      data.uninstall(uninstallBundleName, {
-        param: {
-          userId: 0,
-          installFlag: 0,
-          isKeepData: false
-        }
-      }, this.uninstallCallback.bind(this));
-    })
-      .catch(error =>
-    console.info("Launcher AppModel uninstall err " + error));
-  }
-
-  private uninstallCallback(err, data) {
-    console.info('Launcher AppModel uninstallCallback ' + JSON.stringify(data));
-    if (data.statusMessage == "SUCCESS") {
-      this.mUninstallCallback(UNINSTALL_SUCCESS);
-    } else {
-      this.mUninstallCallback(UNINSTALL_FAILED);
+      console.info('Launcher AppModel bundleInfoList length ' + this.mBundleInfoList.length);
     }
-    console.info('Launcher AppModel uninstallCallback ');
+    return this.mBundleInfoList;
   }
 
-  registerAppListInstallListener(listener) {
-    if (this.mAppListInstallListener.indexOf(listener) == -1) {
-      this.mAppListInstallListener.push(listener);
+  /**
+   * 注册应用列表改变监听
+   *
+   * @param listener 监听对象
+   */
+  public registerStateChangeListener(listener) {
+    if (this.mAppStateChangeListener.indexOf(listener) == CommonConstants.INVALID_VALUE) {
+      this.mAppStateChangeListener.push(listener);
     }
   }
 
   /**
-   * Unregister install listener.
+   * 解注册应用列表改变监听
    *
-   * @param {object} listener - install listener
+   * @param  listener 监听对象
    */
-  unregisterAppListInstallListener(listener) {
-    let index = this.mAppListInstallListener.indexOf(listener);
-    if (index != -1) {
-      this.mAppListInstallListener.splice(index, 1);
+  public unregisterAppStateChangeListener(listener) {
+    if (this.mAppStateChangeListener.indexOf(listener) != CommonConstants.INVALID_VALUE) {
+      this.mAppStateChangeListener.splice(index, 1);
     }
   }
 
   /**
-   * Register uninstall listener.
-   *
-   * @param {object} listener - uninstall listener
+   * 开始监听系统应用状态
    */
-  registerAppListUninstallListener(listener) {
-    if (this.mAppListUninstallListener.indexOf(listener) == -1) {
-      this.mAppListUninstallListener.push(listener);
-    }
-  }
-
-  /**
-   * Unregister uninstall listener.
-   *
-   * @param {object} listener - uninstall listener
-   */
-  unregisterAppListUninstallListener(listener) {
-    let index = this.mAppListUninstallListener.indexOf(listener);
-    if (index != -1) {
-      this.mAppListUninstallListener.splice(index, 1);
-    }
-  }
-
-  /**
-   * Register change listener.
-   *
-   * @param {object} listener - uninstall listener
-   */
-  registerAppListChangeListener(listener) {
-    if (this.mAppListChangeListener.indexOf(listener) == -1) {
-      this.mAppListChangeListener.push(listener);
-    }
-  }
-
-  /**
-   * Unregister change listener.
-   *
-   * @param {object} listener - change listener
-   */
-  unregisterAppListChangeListener(listener) {
-    let index = this.mAppListChangeListener.indexOf(listener);
-    if (index != -1) {
-      this.mAppListChangeListener.splice(index, 1);
-    }
-  }
-
-  registerAppListEvent() {
+  public registerAppListEvent() {
     Subscriber.createSubscriber(
       this.mCommonEventSubscribeInfo,
       this.createInstallationSubscriberCallBack.bind(this)
     );
   }
 
-  unregisterAppListEvent() {
+  /**
+   * 停止监听系统应用状态
+   */
+  public unregisterAppListEvent() {
     Subscriber.unsubscribe(this.mCommonEventSubscriber, () => {
       console.info("Launcher AppModel unregisterAppListEvent");
     });
   }
 
-  private createInstallationSubscriberCallBack(err, data) {
+  private createInstallationSubscriberCallBack(err, subscriber) {
     console.info("Launcher AppModel createInstallationSubscriberCallBack");
-    this.mCommonEventSubscriber = data;
+    this.mCommonEventSubscriber = subscriber;
     Subscriber.subscribe(this.mCommonEventSubscriber, this.installationSubscriberCallBack.bind(this));
   }
 
-  private installationSubscriberCallBack(err, data) {
+  private async installationSubscriberCallBack(err, callbackData) {
     if (err.code == 0) {
-      if (CheckEmptyUtils.isEmpty(data)) {
+      if (CheckEmptyUtils.isEmpty(callbackData)) {
         console.error("Launcher AppModel installationSubscriberCallBack ERROR! data is empty");
-      }
-      console.info("Launcher AppModel installationSubscriberCallBack data = " + JSON.stringify(data));
-      let callbackData = data;
-      if (callbackData.event == EventConstants.EVENT_PACKAGE_REMOVED) {
-        this.reportAppInstallEvent(callbackData.event, callbackData);
         return;
       }
-      BundleMgr.getBundleInfo(callbackData.bundleName, IF_GET_ABILITY)
-        .then(data => {
-        console.info('Launcher AppModel installation subscriber getBundleInfo ' + JSON.stringify(data));
-        let bundleInfo = {
-          type: 0,
-          System: data.appInfo.systemApp,
-          AppName: data.appInfo.label,
-          AppId: data.appId,
-          AppIcon: data.appInfo.iconId,
-          bundleName: data.name,
-          labelId: data.appInfo.labelId,
-          abilityName: data.abilityInfos[0].name,
-          area: [1, 1]
-        };
-        this.reportAppInstallEvent(callbackData.event, bundleInfo);
-      })
-        .catch(e => {
-        console.error("Launcher AppModel installation subscriber getBundleInfo error ");
-      });
+      console.info("Launcher AppModel installationSubscriberCallBack data = " + JSON.stringify(callbackData));
+      if (callbackData.event == EventConstants.EVENT_PACKAGE_REMOVED) {
+        this.removeItem(callbackData.bundleName);
+      } else {
+        let abilityInfo = await launcherAbilityManager.getLauncherAbilityInfo(callbackData.bundleName);
+        this.replaceItem(abilityInfo);
+      }
     } else {
       console.error("Launcher AppModel app list change failed --- err = " + JSON.stringify(err));
     }
   }
 
-  private reportAppInstallEvent(event, bundleInfo) {
-    console.info("Launcher AppModel reportAppInstallEvent + " + event);
-    switch (event) {
-      case EventConstants.EVENT_PACKAGE_ADDED:
-        this.notifyEventListener(this.mAppListInstallListener, bundleInfo);
-        break;
-      case EventConstants.EVENT_PACKAGE_CHANGED:
-        this.notifyEventListener(this.mAppListChangeListener, bundleInfo);
-        break;
-      case EventConstants.EVENT_PACKAGE_REMOVED:
-        this.notifyEventListener(this.mAppListUninstallListener, bundleInfo);
-        break;
-      default:
-        break;
+  private notifyAppStateChangeEvent() {
+    for (let i = 0; i < this.mAppStateChangeListener.length; i++) {
+      this.mAppStateChangeListener[i](this.mBundleInfoList);
     }
   }
 
-  startApplication(abilityName, bundleName) {
-    let paramBundleName = bundleName;
-    let paramAbilityName = abilityName;
-    // promise
-    console.info('Launcher ==> AppModel startApplication abilityName ==> ' + abilityName + " bundleName ==> " + bundleName);
-    let result = FeatureAbility.startAbility({
-      want: {
-        bundleName: paramBundleName,
-        abilityName: paramAbilityName
+  private getItemIndex(bundleName): number {
+    for (let listItem of this.mBundleInfoList) {
+      if (listItem.bundleName == bundleName) {
+        let index = this.mBundleInfoList.indexOf(listItem);
+        return index;
       }
-    })
-      .then(data =>
-    console.info("Launcher AppModel startApplication promise::then : " + JSON.stringify(data))
-    )
-      .catch(error =>
-    console.info("Launcher AppModel startApplication promise::catch : " + JSON.stringify(error))
-    );
-    console.info("Launcher ==> AppModel startApplication  AceApplication : startAbility : " + result);
+    }
+    return CommonConstants.INVALID_VALUE;
   }
 
-  private notifyEventListener(eventListener, bundleInfo) {
-    for (let i = 0; i < eventListener.length; i++) {
-      let listener = eventListener[i];
-      if (listener != undefined && listener != null) {
-        console.info("Launcher AppModel notifyEventListener " + JSON.stringify(bundleInfo));
-        listener(bundleInfo);
-      }
+  private appendItem(item) {
+    console.info("Launcher appendItem: " + item.bundleName);
+    this.removeItem(item.bundleName);
+    this.mBundleInfoList.push(item);
+    this.notifyAppStateChangeEvent();
+  }
+
+  private removeItem(bundleName) {
+    console.info("Launcher removeItem: " + bundleName);
+    let originItemIndex = this.getItemIndex(bundleName);
+    if (originItemIndex != CommonConstants.INVALID_VALUE) {
+      this.mBundleInfoList.splice(originItemIndex, 1);
+      this.notifyAppStateChangeEvent();
+    }
+  }
+
+  private replaceItem(item) {
+    console.info("Launcher replaceItem: " + item.bundleName);
+    let originItemIndex = this.getItemIndex(item.bundleName);
+    if (originItemIndex != CommonConstants.INVALID_VALUE) {
+      this.mBundleInfoList.splice(originItemIndex, 1, item);
+      this.notifyAppStateChangeEvent();
+    } else {
+      this.appendItem(item);
     }
   }
 }

@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import ResourceManager from '../manager/ResourceManager.ets'
-import StyleConstants from '../constants/StyleConstants.ets'
+import ResourceManager from '../manager/ResourceManager.ets';
+import StyleConstants from '../constants/StyleConstants.ets';
 
 @Component
 export default struct AppIcon {
