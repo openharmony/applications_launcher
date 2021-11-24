@@ -14,7 +14,7 @@
  */
 
 const SystemApplication = {
-  SystemApplicationName: 'com.ohos.launcher,com.ohos.systemui,com.ohos.devicemanagerui,com.ohos.callui,com.example.kikakeyboard,com.ohos.contactdataability,com.ohos.telephonydataability'
+  SystemApplicationName: 'com.ohos.launcher,com.ohos.systemui,com.ohos.devicemanagerui,com.ohos.callui,com.example.kikakeyboard,com.ohos.contactdataability,com.ohos.telephonydataability,com.ohos.medialibrary.MediaLibraryDataA,com.ohos.medialibrary.MediaScannerAbilityA'
 }
 
 export default SystemApplication;
