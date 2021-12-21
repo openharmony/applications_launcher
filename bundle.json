@@ -1,0 +1,51 @@
+{
+    "name": "@ohos/applications_launcher",
+    "version": "",
+    "description": "桌面应用",
+    "homePage": "https://gitee.com/openharmony",
+    "license": "",
+    "repository": "",
+    "domain": "os",
+    "language": "",
+    "publishAs": "",
+    "private": false,
+    "scripts": {},
+    "tags": [],
+    "keywords": [],
+    "envs": [],
+    "dirs": [],
+    "author": {
+        "name": "",
+        "email": "",
+        "url": ""
+    },
+    "contributors": [
+        {
+            "name": "",
+            "email": "",
+            "url": ""
+        }
+    ],
+    "segment": {},
+    "component": {
+        "name": "sysapp_launcher",
+        "subsystem": "standard",
+        "syscap": [],
+        "features": [],
+        "adated_system_type": [
+            "small",
+            "standard"
+        ],
+        "rom": "",
+        "ram": "",
+        "deps": {
+            "components": [],
+            "third_party": []
+        },
+        "build": {
+            "sub_component": [],
+            "inner_kits": [],
+            "test": []
+        }
+    }
+}
