@@ -3,15 +3,20 @@
     "version": "",
     "description": "桌面应用",
     "homePage": "https://gitee.com/openharmony",
-    "license": "",
-    "repository": "",
+    "license": "Apache V2",
+    "repository": "https://gitee.com/openharmony/applications_launcher/tree/OpenHarmony-v3.0-LTS",
     "domain": "os",
     "language": "",
-    "publishAs": "",
+    "publishAs": "code-segment",
     "private": false,
     "scripts": {},
-    "tags": [],
-    "keywords": [],
+    "tags": [
+        "applications"
+    ],
+    "keywords": [
+        "applications",
+        "launcher"
+    ],
     "envs": [],
     "dirs": [],
     "author": {
@@ -26,7 +31,9 @@
             "url": ""
         }
     ],
-    "segment": {},
+    "segment": {
+        "destPath": "applications/standard/launcher"
+    },
     "component": {
         "name": "sysapp_launcher",
         "subsystem": "standard",
