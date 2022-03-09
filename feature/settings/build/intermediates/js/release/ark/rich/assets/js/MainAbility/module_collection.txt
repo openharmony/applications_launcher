@@ -1,1 +1,0 @@
-ohos.application.AbilityStage,ohos.application.Ability,ohos.ability.featureAbility,ohos.bytrace,ohos.fileio,ohos.settings,ohos.data.storage
