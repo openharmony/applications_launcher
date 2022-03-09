@@ -1,0 +1,2 @@
+(()=>{"use strict";var e;e={},Object.defineProperty(e,"__esModule",{value:!0}),globalThis.exports.default={onCreate(){console.info("Application onCreate")},onDestroy(){console.info("Application onDestroy")}}})();
+//# sourceMappingURL=_releaseMap/app.js.map

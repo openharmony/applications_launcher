@@ -9,7 +9,7 @@
       "value": "ETS_Empty Feature Ability"
     },
     {
-      "name": "intoSettings",
+      "name": "into_settings",
       "value": "桌面设置"
     },
     {
@@ -17,20 +17,24 @@
       "value": "布局"
     },
     {
-      "name": "layoutStyle",
+      "name": "layout_style",
       "value": "布局样式"
     },
     {
-      "name": "launcherLayout",
+      "name": "launcher_layout",
       "value": "桌面布局"
     },
     {
-      "name": "recentTasksSetting",
+      "name": "recent_tasks_setting",
       "value": "最近任务数"
     },
     {
       "name": "cancel",
       "value": "取消"
+    },
+    {
+      "name": "gesture_navigation_options",
+      "value": "手势导航开关"
     }
   ]
 }
