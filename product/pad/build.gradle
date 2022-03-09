@@ -14,9 +14,7 @@ ohos {
             }
         }
     }
-
 }
 
 dependencies {
 }
-
