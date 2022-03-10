@@ -1,0 +1,64 @@
+{
+  "string": [
+    {
+      "name": "layoutmanager_MainAbility",
+      "value": "layoutmanager_MainAbility"
+    },
+    {
+      "name": "mainability_description",
+      "value": "ETS_Empty Feature Ability"
+    },
+    {
+      "name": "into_settings",
+      "value": "Launcher settings"
+    },
+    {
+      "name": "add_blank_page",
+      "value": "Add Blank Page"
+    },
+    {
+      "name": "delete_blank_page",
+      "value": "Delete Blank Page"
+    },
+    {
+      "name": "uninstall",
+      "value": "Uninstall"
+    },
+    {
+      "name": "submit",
+      "value": "Submit"
+    },
+    {
+      "name": "cancel",
+      "value": "Cancel"
+    },
+    {
+      "name": "launcher_edit",
+      "value": "Launcher Edit"
+    },
+    {
+      "name": "rename_folder",
+      "value": "Rename"
+    },
+    {
+      "name": "delete_app",
+      "value": "Delete application"
+    },
+    {
+      "name": "add_form_to_desktop",
+      "value": "add service widget to desktop"
+    },
+    {
+      "name": "form_edit",
+      "value": "edit service widget"
+    },
+    {
+      "name": "add_to_desktop",
+      "value": "add to desktop"
+    },
+    {
+      "name": "add_form_to_desktop_more",
+      "value": "add service widget to desktop more"
+    }
+  ]
+}

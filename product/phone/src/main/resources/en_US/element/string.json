@@ -9,15 +9,15 @@
       "value": "ETS_Empty Feature Ability"
     },
     {
-      "name": "intoSettings",
+      "name": "into_settings",
       "value": "Launcher settings"
     },
     {
-      "name": "addBlankPage",
+      "name": "add_blank_page",
       "value": "Add Blank Page"
     },
     {
-      "name": "deleteBlankPage",
+      "name": "delete_blank_page",
       "value": "Delete Blank Page"
     },
     {
@@ -25,15 +25,15 @@
       "value": "Layout"
     },
     {
-      "name": "layoutStyle",
+      "name": "layout_style",
       "value": "Layout Style"
     },
     {
-      "name": "launcherLayout",
+      "name": "launcher_layout",
       "value": "Launcher Layout"
     },
     {
-      "name": "recentTasksSetting",
+      "name": "recent_tasks_setting",
       "value": "Recent Tasks Setting"
     },
     {
@@ -49,8 +49,120 @@
       "value": "Submit"
     },
     {
-      "name": "launcherEdit",
-      "value": "launcherEdit"
+      "name": "launcher_edit",
+      "value": "Launcher Edit"
+    },
+    {
+      "name": "uninstall_success",
+      "value": "Successfully uninstalled"
+    },
+    {
+      "name": "uninstall_failed",
+      "value": "Uninstallation failed"
+    },
+    {
+      "name": "disable_uninstall",
+      "value": "Disable uninstall"
+    },
+    {
+      "name": "duplicate_add",
+      "value": "Duplicate add to desktop"
+    },
+    {
+      "name": "no_space_for_add",
+      "value": "No Space for add"
+    },
+    {
+      "name": "delete_app",
+      "value": "Delete application"
+    },
+    {
+      "name": "disable_add_to_dock",
+      "value": "Disable add to dock"
+    },
+    {
+      "name": "disable_add_to_delete",
+      "value": "Disable add to delete"
+    },
+    {
+      "name": "add_form_to_desktop",
+      "value": "add service widget to desktop"
+    },
+    {
+      "name": "form_edit",
+      "value": "edit service widget"
+    },
+    {
+      "name": "app_center_menu_add_dock",
+      "value": "add to dock"
+    },
+    {
+      "name": "app_center_menu_add_desktop",
+      "value": "add to desktop"
+    },
+    {
+      "name": "disable_to_move",
+      "value": "disable to move"
+    },
+    {
+      "name": "add",
+      "value": "Add"
+    },
+    {
+      "name": "add_to",
+      "value": "Add to "
+    },
+    {
+      "name": "new_folder_name",
+      "value": "New folder"
+    },
+    {
+      "name": "rename_folder",
+      "value": "Rename"
+    },
+    {
+      "name": "cancel_dialog",
+      "value": "cancel"
+    },
+    {
+      "name": "confirm_dialog",
+      "value": "confirm"
+    },
+    {
+      "name": "add_to_desktop",
+      "value": "add to desktop"
+    },
+    {
+      "name": "add_form_to_desktop_more",
+      "value": "add service widget to desktop more"
+    },
+    {
+      "name": "app_center_menu_uninstall",
+      "value": "uninstall"
+    },
+    {
+      "name": "delete_form",
+      "value": "Delete service widget"
+    },
+    {
+      "name": "is_delete_form",
+      "value": "Whether to remove"
+    },
+    {
+      "name": "form",
+      "value": "service widget"
+    },
+    {
+      "name": "remove_form_dialog_content",
+      "value": "Long press the application to enter the service widget management page to add a new service widget"
+    },
+    {
+      "name": "gesture_navigation_options",
+      "value": "Gesture Navigation Options"
+    },
+    {
+      "name": "No_running_apps_recently",
+      "value": "no recently running applications"
     }
   ]
 }
