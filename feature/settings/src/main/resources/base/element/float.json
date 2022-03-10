@@ -1,0 +1,36 @@
+{
+  "float": [
+    {
+      "name": "layout_title_width",
+      "value": "812vp"
+    },
+    {
+      "name": "layout_title_font_size",
+      "value": "14vp"
+    },
+    {
+      "name": "top_bar_width",
+      "value": "812vp"
+    },
+    {
+      "name": "top_bar_font_size",
+      "value": "20vp"
+    },
+    {
+      "name": "top_bar_icon_size",
+      "value": "20vp"
+    },
+    {
+      "name": "setting_item_width",
+      "value": "772vp"
+    },
+    {
+      "name": "setting_item_title_width",
+      "value": "462vp"
+    },
+    {
+      "name": "setting_item_title_font_size",
+      "value": "16vp"
+    }
+  ]
+}
