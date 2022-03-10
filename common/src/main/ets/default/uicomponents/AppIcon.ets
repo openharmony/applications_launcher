@@ -13,29 +13,32 @@
  * limitations under the License.
  */
 
-import ResourceManager from '../manager/ResourceManager.ets';
-import StyleConstants from '../constants/StyleConstants.ets';
+import ResourceManager from '../manager/ResourceManager';
+import BadgeManager from '../manager/BadgeManager';
+import StyleConstants from '../constants/StyleConstants';
 
 @Component
 export default struct AppIcon {
   @Prop iconSize: number;
   @Prop @Watch("updateIcon") appIcon: string;
   @Prop bundleName: string;
-  @Prop labelId: string;
   @State icon: string = ' ';
-  @State useCache: boolean = true;
+  @State size: number = 1;
+  useCache: boolean = true;
+  @Prop @Watch("updateBadge") badgeNumber: number;
+  @State badge: number = 0;
+  badgeFontSize: number = StyleConstants.DEFAULT_BADGE_FONT_SIZE;
   private mResourceManager;
+  private mBadgeManager;
   private mDefaultAppIcon;
 
   public aboutToAppear(): void  {
     this.mDefaultAppIcon = StyleConstants.DEFAULT_ICON;
     this.icon = this.mDefaultAppIcon;
     this.mResourceManager = ResourceManager.getInstance();
-    if (this.useCache) {
-      this.mResourceManager.getAppIconWithCache(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
-    } else {
-      this.mResourceManager.getAppIcon(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
-    }
+    this.mBadgeManager = BadgeManager.getInstance();
+    this.updateIcon();
+    this.updateBadge();
   }
 
   public iconLoadCallback(image) {
@@ -43,18 +46,58 @@ export default struct AppIcon {
   }
 
   public updateIcon() {
-    if (this.useCache) {
-      this.mResourceManager.getAppIconWithCache(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
-    } else {
-      this.mResourceManager.getAppIcon(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    this.mResourceManager.getAppIconWithCache(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+  }
+
+  public badgeLoadCallback(badgeNumber) {
+    this.badge = badgeNumber;
+  }
+
+  public updateBadge() {
+    if (this.badgeNumber < 0) {
+      return;
     }
+    this.mBadgeManager.getBadgeByBundle(this.bundleName, this.badgeLoadCallback.bind(this));
   }
 
   build() {
     Column() {
-      Image(this.icon)
+      Badge({
+        count: this.badge,
+        maxCount: StyleConstants.MAX_BADGE_COUNT,
+        style: {
+          color: StyleConstants.DEFAULT_FONT_COLOR,
+          fontSize: this.badgeFontSize,
+          badgeSize: (this.badge > 0 ? StyleConstants.DEFAULT_BADGE_SIZE : 0),
+          badgeColor: Color.Red
+        }
+      }) {
+        Image(this.icon)
+      }
+      .width(this.iconSize)
+      .height(this.iconSize)
     }
+    .onHover((isHover: boolean) => {
+      console.info('Launcher AppIcon onHover isHover ' + isHover);
+      this.size = isHover ? 1.15 : 1
+    })
+    .onTouch((event: TouchEvent) => {
+      if (event.type === TouchType.Down) {
+        this.size = 0.9;
+      } else if (event.type === TouchType.Up) {
+        this.size = 1;
+      }
+    })
+    .onMouse((event: MouseEvent) => {
+      if (event.button == MouseButton.Left && event.action == MouseAction.Press) {
+        this.size = 0.9;
+      } else if (event.button == MouseButton.Left && event.action == MouseAction.Release) {
+        this.size = 1;
+      }
+    })
     .width(this.iconSize)
     .height(this.iconSize)
+    .scale({ x: this.size, y: this.size })
+    .animation({ duration: 100 })
   }
 }

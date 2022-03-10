@@ -1,12 +1,16 @@
 {
   "string": [
     {
-      "name": "common_MainAbility",
-      "value": "common_MainAbility"
+      "name": "display_full_parent",
+      "value": "100%"
     },
     {
-      "name": "mainability_description",
-      "value": "ETS_Empty Feature Ability"
+      "name": "layout_style",
+      "value": "Layout Style"
+    },
+    {
+      "name": "launcher_layout",
+      "value": "Launcher Layout"
     }
   ]
 }

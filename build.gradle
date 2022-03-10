@@ -2,9 +2,9 @@
 apply plugin: 'com.huawei.ohos.app'
 
 ohos {
-    compileSdkVersion 7
+    compileSdkVersion 8
     defaultConfig {
-        compatibleSdkVersion 6
+        compatibleSdkVersion 8
     }
     supportSystem "standard"
 }
@@ -17,13 +17,9 @@ buildscript {
         maven {
             url 'https://developer.huawei.com/repo/'
         }
-        maven {
-            url 'http://repo.ark.tools.huawei.com/artifactory/maven-public/'
-        }
-        jcenter()
     }
     dependencies {
-        classpath 'com.huawei.ohos:hap:3.0.3.2'
+        classpath 'com.huawei.ohos:hap:3.0.5.2'
     }
 }
 
@@ -35,6 +31,5 @@ allprojects {
         maven {
             url 'https://developer.huawei.com/repo/'
         }
-        jcenter()
     }
 }

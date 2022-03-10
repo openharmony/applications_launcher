@@ -13,5 +13,8 @@
  * limitations under the License.
  */
 
-include ':phone', ':common', ':feature:recents', ':feature:settings', ':feature:layoutmanager'
+include ':phone', 'pad', ':common', ':feature:recents', ':feature:settings', ':feature:pagedesktop',
+        ':feature:appcenter', ':feature:smartdock', ':feature:bigfolder', ':feature:form', ':feature:gesturenavigation',
+        ':feature:launcherlayout'
 project(':phone').projectDir = new File('./product/phone')
+project(':pad').projectDir = new File('./product/pad')
