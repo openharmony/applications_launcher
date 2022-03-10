@@ -9,7 +9,7 @@
       "value": "ETS_Empty Feature Ability"
     },
     {
-      "name": "intoSettings",
+      "name": "into_settings",
       "value": "Launcher settings"
     },
     {
@@ -17,20 +17,24 @@
       "value": "Layout"
     },
     {
-      "name": "layoutStyle",
+      "name": "layout_style",
       "value": "Layout Style"
     },
     {
-      "name": "launcherLayout",
+      "name": "launcher_layout",
       "value": "Launcher Layout"
     },
     {
-      "name": "recentTasksSetting",
+      "name": "recent_tasks_setting",
       "value": "Recent Tasks Setting"
     },
     {
       "name": "cancel",
       "value": "Cancel"
+    },
+    {
+      "name": "gesture_navigation_options",
+      "value": "Gesture Navigation Options"
     }
   ]
 }

@@ -15,7 +15,7 @@
     ],
     "distro": {
       "deliveryWithInstall": true,
-      "moduleName": "recents",
+      "moduleName": "smartdock",
       "moduleType": "har"
     }
   }
