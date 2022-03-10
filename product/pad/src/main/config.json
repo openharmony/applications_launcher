@@ -18,7 +18,7 @@
     ],
     "distro": {
       "deliveryWithInstall": true,
-      "moduleName": "phone",
+      "moduleName": "pad",
       "moduleType": "entry",
       "installationFree": true
     },
@@ -52,6 +52,16 @@
             }
           ]
         }
+      },
+      {
+        "visible": false,
+        "srcPath": "CalleeAbility",
+        "name": ".CalleeAbility",
+        "srcLanguage": "ets",
+        "description": "$string:calleeability_description",
+        "label": "$string:entry_CalleeAbility",
+        "type": "page",
+        "launchType": "standard"
       }
     ],
     "js": [
@@ -66,7 +76,21 @@
         ],
         "name": ".MainAbility",
         "window": {
-          "designWidth": 720,
+          "designWidth": 1280,
+          "autoDesignWidth": false
+        }
+      },
+      {
+        "mode": {
+          "syntax": "ets",
+          "type": "pageAbility"
+        },
+        "pages": [
+          "pages/EmptyPage"
+        ],
+        "name": ".CalleeAbility",
+        "window": {
+          "designWidth": 1280,
           "autoDesignWidth": false
         }
       }

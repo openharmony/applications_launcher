@@ -1,0 +1,176 @@
+{
+  "string": [
+    {
+      "name": "entry_MainAbility",
+      "value": "pad"
+    },
+    {
+      "name": "entry_CalleeAbility",
+      "value": "pad callee"
+    },
+    {
+      "name": "mainability_description",
+      "value": "ETS_Empty Feature Ability"
+    },
+    {
+      "name": "calleeability_description",
+      "value": "ETS_Empty Callee Ability"
+    },
+    {
+      "name": "dock_all_app_entry",
+      "value": "全部应用"
+    },
+    {
+      "name": "dock_recents_entry",
+      "value": "最近任务"
+    },
+    {
+      "name": "uninstall_success",
+      "value": "卸载成功"
+    },
+    {
+      "name": "uninstall_failed",
+      "value": "卸载失败"
+    },
+    {
+      "name": "disable_uninstall",
+      "value": "禁止卸载"
+    },
+    {
+      "name": "add_form_to_desktop",
+      "value": "服务卡片"
+    },
+    {
+      "name": "form_edit",
+      "value": "编辑"
+    },
+    {
+      "name": "app_center_menu_add_dock",
+      "value": "添加到快捷栏"
+    },
+    {
+      "name": "app_center_menu_add_desktop",
+      "value": "添加到工作区"
+    },
+    {
+      "name": "app_center_menu_uninstall",
+      "value": "卸载"
+    },
+    {
+      "name": "display_full_parent",
+      "value": "100%"
+    },
+    {
+      "name": "uninstall",
+      "value": "卸载"
+    },
+    {
+      "name": "delete",
+      "value": "移除"
+    },
+    {
+      "name": "submit",
+      "value": "确认"
+    },
+    {
+      "name": "cancel",
+      "value": "取消"
+    },
+    {
+      "name": "disable_add_to_dock",
+      "value": "禁止添加"
+    },
+    {
+      "name": "into_settings",
+      "value": "桌面设置"
+    },
+    {
+      "name": "add_blank_page",
+      "value": "添加空白页"
+    },
+    {
+      "name": "delete_blank_page",
+      "value": "删除空白页"
+    },
+    {
+      "name": "launcher_edit",
+      "value": "桌面编辑"
+    },
+    {
+      "name": "duplicate_add",
+      "value": "重复添加"
+    },
+    {
+      "name": "no_space_for_add",
+      "value": "没有足够空间"
+    },
+    {
+      "name": "delete_app",
+      "value": "移除"
+    },
+    {
+      "name": "disable_add_to_delete",
+      "value": "禁止移除"
+    },
+    {
+      "name": "disable_to_move",
+      "value": "禁止移动"
+    },
+    {
+      "name": "add",
+      "value": "添加"
+    },
+    {
+      "name": "add_to",
+      "value": "添加到"
+    },
+    {
+      "name": "new_folder_name",
+      "value": "新建文件夹"
+    },
+    {
+      "name": "rename_folder",
+      "value": "重命名"
+    },
+    {
+      "name": "cancel_dialog",
+      "value": "取消"
+    },
+    {
+      "name": "confirm_dialog",
+      "value": "确认"
+    },
+    {
+      "name": "add_to_desktop",
+      "value": "添加到桌面"
+    },
+    {
+      "name": "add_form_to_desktop_more",
+      "value": "更多服务卡片"
+    },
+    {
+      "name": "delete_form",
+      "value": "移除"
+    },
+    {
+      "name": "is_delete_form",
+      "value": "是否移除"
+    },
+    {
+      "name": "form",
+      "value": "卡片"
+    },
+    {
+      "name": "remove_form_dialog_content",
+      "value": "通过长按应用进入“卡片管理页”界面可以新添加"
+    },
+    {
+      "name": "gesture_navigation_options",
+      "value": "手势导航开关"
+    },
+    {
+      "name": "No_running_apps_recently",
+      "value": "最近无运行应用"
+    }
+  ]
+}

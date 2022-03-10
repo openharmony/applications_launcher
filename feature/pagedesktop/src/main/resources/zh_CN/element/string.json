@@ -1,0 +1,64 @@
+{
+  "string": [
+    {
+      "name": "layoutmanager_MainAbility",
+      "value": "layoutmanager_MainAbility"
+    },
+    {
+      "name": "mainability_description",
+      "value": "ETS_Empty Feature Ability"
+    },
+    {
+      "name": "into_settings",
+      "value": "桌面设置"
+    },
+    {
+      "name": "add_blank_page",
+      "value": "添加空白页"
+    },
+    {
+      "name": "delete_blank_page",
+      "value": "删除空白页"
+    },
+    {
+      "name": "uninstall",
+      "value": "卸载"
+    },
+    {
+      "name": "submit",
+      "value": "确认"
+    },
+    {
+      "name": "cancel",
+      "value": "取消"
+    },
+    {
+      "name": "launcher_edit",
+      "value": "桌面编辑"
+    },
+    {
+      "name": "rename_folder",
+      "value": "重命名"
+    },
+    {
+      "name": "delete_app",
+      "value": "移除"
+    },
+    {
+      "name": "add_form_to_desktop",
+      "value": "服务卡片"
+    },
+    {
+      "name": "form_edit",
+      "value": "编辑"
+    },
+    {
+      "name": "add_to_desktop",
+      "value": "添加到桌面"
+    },
+    {
+      "name": "add_form_to_desktop_more",
+      "value": "更多服务卡片"
+    }
+  ]
+}
