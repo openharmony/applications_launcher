@@ -74,6 +74,13 @@
                <filteritem type="filepath" name="feature/pagedesktop/src/main/resources/base/media/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="feature/settings/src/main/resources/base/media/.*.svg" desc="self developed image"/>
                <filteritem type="filepath" name="common/src/main/resources/base/media/.*.png" desc="self developed image"/>
+               <filteritem type="filepath" name="AppScope/resources/base/media/.*.png" desc="self developed image"/>
+            </filefilter>
+            <filefilter name="copyrightPolicyFilter" desc="Filters for copyright header policies">
+                <filteritem type="filename" name=".*\.json.*" desc="json file"/>
+            </filefilter>
+            <filefilter name="licenseFileNamePolicyFilter" desc="Filters for LICENSE file policies">
+                <filteritem type="filename" name=".*\.json.*" desc="json file"/>
             </filefilter>
         </filefilterlist>
     </oatconfig>
