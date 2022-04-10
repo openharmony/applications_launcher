@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,6 +18,9 @@ import StyleConstants from '../constants/StyleConstants';
 
 const TAG = 'Recent-RecentMissionAppIcon';
 
+/**
+ * App icon component for recent missions.
+ */
 @Component
 export default struct RecentMissionAppIcon {
   @Prop iconSize: number;
@@ -29,19 +32,28 @@ export default struct RecentMissionAppIcon {
   private mResourceManager;
   private mDefaultAppIcon;
 
-  public aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mDefaultAppIcon = StyleConstants.DEFAULT_APP_ICON_IMAGE;
     this.icon = this.mDefaultAppIcon;
     this.mResourceManager = ResourceManager.getInstance();
     this.updateIcon();
   }
 
-  public iconLoadCallback(image) {
+  /**
+   * The callback of recent missions app icon.
+   *
+   * @param {string} image - the value get from ResourceManager
+   */
+  iconLoadCallback(image): void {
     this.icon = image;
   }
 
-  public updateIcon() {
-    this.mResourceManager.getAppIconWithCache(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+  /**
+   * Update the app icon of recent missions.
+   */
+  updateIcon(): void {
+    this.mResourceManager.getAppIconWithCache(this.appIcon,
+      this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
   }
 
   build() {

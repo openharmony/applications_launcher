@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -55,7 +55,7 @@ export default class FormListInfoCacheManager {
    * @param {string} key - key of the cache map
    * @param {object} value - value of the cache map
    */
-  setCache(key, value) {
+  setCache(key: string, value) {
     console.info('Launcher FormListInfoCacheManager setCache key = ' + key + ' value = ' + value);
     this.lruCache.putCache(key, value);
   }

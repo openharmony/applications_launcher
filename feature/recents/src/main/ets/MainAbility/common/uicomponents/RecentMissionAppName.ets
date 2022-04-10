@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,6 +17,9 @@ import StyleConstants from '../constants/StyleConstants';
 
 const TAG = 'Recent-RecentMissionAppName';
 
+/**
+ * App name component for recent missions.
+ */
 @Component
 export default struct RecentMissionAppName {
   @Prop @Watch("updateName") appName: string;
@@ -27,18 +30,27 @@ export default struct RecentMissionAppName {
   @Prop labelId: string;
   private mResourceManager;
 
-  public aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateName();
   }
 
-  public appNameLoadCallback(name: string) {
+  /**
+   * The callback of recent missions app name.
+   *
+   * @param {string} name - the value get from ResourceManager
+   */
+  appNameLoadCallback(name: string): void {
     this.name = name;
   }
 
-  public updateName() {
+  /**
+   * Update the app name of recent missions.
+   */
+  updateName(): void {
     if (this.bundleName && this.bundleName.length > 0) {
-      this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
+      this.mResourceManager.getAppNameWithCache(this.labelId,
+        this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
     }
   }
 

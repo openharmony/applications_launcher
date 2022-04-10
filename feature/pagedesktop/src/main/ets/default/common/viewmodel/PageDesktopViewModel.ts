@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,13 +33,15 @@ import BadgeManager from '../../../../../../../../common/src/main/ets/default/ma
 import FormManager from '../../../../../../../../common/src/main/ets/default/manager/FormManager';
 import FormListInfoCacheManager from '../../../../../../../../common/src/main/ets/default/cache/FormListInfoCacheManager';
 import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
+import windowManager from '../../../../../../../../common/src/main/ets/default/manager/WindowManager';
+import CheckEmptyUtils from '../../../../../../../../common/src/main/ets/default/utils/CheckEmptyUtils';
+import ResourceManager from '../../../../../../../../common/src/main/ets/default/manager/ResourceManager';
 
 const TAG = 'PageDesktopViewModel';
 const KEY_APP_LIST = 'appListInfo';
 const KEY_FORM_LIST = 'formListInfo';
 
 export default class PageDesktopViewModel extends BaseAppPresenter {
-  private static sPageDesktopViewModel: PageDesktopViewModel = null;
   private readonly pageDesktopStyleConfig: PageDesktopGridStyleConfig = null;
   private readonly formDetailLayoutConfig: FormDetailLayoutConfig = null;
   private readonly mSettingsModel: SettingsModel;
@@ -52,13 +54,33 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   private mBundleInfoList;
   private mHideBundleInfoList = new Array<any>();
   private mGridConfig;
-  private pageIndex = 0;
+  private mPageIndex = 0;
   private mGridAppsInfos;
   private readonly mPageCoordinateData = {
     gridXAxis: [],
     gridYAxis: []
   };
   private isPad = false;
+  private desktopSwiperController: SwiperController;
+
+  async showFormManager(params) {
+    Log.showInfo(TAG, `showFormManager params: ${JSON.stringify(params)}`);
+    globalThis.createWindowWithName(windowManager.FORM_MANAGER_WINDOW_NAME, windowManager.FORM_MANAGER_RANK);
+  }
+  
+  setSwiperController(swiperController: SwiperController) {
+    this.desktopSwiperController = swiperController;
+  }
+
+  showNext() {
+    Log.showInfo(TAG, 'show next page')
+    this.desktopSwiperController?.showNext();
+  }
+
+  showPrevious() {
+    Log.showInfo(TAG, 'show previous page')
+    this.desktopSwiperController?.showPrevious();
+  }
 
   private readonly mLocalEventListener = {
     onReceiveEvent: (event, params) => {
@@ -66,6 +88,8 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       if (!this.isPad) {
         if (event === EventConstants.EVENT_BADGE_UPDATE) {
           this.updateBadgeNumber(params);
+        } else if (event === EventConstants.EVENT_REQUEST_JUMP_TO_FORM_VIEW) {
+          this.showFormManager(params);
         } else {
           this.mHideBundleInfoList = params;
           this.getGridList();
@@ -77,6 +101,8 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
           this.updateBadgeNumber(params);
         } else if (event === EventConstants.EVENT_REQUEST_FORM_ITEM_ADD) {
           this.addFormToDesktop(params);
+        } else if (event === EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE) {
+          this.deleteAppItem(params)
         }
       }
     }
@@ -105,7 +131,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       FeatureConstants.FEATURE_NAME);
     this.formDetailLayoutConfig = LayoutConfigManager.getStyleConfig(FormDetailLayoutConfig.FORM_LAYOUT_INFO,
       FeatureConstants.FEATURE_NAME);
-    AppStorage.SetOrCreate('pageIndex', this.pageIndex);
+    AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
   }
 
   /**
@@ -114,10 +140,10 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     * @return PageDesktopViewModel
    */
   static getInstance(): PageDesktopViewModel {
-    if (PageDesktopViewModel.sPageDesktopViewModel == null) {
-      PageDesktopViewModel.sPageDesktopViewModel = new PageDesktopViewModel();
+    if (globalThis.PageDesktopViewModel == null) {
+      globalThis.PageDesktopViewModel = new PageDesktopViewModel();
     }
-    return PageDesktopViewModel.sPageDesktopViewModel;
+    return globalThis.PageDesktopViewModel;
   }
 
   /**
@@ -138,6 +164,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     console.info('Launcher PageDesktopViewModel onPageDesktopDestroy');
     this.mAppModel.unregisterAppListEvent();
     this.mPageDesktopModel.unregisterEventListener(this.mLocalEventListener);
+    this.mFormModel.unregisterEventListener(this.mLocalEventListener);
   }
 
   /**
@@ -170,13 +197,14 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     if (this.isPad) {
       console.info('Launcher PageDesktopViewModel getAppList info start');
       const info = this.mSettingsModel.getAppListInfo();
-      if (this.ifInfoIsNull(info)) {
+      if (!this.mSettingsModel.isAppListInfoExit() && this.ifInfoIsNull(info)) {
         for (const i in tempAppInfoList) {
           info.push(tempAppInfoList[i]);
         }
       }
       for (const i in info) {
         let hasUninstalled = true;
+        await ResourceManager.getInstance().updateIconCache(info[i].appIconId, info[i].bundleName);
         for (const j in tempAppInfoList) {
           if (info[i].bundleName == tempAppInfoList[j].bundleName) {
             hasUninstalled = false;
@@ -212,6 +240,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       this.mSettingsModel.setAppListInfo(tempAppInfoList);
     }
     console.info('Launcher PageDesktopViewModel getAppList:' + tempAppInfoList.length);
+    AppStorage.SetOrCreate('isDesktopLoadFinished', true);
     return tempAppInfoList;
   }
 
@@ -236,12 +265,13 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     const layoutInfo = gridLayoutInfo.layoutInfo;
     for (let i = 0; i < layoutInfo.length; i++) {
       if (layoutInfo[i].type == CommonConstants.TYPE_APP && layoutInfo[i].bundleName == bundleName) {
+        const page = layoutInfo[i].page;
         gridLayoutInfo.layoutInfo.splice(i, 1);
+        this.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
         this.setLayoutInfo(gridLayoutInfo);
         break;
       }
     }
-
     this.getGridList();
   }
 
@@ -514,6 +544,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     }
     appInfo.appGridInfo = this.integrateSwiper(appListInfo);
     console.log('Launcher PageDesktopViewModel pagingFiltering appListInfo length:' + appListInfo.length);
+    AppStorage.SetOrCreate('selectDesktopAppItem', '');
     AppStorage.SetOrCreate(KEY_APP_LIST, appInfo);
   }
 
@@ -554,27 +585,31 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   }
 
   ifLayoutRationality = (info) => {
-    this.mGridConfig = this.getGridConfig();
-    const column = this.mGridConfig.column;
-    const row = this.mGridConfig.row;
     //verify whether the info is null.
     if (this.ifInfoIsNull(info)) {
       return false;
     }
     const layoutDescription = info.layoutDescription;
+
     //verify whether the layoutDescription is different.
+    this.mGridConfig = this.getGridConfig();
+    const column = this.mGridConfig.column;
+    const row = this.mGridConfig.row;
     if (this.ifDescriptionIsDiffrent(layoutDescription, row, column)) {
       return false;
     }
     const layoutInfo = info.layoutInfo;
+
     //verify whether the layoutInfo's row and column is more than standard.
     if (this.ifColumnOrRowAreBigger(layoutInfo, row, column)) {
       return false;
     }
+
     //verify whether the layoutInfo's position is duplicated.
     if (this.ifDuplicatePosition(layoutInfo)) {
       return false;
     }
+
     //verify whether the layoutInfo's bundleName is duplicated.
     if (this.ifDuplicateBundleName(layoutInfo)) {
       return false;
@@ -632,11 +667,11 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   }
 
   ifDuplicateBundleName(layoutInfo) {
-    const count = {};
+    const count = [];
     for (let i = 0; i < layoutInfo.length; i++) {
-      if (count[layoutInfo[i].bundleName] == undefined || count[layoutInfo[i].bundleName] == null || count[layoutInfo[i].bundleName] == '') {
+      if (CheckEmptyUtils.isEmpty(count[layoutInfo[i].bundleName])) {
         count[layoutInfo[i].bundleName] = 0;
-      } else if (layoutInfo[i].type == CommonConstants.TYPE_APP && ++ count[layoutInfo[i].bundleName] > 1) {
+      } else if (layoutInfo[i].type == CommonConstants.TYPE_APP) {
         return true;
       }
     }
@@ -703,25 +738,23 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     const column = info.layoutDescription.column;
     // current page has space
     let isNeedNewPage = true;
-    const max = pageCount - 1 > this.pageIndex ? this.pageIndex + 1 : pageCount - 1;
-    for (let i = this.pageIndex; i <= max; i++) {
+    const max = pageCount - 1 > this.mPageIndex ? this.mPageIndex + 1 : pageCount - 1;
+    pageCycle: for (let i = this.mPageIndex; i <= max; i++) {
       for (let y = 0; y < row; y++) {
         for (let x = 0; x < column; x++) {
-          if (!isNeedNewPage) {
-            break;
-          }
           if (this.isPositionValid(info, item, i, x, y)) {
             console.log('updateCardItemLayoutInfo isPositionValid: x:' + x + ' y: '+ y + ' page: '+ i);
             isNeedNewPage = false;
             item.page = i;
             item.column = x;
             item.row = y;
+            break pageCycle;
           }
         }
       }
     }
     if (isNeedNewPage) {
-      item.page = this.pageIndex + 1;
+      item.page = this.mPageIndex + 1;
       item.column = 0;
       item.row = 0;
     }
@@ -775,8 +808,8 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     const column = info.layoutDescription.column;
     // current page has space
     let isNeedNewPage = true;
-    const max = pageCount - 1 > this.pageIndex ? this.pageIndex + 1 : pageCount - 1;
-    for (let i = this.pageIndex; i <= this.pageIndex + 1; i++) {
+    const max = pageCount - 1 > this.mPageIndex ? this.mPageIndex + 1 : pageCount - 1;
+    for (let i = this.mPageIndex; i <= this.mPageIndex + 1; i++) {
       for (let y = 0; y < row; y++) {
         for (let x = 0; x < column; x++) {
           if (!isNeedNewPage) {
@@ -793,7 +826,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       }
     }
     if (isNeedNewPage) {
-      item.page = this.pageIndex + 1;
+      item.page = this.mPageIndex + 1;
       item.column = 0;
       item.row = 0;
     }
@@ -811,10 +844,10 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         if (!isNeedNewPage) {
           break;
         }
-        if (this.isPositionValid(info, item, this.pageIndex, x, y)) {
+        if (this.isPositionValid(info, item, this.mPageIndex, x, y)) {
           console.log('updateAppItemFromFolder isPositionValid' + x + ' y '+ y);
           isNeedNewPage = false;
-          item.page = this.pageIndex;
+          item.page = this.mPageIndex;
           item.column = x;
           item.row = y;
         }
@@ -942,14 +975,6 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     this.jumpToSetting();
   }
 
-
-  /**
-   * Longpress event for launcher.
-   */
-  onPageLongPress() {
-    AppStorage.SetOrCreate('blankPageBtnText', this.getBlankPageBtnStr());
-  }
-
   /**
    * Get strings for addBlankPageButton.
    *
@@ -960,26 +985,39 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   }
 
   /**
+   * Get strings for deleteBlankPageButton.
+   *
+   * @return {string} AddBlankPageButton Strings.
+   */
+  getBlankPageBtnIcon() {
+    return this.isBlankPage() ? '/common/pics/ic_public_delete.svg' : '/common/pics/ic_public_add_black.svg';
+  }
+
+  /**
    * Changing the Desktop Page Number.
    *
-   * @param idx: Page number
+   * @param newPageIndex: Page number
    */
-  changeIndexOnly(idx) {
-    this.pageIndex = idx;
+  changeIndexOnly(newPageIndex: number) {
+    this.mPageIndex = newPageIndex;
+    this.updateMenuId();
   }
 
   /**
    * set pageIndex to appStorage.
    */
   setPageIndex() {
-    AppStorage.SetOrCreate('pageIndex', this.pageIndex);
+    AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
   }
 
   isBlankPage() {
-    if (this.mGridAppsInfos[this.pageIndex].length == undefined) {
+    console.info(`isBlankPage ${this.mPageIndex}`);
+    if (CheckEmptyUtils.isEmpty(this.mGridAppsInfos) || CheckEmptyUtils.isEmpty(this.mGridAppsInfos[this.mPageIndex])
+      || CheckEmptyUtils.isEmpty(this.mGridAppsInfos[this.mPageIndex].length)) {
       return true;
     }
-    if (this.mGridAppsInfos[this.pageIndex].length === 0) {
+    console.info(`isBlankPage ${this.mGridAppsInfos[this.mPageIndex].length}`);
+    if (this.mGridAppsInfos[this.mPageIndex].length === 0) {
       return true;
     }
     return false;
@@ -991,15 +1029,16 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * @param idx: Page number
    */
   changeIndex(idx) {
-    this.pageIndex = idx;
-    AppStorage.SetOrCreate('pageIndex', this.pageIndex);
+    this.mPageIndex = idx;
+    console.info('Launcher PageDesktopViewModel changeIndex ' + idx);
+    AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
   }
 
   /**
    * Get the Desktop Page Number.
    */
   getIndex() {
-    return this.pageIndex;
+    return this.mPageIndex;
   }
 
   /**
@@ -1017,12 +1056,12 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * Add a blank page.
    */
   addBlankPage() {
-    console.info('Launcher PageDesktopViewModel addBlankPage');
+    console.info('Launcher PageDesktopViewModel addBlankPage' + this.mPageIndex);
     const allPageCount = this.getLayoutInfo().layoutDescription.pageCount + 1;
     this.setGridPageCount(allPageCount);
     this.pagingFiltering();
-    this.pageIndex = allPageCount - 1;
-    AppStorage.SetOrCreate('pageIndex', this.pageIndex);
+    this.mPageIndex = allPageCount - 1;
+    AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
   }
 
   /**
@@ -1036,6 +1075,13 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
 
   setLayoutInfo(layoutInfo) {
     this.mSettingsModel.setLayoutInfo(layoutInfo);
+    this.updateMenuId();
+  }
+
+  private updateMenuId() {
+    let currentId: number = AppStorage.Get('menuId') as number ?? 0;
+    currentId++;
+    AppStorage.SetOrCreate('menuId', currentId % 100);
   }
 
   /**
@@ -1062,10 +1108,10 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * Delete the choosen blank page.
    */
   private deleteBlankPage() {
-    console.info('Launcher PageDesktopViewModel deleteBlankPage');
-    this.deleteGridPage(this.pageIndex);
-    this.pageIndex = this.pageIndex - 1;
-    AppStorage.SetOrCreate('pageIndex', this.pageIndex);
+    console.info('Launcher PageDesktopViewModel deleteBlankPage ' + this.mPageIndex);
+    this.deleteGridPage(this.mPageIndex);
+    this.mPageIndex = this.mPageIndex - 1;
+    AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
     this.setGridPageCount(this.getLayoutInfo().layoutDescription.pageCount - 1);
     this.pagingFiltering();
   }
@@ -1104,8 +1150,8 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     return this.isPad;
   }
 
-  buildMenuInfoList(appInfo, dialog, formDialog?) {
-    const menuInfoList = new Array<MenuInfo>();
+  buildMenuInfoList(appInfo, dialog, formDialog?, folderCallback?) {
+    let menuInfoList = new Array<MenuInfo>();
     const shortcutInfo = this.mAppModel.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
       let Menu = null;
@@ -1123,28 +1169,40 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         menuInfoList.push(Menu);
       });
     }
+
+    let open = new MenuInfo();
+    open.menuType = CommonConstants.MENU_TYPE_FIXED;
+    open.menuImgSrc = "/common/pics/ic_public_add_norm.svg";
+    open.menuText = $r('app.string.app_menu_open');
+    open.onMenuClick = () => {
+      this.jumpTo(appInfo.abilityName, appInfo.bundleName);
+    };
+    menuInfoList.push(open);
+
     const formInfoList = this.mFormModel.getAppItemFormInfo(appInfo.bundleName);
-    if (formInfoList.length > 0) {
-      const addFormToDeskTopMenu = new MenuInfo();
+    if (!CheckEmptyUtils.isEmptyArr(formInfoList)) {
+      let addFormToDeskTopMenu = new MenuInfo();
       addFormToDeskTopMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
       addFormToDeskTopMenu.menuImgSrc = '/common/pics/ic_public_app.svg';
       addFormToDeskTopMenu.menuText = $r('app.string.add_form_to_desktop');
       addFormToDeskTopMenu.onMenuClick = () => {
         console.info('Launcher click menu item into add form to desktop view');
+        const appName = this.getAppName(appInfo.appLabelId + appInfo.bundleName);
+        console.info(`Launcher PageDesktopViewModel buildMenuInfoList appName: ${appName}`);
+        if (appName != null) {
+          appInfo.appName = appName;
+        }
+        AppStorage.SetOrCreate('formAppInfo', appInfo);
+        console.info('Launcher AppStorage.SetOrCreate formAppInfo');
         if (!this.isPad) {
           this.jumpToFormManagerView(appInfo);
         } else {
-          const appName = this.getAppName(appInfo.appLabelId + appInfo.bundleName);
-          console.info(`Launcher PageDesktopViewModel buildMenuInfoList appName: ${appName}`);
-          if (appName != null) {
-            appInfo.appName = appName;
-          }
-          AppStorage.SetOrCreate('formAppInfo', appInfo);
           formDialog.open();
         }
       };
       menuInfoList.push(addFormToDeskTopMenu);
     }
+
     if (this.isPad) {
       const addToDockMenu = new MenuInfo();
       addToDockMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
@@ -1161,6 +1219,20 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       };
       menuInfoList.push(addToDockMenu);
     }
+
+    if (folderCallback) {
+      const moveOutMenu = new MenuInfo();
+      moveOutMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
+      moveOutMenu.menuImgSrc = '/common/pics/ic_public_remove.svg';
+      moveOutMenu.menuText = $r('app.string.remove_app_from_folder');
+      moveOutMenu.onMenuClick = () => {
+        console.info('Launcher click menu item remove app from folder');
+        // remove app from folder
+        folderCallback(appInfo);
+      };
+      menuInfoList.push(moveOutMenu);
+    }
+
     const uninstallMenu = new MenuInfo();
     uninstallMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
     uninstallMenu.menuImgSrc = this.isPad ? '/common/pics/ic_public_remove.svg' : '/common/pics/ic_public_delete.svg';
@@ -1312,6 +1384,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * @param bundleName bundle name
    */
   onAppDoubleClick(abilityName, bundleName) {
+    AppStorage.SetOrCreate('selectDesktopAppItem', '');
     this.jumpTo(abilityName, bundleName);
   }
 
@@ -1357,7 +1430,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         gridLayoutInfo.layoutDescription.pageCount = gridLayoutInfo.layoutDescription.pageCount + 1;
         for (let index = 0; index < gridLayoutInfo.layoutInfo.length; index++) {
           if (gridLayoutInfo.layoutInfo[index].page > this.getIndex()) {
-            gridLayoutInfo.layoutInfo[index].page ++;
+            gridLayoutInfo.layoutInfo[index].page++;
           }
         }
       }
@@ -1380,4 +1453,39 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     return false;
   }
 
+  /**
+   * delete blank page where no item in this page
+   *
+   * @param page
+   */
+  deleteBlankPageByPageNo(page): void {
+    const layoutInfo = this.getLayoutInfo();
+    const deleteFlag = this.deleteBlankPageFromLayoutInfo(layoutInfo, page);
+    if (!deleteFlag) {
+      return;
+    }
+    this.setLayoutInfo(layoutInfo);
+    this.pagingFiltering();
+  }
+
+  /**
+   * delete blank page from layoutInfo
+   *
+   * @param layoutInfo
+   * @param page
+   */
+  deleteBlankPageFromLayoutInfo(layoutInfo, page): boolean {
+    for (let i = 0; i < layoutInfo.layoutInfo.length; i++) {
+      if (layoutInfo.layoutInfo[i].page == page) {
+        return false;
+      }
+    }
+    layoutInfo.layoutDescription.pageCount--;
+    for (let m = 0; m < layoutInfo.layoutInfo.length; m++) {
+      if (layoutInfo.layoutInfo[m].page > page) {
+        layoutInfo.layoutInfo[m].page--;
+      }
+    }
+    return true;
+  }
 }

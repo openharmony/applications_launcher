@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -50,7 +50,7 @@ export default class DiskLruCache {
    * @param {string} key - key of the cache map
    * @return {object} - target cache object
    */
-  getCache(key) {
+  getCache(key: string) {
     if (this.cache.has(key)) {
       // exist and update
       const temp = this.cache.get(key);
@@ -71,7 +71,7 @@ export default class DiskLruCache {
    * @param {string} key - key of the cache map
    * @param {object} value - value of the cache map
    */
-  putCache(key, value) {
+  putCache(key: string, value: object | string) {
     if (this.cache.has(key)) {
       // exist and update
       this.cache.delete(key);
@@ -93,7 +93,7 @@ export default class DiskLruCache {
    *
    * @param {string} key - key of the cache map
    */
-  remove(key) {
+  remove(key: string) {
     this.cache.delete(key);
     DiskLruFileUtils.removeFile(key);
   }

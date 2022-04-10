@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,8 +26,6 @@ export default class AppListStyleConfig extends ILayoutConfig {
    * list style config
    */
   static APP_LIST_STYLE_CONFIG = 'AppListStyleConfig';
-
-  private static sInstance: AppListStyleConfig = null;
 
   /**
    * width of item
@@ -109,6 +107,11 @@ export default class AppListStyleConfig extends ILayoutConfig {
    */
   mIconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
 
+  /**
+  * list item offset
+  */
+  mItemOffset: {} = {x: 0, y: 0}
+
   protected constructor() {
     super();
   }
@@ -117,11 +120,11 @@ export default class AppListStyleConfig extends ILayoutConfig {
    * get instance of list Style config
    */
   static getInstance() {
-    if (AppListStyleConfig.sInstance == null) {
-      AppListStyleConfig.sInstance = new AppListStyleConfig();
-      AppListStyleConfig.sInstance.initConfig();
+    if (globalThis.AppListStyleConfig == null) {
+      globalThis.AppListStyleConfig = new AppListStyleConfig();
+      globalThis.AppListStyleConfig.initConfig();
     }
-    return AppListStyleConfig.sInstance;
+    return globalThis.AppListStyleConfig;
   }
 
   initConfig(): void {

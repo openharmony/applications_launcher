@@ -15,6 +15,7 @@
 
 import Input from '@ohos.multimodalInput.inputEventClient';
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
+import windowManager from '../../../../../../../common/src/main/ets/default/manager/WindowManager';
 import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
 
 const TAG = 'GestureNavigationExecutors';
@@ -66,12 +67,11 @@ export default class GestureNavigationExecutors {
    */
   touchEventCallback(event: any): boolean {
     Log.showInfo(TAG, 'touchEventCallback enter');
-    const finger_num = event.touches.length;
-    const startXPosition = event.touches[0].globalX;
-    const startYPosition = event.touches[0].globalY;
-    if (finger_num != 1) {
+    if (event.touches.length != 1) {
       return false;
     }
+    const startXPosition = event.touches[0].globalX;
+    const startYPosition = event.touches[0].globalY;
     if (event.type == 'down' && this.isSpecifiesRegion(startXPosition, startYPosition)) {
       this.initializationParameters();
       this.startEventPosition = this.preEventPosition = {
@@ -193,7 +193,7 @@ export default class GestureNavigationExecutors {
 
   private recentEventCall() {
     Log.showInfo(TAG, 'recentEventCall recentEvent start');
-    globalThis.createRecentWindow();
+    globalThis.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
   }
 
   private isRecentsViewShowOfDistanceLimit(eventY: number) {

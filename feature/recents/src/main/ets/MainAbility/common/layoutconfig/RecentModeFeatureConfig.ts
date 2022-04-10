@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@ import CommonConstants from '../../../../../../../../common/src/main/ets/default
 import RecentsModeConfig from '../../../../../../../../common/src/main/ets/default/layoutconfig/RecentsModeConfig';
 
 /**
- * Recent missions layout mode configuration
+ * Recent missions layout mode configuration.
  */
 export default class RecentModeFeatureConfig extends RecentsModeConfig {
 
@@ -24,15 +24,20 @@ export default class RecentModeFeatureConfig extends RecentsModeConfig {
     super();
   }
 
+  /**
+   * The json string corresponding to the current configuration.
+   */
   protected getPersistConfigJson(): string {
     const persistConfig = JSON.parse(super.getPersistConfigJson());
     return JSON.stringify(persistConfig);
   }
 
   /**
-   * Get the instance of recent missions layout mode configuration
+   * Get recent mode configuration instance.
+   *
+   * @return {object} RecentModeFeatureConfig singleton
    */
-  static getInstance() {
+  static getInstance(): RecentModeFeatureConfig {
     if (globalThis.RecentModeFeatureConfigInstance == null) {
       globalThis.RecentModeFeatureConfigInstance = new RecentModeFeatureConfig();
       globalThis.RecentModeFeatureConfigInstance.initConfig();
@@ -40,10 +45,18 @@ export default class RecentModeFeatureConfig extends RecentsModeConfig {
     return globalThis.RecentModeFeatureConfigInstance;
   }
 
+  /**
+   * Init recent mode configuration.
+   */
   initConfig(): void {
     super.initConfig();
   }
 
+  /**
+   * Get recent mode configuration level.
+   *
+   * @return {string} feature-level layout configuration
+   */
   getConfigLevel(): string {
     return CommonConstants.LAYOUT_CONFIG_LEVEL_FEATURE;
   }

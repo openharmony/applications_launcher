@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,8 +25,6 @@ export default class SmartDockLayoutConfig extends ILayoutConfig {
    */
   static SMART_DOCK_LAYOUT_INFO = 'SmartDockLayoutInfo';
 
-  private static sInstance: SmartDockLayoutConfig = null;
-
   /**
    * Dock功能布局数据
    */
@@ -40,12 +38,12 @@ export default class SmartDockLayoutConfig extends ILayoutConfig {
    * 获取工作空间功能布局配置实例
    */
   static getInstance() {
-    if (SmartDockLayoutConfig.sInstance == null) {
-      SmartDockLayoutConfig.sInstance = new SmartDockLayoutConfig();
-      SmartDockLayoutConfig.sInstance.initConfig();
+    if (globalThis.SmartDockLayoutConfig == null) {
+      globalThis.SmartDockLayoutConfig = new SmartDockLayoutConfig();
+      globalThis.SmartDockLayoutConfig.initConfig();
     }
     console.info('Launcher SmartDockLayoutConfig getInstance!');
-    return SmartDockLayoutConfig.sInstance;
+    return globalThis.SmartDockLayoutConfig;
   }
 
   initConfig(): void {
@@ -74,7 +72,7 @@ export default class SmartDockLayoutConfig extends ILayoutConfig {
    *
    * @params gridLayoutInfo dock布局数据
    */
-  updateDockLayoutInfo(dockLayoutInfo): void {
+  updateDockLayoutInfo(dockLayoutInfo: object): void {
     this.mDockLayoutInfo = dockLayoutInfo;
     super.persistConfig();
   }

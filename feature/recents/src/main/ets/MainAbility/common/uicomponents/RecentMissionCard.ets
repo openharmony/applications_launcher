@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,14 +17,17 @@ import CommonStyleConstants from '../../../../../../../../common/src/main/ets/de
 import StyleConstants from '../../common/constants/StyleConstants';
 import RecentMissionAppIcon from './RecentMissionAppIcon.ets';
 import RecentMissionAppName from './RecentMissionAppName.ets';
-import RecentMissionsViewModel from '../../viewmodel/RecentMissionsViewModel';
+import RecentMissionsViewModel from '../../viewmodel/RecentMissionsViewModel.ets';
 import windowManager from  '../../../../../../../../common/src/main/ets/default/manager/WindowManager';
 
 const TAG = 'Recent-RecentMissionCard';
 
+/**
+ * Common card component for recent missions.
+ */
 @Component
 export default struct RecentMissionCard {
-  @Link mIsClickSubComponent: boolean;
+  @Link isClickSubComponent: boolean;
   @Prop missionId: number;
   @Prop appIconId: string;
   @Prop appLabelId: string;
@@ -34,14 +37,14 @@ export default struct RecentMissionCard {
   @Prop lockedState: boolean;
   @State margin: number = StyleConstants.SINGLE_LIST_LAYOUT_MARGIN;
   @State layoutWeight: number = StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT;
-  @State mRecentImage: any = '';
+  @State recentImage: any = '';
   private mDefaultSnapShot: string = '';
   private mIsSingleLayout: boolean = true;
   private mSnapshotList: any = [];
   private mRecentMissionsViewModel: RecentMissionsViewModel;
 
-  public aboutToAppear(): void  {
-    Log.showInfo(TAG, `aboutToAppear start`);
+  aboutToAppear(): void {
+    Log.showInfo(TAG, 'aboutToAppear start');
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
     this.mIsSingleLayout = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ? true : false;
     this.margin = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
@@ -49,19 +52,31 @@ export default struct RecentMissionCard {
     this.layoutWeight = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
       StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT : StyleConstants.DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT;
     this.mDefaultSnapShot = StyleConstants.DEFAULT_APP_IMAGE;
-    this.mRecentImage = this.mDefaultSnapShot;
+    this.recentImage = this.mDefaultSnapShot;
     this.mRecentMissionsViewModel.getMissionSnapShot(this.missionId, this.recentMissionsSnapshotCallback.bind(this));
   }
 
-  public recentMissionsSnapshotCallback(missionId: number, snapShot: any) {
-    console.info(`Launcher recentMissions ${missionId} ${this.missionId}`);
+  aboutToDisappear(): void {
+    Log.showInfo(TAG, `aboutToDisappear start ${this.missionId}`);
+    if (this.recentImage != this.mDefaultSnapShot) {
+      void this.recentImage.release();
+    }
+  }
+
+  /**
+   * The callback of Recent missions snapshot.
+   *
+   * @param {number} missionId
+   * @param {any} snapShot
+   */
+  recentMissionsSnapshotCallback(missionId: number, snapShot: any): void {
+    Log.showInfo(TAG, `recentMissionsSnapshotCallback missionId: ${this.missionId}`);
     if (missionId === this.missionId) {
-      this.mRecentImage = snapShot.image;
+      this.recentImage = snapShot.image;
       let width = snapShot.width;
       let height = snapShot.height;
-      console.info("Launcher recentMissions this.mRecentImage:" + JSON.stringify(this.mRecentImage));
-      console.info("Launcher recentMissions this.mRecentImage width:" + JSON.stringify(width));
-      console.info("Launcher recentMissions this.mRecentImage height:" + JSON.stringify(height));
+      Log.showInfo(TAG, `recentMissionsSnapshotCallback recentImage: ${JSON.stringify(this.recentImage)},
+        width: ${JSON.stringify(width)}, height: ${JSON.stringify(height)}`);
     }
   }
 
@@ -101,16 +116,16 @@ export default struct RecentMissionCard {
               StyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE) - 10)
             .margin({ right: this.margin / 2 })
             .onClick(() => {
-              this.mIsClickSubComponent = true;
-              Log.showInfo(TAG, `set recent mission Locked status`);
+              this.isClickSubComponent = true;
+              Log.showInfo(TAG, 'onClick set recent mission Locked status');
               this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId, !this.lockedState);
-              this.mIsClickSubComponent = false;
+              this.isClickSubComponent = false;
             })
         }
         .layoutWeight(1)
       }
       .margin({ bottom: this.margin / 2 })
-      Image(this.mRecentImage)
+      Image(this.recentImage)
         .objectFit(ImageFit.Contain)
         .borderRadius(StyleConstants.RECENT_IMAGE_RADIUS)
         .width(this.mIsSingleLayout ?
@@ -120,8 +135,8 @@ export default struct RecentMissionCard {
           StyleConstants.SINGLE_LIST_APP_IMAGE_HEIGHT * StyleConstants.DPI_RATIO :
           StyleConstants.DOUBLE_LIST_APP_IMAGE_HEIGHT)
         .onClick(() => {
-          this.mIsClickSubComponent = true;
-          Log.showInfo(TAG, `start launcher ability`);
+          this.isClickSubComponent = true;
+          Log.showInfo(TAG, 'onClick start launcher ability');
           windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
           this.mRecentMissionsViewModel.moveMissionToFront(this.missionId);
         })
@@ -137,13 +152,13 @@ export default struct RecentMissionCard {
     .gesture(
     PanGesture({ fingers: 1, direction: PanDirection.Vertical, distance: 5 })
       .onActionEnd((e) => {
-        let mOffectWidth = (this.mIsSingleLayout ?
+        let offsetWidth = (this.mIsSingleLayout ?
           StyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH * StyleConstants.DPI_RATIO :
           StyleConstants.DOUBLE_LIST_APP_IMAGE_WIDTH) / 2;
-        if (e.offsetY < -50 && e.offsetX <= mOffectWidth && -mOffectWidth <= e.offsetX) {
+        if (e.offsetY < -50 && e.offsetX <= offsetWidth && -offsetWidth <= e.offsetX) {
           this.mRecentMissionsViewModel.deleteRecentMission(false, this.missionId);
-        } else if (e.offsetY > 50 && e.offsetX <= mOffectWidth && -mOffectWidth <= e.offsetX) {
-          this.lockedState = this.lockedState? false : true;
+        } else if (e.offsetY > 50 && e.offsetX <= offsetWidth && -offsetWidth <= e.offsetX) {
+          this.lockedState = this.lockedState ? false : true;
           this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId, this.lockedState);
         }
       }))

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,8 +17,10 @@ import AppListStyleConfig from '../../../../../../../common/src/main/ets/default
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import PresetStyleConstants from '../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
 import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
+import LayoutViewModel from '../../../../../../../common/src/main/ets/default/viewmodel/LayoutViewModel';
 import FeatureConstants from './constants/FeatureConstants';
 import FolderStyleConstants from './constants/FolderStyleConstants';
+import BigFolderModel from './BigFolderModel';
 
 /**
  * folder style config
@@ -60,6 +62,11 @@ export default class BigFolderStyleConfig extends AppListStyleConfig {
   mOpenFolderIconSize = StyleConstants.DEFAULT_OPEN_FOLDER_APP_SIZE;
 
   /**
+   * add icon size of open folder
+   */
+  mOpenFolderAddIconSize = StyleConstants.DEFAULT_ADD_APP_SIZE;
+
+  /**
    * open folder app size
    */
   mOpenFolderAppNameSize = StyleConstants.DEFAULT_OPEN_FOLDER_APP_NAME_SIZE;
@@ -78,6 +85,11 @@ export default class BigFolderStyleConfig extends AppListStyleConfig {
    * open folder grid height
    */
   mOpenFolderGridHeight = StyleConstants.DEFAULT_OPEN_FOLDER_GRID_HEIGHT;
+
+  /**
+   * open folder swiper height
+   */
+  mOpenFolderSwiperHeight = StyleConstants.DEFAULT_OPEN_FOLDER_SWIPER_HEIGHT;
 
   /**
    * open folder grid gap
@@ -184,21 +196,67 @@ export default class BigFolderStyleConfig extends AppListStyleConfig {
   /**
    * get folder style config instance
    */
-  static getInstance() {
+  static getInstance(): BigFolderStyleConfig {
     if (globalThis.BigFolderStyleConfigInstance == null) {
       globalThis.BigFolderStyleConfigInstance = new BigFolderStyleConfig();
     }
+    globalThis.BigFolderStyleConfigInstance.initConfig();
     return globalThis.BigFolderStyleConfigInstance;
   }
 
   initConfig(): void {
+    const layoutViewModel = LayoutViewModel.getInstance();
+    const desktopFolderLayoutInfo = BigFolderModel.getInstance().getFolderLayout();
+    const folderResult = layoutViewModel.calculateFolder(desktopFolderLayoutInfo);
+    const openFolderLayoutInfo = BigFolderModel.getInstance().getFolderOpenLayout();
+    const openResult = layoutViewModel.calculateOpenFolder(openFolderLayoutInfo);
+    const addAppLayoutInfo = BigFolderModel.getInstance().getFolderAddAppLayout();
+    const addResult = layoutViewModel.calculateFolderAddList(addAppLayoutInfo);
+
+    this.mGridSize = folderResult.mGridSize;
+    this.mFolderAppSize = folderResult.mFolderAppSize;
+    this.mFolderGridGap = folderResult.mFolderGridGap;
+    this.mGridMargin = folderResult.mGridMargin;
+    this.mNameHeight = folderResult.mNameHeight;
+    this.mNameLines = folderResult.mNameLines;
+    this.mIconNameMargin = folderResult.mIconNameMargin;
+
+    this.mOpenFolderGridWidth = openResult.mOpenFolderGridWidth;
+    this.mOpenFolderGridHeight = openResult.mOpenFolderGridHeight;
+    this.mOpenFolderSwiperHeight = openResult.mOpenFolderSwiperHeight;
+    this.mOpenFolderIconSize = openResult.mOpenFolderIconSize;
+    this.mOpenFolderAddIconSize = openResult.mOpenFolderAddIconSize;
+    this.mOpenFolderAppSize = openResult.mOpenFolderAppSize;
+    this.mOpenFolderAppNameSize = openResult.mOpenFolderAppNameSize;
+    this.mOpenFolderAppNameHeight = openResult.mOpenFolderAppNameHeight;
+    this.mOpenFolderGridGap = openResult.mOpenFolderGridGap;
+    this.mOpenFolderGridPadding = openResult.mOpenFolderGridPadding;
+    this.mFolderOpenMargin = openResult.mFolderOpenMargin;
+    this.mOpenFolderGridIconTopPadding = openResult.mOpenFolderGridIconTopPadding;
+
+    this.mAddFolderGridWidth = addResult.mAddFolderGridWidth;
+    this.mAddFolderDialogWidth = addResult.mAddFolderDialogWidth;
+    this.mAddFolderDialogHeight = addResult.mAddFolderDialogHeight;
+    this.mAddFolderGridGap = addResult.mAddFolderGridGap;
+    this.mAddFolderGridMargin = addResult.mAddFolderGridMargin;
+    this.mAddFolderMaxHeight = addResult.mAddFolderMaxHeight;
+    this.mFolderToggleSize = addResult.mFolderToggleSize;
+    this.mAddFolderTextSize = addResult.mAddFolderTextSize;
+    this.mAddFolderTextLines = addResult.mAddFolderTextLines;
+    this.mAddFolderLinesHeight = addResult.mAddFolderLinesHeight;
+    this.mAddFolderItemSize = addResult.mAddFolderItemSize;
+    this.mAddFolderIconPaddingTop = addResult.mAddFolderIconPaddingTop;
+    this.mAddFolderIconMarginHorizontal = addResult.mAddFolderIconMarginHorizontal;
+    this.mAddFolderIconSize = addResult.mAddFolderIconSize;
+    this.mAddFolderTitleSize = addResult.mAddFolderTitleSize;
+    this.mAddFolderButtonSize = addResult.mAddFolderButtonSize;
   }
 
   getConfigLevel(): string {
     return CommonConstants.LAYOUT_CONFIG_LEVEL_FEATURE;
   }
 
-  getFeatureName() {
+  getFeatureName(): string {
     return FeatureConstants.FEATURE_NAME;
   }
 }

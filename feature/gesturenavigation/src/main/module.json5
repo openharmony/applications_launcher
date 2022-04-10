@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "gesturenavigation",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+    ],
+    "uiSyntax": "ets"
+  }
+}

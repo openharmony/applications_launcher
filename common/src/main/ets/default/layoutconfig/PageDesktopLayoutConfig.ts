@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -39,8 +39,6 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
     },
     layoutInfo: []
   };
-
-  private static readonly sInstance: PageDesktopLayoutConfig = null;
 
   private mGridLayoutInfo: any = PageDesktopLayoutConfig.DEFAULT_LAYOUT_INFO;
 
@@ -85,7 +83,7 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
    *
    * @params gridLayoutInfo 工作空间布局数据
    */
-  updateGridLayoutInfo(gridLayoutInfo): void {
+  updateGridLayoutInfo(gridLayoutInfo: object): void {
     this.mGridLayoutInfo = gridLayoutInfo;
     super.persistConfig();
   }

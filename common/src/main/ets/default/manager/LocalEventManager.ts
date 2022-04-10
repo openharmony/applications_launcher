@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,8 +24,6 @@ const TAG = 'LocalEventManager';
  * 2、事件的分发
  */
 class LocalEventManager {
-  private static sInstance: LocalEventManager | undefined = undefined;
-
   private mEventListenerMap: Object = {};
 
   private mEventMsgCache: Object = {};
@@ -36,11 +34,11 @@ class LocalEventManager {
    * @return 本地事件管理类对象单一实例
    */
   static getInstance(): LocalEventManager {
-    if (LocalEventManager.sInstance == undefined) {
+    if (globalThis.localEventManager == null) {
       Log.showInfo(TAG, 'getInstance');
-      LocalEventManager.sInstance = new LocalEventManager();
+      globalThis.localEventManager = new LocalEventManager();
     }
-    return LocalEventManager.sInstance;
+    return globalThis.localEventManager;
   }
 
   /**
@@ -57,8 +55,7 @@ class LocalEventManager {
         if (this.mEventListenerMap[event] == undefined) {
           this.mEventListenerMap[event] = new Array<any>();
         }
-        const listenerList: any[] = this.mEventListenerMap[event];
-        if (listenerList.indexOf(listener) === CommonConstants.INVALID_VALUE) {
+        if (this.mEventListenerMap[event].indexOf(listener) === CommonConstants.INVALID_VALUE) {
           this.mEventListenerMap[event].push(listener);
         }
       }
@@ -89,10 +86,10 @@ class LocalEventManager {
    */
   sendLocalEvent(event, params?): void {
     Log.showInfo(TAG, `sendLocalEvent event: ${JSON.stringify(event)}`);
-    const listenerList = this.mEventListenerMap[event];
+    let listenerList = this.mEventListenerMap[event];
     if (listenerList != undefined) {
       Log.showInfo(TAG, `sendLocalEvent listenerList length: ${listenerList.length}`);
-      for (const listener of listenerList) {
+      for (let listener of listenerList) {
         listener.onReceiveEvent(event, params);
       }
     } else {

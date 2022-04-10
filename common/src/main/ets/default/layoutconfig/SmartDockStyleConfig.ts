@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,8 +20,6 @@ import CommonConstants from '../constants/CommonConstants';
  * Dock样式配置类
  */
 export default class SmartDockStyleConfig extends AppListStyleConfig {
-  private static sFeatureInstance: SmartDockStyleConfig = null;
-
   /**
    * dock列表高度
    */
@@ -125,18 +123,14 @@ export default class SmartDockStyleConfig extends AppListStyleConfig {
    * 获取dock样式实例
    */
   static getInstance() {
-    if (SmartDockStyleConfig.sFeatureInstance == null) {
-      SmartDockStyleConfig.sFeatureInstance = new SmartDockStyleConfig();
-      SmartDockStyleConfig.sFeatureInstance.initConfig();
+    if (globalThis.SmartDockStyleConfigInstance == null) {
+      globalThis.SmartDockStyleConfigInstance = new SmartDockStyleConfig();
+      globalThis.SmartDockStyleConfigInstance.initConfig();
     }
-    return SmartDockStyleConfig.sFeatureInstance;
+    return globalThis.SmartDockStyleConfigInstance;
   }
 
   getConfigLevel(): string {
     return CommonConstants.LAYOUT_CONFIG_LEVEL_COMMON;
   }
-
-//  public getFeatureName() {
-//    return FeatureConstants.FEATURE_NAME;
-//  }
 }

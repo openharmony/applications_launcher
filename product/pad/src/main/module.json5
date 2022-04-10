@@ -1,0 +1,59 @@
+{
+  "module": {
+    "name": "pad-launcher",
+    "type": "entry",
+    "srcEntrance": "./ets/Application/AbilityStage.ts",
+    "description": "$string:mainability_description",
+    "mainElement": "com.ohos.launcher.MainAbility",
+    "deviceTypes": [
+      "phone"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "uiSyntax": "ets",
+    "abilities": [
+      {
+        "skills": [
+          {
+            "entities": [
+              "entity.system.home",
+              "flag.home.intent.from.system"
+            ],
+            "actions": [
+              "action.system.home",
+              "com.ohos.action.main"
+            ]
+          }
+        ],
+        "visible": true,
+        "name": "com.ohos.launcher.MainAbility",
+        "icon": "$media:icon",
+        "description": "$string:mainability_description",
+        "label": "$string:entry_MainAbility",
+        "srcEntrance": "./ets/MainAbility/MainAbility.ts",
+        "launchType": "singleton"
+      }
+    ],
+    "requestPermissions": [
+      {
+        "name": "ohos.permission.GET_BUNDLE_INFO_PRIVILEGED"
+      },
+      {
+        "name": "ohos.permission.INSTALL_BUNDLE"
+      },
+      {
+        "name": "ohos.permission.LISTEN_BUNDLE_CHANGE"
+      },
+      {
+        "name": "ohos.permission.MANAGE_MISSIONS"
+      },
+      {
+        "name": "ohos.permission.REQUIRE_FORM"
+      },
+      {
+        "name": "ohos.permission.INPUT_MONITORING"
+      }
+    ]
+  }
+}

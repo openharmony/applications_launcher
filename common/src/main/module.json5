@@ -1,0 +1,11 @@
+ {
+  "module": {
+    "package": "com.ohos.launcher",
+    "name": "common",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+    ],
+    "uiSyntax": "ets"
+  }
+}

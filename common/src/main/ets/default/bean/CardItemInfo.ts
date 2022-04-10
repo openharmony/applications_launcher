@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,37 +20,37 @@ export default class CardItemInfo {
   /**
    * Indicates form id
    */
-  cardId: number;
+  cardId: number | undefined;
 
   /**
    * Indicates form bundleName.
    */
-  bundleName: string;
+  bundleName: string | undefined;
 
   /**
    * Indicates form abilityName.
    */
-  abilityName: string;
+  abilityName: string | undefined;
 
   /**
    * Indicates form moduleName.
    */
-  moduleName: string;
+  moduleName: string | undefined;
 
   /**
    * Indicates cardName.
    */
-  cardName: string;
+  cardName: string | undefined;
 
   /**
    * Indicates form dimension.
    */
-  cardDimension: number;
+  cardDimension: number | undefined;
 
   /**
    * Indicates form size.
    */
-  area: number[];
+  area: number[] | undefined;
 
   /**
    * Indicates form description.
@@ -60,21 +60,21 @@ export default class CardItemInfo {
   /**
    * Indicates form formConfigAbility.
    */
-  formConfigAbility: string;
+  formConfigAbility: string | undefined;
 
   /**
    * Indicates form of app labelId.
    */
-  appLabelId: number;
+  appLabelId: number | undefined;
 
   /**
    * Indicates form of app name.
    */
-  appName: string;
+  appName: string | undefined;
 
   /**
    * Indicates form of support Dimensions.
    */
-  supportDimensions: number[];
+  supportDimensions: number[] | undefined;
 
 }

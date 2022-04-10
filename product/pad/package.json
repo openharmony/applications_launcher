@@ -1,0 +1,20 @@
+{
+	"devDependencies":{},
+	"name":"launcher",
+	"ohos":{
+		"org":"huawei",
+		"directoryLevel":"module",
+		"buildTool":"hvigor"
+	},
+	"version":"1.0.0",
+	"dependencies":{
+		"bigfolder":"file:../../bigfolder/scr",
+		"common":"file:../../common/src",
+		"form":"file:../../form/scr",
+		"appcenter":"file:../../appcenter/scr",
+		"smartdock":"file:../../smartdock/scr",
+		"recents":"file:../../recents/scr",
+		"pagedesktop":"file:../../pagedesktop/scr",
+		"gesturenavigation":"file:../../gesturenavigation/scr"
+	}
+}

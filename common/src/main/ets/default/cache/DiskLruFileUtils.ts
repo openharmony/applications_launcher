@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,8 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import Fileio from '@ohos.fileio';
+import fileIO from '@ohos.fileio';
 
 const writeFilePath = globalThis.desktopContext.cacheDir + '/';
 const journalPath = writeFilePath + 'journal.txt';
@@ -44,9 +43,9 @@ export default class DiskLruFileUtils {
    */
   static readJsonFile(path: string): any {
     console.info('Launcher FileUtil readJsonFile start execution');
-    let readStreamSync = null;
+    let readStreamSync;
     try {
-      readStreamSync = Fileio.createStreamSync(path, 'r');
+      readStreamSync = fileIO.createStreamSync(path, 'r');
       const content = this.getContent(readStreamSync);
       console.info('Launcher FileUtil readJsonFile finish execution' + content);
       return JSON.parse(content);
@@ -69,7 +68,7 @@ export default class DiskLruFileUtils {
     const content = JSON.stringify(jsonObj);
     let writeStreamSync = null;
     try {
-      writeStreamSync = Fileio.createStreamSync(filePath, 'w+');
+      writeStreamSync = fileIO.createStreamSync(filePath, 'w+');
       writeStreamSync.writeSync(content);
     } catch (e) {
       console.info('Launcher FileUtil writeJsonObj error: ' + e);
@@ -88,7 +87,7 @@ export default class DiskLruFileUtils {
     let writeStreamSync = null;
     try {
       console.info('Launcher FileUtil writeJournal start');
-      writeStreamSync = Fileio.createStreamSync(journalPath, 'a+');
+      writeStreamSync = fileIO.createStreamSync(journalPath, 'a+');
       writeStreamSync.writeSync(content + '\n');
     } catch (e) {
       console.info('Launcher FileUtil writeJournal error: ' + e);
@@ -107,7 +106,7 @@ export default class DiskLruFileUtils {
     console.info('Launcher FileUtil readJournal start execution');
     let readStreamSync = null;
     try {
-      readStreamSync = Fileio.createStreamSync(journalPath, 'r');
+      readStreamSync = fileIO.createStreamSync(journalPath, 'r');
       return this.getContent(readStreamSync);
     } catch (e) {
       console.info('Launcher FileUtil readJournal error: ' + e);
@@ -120,7 +119,7 @@ export default class DiskLruFileUtils {
   /**
    * Read JSON object from a file.
    *
-   * @param {Fileio.Stream} readStreamSync - stream of target file
+   * @param {fileIO.Stream} readStreamSync - stream of target file
    * @return {object} object read from file stream
    */
   static getContent(readStreamSync) {
@@ -164,7 +163,7 @@ export default class DiskLruFileUtils {
     try {
       console.info('Launcher FileUtil removeFile');
       //remove file,key : bundlename
-      Fileio.unlinkSync(writeFilePath + bundleName + '.json');
+      fileIO.unlinkSync(writeFilePath + bundleName + '.json');
     } catch (e) {
       console.error('Launcher FileUtil removeFile delete has failed for ' + e);
     }

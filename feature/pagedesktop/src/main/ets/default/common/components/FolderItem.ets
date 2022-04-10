@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,9 +28,13 @@ import FeatureConstants from '../constants/FeatureConstants';
 const FOLDER_INFO_REFRESH_DELAY = 500;
 const TAG = 'FolderItem';
 
+/**
+ * Folder item, which display on desktop workspace.
+ */
 @Component
 export default struct FolderItem {
-  @State isDraging: boolean = false;
+  @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
+  @State isDragging: boolean = false;
   @State mAppNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   @State mAppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
   private folderItem: any;
@@ -62,42 +66,50 @@ export default struct FolderItem {
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
   }
 
+  /**
+   * The folder item on desktop workspace: drag state listener.
+   */
   private mDragStateListener = {
     onItemDragStart: (event: any, itemIndex: number) => {
-      this.isDraging = true;
+      this.isDragging = true;
     },
     onItemDragMove: (event: any, insertIndex: number, itemIndex: number) => {
       if (this.isSwappingPage) {
         return;
       }
-
       let moveX = event.touches[0].screenX;
       let moveY = event.touches[0].screenY;
       if ((moveX - this.mAppItemWidth / 2) < this.mMargin
       && this.mPageDesktopViewModel.getIndex() > 0 && moveY < this.mGridSpaceHeight) {
-        this.mPageDesktopViewModel.changeIndex(this.mPageDesktopViewModel.getIndex() - 1);
+        this.mPageDesktopViewModel.showPrevious();
         this.movingFolderSwapPageDelay();
       } else if ((moveX + this.mAppItemWidth / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
         if (this.mPageDesktopViewModel.getIndex() == this.mPageDesktopViewModel.getGridPageCount() - 1
         && !this.mPageDesktopViewModel.isBlankPage()) {
           this.mPageDesktopViewModel.addBlankPage();
         } else if (this.mPageDesktopViewModel.getIndex() < this.mPageDesktopViewModel.getGridPageCount() - 1) {
-          this.mPageDesktopViewModel.changeIndex(this.mPageDesktopViewModel.getIndex() + 1);
+          this.mPageDesktopViewModel.showNext();
         }
         this.movingFolderSwapPageDelay();
       }
     },
     onItemDragEnd: () => {
-      this.isDraging = false;
+      this.isDragging = false;
     }
   };
 
+  /**
+   * When rename is clicked, call this function to change folder state.
+   */
   private renameClick() {
-    console.info("Launcher click menu folder rename ");
+    Log.showInfo(TAG, 'click menu folder rename');
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     this.mFolderViewModel.openFolder(true, this.folderItem);
   }
 
+  /**
+   * Increase delay when dragging folder to other page.
+   */
   movingFolderSwapPageDelay() {
     this.isSwappingPage = true;
     setTimeout(() => {
@@ -116,6 +128,7 @@ export default struct FolderItem {
           showFolderName: true,
           mFolderItem: this.folderItem,
           badgeNumber: this.folderItem.badgeNumber,
+          isSelect: this.selectDesktopAppItem === this.folderItem.folderId,
           folderNameHeight: this.mAppNameHeight,
           folderNameLines: this.mNameLines,
           folderNameSize: this.mAppNameSize,
@@ -158,7 +171,23 @@ export default struct FolderItem {
           this.mPageDesktopViewModel.buildRenameMenuInfoList(folderItem, this.renameClick.bind(this))
         })
       }
-      .visibility(this.isDraging ? Visibility.Hidden : Visibility.Visible)
+      .visibility(this.isDragging ? Visibility.Hidden : Visibility.Visible)
+      .onMouse((event: MouseEvent) => {
+        if (event.button == MouseButton.Right) {
+          event.stopPropagation();
+          Log.showInfo(TAG, 'onMouse mouse button right');
+          AppStorage.SetOrCreate('selectDesktopAppItem', this.folderItem.folderId);
+        }
+      })
+      .gesture(
+      GestureGroup(GestureMode.Exclusive,
+      TapGesture({ count: 2 })
+        .onAction((event: GestureEvent) => {
+          Log.showInfo(TAG, 'TapGesture double click');
+          this.mFolderViewModel.openFolder(false, this.folderItem);
+        })
+      )
+      )
     }
     .width(StyleConstants.PERCENTAGE_100)
     .height(StyleConstants.PERCENTAGE_100)

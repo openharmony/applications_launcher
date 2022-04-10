@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,8 +25,6 @@ export default class SmartDockModeConfig extends ILayoutConfig {
    */
   static SMART_DOCK_MODE_CONFIG = 'SmartDockModeConfig';
 
-  private static sInstance: SmartDockModeConfig = null;
-
   protected constructor() {
     super();
   }
@@ -35,11 +33,11 @@ export default class SmartDockModeConfig extends ILayoutConfig {
    * 获取Dock列表模式配置实例
    */
   static getInstance(): SmartDockModeConfig {
-    if (SmartDockModeConfig.sInstance == null) {
-      SmartDockModeConfig.sInstance = new SmartDockModeConfig();
-      SmartDockModeConfig.sInstance.initConfig();
+    if (globalThis.SmartDockModeConfig == null) {
+      globalThis.SmartDockModeConfig = new SmartDockModeConfig();
+      globalThis.SmartDockModeConfig.initConfig();
     }
-    return SmartDockModeConfig.sInstance;
+    return globalThis.SmartDockModeConfig;
   }
 
   initConfig(): void {
