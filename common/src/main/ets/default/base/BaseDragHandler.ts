@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -32,7 +32,7 @@ interface Area {
 export default abstract class BaseDragHandler {
   protected mIsInEffectArea = false;
 
-  protected mDragEffectArea: Area = null;
+  protected mDragEffectArea: Area | undefined;
 
   private mDragStateListener = null;
 
@@ -69,7 +69,7 @@ export default abstract class BaseDragHandler {
   /**
    * 获取有效区域(拖拽能力ready后删除)
    */
-  protected getDragEffectArea(): Area {
+  protected getDragEffectArea(): Area | undefined {
     return this.mDragEffectArea;
   }
 

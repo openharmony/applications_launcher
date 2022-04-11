@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,6 +19,9 @@ import AppItem from './AppItem.ets';
 import FolderItem from './FolderItem.ets';
 import FormItem from './FormItem.ets';
 import PageDesktopGridStyleConfig from '../PageDesktopGridStyleConfig';
+import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
+
+const TAG = "SwiperPage";
 
 @Component
 export default struct SwiperPage {
@@ -66,11 +69,15 @@ export default struct SwiperPage {
       this.RowsTemplate += '1fr '
     }
   }
-
+  private buildLog(item): boolean {
+    Log.showInfo(TAG, `build item: ${JSON.stringify(item)}`);
+    return true;
+  }
   build() {
     Grid() {
       ForEach(this.mAppListInfo, (item) => {
         GridItem() {
+          if(this.buildLog(item)){}
           if (item.type == CommonConstants.TYPE_APP) {
             AppItem({
               item: item,
@@ -88,11 +95,18 @@ export default struct SwiperPage {
             })
           }
         }
+        .padding({top:24})
         .rowStart(item.row)
         .columnStart(item.column)
         .rowEnd(item.row + item.area[1] - 1)
         .columnEnd(item.column + item.area[0] - 1)
-      },(item) => JSON.stringify(item))
+      }, (item) => {
+        if (item.type == CommonConstants.TYPE_FOLDER) {
+          return JSON.stringify(item);
+        } else {
+          return `${item.type}${item.row}${item.column}`;
+        }
+      })
     }
     .columnsTemplate(this.ColumnsTemplate)
     .rowsTemplate(this.RowsTemplate)
@@ -100,6 +114,6 @@ export default struct SwiperPage {
     .rowsGap(this.mRowsGap)
     .width(this.mGridWidth)
     .height(this.mGridHeight)
-    .margin({ right: this.mMargin, left: this.mMargin, top :  this.mMarginTop})
+    .margin({ right: this.mMargin, left: this.mMargin, top: this.mMarginTop})
   }
 }

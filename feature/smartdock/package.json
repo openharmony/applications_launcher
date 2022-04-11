@@ -1,0 +1,12 @@
+{
+  "name": "@ohos/smartdock",
+  "version": "1.0.0",
+  "description": "a npm package which contains smartdock feature",
+  "ohos": {
+    "org": "huawei",
+    "buildTool": "hvigor",
+    "directoryLevel": "module"
+  },
+  "dependencies": {
+  }
+}

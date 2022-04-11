@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,17 +30,18 @@ import RecentBundleMissionInfo from '../../../../../../../common/src/main/ets/de
 import DockItemInfo from '../../../../../../../common/src/main/ets/default/bean/DockItemInfo';
 import AppItemInfo from '../../../../../../../common/src/main/ets/default/bean/AppItemInfo';
 import AppModel from '../../../../../../../common/src/main/ets/default/model/AppModel';
+import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
 import FeatureConstants from '../common/constants/FeatureConstants';
 import SmartDockStyleConfig from '../common/SmartDockStyleConfig';
 
+const TAG = 'SmartDockModel';
 const KEY_NAME = 'name';
 
 /**
  * SmartDock Model
  */
 export default class SmartDockModel {
-  private static sSmartDockModel: SmartDockModel;
   private readonly mSmartDockLayoutConfig: SmartDockLayoutConfig;
   private readonly mSmartDockStyleConfig: SmartDockStyleConfig;
   private mResidentList: DockItemInfo[] = new Array<DockItemInfo>();
@@ -57,20 +58,20 @@ export default class SmartDockModel {
     this.registerDockListener();
     this.getResidentList().then(()=>{}, ()=>{});
     this.mDevice = AppStorage.Get('dockDevice');
-    console.info('Launcher SmartDockModel dockDevice:' + this.mDevice);
+    Log.showInfo(TAG, 'dockDevice:' + this.mDevice);
     if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE) {
       this.getRecentDataList().then(()=>{}, ()=>{});
       this.registerMissionListener();
     }
-    console.info('Launcher SmartDockModel constructor!');
+    Log.showInfo(TAG, 'constructor!');
   }
 
   static getInstance(): SmartDockModel{
-    if (typeof SmartDockModel.sSmartDockModel === 'undefined') {
-      SmartDockModel.sSmartDockModel = new SmartDockModel();
+    if (globalThis.SmartDockModel == null) {
+      globalThis.SmartDockModel = new SmartDockModel();
+      Log.showInfo(TAG, 'getInstance!');
     }
-    console.info('Launcher SmartDockModel getInstance!');
-    return SmartDockModel.sSmartDockModel;
+    return globalThis.SmartDockModel;
   }
 
   /**
@@ -79,10 +80,10 @@ export default class SmartDockModel {
   async getResidentList(): Promise<void> {
     const residentList = new Array<DockItemInfo>();
     const dockDataList = this.mSmartDockLayoutConfig.getDockLayoutInfo();
-    console.info('Launcher SmartDockModel getResidentList from config length:' + dockDataList.length);
+    Log.showInfo(TAG, 'getResidentList from config length:' + dockDataList.length);
     for (let i = 0; i < dockDataList.length; i++) {
       if (dockDataList[i].itemType == CommonConstants.TYPE_APP) {
-        console.info('Launcher SmartDockModel getResidentList dockDataList[i].bundleName:' + dockDataList[i].bundleName);
+        Log.showInfo(TAG, 'getResidentList dockDataList[i].bundleName:' + dockDataList[i].bundleName);
         const appData = await launcherAbilityManager.getAppInfoByBundleName(dockDataList[i].bundleName);
         if (appData == undefined) {
           continue;
@@ -115,7 +116,7 @@ export default class SmartDockModel {
     this.mSmartDockLayoutConfig.updateDockLayoutInfo(residentList);
     // trigger component update
     AppStorage.SetOrCreate('residentList', residentList);
-    console.info('Launcher SmartDockModel getResidentList end residentList.length:' + residentList.length);
+    Log.showInfo(TAG, 'getResidentList end residentList.length:' + residentList.length);
   }
 
 
@@ -123,10 +124,10 @@ export default class SmartDockModel {
    * get recent dock list
    */
   async getRecentDataList() {
-    console.info('Launcher SmartDockModel getRecentDataList start!');
+    Log.showInfo(TAG, 'getRecentDataList start!');
     const recentList = await amsMissionManager.getRecentBundleMissionsList();
     if (CheckEmptyUtils.isEmptyArr(recentList)) {
-      console.info('Launcher SmartDockModel getRecentDataList empty');
+      Log.showInfo(TAG, 'getRecentDataList empty');
       AppStorage.SetOrCreate('recentList', recentList);
       return;
     }
@@ -150,7 +151,7 @@ export default class SmartDockModel {
     }
     AppStorage.SetOrCreate('recentList', recents);
     AppStorage.SetOrCreate('missionInfoList', missionInfos);
-    console.info('Launcher SmartDockModel getRecentDataList end, recentList.length:' + recents.length);
+    Log.showInfo(TAG, 'getRecentDataList end, recentList.length:' + recents.length);
   }
 
   /**
@@ -158,8 +159,7 @@ export default class SmartDockModel {
    * @param appInfo
    * @param dockType
    */
-  deleteDockItem(appInfo: AppItemInfo, dockType: number) {
-    let bundleName = appInfo.bundleName;
+  deleteDockItem(bundleName: string, dockType: number) {
     if (CheckEmptyUtils.checkStrIsEmpty(bundleName)) {
       return;
     }
@@ -180,7 +180,7 @@ export default class SmartDockModel {
             this.mResidentList.splice(i, 1);
             AppStorage.SetOrCreate('residentList', this.mResidentList);
             this.mSmartDockLayoutConfig.updateDockLayoutInfo(this.mResidentList);
-            console.info('Launcher SmartDockModel deleteDockItem:' + bundleName + ',dockType:' + dockType);
+            Log.showInfo(TAG, 'deleteDockItem:' + bundleName + ',dockType:' + dockType);
             return;
           }
         }
@@ -192,7 +192,7 @@ export default class SmartDockModel {
         if (this.mRecentDataList[i].bundleName === bundleName)
           this.mRecentDataList.splice(i, 1);
         AppStorage.SetOrCreate('recentList', this.mRecentDataList);
-        console.info('Launcher SmartDockModel deleteDockItem:' + bundleName + ',dockType:' + dockType);
+        Log.showInfo(TAG, 'deleteDockItem:' + bundleName + ',dockType:' + dockType);
       }
       return;
     }
@@ -229,7 +229,7 @@ export default class SmartDockModel {
       }
       AppStorage.SetOrCreate('residentList', this.mResidentList);
       this.mSmartDockLayoutConfig.updateDockLayoutInfo(this.mResidentList);
-      console.info('Launcher SmartDockModel addToSmartdock appInfo:' + appInfo.bundleName);
+      Log.showInfo(TAG, 'addToSmartdock appInfo:' + appInfo.bundleName);
     }
   }
 
@@ -325,7 +325,7 @@ export default class SmartDockModel {
       EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE,
       EventConstants.EVENT_REQUEST_RECENT_DOCK_ITEM_DELETE
     ]);
-    console.info('Launcher SmartDockModel local listener on create');
+    Log.showInfo(TAG, 'local listener on create');
   }
 
   /**
@@ -333,15 +333,15 @@ export default class SmartDockModel {
    */
   unregisterDockListener() {
     localEventManager.unregisterEventListener(this.mAddToDockListener);
-    console.info('Launcher SmartDockModel local listener on destroy');
+    Log.showInfo(TAG, 'local listener on destroy');
   }
 
   /**
    * resident local Listener
    */
   private readonly mAddToDockListener = {
-    onReceiveEvent: (event: string, params: AppItemInfo) => {
-      console.info('Launcher SmartDock receive event: ' + event + ', params: ' + JSON.stringify(params));
+    onReceiveEvent: (event: string, params: any) => {
+      Log.showInfo(TAG, 'receive event: ' + event + ', params: ' + JSON.stringify(params));
       if (event === EventConstants.EVENT_REQUEST_DOCK_ITEM_ADD) {
         this.addToSmartdock(params);
       } else if (event === EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE) {
@@ -353,7 +353,7 @@ export default class SmartDockModel {
   };
 
   private registerMissionListener() {
-    console.log('Launcher SmartDockModel registerMissionListener');
+    Log.showInfo(TAG, 'registerMissionListener');
     const listener = {
       onMissionCreated: this.onMissionCreatedCallback.bind(this),
       onMissionDestroyed: this.onMissionDestroyedCallback.bind(this),
@@ -365,22 +365,22 @@ export default class SmartDockModel {
   }
 
   onMissionCreatedCallback(missionId: number) {
-    console.log('Launcher SmartDockModel onMissionCreatedCallback, missionId=' + missionId);
+    Log.showInfo(TAG, 'onMissionCreatedCallback, missionId=' + missionId);
     this.getRecentDataList().then(()=>{}, ()=>{});
   }
 
   onMissionDestroyedCallback(missionId: number) {
-    console.log('Launcher SmartDockModel onMissionDestroyedCallback, missionId=' + missionId);
+    Log.showInfo(TAG, 'onMissionDestroyedCallback, missionId=' + missionId);
     this.getRecentDataList().then(()=>{}, ()=>{});
   }
 
   onMissionSnapshotChangedCallback(missionId: number) {
-    console.log('Launcher SmartDockModel onMissionSnapshotChangedCallback, missionId=' + missionId);
+    Log.showInfo(TAG, 'onMissionSnapshotChangedCallback, missionId=' + missionId);
     this.getRecentDataList().then(()=>{}, ()=>{});
   }
 
   onMissionMovedToFrontCallback(missionId: number) {
-    console.log('Launcher SmartDockModel onMissionMovedToFrontCallback, missionId=' + missionId);
+    Log.showInfo(TAG, 'onMissionMovedToFrontCallback, missionId=' + missionId);
     this.getRecentDataList().then(()=>{}, ()=>{});
   }
 
@@ -432,8 +432,9 @@ export default class SmartDockModel {
       snapshotList.push(pixelMap);
       snapShotWidth += pixelMap.boxSize + pixelMap.left;
     }
-    AppStorage.SetOrCreate('shapshotList', snapshotList);
+    AppStorage.SetOrCreate('snapshotList', snapshotList);
     AppStorage.SetOrCreate('snapShotWidth', snapShotWidth);
+    Log.showInfo(TAG, 'getSnapshot update snapshotList');
     return snapshotList;
   }
 }

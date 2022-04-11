@@ -1,0 +1,8 @@
+{
+  "src": [
+    "pages/FormManagerView",
+    "pages/EmptyPage",
+    "pages/EntryView",
+    "pages/RecentView"
+  ]
+}

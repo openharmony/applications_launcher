@@ -1,0 +1,49 @@
+{
+  "app": {
+    "compileSdkVersion": 9,
+    "compatibleSdkVersion": 9,
+    "products": [
+      {
+        "name": "default"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "phone-launcher",
+      "srcPath": "./product/phone",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    },
+    {
+      "name": "pad-launcher",
+      "srcPath": "./product/pad",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    },
+    {
+      "name": "launcher_settings",
+      "srcPath": "./feature/settings",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    }
+  ],
+}

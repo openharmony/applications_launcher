@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "recents",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+    ],
+    "uiSyntax": "ets"
+  }
+}

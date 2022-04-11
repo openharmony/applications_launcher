@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,8 +22,6 @@ import AppListStyleConfig from '../../../../../../../common/src/main/ets/default
  * 应用中心列表样式配置类
  */
 export default class AppCenterListStyleConfig extends AppListStyleConfig {
-  private static sFeatureInstance: AppCenterListStyleConfig = null;
-
   /**
    * 列表条目宽度
    */
@@ -82,11 +80,11 @@ export default class AppCenterListStyleConfig extends AppListStyleConfig {
    * 获取应用中心列表样式实例
    */
   static getInstance(): AppCenterListStyleConfig {
-    if (AppCenterListStyleConfig.sFeatureInstance == null) {
-      AppCenterListStyleConfig.sFeatureInstance = new AppCenterListStyleConfig();
-      AppCenterListStyleConfig.sFeatureInstance.initConfig();
+    if (globalThis.AppCenterListStyleConfig == null) {
+      globalThis.AppCenterListStyleConfig = new AppCenterListStyleConfig();
+      globalThis.AppCenterListStyleConfig.initConfig();
     }
-    return AppCenterListStyleConfig.sFeatureInstance;
+    return globalThis.AppCenterListStyleConfig;
   }
 
   getConfigLevel(): string {

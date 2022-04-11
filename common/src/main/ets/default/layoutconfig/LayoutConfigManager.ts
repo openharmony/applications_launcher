@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,8 +28,6 @@ import ILayoutConfig from './ILayoutConfig';
  * 3、持久化某些配置值的能力
  */
 class LayoutConfigManager {
-  private static sInstance: LayoutConfigManager = null;
-
   private readonly mPreferences = null;
 
   private readonly mCommonConfig: ILayoutConfig[][] = new Array<ILayoutConfig[]>();
@@ -58,11 +56,11 @@ class LayoutConfigManager {
    * 获取配置管理类实例
    */
   static getInstance(): LayoutConfigManager {
-    if (LayoutConfigManager.sInstance == null) {
-      LayoutConfigManager.sInstance = new LayoutConfigManager();
+    if (globalThis.LayoutConfigManager == null) {
+      globalThis.LayoutConfigManager = new LayoutConfigManager();
     }
     console.info('Launcher LayoutConfigManager constructor!');
-    return LayoutConfigManager.sInstance;
+    return globalThis.LayoutConfigManager;
   }
 
   /**

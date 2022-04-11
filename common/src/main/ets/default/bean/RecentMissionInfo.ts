@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,35 +20,35 @@ export default class RecentMissionInfo {
   /**
    * Recent mission: mission id
    */
-  missionId: number;
+  missionId: number | undefined;
 
   /**
    * Recent mission: app name
    */
-  appName: string;
+  appName: string | undefined;
 
   /**
    * Recent mission: app icon Id
    */
-  appIconId: string;
+  appIconId: string | undefined;
 
   /**
    * Recent mission: app label Id
    */
-  appLabelId: string;
+  appLabelId: string | undefined;
 
   /**
    * Recent mission: bundle name
    */
-  bundleName: string;
+  bundleName: string | undefined;
 
   /**
    * Recent mission: ability name
    */
-  abilityName: string;
+  abilityName: string | undefined;
 
   /**
    * Recent mission: lock status
    */
-  lockedState: boolean;
+  lockedState: boolean | undefined;
 }

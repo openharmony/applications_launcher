@@ -2,19 +2,11 @@
   "string": [
     {
       "name": "entry_MainAbility",
-      "value": "pad"
-    },
-    {
-      "name": "entry_CalleeAbility",
-      "value": "pad callee"
+      "value": "Launcher"
     },
     {
       "name": "mainability_description",
       "value": "ETS_Empty Feature Ability"
-    },
-    {
-      "name": "calleeability_description",
-      "value": "ETS_Empty Callee Ability"
     },
     {
       "name": "dock_all_app_entry",
@@ -87,6 +79,10 @@
     {
       "name": "add_blank_page",
       "value": "添加空白页"
+    },
+    {
+      "name": "app_menu_open",
+      "value": "打开"
     },
     {
       "name": "delete_blank_page",
@@ -171,6 +167,10 @@
     {
       "name": "No_running_apps_recently",
       "value": "最近无运行应用"
+    },
+    {
+      "name": "remove_app_from_folder",
+      "value": "移出文件夹"
     }
   ]
 }

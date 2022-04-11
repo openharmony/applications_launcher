@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -42,7 +42,7 @@ export default class MenuInfo {
   /**
    * 菜单点击回调
    */
-  onMenuClick: Function = null;
+  onMenuClick: Function | undefined;
 
   /**
    * shortcut icon Id
@@ -57,5 +57,5 @@ export default class MenuInfo {
   /**
    * bundleName
    */
-  bundleName: string = null;
+  bundleName: string | undefined;
 }

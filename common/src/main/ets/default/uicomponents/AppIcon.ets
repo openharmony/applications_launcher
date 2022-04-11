@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,16 +16,20 @@
 import ResourceManager from '../manager/ResourceManager';
 import BadgeManager from '../manager/BadgeManager';
 import StyleConstants from '../constants/StyleConstants';
+import CheckEmptyUtils from '../utils/CheckEmptyUtils';
+import Log from '../utils/Log';
+
+const TAG = 'AppIcon';
 
 @Component
 export default struct AppIcon {
-  @Prop iconSize: number;
-  @Prop @Watch("updateIcon") appIcon: string;
+  @Prop iconSize: number|string;
+  @Prop appIcon: string;
   @Prop bundleName: string;
-  @State icon: string = ' ';
+  @Prop icon: string;
   @State size: number = 1;
   useCache: boolean = true;
-  @Prop @Watch("updateBadge") badgeNumber: number;
+  @Prop badgeNumber: number;
   @State badge: number = 0;
   badgeFontSize: number = StyleConstants.DEFAULT_BADGE_FONT_SIZE;
   private mResourceManager;
@@ -33,12 +37,11 @@ export default struct AppIcon {
   private mDefaultAppIcon;
 
   public aboutToAppear(): void  {
-    this.mDefaultAppIcon = StyleConstants.DEFAULT_ICON;
-    this.icon = this.mDefaultAppIcon;
     this.mResourceManager = ResourceManager.getInstance();
     this.mBadgeManager = BadgeManager.getInstance();
-    this.updateIcon();
-    this.updateBadge();
+    if (CheckEmptyUtils.isEmpty(this.icon)) {
+      this.updateIcon();
+    }
   }
 
   public iconLoadCallback(image) {
@@ -78,8 +81,7 @@ export default struct AppIcon {
       .height(this.iconSize)
     }
     .onHover((isHover: boolean) => {
-      console.info('Launcher AppIcon onHover isHover ' + isHover);
-      this.size = isHover ? 1.15 : 1
+      Log.showInfo(TAG, `onHover isHover ${isHover}`);
     })
     .onTouch((event: TouchEvent) => {
       if (event.type === TouchType.Down) {

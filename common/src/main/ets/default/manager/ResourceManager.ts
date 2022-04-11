@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-import Resmgr from '@ohos.resourceManager';
 import AppResourceCacheManager from '../cache/AppResourceCacheManager';
 import CheckEmptyUtils from '../utils/CheckEmptyUtils';
 import Log from '../utils/Log';
@@ -23,21 +22,47 @@ const KEY_NAME = 'name';
 const TAG = 'ResourceManager';
 
 export default class ResourceManager {
-  private static readonly resourceManager: ResourceManager = new ResourceManager();
-  private mAppResourceCacheManager: AppResourceCacheManager | undefined = undefined;
-
   private constructor() {
   }
 
   static getInstance(): ResourceManager {
-    return this.resourceManager;
+    if (globalThis.ResourceManager == null) {
+      globalThis.ResourceManager = new ResourceManager();
+    }
+    return globalThis.ResourceManager;
   }
 
   private getAppResourceCacheManager(): AppResourceCacheManager {
-    if (this.mAppResourceCacheManager == undefined) {
-      this.mAppResourceCacheManager = new AppResourceCacheManager();
+    if (globalThis.AppResourceCacheManager == null) {
+      globalThis.AppResourceCacheManager = new AppResourceCacheManager();
     }
-    return this.mAppResourceCacheManager;
+    return globalThis.AppResourceCacheManager;
+  }
+
+  getCachedAppIcon(iconId, bundleName) {
+    const cacheKey = `${iconId}${bundleName}`;
+    return this.getAppResourceCacheManager().getCache(cacheKey, KEY_ICON);
+  }
+
+  async updateIconCache(iconId, bundleName): Promise<void> {
+    try {
+      let cacheKey = `${iconId}${bundleName}`;
+      const iconBase64 = this.getAppResourceCacheManager().getCache(cacheKey, KEY_ICON);
+      if (!CheckEmptyUtils.isEmpty(iconBase64)) {
+        return;
+      }
+      const bundleContext = globalThis.desktopContext.createBundleContext(bundleName);
+      if (bundleContext == null) {
+        return;
+      }
+      await bundleContext.resourceManager.getMediaBase64(iconId).then((value)=> {
+        if (value != null) {
+          this.getAppResourceCacheManager().setCache(cacheKey, KEY_ICON, value);
+        }
+      });
+    } catch (error) {
+      Log.showError(TAG, `updateIconCache error ${error}`);
+    }
   }
 
   getAppIconWithCache(iconId, bundleName, callback, defaultAppIcon) {
@@ -158,7 +183,7 @@ export default class ResourceManager {
    * @param {number} resource.id
    * @param {function} callback(value)
    */
-  getStringById(resId: number, callback) {
+  getStringById(resId: number, callback: (value: string) => void): void {
     if (this.isResourceManagerEmpty()) {
       Log.showError(TAG, 'resourceManager is empty');
       callback('');
@@ -180,6 +205,12 @@ export default class ResourceManager {
   private isResourceManagerEmpty(): boolean {
     return CheckEmptyUtils.isEmpty(globalThis.desktopContext)
     || CheckEmptyUtils.isEmpty(globalThis.desktopContext.resourceManager);
+  }
+
+  public async getStringByResource(res: Resource): Promise<string>{
+    const json = JSON.parse(JSON.stringify(res));
+    const id = json.id;
+    return await this.getStringByIdSync(id);
   }
 
   /**

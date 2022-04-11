@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -46,19 +46,29 @@ export default class FormViewModel {
   }
 
   /**
-   * Return an instance of FormViewModel.
+   * Get the form view model object.
+   *
+   * @return {object} form view model singleton
    */
-  static getInstance() {
+  static getInstance(): FormViewModel {
     if (globalThis.FormViewModelInstance == null) {
       globalThis.FormViewModelInstance = new FormViewModel();
     }
     return globalThis.FormViewModelInstance;
   }
 
+  /**
+   * Get the form style config info.
+   *
+   * @return {object} mFormStyleConfig - get the style from layout config manager.
+   */
   getFormStyleConfig(): FormStyleConfig {
     return this.mFormStyleConfig;
   }
 
+  /**
+   * Event listener about jump to form manager view.
+   */
   private readonly mLocalEventListener = {
     onReceiveEvent: (event, params) => {
       Log.showInfo(TAG, `Launcher FormViewModel receive event: ${event}, params: ${JSON.stringify(params)}`);
@@ -69,7 +79,9 @@ export default class FormViewModel {
   };
 
   /**
-   * jump to form view
+   * Jump to form manager view
+   *
+   * @param {string} params - the formInfo witch can get service widget.
    */
   async jumpToFormManagerView(params) {
     Log.showInfo(TAG, `Launcher FormViewModel jumpToFormManagerView params: ${JSON.stringify(params)}`);
@@ -92,7 +104,7 @@ export default class FormViewModel {
   async isSupportForm(appInfo) {
     const formInfoList = await this.mFormModel.getAllFormsInfo();
     const formInfo: any = formInfoList.find(item => {
-      if (item.bundleName == appInfo.bundleName) {
+      if (item.bundleName === appInfo.bundleName) {
         return true;
       }
     });
@@ -107,13 +119,13 @@ export default class FormViewModel {
    * Obtains the FormInfo objects provided by all ohos applications on the device.
    */
   async getForms() {
-    console.info('Launcher FormViewModel getForms');
+    Log.showInfo(TAG, 'getForms start');
     this.mAllFormsInfo = await this.mFormModel.getAllFormsInfo();
     AppStorage.SetOrCreate('allFormsInfo', this.mAllFormsInfo);
   }
 
   /**
-   * Delete form
+   * Delete form by cardId.
    *
    * @param {number} cardId.
    */
@@ -123,7 +135,6 @@ export default class FormViewModel {
       layoutInfo: []
     };
     gridLayoutInfo = this.mPageDesktopViewModel.getLayoutInfo();
-
     const cardIndex = gridLayoutInfo.layoutInfo.findIndex(item => {
       return item.type === CommonConstants.TYPE_CARD && item.cardId === cardId;
     });
@@ -132,18 +143,17 @@ export default class FormViewModel {
       gridLayoutInfo.layoutInfo.splice(cardIndex, 1);
       this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfo);
     }
-
     const formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
-    if (formInfoList == CommonConstants.INVALID_VALUE) {
+    if (formInfoList === CommonConstants.INVALID_VALUE) {
       return;
     }
     for(let i = 0; i < formInfoList.length; i++) {
-      if (formInfoList[i].cardId == cardId){
+      if (formInfoList[i].cardId === cardId){
         formInfoList.splice(i, 1);
         break;
       }
     }
-    if (formInfoList.length == 0) {
+    if (formInfoList.length === 0) {
       this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, null);
     } else {
       this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, formInfoList);

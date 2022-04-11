@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,8 +20,12 @@ import PageDesktopDragHandler from '../common/PageDesktopDragHandler';
 import GridSwiper from '../common/components/GridSwiper.ets';
 import FeatureConstants from '../common/constants/FeatureConstants';
 import Trace from '../../../../../../../common/src/main/ets/default/utils/Trace';
+import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
+import AppMenu from '../../../../../../../common/src/main/ets/default/uicomponents/AppMenu.ets';
+import MenuInfo from '../../../../../../../common/src/main/ets/default/bean/MenuInfo';
 
 let mPageDesktopViewModel: PageDesktopViewModel = null;
+const TAG = "PageDesktopLayout";
 
 @Component
 export default struct PageDesktopLayout {
@@ -31,27 +35,13 @@ export default struct PageDesktopLayout {
   @StorageLink('dragLocation') @Watch('onTouchEventUpdate') dragLocation: string = '';
   @StorageLink('workSpaceWidth') @Watch('updateDeskTopParams') workSpaceWidth: number = 0;
   @StorageLink('workSpaceHeight') @Watch('updateDeskTopParams') workSpaceHeight: number = 0;
-  @StorageLink('dialogControllerStatus') @Watch('updateDialogControllerStatus') dialogControllerStatus: boolean = false;
   @State device: string = 'phone';
   @State @Watch('updateDeskTopParams') mMargin: number = 0;
   @State mTop: number = 0;
   @State @Watch('changeGridConfig') gridConfig: string = '';
+  @StorageLink('menuId') menuId: number = 0;
   private mPageDesktopDragHandler : PageDesktopDragHandler = null;
   private isPad: boolean = false;
-  dialogController: CustomDialogController = new CustomDialogController({
-    builder: ShowDialog(),
-    cancel: this.cancelDialog,
-    autoCancel: true,
-    customStyle : true
-  });
-
-  updateDialogControllerStatus() {
-    this.dialogController.close();
-  }
-
-  cancelDialog() {
-    console.info('Launcher Grid Cancel Dialog');
-  }
 
   private aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
@@ -96,8 +86,55 @@ export default struct PageDesktopLayout {
     mPageDesktopViewModel.getGridList();
   }
 
+  private buildLog(): boolean {
+    Log.showInfo(TAG, 'build start');
+    return true;
+  }
+
+  private getMenu() {
+    let menuInfoList = new Array<MenuInfo>();
+    let setting = new MenuInfo();
+    setting.menuType = CommonConstants.MENU_TYPE_FIXED
+    setting.menuImgSrc = "/common/pics/ic_public_settings.svg"
+    setting.menuText = $r('app.string.into_settings')
+    setting.onMenuClick = () => {
+      Trace.start(Trace.CORE_METHOD_START_SETTINGS);
+      mPageDesktopViewModel.intoSetting();
+    }
+    menuInfoList.push(setting);
+
+    let addOrDeleteBlankPage = new MenuInfo();
+    addOrDeleteBlankPage.menuType = CommonConstants.MENU_TYPE_FIXED
+    addOrDeleteBlankPage.menuImgSrc = mPageDesktopViewModel.getBlankPageBtnIcon()
+    addOrDeleteBlankPage.menuText = mPageDesktopViewModel.getBlankPageBtnStr()
+    addOrDeleteBlankPage.onMenuClick = () => {
+      mPageDesktopViewModel.addOrDeleteBlankPage();
+    }
+    menuInfoList.push(addOrDeleteBlankPage);
+    return menuInfoList;
+  }
+
+  private logId() {
+    Log.showInfo(TAG, `MenuBuilder build start ${this.menuId}`);
+    return true;
+  }
+
+  @Builder MenuBuilder() {
+    if (this.logId()) {
+      Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
+        AppMenu({
+          menuInfoList: this.getMenu()
+        })
+      }
+      .width(StyleConstants.CONTEXT_MENU_WIDTH)
+      .borderRadius(StyleConstants.DEFAULT_12)
+    }
+  }
+
   build() {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
+      if (this.buildLog()) {
+      }
       Column() {
         GridSwiper({
           mAppGridInfo: this.AppListInfo.appGridInfo,
@@ -108,82 +145,12 @@ export default struct PageDesktopLayout {
       .width(StyleConstants.PERCENTAGE_100)
       .height(StyleConstants.PERCENTAGE_100)
     }
-    .gesture(
-    LongPressGesture({ repeat: false })
-      .onAction((event: GestureEvent) => {
-        mPageDesktopViewModel.onPageLongPress();
-        this.dialogController.open();
-      })
-    )
-    .onMouse((event: MouseEvent) => {
-      if (event.button == MouseButton.Right) {
-        event.stopPropagation();
-        console.info('Launcher PageDesktopLayout onMouse MouseButton Right');
-        mPageDesktopViewModel.onPageLongPress();
-        this.dialogController.open();
-      }
-    })
+    .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
+    .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
     .width(StyleConstants.PERCENTAGE_100)
     .height(StyleConstants.PERCENTAGE_100)
     .onClick(() => {
       AppStorage.SetOrCreate('selectDesktopAppItem', null)
     })
-  }
-}
-
-@CustomDialog
-struct ShowDialog {
-  controller: CustomDialogController;
-  cancel: () => void;
-  action: () => void;
-  @StorageLink('blankPageBtnText') buttonText: string = '';
-
-  build() {
-    Column() {
-      Text($r('app.string.launcher_edit'))
-        .fontSize(StyleConstants.DEFAULT_BADGE_FONT_SIZE)
-        .fontColor(StyleConstants.TEXT_COLOR_PRIMARY)
-        .margin({top : StyleConstants.DEFAULT_DIALOG_RADIUS, bottom: StyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN})
-
-      Flex({justifyContent: FlexAlign.SpaceEvenly}) {
-        Button() {
-          Text($r('app.string.into_settings'))
-            .fontSize(StyleConstants.DEFAULT_BADGE_FONT_SIZE)
-            .fontColor(StyleConstants.BUTTON_FONT_COLOR)
-        }
-        .backgroundColor(StyleConstants.DEFAULT_BG_COLOR)
-        .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
-        .onClick(() => {
-          Trace.start(Trace.CORE_METHOD_START_SETTINGS);
-          mPageDesktopViewModel.intoSetting();
-          this.controller.close();
-        })
-
-        Divider()
-          .vertical(true)
-          .color(StyleConstants.DEFAULT_DIVIDER_COLOR)
-          .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
-
-        Button() {
-          Text(this.buttonText)
-            .fontSize(StyleConstants.DEFAULT_BADGE_FONT_SIZE)
-            .fontColor(StyleConstants.BUTTON_FONT_COLOR)
-        }
-        .backgroundColor(StyleConstants.DEFAULT_BG_COLOR)
-        .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
-        .onClick(() => {
-          mPageDesktopViewModel.addOrDeleteBlankPage();
-          this.controller.close();
-        })
-      }
-    }
-    .backgroundColor(Color.White)
-    .padding({
-      bottom: StyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN
-    })
-    .border({
-      radius: StyleConstants.DEFAULT_DIALOG_RADIUS
-    })
-    .width(StyleConstants.DEFAULT_DIALOG_WIDTH)
   }
 }

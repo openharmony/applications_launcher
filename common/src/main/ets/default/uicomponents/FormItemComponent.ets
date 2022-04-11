@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import StyleConstants from '../constants/StyleConstants';
 import PresetStyleConstants from '../constants/PresetStyleConstants';
 import AppMenu from './AppMenu.ets';
@@ -58,7 +59,7 @@ export default struct FormItemComponent {
   build() {
     Column() {
       FormComponent({
-        id: 0,
+        id: this.formItem.cardId,
         name: this.formItem.cardName,
         bundle: this.formItem.bundleName,
         ability: this.formItem.abilityName,
@@ -70,7 +71,7 @@ export default struct FormItemComponent {
         .allowUpdate(this.isAllowUpdate)
         .visibility(this.isShow ? Visibility.Visible : Visibility.None)
         .onAcquired((form) => {
-          console.info(`FormComponent card id is:${form.id}`);
+          Log.showInfo(TAG, `FormComponent card id is: ${form.id}`);
           this.formId = form.id;
           if (this.getFormId) {
             this.getFormId(form.id);
@@ -83,7 +84,7 @@ export default struct FormItemComponent {
           }
         })
         .onError((error) => {
-          console.info(' FormComponent error msg:' + error.msg);
+          Log.showInfo(TAG, `FormComponent error msg: ${error.msg}`);
         })
 
       Column() {
@@ -101,16 +102,15 @@ export default struct FormItemComponent {
       .visibility(this.showFormName ? Visibility.Visible : Visibility.Hidden)
     }
     .onHover((isHover: boolean) => {
-      console.info(`Launcher Form onHover isHover:${isHover}`);
+      Log.showInfo(TAG, `Form onHover isHover: ${isHover}`);
       this.isHover = isHover;
     })
     .onDisAppear(() => {
-      console.log('formItemComponent onDisAppear: ' + this.formId);
+      Log.showInfo(TAG, `formItemComponent onDisAppear: ${this.formId}`);
     })
     .padding({top : this.mPaddingTop})
     .height(StyleConstants.PERCENTAGE_100)
     .width(StyleConstants.PERCENTAGE_100)
-    .scale({ x: this.isHover ? 1.15 : 1.0, y: this.isHover ? 1.15 : 1.0 })
     .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
     .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
   }

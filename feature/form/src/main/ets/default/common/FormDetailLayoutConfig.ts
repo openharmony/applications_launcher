@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import FeatureConstants from './constants/FeatureConstants';
 const TAG = 'FormDetailLayoutConfig';
 
 /**
- * Folder information data model
+ * Form information data model.
  */
 export default class FormDetailLayoutConfig extends FormLayoutConfig{
 
@@ -29,7 +29,7 @@ export default class FormDetailLayoutConfig extends FormLayoutConfig{
   }
 
   /**
-   * Get form detail layout info object
+   * Get form detail layout info object.
    *
    * @return Single instance of form data model
    */
@@ -41,14 +41,27 @@ export default class FormDetailLayoutConfig extends FormLayoutConfig{
     return globalThis.FormDetailLayoutConfigInstance;
   }
 
-  initConfig() {
+  /**
+   * Init recent mode configuration.
+   */
+  initConfig(): void {
   }
 
+  /**
+   * Get form detail layout configuration level.
+   *
+   * @return {string} feature-level layout configuration
+   */
   getConfigLevel(): string {
     return CommonConstants.LAYOUT_CONFIG_LEVEL_FEATURE;
   }
 
-  getFeatureName() {
+  /**
+   * Get form detail layout configuration feature name.
+   *
+   * @return {string} feature name
+   */
+  getFeatureName(): string {
     return FeatureConstants.FEATURE_NAME;
   }
 }

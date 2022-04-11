@@ -2,7 +2,7 @@
   "string": [
     {
       "name": "entry_MainAbility",
-      "value": "phone"
+      "value": "Launcher"
     },
     {
       "name": "mainability_description",
@@ -163,6 +163,14 @@
     {
       "name": "No_running_apps_recently",
       "value": "最近无运行应用"
+    },
+    {
+      "name": "app_menu_open",
+      "value": "打开"
+    },
+    {
+      "name": "remove_app_from_folder",
+      "value": "移出文件夹"
     }
   ]
 }

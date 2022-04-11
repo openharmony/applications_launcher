@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,6 +28,9 @@ import FeatureConstants from '../constants/FeatureConstants';
 const FORM_INFO_REFRESH_DELAY = 500;
 const TAG = 'FormItem';
 
+/**
+ * Form item, which display on desktop workspace.
+ */
 @Component
 export default struct FormItem {
   @StorageLink('isRemoveForm') @Watch('removeFormAnimate') isRemoveForm: boolean = false;
@@ -44,7 +47,7 @@ export default struct FormItem {
   private mFormViewModel: FormViewModel;
   private mFormStyleConfig: FormStyleConfig;
   private mPageDesktopDragHandler: PageDesktopDragHandler;
-  @State isDraging: boolean = false;
+  @State isDragging: boolean = false;
   @State mFormNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   @State mAppItemWidth: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
   @State mFormNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
@@ -75,6 +78,9 @@ export default struct FormItem {
     this.mFormItemHeight = this.mFormStyleConfig.mFormHeight.get(this.formItem.cardDimension.toString());
   }
 
+  /**
+   * Animation effect when card is removed.
+   */
   private removeFormAnimate() {
     Log.showInfo(TAG, `removeFormAnimate start`);
     if (this.isRemoveForm &&
@@ -102,6 +108,9 @@ export default struct FormItem {
     }
   }
 
+  /**
+   * Dialog for form remove.
+   */
   dialogController: CustomDialogController = new CustomDialogController({
     builder:  RemoveFormDialog({
       cancel: () => {},
@@ -116,10 +125,16 @@ export default struct FormItem {
     customStyle: true
   });
 
+  /**
+   * When click cancel dialog, this function will be called.
+   */
   cancelDialog() {
-    console.info('Launcher delete form cancel dialog');
+    Log.showInfo(TAG, 'cancel form dialog');
   }
 
+  /**
+   * Dialog for form manager view (pad adaptation).
+   */
   formManagerDialogController: CustomDialogController = new CustomDialogController({
     builder: FormManagerDialog({
       cancel: () => {
@@ -127,10 +142,9 @@ export default struct FormItem {
       },
       confirm: (formCardItem) => {
         // add form to desktop
-        Log.showInfo(TAG, "createCardToDeskTop formCardItem: " + JSON.stringify(formCardItem));
+        Log.showInfo(TAG, `createCardToDeskTop formCardItem: ${JSON.stringify(formCardItem)}`);
         this.mPageDesktopViewModel.createCardToDeskTop(formCardItem);
         // delete other form
-
       },
       bundleName: this.formItem.bundleName,
       appName: this.mPageDesktopViewModel.getAppName(this.formItem.appLabelId + this.formItem.bundleName),
@@ -141,42 +155,48 @@ export default struct FormItem {
     customStyle: true
   });
 
+  /**
+   * When click cancel dialog, this function will be called.
+   */
   cancelFormDialog() {
-    console.info('Launcher form manager cancel dialog');
+    Log.showInfo(TAG, 'cancel dialog');
   }
 
-
+  /**
+   * The form item on desktop workspace: drag state listener.
+   */
   private mDragStateListener = {
     onItemDragStart: (event: any, itemIndex: number) => {
-      this.isDraging = true;
+      this.isDragging = true;
     },
     onItemDragMove: (event: any, insertIndex: number, itemIndex: number) => {
       if (this.isSwappingPage) {
         return;
       }
-
       let moveX = event.touches[0].screenX;
       let moveY = event.touches[0].screenY;
       if ((moveX - this.mAppItemWidth / 2) < this.mMargin
       && this.mPageDesktopViewModel.getIndex() > 0 && moveY < this.mGridSpaceHeight) {
-        this.mPageDesktopViewModel.changeIndex(this.mPageDesktopViewModel.getIndex() - 1);
+        this.mPageDesktopViewModel.showPrevious();
         this.movingFormSwapPageDelay();
       } else if ((moveX + this.mAppItemWidth / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
-        if (this.mPageDesktopViewModel.getIndex() == this.mPageDesktopViewModel.getGridPageCount() - 1
+        if (this.mPageDesktopViewModel.getIndex() === this.mPageDesktopViewModel.getGridPageCount() - 1
         && !this.mPageDesktopViewModel.isBlankPage()) {
           this.mPageDesktopViewModel.addBlankPage();
         } else if (this.mPageDesktopViewModel.getIndex() < this.mPageDesktopViewModel.getGridPageCount() - 1) {
-          this.mPageDesktopViewModel.changeIndex(this.mPageDesktopViewModel.getIndex() + 1);
+          this.mPageDesktopViewModel.showNext();
         }
         this.movingFormSwapPageDelay();
       }
-
     },
     onItemDragEnd: (event: any, insertIndex: number, itemIndex: number) => {
-      this.isDraging = false;
+      this.isDragging = false;
     }
   };
 
+  /**
+   * Increase delay when dragging card to other page.
+   */
   movingFormSwapPageDelay() {
     this.isSwappingPage = true;
     setTimeout(() => {
@@ -186,7 +206,7 @@ export default struct FormItem {
 
   build() {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceAround }) {
-      if (!this.isDraging) {
+      if (!this.isDragging) {
         Column() {
           FormItemComponent({
             formItemWidth: this.mFormItemWidth,
@@ -198,7 +218,8 @@ export default struct FormItem {
             nameLines: this.mNameLines,
             mPaddingTop: this.mIconMarginVertical,
             iconNameMargin: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mIconNameMargin,
-            menuInfo: this.mPageDesktopViewModel.buildCardMenuInfoList(this.formItem, this.dialogController, this.formManagerDialogController),
+            menuInfo: this.mPageDesktopViewModel.buildCardMenuInfoList(this.formItem,
+              this.dialogController, this.formManagerDialogController),
             clickForm: (event, formItem) => {
               this.mPageDesktopViewModel.openApplication(this.formItem.abilityName, this.formItem.bundleName);
             }
@@ -207,16 +228,16 @@ export default struct FormItem {
         .scale({ x: this.animateScale, y: this.animateScale })
         .opacity(this.animateOpacity)
         .onMouse((event: MouseEvent) => {
-          if (event.button == MouseButton.Right) {
+          if (event.button === MouseButton.Right) {
             event.stopPropagation();
-            console.info('Launcher FormItem onMouse MouseButton Right');
+            Log.showInfo(TAG, 'onMouse mouse button right');
           }
         })
         .gesture(
           GestureGroup(GestureMode.Exclusive,
           TapGesture({ count: 2 })
             .onAction((event: GestureEvent) => {
-              console.info('Launcher FormItem TapGesture double click');
+              Log.showInfo(TAG, 'mouse double click');
               this.mPageDesktopViewModel.onAppDoubleClick(this.formItem.abilityName, this.formItem.bundleName);
             })
           )

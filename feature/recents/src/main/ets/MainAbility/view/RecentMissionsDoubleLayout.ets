@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,14 +20,16 @@ import RecentMissionsViewModel from '../viewmodel/RecentMissionsViewModel';
 
 const TAG = 'RecentMissionsDoubleLayout';
 
+/**
+ * Double-line display of recent task list (pad adaptation).
+ */
 @Component
 export default struct RecentMissionsDoubleLayout {
-  @Link mRecentMissionsDoubleList: [];
-  @Link mIsClickSubComponent: boolean;
+  @Link recentMissionsDoubleList: [];
+  @Link isClickSubComponent: boolean;
   private mRecentMissionsViewModel: RecentMissionsViewModel;
-  private mScroll: Scroller = new Scroller();
 
-  private aboutToAppear(): void  {
+  private aboutToAppear(): void {
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
   }
 
@@ -35,7 +37,7 @@ export default struct RecentMissionsDoubleLayout {
     Column() {
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Start, justifyContent: FlexAlign.Center }) {
         Grid() {
-          ForEach(this.mRecentMissionsDoubleList, (item) => {
+          ForEach(this.recentMissionsDoubleList, (item) => {
               GridItem() {
                 RecentMissionCard({
                   missionId: item.missionId,
@@ -45,7 +47,7 @@ export default struct RecentMissionsDoubleLayout {
                   bundleName: item.bundleName,
                   abilityName: item.abilityName,
                   lockedState: item.lockedState,
-                  mIsClickSubComponent: $mIsClickSubComponent
+                  isClickSubComponent: $isClickSubComponent
                 })
               }
               .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
@@ -54,6 +56,7 @@ export default struct RecentMissionsDoubleLayout {
         }
         .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
         .rowsTemplate('1fr 1fr')
+        .direction(Direction.Rtl)
         .columnsGap(StyleConstants.DOUBLE_LIST_LAYOUT_MARGIN)
         .rowsGap(StyleConstants.DOUBLE_LIST_LAYOUT_MARGIN)
       }
@@ -73,8 +76,8 @@ export default struct RecentMissionsDoubleLayout {
       .padding(8)
       .margin({top: StyleConstants.DOUBLE_LIST_BOTTOM_MARGIN})
       .onClick(() => {
-        this.mIsClickSubComponent = true;
-        Log.showInfo(TAG, `click delete button`);
+        this.isClickSubComponent = true;
+        Log.showInfo(TAG, 'onClick click delete button');
         this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
         this.mRecentMissionsViewModel.backView();
       })

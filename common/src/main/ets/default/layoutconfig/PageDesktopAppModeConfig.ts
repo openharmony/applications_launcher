@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,8 +27,6 @@ export default class PageDesktopAppModeConfig extends ILayoutConfig {
 
   private static readonly DEFAULT_LAYOUT_INFO: any = [];
 
-  private static sInstance: PageDesktopAppModeConfig = null;
-
   private mAppListInfo: any = PageDesktopAppModeConfig.DEFAULT_LAYOUT_INFO;
 
   protected constructor() {
@@ -39,11 +37,11 @@ export default class PageDesktopAppModeConfig extends ILayoutConfig {
    * 获取工作空间功能布局配置实例
    */
   static getInstance() {
-    if (PageDesktopAppModeConfig.sInstance == null) {
-      PageDesktopAppModeConfig.sInstance = new PageDesktopAppModeConfig();
-      PageDesktopAppModeConfig.sInstance.initConfig();
+    if (globalThis.PageDesktopAppModeConfig == null) {
+      globalThis.PageDesktopAppModeConfig = new PageDesktopAppModeConfig();
+      globalThis.PageDesktopAppModeConfig.initConfig();
     }
-    return PageDesktopAppModeConfig.sInstance;
+    return globalThis.PageDesktopAppModeConfig;
   }
 
   initConfig(): void {
@@ -72,7 +70,7 @@ export default class PageDesktopAppModeConfig extends ILayoutConfig {
    *
    * @params appListInfo
    */
-  updateAppListInfo(appListInfo): void {
+  updateAppListInfo(appListInfo: object): void {
     this.mAppListInfo = appListInfo;
     super.persistConfig();
   }

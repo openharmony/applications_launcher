@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,6 @@
 
 import BaseDragHandler from '../../../../../../../common/src/main/ets/default/base/BaseDragHandler';
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
 import PageDesktopViewModel from './viewmodel/PageDesktopViewModel';
 import FolderViewModel from '../../../../../../bigfolder/src/main/ets/default/viewmodel/FolderViewModel';
 import FormViewModel from '../../../../../../form/src/main/ets/default/viewmodel/FormViewModel';
@@ -27,7 +26,6 @@ const TAG = 'PageDesktopDragHandler';
  * 桌面工作区拖拽处理类
  */
 export default class PageDesktopDragHandler extends BaseDragHandler {
-  private static sInstance: PageDesktopDragHandler = null;
   private readonly mPageDesktopViewModel: PageDesktopViewModel;
   private readonly mFolderViewModel: FolderViewModel;
   private readonly mFormViewModel: FormViewModel;
@@ -50,10 +48,10 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   }
 
   static getInstance(): PageDesktopDragHandler {
-    if (PageDesktopDragHandler.sInstance == null) {
-      PageDesktopDragHandler.sInstance = new PageDesktopDragHandler();
+    if (globalThis.PageDesktopDragHandler == null) {
+      globalThis.PageDesktopDragHandler = new PageDesktopDragHandler();
     }
-    return PageDesktopDragHandler.sInstance;
+    return globalThis.PageDesktopDragHandler;
   }
 
   setDragEffectArea(effectArea): void {
@@ -96,6 +94,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   protected getItemIndex(event: any): number {
     const x = event.touches[0].screenX;
     const y = event.touches[0].screenY;
+    console.info('Launcher PageDesktop getItemIndex x: ' + x + ', y: ' + y);
     let rowVal = CommonConstants.INVALID_VALUE;
     for (let index = 0; index < this.mPageCoordinateData.gridYAxis.length; index++) {
       if (this.mPageCoordinateData.gridYAxis[index] > y) {
@@ -208,33 +207,34 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     AppStorage.SetOrCreate('overlayPositionY', moveAppY);
     if (dragItemInfo.type == CommonConstants.TYPE_APP){
       AppStorage.SetOrCreate('overlayData', {
-        iconSize: this.styleConfig.mIconSize * 1.15,
-        nameSize: this.styleConfig.mNameSize * 1.15,
-        nameHeight: this.styleConfig.mNameHeight * 1.15,
+        iconSize: this.styleConfig.mIconSize * 1.05,
+        nameSize: this.styleConfig.mNameSize * 1.05,
+        nameHeight: this.styleConfig.mNameHeight * 1.05,
         appInfo: this.getDragItemInfo(),
       });
       AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_APP_ICON);
     } else if (dragItemInfo.type == CommonConstants.TYPE_FOLDER) {
       const folderStyleConfig = this.mFolderViewModel.getFolderStyleConfig();
 
-      const folderSize = folderStyleConfig.mGridSize * 1.15;
-      const iconSize = folderStyleConfig.mFolderAppSize * 1.15;
-      const gridMargin = folderStyleConfig.mGridMargin * 1.15;
-      const gridGap = folderStyleConfig.mFolderGridGap * 1.15;
+      const folderSize = folderStyleConfig.mGridSize * 1.05;
+      const iconSize = folderStyleConfig.mFolderAppSize * 1.05;
+      const gridMargin = folderStyleConfig.mGridMargin * 1.05;
+      const gridGap = folderStyleConfig.mFolderGridGap * 1.05;
       AppStorage.SetOrCreate('overlayData', {
         folderHeight: folderSize,
         folderWidth: folderSize,
         folderGridSize: folderSize,
         appIconSize: iconSize,
-        gridMargin: gridGap,
+        gridMargin: gridMargin,
+        gridGap: gridGap,
         folderInfo: this.getDragItemInfo()
       });
       AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_FOLDER);
     } else if (dragItemInfo.type == CommonConstants.TYPE_CARD) {
       const formStyleConfig = this.mFormViewModel.getFormStyleConfig();
       const cardDimension = dragItemInfo.cardDimension.toString();
-      const formHeight = formStyleConfig.mFormHeight.get(cardDimension) * 1.15;
-      const formWidth = formStyleConfig.mFormWidth.get(cardDimension) * 1.15;
+      const formHeight = formStyleConfig.mFormHeight.get(cardDimension) * 1.05;
+      const formWidth = formStyleConfig.mFormWidth.get(cardDimension) * 1.05;
       AppStorage.SetOrCreate('overlayData', {
         formHeight: formHeight,
         formWidth: formWidth,
@@ -383,6 +383,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
       console.info('Launcher PageDesktop onDragEnd remove item');
       this.removeItemFromDeskTop(this.mStartPosition);
     }
+    this.mPageDesktopViewModel.deleteBlankPageByPageNo(this.mStartPosition.page);
     this.mStartPosition = null;
     this.mEndPosition = null;
     AppStorage.SetOrCreate('dragFocus', '');
@@ -742,12 +743,11 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     const coverPositionCount = new Map<string, number>();
     Log.showInfo(TAG, `checkCanMoveInSamePage foldersAndForms.length: ${foldersAndForms.length}`);
     for (let i = 0; i < foldersAndForms.length; i++) {
-      const tmp = coverPositionCount.get(foldersAndForms[i].bundleName);
-      Log.showInfo(TAG, `checkCanMoveInSamePage tmp: ${tmp}`);
-      if (tmp != undefined) {
-        coverPositionCount.set(foldersAndForms[i].bundleName, tmp + 1);
+      const bundleName = foldersAndForms[i].bundleName;
+      if (coverPositionCount.has(bundleName)) {
+        coverPositionCount.set(bundleName, coverPositionCount.get(bundleName) + 1);
       } else {
-        coverPositionCount.set(foldersAndForms[i].bundleName, 1);
+        coverPositionCount.set(bundleName, 1);
       }
     }
 

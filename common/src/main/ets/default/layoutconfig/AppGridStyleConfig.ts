@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -112,8 +112,6 @@ export default class AppGridStyleConfig extends ILayoutConfig {
    */
   mIconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
 
-  private static sInstance: AppGridStyleConfig = null;
-
   protected constructor() {
     super();
   }
@@ -122,11 +120,11 @@ export default class AppGridStyleConfig extends ILayoutConfig {
    * 获取应用网格显示样式配置实例
    */
   static getInstance() {
-    if (AppGridStyleConfig.sInstance == null) {
-      AppGridStyleConfig.sInstance = new AppGridStyleConfig();
-      AppGridStyleConfig.sInstance.initConfig();
+    if (globalThis.AppGridStyleConfig == null) {
+      globalThis.AppGridStyleConfig = new AppGridStyleConfig();
+      globalThis.AppGridStyleConfig.initConfig();
     }
-    return AppGridStyleConfig.sInstance;
+    return globalThis.AppGridStyleConfig;
   }
 
   initConfig(): void {

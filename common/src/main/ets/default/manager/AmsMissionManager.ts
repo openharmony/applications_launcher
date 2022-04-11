@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -98,7 +98,8 @@ class AmsMissionManager {
       Log.showError(TAG, 'getRecentBundleMissionsList Empty');
       return recentMissionsList;
     }
-    for (let missionInfo of missionInfos) {
+    for (let i = 0; i < missionInfos.length; i++) {
+      let missionInfo = missionInfos[i];
       let bundleName = missionInfo.want.bundleName!;
       let localMissionInfo = recentMissionsList.find((item) => item.bundleName === bundleName);
       if (localMissionInfo) {
@@ -147,7 +148,7 @@ class AmsMissionManager {
    * Clear all missions in the ability manager service.
    * locked mission will not clear
    *
-   * @param missionId
+   * @return nothing.
    */
   async clearAllMissions(): Promise<void> {
     Log.showInfo(TAG, 'clearAllMissions start!');
@@ -163,7 +164,7 @@ class AmsMissionManager {
   /**
    * lockMission
    *
-   * @param missionId
+   * @param missionId mission id to lock.
    */
   async lockMission(missionId: number): Promise<void> {
     Log.showInfo(TAG, `lockMission start! missionId: ${missionId}`);
@@ -179,7 +180,7 @@ class AmsMissionManager {
   /**
    * unlockMission
    *
-   * @param missionId
+   * @param missionId mission id to unlock.
    */
   async unlockMission(missionId: number): Promise<void> {
     console.info(`unlockMission start! missionId: ${missionId}`);
@@ -195,10 +196,10 @@ class AmsMissionManager {
   /**
    * Get recent mission snapshot info
    *
-   * @param missionId
+   * @param missionId mission id to get snapshot.
    * @return snapshot info
    */
-  async getMissionSnapShot(missionId: number) {
+  async getMissionSnapShot(missionId: number): Promise<object> {
     Log.showInfo(TAG, `getMissionSnapShot start! missionId: ${missionId}`);
     let snapShotInfo: any;
     const pixelMap: {

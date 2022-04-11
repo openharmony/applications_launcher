@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,11 +23,6 @@ import AppGridStyleConfig from '../../../../../../../common/src/main/ets/default
  */
 export default class PageDesktopGridStyleConfig extends AppGridStyleConfig {
   /**
-   * 样式配置索引
-   */
-  private static sFeatureInstance: PageDesktopGridStyleConfig = null;
-
-  /**
    * margin
    */
   mMargin = PresetStyleConstants.DEFAULT_LAYOUT_MARGIN;
@@ -42,11 +37,11 @@ export default class PageDesktopGridStyleConfig extends AppGridStyleConfig {
    * 获取工作空间样式实例
    */
   static getInstance() {
-    if (PageDesktopGridStyleConfig.sFeatureInstance == null) {
-      PageDesktopGridStyleConfig.sFeatureInstance = new PageDesktopGridStyleConfig();
-      PageDesktopGridStyleConfig.sFeatureInstance.initConfig();
+    if (globalThis.PageDesktopGridStyleConfig == null) {
+      globalThis.PageDesktopGridStyleConfig = new PageDesktopGridStyleConfig();
+      globalThis.PageDesktopGridStyleConfig.initConfig();
     }
-    return PageDesktopGridStyleConfig.sFeatureInstance;
+    return globalThis.PageDesktopGridStyleConfig;
   }
 
   initConfig(): void {

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,26 +14,26 @@
  */
 
 /**
- * 通用固定常量定义
+ * Common constants for all features.
  */
 export default class CommonConstants {
   /**
-   * 桌面包名
+   * Bundle name of launcher
    */
   static LAUNCHER_BUNDLE = 'com.ohos.launcher';
 
   /**
-   * 应用中心Ability名
+   * Ability name of AppCenter.
    */
   static APPCENTER_ABILITY = 'com.ohos.launcher.appcenter.MainAbility';
 
   /**
-   * 桌面设置Ability名
+   * Ability name of launcher settings.
    */
   static SETTING_ABILITY = 'com.ohos.launcher.settings.MainAbility';
 
   /**
-   * 桌面多任务Ability名
+   * Ability name of launcher Recents.
    */
   static RECENT_ABILITY = 'com.ohos.launcher.recents.MainAbility';
 
@@ -43,7 +43,7 @@ export default class CommonConstants {
   static LAUNCHER_ABILITY = 'com.ohos.launcher.MainAbility';
 
   /**
-   * 无效值定义
+   * Default invalid value.
    */
   static INVALID_VALUE = -1;
 
@@ -53,27 +53,27 @@ export default class CommonConstants {
   static FOLDER_APP_VALUE = 1;
 
   /**
-   * 卸载成功返回值
+   * Status code if uninstal successed.
    */
   static UNINSTALL_SUCCESS = 0;
 
   /**
-   * 禁止卸载返回值
+   * Status code if uninstall is forbidden.
    */
   static UNINSTALL_FORBID = 1;
 
   /**
-   * 应用类型
+   * Grid item type for apps.
    */
   static TYPE_APP = 0;
 
   /**
-   * 卡片类型
+   * Grid item type for cards.
    */
   static TYPE_CARD = 1;
 
   /**
-   * 功能入口类型
+   * Grid item type for functions.
    */
   static TYPE_FUNCTION = 2;
 
@@ -88,22 +88,22 @@ export default class CommonConstants {
   static TYPE_ADD = 4;
 
   /**
-   * 卡片尺寸1x2
+   * Card dimension constants for 1 row 2 columns.
    */
   static CARD_DIMENSION_1x2 = 1;
 
   /**
-   * 卡片尺寸2x2
+   * Card dimension constants for 2 rows 2 columns.
    */
   static CARD_DIMENSION_2x2 = 2;
 
   /**
-   * 卡片尺寸2x4
+   * Card dimension constants for 2 rows 4 columns.
    */
   static CARD_DIMENSION_2x4 = 3;
 
   /**
-   * 卡片尺寸4x4
+   * Card dimension constants for 4 rows 4 columns.
    */
   static CARD_DIMENSION_4x4 = 4;
 
@@ -281,4 +281,9 @@ export default class CommonConstants {
    * navigationbar status settingDataKey.
    */
   static NAVIGATION_BAR_STATUS_KEY = 'settings.display.navigationbar_status';
+
+  /**
+   * setting data ability uri
+   */
+  static SETTING_DATA_ABILITY_URI: string = 'dataability:///com.ohos.settingsdata.DataAbility';
 }
