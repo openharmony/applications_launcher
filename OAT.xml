@@ -49,7 +49,7 @@
     <oatconfig>
         <policylist>
             <policy name="projectPolicy" desc="">
-                <policyitem type="license" name="Apache-2.0" path="!.*LICENSE" rule="may" group="defaultGroup" filefilter="licenseFileNamePolicyFilter" desc=""/>
+                <policyitem type="license" name="Apache-2.0" path=".*" rule="may" group="defaultGroup" filefilter="licenseFileNamePolicyFilter" desc=""/>
                 <policyitem type="copyright" name="Huawei Device Co., Ltd." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc=""/>
                 <policyitem type="filetype" name="!binary" path=".*" rule="must" group="defaultGroup" filefilter="binaryFileTypePolicyFilter" desc=""/>
             </policy>
