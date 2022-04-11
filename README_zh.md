@@ -48,7 +48,7 @@ Launcher 采用 扩展的TS语言（eTS）开发，主要的结构如下：
 
 ## 说明
 ### 使用说明
-[使用桌面卡片管理功能调试服务卡片](https://gitee.com/OHOS_STD/applications_launcher/blob/OpenHarmony2.0_20210604/docs/使用桌面卡片管理功能调试服务卡片.md)
+[使用桌面卡片管理功能调试服务卡片](https://gitee.com/openharmony/applications_launcher/blob/master/docs/%E4%BD%BF%E7%94%A8Launcher%E5%8D%A1%E7%89%87%E7%AE%A1%E7%90%86%E5%8A%9F%E8%83%BD%E8%B0%83%E8%AF%95%E6%9C%8D%E5%8A%A1%E5%8D%A1%E7%89%87.md)
 
 ## 相关仓
 - [applications_hap](https://gitee.com/openharmony/applications_hap)
