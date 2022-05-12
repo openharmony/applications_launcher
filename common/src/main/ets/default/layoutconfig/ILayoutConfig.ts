@@ -73,7 +73,7 @@ export default abstract class ILayoutConfig {
   /**
    * 强制重新加载配置值
    */
-  forceReloadConfig() {
+  forceReloadConfig(): void {
     this.initConfig();
   }
 
@@ -89,14 +89,14 @@ export default abstract class ILayoutConfig {
   /**
    * 删除配置值
    */
-  deleteConfig() {
+  deleteConfig(): void {
     this.mPreferences.deleteSync(this.getConfigName());
   }
 
   /**
    * 获取当前配置名
    */
-  getFeatureName() {
+  getFeatureName(): string {
     return ILayoutConfig.COMMON_FEATURE_NAME;
   }
 }

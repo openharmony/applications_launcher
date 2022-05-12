@@ -19,7 +19,7 @@ import AppCenterListStyleConfig from './AppCenterListStyleConfig';
 import AppCenterGridStyleConfig from './AppCenterGridStyleConfig';
 
 /**
- * 公共层初始化加载器
+ * public layer initialization loader
  */
 class AppCenterPreLoader extends BaseModulePreLoader {
   protected loadConfig(): void {

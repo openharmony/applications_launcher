@@ -37,29 +37,10 @@ export default class AppListPresenter extends BaseAppPresenter {
     return globalThis.AppListPresenter;
   }
 
-  public async getAppList() {
-    let list: Array<AppItemInfo> | number = this.mAppListInfoCacheManager.getCache(KEY_APP_LIST);
-    if (list != CommonConstants.INVALID_VALUE) {
-      return list;
-    }
-
-    list = await this.mAppModel.getAppList();
-    for (let item of list) {
-      let cacheKey = item.appLabelId + item.bundleName;
-      let appName = this.mResourceManager.getAppResourceCache(cacheKey, KEY_NAME);
-      if (appName != null) {
-        item.appName = appName;
-      } else {
-        let loadAppName = await this.mResourceManager.getAppNameSync(item.appLabelId, item.bundleName, item.appName);
-        console.info("Launcher AppListPresenter getAppList loadAppName:" + loadAppName);
-        item.appName = loadAppName;
-      }
-    }
-
-    list.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
-    this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, list);
-    AppStorage.SetOrCreate('listInfo', list);
-    return list;
+  public async getAppList(): Promise<void> {
+    let appList = await this.mAppModel.getAppList();
+    appList.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
+    AppStorage.SetOrCreate('listInfo', appList);
   }
 
   public async regroupDataAppListChange(callbackList) {
@@ -76,7 +57,6 @@ export default class AppListPresenter extends BaseAppPresenter {
       }
     }
     callbackList.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
-    this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, callbackList);
     animateTo({
       duration: 200,
       curve: Curve.EaseInOut,

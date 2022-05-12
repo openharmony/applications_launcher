@@ -33,7 +33,7 @@ import SmartDockStyleConfig from '../common/SmartDockStyleConfig';
 import SmartDockDragHandler from '../common/SmartDockDragHandler';
 import SmartDockModel from '../model/SmartDockModel';
 
-const TAG = 'SmartDockViewModel'
+const TAG = 'SmartDockViewModel';
 
 /**
  * SmartDock Viewmodel
@@ -111,9 +111,7 @@ export default class SmartDockViewModel extends BaseAppPresenter {
             callback();
           } else if (!CheckEmptyUtils.isEmptyArr(missionList) && missionList.length === 1) {
             let missionId = missionInfoList[i]?.missionInfoList[0]?.missionId;
-            amsMissionManager.moveMissionToFront(missionId).then(() => {
-            }, () => {
-            });
+            amsMissionManager.moveMissionToFront(missionId).then(() => {}, () => {});
           }
           break;
         }
@@ -134,9 +132,7 @@ export default class SmartDockViewModel extends BaseAppPresenter {
    * what SmartDockContent.dockItemList onChange
    */
   onDockListChange() {
-    this.updateDockParams().then(() => {
-    }, () => {
-    });
+    this.updateDockParams().then(() => {}, () => {});
   }
 
   /**
@@ -145,16 +141,17 @@ export default class SmartDockViewModel extends BaseAppPresenter {
   async updateDockParams() {
     const screenWidth: number = AppStorage.Get('screenWidth');
     const screenHeight: number = AppStorage.Get('screenHeight');
-    const systemUiHeight: number = AppStorage.Get('systemUiHeight');
+    const sysUIBottomHeight: number = AppStorage.Get('sysUIBottomHeight');
+    const dockHeight: number = AppStorage.Get('dockHeight');
     const mResidentWidth: number = this.getListWidth(AppStorage.Get('residentList'));
     const mRecentWidth: number = this.getListWidth(AppStorage.Get('recentList'));
 
     if (typeof (this.mSmartDockDragHandler) != 'undefined') {
       this.mSmartDockDragHandler.setDragEffectArea({
-        left: mResidentWidth === 0 ? 0 : (screenWidth - mResidentWidth - this.mSmartDockStyleConfig.mDockGap - mRecentWidth) / 2,
-        right: mResidentWidth === 0 ? screenWidth : (screenWidth - mResidentWidth - this.mSmartDockStyleConfig.mDockGap - mRecentWidth) / 2 + mResidentWidth,
-        top: screenHeight - systemUiHeight - this.mSmartDockStyleConfig.mDockHeight - this.mSmartDockStyleConfig.mDockMargin,
-        bottom: screenHeight - systemUiHeight
+        left: mResidentWidth === 0 ? 0 : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2,
+        right: mResidentWidth === 0 ? screenWidth : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2 + mResidentWidth,
+        top: screenHeight - sysUIBottomHeight - dockHeight,
+        bottom: screenHeight - sysUIBottomHeight
       });
     }
   }
@@ -202,7 +199,7 @@ export default class SmartDockViewModel extends BaseAppPresenter {
     menuInfoList.push(open);
 
     if (appInfo.itemType != CommonConstants.TYPE_FUNCTION) {
-      this.mDevice = AppStorage.Get('dockDevice');
+      this.mDevice = AppStorage.Get('device');
       if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE && dockType === SmartDockConstants.RESIDENT_DOCK_TYPE) {
         const addToWorkSpaceMenu = new MenuInfo();
         addToWorkSpaceMenu.menuType = CommonConstants.MENU_TYPE_FIXED;

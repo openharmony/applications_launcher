@@ -19,8 +19,9 @@ import CommonConstants from '../constants/CommonConstants';
 import Log from '../utils/Log';
 
 const TAG = 'FormManager';
+
 /**
- * form manager
+ * Wrapper class for formManager interfaces.
  */
 export default class FormManager {
   private readonly CARD_SIZE_1x2: number[] = [2, 1];

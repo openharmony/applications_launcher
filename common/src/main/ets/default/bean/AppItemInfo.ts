@@ -63,4 +63,6 @@ export default class AppItemInfo {
   badgeNumber: number | undefined;
 
   checked: boolean | undefined;
+
+  installTime: string | undefined;
 }

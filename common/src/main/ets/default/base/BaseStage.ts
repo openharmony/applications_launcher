@@ -14,21 +14,21 @@
  */
 
 /**
- * Stage基类
+ * Stage base class
  */
 export default class BaseStage {
   constructor() {
   }
 
   /**
-   * Stage启动时的回调
+   * Callback when Stage starts
    */
   onCreate(): void {
     console.info('Launcher BaseStage onCreate!');
   }
 
   /**
-   * Stage退出时回调
+   * Callback when stage exits
    */
   onDestroy(): void {
     console.info('Launcher BaseStage onDestroy!');

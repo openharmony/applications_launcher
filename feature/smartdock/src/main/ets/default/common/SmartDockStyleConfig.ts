@@ -128,7 +128,7 @@ export default class SmartDockStyleConfig extends AppListStyleConfig {
   /**
   * list item offset
   */
-  mItemOffset: {} = {x: 12, y: 12}
+  mItemOffset: {x: number, y: number} = {x: 12, y: 12};
 
   protected constructor() {
     super();
@@ -137,7 +137,7 @@ export default class SmartDockStyleConfig extends AppListStyleConfig {
   /**
    * get SmartDockStyleConfig getInstance
    */
-  static getInstance() {
+  static getInstance(): SmartDockStyleConfig {
     if (globalThis.SmartDockStyleConfig == null) {
       globalThis.SmartDockStyleConfig = new SmartDockStyleConfig();
       Log.showInfo(TAG, 'getInstance!');
@@ -146,7 +146,7 @@ export default class SmartDockStyleConfig extends AppListStyleConfig {
     return globalThis.SmartDockStyleConfig;
   }
 
-  initConfig() {
+  initConfig(): void {
     const result = LayoutViewModel.getInstance().calculateDock();
     this.mDockGap = result.mDockGap;
     this.mIconSize = result.mIconSize;
@@ -158,14 +158,14 @@ export default class SmartDockStyleConfig extends AppListStyleConfig {
     this.mMaxDockNum = result.mMaxDockNum;
     this.mDockHeight = result.mDockHeight;
     this.mMarginBottom = result.mMarginBottom;
-    this.mItemOffset = {x: this.mDockPadding, y: this.mDockPadding}
+    this.mItemOffset = {x: this.mDockPadding, y: this.mDockPadding};
   }
 
   getConfigLevel(): string {
     return CommonConstants.LAYOUT_CONFIG_LEVEL_FEATURE;
   }
 
-  getFeatureName() {
+  getFeatureName(): string {
     return FeatureConstants.FEATURE_NAME;
   }
 }

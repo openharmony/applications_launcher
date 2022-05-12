@@ -89,7 +89,7 @@ export default class LayoutViewModel {
       this.mSysUIBottomHeight = 0;
     }
     Log.showInfo(TAG, `mSysUIBottomHeight: ${this.mSysUIBottomHeight}`);
-    AppStorage.SetOrCreate('systemUiHeight', this.mSysUIBottomHeight);
+    AppStorage.SetOrCreate('sysUIBottomHeight', this.mSysUIBottomHeight);
     Log.showInfo(TAG, `this.mSysUITopHeight ${this.mSysUITopHeight}`);
     Log.showInfo(TAG, `this.mSysUIBottomHeight ${this.mSysUIBottomHeight}`);
     this.mIndicatorHeight = this.mLauncherLayoutStyleConfig.mIndicatorHeight;

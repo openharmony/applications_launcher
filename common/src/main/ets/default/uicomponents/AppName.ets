@@ -40,9 +40,7 @@ export default struct AppName {
   }
 
   public updateName() {
-    if (this.bundleName && this.bundleName.length > 0) {
-      this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
-    }
+    this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
   }
 
   build() {

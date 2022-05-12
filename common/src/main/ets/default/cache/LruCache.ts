@@ -50,7 +50,7 @@ export default class LruCache {
    * @param {string} key - key of the cache map
    * @param {any} value - value of the cache map
    */
-  putCache(key: string, value: any) {
+  putCache(key: string, value: any): void {
     if (this.cache.has(key)) {
       // exist and update
       this.cache.delete(key);
@@ -67,14 +67,14 @@ export default class LruCache {
    *
    * @param {string} key - key of the cache map
    */
-  remove(key: string) {
+  remove(key: string): void {
     this.cache.delete(key);
   }
 
   /**
    * Clear cache of memory.
    */
-  clear() {
+  clear(): void {
     this.cache.clear();
   }
 }

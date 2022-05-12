@@ -15,26 +15,26 @@
 import SettingItemOption from './SettingItemOption';
 
 /**
- * 设置项信息
+ * Item info for launcher settings.
  */
 export default class SettingItemInfo {
   /**
-   * 索引值，设置项在设置项列表中的索引值
+   * Index for setting item.
    */
   ida: number | undefined;
 
   /**
-   * 设置项名称
+   * Setting item name
    */
   settingName: string | undefined;
 
   /**
-   * 设置项的值，为下面设置项选项列表中选中的选项的名称
+   * Current value of this item.
    */
   settingValue: string | undefined;
 
   /**
-   * 设置项选项列表
+   * Option list for this item.
    */
   valueList: SettingItemOption[] = [];
 

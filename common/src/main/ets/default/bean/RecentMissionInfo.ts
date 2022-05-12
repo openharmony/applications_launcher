@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import SnapShotInfo from './SnapShotInfo';
 
 /**
  * Recent mission info
@@ -51,4 +52,9 @@ export default class RecentMissionInfo {
    * Recent mission: lock status
    */
   lockedState: boolean | undefined;
+
+  /**
+   * Recent mission: snapShot info
+   */
+  snapShotInfo: SnapShotInfo | undefined;
 }

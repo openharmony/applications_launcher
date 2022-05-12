@@ -14,7 +14,7 @@
  */
 
 /**
- * 桌面设置业务注册的接口函数，用于获取哪个设置项被选中
+ * Interface for launcher settings items.
  */
 export default interface SettingItemOptionsChecker {
   (): string

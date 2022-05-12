@@ -52,11 +52,11 @@ export default struct SwiperPage {
     this.changeConfig();
   }
 
-  public changeColumnAndRow() {
+  private changeColumnAndRow(): void {
     this.changeConfig();
   }
 
-  public changeConfig() {
+  private changeConfig(): void {
     let mGridConfig = this.mPageDesktopViewModel.getGridConfig();
     let column = mGridConfig.column;
     let row = mGridConfig.row;
@@ -69,6 +69,7 @@ export default struct SwiperPage {
       this.RowsTemplate += '1fr '
     }
   }
+
   private buildLog(item): boolean {
     Log.showInfo(TAG, `build item: ${JSON.stringify(item)}`);
     return true;

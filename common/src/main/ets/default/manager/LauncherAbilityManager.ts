@@ -29,7 +29,7 @@ import Log from '../utils/Log';
 const TAG = 'LauncherAbilityManager';
 
 /**
- * 桌面应用管理类
+ * Wrapper class for innerBundleManager and formManager interfaces.
  */
 class LauncherAbilityManager {
   private static readonly CURRENT_USER_ID = -2;
@@ -208,39 +208,25 @@ class LauncherAbilityManager {
       Log.showError(TAG, `${bundleName} has no launcher ability`);
       return undefined;
     }
-    const data = await this.convertToAppItemInfoCache(abilityInfos[0]);
+    const data = await this.convertToAppItemInfo(abilityInfos[0]);
     Log.showInfo(TAG, `getAppInfoByBundleName from BMS: ${JSON.stringify(data)}`);
     return data;
   }
 
-  private async convertToAppItemInfoCache(info): Promise<AppItemInfo> {
-    const appItemInfo = new AppItemInfo();
-    const appLabelId = info.labelId;
-    const bundleName = info.elementName.bundleName;
-    const appName = info.applicationInfo.label;
-    const loadAppName = await ResourceManager.getInstance().getAppNameSync(appLabelId, bundleName, appName);
-    appItemInfo.appName = loadAppName;
-    appItemInfo.appLabelId = appLabelId;
-    appItemInfo.bundleName = bundleName;
-    appItemInfo.isSystemApp = info.applicationInfo.systemApp;
-    appItemInfo.isUninstallAble = info.applicationInfo.removable;
-    appItemInfo.appIconId = info.iconId;
-    appItemInfo.abilityName = info.elementName.abilityName;
-    await ResourceManager.getInstance().updateIconCache(info.iconId, bundleName);
-    this.mAppMap.set(bundleName, appItemInfo);
-    return appItemInfo;
-  }
-
   private async convertToAppItemInfo(info): Promise<AppItemInfo> {
     const appItemInfo = new AppItemInfo();
-    appItemInfo.appName = info.applicationInfo.label;
+    appItemInfo.appName = await ResourceManager.getInstance().getAppNameSync(
+      info.labelId, info.elementName.bundleName, info.applicationInfo.label
+    );
     appItemInfo.isSystemApp = info.applicationInfo.systemApp;
     appItemInfo.isUninstallAble = info.applicationInfo.removable;
     appItemInfo.appIconId = info.iconId;
     appItemInfo.appLabelId = info.labelId;
     appItemInfo.bundleName = info.elementName.bundleName;
     appItemInfo.abilityName = info.elementName.abilityName;
+    appItemInfo.installTime = String(new Date());
     await ResourceManager.getInstance().updateIconCache(appItemInfo.appIconId, appItemInfo.bundleName);
+    this.mAppMap.set(appItemInfo.bundleName, appItemInfo);
     return appItemInfo;
   }
 

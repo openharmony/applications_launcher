@@ -48,7 +48,7 @@ export default struct SmartDock {
 
   private aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear start!');
-    AppStorage.SetOrCreate('dockDevice', this.device);
+    AppStorage.SetOrCreate('device', this.device);
     try {
       this.mSmartDockViewModel = SmartDockViewModel.getInstance();
     } catch (error) {
@@ -139,8 +139,7 @@ export default struct SmartDock {
       ListItem() {
         SmartDockContent({
           dockItemList: $residentList,
-          mMaxNum: this.mSmartDockViewModel.getStyleConfig()
-          .mMaxDockNum,
+          mMaxNum: this.mSmartDockViewModel.getStyleConfig().mMaxDockNum,
           mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
           onItemClick: (event, item) => this.mSmartDockViewModel.residentOnClick(event, item, this.showAppCenter),
           buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
@@ -157,11 +156,9 @@ export default struct SmartDock {
           mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
           onItemClick: (event, item) => this.mSmartDockViewModel.recentOnClick(event, item, () => this.recentOnClickWithPopup(item)),
           buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
-          onItemTouch: (event) => {
-          },
+          onItemTouch: (event) => {},
           onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
-          onTouchEventUpdateFunc: () => {
-          },
+          onTouchEventUpdateFunc: () => {},
           popup: this.popup,
           onHoverEvent: (onHover, bundleName) => this.onHoverEvent(onHover, bundleName)
         })

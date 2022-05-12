@@ -17,12 +17,12 @@ import display from '@ohos.display';
 import Window from '@ohos.window';
 import Log from '../utils/Log';
 import StyleConstants from '../constants/StyleConstants';
-import ServiceExtensionContext from "application/ServiceExtensionContext";
+import ServiceExtensionContext from 'application/ServiceExtensionContext';
 
 const TAG = 'WindowManager';
 
 /**
- * 窗口管理类
+ * Wrapper class for window interfaces.
  */
 class WindowManager {
   private mDisplayData = null;
@@ -31,7 +31,7 @@ class WindowManager {
 
   DESKTOP_WINDOW_NAME = 'EntryView';
 
-  APP_CENTER_WINDOW_NAME = 'AppCenterView'
+  APP_CENTER_WINDOW_NAME = 'AppCenterView';
 
   FORM_MANAGER_WINDOW_NAME = 'FormManagerView';
 

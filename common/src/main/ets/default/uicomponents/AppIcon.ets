@@ -23,14 +23,14 @@ const TAG = 'AppIcon';
 
 @Component
 export default struct AppIcon {
-  @Prop iconSize: number|string;
-  @Prop appIcon: string;
+  @Prop iconSize: number | string;
+  @Prop iconId: string;
   @Prop bundleName: string;
   @Prop icon: string;
-  @State size: number = 1;
-  useCache: boolean = true;
   @Prop badgeNumber: number;
   @State badge: number = 0;
+  @State scale: number = 1;
+  useCache: boolean = true;
   badgeFontSize: number = StyleConstants.DEFAULT_BADGE_FONT_SIZE;
   private mResourceManager;
   private mBadgeManager;
@@ -39,17 +39,15 @@ export default struct AppIcon {
   public aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
     this.mBadgeManager = BadgeManager.getInstance();
-    if (CheckEmptyUtils.isEmpty(this.icon)) {
-      this.updateIcon();
-    }
+    this.updateIcon();
   }
 
-  public iconLoadCallback(image) {
+  public iconLoadCallback(image: string) {
     this.icon = image;
   }
 
   public updateIcon() {
-    this.mResourceManager.getAppIconWithCache(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    this.mResourceManager.getAppIconWithCache(this.iconId, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
   }
 
   public badgeLoadCallback(badgeNumber) {
@@ -85,21 +83,21 @@ export default struct AppIcon {
     })
     .onTouch((event: TouchEvent) => {
       if (event.type === TouchType.Down) {
-        this.size = 0.9;
+        this.scale = 0.9;
       } else if (event.type === TouchType.Up) {
-        this.size = 1;
+        this.scale = 1;
       }
     })
     .onMouse((event: MouseEvent) => {
       if (event.button == MouseButton.Left && event.action == MouseAction.Press) {
-        this.size = 0.9;
+        this.scale = 0.9;
       } else if (event.button == MouseButton.Left && event.action == MouseAction.Release) {
-        this.size = 1;
+        this.scale = 1;
       }
     })
     .width(this.iconSize)
     .height(this.iconSize)
-    .scale({ x: this.size, y: this.size })
+    .scale({ x: this.scale, y: this.scale })
     .animation({ duration: 100 })
   }
 }

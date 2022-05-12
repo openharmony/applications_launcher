@@ -16,31 +16,31 @@
 import CommonConstants from '../constants/CommonConstants';
 
 /**
- * 弹出框菜单信息
+ * Item info of long press menu.
  */
 export default class MenuInfo {
   /**
-   * 菜单类型
+   * Item type. see CommonConstants.MENU_TYPE_FIXED and CommonConstants.MENU_TYPE_DYNAMIC.
    */
   menuType: number = CommonConstants.MENU_TYPE_FIXED;
 
   /**
-   * 菜单图片信息
+   * Image source for this item.
    */
   menuImgSrc: any = null;
 
   /**
-   * 菜单文字信息
+   * Menu text for this item.
    */
   menuText: any = null;
 
   /**
-   * 菜单当前是否可用
+   * True if this item is enabled.
    */
   menuEnabled = true;
 
   /**
-   * 菜单点击回调
+   * Callback when item is clicked.
    */
   onMenuClick: Function | undefined;
 

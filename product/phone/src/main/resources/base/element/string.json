@@ -86,7 +86,7 @@
     },
     {
       "name": "add_form_to_desktop",
-      "value": "add service widget to desktop"
+      "value": "add widget to desktop"
     },
     {
       "name": "form_edit",
@@ -134,7 +134,7 @@
     },
     {
       "name": "add_form_to_desktop_more",
-      "value": "add service widget to desktop more"
+      "value": "add widget to desktop more"
     },
     {
       "name": "app_center_menu_uninstall",

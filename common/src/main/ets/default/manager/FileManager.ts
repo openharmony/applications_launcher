@@ -21,7 +21,7 @@ const TAG = 'FileManager';
 const READ_DATA_SIZE = 4096;
 
 /**
- * 文件操作管理类
+ * Wrapper class for fileIo interfaces.
  */
 export default class FileManager {
   private baseDir: string | undefined;

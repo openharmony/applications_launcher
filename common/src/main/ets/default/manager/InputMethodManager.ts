@@ -15,6 +15,9 @@
 
 import inputMethod from '@ohos.inputMethod';
 
+/**
+ * Wrapper class for inputMethod interfaces.
+ */
 export default class InputMethodManager {
 
   static getInstance(): InputMethodManager {

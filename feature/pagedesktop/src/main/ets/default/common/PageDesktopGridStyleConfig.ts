@@ -19,7 +19,7 @@ import FeatureConstants from './constants/FeatureConstants';
 import AppGridStyleConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/AppGridStyleConfig';
 
 /**
- * 工作控件网格样式配置类
+ * Work control grid style configuration class
  */
 export default class PageDesktopGridStyleConfig extends AppGridStyleConfig {
   /**
@@ -34,9 +34,9 @@ export default class PageDesktopGridStyleConfig extends AppGridStyleConfig {
   }
 
   /**
-   * 获取工作空间样式实例
+   * Get workspace style instance
    */
-  static getInstance() {
+  static getInstance(): PageDesktopGridStyleConfig {
     if (globalThis.PageDesktopGridStyleConfig == null) {
       globalThis.PageDesktopGridStyleConfig = new PageDesktopGridStyleConfig();
       globalThis.PageDesktopGridStyleConfig.initConfig();
@@ -51,7 +51,7 @@ export default class PageDesktopGridStyleConfig extends AppGridStyleConfig {
     return CommonConstants.LAYOUT_CONFIG_LEVEL_FEATURE;
   }
 
-  getFeatureName() {
+  getFeatureName(): string {
     return FeatureConstants.FEATURE_NAME;
   }
 }

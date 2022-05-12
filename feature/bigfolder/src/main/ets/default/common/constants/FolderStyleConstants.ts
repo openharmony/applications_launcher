@@ -48,6 +48,7 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_FOLDER_APP_GRID_MARGIN = 10;
   static readonly DEFAULT_APP_GRID_TOGGLE_SIZE = 30;
   static readonly DEFAULT_APP_GRID_TOGGLE_MARGIN = -30;
+  static readonly DEFAULT_APP_TITLE_MARGIN = 5;
   static readonly DEFAULT_APP_ADD_TEXT_MARGIN = 14;
   static readonly DEFAULT_APP_ADD_TEXT_BOTTOM_MARGIN = 20;
   static readonly DEFAULT_APP_ADD_WIDTH = '70%';
@@ -59,6 +60,6 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_APP_ADD_DIALOG_WIDTH = 394;
   static readonly DEFAULT_APP_ADD_DIALOG_HEIGHT = 536;
   static readonly DEFAULT_BUTTON_HEIGHT = 40;
-  static readonly DEFAULT_BUTTON_WIDTH = 85;
+  static readonly DEFAULT_BUTTON_WIDTH = 100;
   static readonly DEFAULT_DIALOG_BOTTOM_MARGIN = 16;
 }

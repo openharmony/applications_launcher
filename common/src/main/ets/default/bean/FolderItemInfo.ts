@@ -14,22 +14,22 @@
  */
 
 /**
- * 单个文件夹信息
+ * Item info of folders.
  */
 export default class FolderItemInfo {
 
   /**
-   * 文件夹id
+   * folder id.
    */
   folderId: string | undefined;
 
   /**
-   * 文件夹名
+   * folder name to display
    */
   folderName: string | undefined;
 
   /**
-   * 文件夹内应用信息
+   * Application list of this folder.
    */
   appList: string[] | undefined;
 }

@@ -20,7 +20,7 @@
         "description": "$string:mainability_description",
         "label": "$string:settings_MainAbility",
         "launchType": "singleton",
-        "visible": true
+        "visible": false
       }
     ],
     "requestPermissions": [

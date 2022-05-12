@@ -14,71 +14,71 @@
  */
 
 /**
- * 设置项配置类，只读
+ * Setting item configuration class, read-only
  */
 export default class SettingItemsConfig {
   /**
-   * 设置项名称：布局选项：grid or list
+   * layout options: grid or list
    */
   static readonly SETTING_ITEM_LAYOUT_OPTIONS = 'LayoutOptions';
 
   /**
-   * 设置项名称：phone grid布局选项：例如4X4
+   * Setting options name
    */
   static readonly SETTING_ITEM_PHONE_GRID_LAYOUT_OPTIONS = 'PhoneGridLayOutOptions';
 
   /**
-   * 设置项名称：pad grid布局选项：例如5X11
+   * Setting options name
    */
   static readonly SETTING_ITEM_PAD_GRID_LAYOUT_OPTIONS = 'PadGridLayOutOptions';
 
   /**
-   * 设置项索引：布局设置
+   * Index: Layout settings
    */
   static readonly SETTINGS_INDEX_LAYOUT: number = 0;
 
   /**
-   * 设置项索引：grid布局设置
+   * Index: grid layout
    */
   static readonly SETTINGS_INDEX_GRID_LAYOUT: number = 1;
 
   /**
-   * 适用设备：所有设备都不支持
+   * Applicable equipment: Not supported on all devices
    */
   static readonly DEVICE_TYPE_NULL: number = 0;
 
   /**
-   * 适用设备：phone支持
+   * Applicable equipment: phone support
    */
   static readonly DEVICE_TYPE_PHONE: number = 1;
 
   /**
-   * 适用设备：pad支持
+   * Applicable equipment: pad support
    */
   static readonly DEVICE_TYPE_PAD: number = 1 << 1;
 
   /**
-   * 适用条件：无限制条件
+   * Applicable conditions: no restrictions
    */
   static readonly CONDITION_ALL: number = 0xffffffff;
 
   /**
-   * 适用条件：当前是list布局时有效
+   * Applicable conditions: Valid for list layout
    */
   static readonly CONDITION_LIST_LAYOUT_ENABLE: number = 1;
 
   /**
-   * 适用条件：当前是grid布局时有效
+   * Applicable conditions: Valid for grid layout
    */
   static readonly CONDITION_GRID_LAYOUT_ENABLE: number = 1 << 1;
 
   /**
-   * 设置类型：单选框
+   * setting type: Single box
    */
   static readonly SETTING_TYPE_RADIO = 1;
 
   /**
-   * 设置类型：开关
+   * setting type: switch
    */
   static readonly SETTING_TYPE_SWITCH = 2;
 
@@ -93,7 +93,7 @@ export default class SettingItemsConfig {
   static readonly SHOW_OPTIONS: boolean = true;
 
   /**
-   * 设置项配置信息map
+   * setting options info
    */
   static readonly sSettingsMap = {
     // LayoutOptions

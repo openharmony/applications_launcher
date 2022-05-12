@@ -13,7 +13,9 @@
  * limitations under the License.
  */
 import fileIO from '@ohos.fileio';
+import Log from '../utils/Log';
 
+const TAG = 'DiskLruFileUtils';
 const writeFilePath = globalThis.desktopContext.cacheDir + '/';
 const journalPath = writeFilePath + 'journal.txt';
 const READ_DATA_SIZE = 4096;
@@ -30,7 +32,7 @@ export default class DiskLruFileUtils {
    * @return {any} read object from file
    */
   static readJsonObj(bundleName: string): any {
-    console.info('Launcher FileUtil readJsonObj start execution');
+    Log.showInfo(TAG, 'readJsonObj start execution');
     const filePath = writeFilePath + bundleName + '.json';
     return this.readJsonFile(filePath);
   }
@@ -42,15 +44,15 @@ export default class DiskLruFileUtils {
    * @return {any} read object from file
    */
   static readJsonFile(path: string): any {
-    console.info('Launcher FileUtil readJsonFile start execution');
+    Log.showInfo(TAG, 'readJsonFile start execution');
     let readStreamSync;
     try {
       readStreamSync = fileIO.createStreamSync(path, 'r');
       const content = this.getContent(readStreamSync);
-      console.info('Launcher FileUtil readJsonFile finish execution' + content);
+      Log.showInfo(TAG, `readJsonFile finish execution ${content}`);
       return JSON.parse(content);
     } catch (e) {
-      console.info('Launcher FileUtil readJsonFile ' + e);
+      Log.showInfo(TAG, `readJsonFile error: ${e}`);
     } finally {
       readStreamSync.closeSync();
     }
@@ -63,7 +65,7 @@ export default class DiskLruFileUtils {
    * @param {string} bundleName - use bundleName as target file name
    */
   static writeJsonObj(jsonObj: any, bundleName: string) {
-    console.info('Launcher FileUtil writeJsonObj start execution');
+    Log.showInfo(TAG, 'writeJsonObj start execution');
     const filePath = writeFilePath + bundleName + '.json';
     const content = JSON.stringify(jsonObj);
     let writeStreamSync = null;
@@ -71,48 +73,10 @@ export default class DiskLruFileUtils {
       writeStreamSync = fileIO.createStreamSync(filePath, 'w+');
       writeStreamSync.writeSync(content);
     } catch (e) {
-      console.info('Launcher FileUtil writeJsonObj error: ' + e);
+      Log.showInfo(TAG, `writeJsonObj error: ${e}`);
     } finally {
       writeStreamSync.closeSync();
-      console.info('Launcher FileUtil writeJsonObj close sync');
-    }
-  }
-
-  /**
-   * Record a key that maps the image as value.
-   *
-   * @param {string} content - the key maps the image file
-   */
-  static writeJournal(content: string) {
-    let writeStreamSync = null;
-    try {
-      console.info('Launcher FileUtil writeJournal start');
-      writeStreamSync = fileIO.createStreamSync(journalPath, 'a+');
-      writeStreamSync.writeSync(content + '\n');
-    } catch (e) {
-      console.info('Launcher FileUtil writeJournal error: ' + e);
-    } finally {
-      writeStreamSync.closeSync();
-      console.info('Launcher FileUtil writeJournal close sync');
-    }
-  }
-
-  /**
-   * Get the keys that map the images.
-   *
-   * @return {any} object read from file
-   */
-  static readJournal(): any {
-    console.info('Launcher FileUtil readJournal start execution');
-    let readStreamSync = null;
-    try {
-      readStreamSync = fileIO.createStreamSync(journalPath, 'r');
-      return this.getContent(readStreamSync);
-    } catch (e) {
-      console.info('Launcher FileUtil readJournal error: ' + e);
-    } finally {
-      readStreamSync.closeSync();
-      console.info('Launcher FileUtil readJournal closeSync');
+      Log.showInfo(TAG, 'writeJsonObj close sync');
     }
   }
 
@@ -123,13 +87,13 @@ export default class DiskLruFileUtils {
    * @return {object} object read from file stream
    */
   static getContent(readStreamSync) {
-    console.info('Launcher FileUtil getContent start');
+    Log.showInfo(TAG, 'getContent start');
     const bufArray: ArrayBuffer[] = [];
     let totalLength = 0;
     let buf = new ArrayBuffer(READ_DATA_SIZE);
     let len = readStreamSync.readSync(buf);
     while (len != 0) {
-      console.info('Launcher FileUtil getContent FileIO reading ' + len);
+      Log.showInfo(TAG, `getContent FileIO reading ${len}`);
       totalLength += len;
       if (len < READ_DATA_SIZE) {
         buf = buf.slice(0, len);
@@ -140,11 +104,11 @@ export default class DiskLruFileUtils {
       buf = new ArrayBuffer(READ_DATA_SIZE);
       len = readStreamSync.readSync(buf);
     }
-    console.info('Launcher FileUtil getContent read finished ' + totalLength);
+    Log.showInfo(TAG, `getContent read finished ${totalLength}`);
     const contentBuf = new Uint8Array(totalLength);
     let offset = 0;
     for (const bufArr of bufArray) {
-      console.info('Launcher FileUtil getContent collecting ' + offset);
+      Log.showInfo(TAG, `getContent collecting ${offset}`);
       const uInt8Arr = new Uint8Array(bufArr);
       contentBuf.set(uInt8Arr, offset);
       offset += uInt8Arr.byteLength;
@@ -161,11 +125,11 @@ export default class DiskLruFileUtils {
    */
   static removeFile(bundleName: string) {
     try {
-      console.info('Launcher FileUtil removeFile');
+      Log.showInfo(TAG, 'Launcher FileUtil removeFile');
       //remove file,key : bundlename
       fileIO.unlinkSync(writeFilePath + bundleName + '.json');
     } catch (e) {
-      console.error('Launcher FileUtil removeFile delete has failed for ' + e);
+      Log.showInfo(TAG, `removeFile delete has failed for: ${e}`);
     }
   }
 }

@@ -17,11 +17,11 @@ import ILayoutConfig from './ILayoutConfig';
 import CommonConstants from '../constants/CommonConstants';
 
 /**
- * Dock列表模式配置
+ * Dock list mode configuration
  */
 export default class SmartDockModeConfig extends ILayoutConfig {
   /**
-   * Dock列表模式配置索引
+   * Dock list mode configuration index
    */
   static SMART_DOCK_MODE_CONFIG = 'SmartDockModeConfig';
 
@@ -30,7 +30,7 @@ export default class SmartDockModeConfig extends ILayoutConfig {
   }
 
   /**
-   * 获取Dock列表模式配置实例
+   * Get the Dock list mode configuration instance
    */
   static getInstance(): SmartDockModeConfig {
     if (globalThis.SmartDockModeConfig == null) {

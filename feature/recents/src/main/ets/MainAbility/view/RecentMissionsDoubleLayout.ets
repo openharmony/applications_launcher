@@ -30,7 +30,20 @@ export default struct RecentMissionsDoubleLayout {
   private mRecentMissionsViewModel: RecentMissionsViewModel;
 
   private aboutToAppear(): void {
+    Log.showInfo(TAG, 'aboutToAppear start');
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
+  }
+
+  private aboutToDisappear(): void {
+    Log.showInfo(TAG, `aboutToDisappear start`);
+  }
+
+  private onPageShow(): void {
+    Log.showInfo(TAG, `onPageShow start`);
+  }
+
+  private onPageHide(): void {
+    Log.showInfo(TAG, `onPageHide start`);
   }
 
   build() {
@@ -47,7 +60,8 @@ export default struct RecentMissionsDoubleLayout {
                   bundleName: item.bundleName,
                   abilityName: item.abilityName,
                   lockedState: item.lockedState,
-                  isClickSubComponent: $isClickSubComponent
+                  isClickSubComponent: $isClickSubComponent,
+                  recentImage: item.snapShotInfo.snapShotImage
                 })
               }
               .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)

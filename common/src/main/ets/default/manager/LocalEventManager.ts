@@ -17,11 +17,12 @@ import CommonConstants from '../constants/CommonConstants';
 import Log from '../utils/Log';
 
 const TAG = 'LocalEventManager';
+
 /**
- * 本地事件管理类
- * 主要职责：
- * 1、事件监听的注册、反注册
- * 2、事件的分发
+ * Local event management class
+ * main duty:
+ * 1.Registration and deregistration of event listeners
+ * 2.distribution of events
  */
 class LocalEventManager {
   private mEventListenerMap: Object = {};
@@ -29,9 +30,9 @@ class LocalEventManager {
   private mEventMsgCache: Object = {};
 
   /**
-   * 获取本地事件管理类对象
+   * Get the local event management class object
    *
-   * @return 本地事件管理类对象单一实例
+   * @return Single instance of local event management class object
    */
   static getInstance(): LocalEventManager {
     if (globalThis.localEventManager == null) {
@@ -42,10 +43,10 @@ class LocalEventManager {
   }
 
   /**
-   * 注册监听器
+   * register listener
    *
-   * @param listener 监听对象
-   * @param events 监听的事件
+   * @param listener
+   * @param events
    */
   registerEventListener(listener, events: string[]): void {
     Log.showInfo(TAG, `registerEventListener events: ${JSON.stringify(events)}`);
@@ -63,9 +64,9 @@ class LocalEventManager {
   }
 
   /**
-   * 解除注册监听器
+   * unregister listener
    *
-   * @param listener 监听对象
+   * @param listener
    */
   unregisterEventListener(listener): void {
     Log.showInfo(TAG, 'unregisterEventListener event listener');
@@ -79,10 +80,10 @@ class LocalEventManager {
   }
 
   /**
-   * 同步发送本地广播
+   * Send local broadcasts synchronously
    *
-   * @param event 事件
-   * @param params 事件参数
+   * @param event
+   * @param params
    */
   sendLocalEvent(event, params?): void {
     Log.showInfo(TAG, `sendLocalEvent event: ${JSON.stringify(event)}`);
@@ -98,10 +99,10 @@ class LocalEventManager {
   }
 
   /**
-   * 异步发送本地广播
+   * Send local broadcast asynchronously
    *
-   * @param event 事件
-   * @param params 事件参数
+   * @param event
+   * @param params
    */
   async sendLocalEventAsync(event, params?): Promise<void> {
     Log.showInfo(TAG, 'sendLocalEventAsync, send local event async');
@@ -109,10 +110,10 @@ class LocalEventManager {
   }
 
   /**
-   * 发送粘性本地广播(仅支持异步)
+   * Send sticky local broadcast (async only)
    *
-   * @param event 事件
-   * @param params 事件参数
+   * @param event
+   * @param params
    */
   async sendLocalEventSticky(event, params): Promise<void> {
     Log.showInfo(TAG, `sendLocalEventSticky, send local event sticky, params: ${JSON.stringify(params)}`);

@@ -86,7 +86,7 @@ export default struct SmartDockContent {
   }
 
   private onTouchEventUpdate() {
-    if (AppStorage.Get('dragFocus') == FeatureConstants.FEATURE_NAME) {
+    if (AppStorage.Get('device') === 'phone' || AppStorage.Get('dragFocus') == FeatureConstants.FEATURE_NAME){
       this.onTouchEventUpdateFunc();
     }
   }

@@ -18,13 +18,13 @@ import SettingItemInfo from '../bean/SettingItemInfo';
 import SettingItemOption from '../bean/SettingItemOption';
 
 /**
- * 设置项管理类
+ * Manager class for launcher settings item.
  */
 export default class SettingItemsManager {
   private static readonly INVALID_INDEX: number = -1;
 
   /**
-   * 设置项对应的注册函数（用于获取当前哪个选项被选中）map
+   * Mapping settings item to corresponding functions.
    */
   private settingName2CheckerFuncMap: Record<string, SettingItemOptionsChecker> = {};
 
@@ -35,7 +35,7 @@ export default class SettingItemsManager {
   }
 
   /**
-   * 注册设置项对应的注册函数（用于获取当前哪个选项被选中）
+   * Get corresponding functions for the given name.
    */
   withChecker(SettingName: string, func: SettingItemOptionsChecker): SettingItemsManager {
     console.info('Launcher SettingItemsManager withChecker SettingName is ' + SettingName);
@@ -44,11 +44,11 @@ export default class SettingItemsManager {
   }
 
   /**
-   * 获取所有设置项信息
+   * Get all settings items for the given device type.
    *
-   * @params deviceType 设备类型
-   * @params condition 当前的设置条件
-   * @return 设置项列表
+   * @params deviceType device type constants like 'default', 'tablet'
+   * @params condition current settings.
+   * @return available settings items
    */
   get(deviceType: number, condition: number): SettingItemInfo[] {
     const settingsList: SettingItemInfo[] = [];
@@ -100,10 +100,10 @@ export default class SettingItemsManager {
   }
 
   /**
-   * grid layout设置值转换为索引值，例如4X4返回0
+   * Convert layout constants to settings index.
    *
-   * @params gridLayout 例如4X4
-   * @return 设置选项在列表中的索引值
+   * @params gridLayout layout constants like '4x4'
+   * @return settings index of the given layout
    */
   gridLayoutValue2Idx(gridLayout: string): number {
     const phoneOptionList = SettingItemsConfig.sSettingsMap[SettingItemsConfig.SETTING_ITEM_PHONE_GRID_LAYOUT_OPTIONS].optionList;

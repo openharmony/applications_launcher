@@ -28,7 +28,7 @@ import SettingsModelObserver from './SettingsModelObserver';
 const defaultLayoutInfoFilePath = globalThis.desktopContext.filesDir + '/layoutInfo.json';
 
 /**
- * 桌面设置数据模型
+ * Data model for launcher settings ability.
  */
 export default class SettingsModel {
   static readonly EVENT_FORCE_RELOAD: number = 1;

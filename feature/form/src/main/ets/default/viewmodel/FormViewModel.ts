@@ -140,7 +140,9 @@ export default class FormViewModel {
     });
     if (cardIndex != CommonConstants.INVALID_VALUE) {
       this.mFormModel.deleteFormById(cardId);
+      const page = gridLayoutInfo.layoutInfo[cardIndex].page;
       gridLayoutInfo.layoutInfo.splice(cardIndex, 1);
+      this.mPageDesktopViewModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
       this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfo);
     }
     const formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);

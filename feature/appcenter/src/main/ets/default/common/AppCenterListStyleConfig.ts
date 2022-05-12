@@ -19,56 +19,56 @@ import CommonConstants from '../../../../../../../common/src/main/ets/default/co
 import AppListStyleConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/AppListStyleConfig';
 
 /**
- * 应用中心列表样式配置类
+ * App center list style configuration class
  */
 export default class AppCenterListStyleConfig extends AppListStyleConfig {
   /**
-   * 列表条目宽度
+   * List item width
    */
   mListItemWidth: string | number = StyleConstants.PERCENTAGE_100;
 
   /**
-   * 列表条目高度
+   * List item height
    */
   mListItemHeight: string | number = StyleConstants.DEFAULT_80;
 
   /**
-   * 列表条目间距
+   * List item spacing
    */
   mListItemGap = 12;
 
   /**
-   * 列表名称是否展示在旁边
+   * Whether the list name is displayed next to
    */
   mNameDisplaySide = true;
 
   /**
-   * 列表图标大小
+   * list icon size
    */
   mIconSize: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
 
   /**
-   * 列表名称大小
+   * list name size
    */
   mNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
 
   /**
-   * 列表图标和名称的间距
+   * Spacing between list icons and names
    */
   mNameIconGap: number = StyleConstants.DEFAULT_NUMBER;
 
   /**
-   * 条目的内部边距
+   * the inner margin of the entry
    */
   mItemPadding = 8;
 
   /**
-   * 条目的背景色
+   * the background color of the entry
    */
   mItemBackgroundColor: string = StyleConstants.LIGHT_BLACK;
 
   /**
-   * 条目的圆角值
+   * the rounded corner value of the entry
    */
   mItemBorderRadius: number = StyleConstants.DEFAULT_20;
 
@@ -77,7 +77,7 @@ export default class AppCenterListStyleConfig extends AppListStyleConfig {
   }
 
   /**
-   * 获取应用中心列表样式实例
+   * Get an instance of the app center list style
    */
   static getInstance(): AppCenterListStyleConfig {
     if (globalThis.AppCenterListStyleConfig == null) {

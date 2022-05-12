@@ -24,8 +24,8 @@ export default struct TitleDescriptionComponent {
     Text(this.mTitleDescription)
       .fontSize(this.mTextSize)
       .margin({
-        top: FolderStyleConstants.DEFAULT_APP_ADD_TEXT_MARGIN,
-        bottom: FolderStyleConstants.DEFAULT_APP_ADD_TEXT_MARGIN,
+        top: FolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
+        bottom: FolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
         left: FolderStyleConstants.DEFAULT_APP_ADD_TEXT_MARGIN
       })
   }

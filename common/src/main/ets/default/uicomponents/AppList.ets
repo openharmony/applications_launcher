@@ -215,6 +215,7 @@ struct HorizontalListItem {
       LongPressGesture({ repeat: false })
         .onAction((event: GestureEvent) => {
           this.isShow = true;
+          AppStorage.SetOrCreate('isLongPress', true);
         })
       )
       .bindPopup(this.isShow, {
@@ -263,9 +264,9 @@ struct VerticalListItem {
     Column() {
       AppIcon({
         iconSize: mAppListStyleConfig.mIconSize,
-        appIcon: this.appInfo.appIconId,
-        icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId, this.appInfo.bundleName),
+        iconId: this.appInfo.appIconId,
         bundleName: this.appInfo.bundleName,
+        icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId, this.appInfo.bundleName),
         badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
       })
       if (mAppListStyleConfig.mWithAppName) {
@@ -308,9 +309,9 @@ struct AppItem {
     Row() {
       AppIcon({
         iconSize: mAppListStyleConfig.mIconSize,
-        appIcon: this.appInfo.appIconId,
-        icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId, this.appInfo.bundleName),
+        iconId: this.appInfo.appIconId,
         bundleName: this.appInfo.bundleName,
+        icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId, this.appInfo.bundleName),
         badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
       })
       if (mAppListStyleConfig.mWithAppName) {

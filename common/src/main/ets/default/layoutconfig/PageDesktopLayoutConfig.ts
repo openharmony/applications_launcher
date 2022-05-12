@@ -17,11 +17,11 @@ import ILayoutConfig from './ILayoutConfig';
 import CommonConstants from '../constants/CommonConstants';
 
 /**
- * 桌面工作空间功能布局配置
+ * Desktop workspace function layout configuration.
  */
 export default class PageDesktopLayoutConfig extends ILayoutConfig {
   /**
-   * 工作空间功能布局配置索引
+   * Workspace Feature Layout Configuration Index.
    */
   static GRID_LAYOUT_INFO = 'GridLayoutInfo';
 
@@ -47,7 +47,7 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
   }
 
   /**
-   * 获取工作空间功能布局配置实例
+   * Get an instance of the workspace function layout configuration
    */
   static getInstance(): PageDesktopLayoutConfig {
     if (globalThis.PageDesktopLayoutConfigInstance == null) {
@@ -79,9 +79,9 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
   }
 
   /**
-   * 更新工作空间布局数据
+   * Update workspace layout data.
    *
-   * @params gridLayoutInfo 工作空间布局数据
+   * @params gridLayoutInfo
    */
   updateGridLayoutInfo(gridLayoutInfo: object): void {
     this.mGridLayoutInfo = gridLayoutInfo;
@@ -89,9 +89,9 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
   }
 
   /**
-   * 获取工作空间布局数据
+   * Get workspace layout data
    *
-   * @return 工作空间布局数据
+   * @return Workspace layout data
    */
   getGridLayoutInfo(): any {
     return this.mGridLayoutInfo;

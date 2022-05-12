@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import CheckEmptyUtils from '../../../../../../../../common/src/main/ets/default/utils/CheckEmptyUtils';
 import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
 import CommonStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
 import StyleConstants from '../../common/constants/StyleConstants';
@@ -38,7 +39,7 @@ export default struct RecentMissionCard {
   @State margin: number = StyleConstants.SINGLE_LIST_LAYOUT_MARGIN;
   @State layoutWeight: number = StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT;
   @State recentImage: any = '';
-  private mDefaultSnapShot: string = '';
+  private mDefaultSnapShot: string = StyleConstants.DEFAULT_APP_IMAGE;
   private mIsSingleLayout: boolean = true;
   private mSnapshotList: any = [];
   private mRecentMissionsViewModel: RecentMissionsViewModel;
@@ -51,9 +52,9 @@ export default struct RecentMissionCard {
       StyleConstants.SINGLE_LIST_LAYOUT_MARGIN * StyleConstants.DPI_RATIO : StyleConstants.DOUBLE_LIST_LAYOUT_MARGIN;
     this.layoutWeight = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
       StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT : StyleConstants.DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT;
-    this.mDefaultSnapShot = StyleConstants.DEFAULT_APP_IMAGE;
-    this.recentImage = this.mDefaultSnapShot;
-    this.mRecentMissionsViewModel.getMissionSnapShot(this.missionId, this.recentMissionsSnapshotCallback.bind(this));
+    if (CheckEmptyUtils.isEmpty(this.recentImage)) {
+      this.recentImage = this.mDefaultSnapShot;
+    }
   }
 
   aboutToDisappear(): void {
@@ -63,21 +64,12 @@ export default struct RecentMissionCard {
     }
   }
 
-  /**
-   * The callback of Recent missions snapshot.
-   *
-   * @param {number} missionId
-   * @param {any} snapShot
-   */
-  recentMissionsSnapshotCallback(missionId: number, snapShot: any): void {
-    Log.showInfo(TAG, `recentMissionsSnapshotCallback missionId: ${this.missionId}`);
-    if (missionId === this.missionId) {
-      this.recentImage = snapShot.image;
-      let width = snapShot.width;
-      let height = snapShot.height;
-      Log.showInfo(TAG, `recentMissionsSnapshotCallback recentImage: ${JSON.stringify(this.recentImage)},
-        width: ${JSON.stringify(width)}, height: ${JSON.stringify(height)}`);
-    }
+  private onPageShow(): void {
+    Log.showInfo(TAG, `onPageShow start`);
+  }
+
+  private onPageHide(): void {
+    Log.showInfo(TAG, `onPageHide start`);
   }
 
   build() {

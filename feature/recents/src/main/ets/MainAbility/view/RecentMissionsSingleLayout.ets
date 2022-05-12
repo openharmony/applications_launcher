@@ -53,7 +53,8 @@ export default struct RecentMissionsSingleLayout {
                 bundleName: item.bundleName,
                 abilityName: item.abilityName,
                 lockedState: item.lockedState,
-                isClickSubComponent: $isClickSubComponent
+                isClickSubComponent: $isClickSubComponent,
+                recentImage: item.snapShotInfo.snapShotImage
               })
             }, (item) => JSON.stringify(item))
           }

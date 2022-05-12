@@ -21,7 +21,7 @@ import PageDesktopAppModeConfig from '../../../../../../../common/src/main/ets/d
 import PageDesktopGridStyleConfig from './PageDesktopGridStyleConfig';
 
 /**
- * 公共层初始化加载器
+ * public layer initialization loader
  */
 class PageDesktopPreLoader extends BaseModulePreLoader {
   protected loadConfig(): void {

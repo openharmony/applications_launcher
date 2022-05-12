@@ -35,7 +35,7 @@ export default class FolderLayoutConfig extends ILayoutConfig {
   /**
    * Get folder layout configuration instance
    */
-  static getInstance() {
+  static getInstance(): FolderLayoutConfig {
     if (globalThis.FolderLayoutConfigInstance == null) {
       globalThis.FolderLayoutConfigInstance = new FolderLayoutConfig();
       globalThis.FolderLayoutConfigInstance.initConfig();

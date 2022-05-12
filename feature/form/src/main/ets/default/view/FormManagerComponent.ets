@@ -101,9 +101,21 @@ export default struct FormManagerComponent {
   }
 
   /**
+   * Keep the form which be added to the desktop, and delete the remaining forms.
+   */
+  private clearNoUseFormById(): void {
+    let id = this.mFormIdList[this.mSwiperIndex];
+    for (let i = 0; i < this.mFormIdList.length; i++) {
+      if (i != this.mSwiperIndex) {
+        this.mFormModel.deleteFormByFormID(this.mFormIdList[i]);
+      }
+    }
+  }
+
+  /**
    * Delete all form by id.
    */
-  private deleteAllFormById() {
+  private clearAllFormById(): void {
     for (let i = 0; i < this.mFormIdList.length; i++) {
       this.mFormModel.deleteFormByFormID(this.mFormIdList[i]);
     }
@@ -119,6 +131,7 @@ export default struct FormManagerComponent {
           .margin({left: StyleConstants.FORM_MGR_BACK_ICON_LEFT_MARGIN * StyleConstants.DPI_RATIO})
           .onClick(() => {
             Log.showInfo(TAG, 'hide form manager window');
+            this.clearAllFormById();
             windowManager.hideWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
           })
         Blank()
@@ -204,6 +217,7 @@ export default struct FormManagerComponent {
       .onClick(() => {
         Log.showInfo(TAG, 'form add to desktop');
         this.mPageDesktopViewModel.createCardToDeskTop(this.getChooseCard());
+        this.clearNoUseFormById();
         windowManager.hideWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
       })
     }

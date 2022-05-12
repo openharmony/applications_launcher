@@ -32,7 +32,7 @@ import RecentEvent from '../common/recentEvent';
 import PadStage from '../common/PadStage';
 
 const RAW_IMAGE_CACHE_SIZE = 20000000;
-const TAG = "EntryView";
+const TAG = 'EntryView';
 
 @Entry
 @Component
@@ -50,33 +50,22 @@ struct EntryView {
 
   private aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
-
-    windowManager.getWindowWidth()
-      .then((screenWidth) => {
-        windowManager.getWindowHeight()
-          .then((screenHeight) => {
-            AppStorage.SetOrCreate('screenWidth', screenWidth);
-            AppStorage.SetOrCreate('screenHeight', screenHeight);
-          }).catch((error) => {
-          console.error(`windowManager.getWindowHeight Failed to obtain the screenHeight. Cause: ${error.message}`);
-        })
-      }).catch((error) => {
-      console.error(`windowManager.getWindowWidth Failed to obtain the windowWidth. Cause: ${error.message}`);
-    })
-
+    AppStorage.SetOrCreate('device', this.device);
     this.mStage.onCreate();
+
+    // init layout config
     this.mLayoutViewModel = LayoutViewModel.getInstance();
+    this.getWindowSize();
     this.updateScreenSize();
 
+    // init database
     let dbStore = RdbStoreManager.getInstance();
     dbStore.initRdbConfig();
-    AppStorage.SetOrCreate('dockDevice', this.device);
-    let mCallback: Record<string, () => void> = {
-      "onStateChange": () => this.createRecent()
-    };
+
+    // register recentEvent callback
+    let mCallback: Record<string, () => void> = {'onStateChange': () => this.createRecent()};
     RecentEvent.registerCallback(mCallback);
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
-
   }
 
   registerPageDesktopNavigatorStatusChangeEvent(listener): void {
@@ -122,15 +111,27 @@ struct EntryView {
     }
   }
 
-  private async updateScreenSize(): Promise<void> {
-    let screenWidth = this.screenWidth;
-    let screenHeight = this.screenHeight;
+  private async getWindowSize(): Promise<void> {
+    try {
+      this.screenWidth = await windowManager.getWindowWidth();
+      this.screenHeight = await windowManager.getWindowHeight();
+      AppStorage.SetOrCreate('screenWidth', this.screenWidth);
+      AppStorage.SetOrCreate('screenHeight', this.screenHeight);
+    } catch (error) {
+      Log.showError(TAG, `getWindowWidth or getWindowHeight error: ${error}`);
+      AppStorage.SetOrCreate('screenWidth', 0);
+      AppStorage.SetOrCreate('screenHeight', 0);
+    }
+  }
+
+  private updateScreenSize(): void {
+    this.workSpaceWidth = this.screenWidth;
     this.workSpaceHeight = this.mLayoutViewModel.getWorkSpaceHeight();
     this.dockHeight = this.mLayoutViewModel.getDockHeight();
-    Log.showInfo(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${screenWidth}, screenHeight: ${screenHeight}`);
-    this.workSpaceWidth = screenWidth;
     AppStorage.SetOrCreate('workSpaceWidth', this.workSpaceWidth);
     AppStorage.SetOrCreate('workSpaceHeight', this.workSpaceHeight);
+    AppStorage.SetOrCreate('dockHeight', this.dockHeight);
+    Log.showInfo(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}, workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
   }
 
   private aboutToDisappear(): void {

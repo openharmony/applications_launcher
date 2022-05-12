@@ -1,13 +1,13 @@
 {
-	"devDependencies":{},
-	"name":"launcher_settings",
-	"ohos":{
-		"org":"huawei",
-		"directoryLevel":"module",
-		"buildTool":"hvigor"
+	"devDependencies": {},
+	"name": "launcher_settings",
+	"ohos": {
+		"org": "huawei",
+		"directoryLevel": "module",
+		"buildTool": "hvigor"
 	},
-	"version":"1.0.0",
-	"dependencies":{
-		"common":"file:../../common/src"
+	"version": "1.0.0",
+	"dependencies": {
+		"common": "file:../../common"
 	}
 }

@@ -30,7 +30,7 @@ export default class BadgeManager {
 
   static UPDATE_BADGE = 'updateBadge';
 
-  private listener;
+  private readonly listener;
 
   private constructor() {
     this.mDbStoreManager = RdbStoreManager.getInstance();
