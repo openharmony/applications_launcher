@@ -42,7 +42,7 @@ Launcher 采用 扩展的TS语言（eTS）开发，主要的结构如下：
 ```
 ## 约束
 - 开发环境
-    - [DevEco Studio for OpenHarmony](https://developer.harmonyos.com/cn/develop/deveco-studio#download_beta) 版本号大于3.0.0.900，下载安装OpenHarmony SDK API Version 9。（初始的IDE配置可以参考IDE的使用文档）
+  - **DevEco Studio for OpenHarmony**: 版本号大于3.0.0.900，下载安装OpenHarmony SDK API Version 9。（初始的IDE配置可以参考IDE的使用文档）
 - 语言版本
     - [eTS](https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/quick-start/start-with-ets.md)
 
