@@ -27,7 +27,7 @@ export default class InputMethodManager {
     return globalThis.InputMethodManagerInstance;
   }
 
-  stopInput() {
+  stopInput(): void {
     inputMethod.getInputMethodController()?.stopInput();
   }
 }

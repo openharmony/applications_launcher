@@ -22,7 +22,7 @@ import CheckEmptyUtils from '../utils/CheckEmptyUtils';
 import CommonConstants from '../constants/CommonConstants';
 import EventConstants from '../constants/EventConstants';
 import ResourceManager from './ResourceManager';
-import osaccount from '@ohos.account.osAccount'
+import osaccount from '@ohos.account.osAccount';
 import Trace from '../utils/Trace';
 import Log from '../utils/Log';
 
@@ -70,9 +70,9 @@ class LauncherAbilityManager {
   private constructor() {
     const osAccountManager = osaccount.getAccountManager();
     osAccountManager.getOsAccountLocalIdFromProcess((err, localId) => {
-      Log.showInfo(TAG, "getOsAccountLocalIdFromProcess localId " + localId);
+      Log.showInfo(TAG, `getOsAccountLocalIdFromProcess localId ${localId}`);
       this.mUserId = localId;
-    })
+    });
   }
 
   /**

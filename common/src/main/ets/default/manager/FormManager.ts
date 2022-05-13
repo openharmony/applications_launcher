@@ -51,17 +51,17 @@ export default class FormManager {
   async getAllFormsInfo(): Promise<CardItemInfo[]> {
     const formList = await formManagerAbility.getAllFormsInfo();
     const cardItemInfoList = new Array<CardItemInfo>();
-    for (let i = 0; i < formList.length; i++) {
+    for (const formItem of formList) {
       const cardItemInfo = new CardItemInfo();
-      cardItemInfo.bundleName = formList[i].bundleName;
-      cardItemInfo.abilityName = formList[i].abilityName;
-      cardItemInfo.moduleName = formList[i].moduleName;
-      cardItemInfo.cardName = formList[i].name;
-      cardItemInfo.cardDimension = formList[i].defaultDimension;
+      cardItemInfo.bundleName = formItem.bundleName;
+      cardItemInfo.abilityName = formItem.abilityName;
+      cardItemInfo.moduleName = formItem.moduleName;
+      cardItemInfo.cardName = formItem.name;
+      cardItemInfo.cardDimension = formItem.defaultDimension;
       cardItemInfo.area = this.getCardSize(cardItemInfo.cardDimension);
-      cardItemInfo.description = formList[i].description;
-      cardItemInfo.formConfigAbility = formList[i].formConfigAbility;
-      cardItemInfo.supportDimensions = formList[i].supportDimensions;
+      cardItemInfo.description = formItem.description;
+      cardItemInfo.formConfigAbility = formItem.formConfigAbility;
+      cardItemInfo.supportDimensions = formItem.supportDimensions;
       cardItemInfoList.push(cardItemInfo);
     }
     return cardItemInfoList;
@@ -88,17 +88,17 @@ export default class FormManager {
     Log.showInfo(TAG, 'getFormsInfoByApp bundle:' + bundle);
     const formList = await formManagerAbility.getFormsInfo(bundle);
     const cardItemInfoList = new Array<CardItemInfo>();
-    for (let i = 0; i < formList.length; i++) {
+    for (const formItem of formList) {
       const cardItemInfo = new CardItemInfo();
-      cardItemInfo.bundleName = formList[i].bundleName;
-      cardItemInfo.abilityName = formList[i].abilityName;
-      cardItemInfo.moduleName = formList[i].moduleName;
-      cardItemInfo.cardName = formList[i].name;
-      cardItemInfo.cardDimension = formList[i].defaultDimension;
+      cardItemInfo.bundleName = formItem.bundleName;
+      cardItemInfo.abilityName = formItem.abilityName;
+      cardItemInfo.moduleName = formItem.moduleName;
+      cardItemInfo.cardName = formItem.name;
+      cardItemInfo.cardDimension = formItem.defaultDimension;
       cardItemInfo.area = this.getCardSize(cardItemInfo.cardDimension);
-      cardItemInfo.description = formList[i].description;
-      cardItemInfo.formConfigAbility = formList[i].formConfigAbility;
-      cardItemInfo.supportDimensions = formList[i].supportDimensions;
+      cardItemInfo.description = formItem.description;
+      cardItemInfo.formConfigAbility = formItem.formConfigAbility;
+      cardItemInfo.supportDimensions = formItem.supportDimensions;
       cardItemInfoList.push(cardItemInfo);
     }
     return cardItemInfoList;
@@ -113,17 +113,17 @@ export default class FormManager {
   async getFormsInfoByModule(bundle: string, moduleName: string): Promise<CardItemInfo[]> {
     const formList = await formManagerAbility.getFormsInfo(bundle, moduleName);
     const cardItemInfoList = new Array<CardItemInfo>();
-    for (let i = 0; i < formList.length; i++) {
+    for (const formItem of formList) {
       const cardItemInfo = new CardItemInfo();
-      cardItemInfo.bundleName = formList[i].bundleName;
-      cardItemInfo.abilityName = formList[i].abilityName;
-      cardItemInfo.moduleName = formList[i].moduleName;
-      cardItemInfo.cardName = formList[i].name;
-      cardItemInfo.cardDimension = formList[i].defaultDimension;
+      cardItemInfo.bundleName = formItem.bundleName;
+      cardItemInfo.abilityName = formItem.abilityName;
+      cardItemInfo.moduleName = formItem.moduleName;
+      cardItemInfo.cardName = formItem.name;
+      cardItemInfo.cardDimension = formItem.defaultDimension;
       cardItemInfo.area = this.getCardSize(cardItemInfo.cardDimension);
-      cardItemInfo.description = formList[i].description;
-      cardItemInfo.formConfigAbility = formList[i].formConfigAbility;
-      cardItemInfo.supportDimensions = formList[i].supportDimensions;
+      cardItemInfo.description = formItem.description;
+      cardItemInfo.formConfigAbility = formItem.formConfigAbility;
+      cardItemInfo.supportDimensions = formItem.supportDimensions;
       cardItemInfoList.push(cardItemInfo);
     }
     return cardItemInfoList;

@@ -62,12 +62,12 @@ class AmsMissionManager {
       Log.showError(TAG, 'getRecentMissionsList Empty');
       return recentMissionsList;
     }
-    for (let i = 0; i < listData.length; i++) {
+    for (const recentItem of listData) {
       const recentMissionInfo = new RecentMissionInfo();
-      recentMissionInfo.missionId = listData[i].missionId;
-      recentMissionInfo.bundleName = listData[i].want.bundleName;
-      recentMissionInfo.abilityName = listData[i].want.abilityName;
-      recentMissionInfo.lockedState = listData[i].lockedState;
+      recentMissionInfo.missionId = recentItem.missionId;
+      recentMissionInfo.bundleName = recentItem.want.bundleName;
+      recentMissionInfo.abilityName = recentItem.want.abilityName;
+      recentMissionInfo.lockedState = recentItem.lockedState;
       const appInfo = await launcherAbilityManager.getAppInfoByBundleName(recentMissionInfo.bundleName);
       if (appInfo == undefined) {
         continue;

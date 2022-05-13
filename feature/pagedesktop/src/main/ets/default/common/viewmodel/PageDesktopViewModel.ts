@@ -61,6 +61,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     gridYAxis: []
   };
   private isPad = false;
+  private isAddByDraggingFlag = false;
   private desktopSwiperController: SwiperController;
 
   async showFormManager(params) {
@@ -84,7 +85,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
 
   private readonly mLocalEventListener = {
     onReceiveEvent: (event, params) => {
-      Log.showInfo(TAG, 'localEventListener receive event: ' + event + ', params: ' + params);
+      Log.showInfo(TAG, `localEventListener receive event: ${event}, params: ${params}`);
       switch (event) {
         case EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD:
           this.addToDesktop(params);
@@ -781,21 +782,18 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     return isNeedNewPage;
   }
 
-  private updateAppItemLayoutInfo(info, layoutDescription, item) {
+  private updateAppItemLayoutInfo(info, layoutDescription, item): void {
     const pageCount = info.layoutDescription.pageCount;
     const row = info.layoutDescription.row;
     const column = info.layoutDescription.column;
     const layoutInfo = info.layoutInfo;
     // current page has space
     let isNeedNewPage = true;
-    for (let i = 0; i < pageCount; i++) {
+    pageCycle: for (let i = 0; i < pageCount; i++) {
       for (let y = 0; y < row; y++) {
         for (let x = 0; x < column; x++) {
-          if (!isNeedNewPage) {
-            break;
-          }
           if (this.isPositionValid(info, item, i, x, y)) {
-            Log.showInfo(TAG, 'updateAppItemLayoutInfo isPositionValid' + x + ' y '+ y);
+            Log.showInfo(TAG, `updateAppItemLayoutInfo isPositionValid: x:${x} y:${y} page:${i}`);
             isNeedNewPage = false;
             layoutInfo.push({
               bundleName: item.bundleName,
@@ -805,6 +803,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
               column: x,
               row: y
             });
+            break pageCycle;
           }
         }
       }
@@ -829,18 +828,16 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     // current page has space
     let isNeedNewPage = true;
     const max = pageCount - 1 > this.mPageIndex ? this.mPageIndex + 1 : pageCount - 1;
-    for (let i = this.mPageIndex; i <= this.mPageIndex + 1; i++) {
+    pageCycle: for (let i = this.mPageIndex; i <= max; i++) {
       for (let y = 0; y < row; y++) {
         for (let x = 0; x < column; x++) {
-          if (!isNeedNewPage) {
-            break;
-          }
           if (this.isPositionValid(info, item, i, x, y)) {
-            Log.showInfo(TAG, 'updateFolderItemLayoutInfo isPositionValid' + x + ' y '+ y);
+            Log.showInfo(TAG, `updateFolderItemLayoutInfo isPositionValid: x:${x} y:${y} page:${i}`);
             isNeedNewPage = false;
             item.page = i;
             item.column = x;
             item.row = y;
+            break pageCycle;
           }
         }
       }
@@ -859,19 +856,25 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     const column = info.layoutDescription.column;
     // current page has space
     let isNeedNewPage = true;
-    for (let y = 0; y < row; y++) {
-      for (let x = 0; x < column; x++) {
-        if (!isNeedNewPage) {
-          break;
-        }
-        if (this.isPositionValid(info, item, this.mPageIndex, x, y)) {
-          Log.showInfo(TAG, 'updateAppItemFromFolder isPositionValid' + x + ' y '+ y);
-          isNeedNewPage = false;
-          item.page = this.mPageIndex;
-          item.column = x;
-          item.row = y;
+    const max = pageCount - 1 > this.mPageIndex ? this.mPageIndex + 1 : pageCount - 1;
+    pageCycle: for (let i = this.mPageIndex; i <= max; i++) {
+      for (let y = 0; y < row; y++) {
+        for (let x = 0; x < column; x++) {
+          if (this.isPositionValid(info, item, i, x, y)) {
+            Log.showInfo(TAG, `updateAppItemFromFolder isPositionValid: x:${x} y:${y} page:${i}`);
+            isNeedNewPage = false;
+            item.page = i;
+            item.column = x;
+            item.row = y;
+            break pageCycle;
+          }
         }
       }
+    }
+    if (isNeedNewPage) {
+      item.page = this.mPageIndex + 1;
+      item.column = 0;
+      item.row = 0;
     }
     return isNeedNewPage;
   }
@@ -1068,20 +1071,38 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     if (this.isBlankPage()) {
       this.deleteBlankPage();
     } else {
-      this.addBlankPage();
+      this.addBlankPage(false);
     }
   }
 
   /**
    * Add a blank page.
+   *
+   * @param {boolean} isAddByDrag
    */
-  addBlankPage(): void {
+  addBlankPage(isAddByDrag: boolean): void {
     Log.showInfo(TAG, 'addBlankPage' + this.mPageIndex);
+    this.isAddByDraggingFlag = isAddByDrag;
     const allPageCount = this.getLayoutInfo().layoutDescription.pageCount + 1;
     this.setGridPageCount(allPageCount);
     this.pagingFiltering();
     this.mPageIndex = allPageCount - 1;
     AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
+  }
+
+  /**
+   * get the addByDragging flag
+   */
+  isAddByDragging(): boolean {
+    return this.isAddByDraggingFlag;
+  }
+
+  /**
+   * set the addByDragging flag
+   * @param {boolean} isAddByDragging
+   */
+  setAddByDragging(isAddByDragging: boolean): void {
+    this.isAddByDraggingFlag = isAddByDragging
   }
 
   /**
@@ -1293,15 +1314,15 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     addFormToDeskTopMenu.menuText = $r('app.string.add_form_to_desktop');
     addFormToDeskTopMenu.onMenuClick = () => {
       Log.showInfo(TAG, 'Launcher click menu item into add form to desktop view');
+      const appName = this.getAppName(formInfo.appLabelId + formInfo.bundleName);
+      Log.showInfo(TAG, `buildCardMenuInfoList appName: ${appName}`);
+      if (appName != null) {
+        formInfo.appName = appName;
+      }
+      AppStorage.SetOrCreate('formAppInfo', formInfo);
       if (!this.isPad) {
         this.jumpToFormManagerView(formInfo);
       } else {
-        const appName = this.getAppName(formInfo.appLabelId + formInfo.bundleName);
-        Log.showInfo(TAG, `buildCardMenuInfoList appName: ${appName}`);
-        if (appName != null) {
-          formInfo.appName = appName;
-        }
-        AppStorage.SetOrCreate('formAppInfo', formInfo);
         formDialog.open();
       }
     };
@@ -1481,21 +1502,6 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       return true;
     }
     return false;
-  }
-
-  /**
-   * delete blank page where no item in this page
-   *
-   * @param page
-   */
-  deleteBlankPageByPageNo(page: number): void {
-    const layoutInfo = this.getLayoutInfo();
-    const deleteFlag = this.deleteBlankPageFromLayoutInfo(layoutInfo, page);
-    if (!deleteFlag) {
-      return;
-    }
-    this.setLayoutInfo(layoutInfo);
-    this.pagingFiltering();
   }
 
   /**

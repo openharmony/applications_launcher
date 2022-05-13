@@ -64,7 +64,7 @@ export default class DiskLruFileUtils {
    * @param {any} jsonObj - target JSON object will be written
    * @param {string} bundleName - use bundleName as target file name
    */
-  static writeJsonObj(jsonObj: any, bundleName: string) {
+  static writeJsonObj(jsonObj: any, bundleName: string): void {
     Log.showInfo(TAG, 'writeJsonObj start execution');
     const filePath = writeFilePath + bundleName + '.json';
     const content = JSON.stringify(jsonObj);
@@ -123,7 +123,7 @@ export default class DiskLruFileUtils {
    *
    * @param {string} bundleName - bundleName as target file name
    */
-  static removeFile(bundleName: string) {
+  static removeFile(bundleName: string): void {
     try {
       Log.showInfo(TAG, 'Launcher FileUtil removeFile');
       //remove file,key : bundlename

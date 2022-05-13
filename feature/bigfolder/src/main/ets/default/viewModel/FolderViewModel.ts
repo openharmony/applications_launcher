@@ -56,7 +56,7 @@ export default class FolderViewModel extends BaseAppPresenter {
   private updateBadge(openFolderData, params): void {
     for (let i = 0; i < openFolderData.layoutInfo.length; i++) {
       const appInfo: any = openFolderData.layoutInfo[i].find(item => {
-          return item.bundleName == params.bundleName;
+        return item.bundleName == params.bundleName;
       });
       if (appInfo != undefined && appInfo.bundleName.length > 0) {
         const index = openFolderData.layoutInfo[i].indexOf(appInfo);
@@ -495,10 +495,13 @@ export default class FolderViewModel extends BaseAppPresenter {
         }
       }
       folderItem.layoutInfo = [[]];
-      this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfoTemp);
       for (let i = 0; i < removeFolderApp.length; i++) {
         this.mPageDesktopViewModel.addToDesktop(removeFolderApp[i]);
+        this.mPageDesktopViewModel.updateAppItemFromFolder(gridLayoutInfoTemp, removeFolderApp[i]);
+        const gridLayout = this.createAppLayoutInfo(removeFolderApp[i]);
+        gridLayoutInfoTemp.layoutInfo.push(gridLayout);
       }
+      this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfoTemp);
     } else {
       // checked app's count >= 2
       // update badgeNumber of folder
@@ -508,10 +511,9 @@ export default class FolderViewModel extends BaseAppPresenter {
       // move apps from desktop to folder
       this.moveAppFromDesktopToFolder(appInfos, gridLayoutInfo, gridLayoutInfoTemp);
       // move apps from folder to desktop
-      this.moveAppFromFolderToDesktop(appInfos, removeFolderApp);
+      this.moveAppFromFolderToDesktop(appInfos, removeFolderApp, gridLayoutInfoTemp);
       // delete blank page
       this.deleteBlankPage();
-
     }
     Log.showInfo(TAG, 'updateFolderAppList end');
   }
@@ -675,8 +677,9 @@ export default class FolderViewModel extends BaseAppPresenter {
    *
    * @param appInfos
    * @param removeFolderApp
+   * @param gridLayoutInfoTemp
    */
-  private moveAppFromFolderToDesktop(appInfos, removeFolderApp) {
+  private moveAppFromFolderToDesktop(appInfos, removeFolderApp, gridLayoutInfoTemp) {
     const appFolderToDesktop = [];
     for (let i = 0; i < removeFolderApp.length; i++) {
       let remainFlag = false;
@@ -693,8 +696,20 @@ export default class FolderViewModel extends BaseAppPresenter {
 
     if (appFolderToDesktop.length > 0) {
       for (let i = 0; i < appFolderToDesktop.length; i++) {
+        const needNewPage: boolean = this.mPageDesktopViewModel.updateAppItemFromFolder(gridLayoutInfoTemp, appFolderToDesktop[i]);
+        if (needNewPage) {
+          gridLayoutInfoTemp.layoutDescription.pageCount = gridLayoutInfoTemp.layoutDescription.pageCount + 1;
+          for (let index = 0; index < gridLayoutInfoTemp.layoutInfo.length; index++) {
+            if (gridLayoutInfoTemp.layoutInfo[index].page > this.mPageDesktopViewModel.getIndex()) {
+              gridLayoutInfoTemp.layoutInfo[index].page++;
+            }
+          }
+        }
+        const gridLayout = this.createAppLayoutInfo(appFolderToDesktop[i]);
+        gridLayoutInfoTemp.layoutInfo.push(gridLayout);
         this.mPageDesktopViewModel.addToDesktop(appFolderToDesktop[i]);
       }
+      this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfoTemp);
     }
   }
 
@@ -1120,9 +1135,10 @@ export default class FolderViewModel extends BaseAppPresenter {
     if (num <= row) {
       height = styleConfig.mAddFolderDialogHeight;
     } else {
-      const gridHeight = num * styleConfig.mAddFolderItemSize + (num - 1) * styleConfig.mAddFolderGridGap;
-      height = gridHeight + FolderStyleConstants.DEFAULT_APP_ADD_TITLE_SIZE + FolderStyleConstants.DEFAULT_BUTTON_HEIGHT +
-        FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN;
+      const gridHeight = num * styleConfig.mAddFolderItemSize + num * styleConfig.mAddFolderGridGap +
+        styleConfig.mAddFolderGridMargin * 2;
+      height = gridHeight + FolderStyleConstants.DEFAULT_APP_ADD_TITLE_SIZE +
+        FolderStyleConstants.DEFAULT_BUTTON_HEIGHT + FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN;
       if (height > styleConfig.mAddFolderMaxHeight) {
         height = styleConfig.mAddFolderMaxHeight;
       }
@@ -1192,26 +1208,18 @@ export default class FolderViewModel extends BaseAppPresenter {
    *
    * @param {any} appInfo.
    */
-  removeAppOutOfFolder(appInfo): boolean {
+  removeAppOutOfFolder(appInfo): void {
     let openFolderData: {
       folderId: string,
       layoutInfo: any
     } = AppStorage.Get('openFolderData');
 
     const folderAppList = this.getAppListInFolder(openFolderData);
-    const gridLayoutInfo = this.mPageDesktopViewModel.getLayoutInfo();
-    if (folderAppList.length > 2) {
-      const needNewPage: boolean = this.mPageDesktopViewModel.updateAppItemFromFolder(gridLayoutInfo, appInfo);
-      Log.showInfo(TAG, `removeAppOutOfFolder needNewPage: ${needNewPage}`);
-      if (needNewPage) {
-        return false;
-      }
-    }
-
     this.deleteAppFromFolderAppList(appInfo, folderAppList);
     const folderLayoutInfo = this.filterFolderPage(folderAppList);
 
     const removeAppInfos = [appInfo];
+    const gridLayoutInfo = this.mPageDesktopViewModel.getLayoutInfo();
     const folderIndex = gridLayoutInfo.layoutInfo.findIndex(item => {
       return item.type === CommonConstants.TYPE_FOLDER && item.folderId === openFolderData.folderId;
     });
@@ -1230,7 +1238,15 @@ export default class FolderViewModel extends BaseAppPresenter {
     const appListInfo = this.mSettingsModel.getAppListInfo();
     // Add app to desktop app list
     for (let i = 0; i < removeAppInfos.length; i++) {
-      this.mPageDesktopViewModel.updateAppItemFromFolder(gridLayoutInfo, removeAppInfos[i]);
+      const needNewPage: boolean = this.mPageDesktopViewModel.updateAppItemFromFolder(gridLayoutInfo, removeAppInfos[i]);
+      if (needNewPage) {
+        gridLayoutInfo.layoutDescription.pageCount = gridLayoutInfo.layoutDescription.pageCount + 1;
+        for (let index = 0; index < gridLayoutInfo.layoutInfo.length; index++) {
+          if (gridLayoutInfo.layoutInfo[index].page > this.mPageDesktopViewModel.getIndex()) {
+            gridLayoutInfo.layoutInfo[index].page++;
+          }
+        }
+      }
       const gridLayout = this.createAppLayoutInfo(removeAppInfos[i]);
       gridLayoutInfo.layoutInfo.push(gridLayout);
       const appIndex = appListInfo.findIndex(item => {
@@ -1246,7 +1262,6 @@ export default class FolderViewModel extends BaseAppPresenter {
     }
     this.mPageDesktopViewModel.getGridList();
     this.updateOpenFolderStatus(openFolderData);
-    return true;
   }
 
   /**

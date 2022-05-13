@@ -31,7 +31,7 @@ export default class RecentMissionsModel {
    *
    * @return {object} the model.
    */
-  static getInstance() {
+  static getInstance(): RecentMissionsModel {
     if (globalThis.RecentMissionsModelInstance == null) {
       globalThis.RecentMissionsModelInstance = new RecentMissionsModel();
     }

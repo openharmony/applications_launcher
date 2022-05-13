@@ -62,6 +62,7 @@ export default struct FormItem {
   private mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   private mIsDeleteForm: string = '';
   private mForm: string = '';
+  private clearForm: Function = null;
 
   private aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
@@ -160,8 +161,11 @@ export default struct FormItem {
    */
   formManagerDialogController: CustomDialogController = new CustomDialogController({
     builder: FormManagerDialog({
-      cancel: () => {
+      cancel: (callback?) => {
         // delete all form
+        if (callback != undefined) {
+          this.clearForm = callback;
+        }
       },
       confirm: (formCardItem) => {
         // add form to desktop
@@ -183,6 +187,7 @@ export default struct FormItem {
    */
   cancelFormDialog() {
     Log.showInfo(TAG, 'cancel dialog');
+    this.clearForm();
   }
 
   /**
@@ -205,7 +210,7 @@ export default struct FormItem {
       } else if ((moveX + this.mAppItemWidth / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
         if (this.mPageDesktopViewModel.getIndex() === this.mPageDesktopViewModel.getGridPageCount() - 1
         && !this.mPageDesktopViewModel.isBlankPage()) {
-          this.mPageDesktopViewModel.addBlankPage();
+          this.mPageDesktopViewModel.addBlankPage(true);
         } else if (this.mPageDesktopViewModel.getIndex() < this.mPageDesktopViewModel.getGridPageCount() - 1) {
           this.mPageDesktopViewModel.showNext();
         }

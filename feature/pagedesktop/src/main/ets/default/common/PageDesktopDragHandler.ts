@@ -57,7 +57,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   }
 
   setDragEffectArea(effectArea): void {
-    console.info('Launcher PageDesktopDragHandler setDragEffectArea:' + JSON.stringify(effectArea));
+    console.info(`Launcher PageDesktopDragHandler setDragEffectArea:${JSON.stringify(effectArea)}`);
     super.setDragEffectArea(effectArea);
     this.updateGridParam(effectArea);
   }
@@ -65,7 +65,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   private updateGridParam(effectArea) {
     const gridWidth = effectArea.right - effectArea.left;
     const gridHeight = effectArea.bottom - effectArea.top;
-    console.info('Launcher PageDesktop updateGridParam gridWidth: ' + gridWidth + ', gridHeight: ' + gridHeight);
+    console.info(`Launcher PageDesktop updateGridParam gridWidth: ${gridWidth}, gridHeight: ${gridHeight}`);
     this.mGridConfig = this.mPageDesktopViewModel.getGridConfig();
     const column = this.mGridConfig.column;
     const row = this.mGridConfig.row;
@@ -73,7 +73,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     const rowGap =  this.mPageDesktopViewModel.getPageDesktopStyleConfig().mRowsGap;
     this.mGridItemHeight = row > 0 ? (gridHeight + columnsGap) / row : 0;
     this.mGridItemWidth = column > 0 ? (gridWidth + rowGap) / column : 0;
-    console.info('Launcher PageDesktop updateGridParam column: ' + column + ', row: ' + row);
+    console.info(`Launcher PageDesktop updateGridParam column: ${column}, row: ${row}`);
     this.mPageCoordinateData.gridYAxis = [];
     for (let i = 1; i <= row; i++) {
       const touchPositioningY = (gridHeight / row) * i + effectArea.top;
@@ -97,7 +97,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   protected getItemIndex(event: any): number {
     const x = event.touches[0].screenX;
     const y = event.touches[0].screenY;
-    console.info('Launcher PageDesktop getItemIndex x: ' + x + ', y: ' + y);
+    console.info(`Launcher PageDesktop getItemIndex x: ${x}, y: ${y}`);
     let rowVal = CommonConstants.INVALID_VALUE;
     for (let index = 0; index < this.mPageCoordinateData.gridYAxis.length; index++) {
       if (this.mPageCoordinateData.gridYAxis[index] > y) {
@@ -225,7 +225,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     super.reset();
   }
 
-  private setAppOverlayData() {
+  private setAppOverlayData(): void {
     AppStorage.SetOrCreate('overlayData', {
       iconSize: this.styleConfig.mIconSize * 1.05,
       nameSize: this.styleConfig.mNameSize * 1.05,
@@ -234,7 +234,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     });
   }
 
-  private setFolderOverlayData() {
+  private setFolderOverlayData(): void {
     const folderStyleConfig = this.mFolderViewModel.getFolderStyleConfig();
     const folderSize = folderStyleConfig.mGridSize * 1.05;
     const iconSize = folderStyleConfig.mFolderAppSize * 1.05;
@@ -251,7 +251,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     });
   }
 
-  private setFormOverlayData(dragItemInfo) {
+  private setFormOverlayData(dragItemInfo): void {
     const formStyleConfig = this.mFormViewModel.getFormStyleConfig();
     const cardDimension = dragItemInfo.cardDimension.toString();
     const formHeight = formStyleConfig.mFormHeight.get(cardDimension) * 1.05;
@@ -296,10 +296,10 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
         this.updateEndPosition(dragItemInfo);
         AppStorage.SetOrCreate('positionOffset', []);
         AppStorage.SetOrCreate('moveOffset', []);
-
       } else if(dragItemInfo.type === CommonConstants.TYPE_APP) {
         // end position is the same as start position
         if (this.isMoveToSamePosition(dragItemInfo)) {
+          this.deleteBlankPageAfterDragging();
           return true;
         }
         const endLayoutInfo = this.getEndLayoutInfo(layoutInfo);
@@ -308,6 +308,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
             const appInfo = this.createNewAppInfo(dragItemInfo);
             // add app to folder
             this.mFolderViewModel.addOneAppToFolder(appInfo, endLayoutInfo.folderId);
+            this.deleteBlankPageAfterDragging();
             return true;
           } else if (endLayoutInfo.type === CommonConstants.TYPE_APP) {
             // create a new folder
@@ -315,6 +316,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
             const startLayoutInfo = this.getStartLayoutInfo(layoutInfo, dragItemInfo);
             appListInfo.push(startLayoutInfo);
             this.mFolderViewModel.addNewFolder(appListInfo);
+            this.deleteBlankPageAfterDragging();
             return true;
           }
         }
@@ -329,6 +331,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
         console.info('Launcher PageDesktop onDragEnd not selfDrag');
       }
     }
+    this.deleteBlankPageAfterDragging();
     return isDragSuccess;
   }
 
@@ -338,12 +341,39 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     if (this.isDropOutSide() && isSuccess) {
       console.info('Launcher PageDesktop onDragEnd dropOutSide');
     }
-    if (!CheckEmptyUtils.isEmpty(this.mStartPosition)) {
-      this.mPageDesktopViewModel.deleteBlankPageByPageNo(this.mStartPosition.page);
-    }
+
     this.mStartPosition = null;
     this.mEndPosition = null;
     AppStorage.SetOrCreate('dragFocus', '');
+  }
+
+  /**
+   * delete blank page after dragging
+   */
+  private deleteBlankPageAfterDragging(): void {
+    const layoutInfo = this.mPageDesktopViewModel.getLayoutInfo();
+    const pageCount = layoutInfo.layoutDescription.pageCount;
+    const isAddByDraggingFlag = this.mPageDesktopViewModel.isAddByDragging();
+    let deleteLastFlag = false;
+    if (isAddByDraggingFlag && (CheckEmptyUtils.isEmpty(this.mEndPosition) ||
+      !CheckEmptyUtils.isEmpty(this.mEndPosition) && this.mEndPosition.page != pageCount - 1 )) {
+      layoutInfo.layoutDescription.pageCount = pageCount - 1;
+      deleteLastFlag = true;
+    }
+    let deleteStartFlag = false;
+    if (!CheckEmptyUtils.isEmpty(this.mStartPosition)) {
+      deleteStartFlag = this.mPageDesktopViewModel.deleteBlankPageFromLayoutInfo(layoutInfo, this.mStartPosition.page);
+    }
+    if (CheckEmptyUtils.isEmpty(this.mEndPosition)) {
+      this.mPageDesktopViewModel.changeIndex(this.mStartPosition.page);
+    } else if (deleteStartFlag && this.mStartPosition.page > this.mEndPosition.page) {
+      this.mPageDesktopViewModel.changeIndex(this.mEndPosition.page);
+    }
+    if (deleteLastFlag || deleteStartFlag) {
+      this.mPageDesktopViewModel.setLayoutInfo(layoutInfo);
+      this.mPageDesktopViewModel.pagingFiltering();
+    }
+    this.mPageDesktopViewModel.setAddByDragging(false);
   }
 
   private isMoveToSamePosition(dragItemInfo): boolean {
@@ -426,7 +456,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     if (!this.isValidShortcut(layoutInfo, itemInfo)) {
       console.info('Launcher PageDesktop layoutAdjustment isInvalidShortcut');
       Prompt.showToast({
-        message: $r("app.string.duplicate_add")
+        message: $r('app.string.duplicate_add')
       });
       return;
     }
@@ -874,16 +904,9 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
           break;
         }
         for (let column = 0; column < allPositions[row].length; column++) {
-          let usedPosition = 0;
-          for (let j = 0; j < moveFolderOrForm.area[1]; j++) {
-            for (let i = 0; i < moveFolderOrForm.area[0]; i++) {
-              if (row + j < allPositions.length && column + i < allPositions[row].length && allPositions[row + j][column + i].type == -1) {
-                usedPosition++;
-              }
-            }
-          }
-
-          if (usedPosition == moveFolderOrForm.area[1] * moveFolderOrForm.area[0]) {
+          
+          const usablePositionCount =this.getUsablePositionCount(moveFolderOrForm, allPositions, row , column);
+          if (usablePositionCount == moveFolderOrForm.area[1] * moveFolderOrForm.area[0]) {
             isUsablePosition = true;
             this.updatePositionByMoveItem(moveFolderOrForm, allPositions, row, column);
             movedFoldersAndForms.push(moveFolderOrForm.bundleName);
@@ -900,6 +923,25 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
 
     Log.showInfo(TAG, 'moveFoldersAndForms end');
     return true;
+  }
+
+  /**
+   * get the count of usable position
+   * @param moveFolderOrForm
+   * @param allPositions
+   * @param row
+   * @param column
+   */
+  private getUsablePositionCount(moveFolderOrForm, allPositions, row , column): number {
+    let getUsablePositionCount = 0;
+    for (let j = 0; j < moveFolderOrForm.area[1]; j++) {
+      for (let i = 0; i < moveFolderOrForm.area[0]; i++) {
+        if (row + j < allPositions.length && column + i < allPositions[row].length && allPositions[row + j][column + i].type == -1) {
+          getUsablePositionCount++;
+        }
+      }
+    }
+    return getUsablePositionCount;
   }
 
   /**

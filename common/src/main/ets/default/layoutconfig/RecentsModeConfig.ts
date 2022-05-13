@@ -88,7 +88,7 @@ export default class RecentsModeConfig extends ILayoutConfig {
    *
    * @return {number} limit value
    */
-  getRecentMissionsLimit() {
+  getRecentMissionsLimit(): number {
     return this.mRecentMissionsLimit;
   }
 
@@ -97,7 +97,7 @@ export default class RecentsModeConfig extends ILayoutConfig {
    *
    * @return {string} single / double
    */
-  getRecentMissionsRowType() {
+  getRecentMissionsRowType(): string {
     return this.mRecentMissionsRowType;
   }
 }

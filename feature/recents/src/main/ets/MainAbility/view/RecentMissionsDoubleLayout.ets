@@ -77,24 +77,29 @@ export default struct RecentMissionsDoubleLayout {
       .margin({top: StyleConstants.DOUBLE_LIST_TOP_MARGIN})
       .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
       .height(StyleConstants.DOUBLE_LIST_GRID_HEIGHT_PERCENTAGE)
-      Column() {
-        Image(StyleConstants.DEFAULT_DELETE_IMAGE)
-        .width(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
-        .height(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
+
+      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
+        Column() {
+          Image(StyleConstants.DEFAULT_DELETE_IMAGE)
+            .width(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
+            .height(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
+        }
+        .width(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
+        .height(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
+        .opacity(StyleConstants.DEFAULT_DELETE_IMAGE_OPACITY)
+        .backgroundColor(StyleConstants.DEFAULT_FONT_COLOR)
+        .borderRadius(StyleConstants.RECENT_DELETE_IMAGE_RADIUS)
+        .padding(8)
+        .onClick(() => {
+          this.isClickSubComponent = true;
+          Log.showInfo(TAG, 'onClick click delete button');
+          this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
+          this.mRecentMissionsViewModel.backView();
+        })
       }
-      .width(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
+      .margin({ top: StyleConstants.DOUBLE_LIST_BOTTOM_MARGIN })
+      .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
       .height(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
-      .opacity(StyleConstants.DEFAULT_DELETE_IMAGE_OPACITY)
-      .backgroundColor(StyleConstants.DEFAULT_FONT_COLOR)
-      .borderRadius(StyleConstants.RECENT_DELETE_IMAGE_RADIUS)
-      .padding(8)
-      .margin({top: StyleConstants.DOUBLE_LIST_BOTTOM_MARGIN})
-      .onClick(() => {
-        this.isClickSubComponent = true;
-        Log.showInfo(TAG, 'onClick click delete button');
-        this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
-        this.mRecentMissionsViewModel.backView();
-      })
     }
     .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
   }

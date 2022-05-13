@@ -44,7 +44,7 @@ export default struct FormManagerDialog {
     StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT];
 
   mFormDialogController: CustomDialogController;
-  cancel: () => void;
+  cancel: (callback?) => void;
   confirm: (formCardItem) => void;
   bundleName: string;
   appName: string;
@@ -52,6 +52,7 @@ export default struct FormManagerDialog {
 
   private aboutToAppear(): void {
     this.mFormModel = FormModel.getInstance();
+    this.cancel(this.clearAllFormById.bind(this));
     this.getCurrentFormInfo();
   }
 
@@ -87,11 +88,6 @@ export default struct FormManagerDialog {
           break;
         }
         count++;
-      }
-    }
-    for (let i = 0; i < this.mFormIdList.length; i++) {
-      if (count != i) {
-        this.mFormModel.deleteFormByFormID(this.mFormIdList[i]);
       }
     }
     return formCardItem;
@@ -192,7 +188,6 @@ export default struct FormManagerDialog {
         .width(CommonStyleConstants.DEFAULT_BUTTON_WIDTH)
         .onClick(() => {
           this.mFormDialogController.close();
-          this.cancel();
           this.clearAllFormById();
         })
         Divider()

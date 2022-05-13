@@ -429,6 +429,7 @@ struct FolderAppItem {
   private mFolderInfo: any = {};
   private mouseClick: number = 0;
   private dialogName: string = "";
+  private clearForm: Function = null;
 
   private aboutToAppear(): void  {
     mFolderModel = BigFolderModel.getInstance();
@@ -473,8 +474,11 @@ struct FolderAppItem {
 
   formManagerDialogController: CustomDialogController = new CustomDialogController({
     builder: FormManagerDialog({
-      cancel: () => {
+      cancel: (callback?) => {
         // delete all form
+        if (callback != undefined) {
+          this.clearForm = callback;
+        }
       },
       confirm: (formCardItem) => {
         // add form to desktop
@@ -492,6 +496,7 @@ struct FolderAppItem {
 
   cancelFormDialog() {
     Log.showInfo(TAG, 'form manager cancel dialog');
+    this.clearForm();
   }
 
   private mDragStateListener = {

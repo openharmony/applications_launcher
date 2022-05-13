@@ -52,7 +52,7 @@ export default class PhonePageDesktopGridStyleConfig extends PageDesktopGridStyl
     return globalThis.PhonePageDesktopGridStyleConfig ;
   }
 
-  initConfig() {
+  initConfig(): void {
     const result = LayoutViewModel.getInstance().calculateDesktop();
     this.mMargin = result.mMargin;
     this.mColumnsGap = result.mColumnsGap;

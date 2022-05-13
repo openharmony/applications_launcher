@@ -210,7 +210,7 @@ export default class ResourceManager {
     || CheckEmptyUtils.isEmpty(globalThis.desktopContext.resourceManager);
   }
 
-  public async getStringByResource(res: Resource): Promise<string>{
+  async getStringByResource(res: Resource): Promise<string>{
     const json = JSON.parse(JSON.stringify(res));
     const id = json.id;
     return await this.getStringByIdSync(id);
