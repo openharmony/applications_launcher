@@ -19,7 +19,9 @@ import AppListInfoCacheManager from '../cache/AppListInfoCacheManager';
 import ResourceManager from '../manager/ResourceManager';
 import CommonConstants from '../constants/CommonConstants';
 import { InstallStatus } from 'bundle/bundleinstaller';
+import Log from '../utils/Log';
 
+const TAG = 'BaseAppPresenter';
 const KEY_NAME = 'name';
 
 /**
@@ -89,7 +91,7 @@ export default class BaseAppPresenter {
   }
 
   unregisterAppListChangeCallback(): void {
-    console.info('Launcher appPresenter unregisterAppListChangeCallback');
+    Log.showInfo(TAG, 'unregisterAppListChangeCallback');
     this.mAppModel.unregisterAppStateChangeListener(this.listener);
   }
 

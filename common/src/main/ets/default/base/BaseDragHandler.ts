@@ -14,6 +14,9 @@
  */
 
 import CommonConstants from '../constants/CommonConstants';
+import Log from '../utils/Log';
+
+const TAG = 'BaseDragHandler';
 
 interface Area {
   left: number,
@@ -23,11 +26,10 @@ interface Area {
 }
 
 /**
- * 拖拽处理基类，拖拽处理主要负责以下任务的处理：
- * 1、进行拖拽事件的分发：通过组件对dragEvent和dragItemInfo变化通过onDragEventUpdate进行通知，
- * 根据getDragEffectArea进行有效性分发（在系统拖拽能力框架ready后去掉这部分能力）
- * 2、初始化拖拽功能相关参数
- * 3、根据拖拽结果调整刷新布局数据
+ * Drag processing base class, drag processing is mainly responsible for the processing of the following tasks:
+ * 1.Efficient event distribution based on drag area.
+ * 2.Initialize drag function related parameters.
+ * 3.Adjust and refresh the desktop layout according to the drag results.
  */
 export default abstract class BaseDragHandler {
   protected mIsInEffectArea = false;
@@ -45,55 +47,55 @@ export default abstract class BaseDragHandler {
   }
 
   /**
-   * 获取拖拽操作对应的数据对象
+   * Get the data object corresponding to the drag operation.
    */
   protected abstract getDragRelativeData(): any;
 
   /**
-   * 获取拖拽目标的位置
+   * Get the position of the drag target.
    */
   protected abstract getItemIndex(event: any): number;
 
   /**
-   * 获取目标位置的对象
+   * Get the object at the target location.
    */
   protected abstract getItemByIndex(index: number): any;
 
   /**
-   * 设置拖拽有效区域(拖拽能力ready后删除)
+   * Set the drag effective area.
    */
   setDragEffectArea(effectArea: Area): void {
     this.mDragEffectArea = effectArea;
   }
 
   /**
-   * 获取有效区域(拖拽能力ready后删除)
+   * Get valid area.
    */
   protected getDragEffectArea(): Area | undefined {
     return this.mDragEffectArea;
   }
 
   /**
-   * 设置拖拽监听器
+   * Set up drag listeners.
    */
-  setDragStateListener(dragStateListener) {
+  setDragStateListener(dragStateListener): void {
     this.mDragStateListener = dragStateListener;
   }
 
   /**
-   * 设置拖拽条目信息
+   * Set drag and drop item information.
    *
-   * @param dragItemInfo 拖拽条目信息
+   * @param dragItemInfo
    */
-  protected setDragItemInfo(dragItemInfo) {
-    console.info('Launcher DragHandler setDragItemInfo dragItemInfo');
+  protected setDragItemInfo(dragItemInfo): void {
+    Log.showInfo(TAG, `setDragItemInfo dragItemInfo: ${JSON.stringify(dragItemInfo)}`);
     AppStorage.SetOrCreate('dragItemInfo', dragItemInfo);
   }
 
   /**
-   * 获取拖拽条目信息
+   * Get drag item information.
    *
-   * @return dragItemInfo 拖拽条目信息
+   * @return dragItemInfo
    */
   protected getDragItemInfo() {
     const dragItemInfo: any = AppStorage.Get('dragItemInfo');
@@ -101,41 +103,43 @@ export default abstract class BaseDragHandler {
   }
 
   /**
-   * getIsLongPress
+   * Get IsLongPress parameter.
    *
    * @return isLongPress
    */
-  protected getIsLongPress() {
+  protected getIsLongPress(): boolean {
     const isLongPress: boolean = AppStorage.Get('isLongPress');
     return isLongPress;
   }
 
   /**
-   * setIsLongPress
+   * Set the IsLongPress parameter.
    */
-  protected setIsLongPress(isLongPress) {
-    console.info('Launcher DragHandler setIsLongPress isLongPress');
+  protected setIsLongPress(isLongPress): void {
+    Log.showInfo(TAG, `setIsLongPress isLongPress: ${isLongPress}`);
     AppStorage.SetOrCreate('isLongPress', isLongPress);
   }
 
   /**
-   * 获取是否是自己发起的拖拽
+   * Get whether it is a drag within the component.
+   *
+   * @return
    */
   protected isSelfDrag(): boolean {
     return this.mIsDraging;
   }
 
   /**
-   * 获取是否自己发起的拖拽在外部放下了
+   * Get whether the dragged position is dropped outside the component
    */
-  protected isDropOutSide() {
+  protected isDropOutSide(): boolean {
     return this.isSelfDrag() && !this.mIsInEffectArea;
   }
 
   /**
-   * 通知拖拽事件发生改变(拖拽能力ready后删除)
+   * Notify that the drag event has changed
    */
-  notifyTouchEventUpdate(event: any) {
+  notifyTouchEventUpdate(event: any): void {
     AppStorage.SetOrCreate('dragEvent', event);
     let dragLocation = event.touches[0].screenX + '_' + event.touches[0].screenY + '_' + event.type;
     AppStorage.SetOrCreate('dragLocation', dragLocation);
@@ -148,10 +152,11 @@ export default abstract class BaseDragHandler {
   }
 
   /**
-   * 拖拽事件发生改变(拖拽能力ready后删除)
+   * The drag event changes
    */
-  onTouchEventUpdate(event: any) {
+  onTouchEventUpdate(event: any): void {
     if (event.type == undefined) {
+      Log.showInfo(TAG, 'onTouchEventUpdate event:undefined');
       const dragResult: boolean = AppStorage.Get('dragResult');
       this.onDragEnd(dragResult);
       this.setIsLongPress(false);
@@ -162,27 +167,27 @@ export default abstract class BaseDragHandler {
     }
     if (event.type == CommonConstants.TOUCH_TYPE_DOWN) {
       this.mSelectItemIndex = this.getItemIndex(event);
-      console.info('Launcher DragHandler onTouchEventUpdate mSelectItemIndex ' + this.mSelectItemIndex);
+      Log.showInfo(TAG, `onTouchEventUpdate event:down mSelectItemIndex: ${this.mSelectItemIndex}`);
     }
     if (event.type == CommonConstants.TOUCH_TYPE_MOVE) {
       const isLongPress = this.getIsLongPress();
       if (!isLongPress && this.mSelectItemIndex != CommonConstants.INVALID_VALUE) {
-        console.info(`Launcher DragHandler onTouchEventUpdate invalid move ${isLongPress}`);
+        Log.showInfo(TAG,'onTouchEventUpdate event:move invalid move!');
         return;
       }
       if (!this.mIsInEffectArea && this.isInEffectArea(event)) {
         this.mIsInEffectArea = true;
-        console.info('Launcher DragHandler onDragEnter');
+        Log.showInfo(TAG, 'onTouchEventUpdate event:move onDragEnter');
         this.onDragEnter(event);
       } else if (this.mIsInEffectArea && !this.isInEffectArea(event)) {
         this.mIsInEffectArea = false;
-        console.info('Launcher DragHandler onDragLeave');
+        Log.showInfo(TAG, 'onTouchEventUpdate event:move onDragLeave');
         this.onDragLeave(event);
       }
       if (this.mIsInEffectArea) {
         if (!this.mIsDraging && this.mSelectItemIndex != CommonConstants.INVALID_VALUE) {
           this.mIsDraging = true;
-          console.info('Launcher DragHandler onDragStart');
+          Log.showInfo(TAG, 'onTouchEventUpdate event:move onDragStart');
           this.onDragStart(event, this.mSelectItemIndex);
         } else {
           const insertIndex = this.getItemIndex(event);
@@ -193,7 +198,7 @@ export default abstract class BaseDragHandler {
     if (event.type == CommonConstants.TOUCH_TYPE_UP) {
       if (this.mIsDraging || this.mIsInEffectArea) {
         const insertIndex = this.getItemIndex(event);
-        console.info('Launcher DragHandler onTouchEventUpdate insertIndex:' + insertIndex);
+        Log.showInfo(TAG, `onTouchEventUpdate event:up insertIndex: ${insertIndex}`);
         const dragResult = this.onDragDrop(event, insertIndex, this.mSelectItemIndex);
         if (dragResult) {
           AppStorage.SetOrCreate('dragResult', dragResult);
@@ -222,7 +227,7 @@ export default abstract class BaseDragHandler {
   }
 
   /**
-   * 开始拖拽
+   * Start dragging
    */
   protected onDragStart(event: any, itemIndex: number): void {
     const dragItemInfo = this.getItemByIndex(itemIndex);
@@ -234,7 +239,7 @@ export default abstract class BaseDragHandler {
   }
 
   /**
-   * 拖拽进入区域
+   * Drag the position into the target area
    */
   protected onDragEnter(event: any): void {
     if (this.mDragStateListener && this.mDragStateListener.onItemDragEnter) {
@@ -243,7 +248,7 @@ export default abstract class BaseDragHandler {
   }
 
   /**
-   * 拖拽离开区域
+   * Drag the position away from the target area
    */
   protected onDragLeave(event: any): void {
     if (this.mDragStateListener && this.mDragStateListener.onItemDragLeave) {
@@ -252,7 +257,7 @@ export default abstract class BaseDragHandler {
   }
 
   /**
-   * 拖拽移动
+   * While the drag target is moving
    */
   protected onDragMove(event: any, insertIndex: number, itemIndex: number): void {
     if (this.mDragStateListener && this.mDragStateListener.onItemDragMove) {
@@ -261,7 +266,7 @@ export default abstract class BaseDragHandler {
   }
 
   /**
-   * 停止拖拽
+   * drag and drop
    */
   protected onDragDrop(event: any, insertIndex: number, itemIndex: number): boolean {
     if (this.mDragStateListener && this.mDragStateListener.onItemDrop) {
@@ -271,7 +276,7 @@ export default abstract class BaseDragHandler {
   }
 
   /**
-   * 停止拖拽
+   * end drag
    */
   protected onDragEnd(isSuccess: boolean): void {
     if (this.mDragStateListener && this.mDragStateListener.onItemDragEnd) {

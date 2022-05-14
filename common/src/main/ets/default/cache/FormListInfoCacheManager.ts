@@ -15,6 +15,9 @@
 
 import LruCache from './LruCache';
 import CommonConstants from '../constants/CommonConstants';
+import Log from '../utils/Log';
+
+const TAG = 'FormListInfoCacheManager';
 
 /**
  * A Manager class that provides get/set/clear cache methods for form list data.
@@ -26,7 +29,7 @@ export default class FormListInfoCacheManager {
     this.lruCache = new LruCache();
   }
 
-  static getInstance() {
+  static getInstance(): FormListInfoCacheManager {
     if (globalThis.FormListInfoCacheManagerInstance == null) {
       globalThis.FormListInfoCacheManagerInstance = new FormListInfoCacheManager();
     }
@@ -40,7 +43,7 @@ export default class FormListInfoCacheManager {
    * @return {object} - cache get from the memory or disk
    */
   getCache(key: string): any {
-    console.info('Launcher FormListInfoCacheManager getCache key = ' + key);
+    Log.showInfo(TAG, `getCache key: ${key}`);
     const cache = this.lruCache.getCache(key);
     if (cache == undefined || cache == null || cache == '' || cache == -1) {
       return CommonConstants.INVALID_VALUE;
@@ -55,16 +58,16 @@ export default class FormListInfoCacheManager {
    * @param {string} key - key of the cache map
    * @param {object} value - value of the cache map
    */
-  setCache(key: string, value) {
-    console.info('Launcher FormListInfoCacheManager setCache key = ' + key + ' value = ' + value);
+  setCache(key: string, value): void {
+    Log.showInfo(TAG, `setCache key:${key}, value: ${value}`);
     this.lruCache.putCache(key, value);
   }
 
   /**
    * Clear cache of both disk and memory.
    */
-  clearCache() {
-    console.info('Launcher FormListInfoCacheManager clearCache');
+  clearCache(): void {
+    Log.showInfo(TAG, 'clearCache');
     this.lruCache.clear();
   }
 }

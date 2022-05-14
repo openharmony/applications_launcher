@@ -61,6 +61,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     gridYAxis: []
   };
   private isPad = false;
+  private isAddByDraggingFlag = false;
   private desktopSwiperController: SwiperController;
 
   async showFormManager(params) {
@@ -68,48 +69,55 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     globalThis.createWindowWithName(windowManager.FORM_MANAGER_WINDOW_NAME, windowManager.FORM_MANAGER_RANK);
   }
   
-  setSwiperController(swiperController: SwiperController) {
+  setSwiperController(swiperController: SwiperController): void {
     this.desktopSwiperController = swiperController;
   }
 
-  showNext() {
-    Log.showInfo(TAG, 'show next page')
+  showNext(): void {
+    Log.showInfo(TAG, 'show next page');
     this.desktopSwiperController?.showNext();
   }
 
-  showPrevious() {
-    Log.showInfo(TAG, 'show previous page')
+  showPrevious(): void {
+    Log.showInfo(TAG, 'show previous page');
     this.desktopSwiperController?.showPrevious();
   }
 
   private readonly mLocalEventListener = {
     onReceiveEvent: (event, params) => {
-      console.info('Launcher PageDesktop receive event: ' + event + ', params: ' + params);
-      if (!this.isPad) {
-        if (event === EventConstants.EVENT_BADGE_UPDATE) {
-          this.updateBadgeNumber(params);
-        } else if (event === EventConstants.EVENT_REQUEST_JUMP_TO_FORM_VIEW) {
-          this.showFormManager(params);
-        } else {
-          this.mHideBundleInfoList = params;
-          this.getGridList();
-        }
-      }else{
-        if (event === EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD) {
+      Log.showInfo(TAG, `localEventListener receive event: ${event}, params: ${params}`);
+      switch (event) {
+        case EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD:
           this.addToDesktop(params);
-        } else if (event === EventConstants.EVENT_BADGE_UPDATE) {
+          break;
+        case EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE:
+          this.deleteAppItem(params);
+          break;
+        case EventConstants.EVENT_BADGE_UPDATE:
           this.updateBadgeNumber(params);
-        } else if (event === EventConstants.EVENT_REQUEST_FORM_ITEM_ADD) {
+          break;
+        case EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE:
+          this.updateDesktopInfo();
+          break;
+        case EventConstants.EVENT_REQUEST_FORM_ITEM_ADD:
           this.addFormToDesktop(params);
-        } else if (event === EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE) {
-          this.deleteAppItem(params)
-        }
+          break;
+        case EventConstants.EVENT_REQUEST_JUMP_TO_FORM_VIEW:
+          this.showFormManager(params);
+          break;
+        default:
+          if (!this.isPad) {
+            Log.showInfo(TAG, 'localEventListener hideBundleInfoList!')
+            this.mHideBundleInfoList = params;
+            this.getGridList();
+          }
+          break;
       }
     }
   };
 
   private readonly mSettingsChangeObserver: SettingsModelObserver = (event: number)=> {
-    console.info('Launcher PageDesktopViewModel mSettingsChangeObserver event is ' + event);
+    Log.showInfo(TAG, 'mSettingsChangeObserver event is ' + event);
 
     this.mGridConfig = this.getGridConfig();
     this.pagingFiltering();
@@ -149,8 +157,8 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   /**
    * Registering Listening Events.
    */
-  private onPageDesktopCreate() {
-    console.info('Launcher PageDesktopViewModel onPageDesktopCreate');
+  private onPageDesktopCreate(): void {
+    Log.showInfo(TAG, 'onPageDesktopCreate');
     this.mAppModel.registerAppListEvent();
     this.mPageDesktopModel.registerPageDesktopItemAddEvent(this.mLocalEventListener);
     this.mPageDesktopModel.registerPageDesktopBadgeUpdateEvent(this.mLocalEventListener);
@@ -160,8 +168,8 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   /**
    * Unregistering Listening Events.
    */
-  private onPageDesktopDestroy() {
-    console.info('Launcher PageDesktopViewModel onPageDesktopDestroy');
+  private onPageDesktopDestroy(): void {
+    Log.showInfo(TAG, 'onPageDesktopDestroy');
     this.mAppModel.unregisterAppListEvent();
     this.mPageDesktopModel.unregisterEventListener(this.mLocalEventListener);
     this.mFormModel.unregisterEventListener(this.mLocalEventListener);
@@ -184,64 +192,64 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       }
     }
     this.appendFormData(formInfoList, bundleInfoListTemp);
-    if (!this.isPad) {
-      this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, this.mBundleInfoList);
-    }
     this.mBundleInfoList = bundleInfoListTemp;
     this.pagingFiltering();
 
   }
 
+  private async updateDesktopInfo(): Promise<void> {
+    await this.mAppModel.getAppListAsync();
+    this.getGridList();
+  }
+
   private async getAppList() {
-    let tempAppInfoList = await this.mAppModel.getAppList();
-    if (this.isPad) {
-      console.info('Launcher PageDesktopViewModel getAppList info start');
-      const info = this.mSettingsModel.getAppListInfo();
-      if (!this.mSettingsModel.isAppListInfoExit() && this.ifInfoIsNull(info)) {
-        for (const i in tempAppInfoList) {
-          info.push(tempAppInfoList[i]);
-        }
+    Log.showInfo(TAG, 'getAppList start');
+
+    // get total app from system
+    const totalAppInfoList = await this.mAppModel.getAppList();
+
+    // get pageDesktop app from config
+    let pageDesktopInfo = this.mSettingsModel.getAppListInfo();
+
+    // get from config empty then init pageDesktop app
+    if (!this.mSettingsModel.isAppListInfoExit() && this.ifInfoIsNull(pageDesktopInfo)) {
+      for (const i in totalAppInfoList) {
+        pageDesktopInfo.push(totalAppInfoList[i]);
       }
-      for (const i in info) {
+    } else {
+      // remove uninstalled app
+      for (const i in pageDesktopInfo) {
         let hasUninstalled = true;
-        await ResourceManager.getInstance().updateIconCache(info[i].appIconId, info[i].bundleName);
-        for (const j in tempAppInfoList) {
-          if (info[i].bundleName == tempAppInfoList[j].bundleName) {
+        for (const j in totalAppInfoList) {
+          if (pageDesktopInfo[i].bundleName == totalAppInfoList[j].bundleName) {
+            pageDesktopInfo[i].appName = totalAppInfoList[j].appName;
+            if (pageDesktopInfo[i].appLabelId != totalAppInfoList[j].appLabelId ||
+            pageDesktopInfo[i].appIconId != totalAppInfoList[j].appIconId) {
+              pageDesktopInfo[i].appLabelId = totalAppInfoList[j].appLabelId;
+              pageDesktopInfo[i].appIconId = totalAppInfoList[j].appIconId;
+            }
             hasUninstalled = false;
             break;
           }
         }
         if (hasUninstalled) {
-          info.splice(i, 1);
+          pageDesktopInfo.splice(i, 1);
         }
       }
-      tempAppInfoList = info;
-      this.mSettingsModel.setAppListInfo(tempAppInfoList);
-    } else {
-      const gridLayoutInfo = this.getLayoutInfo();
-      const layoutInfo = gridLayoutInfo.layoutInfo;
-      for (let i = 0; i < layoutInfo.length; i++) {
-        if (layoutInfo[i].type == CommonConstants.TYPE_FOLDER) {
-          for (let j = 0; j < layoutInfo[i].layoutInfo.length; j++) {
-            for (let k = 0; k < layoutInfo[i].layoutInfo[j].length; k++) {
-              const appInfo = tempAppInfoList.find(item => {
-                if (item.bundleName == layoutInfo[i].layoutInfo[j][k].bundleName) {
-                  return true;
-                }
-              });
-              if (!this.ifInfoIsNull(appInfo)) {
-                const index = tempAppInfoList.indexOf(appInfo);
-                tempAppInfoList.splice(index, 1);
-              }
-            }
-          }
-        }
-      }
-      this.mSettingsModel.setAppListInfo(tempAppInfoList);
     }
-    console.info('Launcher PageDesktopViewModel getAppList:' + tempAppInfoList.length);
+
+    // product phone logic
+    if (!this.isPad) {
+      this.addNewInstalledInfo(totalAppInfoList, pageDesktopInfo);
+      this.removeFolderInfo(pageDesktopInfo);
+      this.removeBottomBarInfo(pageDesktopInfo);
+    }
+
+    // update pageDesktop app config
+    this.mSettingsModel.setAppListInfo(pageDesktopInfo);
+    Log.showInfo(TAG, 'getAppList:' + pageDesktopInfo.length);
     AppStorage.SetOrCreate('isDesktopLoadFinished', true);
-    return tempAppInfoList;
+    return pageDesktopInfo;
   }
 
   /**
@@ -251,10 +259,10 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    */
   deleteAppItem(bundleName) {
     this.mBundleInfoList = this.mSettingsModel.getAppListInfo();
-    console.info('Launcher PageDesktopViewModel deleteAppItem:mBundleInfoList' + this.mBundleInfoList.length);
+    Log.showInfo(TAG, 'deleteAppItem mBundleInfoList:' + this.mBundleInfoList.length);
     for (let i = 0; i < this.mBundleInfoList.length; i++) {
       if (this.mBundleInfoList[i].bundleName === bundleName) {
-        console.info('Launcher PageDesktopViewModel deleteAppItem:abilityName:' + bundleName);
+        Log.showInfo(TAG, 'deleteAppItem:abilityName:' + bundleName);
         this.mBundleInfoList.splice(i, 1);
         break;
       }
@@ -281,7 +289,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    */
   deleteAppItems(appListInfo) {
     this.mBundleInfoList = this.mSettingsModel.getAppListInfo();
-    console.info('Launcher PageDesktop deleteAppItems:mBundleInfoList:' + this.mBundleInfoList.length);
+    Log.showInfo(TAG, 'deleteAppItems mBundleInfoList:' + this.mBundleInfoList.length);
     for (let j = 0; j < appListInfo.length; j++) {
       for (let i = 0; i < this.mBundleInfoList.length; i++) {
         if (this.mBundleInfoList[i].bundleName === appListInfo[j].bundleName) {
@@ -300,14 +308,10 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * @param appInfo
    */
   addToDesktop(appInfo) {
-    console.info('Launcher PageDesktopViewModel addToDesktop bundleName ' + appInfo.bundleName);
     this.mBundleInfoList = this.mSettingsModel.getAppListInfo();
-    this.mGridConfig = this.getGridConfig();
-    const column = this.mGridConfig.column;
-    const row = this.mGridConfig.row;
-    console.info('Launcher PageDesktopViewModel addToDesktop mBundleInfoList ' + JSON.stringify(this.mBundleInfoList));
+    Log.showInfo(TAG, 'addToDesktop bundleName:' + appInfo.bundleName + ', mBundleInfoList length:' + this.mBundleInfoList.length);
     for (let i = 0; i < this.mBundleInfoList.length; i++) {
-      console.info('Launcher PageDesktopViewModel addToDesktop for' + appInfo.bundleName);
+      Log.showInfo(TAG, 'addToDesktop in loop:' + JSON.stringify(this.mBundleInfoList[i]));
       if (this.mBundleInfoList[i].bundleName === appInfo.bundleName) {
         Prompt.showToast({
           message: $r('app.string.duplicate_add')
@@ -315,6 +319,27 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         return;
       }
     }
+
+    let gridLayoutInfo = {
+      layoutInfo: []
+    };
+    gridLayoutInfo = this.getLayoutInfo();
+
+    // Check if app is in folder
+    for (let i = 0; i < gridLayoutInfo.layoutInfo.length; i++) {
+      if (gridLayoutInfo.layoutInfo[i].type === CommonConstants.TYPE_FOLDER) {
+        const appIndex = gridLayoutInfo.layoutInfo[i].layoutInfo[0].findIndex(item => {
+          return item.bundleName === appInfo.bundleName && item.abilityName === appInfo.abilityName;
+        })
+        if (appIndex != CommonConstants.INVALID_VALUE) {
+          Prompt.showToast({
+            message: $r('app.string.duplicate_add')
+          });
+          return;
+        }
+      }
+    }
+
     this.mBundleInfoList.push(appInfo);
     this.mSettingsModel.setAppListInfo(this.mBundleInfoList);
     this.getGridList();
@@ -325,7 +350,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * @param appInfo
    */
   addFormToDesktop(formInfo) {
-    console.info('Launcher PageDesktopViewModel addFormToDesktop');
+    Log.showInfo(TAG, 'addFormToDesktop');
     this.mBundleInfoList = this.mSettingsModel.getAppListInfo();
     switch(formInfo.dimension) {
     case FormDimension.Dimension_1_2:
@@ -361,13 +386,11 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * @param badgeInfo
    */
   updateBadgeNumber(badgeInfo) {
-    console.info('Launcher PageDesktopViewModel updateBadgeNumber bundleName ' + badgeInfo.bundleName);
+    Log.showInfo(TAG, 'updateBadgeNumber bundleName ' + badgeInfo.bundleName);
     this.mBundleInfoList = this.mSettingsModel.getAppListInfo();
 
     let appInfo = this.mBundleInfoList.find(item => {
-      if (item.bundleName == badgeInfo.bundleName) {
-        return true;
-      }
+      return item.bundleName == badgeInfo.bundleName;
     });
     if (!this.ifInfoIsNull(appInfo)) {
       appInfo.badgeNumber = badgeInfo.badgeNumber;
@@ -384,9 +407,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         if (layoutInfo[i].type == CommonConstants.TYPE_FOLDER && !hasFound) {
           for (let j = 0; j < layoutInfo[i].layoutInfo.length; j++) {
             appInfo = layoutInfo[i].layoutInfo[j].find(item => {
-              if (item.bundleName == badgeInfo.bundleName) {
-                return true;
-              }
+              return item.bundleName == badgeInfo.bundleName;
             });
 
             if (!this.ifInfoIsNull(appInfo)) {
@@ -418,7 +439,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * @param appInfo
    */
   addToDesktopByDraging(appInfo) {
-    console.info('Launcher PageDesktop addToDesktopByDraging bundleName ' + appInfo.bundleName);
+    Log.showInfo(TAG, 'addToDesktopByDraging bundleName ' + appInfo.bundleName);
     this.mGridConfig = this.mSettingsModel.getGridConfig();
     const column = this.mGridConfig.column;
     const row = this.mGridConfig.row;
@@ -476,11 +497,11 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     for (let i = 0; i < folderInfoList.length; i++) {
       for (let j = 0; j < folderInfoList[i].layoutInfo.length; j++) {
         for (let k = 0; k < folderInfoList[i].layoutInfo[j].length; k++) {
-          for (let l = 0; l < bundleInfoList.length; l++) {
-            if (folderInfoList[i].layoutInfo[j][k].bundleName == bundleInfoList[l].bundleName) {
-              bundleInfoList.splice(l, 1);
-              break;
-            }
+          const appIndex = bundleInfoList.findIndex(item => {
+            return item.bundleName === folderInfoList[i].layoutInfo[j][k].bundleName;
+          });
+          if (appIndex != CommonConstants.INVALID_VALUE) {
+            bundleInfoList.splice(appIndex, 1);
           }
         }
       }
@@ -543,7 +564,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       }
     }
     appInfo.appGridInfo = this.integrateSwiper(appListInfo);
-    console.log('Launcher PageDesktopViewModel pagingFiltering appListInfo length:' + appListInfo.length);
+    Log.showInfo(TAG, 'pagingFiltering appListInfo length:' + appListInfo.length);
     AppStorage.SetOrCreate('selectDesktopAppItem', '');
     AppStorage.SetOrCreate(KEY_APP_LIST, appInfo);
   }
@@ -682,8 +703,8 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     const layoutDescription = info.layoutDescription;
     const layoutInfo = info.layoutInfo;
     this.mGridConfig = this.getGridConfig();
-    console.log('Launcher PageDesktopViewModel updateLayoutInfo layoutDescription:' + JSON.stringify(layoutDescription));
-    console.log('Launcher PageDesktopViewModel updateLayoutInfo mGridConfig:' + JSON.stringify(this.getGridConfig()));
+    Log.showInfo(TAG, 'updateLayoutInfo layoutDescription:' + JSON.stringify(layoutDescription));
+    Log.showInfo(TAG, 'updateLayoutInfo mGridConfig:' + JSON.stringify(this.getGridConfig()));
     const column = this.mGridConfig.column;
     const row = this.mGridConfig.row;
     const newApp = [];
@@ -743,7 +764,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       for (let y = 0; y < row; y++) {
         for (let x = 0; x < column; x++) {
           if (this.isPositionValid(info, item, i, x, y)) {
-            console.log('updateCardItemLayoutInfo isPositionValid: x:' + x + ' y: '+ y + ' page: '+ i);
+            Log.showInfo(TAG, 'updateCardItemLayoutInfo isPositionValid: x:' + x + ' y: '+ y + ' page: '+ i);
             isNeedNewPage = false;
             item.page = i;
             item.column = x;
@@ -761,21 +782,18 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     return isNeedNewPage;
   }
 
-  private updateAppItemLayoutInfo(info, layoutDescription, item) {
+  private updateAppItemLayoutInfo(info, layoutDescription, item): void {
     const pageCount = info.layoutDescription.pageCount;
     const row = info.layoutDescription.row;
     const column = info.layoutDescription.column;
     const layoutInfo = info.layoutInfo;
     // current page has space
     let isNeedNewPage = true;
-    for (let i = 0; i < pageCount; i++) {
+    pageCycle: for (let i = 0; i < pageCount; i++) {
       for (let y = 0; y < row; y++) {
         for (let x = 0; x < column; x++) {
-          if (!isNeedNewPage) {
-            break;
-          }
           if (this.isPositionValid(info, item, i, x, y)) {
-            console.log('Launcher PageDesktopViewModel updateAppItemLayoutInfo isPositionValid' + x + ' y '+ y);
+            Log.showInfo(TAG, `updateAppItemLayoutInfo isPositionValid: x:${x} y:${y} page:${i}`);
             isNeedNewPage = false;
             layoutInfo.push({
               bundleName: item.bundleName,
@@ -785,6 +803,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
               column: x,
               row: y
             });
+            break pageCycle;
           }
         }
       }
@@ -809,18 +828,16 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     // current page has space
     let isNeedNewPage = true;
     const max = pageCount - 1 > this.mPageIndex ? this.mPageIndex + 1 : pageCount - 1;
-    for (let i = this.mPageIndex; i <= this.mPageIndex + 1; i++) {
+    pageCycle: for (let i = this.mPageIndex; i <= max; i++) {
       for (let y = 0; y < row; y++) {
         for (let x = 0; x < column; x++) {
-          if (!isNeedNewPage) {
-            break;
-          }
           if (this.isPositionValid(info, item, i, x, y)) {
-            console.log('updateFolderItemLayoutInfo isPositionValid' + x + ' y '+ y);
+            Log.showInfo(TAG, `updateFolderItemLayoutInfo isPositionValid: x:${x} y:${y} page:${i}`);
             isNeedNewPage = false;
             item.page = i;
             item.column = x;
             item.row = y;
+            break pageCycle;
           }
         }
       }
@@ -839,19 +856,25 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     const column = info.layoutDescription.column;
     // current page has space
     let isNeedNewPage = true;
-    for (let y = 0; y < row; y++) {
-      for (let x = 0; x < column; x++) {
-        if (!isNeedNewPage) {
-          break;
-        }
-        if (this.isPositionValid(info, item, this.mPageIndex, x, y)) {
-          console.log('updateAppItemFromFolder isPositionValid' + x + ' y '+ y);
-          isNeedNewPage = false;
-          item.page = this.mPageIndex;
-          item.column = x;
-          item.row = y;
+    const max = pageCount - 1 > this.mPageIndex ? this.mPageIndex + 1 : pageCount - 1;
+    pageCycle: for (let i = this.mPageIndex; i <= max; i++) {
+      for (let y = 0; y < row; y++) {
+        for (let x = 0; x < column; x++) {
+          if (this.isPositionValid(info, item, i, x, y)) {
+            Log.showInfo(TAG, `updateAppItemFromFolder isPositionValid: x:${x} y:${y} page:${i}`);
+            isNeedNewPage = false;
+            item.page = i;
+            item.column = x;
+            item.row = y;
+            break pageCycle;
+          }
         }
       }
+    }
+    if (isNeedNewPage) {
+      item.page = this.mPageIndex + 1;
+      item.column = 0;
+      item.row = 0;
     }
     return isNeedNewPage;
   }
@@ -941,7 +964,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * @param resultCode: Application uninstallation result
    */
   informUninstallResult(resultCode) {
-    console.info('Launcher PageDesktopViewModel informUninstallResult resultCode = ' + resultCode);
+    Log.showInfo(TAG, 'informUninstallResult resultCode = ' + resultCode);
     if (resultCode === CommonConstants.UNINSTALL_FORBID) {
       Prompt.showToast({
         message: $r('app.string.disable_uninstall')
@@ -963,7 +986,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * @param abilityName
    * @param bundleName
    */
-  openApplication(abilityName, bundleName) {
+  openApplication(abilityName: string, bundleName: string): void {
     this.jumpTo(abilityName, bundleName);
   }
 
@@ -971,7 +994,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * Open Settings.
    */
   intoSetting() {
-    console.info('Launcher PageDesktopViewModel intoSetting');
+    Log.showInfo(TAG, 'intoSetting');
     this.jumpToSetting();
   }
 
@@ -1006,17 +1029,17 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   /**
    * set pageIndex to appStorage.
    */
-  setPageIndex() {
+  setPageIndex(): void {
     AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
   }
 
-  isBlankPage() {
-    console.info(`isBlankPage ${this.mPageIndex}`);
+  isBlankPage(): boolean {
+    Log.showInfo(TAG, `isBlankPage ${this.mPageIndex}`);
     if (CheckEmptyUtils.isEmpty(this.mGridAppsInfos) || CheckEmptyUtils.isEmpty(this.mGridAppsInfos[this.mPageIndex])
       || CheckEmptyUtils.isEmpty(this.mGridAppsInfos[this.mPageIndex].length)) {
       return true;
     }
-    console.info(`isBlankPage ${this.mGridAppsInfos[this.mPageIndex].length}`);
+    Log.showInfo(TAG, `isBlankPage ${this.mGridAppsInfos[this.mPageIndex].length}`);
     if (this.mGridAppsInfos[this.mPageIndex].length === 0) {
       return true;
     }
@@ -1030,38 +1053,56 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    */
   changeIndex(idx) {
     this.mPageIndex = idx;
-    console.info('Launcher PageDesktopViewModel changeIndex ' + idx);
+    Log.showInfo(TAG, 'changeIndex ' + idx);
     AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
   }
 
   /**
    * Get the Desktop Page Number.
    */
-  getIndex() {
+  getIndex(): number {
     return this.mPageIndex;
   }
 
   /**
    * Add or delete the choosen blank page.
    */
-  addOrDeleteBlankPage() {
+  addOrDeleteBlankPage(): void {
     if (this.isBlankPage()) {
       this.deleteBlankPage();
     } else {
-      this.addBlankPage();
+      this.addBlankPage(false);
     }
   }
 
   /**
    * Add a blank page.
+   *
+   * @param {boolean} isAddByDrag
    */
-  addBlankPage() {
-    console.info('Launcher PageDesktopViewModel addBlankPage' + this.mPageIndex);
+  addBlankPage(isAddByDrag: boolean): void {
+    Log.showInfo(TAG, 'addBlankPage' + this.mPageIndex);
+    this.isAddByDraggingFlag = isAddByDrag;
     const allPageCount = this.getLayoutInfo().layoutDescription.pageCount + 1;
     this.setGridPageCount(allPageCount);
     this.pagingFiltering();
     this.mPageIndex = allPageCount - 1;
     AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
+  }
+
+  /**
+   * get the addByDragging flag
+   */
+  isAddByDragging(): boolean {
+    return this.isAddByDraggingFlag;
+  }
+
+  /**
+   * set the addByDragging flag
+   * @param {boolean} isAddByDragging
+   */
+  setAddByDragging(isAddByDragging: boolean): void {
+    this.isAddByDraggingFlag = isAddByDragging
   }
 
   /**
@@ -1073,12 +1114,12 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     return this.mSettingsModel.getLayoutInfo();
   }
 
-  setLayoutInfo(layoutInfo) {
+  setLayoutInfo(layoutInfo): void {
     this.mSettingsModel.setLayoutInfo(layoutInfo);
     this.updateMenuId();
   }
 
-  private updateMenuId() {
+  private updateMenuId(): void {
     let currentId: number = AppStorage.Get('menuId') as number ?? 0;
     currentId++;
     AppStorage.SetOrCreate('menuId', currentId % 100);
@@ -1089,7 +1130,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    *
    * @return {number} PageCount.
    */
-  getGridPageCount() {
+  getGridPageCount(): number {
     return this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount;
   }
 
@@ -1098,7 +1139,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    *
    * @param {number} pageCount - PageCount.
    */
-  private setGridPageCount(pageCount) {
+  private setGridPageCount(pageCount: number): void {
     const gridLayoutInfo = this.getLayoutInfo();
     gridLayoutInfo.layoutDescription.pageCount = pageCount;
     this.setLayoutInfo(gridLayoutInfo);
@@ -1107,8 +1148,8 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   /**
    * Delete the choosen blank page.
    */
-  private deleteBlankPage() {
-    console.info('Launcher PageDesktopViewModel deleteBlankPage ' + this.mPageIndex);
+  private deleteBlankPage(): void {
+    Log.showInfo(TAG, 'deleteBlankPage ' + this.mPageIndex);
     this.deleteGridPage(this.mPageIndex);
     this.mPageIndex = this.mPageIndex - 1;
     AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
@@ -1121,7 +1162,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    *
    * @param {number} pageIndex - Index of the page which is to be deleted.
    */
-  private deleteGridPage(pageIndex) {
+  private deleteGridPage(pageIndex: number): void {
     const info = this.getLayoutInfo();
     const layoutInfo = info.layoutInfo;
     for (const element of layoutInfo) {
@@ -1138,7 +1179,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    *
    * @param EType: Device type
    */
-  setDevice(EType) {
+  setDevice(EType): void {
     this.mSettingsModel.setDevice(EType);
     this.isPad = EType === CommonConstants.PAD_DEVICE_TYPE;
   }
@@ -1146,7 +1187,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   /**
    * Get device type.
    */
-  getDevice() {
+  getDevice(): boolean {
     return this.isPad;
   }
 
@@ -1172,7 +1213,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
 
     let open = new MenuInfo();
     open.menuType = CommonConstants.MENU_TYPE_FIXED;
-    open.menuImgSrc = "/common/pics/ic_public_add_norm.svg";
+    open.menuImgSrc = '/common/pics/ic_public_add_norm.svg';
     open.menuText = $r('app.string.app_menu_open');
     open.onMenuClick = () => {
       this.jumpTo(appInfo.abilityName, appInfo.bundleName);
@@ -1186,14 +1227,14 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       addFormToDeskTopMenu.menuImgSrc = '/common/pics/ic_public_app.svg';
       addFormToDeskTopMenu.menuText = $r('app.string.add_form_to_desktop');
       addFormToDeskTopMenu.onMenuClick = () => {
-        console.info('Launcher click menu item into add form to desktop view');
+        Log.showInfo(TAG, 'Launcher click menu item into add form to desktop view');
         const appName = this.getAppName(appInfo.appLabelId + appInfo.bundleName);
-        console.info(`Launcher PageDesktopViewModel buildMenuInfoList appName: ${appName}`);
+        Log.showInfo(TAG, `buildMenuInfoList appName: ${appName}`);
         if (appName != null) {
           appInfo.appName = appName;
         }
         AppStorage.SetOrCreate('formAppInfo', appInfo);
-        console.info('Launcher AppStorage.SetOrCreate formAppInfo');
+        Log.showInfo(TAG, 'Launcher AppStorage.SetOrCreate formAppInfo');
         if (!this.isPad) {
           this.jumpToFormManagerView(appInfo);
         } else {
@@ -1210,11 +1251,11 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       addToDockMenu.menuText = $r('app.string.app_center_menu_add_dock');
       addToDockMenu.onMenuClick = () => {
         const appName = this.getAppName(appInfo.appLabelId + appInfo.bundleName);
-        console.info('Launcher PageDesktopViewModel buildMenuInfoList appName' + appName);
+        Log.showInfo(TAG, 'buildMenuInfoList appName' + appName);
         if (appName != null) {
           appInfo.appName = appName;
         }
-        console.info('Launcher click menu item add to dock');
+        Log.showInfo(TAG, 'Launcher click menu item add to dock');
         this.addToDock(appInfo);
       };
       menuInfoList.push(addToDockMenu);
@@ -1226,7 +1267,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       moveOutMenu.menuImgSrc = '/common/pics/ic_public_remove.svg';
       moveOutMenu.menuText = $r('app.string.remove_app_from_folder');
       moveOutMenu.onMenuClick = () => {
-        console.info('Launcher click menu item remove app from folder');
+        Log.showInfo(TAG, 'Launcher click menu item remove app from folder');
         // remove app from folder
         folderCallback(appInfo);
       };
@@ -1238,9 +1279,9 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     uninstallMenu.menuImgSrc = this.isPad ? '/common/pics/ic_public_remove.svg' : '/common/pics/ic_public_delete.svg';
     uninstallMenu.menuText = this.isPad ?  $r('app.string.delete_app') : $r('app.string.uninstall');
     uninstallMenu.onMenuClick = () => {
-      console.info('Launcher click menu item uninstall');
+      Log.showInfo(TAG, 'Launcher click menu item uninstall');
       const appName = this.getAppName(appInfo.appLabelId + appInfo.bundleName);
-      console.info('Launcher PageDesktopViewModel buildMenuInfoList appName' + appName);
+      Log.showInfo(TAG, 'buildMenuInfoList appName' + appName);
       if (appName != null) {
         appInfo.appName = appName;
       }
@@ -1261,7 +1302,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       editForm.menuImgSrc = '/common/pics/ic_public_edit.svg';
       editForm.menuText = $r('app.string.form_edit');
       editForm.onMenuClick = () => {
-        console.info(`Launcher click menu item into form edit view:${formInfo.formConfigAbility}`);
+        Log.showInfo(TAG, `Launcher click menu item into form edit view:${formInfo.formConfigAbility}`);
         const abilityName = formInfo.formConfigAbility.slice(CommonConstants.FORM_CONFIG_ABILITY_PREFIX.length);
         this.jumpToForm(abilityName, formInfo.bundleName, formInfo.cardId);
       };
@@ -1272,16 +1313,16 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     addFormToDeskTopMenu.menuImgSrc = '/common/pics/ic_public_app.svg';
     addFormToDeskTopMenu.menuText = $r('app.string.add_form_to_desktop');
     addFormToDeskTopMenu.onMenuClick = () => {
-      console.info('Launcher click menu item into add form to desktop view');
+      Log.showInfo(TAG, 'Launcher click menu item into add form to desktop view');
+      const appName = this.getAppName(formInfo.appLabelId + formInfo.bundleName);
+      Log.showInfo(TAG, `buildCardMenuInfoList appName: ${appName}`);
+      if (appName != null) {
+        formInfo.appName = appName;
+      }
+      AppStorage.SetOrCreate('formAppInfo', formInfo);
       if (!this.isPad) {
         this.jumpToFormManagerView(formInfo);
       } else {
-        const appName = this.getAppName(formInfo.appLabelId + formInfo.bundleName);
-        console.info(`Launcher PageDesktopViewModel buildCardMenuInfoList appName: ${appName}`);
-        if (appName != null) {
-          formInfo.appName = appName;
-        }
-        AppStorage.SetOrCreate('formAppInfo', formInfo);
         formDialog.open();
       }
     };
@@ -1291,7 +1332,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     deleteFormFromDeskTop.menuImgSrc = '/common/pics/ic_public_remove.svg';
     deleteFormFromDeskTop.menuText = $r('app.string.delete_form');
     deleteFormFromDeskTop.onMenuClick = () => {
-      console.info('Launcher click menu item remove form to desktop view');
+      Log.showInfo(TAG, 'Launcher click menu item remove form to desktop view');
       const formAnimateData: {
           cardId: number,
           isOpenRemoveFormDialog: boolean,
@@ -1310,7 +1351,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     renameMenu.menuImgSrc = StyleConstants.DEFAULT_RENAME_IMAGE;
     renameMenu.menuText = $r('app.string.rename_folder');
     renameMenu.onMenuClick = () => {
-      console.info('Launcher click menu to rename');
+      Log.showInfo(TAG, 'Launcher click menu to rename');
       menuCallback();
     };
     menuInfoList.push(renameMenu);
@@ -1343,7 +1384,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    *
    * @param workSpaceWidth
    */
-  setWorkSpaceWidth(workSpaceWidth) {
+  setWorkSpaceWidth(workSpaceWidth: number): void {
     AppStorage.SetOrCreate('workSpaceWidth', workSpaceWidth);
   }
 
@@ -1352,7 +1393,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    *
    * @param workSpaceHeight
    */
-  setWorkSpaceHeight(workSpaceHeight) {
+  setWorkSpaceHeight(workSpaceHeight: string): void {
     AppStorage.SetOrCreate('workSpaceHeight', workSpaceHeight);
   }
 
@@ -1383,7 +1424,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * @param abilityName ability name
    * @param bundleName bundle name
    */
-  onAppDoubleClick(abilityName, bundleName) {
+  onAppDoubleClick(abilityName, bundleName): void {
     AppStorage.SetOrCreate('selectDesktopAppItem', '');
     this.jumpTo(abilityName, bundleName);
   }
@@ -1395,15 +1436,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   async createCardToDeskTop(formCardItem) {
     Log.showInfo(TAG, 'createCardToDeskTop start');
     Log.showInfo(TAG, `createCardToDeskTop formCardItem id: ${formCardItem.id}`);
-    const cardItemInfo = new CardItemInfo();
-    cardItemInfo.cardId = formCardItem.id;
-    cardItemInfo.cardName = formCardItem.name;
-    cardItemInfo.bundleName = formCardItem.bundleName;
-    cardItemInfo.abilityName = formCardItem.abilityName;
-    cardItemInfo.moduleName = formCardItem.moduleName;
-    cardItemInfo.formConfigAbility = formCardItem.formConfigAbility;
-    cardItemInfo.appLabelId = formCardItem.appLabelId;
-    cardItemInfo.cardDimension = formCardItem.dimension;
+    const cardItemInfo = this.createNewCardItemInfo(formCardItem);
 
     let formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
     if (formInfoList == CommonConstants.INVALID_VALUE) {
@@ -1446,26 +1479,29 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     Log.showInfo(TAG, 'createCardToDeskTop end');
   }
 
-  private ifStringIsNull(str) {
+  /**
+   * create new cardItemInfo by formItemInfo
+   *
+   * @param formCardItem
+   */
+  private createNewCardItemInfo(formCardItem): CardItemInfo {
+    const cardItemInfo = new CardItemInfo();
+    cardItemInfo.cardId = formCardItem.id;
+    cardItemInfo.cardName = formCardItem.name;
+    cardItemInfo.bundleName = formCardItem.bundleName;
+    cardItemInfo.abilityName = formCardItem.abilityName;
+    cardItemInfo.moduleName = formCardItem.moduleName;
+    cardItemInfo.formConfigAbility = formCardItem.formConfigAbility;
+    cardItemInfo.appLabelId = formCardItem.appLabelId;
+    cardItemInfo.cardDimension = formCardItem.dimension;
+    return cardItemInfo;
+  }
+
+  private ifStringIsNull(str): boolean {
     if (str == undefined || str == '' || str == null) {
       return true;
     }
     return false;
-  }
-
-  /**
-   * delete blank page where no item in this page
-   *
-   * @param page
-   */
-  deleteBlankPageByPageNo(page): void {
-    const layoutInfo = this.getLayoutInfo();
-    const deleteFlag = this.deleteBlankPageFromLayoutInfo(layoutInfo, page);
-    if (!deleteFlag) {
-      return;
-    }
-    this.setLayoutInfo(layoutInfo);
-    this.pagingFiltering();
   }
 
   /**
@@ -1487,5 +1523,64 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       }
     }
     return true;
+  }
+
+  private addNewInstalledInfo(totalAppInfoList, pageDesktopInfo) {
+    for (const i in totalAppInfoList) {
+      let hasInstalled = false;
+      for (const j in pageDesktopInfo) {
+        if (totalAppInfoList[i].bundleName == pageDesktopInfo[j].bundleName) {
+          hasInstalled = true;
+          break;
+        }
+      }
+      if (!hasInstalled) {
+        pageDesktopInfo.push(totalAppInfoList[i]);
+      }
+    }
+  }
+
+  private removeBottomBarInfo(pageDesktopInfo) {
+    let bottomAppList = [];
+
+    bottomAppList = AppStorage.Get('residentList');
+    Log.showInfo(TAG, 'removeBottomBarInfo bottomAppList:' + JSON.stringify(bottomAppList));
+    if (!CheckEmptyUtils.isEmptyArr(bottomAppList)) {
+      for (let i = 0; i < bottomAppList.length; i++) {
+        const appInfo = pageDesktopInfo.find(item => {
+          if (item.bundleName == bottomAppList[i].bundleName) {
+            return true;
+          }
+        });
+        if (!this.ifInfoIsNull(appInfo)) {
+          const index = pageDesktopInfo.indexOf(appInfo);
+          pageDesktopInfo.splice(index, 1);
+          Log.showInfo(TAG, 'removeBottomBarInfo appInfo:' + JSON.stringify(appInfo.bundleName));
+        }
+      }
+    }
+  }
+
+  private removeFolderInfo(pageDesktopInfo) {
+    const gridLayoutInfo = this.getLayoutInfo();
+    const layoutInfo = gridLayoutInfo.layoutInfo;
+    for (let i = 0; i < layoutInfo.length; i++) {
+      if (layoutInfo[i].type == CommonConstants.TYPE_FOLDER) {
+        for (let j = 0; j < layoutInfo[i].layoutInfo.length; j++) {
+          for (let k = 0; k < layoutInfo[i].layoutInfo[j].length; k++) {
+            const appInfo = pageDesktopInfo.find(item => {
+              if (item.bundleName == layoutInfo[i].layoutInfo[j][k].bundleName) {
+                return true;
+              }
+            });
+            if (!this.ifInfoIsNull(appInfo)) {
+              const index = pageDesktopInfo.indexOf(appInfo);
+              pageDesktopInfo.splice(index, 1);
+              Log.showInfo(TAG, 'removeFolderInfo appInfo:' + JSON.stringify(appInfo.bundleName));
+            }
+          }
+        }
+      }
+    }
   }
 }

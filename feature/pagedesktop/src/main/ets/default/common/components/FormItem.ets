@@ -15,6 +15,7 @@
 
 import StyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
 import PresetStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
+import ResourceManager from '../../../../../../../../common/src/main/ets/default/manager/ResourceManager';
 import PageDesktopViewModel from '../../../../../../../pagedesktop/src/main/ets/default/common/viewmodel/PageDesktopViewModel';
 import FormViewModel from '../../../../../../../form/src/main/ets/default/viewmodel/FormViewModel';
 import FormStyleConfig from '../../../../../../../form/src/main/ets/default/common/FormStyleConfig';
@@ -59,6 +60,9 @@ export default struct FormItem {
   private mFormItemWidth: number = 0;
   private mFormItemHeight: number = 0;
   private mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
+  private mIsDeleteForm: string = '';
+  private mForm: string = '';
+  private clearForm: Function = null;
 
   private aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
@@ -76,6 +80,9 @@ export default struct FormItem {
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
     this.mFormItemWidth = this.mFormStyleConfig.mFormWidth.get(this.formItem.cardDimension.toString());
     this.mFormItemHeight = this.mFormStyleConfig.mFormHeight.get(this.formItem.cardDimension.toString());
+    const resourceManager = ResourceManager.getInstance();
+    resourceManager.getStringById($r('app.string.is_delete_form').id, this.getDialogNamePre.bind(this));
+    resourceManager.getStringById($r('app.string.form').id, this.getDialogNameAft.bind(this));
   }
 
   /**
@@ -108,6 +115,23 @@ export default struct FormItem {
     }
   }
 
+  private getDialogNamePre(value): void {
+    this.mIsDeleteForm = value;
+  }
+
+  private getDialogNameAft(value): void {
+    this.mForm = value;
+  }
+
+  /**
+   * get dialogName
+   */
+  private getDialogName(): string {
+    const appName = this.mPageDesktopViewModel.getAppName(this.formItem.appLabelId + this.formItem.bundleName);
+    const dialogName = `${this.mIsDeleteForm}"${appName}"${this.mForm}`;
+    return dialogName;
+  }
+
   /**
    * Dialog for form remove.
    */
@@ -118,7 +142,7 @@ export default struct FormItem {
         // delete form
         AppStorage.SetOrCreate('isRemoveForm', true);
       },
-      dialogName: this.mPageDesktopViewModel.getAppName(this.formItem.appLabelId + this.formItem.bundleName),
+      dialogName: this.getDialogName(),
     }),
     cancel: this.cancelDialog,
     autoCancel: true,
@@ -137,8 +161,11 @@ export default struct FormItem {
    */
   formManagerDialogController: CustomDialogController = new CustomDialogController({
     builder: FormManagerDialog({
-      cancel: () => {
+      cancel: (callback?) => {
         // delete all form
+        if (callback != undefined) {
+          this.clearForm = callback;
+        }
       },
       confirm: (formCardItem) => {
         // add form to desktop
@@ -160,6 +187,7 @@ export default struct FormItem {
    */
   cancelFormDialog() {
     Log.showInfo(TAG, 'cancel dialog');
+    this.clearForm();
   }
 
   /**
@@ -182,7 +210,7 @@ export default struct FormItem {
       } else if ((moveX + this.mAppItemWidth / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
         if (this.mPageDesktopViewModel.getIndex() === this.mPageDesktopViewModel.getGridPageCount() - 1
         && !this.mPageDesktopViewModel.isBlankPage()) {
-          this.mPageDesktopViewModel.addBlankPage();
+          this.mPageDesktopViewModel.addBlankPage(true);
         } else if (this.mPageDesktopViewModel.getIndex() < this.mPageDesktopViewModel.getGridPageCount() - 1) {
           this.mPageDesktopViewModel.showNext();
         }

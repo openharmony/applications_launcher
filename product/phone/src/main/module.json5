@@ -12,8 +12,9 @@
     "installationFree": false,
     "pages": "$profile:main_pages",
     "uiSyntax": "ets",
-    "abilities": [
+    "extensionAbilities": [
       {
+        "priority": 2,
         "skills": [
           {
             "entities": [
@@ -26,13 +27,13 @@
             ]
           }
         ],
-        "visible": true,
+        "visible": false,
         "name": "com.ohos.launcher.MainAbility",
         "icon": "$media:icon",
         "description": "$string:mainability_description",
         "label": "$string:entry_MainAbility",
         "srcEntrance": "./ets/MainAbility/MainAbility.ts",
-        "launchType": "singleton"
+        "type": "service"
       }
     ],
     "requestPermissions": [

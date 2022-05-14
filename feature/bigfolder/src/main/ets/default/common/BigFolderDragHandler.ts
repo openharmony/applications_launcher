@@ -221,11 +221,8 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     super.onDragDrop(event, insertIndex, itemIndex);
     Log.showInfo(TAG, `Launcher OpenFolder onDragDrop insertIndex:${insertIndex},mIsInEffectArea: ${this.mIsInEffectArea}`);
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
-    let isDragSuccess = false;
     const openingStatus = AppStorage.Get('openFolderStatus');
 
-    const moveAppX = event.touches[0].screenX;
-    const moveAppY = event.touches[0].screenY;
     const pageIndex: number = this.mFolderViewModel.getIndex();
     const openFolderData: {
       folderId: string,
@@ -235,38 +232,10 @@ export default class BigFolderDragHandler extends BaseDragHandler {
       this.mFolderAppList = this.mFolderAppList.concat(openFolderData.layoutInfo[i]);
     }
     if (this.mIsInEffectArea && openingStatus !== FeatureConstants.OPEN_FOLDER_STATUS_CLOSE) {
-      this.mEndPosition = this.getTouchPosition(moveAppX, moveAppY);
-      let mItemIndex = this.getItemIndex(event);
-      const itemCountByPage = this.mOpenGridConfig.column * this.mOpenGridConfig.row;
-      mItemIndex = mItemIndex + itemCountByPage * pageIndex;
-      Log.showInfo(TAG, `onDragDrop mItemIndex: ${mItemIndex}`);
-      // remove add icon
-      if (this.mFolderAppList.length > 0
-        && this.mFolderAppList[this.mFolderAppList.length - 1].type == CommonConstants.TYPE_ADD) {
-        this.mFolderAppList.pop();
-      }
-      if (mItemIndex > this.mFolderAppList.length - 1) {
-        this.mEndIndex = this.mFolderAppList.length - 1;
-      } else {
-        this.mEndIndex = mItemIndex;
-      }
-      Log.showInfo(TAG, `onDragDrop this.mEndIndex: ${this.mEndIndex}`);
-      Log.showInfo(TAG, `onDragDrop this.mStartIndex: ${this.mStartIndex}`);
-      this.layoutAdjustment(this.mStartIndex, this.mEndIndex);
+      this.updateFolderNotClose(event, pageIndex);
     } else if (openingStatus === FeatureConstants.OPEN_FOLDER_STATUS_CLOSE) {
       // effectarea in desktop
-      const desktopInstance = PageDesktopDragHandler.getInstance();
-      const mDesktopPosition = desktopInstance.getCalPosition(moveAppX, moveAppY);
-
-      const info = this.mPageDesktopViewModel.getLayoutInfo();
-      const layoutInfo = info.layoutInfo;
-      const endLayoutInfo = layoutInfo.find(item => {
-        if (item.type === CommonConstants.TYPE_FOLDER) {
-          return item.page === mDesktopPosition.page
-            && (item.row <= mDesktopPosition.row && mDesktopPosition.row <= item.row + 1)
-            && (item.column <= mDesktopPosition.column && mDesktopPosition.column <= item.column + 1);
-        }
-      });
+      const endLayoutInfo = this.getEndLayoutInfo(event);
 
       if (endLayoutInfo != undefined
         && endLayoutInfo.type === CommonConstants.TYPE_FOLDER
@@ -288,8 +257,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
         return false;
       }
     }
-    isDragSuccess = true;
-    return isDragSuccess;
+    return true;
   }
 
   protected onDragEnd(isSuccess: boolean): void {
@@ -338,4 +306,57 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     this.mPageDesktopViewModel.getGridList();
     Log.showInfo(TAG, 'layoutAdjustment end');
   }
+
+  /**
+   * update folder info when folder is not close
+   *
+   * @param event - drag event object
+   * @param pageIndex - the index of page
+   */
+  private updateFolderNotClose(event, pageIndex) {
+    const moveAppX = event.touches[0].screenX;
+    const moveAppY = event.touches[0].screenY;
+    this.mEndPosition = this.getTouchPosition(moveAppX, moveAppY);
+    let mItemIndex = this.getItemIndex(event);
+    const itemCountByPage = this.mOpenGridConfig.column * this.mOpenGridConfig.row;
+    mItemIndex = mItemIndex + itemCountByPage * pageIndex;
+    Log.showInfo(TAG, `onDragDrop mItemIndex: ${mItemIndex}`);
+    // remove add icon
+    if (this.mFolderAppList.length > 0
+      && this.mFolderAppList[this.mFolderAppList.length - 1].type == CommonConstants.TYPE_ADD) {
+      this.mFolderAppList.pop();
+    }
+    if (mItemIndex > this.mFolderAppList.length - 1) {
+      this.mEndIndex = this.mFolderAppList.length - 1;
+    } else {
+      this.mEndIndex = mItemIndex;
+    }
+    Log.showInfo(TAG, `onDragDrop this.mEndIndex: ${this.mEndIndex}`);
+    Log.showInfo(TAG, `onDragDrop this.mStartIndex: ${this.mStartIndex}`);
+    this.layoutAdjustment(this.mStartIndex, this.mEndIndex);
+  }
+
+  /**
+   * get drag end position from layoutInfo
+   *
+   * @param event - drag event object
+   */
+  private getEndLayoutInfo(event) {
+    const moveAppX = event.touches[0].screenX;
+    const moveAppY = event.touches[0].screenY;
+    const desktopInstance = PageDesktopDragHandler.getInstance();
+    const mDesktopPosition = desktopInstance.getCalPosition(moveAppX, moveAppY);
+
+    const info = this.mPageDesktopViewModel.getLayoutInfo();
+    const layoutInfo = info.layoutInfo;
+    const endLayoutInfo = layoutInfo.find(item => {
+      if (item.type === CommonConstants.TYPE_FOLDER) {
+        return item.page === mDesktopPosition.page
+          && (item.row <= mDesktopPosition.row && mDesktopPosition.row <= item.row + 1)
+          && (item.column <= mDesktopPosition.column && mDesktopPosition.column <= item.column + 1);
+      }
+    });
+    return endLayoutInfo;
+  }
+
 }

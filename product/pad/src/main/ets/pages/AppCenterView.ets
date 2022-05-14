@@ -39,7 +39,7 @@ struct AppCenterView {
   private aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
     this.mStage.onCreate();
-    AppStorage.SetOrCreate('dockDevice', this.device);
+    AppStorage.SetOrCreate('device', this.device);
     this.mLayoutViewModel = LayoutViewModel.getInstance();
     this.updateScreenSize();
   }
@@ -47,6 +47,7 @@ struct AppCenterView {
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
     this.mAppGridPresenter = AppGridPresenter.getInstance();
+    this.mAppGridPresenter.getAppList();
     this.mAppGridPresenter.registerAppListChange();
   }
 

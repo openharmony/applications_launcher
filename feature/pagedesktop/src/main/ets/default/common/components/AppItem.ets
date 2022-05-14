@@ -53,6 +53,7 @@ export default struct AppItem {
   private mPageDesktopDragHandler : PageDesktopDragHandler;
   private mouseClick: number = 0;
   private dialogName: string = "";
+  private clearForm: Function = null;
 
   dialogController: CustomDialogController = new CustomDialogController({
     builder:  UninstallDialog({
@@ -77,8 +78,11 @@ export default struct AppItem {
    */
   formManagerDialogController: CustomDialogController = new CustomDialogController({
     builder: FormManagerDialog({
-      cancel: () => {
+      cancel: (callback?) => {
         // delete all form
+        if (callback != undefined) {
+          this.clearForm = callback;
+        }
       },
       confirm: (formCardItem) => {
         // add form to desktop
@@ -100,6 +104,7 @@ export default struct AppItem {
    */
   cancelFormDialog() {
     Log.showInfo(TAG, 'cancel form dialog');
+    this.clearForm();
   }
 
   private aboutToAppear(): void  {
@@ -143,7 +148,7 @@ export default struct AppItem {
       } else if ((moveX + this.mIconSize / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
         let cachePageIndex = this.mPageDesktopViewModel.getLayoutInfo().layoutDescription.pageCount;
         if (curPageIndex == cachePageIndex - 1 && !this.mPageDesktopViewModel.isBlankPage()) {
-          this.mPageDesktopViewModel.addBlankPage();
+          this.mPageDesktopViewModel.addBlankPage(true);
         } else if(curPageIndex < cachePageIndex - 1) {
           this.mPageDesktopViewModel.showNext();
         }

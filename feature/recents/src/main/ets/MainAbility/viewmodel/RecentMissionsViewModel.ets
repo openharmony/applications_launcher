@@ -100,6 +100,9 @@ export default class RecentMissionsViewModel {
     Log.showInfo(TAG, 'getRecentMissionsList start');
     this.mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
     Log.showInfo(TAG, `getRecentMissionsList length: ${this.mRecentMissionsList.length}`);
+    for (let item of this.mRecentMissionsList) {
+      item.snapShotInfo = await amsMissionManager.getMissionSnapShot(item.missionId);
+    }
     AppStorage.SetOrCreate('recentMissionsList', this.mRecentMissionsList);
   }
 

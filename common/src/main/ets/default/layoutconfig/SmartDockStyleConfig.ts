@@ -17,101 +17,101 @@ import AppListStyleConfig from './AppListStyleConfig';
 import CommonConstants from '../constants/CommonConstants';
 
 /**
- * Dock样式配置类
+ * Dock style configuration class
  */
 export default class SmartDockStyleConfig extends AppListStyleConfig {
   /**
-   * dock列表高度
+   * dock list height
    */
   mDockHeight = 78;
 
   /**
-   * dock列表背景色
+   * dock list background color
    */
   mBackgroundColor = '#85FAFAFA';
 
   /**
-   * dock列表圆角值
+   * dock list rounded corner value
    */
   mDockRadius = 22;
 
   /**
-   * dock列表背景模糊度
+   * dock list background blur
    */
   mBackdropBlur = 0;
 
   /**
-   * dock列表padding
+   * dock list padding
    */
   mDockPadding = 9;
 
   /**
-   * dock列表margin
+   * dock list margin
    */
   mDockMargin = 10;
 
   /**
-   * 列表条目宽度
+   * List item width
    */
   mListItemWidth: any = 60;
 
   /**
-   * 列表条目高度
+   * List item height
    */
   mListItemHeight: any = 60;
 
   /**
-   * 列表条目间距
+   * List item spacing
    */
   mListItemGap = 2;
 
   /**
-   * 列表方向
+   * list direction
    */
   mListDirection: Axis = Axis.Horizontal;
 
   /**
-   * 列表名称是否展示在旁边
+   * Whether the list name is displayed next to
    */
   mNameDisplaySide = true;
 
   /**
-   * 是否需要显示应用名称
+   * Whether to display the application name
    */
   mWithAppName = false;
 
   /**
-   * 列表图标大小
+   * list icon size
    */
   mIconSize = 54;
 
   /**
-   * 条目的内部边距
+   * the inner margin of the entry
    */
   mItemPadding = 3;
 
   /**
-   * 条目的背景色
+   * the background color of the entry
    */
   mItemBackgroundColor = '';
 
   /**
-   * 条目的圆角值
+   * the rounded corner value of the entry
    */
   mItemBorderRadius = 0;
 
   /**
-   * 常驻区与非常驻区间隙
+   * Residential area and non-residential area gap
    */
   mDockGap = 12;
 
   /**
-   * 常驻区最大显示数量
+   * The maximum number of displays in the resident area
    */
   mMaxDockNum = 16;
 
   /**
-   * 非常驻区最大显示数量
+   * The maximum number of non-resident areas displayed
    */
   mMaxRecentNum = 3;
 
@@ -120,9 +120,9 @@ export default class SmartDockStyleConfig extends AppListStyleConfig {
   }
 
   /**
-   * 获取dock样式实例
+   * Get the dock style instance
    */
-  static getInstance() {
+  static getInstance(): SmartDockStyleConfig {
     if (globalThis.SmartDockStyleConfigInstance == null) {
       globalThis.SmartDockStyleConfigInstance = new SmartDockStyleConfig();
       globalThis.SmartDockStyleConfigInstance.initConfig();

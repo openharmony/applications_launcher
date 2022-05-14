@@ -17,16 +17,16 @@ import ILayoutConfig from './ILayoutConfig';
 import CommonConstants from '../constants/CommonConstants';
 
 /**
- * 桌面Dock功能布局配置
+ * Desktop Dock function layout configuration
  */
 export default class SmartDockLayoutConfig extends ILayoutConfig {
   /**
-   * Dock功能布局配置索引
+   * Dock Feature Layout Configuration Index
    */
   static SMART_DOCK_LAYOUT_INFO = 'SmartDockLayoutInfo';
 
   /**
-   * Dock功能布局数据
+   * Dock function layout data
    */
   protected mDockLayoutInfo: any = [];
 
@@ -35,9 +35,9 @@ export default class SmartDockLayoutConfig extends ILayoutConfig {
   }
 
   /**
-   * 获取工作空间功能布局配置实例
+   * Get an instance of the workspace function layout configuration
    */
-  static getInstance() {
+  static getInstance(): SmartDockLayoutConfig {
     if (globalThis.SmartDockLayoutConfig == null) {
       globalThis.SmartDockLayoutConfig = new SmartDockLayoutConfig();
       globalThis.SmartDockLayoutConfig.initConfig();
@@ -68,9 +68,9 @@ export default class SmartDockLayoutConfig extends ILayoutConfig {
   }
 
   /**
-   * 更新dock布局数据
+   * Update dock layout data
    *
-   * @params gridLayoutInfo dock布局数据
+   * @params gridLayoutInfo:dock layout data
    */
   updateDockLayoutInfo(dockLayoutInfo: object): void {
     this.mDockLayoutInfo = dockLayoutInfo;
@@ -78,9 +78,9 @@ export default class SmartDockLayoutConfig extends ILayoutConfig {
   }
 
   /**
-   * 获取dock布局数据
+   * Get dock layout data
    *
-   * @return dock布局数据
+   * @return dock layout data
    */
   getDockLayoutInfo(): any {
     return this.mDockLayoutInfo;

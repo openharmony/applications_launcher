@@ -45,14 +45,7 @@ export default struct FormManagerComponent {
     StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO / 2,
     StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO];
 
-  mFormDialogController: CustomDialogController;
-  cancel: () => void;
-  confirm: (formCardItem) => void;
-  bundleName: string;
-  appName: string;
-  appLabelId: string;
-
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mFormModel = FormModel.getInstance();
     Log.showInfo(TAG, `aboutToAppear formAppInfo: ${JSON.stringify(this.formAppInfo)}`);
     this.getCurrentFormInfo();
@@ -85,25 +78,32 @@ export default struct FormManagerComponent {
           formCardItem.moduleName = this.formItem[i].moduleName;
           formCardItem.dimension = this.formItem[i].supportDimensions[j];
           formCardItem.formConfigAbility = this.formItem[i].formConfigAbility;
-          formCardItem.appLabelId = this.appLabelId;
+          formCardItem.appLabelId = this.formAppInfo.appLabelId;
           isStop = true;
           break;
         }
         count++;
       }
     }
+    return formCardItem;
+  }
+
+  /**
+   * Keep the form which be added to the desktop, and delete the remaining forms.
+   */
+  private clearNoUseFormById(): void {
+    let id = this.mFormIdList[this.mSwiperIndex];
     for (let i = 0; i < this.mFormIdList.length; i++) {
-      if (count != i) {
+      if (i != this.mSwiperIndex) {
         this.mFormModel.deleteFormByFormID(this.mFormIdList[i]);
       }
     }
-    return formCardItem;
   }
 
   /**
    * Delete all form by id.
    */
-  private deleteAllFormById() {
+  private clearAllFormById(): void {
     for (let i = 0; i < this.mFormIdList.length; i++) {
       this.mFormModel.deleteFormByFormID(this.mFormIdList[i]);
     }
@@ -119,7 +119,8 @@ export default struct FormManagerComponent {
           .margin({left: StyleConstants.FORM_MGR_BACK_ICON_LEFT_MARGIN * StyleConstants.DPI_RATIO})
           .onClick(() => {
             Log.showInfo(TAG, 'hide form manager window');
-            windowManager.hideWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
+            this.clearAllFormById();
+            windowManager.destroyWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
           })
         Blank()
       }
@@ -143,32 +144,34 @@ export default struct FormManagerComponent {
                 Column() {
                   Flex({
                     direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-                    FormComponent({
-                      id: formItem.cardId,
-                      name: formItem.cardName,
-                      bundle: formItem.bundleName,
-                      ability: formItem.abilityName,
-                      module: formItem.moduleName,
-                      dimension: dimensionItem,
-                    })
-                      .clip(new Rect({
-                        width: this.mFormComponentWidth[dimensionItem - 1],
-                        height: this.mFormComponentHeight[dimensionItem - 1],
-                        radius: 24
-                      }))
-                      .size({
-                        width: this.mFormComponentWidth[dimensionItem - 1],
-                        height: this.mFormComponentHeight[dimensionItem - 1]
+                    if (this.formAppInfo.bundleName == formItem.bundleName) {
+                      FormComponent({
+                        id: formItem.cardId,
+                        name: formItem.cardName,
+                        bundle: formItem.bundleName,
+                        ability: formItem.abilityName,
+                        module: formItem.moduleName,
+                        dimension: dimensionItem,
                       })
-                      .allowUpdate(this.allowUpdate)
-                      .visibility(Visibility.Visible)
-                      .onAcquired((form) => {
-                        Log.showInfo(TAG, `FormComponent card id is: ${form.id}`);
-                        this.mFormIdList.push(form.id);
-                      })
-                      .onError((error) => {
-                        Log.showInfo(TAG, `FormComponent error msg: ${error.msg}`);
-                      })
+                        .clip(new Rect({
+                          width: this.mFormComponentWidth[dimensionItem - 1],
+                          height: this.mFormComponentHeight[dimensionItem - 1],
+                          radius: 24
+                        }))
+                        .size({
+                          width: this.mFormComponentWidth[dimensionItem - 1],
+                          height: this.mFormComponentHeight[dimensionItem - 1]
+                        })
+                        .allowUpdate(this.allowUpdate)
+                        .visibility(Visibility.Visible)
+                        .onAcquired((form) => {
+                          Log.showInfo(TAG, `FormComponent card id is: ${form.id}`);
+                          this.mFormIdList.push(form.id);
+                        })
+                        .onError((error) => {
+                          Log.showInfo(TAG, `FormComponent error msg: ${error.msg}`);
+                        })
+                    }
                   }
                 }
                 .height('80%')
@@ -204,7 +207,8 @@ export default struct FormManagerComponent {
       .onClick(() => {
         Log.showInfo(TAG, 'form add to desktop');
         this.mPageDesktopViewModel.createCardToDeskTop(this.getChooseCard());
-        windowManager.hideWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
+        this.clearNoUseFormById();
+        windowManager.destroyWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
       })
     }
     .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)

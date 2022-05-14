@@ -67,36 +67,6 @@ export default class FormViewModel {
   }
 
   /**
-   * Event listener about jump to form manager view.
-   */
-  private readonly mLocalEventListener = {
-    onReceiveEvent: (event, params) => {
-      Log.showInfo(TAG, `Launcher FormViewModel receive event: ${event}, params: ${JSON.stringify(params)}`);
-      if (event === EventConstants.EVENT_REQUEST_JUMP_TO_FORM_VIEW) {
-        this.jumpToFormManagerView(params);
-      }
-    }
-  };
-
-  /**
-   * Jump to form manager view
-   *
-   * @param {string} params - the formInfo witch can get service widget.
-   */
-  async jumpToFormManagerView(params) {
-    Log.showInfo(TAG, `Launcher FormViewModel jumpToFormManagerView params: ${JSON.stringify(params)}`);
-    const options = {
-      uri: 'pages/FormManagerView',
-      params: params
-    };
-    try {
-      await router.push(options);
-    } catch (err) {
-      Log.showInfo(TAG, `fail callback, code: ${err.code}, msg: ${err.msg}`);
-    }
-  }
-
-  /**
    * Judge whether the current application supports form
    *
    * @param {any} appInfo
@@ -140,7 +110,9 @@ export default class FormViewModel {
     });
     if (cardIndex != CommonConstants.INVALID_VALUE) {
       this.mFormModel.deleteFormById(cardId);
+      const page = gridLayoutInfo.layoutInfo[cardIndex].page;
       gridLayoutInfo.layoutInfo.splice(cardIndex, 1);
+      this.mPageDesktopViewModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
       this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfo);
     }
     const formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);

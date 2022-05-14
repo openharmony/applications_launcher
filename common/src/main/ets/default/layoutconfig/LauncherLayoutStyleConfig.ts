@@ -57,12 +57,11 @@ export default class LauncherLayoutStyleConfig extends ILayoutConfig {
   /**
    * icon name lines
    */
-  mNameLines : number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
-
+  mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   /**
    * icon ratio
    */
-  mIconRatio : number = PresetStyleConstants.DEFAULT_APP_TOP_RATIO;
+  mIconRatio: number = PresetStyleConstants.DEFAULT_APP_TOP_RATIO;
 
   /**
    * icon name margin
@@ -72,7 +71,7 @@ export default class LauncherLayoutStyleConfig extends ILayoutConfig {
   /**
    * icon name text size
    */
-  mNameSize : number = PresetStyleConstants.DEFAULT_APP_NAME_TEXT_SIZE;
+  mNameSize: number = PresetStyleConstants.DEFAULT_APP_NAME_TEXT_SIZE;
 
   /**
    * name height
@@ -83,12 +82,12 @@ export default class LauncherLayoutStyleConfig extends ILayoutConfig {
   /**
    * ratio of gutter with folder
    */
-  mFolderGutterRatio : number = PresetStyleConstants.DEFAULT_FOLDER_GUTTER_RATIO;
+  mFolderGutterRatio: number = PresetStyleConstants.DEFAULT_FOLDER_GUTTER_RATIO;
 
   /**
    * ratio of margin with folder
    */
-  mFolderMarginRatio : number = PresetStyleConstants.DEFAULT_FOLDER_PADDING_RATIO;
+  mFolderMarginRatio: number = PresetStyleConstants.DEFAULT_FOLDER_PADDING_RATIO;
 
   /**
    * gutter of open folder
@@ -224,7 +223,7 @@ export default class LauncherLayoutStyleConfig extends ILayoutConfig {
   /**
    * LauncherLayoutStyleConfig of instance
    */
-  static getInstance() {
+  static getInstance(): LauncherLayoutStyleConfig {
     if (globalThis.LauncherLayoutStyleConfigInstance == null) {
       globalThis.LauncherLayoutStyleConfigInstance = new LauncherLayoutStyleConfig();
     }

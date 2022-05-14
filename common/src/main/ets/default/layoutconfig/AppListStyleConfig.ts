@@ -110,7 +110,7 @@ export default class AppListStyleConfig extends ILayoutConfig {
   /**
   * list item offset
   */
-  mItemOffset: {} = {x: 0, y: 0}
+  mItemOffset: {x: number, y: number} = {x: 0, y: 0};
 
   protected constructor() {
     super();
@@ -119,7 +119,7 @@ export default class AppListStyleConfig extends ILayoutConfig {
   /**
    * get instance of list Style config
    */
-  static getInstance() {
+  static getInstance(): AppListStyleConfig {
     if (globalThis.AppListStyleConfig == null) {
       globalThis.AppListStyleConfig = new AppListStyleConfig();
       globalThis.AppListStyleConfig.initConfig();

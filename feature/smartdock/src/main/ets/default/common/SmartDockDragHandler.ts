@@ -12,7 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import EventConstants from '../../../../../../../common/src/main/ets/default/constants/EventConstants';
+import localEventManager from '../../../../../../../common/src/main/ets/default/manager/LocalEventManager';
 import BaseDragHandler from '../../../../../../../common/src/main/ets/default/base/BaseDragHandler';
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
@@ -101,7 +102,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     super.onDragStart(event, itemIndex);
     const moveAppX = event.touches[0].screenX;
     const moveAppY = event.touches[0].screenY;
-    Log.showInfo(TAG, 'onDragStart itemIndex: ' + itemIndex + ', dragItemInfo: ' + JSON.stringify(this.getDragItemInfo()));
+    Log.showInfo(TAG, `onDragStart itemIndex: ${itemIndex}, dragItemInfo: ${this.getDragItemInfo()}`);
     AppStorage.SetOrCreate('overlayPositionX', moveAppX);
     AppStorage.SetOrCreate('overlayPositionY', moveAppY);
     AppStorage.SetOrCreate('overlayData', {
@@ -122,9 +123,9 @@ export default class SmartDockDragHandler extends BaseDragHandler {
   }
 
   protected onDragDrop(event: any, insertIndex: number, itemIndex: number): boolean {
-    this.mDevice = AppStorage.Get('dockDevice');
+    this.mDevice = AppStorage.Get('device');
     super.onDragDrop(event, insertIndex, itemIndex);
-    Log.showInfo(TAG, 'onDragDrop insertIndex: ' + insertIndex);
+    Log.showInfo(TAG, 'onDragDrop insertIndex: ' + insertIndex + ', this.mIsInEffectArea:' + this.mIsInEffectArea);
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     let isDragSuccess = true;
     if (this.mIsInEffectArea) {
@@ -136,18 +137,23 @@ export default class SmartDockDragHandler extends BaseDragHandler {
         Log.showInfo(TAG, 'onDragDrop addItem: ' + JSON.stringify(dragItemInfo));
         isDragSuccess = this.addItemToSmartDock(dragItemInfo, insertIndex);
       }
+    } else if (this.mDevice == CommonConstants.DEFAULT_DEVICE_TYPE) {
+      Log.showInfo(TAG, 'onDragDrop remove item');
+      const dragItemInfo = this.getDragItemInfo();
+      let deleteDockRes = this.mSmartDockModel.deleteDockItem(dragItemInfo.bundleName, SmartDockConstants.RESIDENT_DOCK_TYPE);
+      if (deleteDockRes) {
+        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, dragItemInfo);
+      }
     }
     return isDragSuccess;
   }
 
   protected onDragEnd(isSuccess: boolean): void {
-    this.mDevice = AppStorage.Get('dockDevice');
+    this.mDevice = AppStorage.Get('device');
     super.onDragEnd(isSuccess);
-    Log.showInfo(TAG, 'onDragEnd isSuccess: ' + isSuccess);
-    if (this.mDevice == CommonConstants.DEFAULT_DEVICE_TYPE && this.isDropOutSide() && isSuccess) {
-      Log.showInfo(TAG, 'onDragEnd remove item');
-      const dragItemInfo = this.getDragItemInfo();
-      this.mSmartDockModel.deleteDockItem(dragItemInfo.bundleName, SmartDockConstants.RESIDENT_DOCK_TYPE);
+    if (this.isDropOutSide() && isSuccess) {
+      console.info('Launcher PageDesktop onDragEnd dropOutSide');
+      Log.showInfo(TAG, 'onDragEnd dropOutSide');
     }
   }
 
@@ -156,7 +162,10 @@ export default class SmartDockDragHandler extends BaseDragHandler {
   }
 
   private addItemToSmartDock(dragItemInfo: any, insertIndex: number): boolean {
-    this.mSmartDockModel.addToSmartdock(dragItemInfo, insertIndex);
+    let addToDockRes = this.mSmartDockModel.addToSmartdock(dragItemInfo, insertIndex);
+    if (addToDockRes) {
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE, dragItemInfo.bundleName);
+    }
     return true;
   }
 }

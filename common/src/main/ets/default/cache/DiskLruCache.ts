@@ -14,6 +14,9 @@
  */
 
 import DiskLruFileUtils from './DiskLruFileUtils';
+import Log from '../utils/Log';
+
+const TAG = 'DiskLruCache';
 
 /**
  * A class provides persistent operation for memory cache.
@@ -31,17 +34,8 @@ export default class DiskLruCache {
   /**
    * Init the cache whether the file has data.
    */
-  initMap() {
+  initMap(): void {
     console.info('Launcher DiskLruCache initMap start execution');
-    try {
-      const arr = DiskLruFileUtils.readJournal().split('\n').reverse();
-      const len = arr.length >= this.capacity ? this.capacity : arr.length;
-      for (let i = 0; i < len; i++) {
-        this.cache.set(arr[i], arr[i]);
-      }
-    } catch (e) {
-      console.error('Launcher DiskLruCache initMap e ' + e);
-    }
   }
 
   /**
@@ -59,7 +53,6 @@ export default class DiskLruCache {
       //update the cache to recent use
       this.cache.set(key, temp);
       //update local cache to recent use
-      DiskLruFileUtils.writeJournal(key);
       return DiskLruFileUtils.readJsonObj(key)[key];
     }
     return -1;
@@ -71,7 +64,7 @@ export default class DiskLruCache {
    * @param {string} key - key of the cache map
    * @param {object} value - value of the cache map
    */
-  putCache(key: string, value: object | string) {
+  putCache(key: string, value: object | string): void {
     if (this.cache.has(key)) {
       // exist and update
       this.cache.delete(key);
@@ -82,7 +75,6 @@ export default class DiskLruCache {
     //update the cache to recent use
     this.cache.set(key, value);
     //update local cache to recent use
-    DiskLruFileUtils.writeJournal(key);
     DiskLruFileUtils.writeJsonObj({
       [key]: value
     }, key);
@@ -93,7 +85,7 @@ export default class DiskLruCache {
    *
    * @param {string} key - key of the cache map
    */
-  remove(key: string) {
+  remove(key: string): void {
     this.cache.delete(key);
     DiskLruFileUtils.removeFile(key);
   }
@@ -101,7 +93,7 @@ export default class DiskLruCache {
   /**
    * Clear cache of disk.
    */
-  clear() {
+  clear(): void {
     this.cache.forEach(function (value, key) {
       DiskLruFileUtils.removeFile(key);
     });

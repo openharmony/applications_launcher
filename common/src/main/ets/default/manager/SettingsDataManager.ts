@@ -17,7 +17,7 @@ import featureAbility from '@ohos.ability.featureAbility';
 import settings from '@ohos.settings';
 
 /**
- * settingsData Manager
+ * Wrapper class for settings interfaces.
  */
 class SettingsDataManager {
 

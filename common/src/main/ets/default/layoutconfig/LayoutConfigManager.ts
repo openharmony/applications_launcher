@@ -17,15 +17,15 @@ import CommonConstants from '../constants/CommonConstants';
 import ILayoutConfig from './ILayoutConfig';
 
 /**
- * 布局配置管理
- * 当前分为三种类型的布局管理：
- * 1、布局模式管理，比如网格/列表布局，这类布局配置可以很方便的转换为设置项
- * 2、布局样式管理，比如边距、大小、颜色等布局参数，用于进行设定上可调节的布局样式配置
- * 3、功能布局管理，比如桌面布局的布局管理
- * 主要提供的功能：
- * 1、保存管理所有的配置对象
- * 2、分三层（产品 > 特性 > 公共）查询配置值的能力
- * 3、持久化某些配置值的能力
+ * Layout configuration management
+ * There are currently three types of layout management:
+ * 1.Layout mode management, such as grid/list layout, such layout configuration can be easily converted into setting items.
+ * 2.Layout style management, such as layout parameters such as margins, sizes, colors, etc., used to configure adjustable layout styles.
+ * 3.Functional layout management, such as layout management of desktop layouts.
+ * Main features provided:
+ * 1.Save and manage all configuration objects.
+ * 2.Ability to query configuration values at three tiers (Product > Features > Public).
+ * 3.the ability to persist certain configuration values.
  */
 class LayoutConfigManager {
   private readonly mPreferences = null;
@@ -40,7 +40,7 @@ class LayoutConfigManager {
     this.resetConfigArray();
   }
 
-  private resetConfigArray() {
+  private resetConfigArray(): void {
     this.initConfigArray(this.mCommonConfig);
     this.initConfigArray(this.mFeatureConfig);
     this.initConfigArray(this.mProductConfig);
@@ -53,7 +53,7 @@ class LayoutConfigManager {
   }
 
   /**
-   * 获取配置管理类实例
+   * Get the instance of the configuration management class
    */
   static getInstance(): LayoutConfigManager {
     if (globalThis.LayoutConfigManager == null) {
@@ -64,7 +64,7 @@ class LayoutConfigManager {
   }
 
   /**
-   * 往配置管理类里添加配置对象
+   * Add configuration objects to the configuration management class
    */
   addConfigToManager(config: ILayoutConfig): void {
     const configLevel = config.getConfigLevel();
@@ -89,17 +89,17 @@ class LayoutConfigManager {
   }
 
   /**
-   * 释放管理类里添加配置对象
+   * Release the configuration object in the management class
    */
   removeConfigFromManager(): void {
     this.resetConfigArray();
   }
 
   /**
-   * 获取对应配置名的布局模式配置
+   * Get the layout mode configuration corresponding to the configuration name
    *
-   * @params configName 配置名
-   * @params featureName 特性名
+   * @params configName
+   * @params featureName
    */
   getModeConfig<T extends ILayoutConfig>(configName: string, featureName?: string): T {
     const configArr = this.getTargetTypeConfigs(CommonConstants.LAYOUT_CONFIG_TYPE_MODE);
@@ -107,10 +107,10 @@ class LayoutConfigManager {
   }
 
   /**
-   * 获取对应配置名的布局样式配置
+   * Get the layout style configuration corresponding to the configuration name
    *
-   * @params configName 配置名
-   * @params featureName 特性名
+   * @params configName
+   * @params featureName
    */
   getStyleConfig(configName: string, featureName?: string): any {
     const configArr = this.getTargetTypeConfigs(CommonConstants.LAYOUT_CONFIG_TYPE_STYLE);
@@ -118,10 +118,10 @@ class LayoutConfigManager {
   }
 
   /**
-   * 获取对应配置名的功能布局配置
+   * Get the function layout configuration corresponding to the configuration name
    *
-   * @params configName 配置名
-   * @params featureName 特性名
+   * @params configName
+   * @params featureName
    */
   getFunctionConfig<T extends ILayoutConfig>(configName: string, featureName?: string): T {
     const configArr = this.getTargetTypeConfigs(CommonConstants.LAYOUT_CONFIG_TYPE_FUNCTION);

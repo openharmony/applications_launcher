@@ -25,7 +25,7 @@ export default class AppGridPresenter extends AppListPresenter {
   }
 
   /**
-   * 获取实例
+   * get instance
    */
   static getInstance(): AppGridPresenter {
     if (globalThis.AppGridPresenter == null) {
@@ -35,23 +35,21 @@ export default class AppGridPresenter extends AppListPresenter {
   }
 
   /**
-   * 注册监听事件
+   * Register to listen to events
    */
   registerAppListChange() {
     this.registerAppListChangeCallback();
-    this.mAppModel.registerAppListEvent();
   }
 
   /**
-   * 反注册监听事件
+   * Unregister listener events
    */
   unregisterAppListChange() {
     this.unregisterAppListChangeCallback();
-    this.mAppModel.unregisterAppListEvent();
   }
 
   /**
-   * 通过bundleName获取shortcut信息
+   * Get shortcut information by bundleName
    */
   getShortcutInfo(bundleName: string): ShortcutInfo[] | undefined {
     return this.mAppModel.getShortcutInfo(bundleName);

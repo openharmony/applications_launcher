@@ -37,14 +37,15 @@ export default class PageDesktopModel {
   }
 
   /**
-  * 注册PageDesktop应用列表添加事件.
+  * Register for the PageDesktop application list add event.
   *
-  * @param listener 监听对象
+  * @param listener
    */
-  registerPageDesktopItemAddEvent(listener) {
+  registerPageDesktopItemAddEvent(listener): void {
     LocalEventManager.registerEventListener(listener, [
       EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD,
-      EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE
+      EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE,
+      EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE
     ]);
   }
 
@@ -53,18 +54,18 @@ export default class PageDesktopModel {
   *
   * @param listener
    */
-  registerPageDesktopBadgeUpdateEvent(listener) {
+  registerPageDesktopBadgeUpdateEvent(listener): void {
     LocalEventManager.registerEventListener(listener, [
       EventConstants.EVENT_BADGE_UPDATE
     ]);
   }
 
   /**
-  * 解注册应用列表改变监听.
+  * Unregister application list change listener.
   *
-  * @param listener 监听对象
+  * @param listener
    */
-  unregisterEventListener(listener) {
+  unregisterEventListener(listener): void {
     LocalEventManager.unregisterEventListener(listener);
   }
 

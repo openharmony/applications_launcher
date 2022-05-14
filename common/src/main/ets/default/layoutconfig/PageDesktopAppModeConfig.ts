@@ -17,11 +17,11 @@ import ILayoutConfig from './ILayoutConfig';
 import CommonConstants from '../constants/CommonConstants';
 
 /**
- * 桌面工作空间应用配置
+ * Desktop Workspace App Configuration
  */
 export default class PageDesktopAppModeConfig extends ILayoutConfig {
   /**
-   * 工作空间功能布局配置索引
+   * Workspace Feature Layout Configuration Index
    */
   static DESKTOP_APPLICATION_INFO = 'DesktopApplicationInfo';
 
@@ -34,9 +34,9 @@ export default class PageDesktopAppModeConfig extends ILayoutConfig {
   }
 
   /**
-   * 获取工作空间功能布局配置实例
+   * Get an instance of the workspace function layout configuration
    */
-  static getInstance() {
+  static getInstance(): PageDesktopAppModeConfig {
     if (globalThis.PageDesktopAppModeConfig == null) {
       globalThis.PageDesktopAppModeConfig = new PageDesktopAppModeConfig();
       globalThis.PageDesktopAppModeConfig.initConfig();
@@ -76,9 +76,9 @@ export default class PageDesktopAppModeConfig extends ILayoutConfig {
   }
 
   /**
-   * 获取工作空间快捷方式
+   * Get workspace shortcuts
    *
-   * @return 工作空间快捷方式
+   * @return Workspace shortcuts
    */
   getAppListInfo(): any {
     return this.mAppListInfo;

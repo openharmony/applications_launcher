@@ -65,12 +65,12 @@ export default class MainAbility extends ServiceExtension {
     this.closeRecentDockPopup();
   }
 
-  private closeFolder() {
+  private closeFolder(): void {
     AppStorage.SetOrCreate('openFolderPageIndex', StyleConstants.DEFAULT_NUMBER_0);
     AppStorage.SetOrCreate('openFolderStatus', StyleConstants.DEFAULT_NUMBER_0);
   }
 
-  private closeRecentDockPopup() {
+  private closeRecentDockPopup(): void {
     let num: number = AppStorage.Get('sysUiRecentOnClickEvent');
     AppStorage.SetOrCreate('sysUiRecentOnClickEvent', ++num);
   }

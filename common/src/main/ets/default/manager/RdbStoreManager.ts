@@ -23,7 +23,7 @@ import Log from '../utils/Log';
 const TAG = 'RdbStoreManager';
 
 /**
- * db manager
+ * Wrapper class for rdb interfaces.
  */
 export default class RdbStoreManager {
   private mRdbStore;

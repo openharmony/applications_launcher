@@ -16,19 +16,19 @@
 import AppItemInfo from './AppItemInfo';
 
 /**
- * smartdock元素信息
+ * Item info of smartdock item.
  */
 export default class DockItemInfo extends AppItemInfo {
   /**
-   * dock类型
-   * 0：应用类型
-   * 1：卡片类型
-   * 2：功能入口类型
+   * Type of smartdock item:
+   * 0: appications
+   * 1: forms
+   * 2: launcher functions
    */
   itemType: number | undefined;
 
   /**
-   * dock是否可编辑
+   * true if this item is editable
    */
   editable: boolean | undefined;
 }

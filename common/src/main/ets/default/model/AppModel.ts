@@ -30,12 +30,12 @@ const TAG = 'AppModel';
  * Desktop application information data model.
  */
 export default class AppModel {
-  private readonly mBundleInfoList: AppItemInfo[] = [];
+  private mBundleInfoList: AppItemInfo[] = [];
   private readonly mSystemApplicationName = [];
   private readonly mAppStateChangeListener = [];
   private readonly mShortcutInfoMap = new Map<string, ShortcutInfo[]>();
   private readonly mFormModel: FormModel;
-  private mInstallationListener;
+  private readonly mInstallationListener;
 
   private constructor() {
     Log.showInfo(TAG, 'constructor start');
@@ -65,9 +65,11 @@ export default class AppModel {
   async getAppList() {
     Log.showInfo(TAG, 'getAppList start');
     if (!CheckEmptyUtils.isEmptyArr(this.mBundleInfoList)) {
+      Log.showInfo(TAG, `getAppList bundleInfoList length: ${this.mBundleInfoList.length}`);
       return this.mBundleInfoList;
     }
     const bundleInfoList: AppItemInfo[] = await this.getAppListAsync();
+
     Log.showInfo(TAG, `getAppList bundleInfoList length: ${this.mBundleInfoList.length}`);
     return bundleInfoList;
   }
@@ -77,19 +79,20 @@ export default class AppModel {
    *
    * @return {array} bundleInfoList, excluding system applications
    */
-  private async getAppListAsync() {
-    const allAbilityList: AppItemInfo[] = await launcherAbilityManager.getLauncherAbilityList();
-    if (!CheckEmptyUtils.isEmptyArr(this.mBundleInfoList)) {
-      return this.mBundleInfoList;
-    }
-    for (let i = 0; i < allAbilityList.length; i++) {
+  async getAppListAsync(): Promise<AppItemInfo[]> {
+    let allAbilityList: AppItemInfo[] = await launcherAbilityManager.getLauncherAbilityList();
+    Log.showInfo(TAG, `getAppListAsync allAbilityList length: ${allAbilityList.length}`);
+    let launcherAbilityList: AppItemInfo[] = [];
+    for (let i in allAbilityList) {
       if (this.mSystemApplicationName.indexOf(allAbilityList[i].bundleName) === CommonConstants.INVALID_VALUE) {
-        this.mBundleInfoList.push(allAbilityList[i]);
+        launcherAbilityList.push(allAbilityList[i]);
         this.updateShortcutInfo(allAbilityList[i].bundleName);
         this.mFormModel.updateAppItemFormInfo(allAbilityList[i].bundleName);
       }
     }
-    return this.mBundleInfoList;
+    this.mBundleInfoList = launcherAbilityList;
+    Log.showInfo(TAG, `getAppListAsync launcherAbiltyList length: ${launcherAbilityList.length}`);
+    return launcherAbilityList;
   }
 
   /**
@@ -97,7 +100,7 @@ export default class AppModel {
    *
    * @param listener
    */
-  registerStateChangeListener(listener) {
+  registerStateChangeListener(listener): void {
     if (this.mAppStateChangeListener.indexOf(listener) === CommonConstants.INVALID_VALUE) {
       this.mAppStateChangeListener.push(listener);
     }
@@ -108,7 +111,7 @@ export default class AppModel {
    *
    * @param listener
    */
-  unregisterAppStateChangeListener(listener) {
+  unregisterAppStateChangeListener(listener): void {
     let index: number = this.mAppStateChangeListener.indexOf(listener);
     if (index != CommonConstants.INVALID_VALUE) {
       this.mAppStateChangeListener.splice(index, 1);
@@ -118,14 +121,14 @@ export default class AppModel {
   /**
    * Start listening to the system application status.
    */
-  registerAppListEvent() {
+  registerAppListEvent(): void {
     launcherAbilityManager.registerLauncherAbilityChangeListener(this.mInstallationListener);
   }
 
   /**
    * Stop listening for system application status.
    */
-  unregisterAppListEvent() {
+  unregisterAppListEvent(): void {
     launcherAbilityManager.unregisterLauncherAbilityChangeListener(this.mInstallationListener);
   }
 
@@ -152,13 +155,24 @@ export default class AppModel {
 
       // delete app from pageDesktop
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE, bundleName);
-      this.notifyAppStateChangeEvent();
     } else {
       const abilityInfos = await launcherAbilityManager.getLauncherAbilityInfo(bundleName);
+      Log.showInfo(TAG, `installationSubscriberCallBack abilityInfos: ${JSON.stringify(abilityInfos)}`);
+      if (event === EventConstants.EVENT_PACKAGE_CHANGED) {
+        if (!CheckEmptyUtils.isEmptyArr(abilityInfos)){
+          let cacheKey = abilityInfos[0].appLabelId + bundleName;
+          globalThis.ResourceManager.setAppResourceCache(cacheKey, 'name', '');
+          cacheKey = abilityInfos[0].appIconId + bundleName;
+          globalThis.ResourceManager.setAppResourceCache(cacheKey, 'icon', '');
+          Log.showInfo(TAG, `installationSubscriberCallBack setAppResourceCache bundleName: ${bundleName}`);
+          localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
+          localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE, abilityInfos[0]);
+        }
+      }
       this.replaceItem(bundleName, abilityInfos);
-      this.notifyAppStateChangeEvent();
       this.mFormModel.updateAppItemFormInfo(bundleName);
     }
+    this.notifyAppStateChangeEvent();
   }
 
   /**
@@ -191,7 +205,7 @@ export default class AppModel {
    *
    * @param {array} abilityInfos
    */
-  private appendItem(abilityInfos) {
+  private appendItem(abilityInfos): void {
     for (let index = 0; index < abilityInfos.length; index++) {
       this.mBundleInfoList.push(abilityInfos[index]);
     }
@@ -202,7 +216,7 @@ export default class AppModel {
    *
    * @param {string} bundleName
    */
-  private removeItem(bundleName: string) {
+  private removeItem(bundleName: string): void {
     Log.showInfo(TAG, `removeItem bundleName: ${bundleName}`);
     let originItemIndex = this.getItemIndex(bundleName);
     while (originItemIndex != CommonConstants.INVALID_VALUE) {
@@ -217,7 +231,7 @@ export default class AppModel {
    * @param {string} bundleName
    * @param {array} abilityInfos
    */
-  private replaceItem(bundleName: string, abilityInfos) {
+  private replaceItem(bundleName: string, abilityInfos): void {
     Log.showInfo(TAG, `replaceItem bundleName: ${bundleName}`);
     this.removeItem(bundleName);
     this.appendItem(abilityInfos);
@@ -229,7 +243,7 @@ export default class AppModel {
    * @param {string} bundleName
    * @param {array} shortcutInfo
    */
-  setShortcutInfo(bundleName: string, shortcutInfo: ShortcutInfo[]) {
+  setShortcutInfo(bundleName: string, shortcutInfo: ShortcutInfo[]): void {
     this.mShortcutInfoMap.set(bundleName, shortcutInfo);
   }
 
@@ -251,7 +265,7 @@ export default class AppModel {
    * @param {string} bundleName
    * @param {string | undefined} eventType
    */
-  private updateShortcutInfo(bundleName, eventType?) {
+  private updateShortcutInfo(bundleName, eventType?): void {
     if (eventType && eventType === EventConstants.EVENT_PACKAGE_REMOVED) {
       this.mShortcutInfoMap.delete(bundleName);
       return;

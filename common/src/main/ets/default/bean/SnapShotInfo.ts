@@ -13,11 +13,27 @@
  * limitations under the License.
  */
 
-export default {
-  onCreate() {
-    console.info('Application onCreate')
-  },
-  onDestroy() {
-    console.info('Application onDestroy')
-  },
+/**
+ * Recent mission SnapShotInfo
+ */
+export default class SnapShotInfo {
+  /**
+   * snapShot info: mission id
+   */
+  missionId: number | undefined;
+
+  /**
+   * snapShot info: snapShot image
+   */
+  snapShotImage: any | undefined;
+
+  /**
+   * snapShot info: snapShot image width
+   */
+  snapShotImageWidth: number | undefined;
+
+  /**
+   * snapShot info: snapShot image height
+   */
+  snapShotImageHeight: number | undefined;
 }

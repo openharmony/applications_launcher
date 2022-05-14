@@ -44,14 +44,15 @@ export default struct FormManagerDialog {
     StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT];
 
   mFormDialogController: CustomDialogController;
-  cancel: () => void;
+  cancel: (callback?) => void;
   confirm: (formCardItem) => void;
   bundleName: string;
   appName: string;
   appLabelId: string;
 
-  private aboutToAppear(): void  {
+  private aboutToAppear(): void {
     this.mFormModel = FormModel.getInstance();
+    this.cancel(this.clearAllFormById.bind(this));
     this.getCurrentFormInfo();
   }
 
@@ -89,18 +90,25 @@ export default struct FormManagerDialog {
         count++;
       }
     }
+    return formCardItem;
+  }
+
+  /**
+   * Keep the form which be added to the desktop, and delete the remaining forms.
+   */
+  private clearNoUseFormById(): void {
+    let id = this.mFormIdList[this.mSwiperIndex];
     for (let i = 0; i < this.mFormIdList.length; i++) {
-      if (count != i) {
+      if (i != this.mSwiperIndex) {
         this.mFormModel.deleteFormByFormID(this.mFormIdList[i]);
       }
     }
-    return formCardItem;
   }
 
   /**
    * Delete all form by id.
    */
-  private deleteAllFormById() {
+  private clearAllFormById(): void {
     for (let i = 0; i < this.mFormIdList.length; i++) {
         this.mFormModel.deleteFormByFormID(this.mFormIdList[i]);
     }
@@ -126,14 +134,15 @@ export default struct FormManagerDialog {
               Column() {
                 Flex({
                   direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-                  FormComponent({
-                    id: formItem.cardId,
-                    name: formItem.cardName,
-                    bundle: formItem.bundleName,
-                    ability: formItem.abilityName,
-                    module: formItem.moduleName,
-                    dimension: dimensionItem,
-                  })
+                  if (this.bundleName == formItem.bundleName) {
+                    FormComponent({
+                      id: formItem.cardId,
+                      name: formItem.cardName,
+                      bundle: formItem.bundleName,
+                      ability: formItem.abilityName,
+                      module: formItem.moduleName,
+                      dimension: dimensionItem,
+                    })
                     .clip(new Rect({
                       width: this.mFormComponentWidth[dimensionItem - 1],
                       height: this.mFormComponentHeight[dimensionItem - 1],
@@ -154,6 +163,7 @@ export default struct FormManagerDialog {
                     })
                   }
                 }
+              }
               .height('70%')
               }
             }, (dimensionItem) => JSON.stringify(dimensionItem))
@@ -178,7 +188,7 @@ export default struct FormManagerDialog {
         .width(CommonStyleConstants.DEFAULT_BUTTON_WIDTH)
         .onClick(() => {
           this.mFormDialogController.close();
-          this.cancel();
+          this.clearAllFormById();
         })
         Divider()
           .vertical(true)
@@ -195,6 +205,7 @@ export default struct FormManagerDialog {
         .onClick(() => {
           this.mFormDialogController.close();
           this.confirm(this.getChooseCard());
+          this.clearNoUseFormById();
         })
       }
     }

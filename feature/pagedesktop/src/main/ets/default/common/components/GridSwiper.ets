@@ -62,6 +62,7 @@ export default struct GridSwiper {
         .loop(false)
         .index(this.PageIndex)
         .onChange((index) => {
+          this.PageIndex = index;
           Log.showInfo(TAG, `swiper change to page ${index}`);
           this.mPageDesktopViewModel.changeIndexOnly(index);
         })

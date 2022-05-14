@@ -66,7 +66,7 @@ export default struct AppGridLayout {
   }
 
   aboutToDisappear(): void {
-    Log.showInfo(TAG, "aboutToDisappear")
+    Log.showInfo(TAG, "aboutToDisappear");
   }
 
   aboutToAppear(): void {

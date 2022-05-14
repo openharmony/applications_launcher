@@ -28,12 +28,11 @@ import SettingsModelObserver from './SettingsModelObserver';
 const defaultLayoutInfoFilePath = globalThis.desktopContext.filesDir + '/layoutInfo.json';
 
 /**
- * 桌面设置数据模型
+ * Data model for launcher settings ability.
  */
 export default class SettingsModel {
   static readonly EVENT_FORCE_RELOAD: number = 1;
   private static readonly DEFAULT_VALUE: string = '1';
-  private static readonly sInstance: SettingsModel = null;
   private readonly mPageDesktopModeConfig: PageDesktopModeConfig;
   private readonly mPageDesktopLayoutConfig: PageDesktopLayoutConfig;
   private readonly mRecentsModeConfig: RecentsModeConfig;
@@ -73,7 +72,7 @@ export default class SettingsModel {
     this.mObserverList.push(observer);
   }
 
-  private notifyObservers(event: number) {
+  private notifyObservers(event: number): void {
     console.info('notifyObservers');
     for (let i = 0; i < this.mObserverList.length; i++) {
       this.mObserverList[i](event);
@@ -162,7 +161,7 @@ export default class SettingsModel {
    *
    * @param gridConfig - Layout config id of grid view.
    */
-  setAppListInfo(appList) {
+  setAppListInfo(appList): void {
     this.mPageDesktopAppModeConfig.updateAppListInfo(appList);
   }
 
@@ -180,7 +179,7 @@ export default class SettingsModel {
    *
    * @param {string} type - Layout view type, should one of 'Grid' or 'List' which is stored in LayoutConstants class.
    */
-  setAppPageStartConfig(type) {
+  setAppPageStartConfig(type): void {
     this.mPageDesktopModeConfig.updateAppStartPageType(type);
   }
 
@@ -189,8 +188,8 @@ export default class SettingsModel {
    *
    * @param {string} deviceType - device type.
    */
-  setDevice(deviceType) {
-    console.log('setDevice ' + deviceType);
+  setDevice(deviceType): void {
+    console.log(`setDevice ${deviceType}`);
     if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
       this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
     } else if (deviceType == CommonConstants.PAD_DEVICE_TYPE) {
@@ -222,14 +221,14 @@ export default class SettingsModel {
   /**
    * Set layout information of grid view.
    */
-  setLayoutInfo(layoutInfo) {
+  setLayoutInfo(layoutInfo): void {
     this.mPageDesktopLayoutConfig.updateGridLayoutInfo(layoutInfo);
   }
 
   /**
    * Remove layout information of grid view.
    */
-  deleteLayoutInfo() {
+  deleteLayoutInfo(): void {
     this.mPageDesktopLayoutConfig.deleteConfig();
   }
 
@@ -247,14 +246,14 @@ export default class SettingsModel {
    *
    * @param {number} num - Recent missions max limit.
    */
-  setRecentMissionsLimit(num) {
+  setRecentMissionsLimit(num): void {
     this.mRecentsModeConfig.updateRecentMissionsLimit(num);
   }
 
   /**
    * Update settingData by settingDataKey.
    */
-  setValue(value: string) {
+  setValue(value: string): void {
     settingsDataManager.setValue(this.helper, CommonConstants.NAVIGATION_BAR_STATUS_KEY, value);
   }
 
@@ -271,7 +270,7 @@ export default class SettingsModel {
    * Monitor data changes.
    * @param callback
    */
-  registerListenForDataChanges(callback) {
+  registerListenForDataChanges(callback): void {
     this.helper.on('dataChange', this.uri, callback);
   }
 }

@@ -198,7 +198,7 @@ export default struct FolderComponent {
                 GridItem() {
                   AppIcon({
                     iconSize: this.appIconSize,
-                    appIcon: item.appIconId,
+                    iconId: item.appIconId,
                     icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName),
                     bundleName: item.bundleName,
                     badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
@@ -230,7 +230,7 @@ export default struct FolderComponent {
                         } else {
                           AppIcon({
                             iconSize: '80%',
-                            appIcon: item.appIconId,
+                            iconId: item.appIconId,
                             icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName),
                             bundleName: item.bundleName,
                             badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE

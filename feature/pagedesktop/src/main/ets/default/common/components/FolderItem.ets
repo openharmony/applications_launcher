@@ -86,7 +86,7 @@ export default struct FolderItem {
       } else if ((moveX + this.mAppItemWidth / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
         if (this.mPageDesktopViewModel.getIndex() == this.mPageDesktopViewModel.getGridPageCount() - 1
         && !this.mPageDesktopViewModel.isBlankPage()) {
-          this.mPageDesktopViewModel.addBlankPage();
+          this.mPageDesktopViewModel.addBlankPage(true);
         } else if (this.mPageDesktopViewModel.getIndex() < this.mPageDesktopViewModel.getGridPageCount() - 1) {
           this.mPageDesktopViewModel.showNext();
         }

@@ -1,7 +1,7 @@
 # 使用桌面卡片管理功能调试服务卡片
 
 ## 总览
-OpenHarmony桌面支持显示服务卡片，本篇介绍如何在桌面上添加、移除、编辑卡片，以进行服务卡片的调试和验证。
+OpenHarmony桌面支持显示服务卡片，本篇介绍如何在桌面上添加、移除、编辑卡片，以进行服务卡片的调试和验证，具体的服务卡片开发指导可以查阅指南[开发服务卡片](https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ohos-development-service-widget-0000001263280425)。
 
 ## 开发准备
 

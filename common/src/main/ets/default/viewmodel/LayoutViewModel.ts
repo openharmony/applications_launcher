@@ -36,7 +36,7 @@ export default class LayoutViewModel {
   private mSysUIBottomHeight: number | undefined;
   private mIndicatorHeight: number | undefined;
   private readonly mLauncherLayoutStyleConfig: LauncherLayoutStyleConfig;
-  private navigationBarStatus: boolean = false;
+  private mNavigationBarStatus = false;
   private mDesktopGap: number | undefined;
   private mDesktopIconMarginLeft: number | undefined;
   private mDesktopIconMarginTop: number | undefined;
@@ -81,15 +81,15 @@ export default class LayoutViewModel {
     Log.showInfo(TAG, `initScreen screenWidth ${this.mScreenWidth}`);
     Log.showInfo(TAG, `initScreen screenHeight ${this.mScreenHeight}`);
     this.mSysUITopHeight = this.mLauncherLayoutStyleConfig.mSysTopHeight;
-    this.navigationBarStatus = navigationBarStatus === '0' ? true : false;
-    Log.showInfo(TAG, `initScreen navigationBarStatus: ${this.navigationBarStatus}`);
-    if (!this.navigationBarStatus) {
+    this.mNavigationBarStatus = navigationBarStatus === '0' ? true : false;
+    Log.showInfo(TAG, `initScreen navigationBarStatus: ${this.mNavigationBarStatus}`);
+    if (!this.mNavigationBarStatus) {
       this.mSysUIBottomHeight = this.mLauncherLayoutStyleConfig.mSysBottomHeight;
     } else {
       this.mSysUIBottomHeight = 0;
     }
     Log.showInfo(TAG, `mSysUIBottomHeight: ${this.mSysUIBottomHeight}`);
-    AppStorage.SetOrCreate('systemUiHeight', this.mSysUIBottomHeight);
+    AppStorage.SetOrCreate('sysUIBottomHeight', this.mSysUIBottomHeight);
     Log.showInfo(TAG, `this.mSysUITopHeight ${this.mSysUITopHeight}`);
     Log.showInfo(TAG, `this.mSysUIBottomHeight ${this.mSysUIBottomHeight}`);
     this.mIndicatorHeight = this.mLauncherLayoutStyleConfig.mIndicatorHeight;
@@ -140,9 +140,9 @@ export default class LayoutViewModel {
     let iconSize = this.mLauncherLayoutStyleConfig.mDockIconSize;
     let listItemGap = this.mLauncherLayoutStyleConfig.mDockItemGap;
     let dockPadding = this.mLauncherLayoutStyleConfig.mDockPadding;
-    Log.showInfo(TAG, `calculateDock navigationBarStatus: ${this.navigationBarStatus}`);
+    Log.showInfo(TAG, `calculateDock navigationBarStatus: ${this.mNavigationBarStatus}`);
     let marginBottom = this.mLauncherLayoutStyleConfig.mDockMarginBottomHideBar;
-    if (!this.navigationBarStatus) {
+    if (!this.mNavigationBarStatus) {
       marginBottom = this.mLauncherLayoutStyleConfig.mDockMarginBottom;
     }
     Log.showInfo(TAG, 'calculateDock iconSize ${iconSize}');
@@ -182,7 +182,7 @@ export default class LayoutViewModel {
     let margin = this.mLauncherLayoutStyleConfig.mMargin;
     let realWidth = this.mScreenWidth - 2 * margin;
     let realHeight = this.mWorkSpaceHeight - this.mIndicatorHeight - this.mSysUITopHeight;
-    if (this.navigationBarStatus) {
+    if (this.mNavigationBarStatus) {
       realHeight = realHeight - this.mLauncherLayoutStyleConfig.mSysBottomHeight;
     }
     Log.showInfo(TAG, `realHeight ${realHeight}`);

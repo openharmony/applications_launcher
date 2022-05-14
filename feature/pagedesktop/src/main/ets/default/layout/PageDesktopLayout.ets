@@ -57,13 +57,13 @@ export default struct PageDesktopLayout {
   private updateStyle() {
     mPageDesktopViewModel.setDevice(this.device);
     this.isPad = mPageDesktopViewModel.getDevice();
-    console.log("Launcher PageDesktopLayout updateStyle isPad:" + this.isPad);
+    Log.showInfo(TAG, `updateStyle isPad: ${this.isPad}`);
   }
 
   private updateDeskTopParams() {
     this.mMargin = mPageDesktopViewModel.getPageDesktopStyleConfig().mMargin;
     this.mTop = mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop;
-    console.log("Launcher PageDesktopLayout updateDeskTopParams mMargin:" + this.mMargin + ", this.mTop: " + this.mTop);
+    Log.showInfo(TAG, `updateDeskTopParams mMargin: ${this.mMargin}, this.mTop: ${this.mTop}`);
     if (this.mPageDesktopDragHandler != null) {
       this.mPageDesktopDragHandler.setDragEffectArea({
         left: this.mMargin,
@@ -75,13 +75,13 @@ export default struct PageDesktopLayout {
   }
 
   private onTouchEventUpdate() {
-    if (AppStorage.Get('dragFocus') == FeatureConstants.FEATURE_NAME) {
+    if (AppStorage.Get('device') === 'phone' || AppStorage.Get('dragFocus') == FeatureConstants.FEATURE_NAME) {
       this.mPageDesktopDragHandler.onTouchEventUpdate(AppStorage.Get('dragEvent'));
     }
   }
 
-  public changeGridConfig() {
-    console.log("Launcher PageDesktopLayout changeGridConfig GridConfig:"+this.gridConfig)
+  private changeGridConfig(): void {
+    Log.showInfo(TAG, `changeGridConfig GridConfig: ${this.gridConfig}`);
     this.updateDeskTopParams();
     mPageDesktopViewModel.getGridList();
   }

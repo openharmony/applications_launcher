@@ -35,7 +35,7 @@ export default class FormLayoutConfig extends ILayoutConfig {
   /**
    * Get folder layout configuration instance
    */
-  static getInstance() {
+  static getInstance(): FormLayoutConfig {
     if (globalThis.FormLayoutConfigInstance == null) {
       globalThis.FormLayoutConfigInstance = new FormLayoutConfig();
       globalThis.FormLayoutConfigInstance.initConfig();

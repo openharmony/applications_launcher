@@ -56,11 +56,11 @@ export default class SmartDockModel {
     this.mAppModel = AppModel.getInstance();
     this.mResourceManager = ResourceManager.getInstance();
     this.registerDockListener();
-    this.getResidentList().then(()=>{}, ()=>{});
-    this.mDevice = AppStorage.Get('dockDevice');
+    this.getResidentList().then(() => {}, () => {});
+    this.mDevice = AppStorage.Get('device');
     Log.showInfo(TAG, 'dockDevice:' + this.mDevice);
     if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE) {
-      this.getRecentDataList().then(()=>{}, ()=>{});
+      this.getRecentDataList().then(() => {}, () => {});
       this.registerMissionListener();
     }
     Log.showInfo(TAG, 'constructor!');
@@ -91,11 +91,12 @@ export default class SmartDockModel {
         const dockItemInfo = new DockItemInfo();
         dockItemInfo.itemType = dockDataList[i].itemType;
         dockItemInfo.editable = dockDataList[i].editable;
-        dockItemInfo.appName = typeof(appData) === 'undefined' ? dockDataList[i].appName : appData.appName;
-        dockItemInfo.bundleName = typeof(appData) === 'undefined' ? dockDataList[i].bundleName : appData.bundleName;
-        dockItemInfo.abilityName = typeof(appData) === 'undefined' ? dockItemInfo.abilityName : appData.abilityName;
-        dockItemInfo.appIconId = typeof(appData) === 'undefined' ? dockItemInfo.appIconId : appData.appIconId;
-        dockItemInfo.appLabelId = typeof(appData) === 'undefined' ? dockItemInfo.appLabelId : appData.appLabelId;
+        dockItemInfo.appName = typeof (appData) === 'undefined' ? dockDataList[i].appName : appData.appName;
+        dockItemInfo.bundleName = typeof (appData) === 'undefined' ? dockDataList[i].bundleName : appData.bundleName;
+        dockItemInfo.abilityName = typeof (appData) === 'undefined' ? dockItemInfo.abilityName : appData.abilityName;
+        dockItemInfo.appIconId = typeof (appData) === 'undefined' ? dockItemInfo.appIconId : appData.appIconId;
+        dockItemInfo.appLabelId = typeof (appData) === 'undefined' ? dockItemInfo.appLabelId : appData.appLabelId;
+        dockItemInfo.installTime = typeof (appData) === 'undefined' ? dockItemInfo.installTime : appData.installTime;
         residentList.push(dockItemInfo);
       } else if (dockDataList[i].itemType == CommonConstants.TYPE_CARD) {
       } else {
@@ -104,8 +105,8 @@ export default class SmartDockModel {
         dockItemInfo.editable = dockDataList[i].editable;
         dockItemInfo.bundleName = dockDataList[i].bundleName;
         dockItemInfo.abilityName = dockDataList[i].abilityName;
-        dockItemInfo.appIconId = typeof(dockDataList[i].appIconId) != 'undefined' ? dockDataList[i].appIconId : dockDataList[i].iconId.id;
-        dockItemInfo.appLabelId =  typeof(dockDataList[i].appLabelId) != 'undefined' ? dockDataList[i].appLabelId : dockDataList[i].labelId.id;
+        dockItemInfo.appIconId = typeof (dockDataList[i].appIconId) != 'undefined' ? dockDataList[i].appIconId : dockDataList[i].iconId.id;
+        dockItemInfo.appLabelId = typeof (dockDataList[i].appLabelId) != 'undefined' ? dockDataList[i].appLabelId : dockDataList[i].labelId.id;
         const loadAppName = await this.mResourceManager
           .getAppNameSync(dockItemInfo.appLabelId, dockItemInfo.bundleName, '');
         dockItemInfo.appName = loadAppName;
@@ -118,7 +119,6 @@ export default class SmartDockModel {
     AppStorage.SetOrCreate('residentList', residentList);
     Log.showInfo(TAG, 'getResidentList end residentList.length:' + residentList.length);
   }
-
 
   /**
    * get recent dock list
@@ -159,42 +159,16 @@ export default class SmartDockModel {
    * @param appInfo
    * @param dockType
    */
-  deleteDockItem(bundleName: string, dockType: number) {
+  deleteDockItem(bundleName: string, dockType: number): boolean {
     if (CheckEmptyUtils.checkStrIsEmpty(bundleName)) {
-      return;
+      return false;
     }
-    if (dockType === SmartDockConstants.RESIDENT_DOCK_TYPE) {
-      this.mResidentList = AppStorage.Get('residentList');
-      const residentLength = this.mResidentList.length;
-      for (let i = 0; i < residentLength; i++) {
-        if (this.mResidentList[i].bundleName === bundleName) {
-          // checkt right to delete
-          let editable = true;
-          editable = this.mResidentList[i].editable;
-          if (!editable) {
-            Prompt.showToast({
-              message: $r('app.string.disable_add_to_delete')
-            });
-            return;
-          } else {
-            this.mResidentList.splice(i, 1);
-            AppStorage.SetOrCreate('residentList', this.mResidentList);
-            this.mSmartDockLayoutConfig.updateDockLayoutInfo(this.mResidentList);
-            Log.showInfo(TAG, 'deleteDockItem:' + bundleName + ',dockType:' + dockType);
-            return;
-          }
-        }
-      }
-    } else if (dockType === SmartDockConstants.RECENT_DOCK_TYPE) {
-      this.mRecentDataList = AppStorage.Get('recentList');
-      const recentLength = this.mRecentDataList.length;
-      for (let i = 0; i < recentLength; i++) {
-        if (this.mRecentDataList[i].bundleName === bundleName)
-          this.mRecentDataList.splice(i, 1);
-        AppStorage.SetOrCreate('recentList', this.mRecentDataList);
-        Log.showInfo(TAG, 'deleteDockItem:' + bundleName + ',dockType:' + dockType);
-      }
-      return;
+    if (SmartDockConstants.RESIDENT_DOCK_TYPE === dockType) {
+      return this.deleteResistDockItem(bundleName);
+
+    }
+    else if (SmartDockConstants.RECENT_DOCK_TYPE === dockType) {
+      return this.deleteRecentDockItem(bundleName);
     }
   }
 
@@ -204,12 +178,12 @@ export default class SmartDockModel {
    * @param appInfo
    * @param index
    */
-  addToSmartdock(appInfo: AppItemInfo, index?: number) {
+  addToSmartdock(appInfo: AppItemInfo, index?: number): boolean {
     this.mResidentList = AppStorage.Get('residentList');
 
     const dockItemCount = this.mResidentList.length;
     if (this.checkDockNum(dockItemCount)) {
-      return;
+      return false;
     }
     const flag = this.idDuplicate(this.mResidentList, appInfo);
     if (flag) {
@@ -230,7 +204,9 @@ export default class SmartDockModel {
       AppStorage.SetOrCreate('residentList', this.mResidentList);
       this.mSmartDockLayoutConfig.updateDockLayoutInfo(this.mResidentList);
       Log.showInfo(TAG, 'addToSmartdock appInfo:' + appInfo.bundleName);
+      return true;
     }
+    return false;
   }
 
   /**
@@ -323,7 +299,8 @@ export default class SmartDockModel {
     localEventManager.registerEventListener(this.mAddToDockListener, [
       EventConstants.EVENT_REQUEST_DOCK_ITEM_ADD,
       EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE,
-      EventConstants.EVENT_REQUEST_RECENT_DOCK_ITEM_DELETE
+      EventConstants.EVENT_REQUEST_RECENT_DOCK_ITEM_DELETE,
+      EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE
     ]);
     Log.showInfo(TAG, 'local listener on create');
   }
@@ -348,6 +325,8 @@ export default class SmartDockModel {
         this.deleteDockItem(params, SmartDockConstants.RESIDENT_DOCK_TYPE);
       } else if (event === EventConstants.EVENT_REQUEST_RECENT_DOCK_ITEM_DELETE) {
         this.deleteDockItem(params, SmartDockConstants.RECENT_DOCK_TYPE);
+      } else if (event === EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE) {
+        this.updateResistDockItem(params);
       }
     }
   };
@@ -366,22 +345,22 @@ export default class SmartDockModel {
 
   onMissionCreatedCallback(missionId: number) {
     Log.showInfo(TAG, 'onMissionCreatedCallback, missionId=' + missionId);
-    this.getRecentDataList().then(()=>{}, ()=>{});
+    this.getRecentDataList().then(() => {}, () => {});
   }
 
   onMissionDestroyedCallback(missionId: number) {
     Log.showInfo(TAG, 'onMissionDestroyedCallback, missionId=' + missionId);
-    this.getRecentDataList().then(()=>{}, ()=>{});
+    this.getRecentDataList().then(() => {}, ( )=> {});
   }
 
   onMissionSnapshotChangedCallback(missionId: number) {
     Log.showInfo(TAG, 'onMissionSnapshotChangedCallback, missionId=' + missionId);
-    this.getRecentDataList().then(()=>{}, ()=>{});
+    this.getRecentDataList().then(() => {}, () => {});
   }
 
   onMissionMovedToFrontCallback(missionId: number) {
     Log.showInfo(TAG, 'onMissionMovedToFrontCallback, missionId=' + missionId);
-    this.getRecentDataList().then(()=>{}, ()=>{});
+    this.getRecentDataList().then(() => {}, () => { });
   }
 
   /**
@@ -436,5 +415,70 @@ export default class SmartDockModel {
     AppStorage.SetOrCreate('snapShotWidth', snapShotWidth);
     Log.showInfo(TAG, 'getSnapshot update snapshotList');
     return snapshotList;
+  }
+
+  private deleteResistDockItem(bundleName: string) {
+    let res = false;
+    this.mResidentList = AppStorage.Get('residentList');
+    if (!CheckEmptyUtils.isEmptyArr(this.mResidentList)) {
+      for (let i = 0; i < this.mResidentList.length; i++) {
+        if (bundleName === this.mResidentList[i].bundleName) {
+          // checkt right to delete
+          if (!this.mResidentList[i].editable) {
+            Prompt.showToast({
+              message: $r('app.string.disable_add_to_delete')
+            });
+          } else {
+            this.mResidentList.splice(i, 1);
+            AppStorage.SetOrCreate('residentList', this.mResidentList);
+            this.mSmartDockLayoutConfig.updateDockLayoutInfo(this.mResidentList);
+            Log.showInfo(TAG, `deleteRecentDockItem resist dockItem: ${bundleName}`);
+            res = true;
+            return res;
+          }
+        }
+      }
+    }
+    return res;
+  }
+
+  private deleteRecentDockItem(bundleName: string) {
+    let res = false;
+    this.mRecentDataList = AppStorage.Get('recentList');
+    if (!CheckEmptyUtils.isEmptyArr(this.mResidentList)) {
+      for (let i = 0; i < this.mRecentDataList.length; i++) {
+        if (bundleName === this.mRecentDataList[i].bundleName) {
+          this.mRecentDataList.splice(i, 1);
+          AppStorage.SetOrCreate('recentList', this.mRecentDataList);
+          Log.showInfo(TAG, `deleteRecentDockItem recent dockItem: ${bundleName}`);
+          res = true;
+          return res;
+        }
+      }
+    }
+    return res;
+  }
+
+  updateResistDockItem(appInfo: AppItemInfo){
+    Log.showInfo(TAG, `updateResistDockItem appInfo: ${JSON.stringify(appInfo)}`);
+    let resistDockItem: DockItemInfo[] = AppStorage.Get('residentList');
+    if (!CheckEmptyUtils.isEmptyArr(resistDockItem)) {
+      for (let i = 0; i < resistDockItem.length; i++) {
+        if (appInfo.bundleName === resistDockItem[i].bundleName) {
+          let dockItemInfo = new DockItemInfo();
+          dockItemInfo.itemType = CommonConstants.TYPE_APP;
+          dockItemInfo.editable = true;
+          dockItemInfo.appId = appInfo.appId;
+          dockItemInfo.appName = appInfo.appName;
+          dockItemInfo.bundleName = appInfo.bundleName;
+          dockItemInfo.abilityName = appInfo.abilityName;
+          dockItemInfo.appIconId = appInfo.appIconId;
+          dockItemInfo.appLabelId = appInfo.appLabelId;
+          dockItemInfo.installTime = appInfo.installTime;
+          resistDockItem[i] = dockItemInfo;
+          AppStorage.SetOrCreate('residentList', resistDockItem);
+        }
+      }
+    }
   }
 }

@@ -57,7 +57,7 @@ export default class PadPageDesktopGridStyleConfig extends PageDesktopGridStyleC
     return globalThis.PadPageDesktopGridStyleConfig;
   }
 
-  initConfig() {
+  initConfig(): void {
     const result = LayoutViewModel.getInstance().calculateDesktop();
     this.mMargin = result.mMargin;
     this.mColumnsGap = result.mColumnsGap;

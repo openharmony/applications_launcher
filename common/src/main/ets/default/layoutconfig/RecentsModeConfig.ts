@@ -47,7 +47,7 @@ export default class RecentsModeConfig extends ILayoutConfig {
    *
    * @return {RecentsModeConfig} RecentsModeConfig instance
    */
-  static getInstance() {
+  static getInstance(): RecentsModeConfig {
     if (globalThis.RecentsModeConfigInstance == null) {
       globalThis.RecentsModeConfigInstance = new RecentsModeConfig();
       globalThis.RecentsModeConfigInstance.initConfig();
@@ -78,7 +78,7 @@ export default class RecentsModeConfig extends ILayoutConfig {
    *
    * @param {number} limit value
    */
-  updateRecentMissionsLimit(limit: number) {
+  updateRecentMissionsLimit(limit: number): void {
     this.mRecentMissionsLimit = limit;
     super.persistConfig();
   }
@@ -88,7 +88,7 @@ export default class RecentsModeConfig extends ILayoutConfig {
    *
    * @return {number} limit value
    */
-  getRecentMissionsLimit() {
+  getRecentMissionsLimit(): number {
     return this.mRecentMissionsLimit;
   }
 
@@ -97,7 +97,7 @@ export default class RecentsModeConfig extends ILayoutConfig {
    *
    * @return {string} single / double
    */
-  getRecentMissionsRowType() {
+  getRecentMissionsRowType(): string {
     return this.mRecentMissionsRowType;
   }
 }

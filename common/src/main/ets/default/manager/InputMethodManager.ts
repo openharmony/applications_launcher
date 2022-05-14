@@ -15,6 +15,9 @@
 
 import inputMethod from '@ohos.inputMethod';
 
+/**
+ * Wrapper class for inputMethod interfaces.
+ */
 export default class InputMethodManager {
 
   static getInstance(): InputMethodManager {
@@ -24,7 +27,7 @@ export default class InputMethodManager {
     return globalThis.InputMethodManagerInstance;
   }
 
-  stopInput() {
+  stopInput(): void {
     inputMethod.getInputMethodController()?.stopInput();
   }
 }

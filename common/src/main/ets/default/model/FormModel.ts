@@ -47,7 +47,7 @@ export default class FormModel {
    *
    * @return {object} form model singleton
    */
-  static getInstance() {
+  static getInstance(): FormModel {
     if (globalThis.FormModelInstance == null) {
       globalThis.FormModelInstance = new FormModel();
     }
@@ -59,7 +59,7 @@ export default class FormModel {
    *
    * @param listener
    */
-  registerJumpToFormViewEvent(listener) {
+  registerJumpToFormViewEvent(listener): void {
     LocalEventManager.registerEventListener(listener, [
       EventConstants.EVENT_REQUEST_JUMP_TO_FORM_VIEW
     ]);
@@ -70,7 +70,7 @@ export default class FormModel {
    *
    * @param listener
    */
-  unregisterEventListener(listener) {
+  unregisterEventListener(listener): void {
     LocalEventManager.unregisterEventListener(listener);
   }
 
@@ -79,7 +79,7 @@ export default class FormModel {
    *
    * @param {array} formViewInfo
    */
-  sendJumpFormViewEvent(formViewInfo) {
+  sendJumpFormViewEvent(formViewInfo): void {
     LocalEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_JUMP_TO_FORM_VIEW, formViewInfo);
   }
 
@@ -181,7 +181,7 @@ export default class FormModel {
    * @param {string} bundleName
    * @param {array} appItemFormInfo
    */
-  setAppItemFormInfo(bundleName: string, appItemFormInfo: CardItemInfo[]) {
+  setAppItemFormInfo(bundleName: string, appItemFormInfo: CardItemInfo[]): void {
     this.mAppItemFormInfoMap.set(bundleName, appItemFormInfo);
   }
 
@@ -204,7 +204,7 @@ export default class FormModel {
    * @param {string} bundleName
    * @param {string | undefined} eventType
    */
-  updateAppItemFormInfo(bundleName, eventType?) {
+  updateAppItemFormInfo(bundleName: string, eventType?: string): void {
     if (eventType && eventType === EventConstants.EVENT_PACKAGE_REMOVED) {
       this.mAppItemFormInfoMap.delete(bundleName);
       return;
@@ -217,7 +217,7 @@ export default class FormModel {
    *
    * @param {string} bundleName
    */
-  deleteFormByBundleName(bundleName) {
+  deleteFormByBundleName(bundleName: string): void {
     const settingsModel = SettingsModel.getInstance();
     this.mRdbStoreManager.deleteFormInfoByBundle(bundleName);
     const formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
@@ -254,6 +254,18 @@ export default class FormModel {
     } else {
       this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, tempFormInfoList);
     }
+
+    this.updateBlankPage(pageItemMap, layoutInfo);
+    settingsModel.setLayoutInfo(layoutInfo);
+  }
+
+  /**
+   * update page number if blank page is exist
+   *
+   * @param pageItemMap
+   * @param layoutInfo
+   */
+  private updateBlankPage(pageItemMap, layoutInfo): void {
     const blankPages = [];
     for (let [page, count] of pageItemMap) {
       if (count === 0) {
@@ -272,6 +284,6 @@ export default class FormModel {
         layoutInfo.layoutInfo[m].page = layoutInfo.layoutInfo[m].page - pageMinus;
       }
     }
-    settingsModel.setLayoutInfo(layoutInfo);
   }
+
 }

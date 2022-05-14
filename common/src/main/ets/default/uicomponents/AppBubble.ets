@@ -57,9 +57,9 @@ export default struct AppBubble {
       Column() {
         AppIcon({
           iconSize: this.iconSize,
-          appIcon: this.appIconId,
-          icon: ResourceManager.getInstance().getCachedAppIcon(this.appIconId, this.bundleName),
+          iconId: this.appIconId,
           bundleName: this.bundleName,
+          icon: ResourceManager.getInstance().getCachedAppIcon(this.appIconId, this.bundleName),
           badgeNumber: this.badgeNumber,
           useCache: this.useCache
         })

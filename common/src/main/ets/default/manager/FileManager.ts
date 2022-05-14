@@ -21,7 +21,7 @@ const TAG = 'FileManager';
 const READ_DATA_SIZE = 4096;
 
 /**
- * 文件操作管理类
+ * Wrapper class for fileIo interfaces.
  */
 export default class FileManager {
   private baseDir: string | undefined;
@@ -62,7 +62,7 @@ export default class FileManager {
     let buf = new ArrayBuffer(READ_DATA_SIZE);
     let len = fileIo.readSync(fd, buf);
     while (len != 0) {
-      Log.showInfo(TAG, 'getContent fileIo reading ' + len);
+      Log.showInfo(TAG, `getContent fileIo reading ${len}`);
       totalLength += len;
       if (len < READ_DATA_SIZE) {
         buf = buf.slice(0, len);
@@ -73,11 +73,11 @@ export default class FileManager {
       buf = new ArrayBuffer(READ_DATA_SIZE);
       len = fileIo.readSync(fd, buf);
     }
-    Log.showInfo(TAG, 'getContent read finished ' + totalLength);
+    Log.showInfo(TAG, `getContent read finished ${totalLength}`);
     const contentBuf = new Uint8Array(totalLength);
     let offset = 0;
     for (const bufArr of bufArray) {
-      Log.showInfo(TAG, 'getContent collecting ' + offset);
+      Log.showInfo(TAG, `getContent collecting ${offset}`);
       const uInt8Arr = new Uint8Array(bufArr);
       contentBuf.set(uInt8Arr, offset);
       offset += uInt8Arr.byteLength;
