@@ -73,11 +73,6 @@ export default class PhonePresetStyleConstants {
   static readonly DEFAULT_FOLDER_GUTTER_RATIO = 0.043;
 
   /**
-   * icon size
-   */
-  static readonly DEFAULT_ICON_SIZE = 54;
-
-  /**
    * folder padding with container size
    */
   static readonly DEFAULT_FOLDER_PADDING_RATIO = 0.07;
