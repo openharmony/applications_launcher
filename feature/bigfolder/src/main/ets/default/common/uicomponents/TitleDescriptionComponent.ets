@@ -19,10 +19,12 @@ import FolderStyleConstants from '../constants/FolderStyleConstants';
 export default struct TitleDescriptionComponent {
   @Link mTitleDescription: any;
   @State mTextSize: number = FolderStyleConstants.DEFAULT_APP_GRID_TEXT_FONT_SIZE;
+  @StorageLink('isPad') isPad: boolean = true;
 
   build() {
     Text(this.mTitleDescription)
-      .fontSize(this.mTextSize)
+      .fontSize(this.isPad?this.mTextSize:FolderStyleConstants.DEFAULT_APP_GRID_TEXT_FONT_PHONE_SIZE)
+      .fontWeight(FolderStyleConstants.DEFAULT_APP_GRID_TEXT_FONT_WEIGHT)
       .margin({
         top: FolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
         bottom: FolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,

@@ -324,6 +324,7 @@ export default class LayoutViewModel {
     let maxHeight: number = this.mLauncherLayoutStyleConfig.mFolderAddMaxHeight *
       (this.mScreenHeight - this.mSysUITopHeight);
     let toggleSize: number = this.mLauncherLayoutStyleConfig.mFolderToggleSize;
+    let iconPaddingTop: number = this.mLauncherLayoutStyleConfig.mAddFolderIconPaddingTop;
     let screenColumns: number = PresetStyleConstants.DEFAULT_PHONE_GRID_APP_COLUMNS;
     let textSize: number = this.mLauncherLayoutStyleConfig.mFolderAddTextSize;
     let textLines: number = this.mLauncherLayoutStyleConfig.mFolderAddTextLines;
@@ -341,11 +342,9 @@ export default class LayoutViewModel {
     let gridSize = layoutWidth - 2 * margin;
     let itemSize = (gridSize - (column - 1) * gap) / column;
     Log.showInfo(TAG, `desktopIcon add app itemSize ${itemSize}`);
-    let layoutHeight = layoutWidth + StyleConstants.DEFAULT_APP_ADD_TITLE_SIZE +
-      StyleConstants.DEFAULT_BUTTON_HEIGHT_NUMBER +
-      StyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN_NUMBER;
+    let layoutHeight: number = this.mLauncherLayoutStyleConfig.mAddFolderDialogHeight;
     Log.showInfo(TAG, `desktopIcon add app layoutHeight ${layoutHeight}`);
-    let iconSize = (1 - 2 * ratio) * itemSize - linesHeight - this.mDesktopIconNameMargin;
+    let iconSize: number = this.mLauncherLayoutStyleConfig.mAddFolderIconSize;
     Log.showInfo(TAG, `desktopIcon add app iconSize ${iconSize}`);
     Log.showInfo(TAG, `desktopIcon add app maxHeight ${maxHeight}`);
 

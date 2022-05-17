@@ -28,23 +28,23 @@ export default class PhonePresetStyleConstants {
   /**
    * desktop item size
    */
-  static readonly DEFAULT_APP_LAYOUT_SIZE = 120;
+  static readonly DEFAULT_APP_LAYOUT_SIZE = 80;
 
   /**
    * desktop container margin
    */
-  static readonly DEFAULT_LAYOUT_MARGIN = 19.5;
+  static readonly DEFAULT_LAYOUT_MARGIN = 12;
 
   /**
    * desktop container minimum gutter
    */
-  static readonly DEFAULT_APP_LAYOUT_MIN_GUTTER = 7;
+  static readonly DEFAULT_APP_LAYOUT_MIN_GUTTER = 5;
 
   //----------- desktop icon-------------
   /**
    * desktop item padding top
    */
-  static readonly DEFAULT_APP_TOP_RATIO = 0.01;
+  static readonly DEFAULT_APP_TOP_RATIO = 0.0375;
 
   /**
    * desktop item name lines
@@ -54,17 +54,17 @@ export default class PhonePresetStyleConstants {
   /**
    * desktop item name size
    */
-  static readonly DEFAULT_APP_NAME_TEXT_SIZE  = 18;
+  static readonly DEFAULT_APP_NAME_TEXT_SIZE  = 12;
 
   /**
    * desktop item icon and name gap
    */
-  static readonly DEFAULT_ICON_NAME_GAP = 6;
+  static readonly DEFAULT_ICON_NAME_GAP = 4;
 
   /**
    * desktop icon name height
    */
-  static readonly DEFAULT_DESKTOP_NAME_HEIGHT = 24;
+  static readonly DEFAULT_DESKTOP_NAME_HEIGHT = 16;
 
   //----------- desktop folder-----------
   /**
@@ -73,11 +73,21 @@ export default class PhonePresetStyleConstants {
   static readonly DEFAULT_FOLDER_GUTTER_RATIO = 0.043;
 
   /**
+   * icon size
+   */
+  static readonly DEFAULT_ICON_SIZE = 54;
+
+  /**
    * folder padding with container size
    */
   static readonly DEFAULT_FOLDER_PADDING_RATIO = 0.07;
 
   //----------- desktop open --------------
+  /**
+   * height of add folder dialog
+   */
+  static readonly DEFAULT_APP_ADD_DIALOG_HEIGHT = 524;
+
   /**
    * gutter of open folder
    */
@@ -91,7 +101,7 @@ export default class PhonePresetStyleConstants {
   /**
    * margin top of open folder
    */
-  static readonly DEFAULT_OPEN_FOLDER_MARGIN_TOP = 214;
+  static readonly DEFAULT_OPEN_FOLDER_MARGIN_TOP = 100;
 
   //----------- folder add list ------------------
   /**
@@ -105,6 +115,12 @@ export default class PhonePresetStyleConstants {
   static readonly DEFAULT_FOLDER_ADD_MARGIN = 18;
 
   /**
+   * padding top of icon
+   */
+  static readonly DEFAULT_ICON_PADDING_TOP = 13;
+
+
+  /**
    * gutter of container
    */
   static readonly DEFAULT_FOLDER_ADD_GAP = 12;
@@ -112,7 +128,7 @@ export default class PhonePresetStyleConstants {
   /**
    * toggle of item
    */
-  static readonly DEFAULT_APP_GRID_TOGGLE_SIZE = 24;
+  static readonly DEFAULT_APP_GRID_TOGGLE_SIZE = 20;
 
   /**
    * icon padding of item with item size
@@ -122,7 +138,7 @@ export default class PhonePresetStyleConstants {
   /**
    * name size of container
    */
-  static readonly DEFAULT_FOLDER_ADD_GRID_TEXT_SIZE = 18;
+  static readonly DEFAULT_FOLDER_ADD_GRID_TEXT_SIZE = 12;
 
   /**
    * title size of container
@@ -137,7 +153,7 @@ export default class PhonePresetStyleConstants {
   /**
    * button size of container
    */
-  static readonly DEFAULT_FOLDER_ADD_BUTTON_SIZE = 24;
+  static readonly DEFAULT_FOLDER_ADD_BUTTON_SIZE = 16;
 
   //----------- app center--------------
   /**
@@ -174,17 +190,17 @@ export default class PhonePresetStyleConstants {
   /**
    * icon size of dock
    */
-  static readonly DEFAULT_DOCK_ICON_SIZE = 75;
+  static readonly DEFAULT_DOCK_ICON_SIZE = 54;
 
   /**
    * padding of dock
    */
-  static readonly DEFAULT_DOCK_PADDING = 21;
+  static readonly DEFAULT_DOCK_PADDING = 12;
 
   /**
    * gap of dock container
    */
-  static readonly DEFAULT_DOCK_ITEM_GAP = 55;
+  static readonly DEFAULT_DOCK_ITEM_GAP = 31.33;
 
   /**
    * gap with resident and recent
@@ -194,17 +210,17 @@ export default class PhonePresetStyleConstants {
   /**
    * save margin of dock
    */
-  static readonly DEFAULT_DOCK_SAVE_MARGIN = 16;
+  static readonly DEFAULT_DOCK_SAVE_MARGIN = 10;
 
   /**
    * margin bottom of dock
    */
-  static readonly DEFAULT_DOCK_MARGIN_BOTTOM = 72;
+  static readonly DEFAULT_DOCK_MARGIN_BOTTOM = 9;
 
   /**
    * margin bottom of dock(Immersive navigation bar)
    */
-  static readonly DEFAULT_DOCK_MARGIN_BOTTOM_HIDE_BAR = 20;
+  static readonly DEFAULT_DOCK_MARGIN_BOTTOM_HIDE_BAR = 18;
 
   /**
    * open folder grid height
@@ -214,5 +230,5 @@ export default class PhonePresetStyleConstants {
   /**
    * open folder swiper height
    */
-  static readonly DEFAULT_OPEN_FOLDER_SWIPER_HEIGHT= 650;
+  static readonly DEFAULT_OPEN_FOLDER_SWIPER_HEIGHT= 445;
 }
