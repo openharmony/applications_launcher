@@ -71,18 +71,16 @@ export default struct RecentMissionsDoubleLayout {
         .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
         .rowsTemplate('1fr 1fr')
         .direction(Direction.Rtl)
-        .columnsGap(StyleConstants.DOUBLE_LIST_LAYOUT_MARGIN)
-        .rowsGap(StyleConstants.DOUBLE_LIST_LAYOUT_MARGIN)
+        .columnsGap(StyleConstants.DOUBLE_LIST_LAYOUT_COLUMNSGAP)
+        .rowsGap(StyleConstants.DOUBLE_LIST_LAYOUT_ROWSGAP)
       }
       .margin({top: StyleConstants.DOUBLE_LIST_TOP_MARGIN})
       .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
       .height(StyleConstants.DOUBLE_LIST_GRID_HEIGHT_PERCENTAGE)
 
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-        Column() {
-          Image(StyleConstants.DEFAULT_DELETE_IMAGE)
-            .width(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
-            .height(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
+      Stack(){
+        Column(){
+
         }
         .width(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
         .height(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
@@ -90,16 +88,18 @@ export default struct RecentMissionsDoubleLayout {
         .backgroundColor(StyleConstants.DEFAULT_FONT_COLOR)
         .borderRadius(StyleConstants.RECENT_DELETE_IMAGE_RADIUS)
         .padding(8)
-        .onClick(() => {
-          this.isClickSubComponent = true;
-          Log.showInfo(TAG, 'onClick click delete button');
-          this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
-          this.mRecentMissionsViewModel.backView();
-        })
+
+        Image(StyleConstants.DEFAULT_DELETE_IMAGE_FULL)
+          .width(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
+          .height(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
       }
-      .margin({ top: StyleConstants.DOUBLE_LIST_BOTTOM_MARGIN })
-      .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
-      .height(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
+      .margin({bottom: StyleConstants.DOUBLE_LIST_BOTTOM_MARGIN})
+      .onClick(() => {
+        this.isClickSubComponent = true;
+        Log.showInfo(TAG, 'onClick click delete button');
+        this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
+        this.mRecentMissionsViewModel.backView();
+      })
     }
     .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
   }

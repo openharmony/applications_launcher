@@ -38,10 +38,10 @@ export default struct RecentMissionsSingleLayout {
       // top blank area
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center })
       .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
-      .height(StyleConstants.SINGLE_LIST_TOP_AERA_HEIGHT * StyleConstants.DPI_RATIO)
+      .height(StyleConstants.SINGLE_LIST_TOP_AERA_HEIGHT)
 
       // middle area, mission list
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Start, justifyContent: FlexAlign.Center }) {
+      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
         Scroll(this.mScroll) {
           Row() {
             ForEach(this.recentMissionsSingleList, (item) => {
@@ -62,22 +62,26 @@ export default struct RecentMissionsSingleLayout {
         .scrollable(ScrollDirection.Horizontal)
       }
       .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
-      .height(StyleConstants.SINGLE_LIST_MIDDLE_AERA_HEIGHT * StyleConstants.DPI_RATIO)
+      .height(StyleConstants.SINGLE_LIST_MIDDLE_AERA_HEIGHT)
 
       // bottom area, button for cleaning up running applications
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center })
       {
-        Column() {
-          Image(StyleConstants.DEFAULT_DELETE_IMAGE)
-            .width(StyleConstants.RECENT_DELETE_IMAGE_SIZE * StyleConstants.DPI_RATIO)
-            .height(StyleConstants.RECENT_DELETE_IMAGE_SIZE * StyleConstants.DPI_RATIO)
+        Stack() {
+          Column(){
+          }
+          .width(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
+          .height(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
+          .opacity(StyleConstants.DEFAULT_DELETE_IMAGE_OPACITY)
+          .backgroundColor(StyleConstants.DEFAULT_FONT_COLOR)
+          .borderRadius(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE / 2)
+          .padding(8)
+
+          Image(StyleConstants.DEFAULT_DELETE_IMAGE_FULL)
+            .width(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
+            .height(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
         }
-        .width(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE * StyleConstants.DPI_RATIO)
-        .height(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE * StyleConstants.DPI_RATIO)
-        .opacity(StyleConstants.DEFAULT_DELETE_IMAGE_OPACITY)
-        .backgroundColor(StyleConstants.DEFAULT_FONT_COLOR)
-        .borderRadius(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE * StyleConstants.DPI_RATIO / 2)
-        .padding(8 * StyleConstants.DPI_RATIO)
+        .margin({bottom: StyleConstants.SINGLE_LIST_DELETE_IMAGE_FULL_BOTTOM_MARGIN})
         .onClick(() => {
           this.isClickSubComponent = true;
           Log.showInfo(TAG, 'onClick click delete button');
@@ -86,7 +90,7 @@ export default struct RecentMissionsSingleLayout {
         })
       }
       .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
-      .height(StyleConstants.SINGLE_LIST_BOTTOM_AERA_HEIGHT * StyleConstants.DPI_RATIO)
+      .height(StyleConstants.SINGLE_LIST_BOTTOM_AERA_HEIGHT)
     }
     .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
   }
