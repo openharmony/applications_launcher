@@ -128,7 +128,7 @@ export default class PhonePresetStyleConstants {
   /**
    * icon padding of item with item size
    */
-  static readonly DEFAULT_FOLDER_ADD_ICON_TOP_RATIO = -0.075;
+  static readonly DEFAULT_FOLDER_ADD_ICON_TOP_RATIO = -0.03;
 
   /**
    * name size of container
