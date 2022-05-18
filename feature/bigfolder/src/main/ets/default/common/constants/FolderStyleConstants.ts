@@ -19,7 +19,6 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_ICON: any = $r('app.media.icon');
   static readonly DEFAULT_BACKGROUND_IMAGE = '$media:ic_wallpaper_folder';
   static readonly DEFAULT_ADD_FOLDER_APP_IMAGE = '/common/pics/ic_public_add.svg';
-  static readonly DEFAULT_CANCEL_APP_IMAGE = '/common/pics/ic_public_cancel.svg';
 
   // font style resources
   static readonly DEFAULT_FONT_COLOR = '#ffffff';
@@ -37,30 +36,24 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_APP_ITEM_HEIGHT = 95;
   static readonly DEFAULT_APP_ICON_SIZE_WIDTH = 70;
   static readonly DEFAULT_APP_NAME_HEIGHT = 25;
-  static readonly DEFAULT_ADD_APP_ICON_SIZE = 28;
+  static readonly DEFAULT_ADD_APP_ICON_SIZE = 50;
   static readonly DEFAULT_ADD_APP_SIZE = 54;
   static readonly DEFAULT_VP_30 = 30;
   static readonly DEFAULT_OPEN_FOLDER_NAME_SIZE = 30;
   static readonly DEFAULT_OPEN_FOLDER_TITLE_HEIGHT = 130;
 
   // Folder add app grid list
-  static readonly DEFAULT_OPEN_FOLDER_TEXTAREA_HEIGHT = 48;
-  static readonly DEFAULT_OPEN_FOLDER_CANCEL_SIZE = 24;
-  static readonly DEFAULT_OPEN_FOLDER_TITLE_TOP = 90;
-  static readonly DEFAULT_OPEN_FOLDER_CANCEL_WIDTH = '85%';
-  static readonly DEFAULT_OPEN_FOLDER_CANCEL_HEIGHT = '40%';
   static readonly DEFAULT_FOLDER_APP_DIALOG_LIST = 536;
   static readonly DEFAULT_FOLDER_APP_GRID_LIST = 424;
   static readonly DEFAULT_FOLDER_APP_GRID_MARGIN = 10;
   static readonly DEFAULT_APP_GRID_TOGGLE_SIZE = 30;
   static readonly DEFAULT_APP_GRID_TOGGLE_MARGIN = -30;
-  static readonly DEFAULT_APP_TITLE_MARGIN = 13;
+  static readonly DEFAULT_APP_TITLE_MARGIN = 5;
   static readonly DEFAULT_APP_ADD_TEXT_MARGIN = 14;
   static readonly DEFAULT_APP_ADD_TEXT_BOTTOM_MARGIN = 20;
   static readonly DEFAULT_APP_ADD_WIDTH = '70%';
   static readonly DEFAULT_APP_GRID_LIST_WIDTH = 360;
   static readonly DEFAULT_APP_GRID_TEXT_FONT_SIZE = 20;
-  static readonly DEFAULT_APP_GRID_TEXT_FONT_WEIGHT = 600;
   static readonly DEFAULT_APP_GRID_BUTTON_SIZE = 60;
   static readonly DEFAULT_APP_GRID_RADIUS = 24;
   static readonly DEFAULT_APP_ADD_TITLE_SIZE = 56;
@@ -68,6 +61,5 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_APP_ADD_DIALOG_HEIGHT = 536;
   static readonly DEFAULT_BUTTON_HEIGHT = 40;
   static readonly DEFAULT_BUTTON_WIDTH = 100;
-  static readonly DEFAULT_DIALOG_OPACITY = 0.95;
   static readonly DEFAULT_DIALOG_BOTTOM_MARGIN = 16;
 }

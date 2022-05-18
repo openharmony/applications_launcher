@@ -63,7 +63,7 @@ export default class PresetStyleConstants {
   /**
    * padding top of icon
    */
-  static readonly DEFAULT_ICON_PADDING_TOP = 13;
+  static readonly DEFAULT_ICON_PADDING_TOP = 0;
 
   /**
    *  padding left of icon
@@ -139,16 +139,6 @@ export default class PresetStyleConstants {
 
   //----------- desktop folder-----------
   /**
-  * height of add folder dialog
-  */
-  static readonly DEFAULT_APP_ADD_DIALOG_HEIGHT = 534;
-
-  /**
-  * size of add app item height
-  */
-  static readonly DEFAULT_APP_LAYOUT_HEIGHT = 86;
-
-  /**
    * folder gutter with container size
    */
   static readonly DEFAULT_FOLDER_GUTTER_RATIO = 0.06;
@@ -173,11 +163,6 @@ export default class PresetStyleConstants {
    * margin top of open folder
    */
   static readonly DEFAULT_OPEN_FOLDER_MARGIN_TOP = 188;
-
-  /**
-   * open folder swiper height
-   */
-  static readonly DEFAULT_OPEN_FOLDER_SWIPER_HEIGHT= 480;
 
   //----------- folder add list ------------------
   /**

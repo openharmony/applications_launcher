@@ -91,7 +91,7 @@ export default class PadPresetStyleConstants {
   /**
    * margin top of open folder
    */
-  static readonly DEFAULT_OPEN_FOLDER_MARGIN_TOP = 120;
+  static readonly DEFAULT_OPEN_FOLDER_MARGIN_TOP = 166;
 
   //----------- folder add list ------------------
   /**

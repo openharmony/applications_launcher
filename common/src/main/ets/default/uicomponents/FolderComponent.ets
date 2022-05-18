@@ -251,8 +251,8 @@ export default struct FolderComponent {
                 .visibility(this.superposeIconVisible ? Visibility.Visible : Visibility.Hidden)
                 .width(StyleConstants.PERCENTAGE_100)
                 .height(StyleConstants.PERCENTAGE_100)
-                .onTouch((event: TouchEvent) => {
-                  Log.showInfo(TAG, `last item onTouch`);
+                .onClick((event: ClickEvent) => {
+                  Log.showInfo(TAG, `last item onClick`);
                   this.showAnimate(1.5, 0, true);
                   if (this.onOpenFolderClick) {
                     this.folderAnimateData.folderId = this.mFolderItem.folderId;

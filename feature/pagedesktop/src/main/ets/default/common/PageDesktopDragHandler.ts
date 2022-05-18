@@ -285,10 +285,13 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     console.info('Launcher PageDesktop onDragDrop insertIndex: ' + insertIndex + ' ,mIsInEffectArea: ' + this.mIsInEffectArea);
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     let isDragSuccess = false;
+    const startPosition = this.copyPosition(this.mStartPosition);
+    let endPosition = null;
     if (this.mIsInEffectArea) {
       const moveAppX = event.touches[0].screenX;
       const moveAppY = event.touches[0].screenY;
       this.mEndPosition = this.getTouchPosition(moveAppX, moveAppY);
+      endPosition = this.copyPosition(this.mEndPosition);
       const dragItemInfo = this.getDragItemInfo();
       const info = this.mPageDesktopViewModel.getLayoutInfo();
       const layoutInfo = info.layoutInfo;
@@ -299,7 +302,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
       } else if(dragItemInfo.type === CommonConstants.TYPE_APP) {
         // end position is the same as start position
         if (this.isMoveToSamePosition(dragItemInfo)) {
-          this.deleteBlankPageAfterDragging();
+          this.deleteBlankPageAfterDragging(startPosition, endPosition);
           return true;
         }
         const endLayoutInfo = this.getEndLayoutInfo(layoutInfo);
@@ -308,15 +311,16 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
             const appInfo = this.createNewAppInfo(dragItemInfo);
             // add app to folder
             this.mFolderViewModel.addOneAppToFolder(appInfo, endLayoutInfo.folderId);
-            this.deleteBlankPageAfterDragging();
+            this.deleteBlankPageAfterDragging(startPosition, endPosition);
             return true;
           } else if (endLayoutInfo.type === CommonConstants.TYPE_APP) {
             // create a new folder
             const appListInfo = [endLayoutInfo];
             const startLayoutInfo = this.getStartLayoutInfo(layoutInfo, dragItemInfo);
             appListInfo.push(startLayoutInfo);
-            this.mFolderViewModel.addNewFolder(appListInfo);
-            this.deleteBlankPageAfterDragging();
+            this.mFolderViewModel.addNewFolder(appListInfo).then(()=> {
+              this.deleteBlankPageAfterDragging(startPosition, endPosition);
+            });
             return true;
           }
         }
@@ -331,7 +335,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
         console.info('Launcher PageDesktop onDragEnd not selfDrag');
       }
     }
-    this.deleteBlankPageAfterDragging();
+    this.deleteBlankPageAfterDragging(startPosition, endPosition);
     return isDragSuccess;
   }
 
@@ -348,26 +352,53 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   }
 
   /**
-   * delete blank page after dragging
+   * copy a new position object by original position
+   *
+   * @param position - original position
    */
-  private deleteBlankPageAfterDragging(): void {
+  private copyPosition(position) {
+    if (CheckEmptyUtils.isEmpty(position)) {
+      return null;
+    }
+    const directionPosition = {
+      page: position.page,
+      row: position.row,
+      column: position.column,
+      X: position.X,
+      Y: position.Y
+    };
+    return directionPosition;
+  }
+
+  /**
+   * delete blank page after dragging
+   *
+   * @param startPosition - drag start position
+   * @param endPosition - drag end position
+   */
+  private deleteBlankPageAfterDragging(startPosition, endPosition): void {
     const layoutInfo = this.mPageDesktopViewModel.getLayoutInfo();
     const pageCount = layoutInfo.layoutDescription.pageCount;
     const isAddByDraggingFlag = this.mPageDesktopViewModel.isAddByDragging();
     let deleteLastFlag = false;
-    if (isAddByDraggingFlag && (CheckEmptyUtils.isEmpty(this.mEndPosition) ||
-      !CheckEmptyUtils.isEmpty(this.mEndPosition) && this.mEndPosition.page != pageCount - 1 )) {
+    if (isAddByDraggingFlag && (CheckEmptyUtils.isEmpty(endPosition) ||
+      !CheckEmptyUtils.isEmpty(endPosition) && endPosition.page != pageCount - 1 )) {
       layoutInfo.layoutDescription.pageCount = pageCount - 1;
       deleteLastFlag = true;
     }
     let deleteStartFlag = false;
-    if (!CheckEmptyUtils.isEmpty(this.mStartPosition)) {
-      deleteStartFlag = this.mPageDesktopViewModel.deleteBlankPageFromLayoutInfo(layoutInfo, this.mStartPosition.page);
+    if (!CheckEmptyUtils.isEmpty(startPosition)) {
+      deleteStartFlag = this.mPageDesktopViewModel.deleteBlankPageFromLayoutInfo(layoutInfo, startPosition.page);
     }
-    if (CheckEmptyUtils.isEmpty(this.mEndPosition)) {
-      this.mPageDesktopViewModel.changeIndex(this.mStartPosition.page);
-    } else if (deleteStartFlag && this.mStartPosition.page > this.mEndPosition.page) {
-      this.mPageDesktopViewModel.changeIndex(this.mEndPosition.page);
+    if (CheckEmptyUtils.isEmpty(endPosition)) {
+      this.mPageDesktopViewModel.changeIndex(startPosition.page);
+    } else if (deleteStartFlag) {
+      if (startPosition.page > endPosition.page) {
+        this.mPageDesktopViewModel.changeIndex(endPosition.page);
+      } else if (endPosition.page > startPosition.page &&
+        endPosition.page < layoutInfo.layoutDescription.pageCount) {
+        this.mPageDesktopViewModel.changeIndex(endPosition.page - 1);
+      }
     }
     if (deleteLastFlag || deleteStartFlag) {
       this.mPageDesktopViewModel.setLayoutInfo(layoutInfo);
