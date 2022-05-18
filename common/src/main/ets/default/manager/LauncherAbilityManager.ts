@@ -246,6 +246,7 @@ class LauncherAbilityManager {
         isKeepData: false
       }
     }, (result) => {
+      Log.showInfo(TAG, `uninstallLauncherAbility result => ${JSON.stringify(result)}`);
       callback(result);
     });
   }
