@@ -23,7 +23,6 @@ export default struct TitleDescriptionComponent {
   build() {
     Text(this.mTitleDescription)
       .fontSize(this.mTextSize)
-      .fontWeight(FolderStyleConstants.DEFAULT_APP_GRID_TEXT_FONT_WEIGHT)
       .margin({
         top: FolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
         bottom: FolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,

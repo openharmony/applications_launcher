@@ -130,11 +130,6 @@ export default class PhoneLauncherLayoutStyleConfig extends LauncherLayoutStyleC
   mFolderToggleSize: number = PhonePresetStyleConstants.DEFAULT_APP_GRID_TOGGLE_SIZE;
 
   /**
-   * padding size of add app icon
-   */
-  mAddFolderIconPaddingTop: number = PhonePresetStyleConstants.DEFAULT_ICON_PADDING_TOP;
-
-  /**
    * name lines of add app
    */
   mFolderAddTextLines: number = PhonePresetStyleConstants.DEFAULT_FOLDER_ADD_TEXT_LINES;
@@ -235,17 +230,6 @@ export default class PhoneLauncherLayoutStyleConfig extends LauncherLayoutStyleC
    * open folder swiper height
    */
   mOpenFolderSwiperHeight: number = PhonePresetStyleConstants.DEFAULT_OPEN_FOLDER_SWIPER_HEIGHT;
-
-  /**
-   * icon size of dock
-   */
-  mAddFolderIconSize: number = PhonePresetStyleConstants.DEFAULT_DOCK_ICON_SIZE;
-
-  /**
-   * height of add folder dialog
-   */
-  mAddFolderDialogHeight: number = PhonePresetStyleConstants.DEFAULT_APP_ADD_DIALOG_HEIGHT;
-
 
   private constructor() {
     super();

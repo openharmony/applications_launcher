@@ -120,24 +120,9 @@ export default class LauncherLayoutStyleConfig extends ILayoutConfig {
   mFolderAddMaxHeight: number = PresetStyleConstants.DEFAULT_FOLDER_ADD_MAX_HEIGHT;
 
   /**
-  * height of add folder dialog
-  */
-  mAddFolderDialogHeight: number = PresetStyleConstants.DEFAULT_APP_ADD_DIALOG_HEIGHT;
-
-  /**
    * toggle size of add app
    */
   mFolderToggleSize: number = PresetStyleConstants.DEFAULT_APP_GRID_TOGGLE_SIZE;
-
-  /**
-   * padding size of add app icon
-   */
-  mAddFolderIconPaddingTop: number = PresetStyleConstants.DEFAULT_ICON_PADDING_TOP;
-
-  /**
-  * size of add app icon
-  */
-  mAddFolderIconSize: number = PresetStyleConstants.DEFAULT_DOCK_ICON_SIZE;
 
   /**
    * name lines of add app
