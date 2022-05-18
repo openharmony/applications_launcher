@@ -341,9 +341,7 @@ export default class LayoutViewModel {
     let gridSize = layoutWidth - 2 * margin;
     let itemSize = (gridSize - (column - 1) * gap) / column;
     Log.showInfo(TAG, `desktopIcon add app itemSize ${itemSize}`);
-    let layoutHeight = layoutWidth + StyleConstants.DEFAULT_APP_ADD_TITLE_SIZE +
-      StyleConstants.DEFAULT_BUTTON_HEIGHT_NUMBER +
-      StyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN_NUMBER;
+    let layoutHeight: number = this.mLauncherLayoutStyleConfig.mAddFolderDialogHeight;
     Log.showInfo(TAG, `desktopIcon add app layoutHeight ${layoutHeight}`);
     let iconSize = (1 - 2 * ratio) * itemSize - linesHeight - this.mDesktopIconNameMargin;
     Log.showInfo(TAG, `desktopIcon add app iconSize ${iconSize}`);

@@ -89,7 +89,7 @@ export default class BigFolderStyleConfig extends AppListStyleConfig {
   /**
    * open folder swiper height
    */
-  mOpenFolderSwiperHeight = StyleConstants.DEFAULT_OPEN_FOLDER_SWIPER_HEIGHT;
+  mOpenFolderSwiperHeight = PresetStyleConstants.DEFAULT_OPEN_FOLDER_SWIPER_HEIGHT;
 
   /**
    * open folder grid gap
@@ -169,6 +169,11 @@ export default class BigFolderStyleConfig extends AppListStyleConfig {
    * size of add app item
    */
   mAddFolderItemSize: number = PresetStyleConstants.DEFAULT_APP_LAYOUT_SIZE;
+
+  /**
+   * size of add app item height
+   */
+  mAddFolderItemHeight: number = PresetStyleConstants.DEFAULT_APP_LAYOUT_HEIGHT;
 
   /**
    * padding top of add app icon
