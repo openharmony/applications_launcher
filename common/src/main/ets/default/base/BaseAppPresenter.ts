@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,11 +18,14 @@ import AppModel from '../model/AppModel';
 import AppListInfoCacheManager from '../cache/AppListInfoCacheManager';
 import ResourceManager from '../manager/ResourceManager';
 import CommonConstants from '../constants/CommonConstants';
+import { InstallStatus } from 'bundle/bundleinstaller';
+import Log from '../utils/Log';
 
+const TAG = 'BaseAppPresenter';
 const KEY_NAME = 'name';
 
 /**
- * 应用列表管理基类
+ * Base class for view models.
  */
 export default class BaseAppPresenter {
   protected mAppModel: AppModel;
@@ -39,12 +42,12 @@ export default class BaseAppPresenter {
 
 
   /**
-   * 启动应用.
+   * Start target ability
    *
-   * @param bundleName 应用包名
-   * @param abilityName ability名
+   * @param bundleName target bundle name
+   * @param abilityName target ability name
    */
-  jumpTo(abilityName: string, bundleName: string) {
+  jumpTo(abilityName: string, bundleName: string): void {
     launcherAbilityManager.startLauncherAbility(abilityName, bundleName);
   }
 
@@ -54,55 +57,55 @@ export default class BaseAppPresenter {
    * @param bundleName
    * @param abilityName
    */
-  jumpToForm(abilityName: string, bundleName: string, cardId: number) {
-    launcherAbilityManager.startAbilityForResult(abilityName, bundleName , cardId);
+  jumpToForm(abilityName: string, bundleName: string, cardId: number): void {
+    launcherAbilityManager.startAbilityFormEdit(abilityName, bundleName, cardId);
   }
 
   /**
-   * 启动桌面设置.
+   * Start launcher settings page.
    */
-  jumpToSetting() {
+  jumpToSetting(): void {
     this.jumpTo(CommonConstants.SETTING_ABILITY, CommonConstants.LAUNCHER_BUNDLE);
   }
 
   /**
-   * 卸载应用.
+   * Uninstall target app by bundle name.
    *
-   * @params uninstallBundleName 卸载应用的包名
-   * @params isUninstallAble 是否允许卸载
+   * @param uninstallBundleName bundle name to uninstall
+   * @param isUninstallable true if target app is uninstallable.
    */
-  uninstallApp(uninstallBundleName: string, isUninstallAble: boolean) {
-    if (!isUninstallAble) {
+  uninstallApp(uninstallBundleName: string, isUninstallable: boolean): void {
+    if (!isUninstallable) {
       this.informUninstallResult(CommonConstants.UNINSTALL_FORBID);
     } else {
-      launcherAbilityManager.uninstallLauncherAbility(uninstallBundleName, this.uninstallAppCallback.bind(this));
+      void launcherAbilityManager.uninstallLauncherAbility(uninstallBundleName, this.uninstallAppCallback.bind(this));
     }
   }
 
-  private uninstallAppCallback(resultData) {
-    this.informUninstallResult(resultData.code);
+  private uninstallAppCallback(resultData: InstallStatus): void {
+    this.informUninstallResult(resultData.status);
   }
 
-  registerAppListChangeCallback() {
+  registerAppListChangeCallback(): void {
     this.mAppModel.registerStateChangeListener(this.listener);
   }
 
-  unregisterAppListChangeCallback() {
-    console.info('Launcher appPresenter unregisterAppListChangeCallback');
+  unregisterAppListChangeCallback(): void {
+    Log.showInfo(TAG, 'unregisterAppListChangeCallback');
     this.mAppModel.unregisterAppStateChangeListener(this.listener);
   }
 
-  appListChangeListener(appList) {
+  appListChangeListener(appList: []): void {
     this.regroupDataAppListChange(appList);
   }
 
-  regroupDataAppListChange(callbackList) {
+  regroupDataAppListChange(callbackList: []): void {
   }
 
-  informUninstallResult(resultCode) {
+  informUninstallResult(resultCode: number): void {
   }
 
-  getAppName(cacheKey) {
+  getAppName(cacheKey: string) {
     return this.mResourceManager.getAppResourceCache(cacheKey, KEY_NAME);
   }
 }

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,14 +22,24 @@ import FormLayoutConfig from '../../../../../../../common/src/main/ets/default/l
  * Form layer initialization loader
  */
 class FormPreLoader extends BaseModulePreLoader {
+
+  /**
+   * Add configuration objects to layout configuration management class.
+   */
   protected loadConfig(): void {
     LayoutConfigManager.addConfigToManager(FormLayoutConfig.getInstance());
     LayoutConfigManager.addConfigToManager(FormStyleConfig.getInstance());
   }
 
+  /**
+   * Initialize load data.
+   */
   protected loadData(): void {
   }
 
+  /**
+   * Release module config and data.
+   */
   releaseConfigAndData(): void {
     LayoutConfigManager.removeConfigFromManager();
   }

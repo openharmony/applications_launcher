@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,21 +14,21 @@
  */
 
 /**
- * Stage基类
+ * Stage base class
  */
 export default class BaseStage {
   constructor() {
   }
 
   /**
-   * Stage启动时的回调
+   * Callback when Stage starts
    */
   onCreate(): void {
     console.info('Launcher BaseStage onCreate!');
   }
 
   /**
-   * Stage退出时回调
+   * Callback when stage exits
    */
   onDestroy(): void {
     console.info('Launcher BaseStage onDestroy!');

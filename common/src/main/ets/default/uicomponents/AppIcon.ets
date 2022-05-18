@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,37 +16,38 @@
 import ResourceManager from '../manager/ResourceManager';
 import BadgeManager from '../manager/BadgeManager';
 import StyleConstants from '../constants/StyleConstants';
+import CheckEmptyUtils from '../utils/CheckEmptyUtils';
+import Log from '../utils/Log';
+
+const TAG = 'AppIcon';
 
 @Component
 export default struct AppIcon {
-  @Prop iconSize: number;
-  @Prop @Watch("updateIcon") appIcon: string;
+  @Prop iconSize: number | string;
+  @Prop iconId: string;
   @Prop bundleName: string;
-  @State icon: string = ' ';
-  @State size: number = 1;
-  useCache: boolean = true;
-  @Prop @Watch("updateBadge") badgeNumber: number;
+  @Prop icon: string;
+  @Prop badgeNumber: number;
   @State badge: number = 0;
+  @State scale: number = 1;
+  useCache: boolean = true;
   badgeFontSize: number = StyleConstants.DEFAULT_BADGE_FONT_SIZE;
   private mResourceManager;
   private mBadgeManager;
   private mDefaultAppIcon;
 
   public aboutToAppear(): void  {
-    this.mDefaultAppIcon = StyleConstants.DEFAULT_ICON;
-    this.icon = this.mDefaultAppIcon;
     this.mResourceManager = ResourceManager.getInstance();
     this.mBadgeManager = BadgeManager.getInstance();
     this.updateIcon();
-    this.updateBadge();
   }
 
-  public iconLoadCallback(image) {
+  public iconLoadCallback(image: string) {
     this.icon = image;
   }
 
   public updateIcon() {
-    this.mResourceManager.getAppIconWithCache(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    this.mResourceManager.getAppIconWithCache(this.iconId, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
   }
 
   public badgeLoadCallback(badgeNumber) {
@@ -78,26 +79,25 @@ export default struct AppIcon {
       .height(this.iconSize)
     }
     .onHover((isHover: boolean) => {
-      console.info('Launcher AppIcon onHover isHover ' + isHover);
-      this.size = isHover ? 1.15 : 1
+      Log.showInfo(TAG, `onHover isHover ${isHover}`);
     })
     .onTouch((event: TouchEvent) => {
       if (event.type === TouchType.Down) {
-        this.size = 0.9;
+        this.scale = 0.9;
       } else if (event.type === TouchType.Up) {
-        this.size = 1;
+        this.scale = 1;
       }
     })
     .onMouse((event: MouseEvent) => {
       if (event.button == MouseButton.Left && event.action == MouseAction.Press) {
-        this.size = 0.9;
+        this.scale = 0.9;
       } else if (event.button == MouseButton.Left && event.action == MouseAction.Release) {
-        this.size = 1;
+        this.scale = 1;
       }
     })
     .width(this.iconSize)
     .height(this.iconSize)
-    .scale({ x: this.size, y: this.size })
+    .scale({ x: this.scale, y: this.scale })
     .animation({ duration: 100 })
   }
 }

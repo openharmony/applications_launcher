@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,6 +19,7 @@ import AppListPresenter from '../common/presenter/AppListPresenter';
 import FeatureConstants from '../common/constants/FeatureConstants';
 import AppList from '../../../../../../../common/src/main/ets/default/uicomponents/AppList.ets';
 import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
+import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
 import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog.ets';
 
 let mAppListPresenter: AppListPresenter;
@@ -27,6 +28,7 @@ let mAppListPresenter: AppListPresenter;
 export default struct ListLayout {
   @StorageLink('listInfo') appListInfo: [] = [];
   @StorageLink('uninstallAppInfo') appInfo: any = {};
+  dialogName: string = "";
 
   mAppCenterListStyleConfig: AppCenterListStyleConfig = null;
 
@@ -35,6 +37,9 @@ export default struct ListLayout {
     mAppListPresenter.getAppList();
     mAppListPresenter.registerAppListChangeCallback();
     this.mAppCenterListStyleConfig = LayoutConfigManager.getStyleConfig(AppCenterListStyleConfig.APP_LIST_STYLE_CONFIG, FeatureConstants.FEATURE_NAME);
+    ResourceManager.getInstance().getStringByResource($r('app.string.uninstall')).then((resName) => {
+      this.dialogName = resName;
+    });
   }
 
   dialogController: CustomDialogController = new CustomDialogController({
@@ -49,7 +54,7 @@ export default struct ListLayout {
       confirm: () => {
         mAppListPresenter.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
       },
-      dialogName: $r('app.string.uninstall'),
+      dialogName: this.dialogName,
       dialogContent: this.appInfo.appName + ' ?',
     }),
     cancel: this.cancelDialog,
@@ -105,6 +110,7 @@ struct ShowDialog {
         }
         .backgroundColor(StyleConstants.DEFAULT_BG_COLOR)
         .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
+        .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
         .onClick(() => {
           mAppListPresenter.intoSetting();
           this.controller.close();
@@ -122,6 +128,7 @@ struct ShowDialog {
         }
         .backgroundColor(StyleConstants.DEFAULT_BG_COLOR)
         .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
+        .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
         .onClick(() => {
           mAppListPresenter.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
           this.controller.close();

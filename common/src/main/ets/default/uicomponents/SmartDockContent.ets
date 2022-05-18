@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,10 +21,9 @@ import FeatureConstants from '../../../../../../feature/smartdock/src/main/ets/d
 @Component
 export default struct SmartDockContent {
   @Link @Watch('onDockListChange') dockItemList: Array<DockItemInfo>;
-  @StorageLink('dragLocation') @Watch('onTouchEventUpdate') dragLocation: string= "";
+  @StorageLink('dragLocation') @Watch('onTouchEventUpdate') dragLocation: string = "";
   mSmartDockStyleConfig: SmartDockStyleConfig;
   mMaxNum: number;
-  mListWidth: number;
   onItemClick: Function;
   onItemTouch: Function;
   onDockListChangeFunc: Function;
@@ -33,7 +32,7 @@ export default struct SmartDockContent {
   popup: {
     show: boolean,
     showItem: string,
-    popup: PopupOption | CustomPopupOption
+    popup
   };
   onHoverEvent: Function;
 
@@ -60,12 +59,11 @@ export default struct SmartDockContent {
       AppStorage.SetOrCreate('dragFocus', FeatureConstants.FEATURE_NAME);
       this.onItemTouch(event);
     })
-    .width(this.mListWidth)
+    .width(this.getListWidth(this.dockItemList))
     .height(this.mSmartDockStyleConfig.mDockHeight)
     .backgroundColor(this.mSmartDockStyleConfig.mBackgroundColor)
     .borderRadius(this.mSmartDockStyleConfig.mDockRadius)
     .backdropBlur(this.mSmartDockStyleConfig.mBackdropBlur)
-    .padding(this.mSmartDockStyleConfig.mDockPadding)
     .visibility(this.getListWidth(this.dockItemList) === 0 ? Visibility.None : Visibility.Visible)
   }
 
@@ -85,11 +83,10 @@ export default struct SmartDockContent {
 
   private onDockListChange() {
     this.onDockListChangeFunc();
-    this.mListWidth = this.getListWidth(this.dockItemList);
   }
 
   private onTouchEventUpdate() {
-    if (AppStorage.Get('dragFocus') == FeatureConstants.FEATURE_NAME) {
+    if (AppStorage.Get('device') === 'phone' || AppStorage.Get('dragFocus') == FeatureConstants.FEATURE_NAME){
       this.onTouchEventUpdateFunc();
     }
   }

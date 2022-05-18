@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "form",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+    ],
+    "uiSyntax": "ets"
+  }
+}

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,47 +20,49 @@ export default class AppItemInfo {
   /**
    * Indicates app id.
    */
-  appId: string;
+  appId: string | undefined;
 
   /**
    * Indicates app name.
    */
-  appName: string;
+  appName: string | undefined;
 
   /**
    * Indicates appIconId.
    */
-  appIconId: string;
+  appIconId: string | undefined;
 
   /**
    * Indicates appLabelId.
    */
-  appLabelId: string;
+  appLabelId: string | undefined;
 
   /**
    * Indicates bundleName.
    */
-  bundleName: string;
+  bundleName: string | undefined;
 
   /**
    * Indicates abilityName.
    */
-  abilityName: string;
+  abilityName: string | undefined;
 
   /**
    * Indicates is system App.
    */
-  isSystemApp: boolean;
+  isSystemApp: boolean | undefined;
 
   /**
    * Indicates is uninstallAble.
    */
-  isUninstallAble: boolean;
+  isUninstallAble: boolean | undefined;
 
   /**
    * badge number
    */
-  badgeNumber: number;
+  badgeNumber: number | undefined;
 
-  checked: boolean;
+  checked: boolean | undefined;
+
+  installTime: string | undefined;
 }

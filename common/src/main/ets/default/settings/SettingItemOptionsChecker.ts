@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,8 +14,8 @@
  */
 
 /**
- * 桌面设置业务注册的接口函数，用于获取哪个设置项被选中
+ * Interface for launcher settings items.
  */
 export default interface SettingItemOptionsChecker {
   (): string
-};;;;;;;;;;
+}

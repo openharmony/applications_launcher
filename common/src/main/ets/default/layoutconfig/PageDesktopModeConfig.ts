@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,19 +18,17 @@ import defaultLayoutConfig from '../configs/DefaultLayoutConfig';
 import ILayoutConfig from './ILayoutConfig';
 
 /**
- * 桌面工作空间布局模式配置
+ * Desktop Workspace Layout Mode Configuration
  */
 export default class PageDesktopModeConfig extends ILayoutConfig {
   /**
-   * 工作空间布局模式配置索引
+   * Workspace layout mode configuration index
    */
   static DESKTOP_MODE_CONFIG = 'DesktopModeConfig';
 
   private static readonly APP_PAGE_START_CONFIG = 'AppStartPageType';
 
   private static readonly GRID_CONFIG = 'GridConfig';
-
-  private static readonly sInstance: PageDesktopModeConfig = null;
 
   private mAppStartPageType: string = defaultLayoutConfig.defaultAppPageStartConfig;
 
@@ -43,9 +41,9 @@ export default class PageDesktopModeConfig extends ILayoutConfig {
   }
 
   /**
-   * 获取工作空间布局模式配置实例
+   * Get an instance of the workspace layout mode configuration
    */
-  static getInstance() {
+  static getInstance(): PageDesktopModeConfig {
     if (globalThis.PageDesktopModeConfigInstance == null) {
       globalThis.PageDesktopModeConfigInstance = new PageDesktopModeConfig();
       globalThis.PageDesktopModeConfigInstance.initConfig();
@@ -82,59 +80,59 @@ export default class PageDesktopModeConfig extends ILayoutConfig {
   }
 
   /**
-   * 更新默认桌面模式
+   * Update default desktop mode
    *
-   * @param startPageType 默认桌面模式
+   * @param startPageType:Default desktop mode
    */
-  updateAppStartPageType(startPageType: string) {
+  updateAppStartPageType(startPageType: string): void {
     this.mAppStartPageType = startPageType;
     super.persistConfig();
   }
 
   /**
-   * 获取默认桌面模式
+   * Get default desktop mode
    *
-   * @return 默认桌面模式
+   * @return startPageType:Default desktop mode
    */
-  getAppStartPageType() {
+  getAppStartPageType(): string {
     return this.mAppStartPageType;
   }
 
   /**
-   * 更新网格布局模式
+   * Update grid layout mode
    *
-   * @param gridConfig 网格布局模式
+   * @param gridConfig
    */
-  updateGridConfig(gridConfig: number) {
+  updateGridConfig(gridConfig: number): void {
     this.mGridConfig = gridConfig;
     super.persistConfig();
   }
 
   /**
-   * 获取网格布局模式
+   * Get grid layout mode
    *
-   * @return 网格布局模式
+   * @return gridConfig:grid layout mode
    */
-  getGridConfig() {
+  getGridConfig(): number {
     return this.mGridConfig;
   }
 
   /**
-   * 更新布局设备类型
+   * Update layout device type
    *
-   * @param deviceType 设备类型
+   * @param deviceType
    */
-  updateDeviceType(deviceType: string) {
+  updateDeviceType(deviceType: string): void {
     this.mDeviceType = deviceType;
     super.persistConfig();
   }
 
   /**
-   * 获取布局设备类型
+   * Get layout device type
    *
-   * @return 设备类型
+   * @return deviceType
    */
-  getDeviceType() {
+  getDeviceType(): string {
     return this.mDeviceType;
   }
 }

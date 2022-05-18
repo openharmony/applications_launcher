@@ -15,12 +15,9 @@
 
 import featureAbility from '@ohos.ability.featureAbility';
 import settings from '@ohos.settings';
-import Log from '../utils/Log';
-
-const TAG = 'SettingsDataManager';
 
 /**
- * settingsData Manager
+ * Wrapper class for settings interfaces.
  */
 class SettingsDataManager {
 

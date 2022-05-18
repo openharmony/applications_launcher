@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,11 +21,16 @@ import AppMenu from './AppMenu.ets';
 import CommonConstants from '../constants/CommonConstants';
 import StyleConstants from '../constants/StyleConstants';
 import ScrollerComponent from './ScrollerComponent.ets';
+import ResourceManager from '../manager/ResourceManager';
+import CheckEmptyUtils from '../utils/CheckEmptyUtils';
+import Log from '../utils/Log';
 
 let mAppListStyleConfig: AppListStyleConfig = null;
+const TAG = 'AppList';
 
 @Component
 export default struct AppList {
+  @StorageLink('sysUiRecentOnClickEvent') @Watch('sysUiRecentOnClick') sysUiRecentOnClickEvent: number = 0;
   @State isHover: boolean = false;
   @State showPopup: boolean = false;
   @State onHoverItem: string = '';
@@ -39,7 +44,7 @@ export default struct AppList {
   popup: {
     show: boolean,
     showItem: string,
-    popup: PopupOption | CustomPopupOption
+    popup
   } = { show: false, showItem: '', popup: null };
   onClickWithPopup: boolean = false;
   autoCancel: boolean = false;
@@ -47,6 +52,11 @@ export default struct AppList {
 
   private aboutToAppear(): void {
     mAppListStyleConfig = this.appListStyleConfig;
+  }
+
+  private sysUiRecentOnClick() {
+    this.showPopup = false;
+    this.popup = { show: false, showItem: '', popup: null };
   }
 
   @Builder popupBuilder() {
@@ -81,12 +91,7 @@ export default struct AppList {
       }
       this.getShowPopup();
     })
-    .onClick((isScrollHover: boolean) => {
-      if (isScrollHover) {
-        this.isScrollHover = true;
-      } else {
-        this.isScrollHover = false;
-      }
+    .onClick(() => {
       this.getShowPopup();
     })
   }
@@ -112,7 +117,8 @@ export default struct AppList {
           if (mAppListStyleConfig.mNameDisplaySide) {
             HorizontalListItem({
               appInfo: item,
-              buildMenu: this.buildMenu
+              buildMenu: this.buildMenu,
+              itemOffset: mAppListStyleConfig.mItemOffset
             })
           } else {
             VerticalListItem({
@@ -121,7 +127,7 @@ export default struct AppList {
             })
           }
         }
-        .bindPopup(this.showPopup && item.bundleName == this.onHoverItem, {
+        .bindPopup(this.showPopup && item.bundleName == this.onHoverItem && !AppStorage.Get('smartDockShowMenu') as boolean, {
           builder: this.popupBuilder,
           placement: Placement.Top,
           enableArrow: true,
@@ -129,10 +135,13 @@ export default struct AppList {
           maskColor: ('rgba(250,250,250,0)'),
           popupColor: ('rgba(250,250,250,0.6)'),
           onStateChange: (e) => {
-            if(!e.isVisible){
-              this.showPopup = false;
-              this.onHoverItem = ''
+            if (!e.isVisible && this.autoCancel) {
+              this.popup = { show: false, showItem: '', popup: null };
+              this.onHoverItem = '';
               this.onClickWithPopup = false;
+              this.autoCancel = false;
+              this.showPopup = false;
+              AppStorage.SetOrCreate('snapshotList', []);
               AppStorage.SetOrCreate('recentShowPopup', false);
             }
             if (this.updateData) {
@@ -152,15 +161,14 @@ export default struct AppList {
         })
         .onClick((event: ClickEvent) => {
           this.onItemClick(event, item);
-          let shapshotList:[] = AppStorage.Get("shapshotList");
-          this.onClickWithPopup = AppStorage.Get("recentShowPopup");
-          console.info('Launcher AppList onClick this.onClickWithPopup:' + this.onClickWithPopup);
-          if (this.onClickWithPopup && shapshotList?.length > 1) {
+          this.onClickWithPopup = AppStorage.Get('recentShowPopup');
+          Log.showInfo(TAG, `onClick this.onClickWithPopup: ${this.onClickWithPopup}`);
+          if (this.onClickWithPopup) {
             this.autoCancel = true;
-            this.onHoverEvent(true, item.bundleName);
             this.showPopup = true
             this.onHoverItem = item.bundleName;
           }
+          AppStorage.SetOrCreate('recentShowPopup', false);
         })
       }, (item) => JSON.stringify(item))
     }
@@ -175,6 +183,7 @@ struct HorizontalListItem {
   @State isShow: boolean = false;
   appInfo: AppItemInfo = null;
   buildMenu: Function = null;
+  itemOffset: {} = { x: 0, y: 0 }
   private menuInfo;
 
   private aboutToAppear(): void {
@@ -206,6 +215,7 @@ struct HorizontalListItem {
       LongPressGesture({ repeat: false })
         .onAction((event: GestureEvent) => {
           this.isShow = true;
+          AppStorage.SetOrCreate('isLongPress', true);
         })
       )
       .bindPopup(this.isShow, {
@@ -216,6 +226,7 @@ struct HorizontalListItem {
           if (!e.isVisible) {
             this.isShow = false;
           }
+          AppStorage.SetOrCreate('smartDockShowMenu', e.isVisible)
         },
         autoCancel: true
       })
@@ -227,11 +238,12 @@ struct HorizontalListItem {
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
           event.stopPropagation();
-          console.info('Launcher AppList onMouse MouseButton Right');
+          Log.showInfo(TAG, 'onMouse MouseButton Right');
           AppStorage.SetOrCreate('selectDesktopAppItem', null);
           this.isShow = true;
         }
       })
+      .offset(this.itemOffset)
     } else {
       Column() {
         AppItem({
@@ -252,8 +264,9 @@ struct VerticalListItem {
     Column() {
       AppIcon({
         iconSize: mAppListStyleConfig.mIconSize,
-        appIcon: this.appInfo.appIconId,
+        iconId: this.appInfo.appIconId,
         bundleName: this.appInfo.bundleName,
+        icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId, this.appInfo.bundleName),
         badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
       })
       if (mAppListStyleConfig.mWithAppName) {
@@ -296,8 +309,9 @@ struct AppItem {
     Row() {
       AppIcon({
         iconSize: mAppListStyleConfig.mIconSize,
-        appIcon: this.appInfo.appIconId,
+        iconId: this.appInfo.appIconId,
         bundleName: this.appInfo.bundleName,
+        icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId, this.appInfo.bundleName),
         badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
       })
       if (mAppListStyleConfig.mWithAppName) {
@@ -318,7 +332,6 @@ struct AppItem {
     }
     .width(mAppListStyleConfig.mListItemWidth)
     .height(mAppListStyleConfig.mListItemHeight)
-    .padding(mAppListStyleConfig.mItemPadding)
     .backgroundColor(mAppListStyleConfig.mItemBackgroundColor)
     .borderRadius(mAppListStyleConfig.mItemBorderRadius)
   }

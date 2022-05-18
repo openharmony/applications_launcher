@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,6 +16,7 @@
 import AppListStyleConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/AppListStyleConfig';
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import FeatureConstants from './constants/FeatureConstants';
+import LayoutViewModel from '../../../../../../../common/src/main/ets/default/viewmodel/LayoutViewModel';
 
 /**
  * Form style config
@@ -86,23 +87,49 @@ export default class FormStyleConfig extends AppListStyleConfig {
   }
 
   /**
-   * get form style config instance
+   * Get form style configuration instance.
+   *
+   * @return {object} FormStyleConfig singleton
    */
-  static getInstance() {
+  static getInstance(): FormStyleConfig {
     if (globalThis.FormStyleConfigInstance == null) {
       globalThis.FormStyleConfigInstance = new FormStyleConfig();
     }
+    globalThis.FormStyleConfigInstance.initConfig();
     return globalThis.FormStyleConfigInstance;
   }
 
+  /**
+   * Init form style configuration.
+   */
   initConfig(): void {
+    const result = LayoutViewModel.getInstance().calculateForm();
+    this.mFormWidth.set(CommonConstants.CARD_DIMENSION_1x2.toString(), result.widthDimension1);
+    this.mFormHeight.set(CommonConstants.CARD_DIMENSION_1x2.toString(), result.heightDimension1);
+    this.mFormWidth.set(CommonConstants.CARD_DIMENSION_2x2.toString(), result.widthDimension2);
+    this.mFormHeight.set(CommonConstants.CARD_DIMENSION_2x2.toString(), result.heightDimension2);
+    this.mFormWidth.set(CommonConstants.CARD_DIMENSION_2x4.toString(), result.widthDimension3);
+    this.mFormHeight.set(CommonConstants.CARD_DIMENSION_2x4.toString(), result.heightDimension3);
+    this.mFormWidth.set(CommonConstants.CARD_DIMENSION_4x4.toString(), result.widthDimension4);
+    this.mFormHeight.set(CommonConstants.CARD_DIMENSION_4x4.toString(), result.heightDimension4);
+    this.mIconNameMargin = result.mIconNameMargin;
   }
 
+  /**
+   * Get form style configuration level.
+   *
+   * @return {string} feature-level layout configuration
+   */
   getConfigLevel(): string {
     return CommonConstants.LAYOUT_CONFIG_LEVEL_FEATURE;
   }
 
-  getFeatureName() {
+  /**
+   * Get form style feature name.
+   *
+   * @return {string} feature name
+   */
+  getFeatureName(): string {
     return FeatureConstants.FEATURE_NAME;
   }
 }

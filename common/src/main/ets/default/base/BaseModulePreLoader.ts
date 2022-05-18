@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,13 +14,13 @@
  */
 
 /**
- * 模块初始内容加载器基类
- * 进行配置和数据的提前加载
+ * Module initial content loader base class.
+ * Perform early loading of configuration and data.
  */
 export default abstract class BaseModulePreLoader {
 
   /**
-   * 执行初始化加载动作
+   * Perform initial loading action.
    */
   load(): void {
     this.loadConfig();
@@ -28,17 +28,17 @@ export default abstract class BaseModulePreLoader {
   }
 
   /**
-   * 初始化加载配置
+   * Initial load configuration.
    */
   protected abstract loadConfig(): void;
 
   /**
-   * 初始化加载数据
+   * Initialize load data.
    */
   protected abstract loadData(): void;
 
   /**
-   * 模块释放
+   * module release
    */
   abstract releaseConfigAndData(): void;
 }

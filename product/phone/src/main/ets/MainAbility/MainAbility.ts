@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,16 +26,15 @@ export default class MainAbility extends ServiceExtension {
   onCreate(want: Want): void {
     Log.showInfo(TAG,'onCreate start');
     this.initGlobalConst();
-    windowManager.createWindow(this.context, windowManager.DESKTOP_WINDOW_NAME, 2001, 'pages/EntryView');
+    windowManager.createWindow(this.context, windowManager.DESKTOP_WINDOW_NAME,
+      windowManager.DESKTOP_RANK, 'pages/EntryView');
   }
 
   private initGlobalConst(): void {
     globalThis.desktopContext = this.context;
-    // ServiceExtension can't access callee.
-    // globalThis.callee = this.callee;
-    globalThis.createRecentWindow = (() => {
-      Log.showInfo(TAG, 'createRecentWindow Begin');
-      windowManager.createWindowIfAbsent(this.context, windowManager.RECENT_WINDOW_NAME, 2115, 'pages/RecentView');
+    globalThis.createWindowWithName = ((windowName: string, windowRank: number) => {
+      Log.showInfo(TAG, 'createWindowWithName Begin');
+      windowManager.createWindowIfAbsent(this.context, windowName, windowRank, 'pages/' + windowName);
     });
     this.startGestureNavigation();
   }

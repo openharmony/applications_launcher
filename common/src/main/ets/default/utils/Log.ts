@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,7 +26,7 @@ export default class Log {
      * @param {string} tag - Page or class tag
      * @param {string} log - Log needs to be printed
      */
-  static showInfo(tag, log) {
+  static showInfo(tag: string, log: string) {
     console.info(`${TAG} tag: ${tag} --> ${log}`);
   }
 
@@ -36,7 +36,7 @@ export default class Log {
      * @param {string} tag - Page or class tag
      * @param {string} log - Log needs to be printed
      */
-  static showDebug(tag, log) {
+  static showDebug(tag: string, log: string) {
     console.debug(`${TAG} tag: ${tag} --> ${log}`);
   }
 
@@ -46,7 +46,7 @@ export default class Log {
      * @param {string} tag - Page or class tag
      * @param {string} log - Log needs to be printed
      */
-  static showError(tag, log) {
+  static showError(tag: string, log: string) {
     console.error(`${TAG} tag: ${tag} --> ${log}`);
   }
 }

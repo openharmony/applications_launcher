@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,31 +15,31 @@
 import SettingItemOption from './SettingItemOption';
 
 /**
- * 设置项信息
+ * Item info for launcher settings.
  */
 export default class SettingItemInfo {
   /**
-   * 索引值，设置项在设置项列表中的索引值
+   * Index for setting item.
    */
-  ida: number;
+  ida: number | undefined;
 
   /**
-   * 设置项名称
+   * Setting item name
    */
-  settingName: string;
+  settingName: string | undefined;
 
   /**
-   * 设置项的值，为下面设置项选项列表中选中的选项的名称
+   * Current value of this item.
    */
-  settingValue: string;
+  settingValue: string | undefined;
 
   /**
-   * 设置项选项列表
+   * Option list for this item.
    */
   valueList: SettingItemOption[] = [];
 
   /**
    * settings option type.
    */
-  settingType: number;
+  settingType: number | undefined;
 }

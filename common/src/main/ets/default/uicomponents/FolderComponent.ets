@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import AppIcon from './AppIcon.ets';
 import AppName from './AppName.ets';
 import StyleConstants from '../constants/StyleConstants';
@@ -20,6 +21,7 @@ import PresetStyleConstants from '../constants/PresetStyleConstants';
 import SettingsModel from '../model/SettingsModel';
 import AppMenu from './AppMenu.ets';
 import Log from '../utils/Log';
+import ResourceManager from '../manager/ResourceManager';
 
 const TAG = 'FolderComponent';
 
@@ -62,6 +64,7 @@ export default struct FolderComponent {
   buildMenu: Function = null;
   folderNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   iconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
+  isSelect?: boolean;
 
   private aboutToAppear(): void  {
     Log.showInfo(TAG, `aboutToAppear`);
@@ -99,9 +102,9 @@ export default struct FolderComponent {
     this.mSuperposeAppList[1].alignContent = Alignment.Center;
     this.mSuperposeAppList[2].alignContent = Alignment.BottomEnd;
 
-    Log.showInfo(TAG, `this.superposeIconVisible:${this.superposeIconVisible}`);
-    Log.showInfo(TAG, `this.mFolderItem.layoutInfo[0].length:${this.mFolderItem.layoutInfo[0].length}`);
-    Log.showInfo(TAG, `this.mSuperposeAppList.length:${this.mSuperposeAppList.length}`);
+    Log.showInfo(TAG, `superposeIconVisible:${this.superposeIconVisible}`);
+    Log.showInfo(TAG, `FolderItem.layoutInfo[0].length:${this.mFolderItem.layoutInfo[0].length}`);
+    Log.showInfo(TAG, `SuperposeAppList length:${this.mSuperposeAppList.length}`);
   }
 
   @Builder MenuBuilder() {
@@ -130,14 +133,14 @@ export default struct FolderComponent {
     }
   }
 
-  private showAnimate(animateScale: number, animateOpacity:number, isMoveFolder: boolean) {
+  private showAnimate(animateScale: number, animateOpacity: number, isMoveFolder: boolean) {
     let positionX = 0;
     let positionY = 0;
     if (this.onGetPosition) {
       this.onGetPosition(this.getPosition.bind(this));
       if (isMoveFolder) {
         positionX = this.animateFolderPositionX;
-        positionY= this.animateFolderPositionY;
+        positionY = this.animateFolderPositionY;
       }
     }
     animateTo({
@@ -170,144 +173,155 @@ export default struct FolderComponent {
 
   build() {
     Column() {
-      Badge({
-        count: this.badgeNumber,
-        maxCount: StyleConstants.MAX_BADGE_COUNT,
-        style: {
-          color: StyleConstants.DEFAULT_FONT_COLOR,
-          fontSize: StyleConstants.DEFAULT_BADGE_FONT_SIZE,
-          badgeSize: (this.badgeNumber > 0 ? StyleConstants.DEFAULT_BADGE_SIZE : 0),
-          badgeColor: Color.Red,
-        }
-      }) {
-        Stack() {
-          Column() {
+      Column() {
+        Badge({
+          count: this.badgeNumber,
+          maxCount: StyleConstants.MAX_BADGE_COUNT,
+          style: {
+            color: StyleConstants.DEFAULT_FONT_COLOR,
+            fontSize: StyleConstants.DEFAULT_BADGE_FONT_SIZE,
+            badgeSize: (this.badgeNumber > 0 ? StyleConstants.DEFAULT_BADGE_SIZE : 0),
+            badgeColor: Color.Red,
           }
-          .backgroundColor(Color.White)
-          .borderRadius(24)
-          .opacity(0.5)
-          .height(this.folderGridSize)
-          .width(this.folderGridSize)
-          Grid() {
-            ForEach(this.mShowAppList, (item) => {
-              GridItem() {
-                AppIcon({
-                  iconSize: this.appIconSize,
-                  appIcon: item.appIconId,
-                  bundleName: item.bundleName,
-                  badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
+        }) {
+          Stack() {
+            Column() {
+            }
+            .backgroundColor(Color.White)
+            .borderRadius(24)
+            .opacity(0.5)
+            .height(this.folderGridSize)
+            .width(this.folderGridSize)
+
+            Grid() {
+              ForEach(this.mShowAppList, (item) => {
+                GridItem() {
+                  AppIcon({
+                    iconSize: this.appIconSize,
+                    iconId: item.appIconId,
+                    icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName),
+                    bundleName: item.bundleName,
+                    badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
+                  })
+                }
+                .height(StyleConstants.PERCENTAGE_100)
+                .width(StyleConstants.PERCENTAGE_100)
+                .onClick((event: ClickEvent) => {
+                  if (this.onAppIconClick) {
+                    this.onAppIconClick(event, item);
+                  }
+                })
+              }, (item) => JSON.stringify(item))
+
+              if (this.mSuperposeAppList.length > 0) {
+                GridItem() {
+                  Stack() {
+                    ForEach(this.mSuperposeAppList, (item) => {
+                      Stack({ alignContent: item.alignContent }) {
+                        if (item.isEmpty) {
+                          Column() {
+                          }
+                          .backgroundColor(Color.White)
+                          .borderRadius(10)
+                          .opacity(0.5)
+                          .width(StyleConstants.PERCENTAGE_75)
+                          .height(StyleConstants.PERCENTAGE_75)
+                          .margin({ left: 3, top: 3 })
+                        } else {
+                          AppIcon({
+                            iconSize: '80%',
+                            iconId: item.appIconId,
+                            icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName),
+                            bundleName: item.bundleName,
+                            badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
+                          })
+                        }
+                      }
+                      .width(StyleConstants.PERCENTAGE_100)
+                      .height(StyleConstants.PERCENTAGE_100)
+                    }, (item) => JSON.stringify(item))
+                  }
+                  .width(this.isPad ?
+                    StyleConstants.DEFAULT_FOLDER_APP_ITEM_WIDTH_SMALL :
+                    StyleConstants.DEFAULT_FOLDER_APP_ITEM_WIDTH)
+                  .height(this.isPad ?
+                    StyleConstants.DEFAULT_FOLDER_APP_ITEM_WIDTH_SMALL :
+                    StyleConstants.DEFAULT_FOLDER_APP_ITEM_WIDTH)
+                }
+                .visibility(this.superposeIconVisible ? Visibility.Visible : Visibility.Hidden)
+                .width(StyleConstants.PERCENTAGE_100)
+                .height(StyleConstants.PERCENTAGE_100)
+                .onClick((event: ClickEvent) => {
+                  Log.showInfo(TAG, `last item onClick`);
+                  this.showAnimate(1.5, 0, true);
+                  if (this.onOpenFolderClick) {
+                    this.folderAnimateData.folderId = this.mFolderItem.folderId;
+                    this.folderAnimateData.isOpenFolder = true;
+                    AppStorage.SetOrCreate('folderAnimateData', this.folderAnimateData);
+                    this.onOpenFolderClick(event, this.mFolderItem);
+                  }
                 })
               }
-              .height(StyleConstants.PERCENTAGE_100)
-              .width(StyleConstants.PERCENTAGE_100)
-              .onClick((event: ClickEvent) => {
-                if (this.onAppIconClick) {
-                  this.onAppIconClick(event, item);
-                }
-              })
-            }, (item) => JSON.stringify(item))
-
-            if (this.mSuperposeAppList.length > 0) {
-              GridItem() {
-                Stack() {
-                  ForEach(this.mSuperposeAppList, (item) => {
-                    Stack({ alignContent: item.alignContent }) {
-                      if (item.isEmpty) {
-                        Column() {
-                        }
-                        .backgroundColor(Color.White)
-                        .borderRadius(10)
-                        .opacity(0.5)
-                        .width(StyleConstants.PERCENTAGE_75)
-                        .height(StyleConstants.PERCENTAGE_75)
-                        .margin({ left: 3, top: 3 })
-                      } else {
-                        AppIcon({
-                          iconSize: '80%',
-                          appIcon: item.appIconId,
-                          bundleName: item.bundleName,
-                          badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
-                        })
-                      }
-                    }
-                    .width(StyleConstants.PERCENTAGE_100)
-                    .height(StyleConstants.PERCENTAGE_100)
-                  }, (item) => JSON.stringify(item))
-                }
-                .width(this.isPad ?
-                  StyleConstants.DEFAULT_FOLDER_APP_ITEM_WIDTH_SMALL :
-                  StyleConstants.DEFAULT_FOLDER_APP_ITEM_WIDTH)
-                .height(this.isPad ?
-                  StyleConstants.DEFAULT_FOLDER_APP_ITEM_WIDTH_SMALL :
-                  StyleConstants.DEFAULT_FOLDER_APP_ITEM_WIDTH)
+            }
+            .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
+            .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+            .padding(this.gridMargin)
+            .columnsTemplate('1fr 1fr 1fr')
+            .rowsTemplate('1fr 1fr 1fr')
+            .columnsGap(this.gridGap)
+            .rowsGap(this.gridGap)
+            .onClick((event: ClickEvent) => {
+              Log.showInfo(TAG, `grid onClick`);
+              this.showAnimate(1.5, 0, true);
+              if (this.onOpenFolderClick) {
+                this.folderAnimateData.folderId = this.mFolderItem.folderId;
+                this.folderAnimateData.isOpenFolder = true;
+                AppStorage.SetOrCreate('folderAnimateData', this.folderAnimateData);
+                this.onOpenFolderClick(event, this.mFolderItem);
               }
-              .visibility(this.superposeIconVisible ? Visibility.Visible : Visibility.Hidden)
-              .width(StyleConstants.PERCENTAGE_100)
-              .height(StyleConstants.PERCENTAGE_100)
-              .onClick((event: ClickEvent) => {
-                Log.showInfo(TAG, `last item onClick`);
-                this.showAnimate(1.5, 0, true);
-                if (this.onOpenFolderClick) {
-                  this.folderAnimateData.folderId = this.mFolderItem.folderId;
-                  this.folderAnimateData.isOpenFolder = true;
-                  AppStorage.SetOrCreate('folderAnimateData', this.folderAnimateData);
-                  this.onOpenFolderClick(event, this.mFolderItem);
-                }
-              })
-            }
+            })
+            .onTouch((event: TouchEvent) => {
+              Log.showInfo(TAG, "onTouch start");
+              if (this.onFolderTouch) {
+                this.onFolderTouch(event, this.mFolderItem);
+              }
+              Log.showInfo(TAG, "onTouch end");
+            })
           }
-          .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-          .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
-          .padding(this.gridMargin)
-          .columnsTemplate('1fr 1fr 1fr')
-          .rowsTemplate('1fr 1fr 1fr')
-          .columnsGap(this.gridGap)
-          .rowsGap(this.gridGap)
-          .onClick((event: ClickEvent) => {
-            Log.showInfo(TAG, `grid onClick`);
-            this.showAnimate(1.5, 0, true);
-            if (this.onOpenFolderClick) {
-              this.folderAnimateData.folderId = this.mFolderItem.folderId;
-              this.folderAnimateData.isOpenFolder = true;
-              AppStorage.SetOrCreate('folderAnimateData', this.folderAnimateData);
-              this.onOpenFolderClick(event, this.mFolderItem);
-            }
-          })
-          .onTouch((event: TouchEvent) => {
-            Log.showInfo(TAG, "onTouch start");
-            if (this.onFolderTouch) {
-              this.onFolderTouch(event, this.mFolderItem);
-            }
-            Log.showInfo(TAG, "onTouch end");
+          .height(StyleConstants.PERCENTAGE_100)
+          .width(StyleConstants.PERCENTAGE_100)
+          .onHover((isHover: boolean) => {
+            Log.showInfo(TAG, `onHover isHover:${isHover}`);
+            this.isHover = isHover;
           })
         }
-        .height(StyleConstants.PERCENTAGE_100)
-        .width(StyleConstants.PERCENTAGE_100)
-        .onHover((isHover: boolean) => {
-          Log.showInfo(TAG, `onHover isHover:${isHover}`);
-          this.isHover = isHover;
-        })
-      }
-      .height(this.folderGridSize)
-      .width(this.folderGridSize)
+        .height(this.folderGridSize)
+        .width(this.folderGridSize)
 
-      Column() {
-        AppName({
-          nameHeight: this.folderNameHeight,
-          nameSize: this.folderNameSize,
-          nameFontColor: this.nameFontColor,
-          appName: this.mFolderItem.folderName,
-          nameLines: this.folderNameLines,
-          marginTop: this.iconNameMargin
-        })
+        Column() {
+          AppName({
+            nameHeight: this.folderNameHeight,
+            nameSize: this.folderNameSize,
+            nameFontColor: this.nameFontColor,
+            appName: this.mFolderItem.folderName,
+            nameLines: this.folderNameLines,
+            marginTop: this.iconNameMargin
+          })
+        }
+        .visibility(this.showFolderName ? Visibility.Visible : Visibility.Hidden)
       }
-      .visibility(this.showFolderName ? Visibility.Visible : Visibility.Hidden)
+      .width(StyleConstants.PERCENTAGE_100)
+      .height(StyleConstants.PERCENTAGE_100)
+      .offset({ x: this.folderPositionX, y: this.folderPositionY })
+      .scale({ x: this.isHover ? 1.05 : this.animateScale, y: this.isHover ? 1.05 : this.animateScale })
+      .opacity(this.animateOpacity)
     }
-    .width(StyleConstants.PERCENTAGE_100)
-    .height(StyleConstants.PERCENTAGE_100)
-    .offset({ x: this.folderPositionX, y: this.folderPositionY })
-    .padding({top : this.mPaddingTop})
-    .scale({ x: this.isHover ? 1.15 : this.animateScale, y: this.isHover ? 1.15 : this.animateScale })
-    .opacity(this.animateOpacity)
+    .width(this.isSelect ? this.folderGridSize + StyleConstants.DEFAULT_40 : StyleConstants.PERCENTAGE_100)
+    .height(this.isSelect ? this.folderGridSize + StyleConstants.DEFAULT_40 : StyleConstants.PERCENTAGE_100)
+    .backgroundColor(this.isSelect ? StyleConstants.DEFAULT_BROAD_COLOR : StyleConstants.DEFAULT_TRANSPARENT_COLOR)
+    .borderRadius(this.isSelect ? StyleConstants.DEFAULT_15 : StyleConstants.DEFAULT_0)
+    .padding(this.isSelect ? { left: StyleConstants.DEFAULT_20,
+                               right: StyleConstants.DEFAULT_20, top: this.mPaddingTop + StyleConstants.DEFAULT_10 } : { top: this.mPaddingTop })
+
   }
 }

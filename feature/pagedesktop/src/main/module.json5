@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "pagedesktop",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+    ],
+    "uiSyntax": "ets"
+  }
+}
