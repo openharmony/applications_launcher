@@ -68,7 +68,7 @@ class AmsMissionManager {
       recentMissionInfo.bundleName = recentItem.want.bundleName;
       recentMissionInfo.abilityName = recentItem.want.abilityName;
       recentMissionInfo.lockedState = recentItem.lockedState;
-      const appInfo = await launcherAbilityManager.getAppInfoByBundleName(recentMissionInfo.bundleName);
+      const appInfo = await launcherAbilityManager.getAppInfoByBundleAndAbility(recentMissionInfo.bundleName, recentMissionInfo.abilityName);
       if (appInfo == undefined) {
         continue;
       }
@@ -103,6 +103,7 @@ class AmsMissionManager {
     for (let i = 0; i < missionInfos.length; i++) {
       let missionInfo = missionInfos[i];
       let bundleName = missionInfo.want.bundleName!;
+      let abilityName = missionInfo.want.abilityName!;
       let localMissionInfo = recentMissionsList.find((item) => item.bundleName === bundleName);
       if (localMissionInfo) {
         let missionInfoAdd = new MissionInfo();
@@ -111,7 +112,7 @@ class AmsMissionManager {
       } else {
         let recentTaskInfo = new RecentBundleMissionInfo();
         recentTaskInfo.bundleName = bundleName;
-        const appInfo = await launcherAbilityManager.getAppInfoByBundleName(bundleName);
+        const appInfo = await launcherAbilityManager.getAppInfoByBundleAndAbility(bundleName, abilityName);
         if (appInfo == undefined) {
           continue;
         }
