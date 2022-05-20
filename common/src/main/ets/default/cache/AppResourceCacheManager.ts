@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,9 @@
 
 import LruCache from './LruCache';
 import DiskLruCache from './DiskLruCache';
+import Log from '../utils/Log';
 
+const TAG = 'AppResourceCacheManager';
 const KEY_ICON = 'icon';
 const DISK_CACHE_MISS = -1;
 
@@ -34,15 +36,15 @@ export default class AppResourceCacheManager {
   /**
    * Get cache from disk or memory.
    *
-   * @param {string} key - key of the cache map
+   * @param {string} cacheKey - cacheKey of the cache map
    * @return {object} - cache get from memory or disk
    */
-  getCache(bundleName, key) {
-    const cache = this.getCacheFromMemory(bundleName, key);
+  getCache(cacheKey: string, cacheType: string) {
+    const cache = this.getCacheFromMemory(cacheKey, cacheType);
     if (cache == undefined || cache == null || cache == '') {
-      if (key === KEY_ICON) {
-        const cacheFromDisk = this.getCacheFromDisk(bundleName, key);
-        this.setCacheToMemory(bundleName, key, cacheFromDisk);
+      if (cacheType === KEY_ICON) {
+        const cacheFromDisk = this.getCacheFromDisk(cacheKey, cacheType);
+        this.setCacheToMemory(cacheKey, cacheType, cacheFromDisk);
         return cacheFromDisk;
       }
       return null;
@@ -54,53 +56,53 @@ export default class AppResourceCacheManager {
   /**
    * Set cache to disk or memory.
    *
-   * @param {string} key - key of the cache map
+   * @param {string} cacheKey - cacheKey of the cache map
    * @param {object} value - value of the cache map
    */
-  setCache(bundleName, key, value) {
-    console.info('Launcher AppResourceCacheManager setCache bundleName = ' + bundleName + ' key = ' + key);
-    this.setCacheToMemory(bundleName, key, value);
-    if (key === KEY_ICON) {
-      this.setCacheToDisk(bundleName, key, value);
+  setCache(cacheKey: string, cacheType: string, value: object | string) {
+    Log.showInfo(TAG, `setCache cacheKey: ${cacheKey}, cacheType: ${cacheType}`);
+    this.setCacheToMemory(cacheKey, cacheType, value);
+    if (cacheType === KEY_ICON) {
+      this.setCacheToDisk(cacheKey, cacheType, value);
     }
   }
 
   /**
    * Clear cache of both disk and memory.
    */
-  clearCache() {
-    console.info('Launcher AppResourceCacheManager clearCache');
+  clearCache(): void {
+    Log.showInfo(TAG, 'clearCache');
     this.memoryCache.clear();
   }
 
-  private getCacheFromMemory(bundleName, key) {
-    const cache = this.memoryCache.getCache(bundleName);
+  private getCacheFromMemory(cacheKey: string, cacheType: string) {
+    const cache = this.memoryCache.getCache(cacheKey);
     if (cache == undefined || cache == null || cache == '' || cache === -1) {
       return null;
-    } else if (cache[key] == undefined || cache[key] == null || cache[key] == '') {
+    } else if (cache[cacheType] == undefined || cache[cacheType] == null || cache[cacheType] == '') {
       return null;
     } else {
-      return cache[key];
+      return cache[cacheType];
     }
   }
 
-  private setCacheToMemory(bundleName, key, value) {
-    let cache = this.memoryCache.getCache(bundleName);
+  private setCacheToMemory(cacheKey: string, cacheType: string, value: object | string): void {
+    let cache = this.memoryCache.getCache(cacheKey);
     if (cache == undefined || cache == null || cache == '' || cache === -1) {
       cache = {};
-      cache[key] = value;
+      cache[cacheType] = value;
     } else {
-      cache[key] = value;
+      cache[cacheType] = value;
     }
-    this.memoryCache.putCache(bundleName, cache);
+    this.memoryCache.putCache(cacheKey, cache);
   }
 
-  private getCacheFromDisk(bundleName, key) {
-    const data = this.diskCache.getCache(bundleName);
+  private getCacheFromDisk(cacheKey: string, cacheType: string) {
+    const data = this.diskCache.getCache(cacheKey);
     return data !== DISK_CACHE_MISS ? data : null;
   }
 
-  private setCacheToDisk(bundleName, key, value) {
-    this.diskCache.putCache(bundleName, value);
+  private setCacheToDisk(cacheKey: string, cacheType: string, value: object | string): void {
+    this.diskCache.putCache(cacheKey, value);
   }
 }

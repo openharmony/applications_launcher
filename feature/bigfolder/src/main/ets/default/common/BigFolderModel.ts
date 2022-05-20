@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
 import LocalEventManager from '../../../../../../../common/src/main/ets/default/manager/LocalEventManager';
 import FolderLayoutConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/FolderLayoutConfig';
@@ -26,12 +27,13 @@ const TAG = 'BigFolderModel';
  * Folder information data model
  */
 export default class BigFolderModel {
-  private mFolderLayoutConfig: FolderLayoutConfig = null;
-  mFolderInfoList = [];
+  private readonly mFolderLayoutConfig: FolderLayoutConfig;
   private readonly mSettingsModel: SettingsModel;
+  mFolderInfoList = [];
 
   private constructor() {
     this.mSettingsModel = SettingsModel.getInstance();
+    this.mFolderLayoutConfig = LayoutConfigManager.getFunctionConfig(FolderLayoutConfig.FOLDER_GRID_LAYOUT_INFO);
   }
 
   /**
@@ -39,16 +41,11 @@ export default class BigFolderModel {
    *
    * @return Single instance of folder data model
    */
-  static getInstance() {
+  static getInstance(): BigFolderModel {
     if (globalThis.BigFolderModelInstance == null) {
       globalThis.BigFolderModelInstance = new BigFolderModel();
-      globalThis.BigFolderModelInstance.initConfig();
     }
     return globalThis.BigFolderModelInstance;
-  }
-
-  private initConfig() {
-    this.mFolderLayoutConfig = LayoutConfigManager.getFunctionConfig(FolderLayoutConfig.FOLDER_GRID_LAYOUT_INFO);
   }
 
   getFolderLayout(): any {
@@ -89,7 +86,7 @@ export default class BigFolderModel {
   *
   * @param listener
    */
-  registerFolderUpdateEvent(listener) {
+  registerFolderUpdateEvent(listener): void {
     LocalEventManager.registerEventListener(listener, [
       EventConstants.EVENT_BADGE_UPDATE,
       EventConstants.EVENT_FOLDER_PACKAGE_REMOVED

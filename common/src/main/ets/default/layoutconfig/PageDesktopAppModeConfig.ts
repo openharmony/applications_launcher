@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,17 +17,15 @@ import ILayoutConfig from './ILayoutConfig';
 import CommonConstants from '../constants/CommonConstants';
 
 /**
- * 桌面工作空间应用配置
+ * Desktop Workspace App Configuration
  */
 export default class PageDesktopAppModeConfig extends ILayoutConfig {
   /**
-   * 工作空间功能布局配置索引
+   * Workspace Feature Layout Configuration Index
    */
   static DESKTOP_APPLICATION_INFO = 'DesktopApplicationInfo';
 
   private static readonly DEFAULT_LAYOUT_INFO: any = [];
-
-  private static sInstance: PageDesktopAppModeConfig = null;
 
   private mAppListInfo: any = PageDesktopAppModeConfig.DEFAULT_LAYOUT_INFO;
 
@@ -36,14 +34,14 @@ export default class PageDesktopAppModeConfig extends ILayoutConfig {
   }
 
   /**
-   * 获取工作空间功能布局配置实例
+   * Get an instance of the workspace function layout configuration
    */
-  static getInstance() {
-    if (PageDesktopAppModeConfig.sInstance == null) {
-      PageDesktopAppModeConfig.sInstance = new PageDesktopAppModeConfig();
-      PageDesktopAppModeConfig.sInstance.initConfig();
+  static getInstance(): PageDesktopAppModeConfig {
+    if (globalThis.PageDesktopAppModeConfig == null) {
+      globalThis.PageDesktopAppModeConfig = new PageDesktopAppModeConfig();
+      globalThis.PageDesktopAppModeConfig.initConfig();
     }
-    return PageDesktopAppModeConfig.sInstance;
+    return globalThis.PageDesktopAppModeConfig;
   }
 
   initConfig(): void {
@@ -72,15 +70,15 @@ export default class PageDesktopAppModeConfig extends ILayoutConfig {
    *
    * @params appListInfo
    */
-  updateAppListInfo(appListInfo): void {
+  updateAppListInfo(appListInfo: object): void {
     this.mAppListInfo = appListInfo;
     super.persistConfig();
   }
 
   /**
-   * 获取工作空间快捷方式
+   * Get workspace shortcuts
    *
-   * @return 工作空间快捷方式
+   * @return Workspace shortcuts
    */
   getAppListInfo(): any {
     return this.mAppListInfo;

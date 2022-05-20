@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,8 +17,10 @@ import AppItemInfo from '../bean/AppItemInfo';
 import AppBubble from './AppBubble.ets';
 import AppGridStyleConfig from '../layoutconfig/AppGridStyleConfig';
 import CommonConstants from '../constants/CommonConstants';
+import Log from '../utils/Log';
 
 let mAppGridStyleConfig: AppGridStyleConfig = null;
+const TAG = 'AppGrid';
 
 @Component
 export default struct AppGrid {
@@ -77,7 +79,7 @@ export default struct AppGrid {
           .onMouse((event: MouseEvent) => {
             if (event.button == MouseButton.Right) {
               event.stopPropagation();
-              console.info('Launcher AppGrid onMouse MouseButton Right');
+              Log.showInfo(TAG, 'onMouse MouseButton Right');
             }
           })
         }

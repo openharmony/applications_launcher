@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import featureAbility from '@ohos.ability.featureAbility';
 import launcherAbilityManager from '../../../../../../../common/src/main/ets/default/manager/LauncherAbilityManager';
 import amsMissionManager from '../../../../../../../common/src/main/ets/default/manager/AmsMissionManager';
@@ -20,6 +21,7 @@ import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
 import RecentMissionInfo from '../../../../../../../common/src/main/ets/default/bean/RecentMissionInfo';
 import RecentMissionsModel from '../../../../../../../common/src/main/ets/default/model/RecentMissionsModel';
 import RecentModeFeatureConfig from '../common/layoutconfig/RecentModeFeatureConfig';
+import windowManager from '../../../../../../../common/src/main/ets/default/manager/WindowManager';
 
 const TAG = 'RecentMissionsViewModel';
 
@@ -33,7 +35,7 @@ export default class RecentMissionsViewModel {
   private mRecentMissionsList: RecentMissionInfo[] = [];
 
   private constructor() {
-    Log.showInfo(TAG, `constructor start`);
+    Log.showInfo(TAG, 'constructor start');
     this.mRecentMissionsModel = RecentMissionsModel.getInstance();
     let config = LayoutConfigManager.getModeConfig(RecentModeFeatureConfig.RECENT_MISSIONS_MODE_CONFIG);
     if (config instanceof RecentModeFeatureConfig) {
@@ -46,51 +48,61 @@ export default class RecentMissionsViewModel {
    * Delete recent missions.
    *
    */
-  private async deleteRecentMissions() {
+  private async deleteRecentMissions(): Promise<void> {
     await amsMissionManager.clearAllMissions();
   }
 
   /**
-   * lockMission
+   * Set lock mission state into amsMissionManager.
    *
-   * @param missionId
+   * @param {number} missionId
    */
-  private async lockMission(missionId: number) {
-    console.info("Launcher AmsMissionManager lockMission start!");
+  private async lockMission(missionId: number): Promise<void> {
+    Log.showInfo(TAG, 'lockMission start');
     await amsMissionManager.lockMission(missionId);
   }
 
   /**
-   * unlockMission
+   * Set unlock mission state into amsMissionManager.
    *
-   * @param missionId
+   * @param {number} missionId
    */
-  private async unlockMission(missionId: number) {
-    console.info("Launcher AmsMissionManager unlockMission start!");
+  private async unlockMission(missionId: number): Promise<void> {
+    Log.showInfo(TAG, 'unlockMission start');
     await amsMissionManager.unlockMission(missionId);
   }
 
   /**
-   * Return an instance of RecentMissionsViewModel.
+   * Get the recent mission view model object.
+   *
+   * @return {object} recent mission view model singleton
    */
-  public static getInstance() {
+  static getInstance(): RecentMissionsViewModel {
     if (globalThis.RecentMissionsViewModelInstance == null) {
       globalThis.RecentMissionsViewModelInstance = new RecentMissionsViewModel();
     }
     return globalThis.RecentMissionsViewModelInstance;
   }
 
-  public getRecentMissionsRowType() {
+  /**
+   * Get the recent mission row type.
+   *
+   * @return {string} row type
+   */
+  getRecentMissionsRowType(): string {
     return this.mRecentModeFeatureConfig.getRecentMissionsRowType();
   }
 
   /**
    * Callback function of getRecentMissionsList.
    */
-  public async getRecentMissionsList() {
-    Log.showInfo(TAG, `getRecentMissionsList start`);
+  async getRecentMissionsList(): Promise<void> {
+    Log.showInfo(TAG, 'getRecentMissionsList start');
     this.mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
     Log.showInfo(TAG, `getRecentMissionsList length: ${this.mRecentMissionsList.length}`);
+    for (let item of this.mRecentMissionsList) {
+      item.snapShotInfo = await amsMissionManager.getMissionSnapShot(item.missionId);
+    }
     AppStorage.SetOrCreate('recentMissionsList', this.mRecentMissionsList);
   }
 
@@ -100,11 +112,9 @@ export default class RecentMissionsViewModel {
    * @param {boolean} isClickDelBtn - The flag of click delete button.
    * @param {number} missionId - The missionId of current recent mission.
    */
-  public async deleteRecentMission(isClickDelBtn: boolean, missionId: number) {
+  async deleteRecentMission(isClickDelBtn: boolean, missionId: number): Promise<void> {
     Log.showInfo(TAG, `deleteRecentMissions missionId: ${missionId}`);
-    let missionIds = [];
     if (!isClickDelBtn && missionId != -1) {
-      missionIds.push(missionId);
       await amsMissionManager.clearMission(missionId);
       for (let iRecentMissionsIndex = 0; iRecentMissionsIndex < this.mRecentMissionsList.length; iRecentMissionsIndex++) {
         if (this.mRecentMissionsList[iRecentMissionsIndex].missionId === missionId) {
@@ -113,12 +123,10 @@ export default class RecentMissionsViewModel {
         }
       }
     } else {
-      for (let iRecentMissionsIndex = 0; iRecentMissionsIndex < this.mRecentMissionsList.length; iRecentMissionsIndex++) {
-          if (!this.mRecentMissionsList[iRecentMissionsIndex].lockedState) {
-            missionIds.push(this.mRecentMissionsList[iRecentMissionsIndex].missionId);
-          }
-      }
+      this.mRecentMissionsList = [];
+      AppStorage.SetOrCreate('recentMissionsList', this.mRecentMissionsList);
       await this.deleteRecentMissions();
+      return;
     }
     animateTo({
       duration: 200,
@@ -131,7 +139,7 @@ export default class RecentMissionsViewModel {
       }
     }, () => {
       AppStorage.SetOrCreate('recentMissionsList', this.mRecentMissionsList);
-    })
+    });
     if(this.mRecentMissionsList.length == 0) {
       this.terminateRecentIfAllClear();
     }
@@ -141,25 +149,26 @@ export default class RecentMissionsViewModel {
    * Set recent mission locked status.
    *
    * @param {string} missionId - The missionId of current recent mission.
+   * @param {boolean} lockedState - The lockedState of current recent mission.
    */
-  public async setRecentMissionLock(missionId: number, lockedState: boolean) {
-    Log.showInfo(TAG, `setRecentMissionLock missionId: ${missionId}, lockedState: ${lockedState}`);
+  async setRecentMissionLock(missionId: number, lockedState: boolean): Promise<void> {
+    Log.showInfo(TAG, `setRecentMissionLock missionId: ${missionId}, lockedState: ${String(lockedState)}`);
     if (lockedState) {
-      this.lockMission(missionId);
+      void this.lockMission(missionId);
     } else {
-      this.unlockMission(missionId);
+      void this.unlockMission(missionId);
     }
-    this.getRecentMissionsList();
+    void this.getRecentMissionsList();
   }
 
   /**
    * Get mission snapshot
    *
-   * @param missionId
+   * @param missionId - The missionId of current recent mission.
    *
-   * @return snapshot
+   * @return snapshot - The snapshot of current recent mission.
    */
-  public async getMissionSnapShot(missionId: number, callback?: any) {
+  async getMissionSnapShot(missionId: number, callback?: any) {
     Log.showInfo(TAG, `getMissionSnapShot missionId: ${missionId}`);
     let snapShot = await amsMissionManager.getMissionSnapShot(missionId);
     if (callback != undefined) {
@@ -170,34 +179,27 @@ export default class RecentMissionsViewModel {
   }
 
   /**
-   * Move mission to front
+   * Move the recent mission to front
    *
-   * @param missionId
+   * @param missionId - The missionId of current recent mission.
    */
-  public async moveMissionToFront(missionId: number) {
+  async moveMissionToFront(missionId: number): Promise<void> {
     await amsMissionManager.moveMissionToFront(missionId);
   }
 
   /**
-   * Terminate recent.
+   * Terminate recent if clear all missions.
    */
-  public terminateRecentIfAllClear(): void {
-    Log.showInfo(TAG, `terminateRecentIfAllClear start`);
-    setTimeout(() => {
-      if (this.mRecentMissionsList.length === 0) {
-        Log.showInfo(TAG, `terminateRecentIfAllClear all recent cleared`);
-        featureAbility.terminateAbility();
-      }
-    }, 1000);
+  terminateRecentIfAllClear(): void {
+    Log.showInfo(TAG, 'terminateRecentIfAllClear all recent cleared');
+    windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
   }
 
   /**
    * Back to desktop.
    */
-  public backView() {
-    Log.showInfo(TAG, `backView start`);
-    let bundleName = 'com.ohos.launcher';
-    let abilityName = 'com.ohos.launcher.MainAbility';
-    launcherAbilityManager.startLauncherAbility(abilityName, bundleName);
+  backView(): void {
+    Log.showInfo(TAG, 'backView start');
+    windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
   }
 }

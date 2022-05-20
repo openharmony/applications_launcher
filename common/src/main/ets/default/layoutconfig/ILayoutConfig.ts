@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -64,9 +64,16 @@ export default abstract class ILayoutConfig {
   }
 
   /**
+   * 判断当前属性是否已存在
+   */
+  isConfigExit(): boolean {
+    return this.mPreferences.hasSync(this.getConfigName());
+  }
+
+  /**
    * 强制重新加载配置值
    */
-  forceReloadConfig() {
+  forceReloadConfig(): void {
     this.initConfig();
   }
 
@@ -82,14 +89,14 @@ export default abstract class ILayoutConfig {
   /**
    * 删除配置值
    */
-  deleteConfig() {
+  deleteConfig(): void {
     this.mPreferences.deleteSync(this.getConfigName());
   }
 
   /**
    * 获取当前配置名
    */
-  getFeatureName() {
+  getFeatureName(): string {
     return ILayoutConfig.COMMON_FEATURE_NAME;
   }
 }

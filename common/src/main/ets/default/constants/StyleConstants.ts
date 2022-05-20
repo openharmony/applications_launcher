@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,6 +25,7 @@ export default class StyleConstants {
   static readonly DEFAULT_DIALOG_RADIUS = '24vp';
   static readonly DEFAULT_DIALOG_WIDTH = '395vp';
   static readonly DEFAULT_BUTTON_HEIGHT = '40vp';
+  static readonly DEFAULT_BUTTON_WIDTH = '120vp';
   static readonly DEFAULT_COLOR_ERROR = '#FFE84026';
   static readonly DEFAULT_ICON = '/common/pics/icon.png';
   static readonly DEFAULT_BACKGROUND_IMAGE = '/common/pics/img_wallpaper.jpg';
@@ -43,12 +44,17 @@ export default class StyleConstants {
   static readonly DEFAULT_FOLDER_GRID_MARGIN= 10;
   static readonly DEFAULT_FOLDER_GRID_GAP= 2;
   static readonly DEFAULT_OPEN_FOLDER_APP_SIZE= 60;
+  static readonly DEFAULT_ADD_APP_SIZE= 54;
   static readonly DEFAULT_OPEN_FOLDER_APP_NAME_SIZE= 14;
   static readonly DEFAULT_OPEN_FOLDER_APP_NAME_HEIGHT= 36;
   static readonly DEFAULT_OPEN_FOLDER_GRID_WIDTH= 444;
   static readonly DEFAULT_OPEN_FOLDER_GRID_HEIGHT= 455;
+  static readonly DEFAULT_OPEN_FOLDER_SWIPER_HEIGHT= 480;
   static readonly DEFAULT_OPEN_FOLDER_GRID_GAP= 6;
   static readonly DEFAULT_OPEN_FOLDER_TITLE_HEIGHT = 130;
+  static readonly DEFAULT_APP_ADD_TITLE_SIZE = 56;
+  static readonly DEFAULT_DIALOG_BOTTOM_MARGIN_NUMBER = 16;
+  static readonly DEFAULT_BUTTON_HEIGHT_NUMBER = 40;
   static readonly DEFAULT_MENU_HEIGHT = 76;
   static readonly PERCENTAGE_100 = '100%';
   static readonly PERCENTAGE_85 = '85%';
@@ -71,16 +77,22 @@ export default class StyleConstants {
   static readonly PIXEL_150 = 150;
   static readonly LIGHT_BLACK = '#3c000000';
   static readonly DEFAULT_0 = 0;
+  static readonly DEFAULT_1 = 1;
+  static readonly DEFAULT_4 = 4;
   static readonly DEFAULT_5 = 5;
   static readonly DEFAULT_8 = 8;
   static readonly DEFAULT_10 = 10;
   static readonly DEFAULT_12 = 12;
+  static readonly DEFAULT_14 = 14;
   static readonly DEFAULT_15 = 15;
+  static readonly DEFAULT_16 = 16;
   static readonly DEFAULT_20 = 20;
+  static readonly DEFAULT_24 = 24;
   static readonly DEFAULT_25 = 25;
   static readonly DEFAULT_28 = 28;
   static readonly DEFAULT_30 = 30;
   static readonly DEFAULT_40 = 40;
+  static readonly DEFAULT_56 = 56;
   static readonly DEFAULT_60 = 60;
   static readonly DEFAULT_80 = 80;
   static readonly DEFAULT_DIVIDER_COLOR = 'rgb(207, 195, 195)';
@@ -102,8 +114,8 @@ export default class StyleConstants {
   static readonly DEFAULT_FORM_REMOVE_DIALOG_HEIGHT= 170;
   static readonly DEFAULT_FORM_REMOVE_DIALOG_BUTTON_WIDTH= 136;
   static readonly DEFAULT_FORM_REMOVE_DIALOG_BUTTON_HEIGHT= 22;
-  static readonly DEFAULT_SMART_DOCK_MISSION_HEIGHT = 146;
+  static readonly DEFAULT_SMART_DOCK_MISSION_HEIGHT = 132;
   static readonly DEFAULT_SMART_DOCK_MISSION_MERGIN_BOTTOM = 6;
   static readonly DEFAULT_SMART_DOCK_MISSION_MERGIN_RIGHT = 2;
-  static readonly DEFAULT_SMART_DOCK_MISSION_IMAGE_HEIGHT = 96;
+  static readonly DEFAULT_SMART_DOCK_MISSION_IMAGE_HEIGHT = 80;
 }

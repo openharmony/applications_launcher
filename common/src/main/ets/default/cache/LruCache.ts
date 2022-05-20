@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,7 +17,7 @@
  * A class provides memory cache operation.
  */
 export default class LruCache {
-  private readonly cache: Map<string, object>;
+  private readonly cache: Map<string, object | string>;
   private readonly capacity: number;
 
   constructor(capacity = 100) {
@@ -50,7 +50,7 @@ export default class LruCache {
    * @param {string} key - key of the cache map
    * @param {any} value - value of the cache map
    */
-  putCache(key: string, value: any) {
+  putCache(key: string, value: any): void {
     if (this.cache.has(key)) {
       // exist and update
       this.cache.delete(key);
@@ -67,14 +67,14 @@ export default class LruCache {
    *
    * @param {string} key - key of the cache map
    */
-  remove(key: string) {
+  remove(key: string): void {
     this.cache.delete(key);
   }
 
   /**
    * Clear cache of memory.
    */
-  clear() {
+  clear(): void {
     this.cache.clear();
   }
 }

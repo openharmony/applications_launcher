@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,18 +17,16 @@ import ILayoutConfig from './ILayoutConfig';
 import CommonConstants from '../constants/CommonConstants';
 
 /**
- * 桌面Dock功能布局配置
+ * Desktop Dock function layout configuration
  */
 export default class SmartDockLayoutConfig extends ILayoutConfig {
   /**
-   * Dock功能布局配置索引
+   * Dock Feature Layout Configuration Index
    */
   static SMART_DOCK_LAYOUT_INFO = 'SmartDockLayoutInfo';
 
-  private static sInstance: SmartDockLayoutConfig = null;
-
   /**
-   * Dock功能布局数据
+   * Dock function layout data
    */
   protected mDockLayoutInfo: any = [];
 
@@ -37,15 +35,15 @@ export default class SmartDockLayoutConfig extends ILayoutConfig {
   }
 
   /**
-   * 获取工作空间功能布局配置实例
+   * Get an instance of the workspace function layout configuration
    */
-  static getInstance() {
-    if (SmartDockLayoutConfig.sInstance == null) {
-      SmartDockLayoutConfig.sInstance = new SmartDockLayoutConfig();
-      SmartDockLayoutConfig.sInstance.initConfig();
+  static getInstance(): SmartDockLayoutConfig {
+    if (globalThis.SmartDockLayoutConfig == null) {
+      globalThis.SmartDockLayoutConfig = new SmartDockLayoutConfig();
+      globalThis.SmartDockLayoutConfig.initConfig();
     }
     console.info('Launcher SmartDockLayoutConfig getInstance!');
-    return SmartDockLayoutConfig.sInstance;
+    return globalThis.SmartDockLayoutConfig;
   }
 
   initConfig(): void {
@@ -70,19 +68,19 @@ export default class SmartDockLayoutConfig extends ILayoutConfig {
   }
 
   /**
-   * 更新dock布局数据
+   * Update dock layout data
    *
-   * @params gridLayoutInfo dock布局数据
+   * @params gridLayoutInfo:dock layout data
    */
-  updateDockLayoutInfo(dockLayoutInfo): void {
+  updateDockLayoutInfo(dockLayoutInfo: object): void {
     this.mDockLayoutInfo = dockLayoutInfo;
     super.persistConfig();
   }
 
   /**
-   * 获取dock布局数据
+   * Get dock layout data
    *
-   * @return dock布局数据
+   * @return dock layout data
    */
   getDockLayoutInfo(): any {
     return this.mDockLayoutInfo;

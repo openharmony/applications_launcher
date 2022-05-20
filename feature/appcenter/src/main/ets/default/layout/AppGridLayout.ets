@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,6 +15,7 @@
 
 import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
 import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
+import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
 import MenuInfo from '../../../../../../../common/src/main/ets/default/bean/MenuInfo';
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import AppGrid from '../../../../../../../common/src/main/ets/default/uicomponents/AppGrid.ets';
@@ -26,6 +27,10 @@ import localEventManager from '../../../../../../../common/src/main/ets/default/
 import EventConstants from '../../../../../../../common/src/main/ets/default/constants/EventConstants';
 import Trace from '../../../../../../../common/src/main/ets/default/utils/Trace';
 import AppCenterViewModel from '../common/viewmodel/AppCenterViewModel.ets';
+import windowManager from '../../../../../../../common/src/main/ets/default/manager/WindowManager';
+import Log from '../../../../../../../common/src/main/ets/default/utils/Log'
+
+const TAG = 'AppGridLayout'
 
 @Component
 export default struct AppGridLayout {
@@ -35,6 +40,7 @@ export default struct AppGridLayout {
   mAppGridPresenter: AppGridPresenter = null;
   mAppCenterGridStyleConfig: AppCenterGridStyleConfig = null;
   mSelectItem = null;
+  private dialogName: string = "";
   mDialogController: CustomDialogController = new CustomDialogController({
     builder: UninstallDialog({
       cancel: () => {
@@ -42,7 +48,7 @@ export default struct AppGridLayout {
       confirm: () => {
         this.onAccept()
       },
-      dialogName: $r('app.string.app_center_menu_uninstall'),
+      dialogName: this.dialogName,
       dialogContent: this.mSelectItem.appName + ' ?',
     }),
     cancel: () => {
@@ -59,15 +65,18 @@ export default struct AppGridLayout {
     this.mDialogController.close();
   }
 
-  private aboutToDisappear(): void {
-    this.mAppGridPresenter.unregisterAppListChange();
+  aboutToDisappear(): void {
+    Log.showInfo(TAG, "aboutToDisappear");
   }
 
-  private aboutToAppear(): void {
+  aboutToAppear(): void {
+    Log.showInfo(TAG, "aboutToAppear")
     this.mAppGridPresenter = AppGridPresenter.getInstance();
     this.mAppGridPresenter.getAppList();
-    this.mAppGridPresenter.registerAppListChange()
     this.mAppCenterGridStyleConfig = AppCenterViewModel.getInstance().getAppGridStyleConfig();
+    ResourceManager.getInstance().getStringByResource($r('app.string.app_center_menu_uninstall')).then((resName) => {
+      this.dialogName = resName;
+    });
   }
 
   public buildMenuInfoList(appInfo) {
@@ -89,12 +98,22 @@ export default struct AppGridLayout {
         menuInfoList.push(Menu);
       });
     }
+
+    let open = new MenuInfo();
+    open.menuType = CommonConstants.MENU_TYPE_FIXED;
+    open.menuImgSrc = "/common/pics/ic_public_add_norm.svg";
+    open.menuText = $r('app.string.app_menu_open');
+    open.onMenuClick = () => {
+      this.mAppGridPresenter.jumpTo(appInfo.abilityName, appInfo.bundleName);
+    };
+    menuInfoList.push(open);
+
     let addToDockMenu = new MenuInfo();
     addToDockMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
     addToDockMenu.menuImgSrc = "/common/pics/ic_public_copy.svg";
     addToDockMenu.menuText = $r('app.string.app_center_menu_add_dock');
     addToDockMenu.onMenuClick = () => {
-      console.info("Launcher click menu item add to smartDock entry");
+      Log.showInfo(TAG, "Launcher click menu item add to smartDock entry");
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_DOCK_ITEM_ADD, appInfo);
     };
     menuInfoList.push(addToDockMenu);
@@ -104,7 +123,7 @@ export default struct AppGridLayout {
     addToDeskMenu.menuImgSrc = "/common/pics/ic_public_copy.svg";
     addToDeskMenu.menuText = $r('app.string.app_center_menu_add_desktop');
     addToDeskMenu.onMenuClick = () => {
-      console.info("Launcher click menu item add to pageDesk entry");
+      Log.showInfo(TAG, "Launcher click menu item add to pageDesk entry");
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, appInfo);
     };
     menuInfoList.push(addToDeskMenu);
@@ -114,10 +133,10 @@ export default struct AppGridLayout {
     uninstallMenu.menuImgSrc = "/common/pics/ic_public_delete.svg";
     uninstallMenu.menuText = $r('app.string.uninstall');
     uninstallMenu.onMenuClick = () => {
-      console.info("Launcher click menu item uninstall" + JSON.stringify(appInfo));
+      Log.showInfo(TAG, "Launcher click menu item uninstall" + JSON.stringify(appInfo));
       let cacheKey = appInfo.appLabelId + appInfo.bundleName;
       let appName = this.mAppGridPresenter.getAppName(cacheKey);
-      console.info("Launcher AppGridLayout buildMenuInfoList appName" + appName);
+      Log.showInfo(TAG, "Launcher AppGridLayout buildMenuInfoList appName" + appName);
       if (appName != null) {
         appInfo.appName = appName;
       }
@@ -137,7 +156,7 @@ export default struct AppGridLayout {
           isScroll: true,
           appGridStyleConfig: this.mAppCenterGridStyleConfig,
           onItemClick: (event, item) => {
-            this.mAppGridPresenter.jumpTo(item.abilityName, item.bundleName)
+            this.mAppGridPresenter.jumpTo(item.abilityName, item.bundleName);
           },
           buildMenu: (item) => this.buildMenuInfoList(item)
         })

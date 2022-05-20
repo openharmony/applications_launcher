@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,9 +14,11 @@
  */
 
 import missionManager from '@ohos.application.missionManager';
+import { MissionSnapshot } from 'application/MissionSnapshot';
 import launcherAbilityManager from './LauncherAbilityManager';
 import RecentBundleMissionInfo from '../bean/RecentBundleMissionInfo';
 import RecentMissionInfo from '../bean/RecentMissionInfo';
+import SnapShotInfo from '../bean/SnapShotInfo';
 import MissionInfo from '../bean/MissionInfo';
 import CheckEmptyUtils from '../utils/CheckEmptyUtils';
 import image from '@ohos.multimedia.image';
@@ -60,12 +62,12 @@ class AmsMissionManager {
       Log.showError(TAG, 'getRecentMissionsList Empty');
       return recentMissionsList;
     }
-    for (let i = 0; i < listData.length; i++) {
+    for (const recentItem of listData) {
       const recentMissionInfo = new RecentMissionInfo();
-      recentMissionInfo.missionId = listData[i].missionId;
-      recentMissionInfo.bundleName = listData[i].want.bundleName;
-      recentMissionInfo.abilityName = listData[i].want.abilityName;
-      recentMissionInfo.lockedState = listData[i].lockedState;
+      recentMissionInfo.missionId = recentItem.missionId;
+      recentMissionInfo.bundleName = recentItem.want.bundleName;
+      recentMissionInfo.abilityName = recentItem.want.abilityName;
+      recentMissionInfo.lockedState = recentItem.lockedState;
       const appInfo = await launcherAbilityManager.getAppInfoByBundleName(recentMissionInfo.bundleName);
       if (appInfo == undefined) {
         continue;
@@ -98,7 +100,8 @@ class AmsMissionManager {
       Log.showError(TAG, 'getRecentBundleMissionsList Empty');
       return recentMissionsList;
     }
-    for (let missionInfo of missionInfos) {
+    for (let i = 0; i < missionInfos.length; i++) {
+      let missionInfo = missionInfos[i];
       let bundleName = missionInfo.want.bundleName!;
       let localMissionInfo = recentMissionsList.find((item) => item.bundleName === bundleName);
       if (localMissionInfo) {
@@ -147,7 +150,7 @@ class AmsMissionManager {
    * Clear all missions in the ability manager service.
    * locked mission will not clear
    *
-   * @param missionId
+   * @return nothing.
    */
   async clearAllMissions(): Promise<void> {
     Log.showInfo(TAG, 'clearAllMissions start!');
@@ -163,7 +166,7 @@ class AmsMissionManager {
   /**
    * lockMission
    *
-   * @param missionId
+   * @param missionId mission id to lock.
    */
   async lockMission(missionId: number): Promise<void> {
     Log.showInfo(TAG, `lockMission start! missionId: ${missionId}`);
@@ -179,7 +182,7 @@ class AmsMissionManager {
   /**
    * unlockMission
    *
-   * @param missionId
+   * @param missionId mission id to unlock.
    */
   async unlockMission(missionId: number): Promise<void> {
     console.info(`unlockMission start! missionId: ${missionId}`);
@@ -195,30 +198,22 @@ class AmsMissionManager {
   /**
    * Get recent mission snapshot info
    *
-   * @param missionId
+   * @param missionId mission id to get snapshot.
    * @return snapshot info
    */
-  async getMissionSnapShot(missionId: number) {
+  async getMissionSnapShot(missionId: number): Promise<SnapShotInfo> {
+    let snapShotInfo: SnapShotInfo = new SnapShotInfo();
     Log.showInfo(TAG, `getMissionSnapShot start! missionId: ${missionId}`);
-    let snapShotInfo: any;
-    const pixelMap: {
-      image: any,
-      missionId: number,
-      width: number,
-      height: number
-    } = {
-      missionId: -1,
-      image: '/common/pics/img_app_default.png',
-      width:0,
-      height:0
-    };
-    const snapshotMap = await missionManager.getMissionSnapShot('', missionId);
-    pixelMap.image = snapshotMap.snapshot;
-    pixelMap.missionId = missionId;
-    const imageInfo = await snapshotMap.snapshot.getImageInfo();
-    pixelMap.width = imageInfo.size.width;
-    pixelMap.height = imageInfo.size.height;
-    snapShotInfo = pixelMap;
+    try {
+      const missionSnapshot: MissionSnapshot = await missionManager.getMissionSnapShot('', missionId);
+      const imageInfo = await missionSnapshot.snapshot.getImageInfo();
+      snapShotInfo.missionId = missionId;
+      snapShotInfo.snapShotImage = missionSnapshot.snapshot;
+      snapShotInfo.snapShotImageWidth = imageInfo.size.width;
+      snapShotInfo.snapShotImageHeight = imageInfo.size.height;
+    } catch (err) {
+      Log.showError(TAG, `missionManager.getMissionSnapShot err: ${err}`);
+    }
     Log.showInfo(TAG, `getMissionSnapShot return ${JSON.stringify(snapShotInfo)}`);
     return snapShotInfo;
   }

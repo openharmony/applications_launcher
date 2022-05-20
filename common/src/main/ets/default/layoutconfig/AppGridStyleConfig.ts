@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,11 +19,11 @@ import StyleConstants from '../constants/StyleConstants';
 import PresetStyleConstants from '../constants/PresetStyleConstants';
 
 /**
- * 应用网格显示样式配置
+ * Style config for app grid.
  */
 export default class AppGridStyleConfig extends ILayoutConfig {
   /**
-   * 应用网格显示样式索引
+   * Style config symbol for app grid
    */
   static APP_GRID_STYLE_CONFIG = 'AppGridStyleConfig';
 
@@ -73,22 +73,22 @@ export default class AppGridStyleConfig extends ILayoutConfig {
   mAppItemSize: number;
 
   /**
-   * 图标大小
+   * icon size
    */
   mIconSize = StyleConstants.DEFAULT_APP_ICON_SIZE_WIDTH;
 
   /**
-   * 名称大小
+   * app name font size
    */
   mNameSize = StyleConstants.DEFAULT_APP_NAME_SIZE;
 
   /**
-   * 名称颜色
+   * app name font color
    */
   mNameFontColor = StyleConstants.DEFAULT_FONT_COLOR;
 
   /**
-   * 名称高度
+   * app name font height
    */
   mNameHeight = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
 
@@ -112,21 +112,19 @@ export default class AppGridStyleConfig extends ILayoutConfig {
    */
   mIconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
 
-  private static sInstance: AppGridStyleConfig = null;
-
   protected constructor() {
     super();
   }
 
   /**
-   * 获取应用网格显示样式配置实例
+   * Get single instance.
    */
-  static getInstance() {
-    if (AppGridStyleConfig.sInstance == null) {
-      AppGridStyleConfig.sInstance = new AppGridStyleConfig();
-      AppGridStyleConfig.sInstance.initConfig();
+  static getInstance(): AppGridStyleConfig {
+    if (globalThis.AppGridStyleConfig == null) {
+      globalThis.AppGridStyleConfig = new AppGridStyleConfig();
+      globalThis.AppGridStyleConfig.initConfig();
     }
-    return AppGridStyleConfig.sInstance;
+    return globalThis.AppGridStyleConfig;
   }
 
   initConfig(): void {

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,10 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import FolderStyleConstants from '../constants/FolderStyleConstants';
 
 @Component
-export default struct  TitleDescriptionComponent {
+export default struct TitleDescriptionComponent {
   @Link mTitleDescription: any;
   @State mTextSize: number = FolderStyleConstants.DEFAULT_APP_GRID_TEXT_FONT_SIZE;
 
@@ -23,8 +24,8 @@ export default struct  TitleDescriptionComponent {
     Text(this.mTitleDescription)
       .fontSize(this.mTextSize)
       .margin({
-        top: FolderStyleConstants.DEFAULT_APP_ADD_TEXT_MARGIN,
-        bottom: FolderStyleConstants.DEFAULT_APP_ADD_TEXT_MARGIN,
+        top: FolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
+        bottom: FolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
         left: FolderStyleConstants.DEFAULT_APP_ADD_TEXT_MARGIN
       })
   }

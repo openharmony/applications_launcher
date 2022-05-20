@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,21 +14,21 @@
  */
 
 /**
- * 设置项选项信息
+ * Option of setting item for launcher settings.
  */
 export default class SettingItemOption {
   /**
-   * 选项名称
+   * Name of this option
    */
-  name: string;
+  name: string | undefined;
 
   /**
-   * 选项值
+   * Value of this option
    */
-  value: string;
+  value: string | undefined;
 
   /**
-   * 该选项是否被选中
+   * True if this item is checked
    */
-  checked: boolean;
+  checked: boolean | undefined;
 }

@@ -2,7 +2,7 @@
   "string": [
     {
       "name": "entry_MainAbility",
-      "value": "phone"
+      "value": "Launcher"
     },
     {
       "name": "mainability_description",
@@ -86,7 +86,7 @@
     },
     {
       "name": "add_form_to_desktop",
-      "value": "add service widget to desktop"
+      "value": "add widget to desktop"
     },
     {
       "name": "form_edit",
@@ -134,7 +134,7 @@
     },
     {
       "name": "add_form_to_desktop_more",
-      "value": "add service widget to desktop more"
+      "value": "add widget to desktop more"
     },
     {
       "name": "app_center_menu_uninstall",
@@ -163,6 +163,14 @@
     {
       "name": "No_running_apps_recently",
       "value": "no recently running applications"
+    },
+    {
+      "name": "app_menu_open",
+      "value": "open"
+    },
+    {
+      "name": "remove_app_from_folder",
+      "value": "remove app from folder"
     }
   ]
 }

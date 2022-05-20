@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,19 +16,19 @@
 import AppItemInfo from './AppItemInfo';
 
 /**
- * smartdock元素信息
+ * Item info of smartdock item.
  */
 export default class DockItemInfo extends AppItemInfo {
   /**
-   * dock类型
-   * 0：应用类型
-   * 1：卡片类型
-   * 2：功能入口类型
+   * Type of smartdock item:
+   * 0: appications
+   * 1: forms
+   * 2: launcher functions
    */
-  itemType: number;
+  itemType: number | undefined;
 
   /**
-   * dock是否可编辑
+   * true if this item is editable
    */
-  editable: boolean;
+  editable: boolean | undefined;
 }

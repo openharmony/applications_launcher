@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,17 +20,17 @@ export default class MissionInfo {
   /**
    * Indicates mission id.
    */
-  missionId: number;
+  missionId: number | undefined;
 
   /**
    * Indicates running state.
    */
-  runningState: number;
+  runningState: number | undefined;
 
   /**
    * Indicates locked state.
    */
-  lockedState: boolean;
+  lockedState: boolean | undefined;
 
   /**
    * Indicates mission snapshot.

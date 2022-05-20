@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -37,7 +37,7 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_APP_ICON_SIZE_WIDTH = 70;
   static readonly DEFAULT_APP_NAME_HEIGHT = 25;
   static readonly DEFAULT_ADD_APP_ICON_SIZE = 50;
-  static readonly DEFAULT_ADD_APP_SIZE = 65;
+  static readonly DEFAULT_ADD_APP_SIZE = 54;
   static readonly DEFAULT_VP_30 = 30;
   static readonly DEFAULT_OPEN_FOLDER_NAME_SIZE = 30;
   static readonly DEFAULT_OPEN_FOLDER_TITLE_HEIGHT = 130;
@@ -48,6 +48,7 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_FOLDER_APP_GRID_MARGIN = 10;
   static readonly DEFAULT_APP_GRID_TOGGLE_SIZE = 30;
   static readonly DEFAULT_APP_GRID_TOGGLE_MARGIN = -30;
+  static readonly DEFAULT_APP_TITLE_MARGIN = 5;
   static readonly DEFAULT_APP_ADD_TEXT_MARGIN = 14;
   static readonly DEFAULT_APP_ADD_TEXT_BOTTOM_MARGIN = 20;
   static readonly DEFAULT_APP_ADD_WIDTH = '70%';
@@ -59,5 +60,6 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_APP_ADD_DIALOG_WIDTH = 394;
   static readonly DEFAULT_APP_ADD_DIALOG_HEIGHT = 536;
   static readonly DEFAULT_BUTTON_HEIGHT = 40;
+  static readonly DEFAULT_BUTTON_WIDTH = 100;
   static readonly DEFAULT_DIALOG_BOTTOM_MARGIN = 16;
 }

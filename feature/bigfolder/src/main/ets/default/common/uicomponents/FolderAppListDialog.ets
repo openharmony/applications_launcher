@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,14 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import AppBubble from '../../../../../../../../common/src/main/ets/default/uicomponents/AppBubble.ets';
 import CommonConstants from '../../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import PresetStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
 import CommonStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
 import ResourceManager from '../../../../../../../../common/src/main/ets/default/manager/ResourceManager';
+import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
 import FolderStyleConstants from '../constants/FolderStyleConstants';
 import FolderViewModel from '../../viewmodel/FolderViewModel';
-import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
 import TitleDescriptionComponent from './TitleDescriptionComponent.ets';
 import BigFolderStyleConfig from '../BigFolderStyleConfig';
 
@@ -34,13 +35,11 @@ export default struct FolderAppListDialog {
   @StorageLink('folderAppList') folderAppList: [] = [];
   @StorageLink('appListChecked') @Watch('onAppListChecked') appListChecked: any = [];
   @StorageLink('titleDescription') titleDescription: any = '';
-  @State mAppItemWidth: number = FolderStyleConstants.DEFAULT_APP_ITEM_WIDTH;
-  @State mAppNameHeight: number = FolderStyleConstants.DEFAULT_APP_NAME_HEIGHT;
-  @State mAppNameSize: number = FolderStyleConstants.DEFAULT_FOLDER_ADD_APP_NAME_SIZE;
   @State mNameFontColor: string = FolderStyleConstants.FOLDER_ADD_APP_FONT_COLOR;
   private mFolderStyleConfig: BigFolderStyleConfig;
   private mColumnsTemplate: string;
-
+  private mDialogHeight: number = 0;
+  private mGridHeight: number = 0;
   controller: CustomDialogController;
   cancel: () => void;
   confirm: (isDestory) => void;
@@ -55,6 +54,9 @@ export default struct FolderAppListDialog {
     folderViewModel.getFolderAppList(this.folderItem.folderId);
     this.appListChecked = this.folderAppList;
     ResourceManager.getInstance().getStringById($r('app.string.add_to').id, this.updateTitleDes.bind(this));
+    this.mDialogHeight = folderViewModel.getDialogHeight(this.allAppInfoList);
+    this.mGridHeight = this.mDialogHeight - FolderStyleConstants.DEFAULT_APP_ADD_TITLE_SIZE -
+      FolderStyleConstants.DEFAULT_BUTTON_HEIGHT - FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN;
   }
 
   private updateTitleDes(value: string) {
@@ -62,7 +64,7 @@ export default struct FolderAppListDialog {
     this.onAppListChecked();
   }
 
-  private onAppListChecked () {
+  private onAppListChecked() {
     this.titleDescription = `${this.addToString}${this.folderItem.folderName}(${this.appListChecked.length}/${this.allAppInfoList.length})`;
     AppStorage.SetOrCreate('titleDescription', this.titleDescription);
   }
@@ -105,22 +107,24 @@ export default struct FolderAppListDialog {
                 Toggle({ type: ToggleType.Checkbox, isOn: item.checked })
                 .width(this.mFolderStyleConfig.mFolderToggleSize)
                 .height(this.mFolderStyleConfig.mFolderToggleSize)
-                  .position({x:-this.mFolderStyleConfig.mFolderToggleSize + this.mFolderStyleConfig.mAddFolderIconMarginHorizontal
-                  , y:-this.mFolderStyleConfig.mFolderToggleSize/2})
-                  .onChange((isOn: boolean) => {
-                    Log.showInfo(TAG, `Toggle onChange this.isOn: ${isOn}`);
-                    if (isOn) {
-                      let appItem: any;
-                      appItem = item;
-                      appItem.area = [1,1];
-                      appItem.type = CommonConstants.TYPE_APP;
-                      this.appListChecked.push(appItem);
-                    } else {
-                      let index = this.appListChecked.indexOf(item);
-                      this.appListChecked.splice(index, 1);
-                    }
-                    AppStorage.SetOrCreate('appListChecked', this.appListChecked);
-                  })
+                .position({x:-this.mFolderStyleConfig.mFolderToggleSize + this.mFolderStyleConfig.mAddFolderIconMarginHorizontal,
+                  y:-this.mFolderStyleConfig.mFolderToggleSize/2})
+                .onChange((isOn: boolean) => {
+                  Log.showInfo(TAG, `Toggle onChange this.isOn: ${isOn}`);
+                  if (isOn) {
+                    item.checked = true;
+                    let appItem: any;
+                    appItem = item;
+                    appItem.area = [1, 1];
+                    appItem.type = CommonConstants.TYPE_APP;
+                    this.appListChecked.push(appItem);
+                  } else {
+                    item.checked = false;
+                    let index = this.appListChecked.indexOf(item);
+                    this.appListChecked.splice(index, 1);
+                  }
+                  AppStorage.SetOrCreate('appListChecked', this.appListChecked);
+                })
               }
             }
             .width(this.mFolderStyleConfig.mAddFolderItemSize)
@@ -132,6 +136,8 @@ export default struct FolderAppListDialog {
         .rowsGap(this.mFolderStyleConfig.mAddFolderGridGap)
         .margin( this.mFolderStyleConfig.mAddFolderGridMargin )
       }
+      .width(this.mFolderStyleConfig.mAddFolderDialogWidth)
+      .height(this.mGridHeight)
 
       Flex({ justifyContent: FlexAlign.SpaceAround }) {
         Button() {
@@ -141,6 +147,7 @@ export default struct FolderAppListDialog {
         }
         .flexGrow(1)
         .backgroundColor(CommonStyleConstants.DEFAULT_BG_COLOR)
+        .width(FolderStyleConstants.DEFAULT_BUTTON_WIDTH)
         .height(FolderStyleConstants.DEFAULT_BUTTON_HEIGHT)
         .onClick(() => {
           this.controller.close();
@@ -160,6 +167,7 @@ export default struct FolderAppListDialog {
         .flexGrow(1)
         .backgroundColor(CommonStyleConstants.DEFAULT_BG_COLOR)
         .height(FolderStyleConstants.DEFAULT_BUTTON_HEIGHT)
+        .width(FolderStyleConstants.DEFAULT_BUTTON_WIDTH)
         .onClick(() => {
           Log.showInfo(TAG, `Dialog confirm start`);
           folderViewModel.updateFolderAppList(this.appListChecked, this.folderItem);
@@ -186,6 +194,6 @@ export default struct FolderAppListDialog {
       bottom: FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN
     })
     .width(this.mFolderStyleConfig.mAddFolderDialogWidth)
-    .height(folderViewModel.getDialogHeight(this.allAppInfoList))
+    .height(this.mDialogHeight)
   }
 }

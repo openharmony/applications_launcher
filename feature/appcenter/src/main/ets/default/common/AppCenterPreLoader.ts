@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,7 +19,7 @@ import AppCenterListStyleConfig from './AppCenterListStyleConfig';
 import AppCenterGridStyleConfig from './AppCenterGridStyleConfig';
 
 /**
- * 公共层初始化加载器
+ * public layer initialization loader
  */
 class AppCenterPreLoader extends BaseModulePreLoader {
   protected loadConfig(): void {
@@ -31,7 +31,6 @@ class AppCenterPreLoader extends BaseModulePreLoader {
   }
 
   releaseConfigAndData(): void {
-    LayoutConfigManager.removeConfigFromManager();
   }
 }
 

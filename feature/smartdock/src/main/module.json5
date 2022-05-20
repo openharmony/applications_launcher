@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "smartdock",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+    ],
+    "uiSyntax": "ets"
+  }
+}

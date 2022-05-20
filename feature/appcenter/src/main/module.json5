@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "appcenter",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+    ],
+    "uiSyntax": "ets"
+  }
+}

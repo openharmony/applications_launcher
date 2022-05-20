@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,40 +20,36 @@ import AppListPresenter from './AppListPresenter';
  * AppGridPresenter
  */
 export default class AppGridPresenter extends AppListPresenter {
-  private static sAppGridPresenter: AppGridPresenter = null;
-
   private constructor() {
     super();
   }
 
   /**
-   * 获取实例
+   * get instance
    */
   static getInstance(): AppGridPresenter {
-    if (AppGridPresenter.sAppGridPresenter == null) {
-      AppGridPresenter.sAppGridPresenter = new AppGridPresenter();
+    if (globalThis.AppGridPresenter == null) {
+      globalThis.AppGridPresenter = new AppGridPresenter();
     }
-    return AppGridPresenter.sAppGridPresenter;
+    return globalThis.AppGridPresenter;
   }
 
   /**
-   * 注册监听事件
+   * Register to listen to events
    */
   registerAppListChange() {
     this.registerAppListChangeCallback();
-    this.mAppModel.registerAppListEvent();
   }
 
   /**
-   * 反注册监听事件
+   * Unregister listener events
    */
   unregisterAppListChange() {
     this.unregisterAppListChangeCallback();
-    this.mAppModel.unregisterAppListEvent();
   }
 
   /**
-   * 通过bundleName获取shortcut信息
+   * Get shortcut information by bundleName
    */
   getShortcutInfo(bundleName: string): ShortcutInfo[] | undefined {
     return this.mAppModel.getShortcutInfo(bundleName);

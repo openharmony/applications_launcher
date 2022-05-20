@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,21 +17,31 @@ import display from '@ohos.display';
 import Window from '@ohos.window';
 import Log from '../utils/Log';
 import StyleConstants from '../constants/StyleConstants';
-import ServiceExtensionContext from "application/ServiceExtensionContext";
+import ServiceExtensionContext from 'application/ServiceExtensionContext';
 
 const TAG = 'WindowManager';
 
 /**
- * 窗口管理类
+ * Wrapper class for window interfaces.
  */
 class WindowManager {
-  private static sInstance: WindowManager | undefined = undefined;
-
   private mDisplayData = null;
 
-  RECENT_WINDOW_NAME = 'recentsWindow';
+  RECENT_WINDOW_NAME = 'RecentView';
 
-  DESKTOP_WINDOW_NAME = 'LauncherWindow';
+  DESKTOP_WINDOW_NAME = 'EntryView';
+
+  APP_CENTER_WINDOW_NAME = 'AppCenterView';
+
+  FORM_MANAGER_WINDOW_NAME = 'FormManagerView';
+
+  DESKTOP_RANK = 2001;
+
+  FORM_MANAGER_RANK = 2100;
+
+  RECENT_RANK = 2115;
+
+  DOCK_RANK = 2116;
 
   /**
    * 获取窗口管理类对象
@@ -39,10 +49,10 @@ class WindowManager {
    * @return 窗口管理类对象单一实例
    */
   static getInstance(): WindowManager {
-    if (WindowManager.sInstance == undefined) {
-      WindowManager.sInstance = new WindowManager();
+    if (globalThis.WindowManager == null) {
+      globalThis.WindowManager = new WindowManager();
     }
-    return WindowManager.sInstance;
+    return globalThis.WindowManager;
   }
 
   /**
@@ -112,13 +122,21 @@ class WindowManager {
           void win.loadContent(loadContent).then(() => {
             Log.showInfo(TAG, `then begin ${name} window loadContent in then!`);
             void win.show().then(() => {
-              void win.setLayoutFullScreen(true).then(() => {
-                void win.setSystemBarProperties({
-                  navigationBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR,
-                  statusBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR
-                }).then(() => {
-                  Log.showInfo(TAG, name + `${name} setSystemBarProperties`);
-                });
+              void win.setSystemBarProperties({
+                navigationBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR,
+                statusBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR
+              }).then(() => {
+                if (name === this.RECENT_WINDOW_NAME) {
+                  // setFullScreen is also need to set system ui bar color to avoid flicker
+                  void win.setFullScreen(true).then(() => {
+                    Log.showInfo(TAG, `${name} setFullScreen`);
+                  });
+                } else {
+                  void win.setLayoutFullScreen(true).then(() => {
+                    Log.showInfo(TAG, `${name} setLayoutFullScreen`);
+                  });
+                }
+                Log.showInfo(TAG, `${name} setSystemBarProperties`);
               });
               if (callback) {
                 callback(win);
@@ -193,6 +211,7 @@ class WindowManager {
         Log.showInfo(TAG, 'Launcher minimizeAll');
       });
     });
+    this.destroyWindow(this.FORM_MANAGER_WINDOW_NAME);
   }
 
   destroyWindow(name: string, callback?: Function): void {

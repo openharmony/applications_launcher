@@ -1,0 +1,12 @@
+{
+  "name": "@ohos/common",
+  "version": "1.0.0",
+  "description": "a npm package which contains common function",
+  "ohos": {
+    "org": "huawei",
+    "buildTool": "hvigor",
+    "directoryLevel": "module"
+  },
+  "dependencies": {
+  }
+}

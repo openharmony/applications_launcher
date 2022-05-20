@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,22 +14,22 @@
  */
 
 /**
- * 单个文件夹信息
+ * Item info of folders.
  */
 export default class FolderItemInfo {
 
   /**
-   * 文件夹id
+   * folder id.
    */
-  folderId: string;
+  folderId: string | undefined;
 
   /**
-   * 文件夹名
+   * folder name to display
    */
-  folderName: string;
+  folderName: string | undefined;
 
   /**
-   * 文件夹内应用信息
+   * Application list of this folder.
    */
-  appList: string[];
+  appList: string[] | undefined;
 }

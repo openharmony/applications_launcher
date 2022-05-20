@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -47,7 +47,7 @@ export default class RecentsModeConfig extends ILayoutConfig {
    *
    * @return {RecentsModeConfig} RecentsModeConfig instance
    */
-  static getInstance() {
+  static getInstance(): RecentsModeConfig {
     if (globalThis.RecentsModeConfigInstance == null) {
       globalThis.RecentsModeConfigInstance = new RecentsModeConfig();
       globalThis.RecentsModeConfigInstance.initConfig();
@@ -78,7 +78,7 @@ export default class RecentsModeConfig extends ILayoutConfig {
    *
    * @param {number} limit value
    */
-  updateRecentMissionsLimit(limit: number) {
+  updateRecentMissionsLimit(limit: number): void {
     this.mRecentMissionsLimit = limit;
     super.persistConfig();
   }
@@ -88,7 +88,7 @@ export default class RecentsModeConfig extends ILayoutConfig {
    *
    * @return {number} limit value
    */
-  getRecentMissionsLimit() {
+  getRecentMissionsLimit(): number {
     return this.mRecentMissionsLimit;
   }
 
@@ -97,7 +97,7 @@ export default class RecentsModeConfig extends ILayoutConfig {
    *
    * @return {string} single / double
    */
-  getRecentMissionsRowType() {
+  getRecentMissionsRowType(): string {
     return this.mRecentMissionsRowType;
   }
 }

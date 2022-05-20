@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,8 +21,6 @@ import EventConstants from '../../../../../../../../common/src/main/ets/default/
  */
 
 export default class PageDesktopModel {
-  private static sPageDesktopModel: PageDesktopModel = null;
-
   private constructor() {
   }
 
@@ -32,20 +30,22 @@ export default class PageDesktopModel {
   * @return PageDesktopModel
    */
   static getInstance(): PageDesktopModel {
-    if (PageDesktopModel.sPageDesktopModel == null) {
-      PageDesktopModel.sPageDesktopModel = new PageDesktopModel();
+    if (globalThis.PageDesktopModel == null) {
+      globalThis.PageDesktopModel = new PageDesktopModel();
     }
-    return PageDesktopModel.sPageDesktopModel;
+    return globalThis.PageDesktopModel;
   }
 
   /**
-  * 注册PageDesktop应用列表添加事件.
+  * Register for the PageDesktop application list add event.
   *
-  * @param listener 监听对象
+  * @param listener
    */
-  registerPageDesktopItemAddEvent(listener) {
+  registerPageDesktopItemAddEvent(listener): void {
     LocalEventManager.registerEventListener(listener, [
-      EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD
+      EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD,
+      EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE,
+      EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE
     ]);
   }
 
@@ -54,18 +54,18 @@ export default class PageDesktopModel {
   *
   * @param listener
    */
-  registerPageDesktopBadgeUpdateEvent(listener) {
+  registerPageDesktopBadgeUpdateEvent(listener): void {
     LocalEventManager.registerEventListener(listener, [
       EventConstants.EVENT_BADGE_UPDATE
     ]);
   }
 
   /**
-  * 解注册应用列表改变监听.
+  * Unregister application list change listener.
   *
-  * @param listener 监听对象
+  * @param listener
    */
-  unregisterEventListener(listener) {
+  unregisterEventListener(listener): void {
     LocalEventManager.unregisterEventListener(listener);
   }
 

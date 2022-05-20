@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,7 +23,6 @@ const KEY_APP_LIST = "appListInfo";
 const KEY_NAME = "name";
 
 export default class AppListPresenter extends BaseAppPresenter {
-  private static sAppListPresenter: AppListPresenter = null;
   private mPinyinSort: PinyinSort;
 
   protected constructor() {
@@ -32,46 +31,16 @@ export default class AppListPresenter extends BaseAppPresenter {
   }
 
   public static getInstance(): AppListPresenter {
-    if (AppListPresenter.sAppListPresenter == null) {
-      AppListPresenter.sAppListPresenter = new AppListPresenter();
+    if (globalThis.AppListPresenter == null) {
+      globalThis.AppListPresenter = new AppListPresenter();
     }
-    return AppListPresenter.sAppListPresenter;
+    return globalThis.AppListPresenter;
   }
 
-  public async getAppList() {
-    let list: Array<AppItemInfo> | number = this.mAppListInfoCacheManager.getCache(KEY_APP_LIST);
-    if (list != CommonConstants.INVALID_VALUE) {
-      return list;
-    }
-
-    list = await this.mAppModel.getAppList();
-    for (let item of list) {
-      let cacheKey = item.appLabelId + item.bundleName;
-      let appName = this.mResourceManager.getAppResourceCache(cacheKey, KEY_NAME);
-      if (appName != null) {
-        item.appName = appName;
-      } else {
-        let loadAppName = await this.mResourceManager.getAppNameSync(item.appLabelId, item.bundleName, item.appName);
-        console.info("Launcher AppListPresenter getAppList loadAppName:" + loadAppName);
-        item.appName = loadAppName;
-      }
-    }
-
-    list.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
-    this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, list);
-    animateTo({
-      duration: 200,
-      curve: Curve.EaseInOut,
-      delay: 100,
-      playMode: PlayMode.Normal,
-      tempo: 0.5,
-      iterations: 1,
-      onFinish: () => {
-      }
-    }, () => {
-      AppStorage.SetOrCreate('listInfo', list);
-    })
-    return list;
+  public async getAppList(): Promise<void> {
+    let appList = await this.mAppModel.getAppList();
+    appList.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
+    AppStorage.SetOrCreate('listInfo', appList);
   }
 
   public async regroupDataAppListChange(callbackList) {
@@ -88,7 +57,6 @@ export default class AppListPresenter extends BaseAppPresenter {
       }
     }
     callbackList.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
-    this.mAppListInfoCacheManager.setCache(KEY_APP_LIST, callbackList);
     animateTo({
       duration: 200,
       curve: Curve.EaseInOut,

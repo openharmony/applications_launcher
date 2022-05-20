@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -72,7 +72,7 @@ export default class FileUtils {
    * @param {string} string - target string will be written to file
    * @param {string} bundleName - bundleName as target file name
    */
-  static writeStringToFile(string: string, bundleName: string) {
+  static writeStringToFile(string: string, bundleName: string): void {
     console.info('Launcher FileUtil writeStringToFile start execution');
     const filePath = writeFilePath + bundleName + '.json';
     let writeStreamSync = null;
@@ -100,7 +100,7 @@ export default class FileUtils {
     let buf = new ArrayBuffer(READ_DATA_SIZE);
     let len = readStreamSync.readSync(buf);
     while (len != 0) {
-      console.info('Launcher FileUtil getContent FileIO reading ' + len);
+      console.info(`Launcher FileUtil getContent FileIO reading ${len}`);
       totalLength += len;
       if (len < READ_DATA_SIZE) {
         buf = buf.slice(0, len);

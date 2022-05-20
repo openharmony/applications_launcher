@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,19 +16,19 @@ import BaseStage from '../../../../../../../common/src/main/ets/default/base/Bas
 import recentMissionsPreLoader from './RecentMissionsPreLoader';
 
 /**
- * Recent missions feature stage
+ * Recent missions feature stage.
  */
 export default class RecentMissionsStage extends BaseStage {
 
   /**
-   * The callback of stage start
+   * The callback of stage start.
    */
   onCreate(): void {
     recentMissionsPreLoader.load();
   }
 
   /**
-   * The callback of stage exit
+   * The callback of stage exit.
    */
   onDestroy(): void {
     recentMissionsPreLoader.releaseConfigAndData();

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,9 +40,7 @@ export default struct AppName {
   }
 
   public updateName() {
-    if (this.bundleName && this.bundleName.length > 0) {
-      this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
-    }
+    this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
   }
 
   build() {

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,9 +17,9 @@ export default class StyleConstants {
   // image resources
   static readonly DEFAULT_APP_ICON_IMAGE: any = $r('app.media.icon');
   static readonly DEFAULT_APP_IMAGE: any = $r('app.media.img_app_default');
-  static readonly DEFAULT_DELETE_IMAGE: any = '/common/pics/ic_public_delete.svg';
+  static readonly DEFAULT_DELETE_IMAGE = '/common/pics/ic_public_delete.svg';
   static readonly DEFAULT_RECENT_BACKGROUND_IMAGE = '/common/pics/ic_wallpaper_recent.jpg';
-  static readonly DEFAULT_LOCKED_IMAGE: any = '/common/pics/ic_public_lock.svg';
+  static readonly DEFAULT_LOCKED_IMAGE = '/common/pics/ic_public_lock.svg';
 
   // font style resources
   static readonly DEFAULT_FONT_COLOR = '#ffffff';
@@ -38,14 +38,14 @@ export default class StyleConstants {
   static readonly DOUBLE_LIST_DELETE_HEIGHT_PERCENTAGE = '10%';
 
   // layout size
-  static readonly SINGLE_LIST_TOP_AERA_HEIGHT: number = 107;
-  static readonly SINGLE_LIST_MIDDLE_AERA_HEIGHT: number = 497;
+  static readonly SINGLE_LIST_TOP_AERA_HEIGHT: number = 80;
+  static readonly SINGLE_LIST_MIDDLE_AERA_HEIGHT: number = 600;
   static readonly SINGLE_LIST_BOTTOM_AERA_HEIGHT: number = 176;
 
   // image size resources
-  static readonly SINGLE_LIST_APP_IMAGE_WIDTH = 216;
-  static readonly SINGLE_LIST_APP_IMAGE_HEIGHT = 458;
-  static readonly SINGLE_LIST_MISSION_HEIGHT: number = 497;
+  static readonly SINGLE_LIST_APP_IMAGE_WIDTH = 280;
+  static readonly SINGLE_LIST_APP_IMAGE_HEIGHT = 500;
+  static readonly SINGLE_LIST_MISSION_HEIGHT: number = 600;
   static readonly DOUBLE_LIST_APP_IMAGE_WIDTH = 282;
   static readonly DOUBLE_LIST_APP_IMAGE_HEIGHT = 176;
   static readonly DOUBLE_LIST_MISSION_HEIGHT = 214;

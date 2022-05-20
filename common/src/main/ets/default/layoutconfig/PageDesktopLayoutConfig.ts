@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,11 +17,11 @@ import ILayoutConfig from './ILayoutConfig';
 import CommonConstants from '../constants/CommonConstants';
 
 /**
- * 桌面工作空间功能布局配置
+ * Desktop workspace function layout configuration.
  */
 export default class PageDesktopLayoutConfig extends ILayoutConfig {
   /**
-   * 工作空间功能布局配置索引
+   * Workspace Feature Layout Configuration Index.
    */
   static GRID_LAYOUT_INFO = 'GridLayoutInfo';
 
@@ -40,8 +40,6 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
     layoutInfo: []
   };
 
-  private static readonly sInstance: PageDesktopLayoutConfig = null;
-
   private mGridLayoutInfo: any = PageDesktopLayoutConfig.DEFAULT_LAYOUT_INFO;
 
   protected constructor() {
@@ -49,7 +47,7 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
   }
 
   /**
-   * 获取工作空间功能布局配置实例
+   * Get an instance of the workspace function layout configuration
    */
   static getInstance(): PageDesktopLayoutConfig {
     if (globalThis.PageDesktopLayoutConfigInstance == null) {
@@ -81,19 +79,19 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
   }
 
   /**
-   * 更新工作空间布局数据
+   * Update workspace layout data.
    *
-   * @params gridLayoutInfo 工作空间布局数据
+   * @params gridLayoutInfo
    */
-  updateGridLayoutInfo(gridLayoutInfo): void {
+  updateGridLayoutInfo(gridLayoutInfo: object): void {
     this.mGridLayoutInfo = gridLayoutInfo;
     super.persistConfig();
   }
 
   /**
-   * 获取工作空间布局数据
+   * Get workspace layout data
    *
-   * @return 工作空间布局数据
+   * @return Workspace layout data
    */
   getGridLayoutInfo(): any {
     return this.mGridLayoutInfo;

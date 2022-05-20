@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "bigfolder",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+    ],
+    "uiSyntax": "ets"
+  }
+}

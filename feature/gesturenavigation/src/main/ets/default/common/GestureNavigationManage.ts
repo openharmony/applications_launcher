@@ -66,7 +66,7 @@ export default class GestureNavigationManage {
     try{
       gestureNavigationStatus = this.getValue();
       Log.showInfo(TAG, `getGestureNavigationStatus gestureNavigationStatus:  ${gestureNavigationStatus}`);
-      this.HandleEventSwitches(gestureNavigationStatus);
+      this.handleEventSwitches(gestureNavigationStatus);
       this.registerListenForDataChanges(this.dataChangesCallback.bind(this));
     }catch (err) {
       Log.showInfo(TAG, 'getGestureNavigationStatus error');
@@ -78,7 +78,8 @@ export default class GestureNavigationManage {
       Log.showInfo(TAG, `dataChangesCallback failed, because ${data.message}`);
     } else {
       const getRetValue = this.getValue();
-      this.HandleEventSwitches(getRetValue);
+      this.handleEventSwitches(getRetValue);
+      AppStorage.SetOrCreate('NavigationBarStatusValue', getRetValue == '0' ? true : false);
       Log.showInfo(TAG, `dataChangesCallback getRetValue ${getRetValue}`);
     }
   }
@@ -91,7 +92,7 @@ export default class GestureNavigationManage {
     inputMonitor.off('touch', this.touchEventCallback);
   }
 
-  private HandleEventSwitches(gestureNavigationStatus: string) {
+  private handleEventSwitches(gestureNavigationStatus: string) {
     if (gestureNavigationStatus == '0') {
       this.turnOnTouchEventCallback();
     } else {

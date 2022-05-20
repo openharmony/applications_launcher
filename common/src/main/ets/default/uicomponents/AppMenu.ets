@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,6 +17,9 @@ import MenuInfo from '../bean/MenuInfo';
 import CommonConstants from '../constants/CommonConstants';
 import StyleConstants from '../constants/StyleConstants';
 import ResourceManager from '../manager/ResourceManager';
+import Log from '../utils/Log';
+
+const TAG = 'AppMenu';
 
 @Component
 export default struct AppMenu {
@@ -27,7 +30,7 @@ export default struct AppMenu {
   isBothTypeMenuExist: boolean = true;
 
   aboutToAppear() {
-    console.info("Launcher AppMenu aboutToAppear start");
+    Log.showInfo(TAG, 'aboutToAppear start');
     this.fixedMenuList = new Array<MenuInfo>();
     this.dynamicMenuList = new Array<MenuInfo>();
     for (let menuInfo of this.menuInfoList) {

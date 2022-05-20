@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,31 +22,33 @@ import CheckEmptyUtils from '../utils/CheckEmptyUtils';
 import CommonConstants from '../constants/CommonConstants';
 import EventConstants from '../constants/EventConstants';
 import ResourceManager from './ResourceManager';
+import osaccount from '@ohos.account.osAccount';
 import Trace from '../utils/Trace';
 import Log from '../utils/Log';
 
 const TAG = 'LauncherAbilityManager';
 
 /**
- * 桌面应用管理类
+ * Wrapper class for innerBundleManager and formManager interfaces.
  */
 class LauncherAbilityManager {
   private static readonly CURRENT_USER_ID = -2;
   private static readonly BUNDLE_STATUS_CHANGE_KEY = 'BundleStatusChange';
   private readonly mAppMap = new Map<string, AppItemInfo>();
+  private mUserId: number = 100;
 
   private readonly mBundleStatusCallback: BundleStatusCallback = {
     add: (bundleName, userId) => {
-      Log.showInfo(TAG, `mBundleStatusCallback add bundleName: ${bundleName}, userId: ${userId}`);
-      this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_ADDED, bundleName, userId);
+      Log.showInfo(TAG, `mBundleStatusCallback add bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
+      this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_ADDED, bundleName, userId);
     },
     remove: (bundleName, userId) => {
-      Log.showInfo(TAG, `mBundleStatusCallbackremove bundleName: ${bundleName}, userId: ${userId}`);
-      this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_REMOVED, bundleName, userId);
+      Log.showInfo(TAG, `mBundleStatusCallbackremove bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
+      this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_REMOVED, bundleName, userId);
     },
     update: (bundleName, userId) => {
-      Log.showInfo(TAG, `mBundleStatusCallbackupdate bundleName: ${bundleName}, userId: ${userId}`);
-      this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_CHANGED, bundleName, userId);
+      Log.showInfo(TAG, `mBundleStatusCallbackupdate bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
+      this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_CHANGED, bundleName, userId);
     }
   };
 
@@ -63,6 +65,14 @@ class LauncherAbilityManager {
     }
     Log.showInfo(TAG, 'getInstance!');
     return globalThis.LauncherAbilityManagerInstance;
+  }
+
+  private constructor() {
+    const osAccountManager = osaccount.getAccountManager();
+    osAccountManager.getOsAccountLocalIdFromProcess((err, localId) => {
+      Log.showInfo(TAG, `getOsAccountLocalIdFromProcess localId ${localId}`);
+      this.mUserId = localId;
+    });
   }
 
   /**
@@ -132,7 +142,8 @@ class LauncherAbilityManager {
       return appItemInfoList;
     }
     for (let i = 0; i < abilityList.length; i++) {
-      appItemInfoList.push(this.convertToAppItemInfo(abilityList[i]));
+      let appItem = await this.convertToAppItemInfo(abilityList[i]);
+      appItemInfoList.push(appItem);
     }
     return appItemInfoList;
   }
@@ -159,7 +170,8 @@ class LauncherAbilityManager {
       return appItemInfoList;
     }
     for (let i = 0; i < abilityInfos.length; i++) {
-      appItemInfoList.push(this.convertToAppItemInfo(abilityInfos[i]));
+      let appItem = await this.convertToAppItemInfo(abilityInfos[i]);
+      appItemInfoList.push(appItem);
     }
     return appItemInfoList;
   }
@@ -196,37 +208,25 @@ class LauncherAbilityManager {
       Log.showError(TAG, `${bundleName} has no launcher ability`);
       return undefined;
     }
-    const data = await this.convertToAppItemInfoCache(abilityInfos[0]);
+    const data = await this.convertToAppItemInfo(abilityInfos[0]);
     Log.showInfo(TAG, `getAppInfoByBundleName from BMS: ${JSON.stringify(data)}`);
     return data;
   }
 
-  private async convertToAppItemInfoCache(info): Promise<AppItemInfo> {
+  private async convertToAppItemInfo(info): Promise<AppItemInfo> {
     const appItemInfo = new AppItemInfo();
-    const appLabelId = info.labelId;
-    const bundleName = info.elementName.bundleName;
-    const appName = info.applicationInfo.label;
-    const loadAppName = await ResourceManager.getInstance().getAppNameSync(appLabelId, bundleName, appName);
-    appItemInfo.appName = loadAppName;
-    appItemInfo.appLabelId = appLabelId;
-    appItemInfo.bundleName = bundleName;
-    appItemInfo.isSystemApp = info.applicationInfo.systemApp;
-    appItemInfo.isUninstallAble = info.applicationInfo.removable;
-    appItemInfo.appIconId = info.iconId;
-    appItemInfo.abilityName = info.elementName.abilityName;
-    this.mAppMap.set(bundleName, appItemInfo);
-    return appItemInfo;
-  }
-
-  private convertToAppItemInfo(info): AppItemInfo {
-    const appItemInfo = new AppItemInfo();
-    appItemInfo.appName = info.applicationInfo.label;
+    appItemInfo.appName = await ResourceManager.getInstance().getAppNameSync(
+      info.labelId, info.elementName.bundleName, info.applicationInfo.label
+    );
     appItemInfo.isSystemApp = info.applicationInfo.systemApp;
     appItemInfo.isUninstallAble = info.applicationInfo.removable;
     appItemInfo.appIconId = info.iconId;
     appItemInfo.appLabelId = info.labelId;
     appItemInfo.bundleName = info.elementName.bundleName;
     appItemInfo.abilityName = info.elementName.abilityName;
+    appItemInfo.installTime = String(new Date());
+    await ResourceManager.getInstance().updateIconCache(appItemInfo.appIconId, appItemInfo.bundleName);
+    this.mAppMap.set(appItemInfo.bundleName, appItemInfo);
     return appItemInfo;
   }
 
@@ -276,9 +276,9 @@ class LauncherAbilityManager {
    * @params paramAbilityName
    * @params paramBundleName
    */
-  startAbilityForResult(paramAbilityName: string, paramBundleName: string, paramCardId: number) {
-    Log.showInfo(TAG, `startAbilityForResult abilityName: ${paramAbilityName},bundleName: ${paramBundleName},paramCardId: ${paramCardId}`);
-    const result = globalThis.desktopContext.startAbilityForResult({
+  startAbilityFormEdit(paramAbilityName: string, paramBundleName: string, paramCardId: number) {
+    Log.showInfo(TAG, `startAbility abilityName: ${paramAbilityName},bundleName: ${paramBundleName},paramCardId: ${paramCardId}`);
+    const result = globalThis.desktopContext.startAbility({
       bundleName: paramBundleName,
       abilityName: paramAbilityName,
       parameters:
@@ -286,22 +286,11 @@ class LauncherAbilityManager {
           formId: paramCardId.toString()
         }
     }).then((ret) => {
-      Log.showInfo(TAG, `startAbilityForResult ret: ${JSON.stringify(ret)}`);
+      Log.showInfo(TAG, `startAbility ret: ${JSON.stringify(ret)}`);
     }, (err) => {
-      Log.showError(TAG, `startAbilityForResult catch error: ${JSON.stringify(err)}`);
+      Log.showError(TAG, `startAbility catch error: ${JSON.stringify(err)}`);
     });
-    Log.showInfo(TAG, `startAbilityForResult result: ${JSON.stringify(result)}`);
-    this.requestForm(paramCardId);
-  }
-
-  async requestForm(paramCardId: number) {
-    await formManagerAbility.requestForm(paramCardId.toString())
-      .then((result) => {
-        Log.showInfo(TAG, `requestForm result: ${JSON.stringify(result)}`);
-      })
-      .catch((err) => {
-        Log.showInfo(TAG, `requestForm error: ${JSON.stringify(err)}`);
-      });
+    Log.showInfo(TAG, `startAbility result: ${JSON.stringify(result)}`);
   }
 
   async getShortcutInfo(paramBundleName, callback) {

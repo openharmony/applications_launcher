@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+/**
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,22 +20,37 @@ import RecentMissionsViewModel from '../viewmodel/RecentMissionsViewModel';
 
 const TAG = 'RecentMissionsDoubleLayout';
 
+/**
+ * Double-line display of recent task list (pad adaptation).
+ */
 @Component
 export default struct RecentMissionsDoubleLayout {
-  @Link mRecentMissionsDoubleList: [];
-  @Link mIsClickSubComponent: boolean;
+  @Link recentMissionsDoubleList: [];
+  @Link isClickSubComponent: boolean;
   private mRecentMissionsViewModel: RecentMissionsViewModel;
-  private mScroll: Scroller = new Scroller();
 
-  private aboutToAppear(): void  {
+  private aboutToAppear(): void {
+    Log.showInfo(TAG, 'aboutToAppear start');
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
+  }
+
+  private aboutToDisappear(): void {
+    Log.showInfo(TAG, `aboutToDisappear start`);
+  }
+
+  private onPageShow(): void {
+    Log.showInfo(TAG, `onPageShow start`);
+  }
+
+  private onPageHide(): void {
+    Log.showInfo(TAG, `onPageHide start`);
   }
 
   build() {
     Column() {
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Start, justifyContent: FlexAlign.Center }) {
         Grid() {
-          ForEach(this.mRecentMissionsDoubleList, (item) => {
+          ForEach(this.recentMissionsDoubleList, (item) => {
               GridItem() {
                 RecentMissionCard({
                   missionId: item.missionId,
@@ -45,7 +60,8 @@ export default struct RecentMissionsDoubleLayout {
                   bundleName: item.bundleName,
                   abilityName: item.abilityName,
                   lockedState: item.lockedState,
-                  mIsClickSubComponent: $mIsClickSubComponent
+                  isClickSubComponent: $isClickSubComponent,
+                  recentImage: item.snapShotInfo.snapShotImage
                 })
               }
               .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
@@ -54,30 +70,36 @@ export default struct RecentMissionsDoubleLayout {
         }
         .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
         .rowsTemplate('1fr 1fr')
+        .direction(Direction.Rtl)
         .columnsGap(StyleConstants.DOUBLE_LIST_LAYOUT_MARGIN)
         .rowsGap(StyleConstants.DOUBLE_LIST_LAYOUT_MARGIN)
       }
       .margin({top: StyleConstants.DOUBLE_LIST_TOP_MARGIN})
       .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
       .height(StyleConstants.DOUBLE_LIST_GRID_HEIGHT_PERCENTAGE)
-      Column() {
-        Image(StyleConstants.DEFAULT_DELETE_IMAGE)
-        .width(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
-        .height(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
+
+      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
+        Column() {
+          Image(StyleConstants.DEFAULT_DELETE_IMAGE)
+            .width(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
+            .height(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
+        }
+        .width(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
+        .height(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
+        .opacity(StyleConstants.DEFAULT_DELETE_IMAGE_OPACITY)
+        .backgroundColor(StyleConstants.DEFAULT_FONT_COLOR)
+        .borderRadius(StyleConstants.RECENT_DELETE_IMAGE_RADIUS)
+        .padding(8)
+        .onClick(() => {
+          this.isClickSubComponent = true;
+          Log.showInfo(TAG, 'onClick click delete button');
+          this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
+          this.mRecentMissionsViewModel.backView();
+        })
       }
-      .width(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
+      .margin({ top: StyleConstants.DOUBLE_LIST_BOTTOM_MARGIN })
+      .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
       .height(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
-      .opacity(StyleConstants.DEFAULT_DELETE_IMAGE_OPACITY)
-      .backgroundColor(StyleConstants.DEFAULT_FONT_COLOR)
-      .borderRadius(StyleConstants.RECENT_DELETE_IMAGE_RADIUS)
-      .padding(8)
-      .margin({top: StyleConstants.DOUBLE_LIST_BOTTOM_MARGIN})
-      .onClick(() => {
-        this.mIsClickSubComponent = true;
-        Log.showInfo(TAG, `click delete button`);
-        this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
-        this.mRecentMissionsViewModel.backView();
-      })
     }
     .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
   }
