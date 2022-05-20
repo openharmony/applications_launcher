@@ -15,6 +15,7 @@
 
 import ResourceManager from '../../../../../../../../common/src/main/ets/default/manager/ResourceManager';
 import StyleConstants from '../constants/StyleConstants';
+import RecentMissionsViewModel from '../../viewmodel/RecentMissionsViewModel.ets';
 
 const TAG = 'Recent-RecentMissionAppIcon';
 
@@ -29,14 +30,18 @@ export default struct RecentMissionAppIcon {
   @Prop labelId: string;
   @State icon: string = ' ';
   @State useCache: boolean = true;
+  private mIsSingleLayout: boolean = true;
   private mResourceManager;
   private mDefaultAppIcon;
+  private mRecentMissionsViewModel: RecentMissionsViewModel;
 
   aboutToAppear(): void  {
     this.mDefaultAppIcon = StyleConstants.DEFAULT_APP_ICON_IMAGE;
     this.icon = this.mDefaultAppIcon;
     this.mResourceManager = ResourceManager.getInstance();
     this.updateIcon();
+    this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
+    this.mIsSingleLayout = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ? true : false;
   }
 
   /**
@@ -62,5 +67,6 @@ export default struct RecentMissionAppIcon {
     }
     .width(this.iconSize)
     .height(this.iconSize)
+    .margin({left: this.mIsSingleLayout ? StyleConstants.SINGLE_LIST_APPICON_LEFT_MARGIN : 0})
   }
 }

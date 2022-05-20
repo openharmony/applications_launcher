@@ -18,6 +18,7 @@ export default class StyleConstants {
   static readonly DEFAULT_APP_ICON_IMAGE: any = $r('app.media.icon');
   static readonly DEFAULT_APP_IMAGE: any = $r('app.media.img_app_default');
   static readonly DEFAULT_DELETE_IMAGE = '/common/pics/ic_public_delete.svg';
+  static readonly DEFAULT_DELETE_IMAGE_FULL = '/common/pics/ic_public_delete_full.svg';
   static readonly DEFAULT_RECENT_BACKGROUND_IMAGE = '/common/pics/ic_wallpaper_recent.jpg';
   static readonly DEFAULT_LOCKED_IMAGE = '/common/pics/ic_public_lock.svg';
 
@@ -27,6 +28,7 @@ export default class StyleConstants {
   static readonly DEFAULT_APP_NAME_SIZE = 16;
   static readonly SINGLE_LIST_DEFAULT_APP_ICON_SIZE = 28;
   static readonly DOUBLE_LIST_DEFAULT_APP_ICON_SIZE = 28;
+  static readonly SINGLE_LIST_DEFAULT_APP_ICON_SIZE_NEW = 22;
 
   // layout percentage adaptation resources
   static readonly DEFAULT_LAYOUT_PERCENTAGE = '100%';
@@ -56,16 +58,25 @@ export default class StyleConstants {
   static readonly RECENT_IMAGE_RADIUS = 20;
   static readonly RECENT_DELETE_IMAGE_RADIUS = 24;
   static readonly RECENT_DELETE_IMAGE_SIZE = 24;
-  static readonly RECENT_DELETE_IMAGE_COLUMN_SIZE = 40;
+  static readonly RECENT_DELETE_IMAGE_COLUMN_SIZE = 48;
   static readonly SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT = 1;
   static readonly SINGLE_LIST_LAYOUT_MARGIN = 10;
   static readonly DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT = 2;
   static readonly DOUBLE_LIST_LAYOUT_MARGIN = 20;
+  static readonly DOUBLE_LIST_LAYOUT_COLUMNSGAP = 20;
+  static readonly DOUBLE_LIST_LAYOUT_ROWSGAP = 40;
   static readonly DOUBLE_LIST_RIGHT_MARGIN = 72;
-  static readonly DOUBLE_LIST_TOP_MARGIN = 24;
-  static readonly DOUBLE_LIST_BOTTOM_MARGIN = 24;
+  static readonly DOUBLE_LIST_TOP_MARGIN = 54;
+  static readonly DOUBLE_LIST_BOTTOM_MARGIN = 26;
+  static readonly SINGLE_LIST_APPICON_LEFT_MARGIN = 16;
+  static readonly SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN = 40;
+  static readonly DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN = 43;
+  static readonly DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN = 6;
+  static readonly SINGLE_LIST_DELETE_IMAGE_FULL_BOTTOM_MARGIN = 96;
+
+
 
   // the dpi of phone should be 480, but it is 320 currently.
   // so all dimensions have to be multiplied by 1.5
-  static readonly DPI_RATIO = 1.5;
+  static readonly DPI_RATIO = 1;
 }

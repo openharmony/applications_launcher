@@ -96,17 +96,20 @@ export default struct RecentMissionCard {
           })
         }
         .layoutWeight(this.layoutWeight)
-        .margin({ left: this.margin / 2 })
+        .margin({ left: this.margin / 2, bottom: this.mIsSingleLayout ?  this.margin:0 })
         Column() {
           Image(StyleConstants.DEFAULT_LOCKED_IMAGE)
             .visibility(this.lockedState? Visibility.Visible: Visibility.Hidden)
-            .width((this.mIsSingleLayout ?
-              StyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE * StyleConstants.DPI_RATIO :
-              StyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE) - 10)
-            .height((this.mIsSingleLayout ?
-              StyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE * StyleConstants.DPI_RATIO :
-              StyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE) - 10)
-            .margin({ right: this.margin / 2 })
+            .width(this.mIsSingleLayout ?
+              StyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE_NEW :
+              StyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE - 10)
+            .height(this.mIsSingleLayout ?
+              StyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE_NEW :
+              StyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE - 10)
+            .margin({
+              right: this.mIsSingleLayout ? (StyleConstants.SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN):(StyleConstants.DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN),
+              bottom: this.mIsSingleLayout ? this.margin : 0
+            })
             .onClick(() => {
               this.isClickSubComponent = true;
               Log.showInfo(TAG, 'onClick set recent mission Locked status');
@@ -114,9 +117,9 @@ export default struct RecentMissionCard {
               this.isClickSubComponent = false;
             })
         }
-        .layoutWeight(1)
+//        .layoutWeight(1)
       }
-      .margin({ bottom: this.margin / 2 })
+      .margin({ bottom: this.mIsSingleLayout ? this.margin / 2 :  StyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN })
       Image(this.recentImage)
         .objectFit(ImageFit.Contain)
         .borderRadius(StyleConstants.RECENT_IMAGE_RADIUS)
@@ -139,7 +142,7 @@ export default struct RecentMissionCard {
     .height(this.mIsSingleLayout ?
       StyleConstants.SINGLE_LIST_MISSION_HEIGHT * StyleConstants.DPI_RATIO :
       StyleConstants.DOUBLE_LIST_MISSION_HEIGHT)
-    .margin({ right: this.margin })
+    .margin({ right: this.mIsSingleLayout ? 0 : this.margin })
     .backgroundColor(CommonStyleConstants.DEFAULT_BG_COLOR)
     .gesture(
     PanGesture({ fingers: 1, direction: PanDirection.Vertical, distance: 5 })
