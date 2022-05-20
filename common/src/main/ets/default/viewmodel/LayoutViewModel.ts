@@ -289,6 +289,7 @@ export default class LayoutViewModel {
     let gutter = this.mLauncherLayoutStyleConfig.mFolderOpenGutter;
     let padding = this.mLauncherLayoutStyleConfig.mFolderOpenPADDING;
     let margin = this.mLauncherLayoutStyleConfig.mFolderOpenMargin;
+    let title = this.mLauncherLayoutStyleConfig.mFolderOpenTitle;
     let itemSize = this.mDesktopItemSize;
     let layoutWidth = column * itemSize + (column - 1) * gutter + 2 * padding;
     let layoutHeight = row * itemSize + (row - 1) * gutter + 2 * padding;
@@ -305,6 +306,7 @@ export default class LayoutViewModel {
       mOpenFolderGridGap: gutter,
       mOpenFolderGridPadding: padding,
       mFolderOpenMargin: margin,
+      mFolderOpenTitle: title,
       mOpenFolderGridIconTopPadding: this.mDesktopIconMarginTop
     };
     return result;

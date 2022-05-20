@@ -50,6 +50,7 @@ export default class BigFolderStyleConfig extends AppListStyleConfig {
    * margin of folder open
    */
   mFolderOpenMargin = StyleConstants.DEFAULT_OPEN_FOLDER_TITLE_HEIGHT;
+  mFolderOpenTitle = StyleConstants.DEFAULT_OPEN_FOLDER_TITLE_TOP;
 
   /**
    * open folder app size
@@ -232,6 +233,7 @@ export default class BigFolderStyleConfig extends AppListStyleConfig {
     this.mOpenFolderGridGap = openResult.mOpenFolderGridGap;
     this.mOpenFolderGridPadding = openResult.mOpenFolderGridPadding;
     this.mFolderOpenMargin = openResult.mFolderOpenMargin;
+    this.mFolderOpenTitle = openResult.mFolderOpenTitle;
     this.mOpenFolderGridIconTopPadding = openResult.mOpenFolderGridIconTopPadding;
 
     this.mAddFolderGridWidth = addResult.mAddFolderGridWidth;

@@ -175,10 +175,10 @@ export default struct FormManagerComponent {
                   }
                 }
                 .height('80%')
-              }
+              }.width('100%')
             }, (dimensionItem) => JSON.stringify(dimensionItem))
           }, (formItem) => JSON.stringify(formItem))
-        }
+        }.width('100%')
         .height('100%')
         .loop(false)
         .index(0)
@@ -188,7 +188,7 @@ export default struct FormManagerComponent {
         .onChange((index: number) => {
           this.mSwiperIndex = index;
         })
-      }
+      }.alignItems(HorizontalAlign.Center)
       .height('60%')
       Blank()
       Button({type: ButtonType.Capsule}) {

@@ -164,6 +164,11 @@ export default class PresetStyleConstants {
    */
   static readonly DEFAULT_OPEN_FOLDER_MARGIN_TOP = 188;
 
+  /**
+   * margin top of open folder
+   */
+  static readonly DEFAULT_OPEN_FOLDER_TITLE_TOP = 40;
+
   //----------- folder add list ------------------
   /**
    * max height of container

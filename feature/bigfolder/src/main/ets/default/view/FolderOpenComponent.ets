@@ -57,6 +57,7 @@ let mGridWidth;
 let mGridHeight;
 let mGridPadding;
 let mGridMarginTop;
+let mFolderOpenTitle;
 let mGridIconTopPadding;
 let isPad = false;
 
@@ -103,6 +104,7 @@ export default struct FolderOpenComponent {
     mNameLines = mBigFolderStyleConfig.mNameLines;
     mIconNameMargin = mBigFolderStyleConfig.mIconNameMargin;
     mGridMarginTop = mBigFolderStyleConfig.mFolderOpenMargin;
+    mFolderOpenTitle = mBigFolderStyleConfig.mFolderOpenTitle;
     mGridIconTopPadding = mBigFolderStyleConfig.mOpenFolderGridIconTopPadding;
   }
 
@@ -188,9 +190,14 @@ export default struct FolderOpenComponent {
             Log.showInfo(TAG, 'title click');
             this.isRenaming = true;
           })
-          TextInput({ placeholder: this.mFolderInfo.folderName, text: this.newFolderName })
-            .maxLength(CommonConstants.FOLDER_NAME_MAX_LENGTH)
+          TextArea({ placeholder: this.mFolderInfo.folderName, text: this.newFolderName })
+            .height(FolderStyleConstants.DEFAULT_OPEN_FOLDER_TEXTAREA_HEIGHT)
+            .textAlign(TextAlign.Center)
             .fontColor(Color.White)
+            .fontSize(FolderStyleConstants.DEFAULT_OPEN_FOLDER_NAME_SIZE)
+            .fontWeight(FontWeight.Normal)
+            .fontFamily("sans-serif")
+            .fontStyle(FontStyle.Normal)
             .placeholderColor(Color.White)
             .caretColor(Color.White)
             .placeholderFont({
@@ -198,25 +205,36 @@ export default struct FolderOpenComponent {
               weight: FontWeight.Normal,
               family: "sans-serif"
             })
+            .backgroundColor('rgba(255,255,255,0.3)')
+            .clip(new Rect({
+              width:FolderStyleConstants.PERCENTAGE_100,
+              height:FolderStyleConstants.DEFAULT_OPEN_FOLDER_TEXTAREA_HEIGHT,
+              radius:[[FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE,FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE],
+              [FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE,FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE],
+              [FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE,FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE],
+              [FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE,FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE]]}))
             .width(FolderStyleConstants.PERCENTAGE_100)
             .visibility(this.isRenaming ? Visibility.Visible : Visibility.Hidden)
-            .enterKeyType(EnterKeyType.Done)
-            .border({
-              width: 1,
-              color: Color.White,
-              radius: 10,
-              style: BorderStyle.Solid
-            })
-            .onSubmit((enterKey: EnterKeyType) => {
-              Log.showInfo(TAG, `textinput done: ${enterKey}`);
+            .onBlur(()=> {
               this.isRenaming = true;
               this.saveText();
             })
             .onChange((text: string) => {
               Log.showInfo(TAG, `textinput: ` + text);
-              this.newFolderName = text;
+              this.newFolderName  = text;
+            })
+          Image(FolderStyleConstants.DEFAULT_CANCEL_APP_IMAGE)
+            .width(FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
+            .height(FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
+            .position({ x: FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_WIDTH,
+              y: FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_HEIGHT})
+            .visibility(this.isRenaming ? Visibility.Visible : Visibility.Hidden)
+            .onClick(()=>{
+              this.mFolderInfo.folderName = ''
+              this.newFolderName = ''
             })
         }
+        .margin({ top: mFolderOpenTitle })
         .width(mGridWidth)
         .height(mGridMarginTop)
 
@@ -229,7 +247,8 @@ export default struct FolderOpenComponent {
             }, (item) => JSON.stringify(item))
           }
           .indicatorStyle({
-            selectedColor: StyleConstants.DEFAULT_FONT_COLOR
+            selectedColor: StyleConstants.DEFAULT_FONT_COLOR,
+            bottom: FolderStyleConstants.DEFAULT_OPEN_FOLDER_INDICATOR
           })
           .onClick(() => {
             Log.showInfo(TAG, `Swiper click`);

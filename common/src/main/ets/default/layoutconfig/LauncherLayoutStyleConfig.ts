@@ -105,6 +105,11 @@ export default class LauncherLayoutStyleConfig extends ILayoutConfig {
   mFolderOpenMargin: number = PresetStyleConstants.DEFAULT_OPEN_FOLDER_MARGIN_TOP;
 
   /**
+  * margin top of open folder
+  */
+  mFolderOpenTitle: number = PresetStyleConstants.DEFAULT_OPEN_FOLDER_TITLE_TOP;
+
+  /**
    * gutter of add app
    */
   mFolderAddGridGap: number = PresetStyleConstants.DEFAULT_FOLDER_ADD_GAP;

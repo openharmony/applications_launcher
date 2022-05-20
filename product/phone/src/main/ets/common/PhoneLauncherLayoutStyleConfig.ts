@@ -110,6 +110,11 @@ export default class PhoneLauncherLayoutStyleConfig extends LauncherLayoutStyleC
   mFolderOpenMargin: number = PhonePresetStyleConstants.DEFAULT_OPEN_FOLDER_MARGIN_TOP;
 
   /**
+  * margin top of open folder
+  */
+  mFolderOpenTitle: number = PhonePresetStyleConstants.DEFAULT_OPEN_FOLDER_TITLE_TOP;
+
+  /**
    * gutter of add app
    */
   mFolderAddGridGap: number = PhonePresetStyleConstants.DEFAULT_FOLDER_ADD_GAP;
