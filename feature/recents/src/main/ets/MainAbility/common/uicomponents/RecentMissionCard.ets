@@ -117,7 +117,6 @@ export default struct RecentMissionCard {
               this.isClickSubComponent = false;
             })
         }
-//        .layoutWeight(1)
       }
       .margin({ bottom: this.mIsSingleLayout ? this.margin / 2 :  StyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN })
       Image(this.recentImage)

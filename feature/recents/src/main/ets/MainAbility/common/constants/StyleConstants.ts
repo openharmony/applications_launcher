@@ -67,7 +67,6 @@ export default class StyleConstants {
   static readonly DOUBLE_LIST_LAYOUT_ROWSGAP = 40;
   static readonly DOUBLE_LIST_RIGHT_MARGIN = 72;
   static readonly DOUBLE_LIST_TOP_MARGIN = 54;
-  static readonly DOUBLE_LIST_BOTTOM_MARGIN = 26;
   static readonly SINGLE_LIST_APPICON_LEFT_MARGIN = 16;
   static readonly SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN = 40;
   static readonly DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN = 43;
