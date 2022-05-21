@@ -108,6 +108,11 @@ export default class PadLauncherLayoutStyleConfig extends LauncherLayoutStyleCon
   mFolderOpenMargin: number = PadPresetStyleConstants.DEFAULT_OPEN_FOLDER_MARGIN_TOP;
 
   /**
+  * margin top of open folder
+  */
+  mFolderOpenTitle: number = PadPresetStyleConstants.DEFAULT_OPEN_FOLDER_TITLE_TOP;
+
+  /**
    * gutter of add app
    */
   mFolderAddGridGap: number = PadPresetStyleConstants.DEFAULT_FOLDER_ADD_GAP;

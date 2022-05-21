@@ -24,7 +24,7 @@ export default class PhoneSmartDockStyleConfig extends SmartDockStyleConfig {
   /**
    * dock list height
    */
-  mDockHeight = 94;
+  mDockHeight = 78;
 
   /**
    * dock list backgroundcolor
@@ -54,27 +54,27 @@ export default class PhoneSmartDockStyleConfig extends SmartDockStyleConfig {
   /**
    * list item width
    */
-  mListItemWidth = 70;
+  mListItemWidth = 54;
 
   /**
    * list item height
    */
-  mListItemHeight = 70;
+  mListItemHeight = 54;
 
   /**
    * list item gap
    */
-  mListItemGap = 60;
+  mListItemGap = 33;
 
   /**
    * list icon size
    */
-  mIconSize = 70;
+  mIconSize = 54;
 
   /**
    * max display item count in dock list
    */
-  mMaxDockNum = 5;
+  mMaxDockNum = 4;
 
   protected constructor() {
     super();

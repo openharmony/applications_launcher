@@ -52,6 +52,7 @@ export default class StyleConstants {
   static readonly DEFAULT_OPEN_FOLDER_SWIPER_HEIGHT= 480;
   static readonly DEFAULT_OPEN_FOLDER_GRID_GAP= 6;
   static readonly DEFAULT_OPEN_FOLDER_TITLE_HEIGHT = 130;
+  static readonly DEFAULT_OPEN_FOLDER_TITLE_TOP = 130;
   static readonly DEFAULT_APP_ADD_TITLE_SIZE = 56;
   static readonly DEFAULT_DIALOG_BOTTOM_MARGIN_NUMBER = 16;
   static readonly DEFAULT_BUTTON_HEIGHT_NUMBER = 40;

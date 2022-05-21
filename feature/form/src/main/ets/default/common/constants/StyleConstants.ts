@@ -60,5 +60,5 @@ export default class StyleConstants {
 
   // the dpi of phone should be 480, but it is 320 currently.
   // so all dimensions have to be multiplied by 1.5
-  static readonly DPI_RATIO = 1.5;
+  static readonly DPI_RATIO = 1;
 }

@@ -19,6 +19,7 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_ICON: any = $r('app.media.icon');
   static readonly DEFAULT_BACKGROUND_IMAGE = '$media:ic_wallpaper_folder';
   static readonly DEFAULT_ADD_FOLDER_APP_IMAGE = '/common/pics/ic_public_add.svg';
+  static readonly DEFAULT_CANCEL_APP_IMAGE = '/common/pics/ic_public_cancel.svg';
 
   // font style resources
   static readonly DEFAULT_FONT_COLOR = '#ffffff';
@@ -36,13 +37,24 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_APP_ITEM_HEIGHT = 95;
   static readonly DEFAULT_APP_ICON_SIZE_WIDTH = 70;
   static readonly DEFAULT_APP_NAME_HEIGHT = 25;
-  static readonly DEFAULT_ADD_APP_ICON_SIZE = 50;
+  static readonly DEFAULT_ADD_APP_ICON_SIZE = 28;
   static readonly DEFAULT_ADD_APP_SIZE = 54;
   static readonly DEFAULT_VP_30 = 30;
   static readonly DEFAULT_OPEN_FOLDER_NAME_SIZE = 30;
   static readonly DEFAULT_OPEN_FOLDER_TITLE_HEIGHT = 130;
 
   // Folder add app grid list
+  static readonly DEFAULT_OPEN_FOLDER_TEXTAREA_HEIGHT = 48;
+  static readonly DEFAULT_OPEN_FOLDER_CANCEL_SIZE = 24;
+  static readonly DEFAULT_OPEN_FOLDER_TITLE_TOP = 90;
+  static readonly DEFAULT_OPEN_FOLDER_NAVIGATION = 0;
+  static readonly DEFAULT_OPEN_FOLDER_PHONE_HEIGHT = 524;
+  static readonly DEFAULT_OPEN_FOLDER_PHONE_ICON = 85;
+  static readonly DEFAULT_OPEN_FOLDER_INDICATOR = 150;
+  static readonly DEFAULT_DIALOG_OPACITY = 0.95;
+  static readonly DEFAULT_OPEN_FOLDER_CANCEL_WIDTH = '85%';
+  static readonly DEFAULT_OPEN_FOLDER_CANCEL_HEIGHT = '40%';
+  static readonly DEFAULT_APP_GRID_TEXT_FONT_WEIGHT = 600;
   static readonly DEFAULT_FOLDER_APP_DIALOG_LIST = 536;
   static readonly DEFAULT_FOLDER_APP_GRID_LIST = 424;
   static readonly DEFAULT_FOLDER_APP_GRID_MARGIN = 10;
@@ -59,6 +71,7 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_APP_ADD_TITLE_SIZE = 56;
   static readonly DEFAULT_APP_ADD_DIALOG_WIDTH = 394;
   static readonly DEFAULT_APP_ADD_DIALOG_HEIGHT = 536;
+  static readonly DEFAULT_DIVIDER_HEIGHT = 24;
   static readonly DEFAULT_BUTTON_HEIGHT = 40;
   static readonly DEFAULT_BUTTON_WIDTH = 100;
   static readonly DEFAULT_DIALOG_BOTTOM_MARGIN = 16;
