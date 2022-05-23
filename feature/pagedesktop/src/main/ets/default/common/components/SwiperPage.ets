@@ -26,6 +26,7 @@ const TAG = "SwiperPage";
 @Component
 export default struct SwiperPage {
   @StorageLink('workSpaceWidth') workSpaceWidth: number = 0;
+  @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
   @State ColumnsTemplate: string = '';
   @State RowsTemplate: string = ''
   @Prop @Watch('changeColumnAndRow') gridConfig: string;
@@ -117,6 +118,10 @@ export default struct SwiperPage {
     .rowsGap(this.mRowsGap)
     .width(this.mGridWidth)
     .height(this.mGridHeight)
-    .margin({ right: this.mMargin, left: this.mMargin, top: this.mMarginTop})
+    .margin({
+      right: this.mMargin,
+      left: this.mMargin,
+      top: this.navigationBarStatusValue ? this.mPageDesktopStyleConfig.mDesktopMarginTop : this.mPageDesktopStyleConfig.mDesktopMarginTop + 0
+    })
   }
 }

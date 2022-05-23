@@ -48,7 +48,7 @@ export default class PresetStyleConstants {
   /**
    * desktop indicator height
    */
-  static readonly DEFAULT_PHONE_INDICATOR_HEIGHT = 48;
+  static readonly DEFAULT_PHONE_INDICATOR_HEIGHT = 32;
 
   /**
    * columns of screen with phone

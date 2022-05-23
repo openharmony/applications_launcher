@@ -141,7 +141,7 @@ struct EntryView {
 
   build() {
     Stack() {
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
+      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
         if (this.mAppPageStartConfig === 'Grid') {
           Column() {
             PageDesktopLayout({
