@@ -16,6 +16,7 @@
 import ServiceExtension from '@ohos.application.ServiceExtensionAbility';
 import display from '@ohos.display';
 import Want from '@ohos.application.Want';
+import RdbStoreManager from '../../../../../../common/src/main/ets/default/manager/RdbStoreManager';
 import windowManager from '../../../../../../common/src/main/ets/default/manager/WindowManager';
 import Log from '../../../../../../common/src/main/ets/default/utils/Log';
 import GestureNavigationManage from '../../../../../../feature/gesturenavigation/src/main/ets/default/common/GestureNavigationManage';
@@ -26,18 +27,35 @@ const TAG = 'LauncherMainAbility';
 export default class MainAbility extends ServiceExtension {
   onCreate(want: Want): void {
     Log.showInfo(TAG,'onCreate start');
+    this.initLauncher();
+  }
+
+  async initLauncher(): Promise<void> {
+    // init Launcehr context
+    globalThis.desktopContext = this.context;
+
+    // init global const
     this.initGlobalConst();
-    windowManager.createWindow(this.context, windowManager.DESKTOP_WINDOW_NAME,
+
+    // init Gesture navigation
+    this.startGestureNavigation();
+
+    // init rdb
+    let dbStore = RdbStoreManager.getInstance();
+    await dbStore.initRdbConfig();
+    await dbStore.createTable();
+
+    // create Launcher entry view
+    windowManager.createWindow(globalThis.desktopContext, windowManager.DESKTOP_WINDOW_NAME,
       windowManager.DESKTOP_RANK, 'pages/EntryView');
   }
 
   private initGlobalConst(): void {
-    globalThis.desktopContext = this.context;
+    // init create window global function
     globalThis.createWindowWithName = ((windowName: string, windowRank: number) => {
-      Log.showInfo(TAG, 'createWindowWithName Begin' + windowName);
-      windowManager.createWindowIfAbsent(this.context, windowName, windowRank, 'pages/' + windowName);
+      Log.showInfo(TAG, `createWindowWithName begin windowName: ${windowName}`);
+      windowManager.createWindowIfAbsent(globalThis.desktopContext, windowName, windowRank, 'pages/' + windowName);
     });
-    this.startGestureNavigation();
   }
 
   private startGestureNavigation(): void {

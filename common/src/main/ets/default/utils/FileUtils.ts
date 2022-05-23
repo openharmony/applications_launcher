@@ -17,6 +17,9 @@
  * An util that provides io functionality between file and JSON object.
  */
 import Fileio from '@ohos.fileio';
+import Log from './Log';
+
+const TAG = 'FileUtils';
 
 const writeFilePath = globalThis.desktopContext.cacheDir + '/';
 const READ_DATA_SIZE = 4096;
@@ -30,15 +33,15 @@ export default class FileUtils {
    * @return {any} - read object from file
    */
   static readJsonFile(path: string): any {
-    console.info('Launcher FileUtil readJsonFile start execution');
+    Log.showInfo(TAG, 'readJsonFile start execution');
     let readStreamSync = null;
     try {
       readStreamSync = Fileio.createStreamSync(path, 'r');
       const content = this.getContent(readStreamSync);
-      console.info('Launcher FileUtil readJsonFile finish execution' + content);
+      Log.showInfo(TAG, `readJsonFile finish execution content: ${content}`);
       return JSON.parse(content);
     } catch (e) {
-      console.info('Launcher FileUtil readJsonFile ' + e);
+      Log.showInfo(TAG, `readJsonFile error: ${e}`);
     } finally {
       readStreamSync.closeSync();
     }
@@ -51,16 +54,16 @@ export default class FileUtils {
    * @return {string} - read string from file
    */
   static readStringFromFile(bundleName: string): string {
-    console.info('Launcher FileUtil readStringFromFile start execution');
+    Log.showInfo(TAG, 'readStringFromFile start execution');
     const filePath = writeFilePath + bundleName + '.json';
     let readStreamSync = null;
     try {
       readStreamSync = Fileio.createStreamSync(filePath, 'r');
       const content = this.getContent(readStreamSync);
-      console.info('Launcher FileUtil readStringFromFile finish execution' + content);
+      Log.showInfo(TAG, 'readStringFromFile finish execution' + content);
       return content;
     } catch (e) {
-      console.info('Launcher FileUtil readStringFromFile ' + e);
+      Log.showInfo(TAG, 'readStringFromFile ' + e);
     } finally {
       readStreamSync.closeSync();
     }
@@ -73,17 +76,17 @@ export default class FileUtils {
    * @param {string} bundleName - bundleName as target file name
    */
   static writeStringToFile(string: string, bundleName: string): void {
-    console.info('Launcher FileUtil writeStringToFile start execution');
+    Log.showInfo(TAG, 'writeStringToFile start execution');
     const filePath = writeFilePath + bundleName + '.json';
     let writeStreamSync = null;
     try {
       writeStreamSync = Fileio.createStreamSync(filePath, 'w+');
       writeStreamSync.writeSync(string);
     } catch (e) {
-      console.info('Launcher FileUtil writeStringToFile error: ' + e);
+      Log.showInfo(TAG, 'writeStringToFile error: ' + e);
     } finally {
       writeStreamSync.closeSync();
-      console.info('Launcher FileUtil writeStringToFile close sync');
+      Log.showInfo(TAG, 'writeStringToFile close sync');
     }
   }
 
@@ -94,13 +97,13 @@ export default class FileUtils {
    * @return {object} - object read from file stream
    */
   static getContent(readStreamSync) {
-    console.info('Launcher FileUtil getContent start');
+    Log.showInfo(TAG, 'getContent start');
     const bufArray = [];
     let totalLength = 0;
     let buf = new ArrayBuffer(READ_DATA_SIZE);
     let len = readStreamSync.readSync(buf);
     while (len != 0) {
-      console.info(`Launcher FileUtil getContent FileIO reading ${len}`);
+      Log.showInfo(TAG, `getContent FileIO reading ${len}`);
       totalLength += len;
       if (len < READ_DATA_SIZE) {
         buf = buf.slice(0, len);
@@ -111,11 +114,11 @@ export default class FileUtils {
       buf = new ArrayBuffer(READ_DATA_SIZE);
       len = readStreamSync.readSync(buf);
     }
-    console.info('Launcher FileUtil getContent read finished ' + totalLength);
+    Log.showInfo(TAG, `getContent read finished: ${totalLength}`);
     const contentBuf = new Uint8Array(totalLength);
     let offset = 0;
     for (const bufArr of bufArray) {
-      console.info('Launcher FileUtil getContent collecting ' + offset);
+      Log.showInfo(TAG, `getContent collecting: ${offset}`);
       const uInt8Arr = new Uint8Array(bufArr);
       contentBuf.set(uInt8Arr, offset);
       offset += uInt8Arr.byteLength;

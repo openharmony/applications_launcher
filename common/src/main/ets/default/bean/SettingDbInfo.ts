@@ -12,49 +12,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SnapShotInfo from './SnapShotInfo';
+import SettingItemOption from './SettingItemOption';
 
 /**
- * Recent mission info
+ * Item info for launcher settings db data.
  */
-export default class RecentMissionInfo {
+export default class SettingDbInfo {
   /**
-   * Recent mission: mission id
+   * Index for setting db item.
    */
-  missionId: number | undefined;
+  id: number | undefined;
 
   /**
-   * Recent mission: app name
+   * appStartPageType for setting db item.
    */
-  appName: string | undefined;
+  appStartPageType: string | undefined;
 
   /**
-   * Recent mission: app icon Id
+   * gridConfig for setting db item.
    */
-  appIconId: string | undefined;
+  gridConfig: number | undefined;
 
   /**
-   * Recent mission: app label Id
+   * deviceType for setting db item.
    */
-  appLabelId: string | undefined;
+  deviceType: string | undefined;
 
   /**
-   * Recent mission: bundle name
+   * pageCount for setting db item.
    */
-  bundleName: string | undefined;
+  pageCount: number | undefined;
 
   /**
-   * Recent mission: ability name
+   * row for setting db item.
    */
-  abilityName: string | undefined;
+  row: number | undefined;
 
   /**
-   * Recent mission: lock status
+   * column for setting db item.
    */
-  lockedState: boolean | undefined;
-
-  /**
-   * Recent mission: trigger snapShot update
-   */
-  snapShotTime: string | undefined;
+  column: number | undefined;
 }

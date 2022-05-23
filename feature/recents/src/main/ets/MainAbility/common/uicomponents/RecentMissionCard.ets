@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import image from '@ohos.multimedia.image';
 import CheckEmptyUtils from '../../../../../../../../common/src/main/ets/default/utils/CheckEmptyUtils';
 import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
 import CommonStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
@@ -20,6 +21,7 @@ import RecentMissionAppIcon from './RecentMissionAppIcon.ets';
 import RecentMissionAppName from './RecentMissionAppName.ets';
 import RecentMissionsViewModel from '../../viewmodel/RecentMissionsViewModel.ets';
 import windowManager from  '../../../../../../../../common/src/main/ets/default/manager/WindowManager';
+import SnapShotInfo from '../../../../../../../../common/src/main/ets/default/bean/SnapShotInfo';
 
 const TAG = 'Recent-RecentMissionCard';
 
@@ -38,10 +40,10 @@ export default struct RecentMissionCard {
   @Prop lockedState: boolean;
   @State margin: number = StyleConstants.SINGLE_LIST_LAYOUT_MARGIN;
   @State layoutWeight: number = StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT;
-  @State recentImage: any = '';
+  @State recentImage: string | image.PixelMap = '';
   private mDefaultSnapShot: string = StyleConstants.DEFAULT_APP_IMAGE;
   private mIsSingleLayout: boolean = true;
-  private mSnapshotList: any = [];
+  private snapShotTime: string = '';
   private mRecentMissionsViewModel: RecentMissionsViewModel;
 
   aboutToAppear(): void {
@@ -52,6 +54,7 @@ export default struct RecentMissionCard {
       StyleConstants.SINGLE_LIST_LAYOUT_MARGIN * StyleConstants.DPI_RATIO : StyleConstants.DOUBLE_LIST_LAYOUT_MARGIN;
     this.layoutWeight = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
       StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT : StyleConstants.DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT;
+    this.mRecentMissionsViewModel.getMissionSnapShot(this.missionId, this.recentMissionsSnapshotCallback.bind(this));
     if (CheckEmptyUtils.isEmpty(this.recentImage)) {
       this.recentImage = this.mDefaultSnapShot;
     }
@@ -59,8 +62,11 @@ export default struct RecentMissionCard {
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, `aboutToDisappear start ${this.missionId}`);
+    Log.showInfo(TAG, `typeof this.recentImage ${typeof this.recentImage}`);
     if (this.recentImage != this.mDefaultSnapShot) {
-      void this.recentImage.release();
+      this.recentImage.release().catch((err) => {
+        Log.showError(TAG, `image.PixelMap release err: ${err}`);
+      })
     }
   }
 
@@ -70,6 +76,23 @@ export default struct RecentMissionCard {
 
   private onPageHide(): void {
     Log.showInfo(TAG, `onPageHide start`);
+  }
+
+  /**
+ * The callback of Recent missions snapshot.
+ *
+ * @param {number} missionId
+ * @param {any} snapShotInfo
+ */
+  recentMissionsSnapshotCallback(missionId: number, snapShotInfo: SnapShotInfo): void {
+    Log.showInfo(TAG, `recentMissionsSnapshotCallback missionId: ${this.missionId}`);
+    if (missionId === this.missionId) {
+      this.recentImage = snapShotInfo.snapShotImage;
+      let width = snapShotInfo.snapShotImageWidth;
+      let height = snapShotInfo.snapShotImageHeight;
+      Log.showInfo(TAG, `recentMissionsSnapshotCallback recentImage: ${JSON.stringify(this.recentImage)},
+        width: ${JSON.stringify(width)}, height: ${JSON.stringify(height)}`);
+    }
   }
 
   build() {
@@ -112,12 +135,12 @@ export default struct RecentMissionCard {
             })
             .onClick(() => {
               this.isClickSubComponent = true;
-              Log.showInfo(TAG, 'onClick set recent mission Locked status');
-              this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId, !this.lockedState);
+              this.lockedState = !this.lockedState;
+              Log.showInfo(TAG, `onClick set recent mission Locked status: ${this.lockedState}`);
+              this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId, this.lockedState);
               this.isClickSubComponent = false;
             })
         }
-//        .layoutWeight(1)
       }
       .margin({ bottom: this.mIsSingleLayout ? this.margin / 2 :  StyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN })
       Image(this.recentImage)
@@ -153,7 +176,8 @@ export default struct RecentMissionCard {
         if (e.offsetY < -50 && e.offsetX <= offsetWidth && -offsetWidth <= e.offsetX) {
           this.mRecentMissionsViewModel.deleteRecentMission(false, this.missionId);
         } else if (e.offsetY > 50 && e.offsetX <= offsetWidth && -offsetWidth <= e.offsetX) {
-          this.lockedState = this.lockedState ? false : true;
+          this.lockedState = !this.lockedState;
+          Log.showInfo(TAG, `gesture set recent mission Locked status: ${this.lockedState}`);
           this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId, this.lockedState);
         }
       }))

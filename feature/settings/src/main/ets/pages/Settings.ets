@@ -123,7 +123,7 @@ struct SettingPage {
 
   private aboutToAppear(): void  {
     this.SettingList = mSettingsPresenter.getSettingList();
-    Log.showInfo(TAG, 'aboutToAppear SettingList ' + JSON.stringify(this.SettingList));
+    Log.showInfo(TAG, `aboutToAppear SettingList length: ${this.SettingList.length}`);
   }
 
   private onPageShow(): void {
@@ -220,7 +220,7 @@ struct SettingItem {
           .width(50)
           .height(40)
           .onChange((isOn: boolean) => {
-            Log.showInfo(TAG, 'SettingItemToggle onChange for GestureNavigation Enable:' + isOn);
+            Log.showInfo(TAG, `SettingItemToggle onChange for GestureNavigation Enable: ${isOn}`);
             mSettingsPresenter.setValue(isOn ? '0' : '1');
           })
       }

@@ -16,6 +16,9 @@ import SettingItemOptionsChecker from './SettingItemOptionsChecker';
 import SettingItemsConfig from '../configs/SettingItemsConfig';
 import SettingItemInfo from '../bean/SettingItemInfo';
 import SettingItemOption from '../bean/SettingItemOption';
+import Log from '../utils/Log';
+
+const TAG = 'SettingItemsManager';
 
 /**
  * Manager class for launcher settings item.
@@ -37,9 +40,9 @@ export default class SettingItemsManager {
   /**
    * Get corresponding functions for the given name.
    */
-  withChecker(SettingName: string, func: SettingItemOptionsChecker): SettingItemsManager {
-    console.info('Launcher SettingItemsManager withChecker SettingName is ' + SettingName);
-    this.settingName2CheckerFuncMap[SettingName] = func;
+  withChecker(settingName: string, func: SettingItemOptionsChecker): SettingItemsManager {
+    Log.showInfo(TAG, `withChecker settingName: ${settingName}`);
+    this.settingName2CheckerFuncMap[settingName] = func;
     return this;
   }
 

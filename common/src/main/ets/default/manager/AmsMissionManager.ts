@@ -186,7 +186,7 @@ class AmsMissionManager {
    * @param missionId mission id to unlock.
    */
   async unlockMission(missionId: number): Promise<void> {
-    console.info(`unlockMission start! missionId: ${missionId}`);
+    Log.showInfo(TAG, `unlockMission start! missionId: ${missionId}`);
     await missionManager.unlockMission(missionId)
       .then((data) => {
         Log.showInfo(TAG, `unlockMission data: ${JSON.stringify(data)}`);

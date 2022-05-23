@@ -86,7 +86,7 @@ export default class PageDesktopModeConfig extends ILayoutConfig {
    */
   updateAppStartPageType(startPageType: string): void {
     this.mAppStartPageType = startPageType;
-    super.persistConfig();
+    globalThis.RdbStoreManagerInstance.updateSettings('app_start_page_type', startPageType);
   }
 
   /**
@@ -105,7 +105,7 @@ export default class PageDesktopModeConfig extends ILayoutConfig {
    */
   updateGridConfig(gridConfig: number): void {
     this.mGridConfig = gridConfig;
-    super.persistConfig();
+    globalThis.RdbStoreManagerInstance.updateSettings('grid_config', gridConfig);
   }
 
   /**
@@ -124,7 +124,7 @@ export default class PageDesktopModeConfig extends ILayoutConfig {
    */
   updateDeviceType(deviceType: string): void {
     this.mDeviceType = deviceType;
-    super.persistConfig();
+    globalThis.RdbStoreManagerInstance.updateSettings('device_type', deviceType);
   }
 
   /**

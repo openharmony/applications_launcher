@@ -24,6 +24,9 @@ import PageDesktopAppModeConfig from '../layoutconfig/PageDesktopAppModeConfig';
 import RecentsModeConfig from '../layoutconfig/RecentsModeConfig';
 import settingsDataManager from '../manager/SettingsDataManager';
 import SettingsModelObserver from './SettingsModelObserver';
+import Log from '../utils/Log';
+
+const TAG = 'SettingsModel';
 
 const defaultLayoutInfoFilePath = globalThis.desktopContext.filesDir + '/layoutInfo.json';
 
@@ -68,12 +71,12 @@ export default class SettingsModel {
   }
 
   addObserver(observer: SettingsModelObserver): void {
-    console.info('addObserver');
+    Log.showInfo(TAG, 'addObserver');
     this.mObserverList.push(observer);
   }
 
   private notifyObservers(event: number): void {
-    console.info('notifyObservers');
+    Log.showInfo(TAG, 'notifyObservers');
     for (let i = 0; i < this.mObserverList.length; i++) {
       this.mObserverList[i](event);
     }
@@ -189,7 +192,7 @@ export default class SettingsModel {
    * @param {string} deviceType - device type.
    */
   setDevice(deviceType): void {
-    console.log(`setDevice ${deviceType}`);
+    Log.showInfo(TAG, `setDevice ${deviceType}`);
     if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
       this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
     } else if (deviceType == CommonConstants.PAD_DEVICE_TYPE) {

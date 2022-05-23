@@ -42,7 +42,6 @@ export default class SmartDockLayoutConfig extends ILayoutConfig {
       globalThis.SmartDockLayoutConfig = new SmartDockLayoutConfig();
       globalThis.SmartDockLayoutConfig.initConfig();
     }
-    console.info('Launcher SmartDockLayoutConfig getInstance!');
     return globalThis.SmartDockLayoutConfig;
   }
 

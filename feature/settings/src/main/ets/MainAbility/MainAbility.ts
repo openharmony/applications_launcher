@@ -14,32 +14,35 @@
  */
 
 import Ability from '@ohos.application.Ability';
+import Log from '../../../../../../common/src/main/ets/default/utils/Log';
+
+const TAG = 'Settings MainAbility';
 
 export default class MainAbility extends Ability {
   onCreate(want, launchParam) {
-    console.log('settings MainAbility onCreate is called');
+    Log.showInfo(TAG, 'onCreate is called');
   }
 
   onDestroy() {
-    console.log('settings MainAbility onDestroy is called');
+    Log.showInfo(TAG, 'onDestroy is called');
   }
 
   onWindowStageCreate(windowStage) {
-    console.log('settings MainAbility onWindowStageCreate is called');
+    Log.showInfo(TAG, 'onWindowStageCreate is called');
     globalThis.settingsContext = this.context;
     windowStage.setUIContent(this.context, 'pages/Settings', null);
   }
 
   onWindowStageDestroy() {
-    console.log('settings MainAbility onWindowStageDestroy is called');
+    Log.showInfo(TAG, 'onWindowStageDestroy is called');
   }
 
   onForeground() {
-    console.log('settings MainAbility onForeground is called');
+    Log.showInfo(TAG, 'onForeground is called');
   }
 
   onBackground() {
-    console.log('settings MainAbility onBackground is called');
+    Log.showInfo(TAG, 'onBackground is called');
     globalThis.settingsContext.terminateSelf();
   }
 }
