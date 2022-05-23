@@ -86,7 +86,7 @@ class LauncherAbilityManager {
         launcherBundleMgr.on(LauncherAbilityManager.BUNDLE_STATUS_CHANGE_KEY, this.mBundleStatusCallback).then(data => {
           Log.showInfo(TAG, `registerCallback success: ${JSON.stringify(data)}`);
         }).catch(err => {
-          Log.showError(TAG, `registerCallback fail: ${JSON.stringify(err)}`);
+          Log.showInfo(TAG, `registerCallback fail: ${JSON.stringify(err)}`);
         });
       }
       const index = this.mLauncherAbilityChangeListeners.indexOf(listener);
@@ -111,7 +111,7 @@ class LauncherAbilityManager {
         launcherBundleMgr.off(LauncherAbilityManager.BUNDLE_STATUS_CHANGE_KEY).then(data => {
           Log.showInfo(TAG, 'unregisterCallback success');
         }).catch(err => {
-          Log.showError(TAG, `unregisterCallback fail: ${JSON.stringify(err)}`);
+          Log.showInfo(TAG, `unregisterCallback fail: ${JSON.stringify(err)}`);
         });
       }
     }
@@ -138,7 +138,7 @@ class LauncherAbilityManager {
       });
     const appItemInfoList = new Array<AppItemInfo>();
     if (CheckEmptyUtils.isEmpty(abilityList)) {
-      Log.showError(TAG, 'getLauncherAbilityList Empty');
+      Log.showInfo(TAG, 'getLauncherAbilityList Empty');
       return appItemInfoList;
     }
     for (let i = 0; i < abilityList.length; i++) {
@@ -166,7 +166,7 @@ class LauncherAbilityManager {
       });
     const appItemInfoList = new Array<AppItemInfo>();
     if (CheckEmptyUtils.isEmpty(abilityInfos)) {
-      console.error('getLauncherAbilityInfo Empty');
+      Log.showInfo(TAG, 'getLauncherAbilityInfo Empty');
       return appItemInfoList;
     }
     for (let i = 0; i < abilityInfos.length; i++) {
@@ -205,7 +205,7 @@ class LauncherAbilityManager {
       });
 
     if (abilityInfos == undefined || abilityInfos.length == 0) {
-      Log.showError(TAG, `${bundleName} has no launcher ability`);
+      Log.showInfo(TAG, `${bundleName} has no launcher ability`);
       return undefined;
     }
     const data = await this.convertToAppItemInfo(abilityInfos[0]);
@@ -265,7 +265,7 @@ class LauncherAbilityManager {
     }).then(() => {
       Log.showInfo(TAG, 'startApplication promise success');
     }, (err) => {
-      Log.showError(TAG, `startApplication promise error: ${JSON.stringify(err)}`);
+      Log.showInfo(TAG, `startApplication promise error: ${JSON.stringify(err)}`);
     });
     Log.showInfo(TAG, `startApplication  AceApplication : startAbility : ${result}`);
     Trace.end(Trace.CORE_METHOD_LAUNCH_APP);
@@ -302,7 +302,7 @@ class LauncherAbilityManager {
         callback(paramBundleName, shortcutInfo);
       })
       .catch(err => {
-        Log.showError(TAG, `getShortcutInfo ${JSON.stringify(err)}`);
+        Log.showInfo(TAG, `getShortcutInfo ${JSON.stringify(err)}`);
       });
   }
 
@@ -320,7 +320,7 @@ class LauncherAbilityManager {
     }).then(() => {
       Log.showInfo(TAG, 'startLauncherAbilityByUri promise success');
     }, (err) => {
-      Log.showError(TAG, `startLauncherAbilityByUri promise error: ${JSON.stringify(err)}`);
+      Log.showInfo(TAG, `startLauncherAbilityByUri promise error: ${JSON.stringify(err)}`);
     });
     Log.showInfo(TAG, `startLauncherAbilityByUri AceApplication : startAbility : ${result}`);
   }

@@ -21,6 +21,9 @@ import AppList from '../../../../../../../common/src/main/ets/default/uicomponen
 import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
 import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
 import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog.ets';
+import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
+
+const TAG = 'ListLayout';
 
 let mAppListPresenter: AppListPresenter;
 
@@ -68,7 +71,7 @@ export default struct ListLayout {
   }
 
   cancelDialog() {
-    console.info('Launcher Grid Cancel Dialog');
+    Log.showInfo(TAG, 'Cancel Dialog');
   }
 
   build() {

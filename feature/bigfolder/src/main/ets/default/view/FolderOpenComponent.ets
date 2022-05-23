@@ -501,7 +501,7 @@ struct FolderAppItem {
       },
       confirm: (formCardItem) => {
         // add form to desktop
-        Log.showInfo(TAG, "createCardToDeskTop formCardItem: " + JSON.stringify(formCardItem));
+        Log.showInfo(TAG, `createCardToDeskTop formCardItem: ${JSON.stringify(formCardItem)}`);
         mPageDesktopViewModel.createCardToDeskTop(formCardItem);
       },
       bundleName: this.item.bundleName,

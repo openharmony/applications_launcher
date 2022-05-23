@@ -38,6 +38,32 @@ const RdbStoreConfig = {
     'config_ability TEXT, ' +
     'app_label_id INTEGER, ' +
     'dimension INTEGER)'
+  },
+
+  Settings: {
+    TABLE_NAME: 'SETTINGS',
+    CREATE_TABLE: 'CREATE TABLE IF NOT EXISTS SETTINGS ' +
+    '(id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+    'app_start_page_type TEXT, ' +
+    'grid_config INTEGER, ' +
+    'device_type TEXT, ' +
+    'page_count INTEGER, ' +
+    'row INTEGER, ' +
+    'column INTEGER)'
+  },
+
+  SmartDock: {
+    TABLE_NAME: 'SMARTDOCK',
+    CREATE_TABLE: 'CREATE TABLE IF NOT EXISTS SMARTDOCK ' +
+    '(id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+    'item_type INTEGER, ' +
+    'editable INTEGER, ' +
+    'bundle_name TEXT, ' +
+    'ability_name TEXT, ' +
+    'app_icon_id INTEGER, ' +
+    'app_label_id INTEGER, ' +
+    'app_name TEXT, ' +
+    'install_time TEXT)'
   }
 };
 

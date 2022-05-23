@@ -35,7 +35,6 @@ export default class DiskLruCache {
    * Init the cache whether the file has data.
    */
   initMap(): void {
-    console.info('Launcher DiskLruCache initMap start execution');
   }
 
   /**

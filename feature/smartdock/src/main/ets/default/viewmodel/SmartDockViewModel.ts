@@ -100,7 +100,7 @@ export default class SmartDockViewModel extends BaseAppPresenter {
   public recentOnClick(event, item, callback?) {
     let missionInfoList = [];
     missionInfoList = AppStorage.Get('missionInfoList');
-    Log.showInfo(TAG, 'recentOnClick missionInfoList.length:' + missionInfoList.length);
+    Log.showInfo(TAG, `recentOnClick missionInfoList.length: ${missionInfoList.length}`);
     if (!CheckEmptyUtils.isEmptyArr(missionInfoList)) {
       for (let i = 0; i < missionInfoList.length; i++) {
         if (missionInfoList[i].bundleName === item.bundleName) {
@@ -217,10 +217,10 @@ export default class SmartDockViewModel extends BaseAppPresenter {
       removeMenu.menuImgSrc = this.mDevice === CommonConstants.PAD_DEVICE_TYPE ? '/common/pics/ic_public_remove.svg' : '/common/pics/ic_public_delete.svg';
       removeMenu.menuText = this.mDevice === CommonConstants.PAD_DEVICE_TYPE ? $r('app.string.delete_app') : $r('app.string.uninstall');
       removeMenu.onMenuClick = () => {
-        Log.showInfo(TAG, 'onMenuClick item remove:' + JSON.stringify(appInfo) + ',dockType:' + dockType);
+        Log.showInfo(TAG, `onMenuClick item remove: ${JSON.stringify(appInfo)},dockType: ${dockType}`);
         const cacheKey = appInfo.appLabelId + appInfo.bundleName;
         const appName = this.mSmartDockModel.getAppName(cacheKey);
-        Log.showInfo(TAG, 'onMenuClick item remove appName:' + appName);
+        Log.showInfo(TAG, `onMenuClick item remove appName: ${appName}`);
         if (appName != null) {
           appInfo.appName = appName;
         }
@@ -239,12 +239,12 @@ export default class SmartDockViewModel extends BaseAppPresenter {
   }
 
   getSelectedItem(): any {
-    Log.showInfo(TAG, 'getSelectedItem:' + JSON.stringify(this.mSelectedItem));
+    Log.showInfo(TAG, `getSelectedItem: ${JSON.stringify(this.mSelectedItem)}`);
     return this.mSelectedItem;
   }
 
   getSelectedDockType(): any {
-    Log.showInfo(TAG, 'getSelectedDockType:' + JSON.stringify(this.mSelectedDockType));
+    Log.showInfo(TAG, `getSelectedDockType: ${JSON.stringify(this.mSelectedDockType)}`);
     return this.mSelectedDockType;
   }
 

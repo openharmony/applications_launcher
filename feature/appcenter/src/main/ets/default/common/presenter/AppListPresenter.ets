@@ -18,6 +18,9 @@ import BaseAppPresenter from '../../../../../../../../common/src/main/ets/defaul
 import PinyinSort from '../../../../../../../../common/src/main/ets/default/utils/PinyinSort';
 import CommonConstants from '../../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import AppItemInfo from '../../../../../../../../common/src/main/ets/default/bean/AppItemInfo';
+import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
+
+const TAG = 'AppListPresenter';
 
 const KEY_APP_LIST = "appListInfo";
 const KEY_NAME = "name";
@@ -47,12 +50,12 @@ export default class AppListPresenter extends BaseAppPresenter {
     for (let item of callbackList) {
       let cacheKey = item.appLabelId + item.bundleName;
       let appName = this.mResourceManager.getAppResourceCache(cacheKey, KEY_NAME);
-      console.info("Launcher AppListPresenter regroupDataAppListChange + appName = " + appName);
+      Log.showInfo(TAG, `regroupDataAppListChange appName: ${appName}`);
       if (appName != null) {
         item.appName = appName;
       } else {
         let loadAppName = await this.mResourceManager.getAppNameSync(item.appLabelId, item.bundleName, item.appName);
-        console.info("Launcher AppListPresenter regroupDataAppListChange loadAppName:" + loadAppName);
+        Log.showInfo(TAG, `regroupDataAppListChange loadAppName: ${loadAppName}`);
         item.appName = loadAppName;
       }
     }
@@ -72,7 +75,7 @@ export default class AppListPresenter extends BaseAppPresenter {
   }
 
   public informUninstallResult(resultCode) {
-    console.info("Launcher AppListView getUninstallApp uninstallationResult:" + resultCode);
+    Log.showInfo(TAG, `Launcher AppListView getUninstallApp uninstallationResult: ${resultCode}`);
     if (resultCode === CommonConstants.UNINSTALL_FORBID) {
       Prompt.showToast({
         message: $r("app.string.disable_uninstall")
@@ -89,7 +92,7 @@ export default class AppListPresenter extends BaseAppPresenter {
   }
 
   public intoSetting() {
-    console.info("Launcher AppListView intoSetting");
+    Log.showInfo(TAG, 'intoSetting');
     this.jumpToSetting();
   }
 
@@ -100,7 +103,7 @@ export default class AppListPresenter extends BaseAppPresenter {
    * @param {string} bundleName - bundle name of the application to be jump to.
    */
   public openApplication(abilityName, bundleName) {
-    console.info("Launcher AppListView openApplication abilityName:" + abilityName);
+    Log.showInfo(TAG, `openApplication abilityName: ${abilityName}`);
     this.jumpTo(abilityName, bundleName);
   }
 }

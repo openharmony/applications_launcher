@@ -57,7 +57,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   }
 
   setDragEffectArea(effectArea): void {
-    console.info(`Launcher PageDesktopDragHandler setDragEffectArea:${JSON.stringify(effectArea)}`);
+    Log.showInfo(TAG, `setDragEffectArea:${JSON.stringify(effectArea)}`)
     super.setDragEffectArea(effectArea);
     this.updateGridParam(effectArea);
   }
@@ -65,7 +65,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   private updateGridParam(effectArea) {
     const gridWidth = effectArea.right - effectArea.left;
     const gridHeight = effectArea.bottom - effectArea.top;
-    console.info(`Launcher PageDesktop updateGridParam gridWidth: ${gridWidth}, gridHeight: ${gridHeight}`);
+    Log.showInfo(TAG, `updateGridParam gridWidth: ${gridWidth}, gridHeight: ${gridHeight}`);
     this.mGridConfig = this.mPageDesktopViewModel.getGridConfig();
     const column = this.mGridConfig.column;
     const row = this.mGridConfig.row;
@@ -73,7 +73,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     const rowGap =  this.mPageDesktopViewModel.getPageDesktopStyleConfig().mRowsGap;
     this.mGridItemHeight = row > 0 ? (gridHeight + columnsGap) / row : 0;
     this.mGridItemWidth = column > 0 ? (gridWidth + rowGap) / column : 0;
-    console.info(`Launcher PageDesktop updateGridParam column: ${column}, row: ${row}`);
+    Log.showInfo(TAG, `updateGridParam column: ${column}, row: ${row}`);
     this.mPageCoordinateData.gridYAxis = [];
     for (let i = 1; i <= row; i++) {
       const touchPositioningY = (gridHeight / row) * i + effectArea.top;
@@ -97,7 +97,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   protected getItemIndex(event: any): number {
     const x = event.touches[0].screenX;
     const y = event.touches[0].screenY;
-    console.info(`Launcher PageDesktop getItemIndex x: ${x}, y: ${y}`);
+    Log.showInfo(TAG, `getItemIndex x: ${x}, y: ${y}`);
     let rowVal = CommonConstants.INVALID_VALUE;
     for (let index = 0; index < this.mPageCoordinateData.gridYAxis.length; index++) {
       if (this.mPageCoordinateData.gridYAxis[index] > y) {
@@ -122,11 +122,10 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   protected getItemByIndex(index: number): any {
     const column = index % this.mGridConfig.column;
     const row = Math.floor(index / this.mGridConfig.column);
-    console.info('Launcher PageDesktop getItemByIndex column: ' + column + ', row: ' + row);
     const pageIndex: number = this.mPageDesktopViewModel.getIndex();
     const appGridInfo = this.getDragRelativeData();
-    console.info('Launcher PageDesktop getItemByIndex pageIndex: ' + pageIndex + ', appGridInfo length: ' + appGridInfo.length);
-
+    Log.showInfo(TAG, `getItemByIndex pageIndex: ${pageIndex}, appGridInfo length: ${appGridInfo.length},
+    column: ${column}, row: ${row}`);
     const itemInfo = appGridInfo[pageIndex].find(item => {
       if (item.type == CommonConstants.TYPE_APP) {
         return item.column == column && item.row == row;
@@ -154,7 +153,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
 
   private getTouchPosition(x, y): any {
     const pageIndex =this.mPageDesktopViewModel.getIndex();
-    console.info('getTouchPosition pageIndex: ' + pageIndex);
+    Log.showInfo(TAG, `getTouchPosition pageIndex: ${pageIndex}`);
     const position = {
       page: pageIndex,
       row: 0,
@@ -182,7 +181,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   }
 
   protected onDragStart(event: any, itemIndex: number): void {
-    Log.showInfo(TAG, 'onDragStart itemIndex: ' + itemIndex);
+    Log.showInfo(TAG, `onDragStart itemIndex: ${itemIndex}`);
     super.onDragStart(event, itemIndex);
     const moveAppX = event.touches[0].screenX;
     const moveAppY = event.touches[0].screenY;
@@ -265,7 +264,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
 
   protected onDragMove(event: any, insertIndex: number, itemIndex: number): void {
     super.onDragMove(event, insertIndex, itemIndex);
-    console.info('Launcher PageDesktop onDragMove insertIndex: ' + insertIndex);
+    Log.showInfo(TAG, `onDragMove insertIndex: ${insertIndex}`);
     const moveAppX = event.touches[0].screenX;
     const moveAppY = event.touches[0].screenY;
     const dragItemInfo = this.getDragItemInfo();
@@ -282,7 +281,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
 
   protected onDragDrop(event: any, insertIndex: number, itemIndex: number): boolean {
     super.onDragDrop(event, insertIndex, itemIndex);
-    console.info('Launcher PageDesktop onDragDrop insertIndex: ' + insertIndex + ' ,mIsInEffectArea: ' + this.mIsInEffectArea);
+    Log.showInfo(TAG, `onDragDrop insertIndex: ${insertIndex}, mIsInEffectArea: ${this.mIsInEffectArea}`);
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     let isDragSuccess = false;
     const startPosition = this.copyPosition(this.mStartPosition);
@@ -332,7 +331,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
         this.mPageDesktopViewModel.pagingFiltering();
         isDragSuccess = true;
       } else {
-        console.info('Launcher PageDesktop onDragEnd not selfDrag');
+        Log.showInfo(TAG, 'onDragEnd not selfDrag');
       }
     }
     this.deleteBlankPageAfterDragging(startPosition, endPosition);
@@ -341,9 +340,9 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
 
   protected onDragEnd(isSuccess: boolean): void {
     super.onDragEnd(isSuccess);
-    console.info('Launcher PageDesktop onDragEnd isSuccess: ' + isSuccess);
+    Log.showInfo(TAG, `onDragEnd isSuccess: ${isSuccess}`);
     if (this.isDropOutSide() && isSuccess) {
-      console.info('Launcher PageDesktop onDragEnd dropOutSide');
+      Log.showInfo(TAG, 'onDragEnd dropOutSide');
     }
 
     this.mStartPosition = null;
@@ -476,7 +475,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     const layoutInfo = info.layoutInfo;
     this.moveLayout(startInfo, endInfo, layoutInfo, startInfo);
     info.layoutInfo = layoutInfo;
-    console.info('Launcher PageDesktop layoutAdjustment setLayoutInfo');
+    Log.showInfo(TAG, 'layoutAdjustment setLayoutInfo');
     this.mPageDesktopViewModel.setLayoutInfo(info);
     this.mPageDesktopViewModel.pagingFiltering();
   }
@@ -485,7 +484,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     const info = this.mPageDesktopViewModel.getLayoutInfo();
     const layoutInfo = info.layoutInfo;
     if (!this.isValidShortcut(layoutInfo, itemInfo)) {
-      console.info('Launcher PageDesktop layoutAdjustment isInvalidShortcut');
+      Log.showInfo(TAG, 'layoutAdjustment isInvalidShortcut');
       Prompt.showToast({
         message: $r('app.string.duplicate_add')
       });
@@ -507,7 +506,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
       }
     }
     info.layoutInfo = layoutInfo;
-    console.info('Launcher PageDesktop addItemToDeskTop setLayoutInfo');
+    Log.showInfo(TAG, 'addItemToDeskTop setLayoutInfo');
     this.mPageDesktopViewModel.setLayoutInfo(info);
     this.mPageDesktopViewModel.pagingFiltering();
   }
@@ -530,7 +529,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
       }
     }
     info.layoutInfo = layoutInfo;
-    console.info('Launcher PageDesktop removeItemFromDeskTop setLayoutInfo');
+    Log.showInfo(TAG, 'removeItemFromDeskTop setLayoutInfo');
     this.mPageDesktopViewModel.setLayoutInfo(info);
     this.mPageDesktopViewModel.pagingFiltering();
   }

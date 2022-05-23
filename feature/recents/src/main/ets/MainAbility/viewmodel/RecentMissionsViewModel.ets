@@ -100,8 +100,9 @@ export default class RecentMissionsViewModel {
     Log.showInfo(TAG, 'getRecentMissionsList start');
     this.mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
     Log.showInfo(TAG, `getRecentMissionsList length: ${this.mRecentMissionsList.length}`);
+    const snapShotTime = new Date().toString();
     for (let item of this.mRecentMissionsList) {
-      item.snapShotInfo = await amsMissionManager.getMissionSnapShot(item.missionId);
+      item.snapShotTime = snapShotTime;
     }
     AppStorage.SetOrCreate('recentMissionsList', this.mRecentMissionsList);
   }
@@ -158,7 +159,6 @@ export default class RecentMissionsViewModel {
     } else {
       void this.unlockMission(missionId);
     }
-    void this.getRecentMissionsList();
   }
 
   /**

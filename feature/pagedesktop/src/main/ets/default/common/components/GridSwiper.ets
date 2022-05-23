@@ -32,7 +32,7 @@ export default struct GridSwiper {
   }
 
   private aboutToDisappear(): void  {
-    console.info("Launcher GridSwiper aboutToDisappear");
+    Log.showInfo(TAG, 'aboutToDisappear');
     this.mPageDesktopViewModel.setPageIndex();
   }
 

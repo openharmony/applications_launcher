@@ -39,10 +39,10 @@ class RecentEvent {
   }
 
   private createRecentCallBack(error: BusinessError, data: CommonEventData): void {
-    Log.showInfo(TAG, `createRecentCallBack error: ${JSON.stringify(error)} data: ${JSON.stringify(data)}`);
+    Log.showInfo(TAG, `createRecentCallBack error: ${JSON.stringify(error)}, data: ${JSON.stringify(data)}`);
     commonEventSubscriber = data;
     commonEvent.subscribe(data, (error, data) => {
-      Log.showInfo(TAG, `subscribe error: ${JSON.stringify(error)} data: ${JSON.stringify(data)}`);
+      Log.showInfo(TAG, `subscribe error: ${JSON.stringify(error)}, data: ${JSON.stringify(data)}`);
       if (error.code == 0) {
         this.mCallback.onStateChange();
       } else {

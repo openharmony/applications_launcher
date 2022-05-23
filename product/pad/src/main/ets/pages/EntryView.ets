@@ -58,10 +58,6 @@ struct EntryView {
     this.getWindowSize();
     this.updateScreenSize();
 
-    // init database
-    let dbStore = RdbStoreManager.getInstance();
-    dbStore.initRdbConfig();
-
     // register recentEvent callback
     let mCallback: Record<string, () => void> = {'onStateChange': () => this.createRecent()};
     RecentEvent.registerCallback(mCallback);

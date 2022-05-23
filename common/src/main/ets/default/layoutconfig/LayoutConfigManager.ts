@@ -59,7 +59,6 @@ class LayoutConfigManager {
     if (globalThis.LayoutConfigManager == null) {
       globalThis.LayoutConfigManager = new LayoutConfigManager();
     }
-    console.info('Launcher LayoutConfigManager constructor!');
     return globalThis.LayoutConfigManager;
   }
 

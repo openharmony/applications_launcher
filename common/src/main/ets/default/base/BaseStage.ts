@@ -16,6 +16,10 @@
 /**
  * Stage base class
  */
+import Log from '../utils/Log';
+
+const TAG = 'BaseStage';
+
 export default class BaseStage {
   constructor() {
   }
@@ -24,13 +28,13 @@ export default class BaseStage {
    * Callback when Stage starts
    */
   onCreate(): void {
-    console.info('Launcher BaseStage onCreate!');
+    Log.showInfo(TAG, 'onCreate!');
   }
 
   /**
    * Callback when stage exits
    */
   onDestroy(): void {
-    console.info('Launcher BaseStage onDestroy!');
+    Log.showInfo(TAG, 'onDestroy!');
   }
 }

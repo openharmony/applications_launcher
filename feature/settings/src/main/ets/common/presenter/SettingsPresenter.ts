@@ -46,13 +46,13 @@ export default class SettingsPresenter {
 
   private readonly mLayoutOptionsChecker: SettingItemOptionsChecker = ()=> {
     const layout = this.mSettingsModel.getAppPageStartConfig();
-    Log.showInfo(TAG, 'mLayoutOptionsChecker layout is ' + layout);
+    Log.showInfo(TAG, `mLayoutOptionsChecker layout: ${layout}`);
     return layout;
   };
 
   private readonly mGridLayOutOptionsChecker: SettingItemOptionsChecker = ()=> {
     const gridLayout = this.mSettingsModel.getGridConfig().layout;
-    Log.showInfo(TAG, 'mGridLayOutOptionsChecker layout is ' + gridLayout);
+    Log.showInfo(TAG, `mGridLayOutOptionsChecker layout: ${gridLayout}`);
     return gridLayout;
   };
 

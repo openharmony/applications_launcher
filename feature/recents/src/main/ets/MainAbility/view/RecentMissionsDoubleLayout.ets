@@ -61,7 +61,7 @@ export default struct RecentMissionsDoubleLayout {
                   abilityName: item.abilityName,
                   lockedState: item.lockedState,
                   isClickSubComponent: $isClickSubComponent,
-                  recentImage: item.snapShotInfo.snapShotImage
+                  snapShotTime: item.snapShotTime
                 })
               }
               .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
