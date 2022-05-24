@@ -445,7 +445,7 @@ struct FolderAppItem {
   private aboutToAppear(): void  {
     mFolderModel = BigFolderModel.getInstance();
     ResourceManager.getInstance().getStringByResource(isPad
-      ? $r('app.string.delete_app') : $r('app.string.uninstall')).then((resName) => {
+      ? $r('app.string.is_delete_form') : $r('app.string.isUninstall')).then((resName) => {
       this.dialogName = resName;
     });
   }
