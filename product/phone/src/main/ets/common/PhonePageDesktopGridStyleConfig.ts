@@ -37,6 +37,11 @@ export default class PhonePageDesktopGridStyleConfig extends PageDesktopGridStyl
    */
   mNameHeight = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
 
+  /**
+   * item padding
+   */
+  mPaddingTop = StyleConstants.DEFAULT_APP_TOP_RATIO;
+
   protected constructor() {
     super();
   }

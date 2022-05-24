@@ -29,6 +29,8 @@ export default class PageDesktopGridStyleConfig extends AppGridStyleConfig {
 
   mDesktopMarginTop = PresetStyleConstants.DEFAULT_ICON_PADDING_TOP;
 
+  mPaddingTop = PresetStyleConstants.DEFAULT_APP_TOP_RATIO;
+
   protected constructor() {
     super();
   }

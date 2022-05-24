@@ -17,6 +17,12 @@
  * Common constants for all features.
  */
 export default class CommonConstants {
+
+  /**
+   * dock space
+   */
+  static DOCK_SPACE = 0.1;
+
   /**
    * Bundle name of launcher
    */

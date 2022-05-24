@@ -20,4 +20,5 @@ export default class StyleConstants {
   static readonly DEFAULT_APP_NAME_HEIGHT  = 36;
   static readonly DEFAULT_MARGIN_SIZE = 82;
   static readonly DEFAULT_NUMBER_0 = 0;
+  static readonly DEFAULT_APP_TOP_RATIO  = 24;
 }

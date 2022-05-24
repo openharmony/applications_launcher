@@ -26,6 +26,11 @@ export default class LauncherLayoutStyleConfig extends ILayoutConfig {
   static LAUNCHER_PRODUCT_STYLE_CONFIG: string = 'launcherStyleProduct';
 
   /**
+     * UninstallDialog width
+   */
+  mUninstallDialogWidth = PresetStyleConstants.DEFAULT_UNINSTALLDIALOG_WIDTH;
+
+  /**
    * systemUI top height
    */
   mSysTopHeight = PresetStyleConstants.DEFAULT_SYS_TOP_HEIGHT;
@@ -58,6 +63,7 @@ export default class LauncherLayoutStyleConfig extends ILayoutConfig {
    * icon name lines
    */
   mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
+
   /**
    * icon ratio
    */

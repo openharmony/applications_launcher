@@ -25,6 +25,7 @@ export default class StyleConstants {
   static readonly DEFAULT_DIALOG_RADIUS = '24vp';
   static readonly DEFAULT_DIALOG_WIDTH = '395vp';
   static readonly DEFAULT_BUTTON_HEIGHT = '40vp';
+  static readonly DEFAULT_DIVIDER_HEIGHT = '24vp';
   static readonly DEFAULT_BUTTON_WIDTH = '120vp';
   static readonly DEFAULT_COLOR_ERROR = '#FFE84026';
   static readonly DEFAULT_ICON = '/common/pics/icon.png';
@@ -59,6 +60,7 @@ export default class StyleConstants {
   static readonly DEFAULT_MENU_HEIGHT = 76;
   static readonly PERCENTAGE_100 = '100%';
   static readonly PERCENTAGE_85 = '85%';
+  static readonly PERCENTAGE_80 = '80%';
   static readonly PERCENTAGE_75 = '75%';
   static readonly PERCENTAGE_70 = '70%';
   static readonly PERCENTAGE_15 = '15%';
@@ -97,8 +99,8 @@ export default class StyleConstants {
   static readonly DEFAULT_60 = 60;
   static readonly DEFAULT_80 = 80;
   static readonly DEFAULT_DIVIDER_COLOR = 'rgb(207, 195, 195)';
-  static readonly DEFAULT_FOLDER_APP_ITEM_WIDTH = 60;
-  static readonly DEFAULT_FOLDER_APP_ITEM_WIDTH_SMALL = 40;
+  static readonly DEFAULT_FOLDER_APP_ITEM_WIDTH = 36;
+  static readonly DEFAULT_FOLDER_APP_ITEM_WIDTH_SMALL = 45;
   static readonly DEFAULT_BADGE_FONT_SIZE = 16;
   static readonly DEFAULT_BADGE_SIZE = 20;
   static readonly MAX_BADGE_COUNT = 99;

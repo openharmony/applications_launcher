@@ -121,7 +121,7 @@ export default struct AppItem {
     this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
     ResourceManager.getInstance().getStringByResource(this.isPad
-      ? $r('app.string.delete_app') : $r('app.string.uninstall')).then((resName) => {
+      ? $r('app.string.is_delete_form') : $r('app.string.isUninstall')).then((resName) => {
       this.dialogName = resName;
     });
   }

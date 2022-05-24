@@ -10,7 +10,7 @@
     },
     {
       "name": "into_settings",
-      "value": "桌面设置"
+      "value": "选择桌面编辑项"
     },
     {
       "name": "add_blank_page",
@@ -45,12 +45,16 @@
       "value": "卸载"
     },
     {
+      "name": "isUninstall",
+      "value": "是否卸载"
+    },
+    {
       "name": "submit",
-      "value": "确认"
+      "value": "卸载"
     },
     {
       "name": "launcher_edit",
-      "value": "桌面编辑"
+      "value": "更多设置"
     },
     {
       "name": "uninstall_success",

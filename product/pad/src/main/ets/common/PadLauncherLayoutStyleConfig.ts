@@ -24,6 +24,11 @@ import PadPresetStyleConstants from './constants/PadPresentConstants';
 export default class PadLauncherLayoutStyleConfig extends LauncherLayoutStyleConfig {
 
   /**
+   * UninstallDialog width
+   */
+  mUninstallDialogWidth = PadPresetStyleConstants.DEFAULT_UNINSTALLDIALOG_WIDTH;
+
+  /**
    * systemUI top height
    */
   mSysTopHeight = PadPresetStyleConstants.DEFAULT_SYS_TOP_HEIGHT;

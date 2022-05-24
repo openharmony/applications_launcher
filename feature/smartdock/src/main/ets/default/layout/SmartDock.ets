@@ -57,7 +57,7 @@ export default struct SmartDock {
 
     Log.showInfo(TAG, 'aboutToAppear end!');
     ResourceManager.getInstance().getStringByResource(this.device === CommonConstants.PAD_DEVICE_TYPE
-      ? $r('app.string.delete_app') : $r('app.string.uninstall')).then((resName) => {
+      ? $r('app.string.is_delete_form') : $r('app.string.isUninstall')).then((resName) => {
       this.dialogName = resName;
     });
   }
@@ -133,7 +133,10 @@ export default struct SmartDock {
   }
 
   build() {
-    List({ space: this.mSmartDockViewModel.getStyleConfig().mDockGap }) {
+    List({
+      space: this.device == CommonConstants.DEFAULT_DEVICE_TYPE ? CommonConstants.DOCK_SPACE :
+        this.mSmartDockViewModel.getStyleConfig().mDockGap
+    }) {
       if (this.buildLog()) {
       }
       ListItem() {
@@ -156,9 +159,11 @@ export default struct SmartDock {
           mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
           onItemClick: (event, item) => this.mSmartDockViewModel.recentOnClick(event, item, () => this.recentOnClickWithPopup(item)),
           buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
-          onItemTouch: (event) => {},
+          onItemTouch: (event) => {
+          },
           onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
-          onTouchEventUpdateFunc: () => {},
+          onTouchEventUpdateFunc: () => {
+          },
           popup: this.popup,
           onHoverEvent: (onHover, bundleName) => this.onHoverEvent(onHover, bundleName)
         })

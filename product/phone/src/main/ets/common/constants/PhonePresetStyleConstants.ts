@@ -15,6 +15,12 @@
 
 export default class PhonePresetStyleConstants {
   //----------- desktop layout-------------
+
+  /**
+   * UninstallDialog width
+   */
+  static readonly DEFAULT_UNINSTALLDIALOG_WIDTH = '100%';
+
   /**
    * systemUI top height
    */
