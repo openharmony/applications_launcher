@@ -78,28 +78,29 @@ export default struct RecentMissionsDoubleLayout {
       .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
       .height(StyleConstants.DOUBLE_LIST_GRID_HEIGHT_PERCENTAGE)
 
-      Stack(){
-        Column(){
+      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center }){
+        Stack(){
+          Column(){
+          }
+          .width(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
+          .height(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
+          .opacity(StyleConstants.DEFAULT_DELETE_IMAGE_OPACITY)
+          .backgroundColor(StyleConstants.DEFAULT_FONT_COLOR)
+          .borderRadius(StyleConstants.RECENT_DELETE_IMAGE_RADIUS)
+          .padding(8)
 
+          Image(StyleConstants.DEFAULT_DELETE_IMAGE_FULL)
+            .width(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
+            .height(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
         }
-        .width(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
-        .height(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
-        .opacity(StyleConstants.DEFAULT_DELETE_IMAGE_OPACITY)
-        .backgroundColor(StyleConstants.DEFAULT_FONT_COLOR)
-        .borderRadius(StyleConstants.RECENT_DELETE_IMAGE_RADIUS)
-        .padding(8)
-
-        Image(StyleConstants.DEFAULT_DELETE_IMAGE_FULL)
-          .width(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
-          .height(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
+        .onClick(() => {
+          this.isClickSubComponent = true;
+          Log.showInfo(TAG, 'onClick click delete button');
+          this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
+          this.mRecentMissionsViewModel.backView();
+        })
       }
-      .margin({bottom: StyleConstants.DOUBLE_LIST_BOTTOM_MARGIN})
-      .onClick(() => {
-        this.isClickSubComponent = true;
-        Log.showInfo(TAG, 'onClick click delete button');
-        this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
-        this.mRecentMissionsViewModel.backView();
-      })
+      .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
     }
     .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
   }
