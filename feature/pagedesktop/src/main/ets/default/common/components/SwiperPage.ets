@@ -32,6 +32,7 @@ export default struct SwiperPage {
   @State mMargin: number = 0;
   @State mColumnsGap: number = 0;
   @State mRowsGap: number = 0;
+  @State mPaddingTop: number = 0;
   @State mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   @State mMarginTop: number = 0;
   private mAppListInfo;
@@ -45,6 +46,7 @@ export default struct SwiperPage {
     this.mMargin = this.mPageDesktopStyleConfig.mMargin;
     this.mColumnsGap = this.mPageDesktopStyleConfig.mColumnsGap;
     this.mRowsGap = this.mPageDesktopStyleConfig.mRowsGap;
+    this.mPaddingTop = this.mPageDesktopStyleConfig.mPaddingTop;
     this.mNameLines = this.mPageDesktopStyleConfig.mNameLines;
     this.mMarginTop = this.mPageDesktopStyleConfig.mDesktopMarginTop;
     this.mGridWidth = this.mPageDesktopStyleConfig.mGridWidth;
@@ -96,7 +98,7 @@ export default struct SwiperPage {
             })
           }
         }
-        .padding({top:24})
+        .padding({top:this.mPaddingTop})
         .rowStart(item.row)
         .columnStart(item.column)
         .rowEnd(item.row + item.area[1] - 1)

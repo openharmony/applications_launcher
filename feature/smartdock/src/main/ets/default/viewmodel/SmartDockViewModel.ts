@@ -226,6 +226,7 @@ export default class SmartDockViewModel extends BaseAppPresenter {
         }
         this.mSelectedItem = appInfo;
         this.mSelectedDockType = dockType;
+        AppStorage.SetOrCreate('uninstallAppInfo', appInfo);
         callback();
       };
       removeMenu.menuEnabled = appInfo.isUninstallAble;

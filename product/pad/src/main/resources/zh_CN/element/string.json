@@ -29,8 +29,12 @@
       "value": "卸载"
     },
     {
+      "name": "isUninstall",
+      "value": "是否卸载"
+    },
+    {
       "name": "submit",
-      "value": "确认"
+      "value": "移除"
     },
     {
       "name": "launcher_edit",

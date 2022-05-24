@@ -60,7 +60,7 @@ export default class FolderStyleConstants {
   static readonly DEFAULT_FOLDER_APP_GRID_MARGIN = 10;
   static readonly DEFAULT_APP_GRID_TOGGLE_SIZE = 30;
   static readonly DEFAULT_APP_GRID_TOGGLE_MARGIN = -30;
-  static readonly DEFAULT_APP_TITLE_MARGIN = 5;
+  static readonly DEFAULT_APP_TITLE_MARGIN = 10;
   static readonly DEFAULT_APP_ADD_TEXT_MARGIN = 14;
   static readonly DEFAULT_APP_ADD_TEXT_BOTTOM_MARGIN = 20;
   static readonly DEFAULT_APP_ADD_WIDTH = '70%';

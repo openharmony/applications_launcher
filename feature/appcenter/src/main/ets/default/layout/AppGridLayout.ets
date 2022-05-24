@@ -74,7 +74,7 @@ export default struct AppGridLayout {
     this.mAppGridPresenter = AppGridPresenter.getInstance();
     this.mAppGridPresenter.getAppList();
     this.mAppCenterGridStyleConfig = AppCenterViewModel.getInstance().getAppGridStyleConfig();
-    ResourceManager.getInstance().getStringByResource($r('app.string.app_center_menu_uninstall')).then((resName) => {
+    ResourceManager.getInstance().getStringByResource($r('app.string.isUninstall')).then((resName) => {
       this.dialogName = resName;
     });
   }
@@ -142,6 +142,7 @@ export default struct AppGridLayout {
       }
       this.mSelectItem = appInfo;
       this.mDialogController.open();
+      AppStorage.SetOrCreate('uninstallAppInfo', appInfo);
     };
     uninstallMenu.menuEnabled = appInfo.isUninstallAble;
     menuInfoList.push(uninstallMenu);

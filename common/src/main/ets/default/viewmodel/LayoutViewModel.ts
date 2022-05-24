@@ -48,6 +48,7 @@ export default class LayoutViewModel {
   private mDesktopNameSize: number | undefined;
   private mDesktopFolderSize: number | undefined;
   private mGridRealHeight: number | undefined;
+  private mUninstallDialogWidth = '';
 
   private constructor() {
     Log.showInfo(TAG, 'constructor');
@@ -94,6 +95,7 @@ export default class LayoutViewModel {
     Log.showInfo(TAG, `this.mSysUIBottomHeight ${this.mSysUIBottomHeight}`);
     this.mIndicatorHeight = this.mLauncherLayoutStyleConfig.mIndicatorHeight;
     Log.showInfo(TAG, `initScreen mIndicatorHeight ${this.mIndicatorHeight}`);
+    this.mUninstallDialogWidth = this.mLauncherLayoutStyleConfig.mUninstallDialogWidth;
   }
 
   /**
@@ -120,6 +122,13 @@ export default class LayoutViewModel {
   getDockHeight(): number {
     Log.showInfo(TAG, `initScreen mDockHeight ${this.mDockHeight}`);
     return this.mDockHeight;
+  }
+
+  /**
+  * get UninstallDialogWidth
+  */
+  getUninstallDialogWidth(): string {
+    return this.mUninstallDialogWidth;
   }
 
   /**
@@ -324,7 +333,7 @@ export default class LayoutViewModel {
     let screenGap: number = PresetStyleConstants.DEFAULT_SCREEN_GRID_GAP_AND_MARGIN;
     let gap: number = this.mLauncherLayoutStyleConfig.mFolderAddGridGap;
     let maxHeight: number = this.mLauncherLayoutStyleConfig.mFolderAddMaxHeight *
-      (this.mScreenHeight - this.mSysUITopHeight);
+    (this.mScreenHeight - this.mSysUITopHeight);
     let toggleSize: number = this.mLauncherLayoutStyleConfig.mFolderToggleSize;
     let screenColumns: number = PresetStyleConstants.DEFAULT_PHONE_GRID_APP_COLUMNS;
     let textSize: number = this.mLauncherLayoutStyleConfig.mFolderAddTextSize;
@@ -344,8 +353,8 @@ export default class LayoutViewModel {
     let itemSize = (gridSize - (column - 1) * gap) / column;
     Log.showInfo(TAG, `desktopIcon add app itemSize ${itemSize}`);
     let layoutHeight = layoutWidth + StyleConstants.DEFAULT_APP_ADD_TITLE_SIZE +
-      StyleConstants.DEFAULT_BUTTON_HEIGHT_NUMBER +
-      StyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN_NUMBER;
+    StyleConstants.DEFAULT_BUTTON_HEIGHT_NUMBER +
+    StyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN_NUMBER;
     Log.showInfo(TAG, `desktopIcon add app layoutHeight ${layoutHeight}`);
     let iconSize = (1 - 2 * ratio) * itemSize - linesHeight - this.mDesktopIconNameMargin;
     Log.showInfo(TAG, `desktopIcon add app iconSize ${iconSize}`);
@@ -391,7 +400,7 @@ export default class LayoutViewModel {
     let heightDimension3 = folderSize;
     let widthDimension4 = widthDimension3;
     let heightDimension4 = (itemSize + gap) * 4 - gap - 2 * iconMarginVertical -
-      nameHeight - this.mDesktopIconNameMargin;
+    nameHeight - this.mDesktopIconNameMargin;
     let result = {
       widthDimension1: widthDimension1,
       heightDimension1: heightDimension1,

@@ -58,7 +58,7 @@ export default struct FolderAppListDialog {
     ResourceManager.getInstance().getStringById($r('app.string.add_to').id, this.updateTitleDes.bind(this));
     this.mDialogHeight = folderViewModel.getDialogHeight(this.allAppInfoList);
     this.mGridHeight = this.mDialogHeight - FolderStyleConstants.DEFAULT_APP_ADD_TITLE_SIZE -
-      FolderStyleConstants.DEFAULT_BUTTON_HEIGHT - FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN;
+    FolderStyleConstants.DEFAULT_BUTTON_HEIGHT - FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN;
   }
 
   private updateTitleDes(value: string) {
@@ -81,7 +81,7 @@ export default struct FolderAppListDialog {
 
   build() {
     Column(){
-      Flex({direction: FlexDirection.Column, justifyContent: FlexAlign.End}) {
+      Flex({direction: FlexDirection.Column, justifyContent: FlexAlign.Center}) {
         TitleDescriptionComponent({
           mTitleDescription: $titleDescription,
           mTextSize: this.mFolderStyleConfig.mAddFolderTitleSize})
@@ -143,7 +143,7 @@ export default struct FolderAppListDialog {
         .width(this.mFolderStyleConfig.mAddFolderDialogWidth)
         .height(this.mGridHeight)
 
-        Flex({ justifyContent: FlexAlign.SpaceAround }) {
+        Flex({ alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceAround }) {
           Button() {
             Text($r('app.string.cancel_dialog'))
               .fontSize(this.mFolderStyleConfig.mAddFolderButtonSize)
@@ -188,6 +188,7 @@ export default struct FolderAppListDialog {
         }
       }
       .backgroundColor(Color.White)
+      .opacity(FolderStyleConstants.DEFAULT_DIALOG_OPACITY)
       .padding({
         bottom: FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN
       })

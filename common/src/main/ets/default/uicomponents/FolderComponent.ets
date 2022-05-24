@@ -220,21 +220,30 @@ export default struct FolderComponent {
                       Stack({ alignContent: item.alignContent }) {
                         if (item.isEmpty) {
                           Column() {
+                            Column() {
+                            }
+                            .backgroundColor(Color.White)
+                            .borderRadius(10)
+                            .opacity(0.5)
+                            .width(StyleConstants.PERCENTAGE_100)
+                            .height(StyleConstants.PERCENTAGE_100)
                           }
-                          .backgroundColor(Color.White)
-                          .borderRadius(10)
-                          .opacity(0.5)
-                          .width(StyleConstants.PERCENTAGE_75)
-                          .height(StyleConstants.PERCENTAGE_75)
-                          .margin({ left: 3, top: 3 })
+                          .alignItems(HorizontalAlign.Start)
+                          .width(StyleConstants.PERCENTAGE_80)
+                          .height(StyleConstants.PERCENTAGE_80)
                         } else {
-                          AppIcon({
-                            iconSize: '80%',
-                            iconId: item.appIconId,
-                            icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName),
-                            bundleName: item.bundleName,
-                            badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
-                          })
+                          Column() {
+                            AppIcon({
+                              iconSize: '100%',
+                              iconId: item.appIconId,
+                              icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName),
+                              bundleName: item.bundleName,
+                              badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
+                            })
+                          }
+                          .width(StyleConstants.PERCENTAGE_80)
+                          .height(StyleConstants.PERCENTAGE_80)
+                          .alignItems(HorizontalAlign.Start)
                         }
                       }
                       .width(StyleConstants.PERCENTAGE_100)

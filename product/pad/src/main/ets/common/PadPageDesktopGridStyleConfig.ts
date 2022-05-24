@@ -42,6 +42,11 @@ export default class PadPageDesktopGridStyleConfig extends PageDesktopGridStyleC
    */
   mNameHeight = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
 
+  /**
+   * item padding
+   */
+  mPaddingTop = StyleConstants.DEFAULT_APP_TOP_RATIO;
+
   protected constructor() {
     super();
   }
