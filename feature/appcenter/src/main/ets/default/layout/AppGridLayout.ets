@@ -113,7 +113,7 @@ export default struct AppGridLayout {
     addToDockMenu.menuImgSrc = "/common/pics/ic_public_copy.svg";
     addToDockMenu.menuText = $r('app.string.app_center_menu_add_dock');
     addToDockMenu.onMenuClick = () => {
-      Log.showInfo(TAG, "Launcher click menu item add to smartDock entry");
+      Log.showDebug(TAG, "Launcher click menu item add to smartDock entry");
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_DOCK_ITEM_ADD, appInfo);
     };
     menuInfoList.push(addToDockMenu);
@@ -123,7 +123,7 @@ export default struct AppGridLayout {
     addToDeskMenu.menuImgSrc = "/common/pics/ic_public_copy.svg";
     addToDeskMenu.menuText = $r('app.string.app_center_menu_add_desktop');
     addToDeskMenu.onMenuClick = () => {
-      Log.showInfo(TAG, 'click menu item add to pageDesk entry');
+      Log.showDebug(TAG, 'click menu item add to pageDesk entry');
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, appInfo);
     };
     menuInfoList.push(addToDeskMenu);
@@ -133,10 +133,10 @@ export default struct AppGridLayout {
     uninstallMenu.menuImgSrc = "/common/pics/ic_public_delete.svg";
     uninstallMenu.menuText = $r('app.string.uninstall');
     uninstallMenu.onMenuClick = () => {
-      Log.showInfo(TAG, `click menu item uninstall: ${JSON.stringify(appInfo)}`);
+      Log.showDebug(TAG, `click menu item uninstall: ${JSON.stringify(appInfo)}`);
       let cacheKey = appInfo.appLabelId + appInfo.bundleName;
       let appName = this.mAppGridPresenter.getAppName(cacheKey);
-      Log.showInfo(TAG, `buildMenuInfoList appName: ${appName}`);
+      Log.showDebug(TAG, `buildMenuInfoList appName: ${appName}`);
       if (appName != null) {
         appInfo.appName = appName;
       }

@@ -50,12 +50,12 @@ export default class AppListPresenter extends BaseAppPresenter {
     for (let item of callbackList) {
       let cacheKey = item.appLabelId + item.bundleName;
       let appName = this.mResourceManager.getAppResourceCache(cacheKey, KEY_NAME);
-      Log.showInfo(TAG, `regroupDataAppListChange appName: ${appName}`);
+      Log.showDebug(TAG, `regroupDataAppListChange appName: ${appName}`);
       if (appName != null) {
         item.appName = appName;
       } else {
         let loadAppName = await this.mResourceManager.getAppNameSync(item.appLabelId, item.bundleName, item.appName);
-        Log.showInfo(TAG, `regroupDataAppListChange loadAppName: ${loadAppName}`);
+        Log.showDebug(TAG, `regroupDataAppListChange loadAppName: ${loadAppName}`);
         item.appName = loadAppName;
       }
     }
@@ -75,7 +75,7 @@ export default class AppListPresenter extends BaseAppPresenter {
   }
 
   public informUninstallResult(resultCode) {
-    Log.showInfo(TAG, `Launcher AppListView getUninstallApp uninstallationResult: ${resultCode}`);
+    Log.showDebug(TAG, `Launcher AppListView getUninstallApp uninstallationResult: ${resultCode}`);
     if (resultCode === CommonConstants.UNINSTALL_FORBID) {
       Prompt.showToast({
         message: $r("app.string.disable_uninstall")
@@ -92,7 +92,7 @@ export default class AppListPresenter extends BaseAppPresenter {
   }
 
   public intoSetting() {
-    Log.showInfo(TAG, 'intoSetting');
+    Log.showDebug(TAG, 'intoSetting');
     this.jumpToSetting();
   }
 
@@ -103,7 +103,7 @@ export default class AppListPresenter extends BaseAppPresenter {
    * @param {string} bundleName - bundle name of the application to be jump to.
    */
   public openApplication(abilityName, bundleName) {
-    Log.showInfo(TAG, `openApplication abilityName: ${abilityName}`);
+    Log.showDebug(TAG, `openApplication abilityName: ${abilityName}`);
     this.jumpTo(abilityName, bundleName);
   }
 }

@@ -66,7 +66,7 @@ export default class BigFolderModel {
    * @return folder list
    */
   async getFolderList() {
-    Log.showInfo(TAG, 'getFolderList');
+    Log.showDebug(TAG, 'getFolderList');
     this.mFolderInfoList = [];
     let gridLayoutInfo = {
       layoutInfo: []

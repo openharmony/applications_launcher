@@ -31,7 +31,7 @@ class RecentEvent {
   mCallback: Record<string, () => void> = {};
 
   registerCallback(callback: Record<string, () => void>): void {
-    Log.showInfo(TAG, 'registerCallback');
+    Log.showDebug(TAG, 'registerCallback');
     this.mCallback = callback;
     if (commonEventSubscriber == null) {
       void commonEvent.createSubscriber(commonEventSubscribeInfo, this.createRecentCallBack.bind(this));
@@ -39,10 +39,10 @@ class RecentEvent {
   }
 
   private createRecentCallBack(error: BusinessError, data: CommonEventData): void {
-    Log.showInfo(TAG, `createRecentCallBack error: ${JSON.stringify(error)}, data: ${JSON.stringify(data)}`);
+    Log.showDebug(TAG, `createRecentCallBack error: ${JSON.stringify(error)}, data: ${JSON.stringify(data)}`);
     commonEventSubscriber = data;
     commonEvent.subscribe(data, (error, data) => {
-      Log.showInfo(TAG, `subscribe error: ${JSON.stringify(error)}, data: ${JSON.stringify(data)}`);
+      Log.showDebug(TAG, `subscribe error: ${JSON.stringify(error)}, data: ${JSON.stringify(data)}`);
       if (error.code == 0) {
         this.mCallback.onStateChange();
       } else {

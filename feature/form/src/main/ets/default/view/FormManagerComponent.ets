@@ -118,7 +118,7 @@ export default struct FormManagerComponent {
           .objectFit(ImageFit.Fill)
           .margin({left: StyleConstants.FORM_MGR_BACK_ICON_LEFT_MARGIN * StyleConstants.DPI_RATIO})
           .onClick(() => {
-            Log.showInfo(TAG, 'hide form manager window');
+            Log.showDebug(TAG, 'hide form manager window');
             this.clearAllFormById();
             windowManager.destroyWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
           })
@@ -165,11 +165,11 @@ export default struct FormManagerComponent {
                         .allowUpdate(this.allowUpdate)
                         .visibility(Visibility.Visible)
                         .onAcquired((form) => {
-                          Log.showInfo(TAG, `FormComponent card id is: ${form.id}`);
+                          Log.showDebug(TAG, `FormComponent card id is: ${form.id}`);
                           this.mFormIdList.push(form.id);
                         })
                         .onError((error) => {
-                          Log.showInfo(TAG, `FormComponent error msg: ${error.msg}`);
+                          Log.showDebug(TAG, `FormComponent error msg: ${error.msg}`);
                         })
                     }
                   }
@@ -205,7 +205,7 @@ export default struct FormManagerComponent {
         left: StyleConstants.FORM_MGR_ADD_TO_DESKTOP_BUTTON_LEFT_MARGIN * StyleConstants.DPI_RATIO,
         right: StyleConstants.FORM_MGR_ADD_TO_DESKTOP_BUTTON_RIGHT_MARGIN * StyleConstants.DPI_RATIO})
       .onClick(() => {
-        Log.showInfo(TAG, 'form add to desktop');
+        Log.showDebug(TAG, 'form add to desktop');
         this.mPageDesktopViewModel.createCardToDeskTop(this.getChooseCard());
         this.clearNoUseFormById();
         windowManager.destroyWindow(windowManager.FORM_MANAGER_WINDOW_NAME);

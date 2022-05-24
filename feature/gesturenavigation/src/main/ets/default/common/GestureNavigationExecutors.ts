@@ -66,7 +66,7 @@ export default class GestureNavigationExecutors {
    * @return true: Returns true if the gesture is within the specified hot zone.
    */
   touchEventCallback(event: any): boolean {
-    Log.showInfo(TAG, 'touchEventCallback enter');
+    Log.showDebug(TAG, 'touchEventCallback enter');
     if (event.touches.length != 1) {
       return false;
     }
@@ -128,10 +128,10 @@ export default class GestureNavigationExecutors {
           } else {
             distance = this.startEventPosition.y - startYPosition;
             const isDistance = this.isHomeViewShowOfDistanceLimit(startYPosition);
-            Log.showInfo(TAG, `touchEventCallback isDistance: ${isDistance}`);
+            Log.showDebug(TAG, `touchEventCallback isDistance: ${isDistance}`);
             if (isDistance) {
               slidingSpeed = distance / ((event.timestamp - this.startTime) / GestureNavigationExecutors.NS_PER_MS);
-              Log.showInfo(TAG, `touchEventCallback homeEvent slidingSpeed: ${slidingSpeed}`);
+              Log.showDebug(TAG, `touchEventCallback homeEvent slidingSpeed: ${slidingSpeed}`);
               if (slidingSpeed >= vp2px(500)) {
                 this.homeEventCall();
               }
@@ -156,7 +156,7 @@ export default class GestureNavigationExecutors {
   }
 
   private backEventCall() {
-    Log.showInfo(TAG, 'backEventCall backEvent start');
+    Log.showDebug(TAG, 'backEventCall backEvent start');
     let keyEvent = {
       isPressed: true,
       keyCode: 2,
@@ -165,7 +165,7 @@ export default class GestureNavigationExecutors {
     };
     // eslint-disable-next-line @typescript-eslint/naming-convention
     let res = Input.injectEvent({KeyEvent: keyEvent});
-    Log.showInfo(TAG, `backEventCall result: ${res}`);
+    Log.showDebug(TAG, `backEventCall result: ${res}`);
     keyEvent = {
       isPressed: false,
       keyCode: 2,
@@ -174,25 +174,25 @@ export default class GestureNavigationExecutors {
     };
     // eslint-disable-next-line @typescript-eslint/naming-convention
     res = Input.injectEvent({KeyEvent: keyEvent});
-    Log.showInfo(TAG, `backEventCall result: ${res}`);
+    Log.showDebug(TAG, `backEventCall result: ${res}`);
   }
 
   private homeEventCall() {
-    Log.showInfo(TAG, 'homeEventCall homeEvent start');
+    Log.showDebug(TAG, 'homeEventCall homeEvent start');
     globalThis.desktopContext.startAbility({
       bundleName: CommonConstants.LAUNCHER_BUNDLE,
       abilityName: CommonConstants.LAUNCHER_ABILITY
     })
       .then(() => {
-        Log.showInfo(TAG, 'homeEventCall startAbility Promise in service successful.');
+        Log.showDebug(TAG, 'homeEventCall startAbility Promise in service successful.');
       })
       .catch(() => {
-        Log.showInfo(TAG, 'homeEventCall startAbility Promise in service failed.');
+        Log.showDebug(TAG, 'homeEventCall startAbility Promise in service failed.');
       });
   }
 
   private recentEventCall() {
-    Log.showInfo(TAG, 'recentEventCall recentEvent start');
+    Log.showDebug(TAG, 'recentEventCall recentEvent start');
     globalThis.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
   }
 

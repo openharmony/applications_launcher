@@ -62,7 +62,7 @@ export default struct RecentMissionCard {
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, `aboutToDisappear start ${this.missionId}`);
-    Log.showInfo(TAG, `typeof this.recentImage ${typeof this.recentImage}`);
+    Log.showDebug(TAG, `typeof this.recentImage ${typeof this.recentImage}`);
     if (this.recentImage != this.mDefaultSnapShot) {
       this.recentImage.release().catch((err) => {
         Log.showError(TAG, `image.PixelMap release err: ${err}`);
@@ -85,12 +85,12 @@ export default struct RecentMissionCard {
  * @param {any} snapShotInfo
  */
   recentMissionsSnapshotCallback(missionId: number, snapShotInfo: SnapShotInfo): void {
-    Log.showInfo(TAG, `recentMissionsSnapshotCallback missionId: ${this.missionId}`);
+    Log.showDebug(TAG, `recentMissionsSnapshotCallback missionId: ${this.missionId}`);
     if (missionId === this.missionId) {
       this.recentImage = snapShotInfo.snapShotImage;
       let width = snapShotInfo.snapShotImageWidth;
       let height = snapShotInfo.snapShotImageHeight;
-      Log.showInfo(TAG, `recentMissionsSnapshotCallback recentImage: ${JSON.stringify(this.recentImage)},
+      Log.showDebug(TAG, `recentMissionsSnapshotCallback recentImage: ${JSON.stringify(this.recentImage)},
         width: ${JSON.stringify(width)}, height: ${JSON.stringify(height)}`);
     }
   }
@@ -136,7 +136,7 @@ export default struct RecentMissionCard {
             .onClick(() => {
               this.isClickSubComponent = true;
               this.lockedState = !this.lockedState;
-              Log.showInfo(TAG, `onClick set recent mission Locked status: ${this.lockedState}`);
+              Log.showDebug(TAG, `onClick set recent mission Locked status: ${this.lockedState}`);
               this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId, this.lockedState);
               this.isClickSubComponent = false;
             })
@@ -154,7 +154,7 @@ export default struct RecentMissionCard {
           StyleConstants.DOUBLE_LIST_APP_IMAGE_HEIGHT)
         .onClick(() => {
           this.isClickSubComponent = true;
-          Log.showInfo(TAG, 'onClick start launcher ability');
+          Log.showDebug(TAG, 'onClick start launcher ability');
           windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
           this.mRecentMissionsViewModel.moveMissionToFront(this.missionId);
         })
@@ -177,7 +177,7 @@ export default struct RecentMissionCard {
           this.mRecentMissionsViewModel.deleteRecentMission(false, this.missionId);
         } else if (e.offsetY > 50 && e.offsetX <= offsetWidth && -offsetWidth <= e.offsetX) {
           this.lockedState = !this.lockedState;
-          Log.showInfo(TAG, `gesture set recent mission Locked status: ${this.lockedState}`);
+          Log.showDebug(TAG, `gesture set recent mission Locked status: ${this.lockedState}`);
           this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId, this.lockedState);
         }
       }))

@@ -46,13 +46,13 @@ export default class SettingsPresenter {
 
   private readonly mLayoutOptionsChecker: SettingItemOptionsChecker = ()=> {
     const layout = this.mSettingsModel.getAppPageStartConfig();
-    Log.showInfo(TAG, `mLayoutOptionsChecker layout: ${layout}`);
+    Log.showDebug(TAG, `mLayoutOptionsChecker layout: ${layout}`);
     return layout;
   };
 
   private readonly mGridLayOutOptionsChecker: SettingItemOptionsChecker = ()=> {
     const gridLayout = this.mSettingsModel.getGridConfig().layout;
-    Log.showInfo(TAG, `mGridLayOutOptionsChecker layout: ${gridLayout}`);
+    Log.showDebug(TAG, `mGridLayOutOptionsChecker layout: ${gridLayout}`);
     return gridLayout;
   };
 
@@ -93,7 +93,7 @@ export default class SettingsPresenter {
     const condition = this.mSettingsModel.getAppPageStartConfig() == 'Grid' ?
       SettingItemsConfig.CONDITION_GRID_LAYOUT_ENABLE : SettingItemsConfig.CONDITION_LIST_LAYOUT_ENABLE;
 
-    Log.showInfo(TAG, 'getSettingList, deviceType is '+ deviceType + ', condition is ' + condition);
+    Log.showDebug(TAG, 'getSettingList, deviceType is '+ deviceType + ', condition is ' + condition);
     return this.mSettingItemsManager.get(deviceType, condition);
   }
 
@@ -104,13 +104,13 @@ export default class SettingsPresenter {
    * @param {string} settingValue - setting value.
    */
   setSettingsValue(ida, settingValue) {
-    Log.showInfo(TAG, 'setSettingsValue, ida is '+ ida + ', settingValue is ' + settingValue);
+    Log.showDebug(TAG, 'setSettingsValue, ida is '+ ida + ', settingValue is ' + settingValue);
 
     if (ida == SettingsPresenter.SETTINGS_INDEX_STYLE) {
       this.setAppPageStartConfig(settingValue);
     } else if (ida == SettingsPresenter.SETTINGS_INDEX_GRID_LAYOUT) {
       const idx = this.mSettingItemsManager.gridLayoutValue2Idx(settingValue);
-      Log.showInfo(TAG, 'setSettingsValue, idx is '+ idx);
+      Log.showDebug(TAG, 'setSettingsValue, idx is '+ idx);
       this.setGridConfig(idx);
     } else {
       this.setRecentMissionsLimit(settingValue);
@@ -132,11 +132,11 @@ export default class SettingsPresenter {
    *
    */
   settingUpdate() {
-    Log.showInfo(TAG, 'settingUpdate start');
+    Log.showDebug(TAG, 'settingUpdate start');
     globalThis.settingsContext.terminateSelf()
-      .then(data => Log.showInfo(TAG, 'terminateSelf promise::then : ' + data))
-      .catch(error => Log.showInfo(TAG, 'terminateSelf promise::catch : ' + error));
-    Log.showInfo(TAG, 'terminateSelf end');
+      .then(data => Log.showDebug(TAG, 'terminateSelf promise::then : ' + data))
+      .catch(error => Log.showError(TAG, 'terminateSelf promise::catch : ' + error));
+    Log.showDebug(TAG, 'terminateSelf end');
   }
 
   /**
@@ -162,7 +162,7 @@ export default class SettingsPresenter {
    *
    */
   backToTheDesktop() {
-    Log.showInfo(TAG, 'backToTheDesktop!');
+    Log.showDebug(TAG, 'backToTheDesktop!');
     this.settingUpdate();
   }
 
@@ -204,16 +204,16 @@ export default class SettingsPresenter {
   }
 
   setValue(value: string) {
-    Log.showInfo(TAG, `setValue setValue: ${value}`);
+    Log.showDebug(TAG, `setValue setValue: ${value}`);
     if (value != '1' && value != '0') {
-      Log.showInfo(TAG, 'setValue error');
+      Log.showDebug(TAG, 'setValue error');
       return;
     }
     try{
       LocalEventManager.sendLocalEventSticky(EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE, value);
       this.mSettingsModel.setValue(value);
     } catch (e) {
-      Log.showInfo(TAG, `setValue error:  ${e.toString()}`);
+      Log.showError(TAG, `setValue error:  ${e.toString()}`);
     }
   }
 
@@ -221,20 +221,20 @@ export default class SettingsPresenter {
     try {
       const initValue = this.mSettingsModel.getValue();
       const navigationBarStatusValue = initValue == '0' ? true : false;
-      Log.showInfo(TAG, `initNavigationBarStatusValue initValue:${initValue}, navigationBarStatusValue:${navigationBarStatusValue}`);
+      Log.showDebug(TAG, `initNavigationBarStatusValue initValue:${initValue}, navigationBarStatusValue:${navigationBarStatusValue}`);
       AppStorage.SetOrCreate('NavigationBarStatusValue', navigationBarStatusValue);
       this.mSettingsModel.registerListenForDataChanges(this.dataChangesCallback.bind(this));
     } catch (e) {
-      Log.showInfo(TAG, `initNavigationBarStatusValue error:  ${e.toString()}`);
+      Log.showError(TAG, `initNavigationBarStatusValue error:  ${e.toString()}`);
     }
   }
 
   private dataChangesCallback(data: any) {
     if (data.code !== 0) {
-      Log.showInfo(TAG, `dataChangesCallback failed, because ${data.message}`);
+      Log.showDebug(TAG, `dataChangesCallback failed, because ${data.message}`);
     } else {
       const getRetValue = this.mSettingsModel.getValue();
-      Log.showInfo(TAG, `dataChangesCallback getRetValue ${getRetValue}`);
+      Log.showDebug(TAG, `dataChangesCallback getRetValue ${getRetValue}`);
       AppStorage.SetOrCreate('NavigationBarStatusValue', getRetValue == '0' ? true : false);
     }
   }

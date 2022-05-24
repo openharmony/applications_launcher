@@ -164,7 +164,7 @@ struct SettingItem {
   });
 
   cancelDialog() {
-    Log.showInfo(TAG, 'cancelDialog');
+    Log.showDebug(TAG, 'cancelDialog');
   }
 
   private aboutToAppear(): void  {
@@ -220,7 +220,7 @@ struct SettingItem {
           .width(50)
           .height(40)
           .onChange((isOn: boolean) => {
-            Log.showInfo(TAG, `SettingItemToggle onChange for GestureNavigation Enable: ${isOn}`);
+            Log.showDebug(TAG, `SettingItemToggle onChange for GestureNavigation Enable: ${isOn}`);
             mSettingsPresenter.setValue(isOn ? '0' : '1');
           })
       }

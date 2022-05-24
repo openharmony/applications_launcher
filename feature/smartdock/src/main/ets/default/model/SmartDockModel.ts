@@ -58,7 +58,7 @@ export default class SmartDockModel {
     this.registerDockListener();
     this.getResidentList().then(() => {}, () => {});
     this.mDevice = AppStorage.Get('device');
-    Log.showInfo(TAG, `dockDevice: ${this.mDevice}`);
+    Log.showDebug(TAG, `dockDevice: ${this.mDevice}`);
     if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE) {
       this.getRecentDataList().then(() => {}, () => {});
       this.registerMissionListener();
@@ -87,10 +87,10 @@ export default class SmartDockModel {
     if (CheckEmptyUtils.isEmptyArr(rdbResidentList)) {
       // init preset dock data
       const dockDataList = this.mSmartDockLayoutConfig.getDockLayoutInfo();
-      Log.showInfo(TAG, `getResidentList from config length: ${dockDataList.length}`);
+      Log.showDebug(TAG, `getResidentList from config length: ${dockDataList.length}`);
       for (let i = 0; i < dockDataList.length; i++) {
         if (dockDataList[i].itemType == CommonConstants.TYPE_APP) {
-          Log.showInfo(TAG, `getResidentList dockDataList[i].bundleName: ${dockDataList[i].bundleName}`);
+          Log.showDebug(TAG, `getResidentList dockDataList[i].bundleName: ${dockDataList[i].bundleName}`);
           const appData = await launcherAbilityManager.getAppInfoByBundleName(dockDataList[i].bundleName);
           if (appData == undefined) {
             continue;
@@ -125,22 +125,22 @@ export default class SmartDockModel {
       globalThis.RdbStoreManagerInstance.insertIntoSmartdock(residentList);
     } else {
       residentList = rdbResidentList;
-      Log.showInfo(TAG, 'getResidentList from rdb!');
+      Log.showDebug(TAG, 'getResidentList from rdb!');
     }
 
     // trigger component update
     AppStorage.SetOrCreate('residentList', residentList);
-    Log.showInfo(TAG, `getResidentList end residentList.length: ${residentList.length}`);
+    Log.showDebug(TAG, `getResidentList end residentList.length: ${residentList.length}`);
   }
 
   /**
    * get recent dock list
    */
   async getRecentDataList(): Promise<void> {
-    Log.showInfo(TAG, 'getRecentDataList start!');
+    Log.showDebug(TAG, 'getRecentDataList start!');
     const recentList = await amsMissionManager.getRecentBundleMissionsList();
     if (CheckEmptyUtils.isEmptyArr(recentList)) {
-      Log.showInfo(TAG, 'getRecentDataList empty');
+      Log.showDebug(TAG, 'getRecentDataList empty');
       AppStorage.SetOrCreate('recentList', recentList);
       return;
     }
@@ -164,7 +164,7 @@ export default class SmartDockModel {
     }
     AppStorage.SetOrCreate('recentList', recents);
     AppStorage.SetOrCreate('missionInfoList', missionInfos);
-    Log.showInfo(TAG, `getRecentDataList end, recentList.length: ${recents.length}`);
+    Log.showDebug(TAG, `getRecentDataList end, recentList.length: ${recents.length}`);
   }
 
   /**
@@ -216,7 +216,7 @@ export default class SmartDockModel {
       }
       AppStorage.SetOrCreate('residentList', this.mResidentList);
       globalThis.RdbStoreManagerInstance.insertIntoSmartdock(this.mResidentList);
-      Log.showInfo(TAG, `addToSmartdock appInfo: ${appInfo.bundleName}`);
+      Log.showDebug(TAG, `addToSmartdock appInfo: ${appInfo.bundleName}`);
       return true;
     }
     return false;
@@ -315,7 +315,7 @@ export default class SmartDockModel {
       EventConstants.EVENT_REQUEST_RECENT_DOCK_ITEM_DELETE,
       EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE
     ]);
-    Log.showInfo(TAG, 'local listener on create');
+    Log.showDebug(TAG, 'local listener on create');
   }
 
   /**
@@ -323,7 +323,7 @@ export default class SmartDockModel {
    */
   unregisterDockListener(): void {
     localEventManager.unregisterEventListener(this.mAddToDockListener);
-    Log.showInfo(TAG, 'local listener on destroy');
+    Log.showDebug(TAG, 'local listener on destroy');
   }
 
   /**
@@ -331,7 +331,7 @@ export default class SmartDockModel {
    */
   private readonly mAddToDockListener = {
     onReceiveEvent: (event: string, params: any) => {
-      Log.showInfo(TAG, `receive event: ${event}, params: ${JSON.stringify(params)}`);
+      Log.showDebug(TAG, `receive event: ${event}, params: ${JSON.stringify(params)}`);
       if (event === EventConstants.EVENT_REQUEST_DOCK_ITEM_ADD) {
         this.addToSmartdock(params);
       } else if (event === EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE) {
@@ -345,7 +345,7 @@ export default class SmartDockModel {
   };
 
   private registerMissionListener(): void {
-    Log.showInfo(TAG, 'registerMissionListener');
+    Log.showDebug(TAG, 'registerMissionListener');
     const listener = {
       onMissionCreated: this.onMissionCreatedCallback.bind(this),
       onMissionDestroyed: this.onMissionDestroyedCallback.bind(this),
@@ -426,7 +426,7 @@ export default class SmartDockModel {
     }
     AppStorage.SetOrCreate('snapshotList', snapshotList);
     AppStorage.SetOrCreate('snapShotWidth', snapShotWidth);
-    Log.showInfo(TAG, 'getSnapshot update snapshotList');
+    Log.showDebug(TAG, 'getSnapshot update snapshotList');
     return snapshotList;
   }
 
@@ -445,7 +445,7 @@ export default class SmartDockModel {
             this.mResidentList.splice(i, 1);
             AppStorage.SetOrCreate('residentList', this.mResidentList);
             globalThis.RdbStoreManagerInstance.insertIntoSmartdock(this.mResidentList);
-            Log.showInfo(TAG, `deleteRecentDockItem resist dockItem: ${bundleName}`);
+            Log.showDebug(TAG, `deleteRecentDockItem resist dockItem: ${bundleName}`);
             res = true;
             return res;
           }
@@ -463,7 +463,7 @@ export default class SmartDockModel {
         if (bundleName === this.mRecentDataList[i].bundleName) {
           this.mRecentDataList.splice(i, 1);
           AppStorage.SetOrCreate('recentList', this.mRecentDataList);
-          Log.showInfo(TAG, `deleteRecentDockItem recent dockItem: ${bundleName}`);
+          Log.showDebug(TAG, `deleteRecentDockItem recent dockItem: ${bundleName}`);
           res = true;
           return res;
         }
@@ -473,7 +473,7 @@ export default class SmartDockModel {
   }
 
   updateResistDockItem(appInfo: AppItemInfo): void{
-    Log.showInfo(TAG, `updateResistDockItem appInfo: ${JSON.stringify(appInfo)}`);
+    Log.showDebug(TAG, `updateResistDockItem appInfo: ${JSON.stringify(appInfo)}`);
     let resistDockItem: DockItemInfo[] = AppStorage.Get('residentList');
     if (!CheckEmptyUtils.isEmptyArr(resistDockItem)) {
       for (let i = 0; i < resistDockItem.length; i++) {

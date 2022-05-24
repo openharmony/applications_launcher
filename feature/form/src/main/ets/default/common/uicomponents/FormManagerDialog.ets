@@ -155,11 +155,11 @@ export default struct FormManagerDialog {
                     .allowUpdate(this.mAllowUpdate)
                     .visibility(Visibility.Visible)
                     .onAcquired((form) => {
-                      Log.showInfo(TAG, `FormComponent card id is: ${form.id}`);
+                      Log.showDebug(TAG, `FormComponent card id is: ${form.id}`);
                       this.mFormIdList.push(form.id);
                     })
                     .onError((error) => {
-                      Log.showInfo(TAG, `FormComponent error msg: ${error.msg}`);
+                      Log.showDebug(TAG, `FormComponent error msg: ${error.msg}`);
                     })
                   }
                 }

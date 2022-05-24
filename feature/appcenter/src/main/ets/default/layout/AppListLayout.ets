@@ -71,7 +71,7 @@ export default struct ListLayout {
   }
 
   cancelDialog() {
-    Log.showInfo(TAG, 'Cancel Dialog');
+    Log.showDebug(TAG, 'Cancel Dialog');
   }
 
   build() {

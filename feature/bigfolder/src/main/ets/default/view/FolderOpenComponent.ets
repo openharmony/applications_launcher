@@ -109,17 +109,17 @@ export default struct FolderOpenComponent {
   }
 
   private showStateChange() {
-    Log.showInfo(TAG, `showStateChange start`);
+    Log.showDebug(TAG, `showStateChange start`);
     if (this.showState) {
       this.showOpenFolder();
     } else {
       this.hideOpenFolder();
     }
-    Log.showInfo(TAG, `showStateChange end`);
+    Log.showDebug(TAG, `showStateChange end`);
   }
 
   private updateFolderData() {
-    Log.showInfo(TAG, `updateFolderData start`);
+    Log.showDebug(TAG, `updateFolderData start`);
     if (this.openFolderStatus == FeatureConstants.OPEN_FOLDER_STATUS_STATIC) {
       return;
     }
@@ -136,16 +136,16 @@ export default struct FolderOpenComponent {
     }
     AppStorage.SetOrCreate('openFolderStatus', FeatureConstants.OPEN_FOLDER_STATUS_STATIC);
     AppStorage.SetOrCreate('isDraging', false);
-    Log.showInfo(TAG, `updateFolderData end`);
+    Log.showDebug(TAG, `updateFolderData end`);
   }
 
   private hideOpenFolder() {
-    Log.showInfo(TAG, `hideOpenFolder start`);
+    Log.showDebug(TAG, `hideOpenFolder start`);
     this.isRenaming = false;
     this.withBlur = false;
     this.openFolderStatus = FeatureConstants.OPEN_FOLDER_STATUS_CLOSE;
     this.showAnimate(0.3, Curve.EaseOut);
-    Log.showInfo(TAG, `hideOpenFolder end`);
+    Log.showDebug(TAG, `hideOpenFolder end`);
   }
 
   private showOpenFolder() {
@@ -191,12 +191,12 @@ export default struct FolderOpenComponent {
                 .backgroundColor('rgba(255,255,255,0)')
                 .enterKeyType(EnterKeyType.Done)
                 .onSubmit((enterKey:EnterKeyType) => {
-                  Log.showInfo(TAG, `textinput done: ${enterKey} `)
+                  Log.showDebug(TAG, `textinput done: ${enterKey} `)
                   this.isRenaming = true;
                   this.saveText();
                 })
                 .onChange((text:string) => {
-                  Log.showInfo(TAG, `textinput: ` + text);
+                  Log.showDebug(TAG, `textinput: ` + text);
                   this.newFolderName  = text;
                 })
               Image(FolderStyleConstants.DEFAULT_CANCEL_APP_IMAGE)
@@ -220,7 +220,7 @@ export default struct FolderOpenComponent {
             .maxLines(1)
             .width(FolderStyleConstants.PERCENTAGE_100)
             .onClick(() => {
-              Log.showInfo(TAG, 'title click');
+              Log.showDebug(TAG, 'title click');
               this.isRenaming = true;
               this.newFolderName = this.mFolderInfo.folderName
             })
@@ -243,7 +243,7 @@ export default struct FolderOpenComponent {
             bottom: FolderStyleConstants.DEFAULT_OPEN_FOLDER_INDICATOR
           })
           .onClick(() => {
-            Log.showInfo(TAG, `Swiper click`);
+            Log.showDebug(TAG, `Swiper click`);
             if (!isOpenFolderDialog) {
               mFolderViewModel.closeFolder();
             }
@@ -253,7 +253,7 @@ export default struct FolderOpenComponent {
           .index(this.PageIndex)
           .loop(false)
           .onChange((index) => {
-            Log.showInfo(TAG, `mFolderViewModel.changeIndex(index):${index}`);
+            Log.showDebug(TAG, `mFolderViewModel.changeIndex(index):${index}`);
             mFolderViewModel.changeIndex(index);
           })
         }
@@ -266,13 +266,13 @@ export default struct FolderOpenComponent {
     .opacity(this.overLayAlpha)
     .backgroundColor('rgba(0,0,0,0.25)')
     .onClick(() => {
-      Log.showInfo(TAG, 'blank click');
+      Log.showDebug(TAG, 'blank click');
       this.saveText();
     })
     .onMouse((event: MouseEvent) => {
       if (event.button == MouseButton.Right) {
         event.stopPropagation();
-        Log.showInfo(TAG, 'onMouse MouseButton Right');
+        Log.showDebug(TAG, 'onMouse MouseButton Right');
       }
     })
   }
@@ -389,7 +389,7 @@ struct FolderSwiperPage {
               .width(FolderStyleConstants.PERCENTAGE_100)
               .height(FolderStyleConstants.PERCENTAGE_100)
               .onClick(() => {
-                Log.showInfo(TAG, `add app to this folder`);
+                Log.showDebug(TAG, `add app to this folder`);
                 this.folderDialogController.open();
               })
             } else {
@@ -406,7 +406,7 @@ struct FolderSwiperPage {
       .columnsGap(this.mGridGap)
       .rowsGap(this.mGridGap)
       .onClick(() => {
-        Log.showInfo(TAG, 'Grid click');
+        Log.showDebug(TAG, 'Grid click');
         mFolderViewModel.closeFolder();
       })
       .columnsTemplate(this.ColumnsTemplate)
@@ -420,7 +420,7 @@ struct FolderSwiperPage {
     .onMouse((event: MouseEvent) => {
       if (event.button == MouseButton.Right) {
         event.stopPropagation();
-        Log.showInfo(TAG, 'Grid onMouse MouseButton Right');
+        Log.showDebug(TAG, 'Grid onMouse MouseButton Right');
       }
     })
   }
@@ -493,7 +493,7 @@ struct FolderAppItem {
       },
       confirm: (formCardItem) => {
         // add form to desktop
-        Log.showInfo(TAG, `createCardToDeskTop formCardItem: ${JSON.stringify(formCardItem)}`);
+        Log.showDebug(TAG, `createCardToDeskTop formCardItem: ${JSON.stringify(formCardItem)}`);
         mPageDesktopViewModel.createCardToDeskTop(formCardItem);
       },
       bundleName: this.item.bundleName,
@@ -506,7 +506,7 @@ struct FolderAppItem {
   });
 
   cancelFormDialog() {
-    Log.showInfo(TAG, 'form manager cancel dialog');
+    Log.showDebug(TAG, 'form manager cancel dialog');
     this.clearForm();
   }
 
@@ -515,7 +515,7 @@ struct FolderAppItem {
       this.isDraging = true;
     },
     onItemDragMove: (event: any, insertIndex: number, itemIndex: number) => {
-      Log.showInfo(TAG, "FolderOpenComponent onItemDragMove start");
+      Log.showDebug(TAG, "FolderOpenComponent onItemDragMove start");
       this.uninstallDialogController.close();
 
       if (this.isSwappingPage) {
@@ -530,11 +530,10 @@ struct FolderAppItem {
       let pageCount = this.mFolderInfo.layoutInfo.length;
 
       let pageIndex: number = mFolderViewModel.getIndex();
-      Log.showInfo(TAG, "FolderOpenComponent onItemDragMove pageIndex: " + pageIndex);
-
-      Log.showInfo(TAG, `FolderOpenComponent onItemDragMove dragEffectArea.left: ${dragEffectArea.left}`);
-      Log.showInfo(TAG, `FolderOpenComponent onItemDragMove dragEffectArea.bottom: ${dragEffectArea.bottom}`);
-      Log.showInfo(TAG, `FolderOpenComponent onItemDragMove dragEffectArea.right: ${dragEffectArea.right}`);
+      Log.showDebug(TAG, `FolderOpenComponent onItemDragMove pageIndex: ${pageIndex},
+        dragEffectArea.left: ${dragEffectArea.left},
+        dragEffectArea.bottom: ${dragEffectArea.bottom},
+        dragEffectArea.right: ${dragEffectArea.right}`);
 
       if ((moveX - mAppIconSize / 2) < dragEffectArea.left && moveY < dragEffectArea.bottom) {
         if (pageIndex > 0) {
@@ -609,13 +608,13 @@ struct FolderAppItem {
       .height(mAppItemWidth)
       .visibility(this.isDraging ? Visibility.Hidden : Visibility.Visible)
       .onClick(() => {
-        Log.showInfo(TAG, 'App click');
+        Log.showDebug(TAG, 'App click');
         mPageDesktopViewModel.openApplication(this.item.abilityName, this.item.bundleName);
       })
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
           event.stopPropagation();
-          Log.showInfo(TAG, 'FolderAppItem onMouse MouseButton Right');
+          Log.showDebug(TAG, 'FolderAppItem onMouse MouseButton Right');
           AppStorage.SetOrCreate('selectDesktopAppItem', this.item.bundleName);
         }
       })
@@ -623,11 +622,11 @@ struct FolderAppItem {
       GestureGroup(GestureMode.Exclusive,
       TapGesture()
         .onAction((event: GestureEvent) => {
-          Log.showInfo(TAG, `tap action ${JSON.stringify(event)}`)
+          Log.showDebug(TAG, `tap action ${JSON.stringify(event)}`)
           if (event.source == SourceType.Mouse) {
             this.mouseClick++;
             if (this.mouseClick == DOUBLE_CLICK_COUNT) {
-              Log.showInfo(TAG, 'mouse double click');
+              Log.showDebug(TAG, 'mouse double click');
               this.mouseClick = 0;
               this.launchApp();
             } else {
@@ -637,14 +636,14 @@ struct FolderAppItem {
               }, 300)
             }
           } else {
-            Log.showInfo(TAG, 'tap click');
+            Log.showDebug(TAG, 'tap click');
             this.launchApp();
           }
         })
       )
       )
       //      .onTouch((event: TouchEvent) => {
-      //        Log.showInfo(TAG, `onTouch`);
+      //        Log.showDebug(TAG, `onTouch`);
       //        AppStorage.SetOrCreate('dragFocus', FeatureConstants.FEATURE_NAME);
       //        mBigFolderDragHandler.setDragStateListener(this.mDragStateListener);
       //        mBigFolderDragHandler.notifyTouchEventUpdate(event);
