@@ -64,7 +64,7 @@ let isPad = false;
 @Component
 export default struct FolderOpenComponent {
   @State withBlur: boolean = true;
-//  @StorageLink('isDraging') isDraging: boolean = false;
+  //  @StorageLink('isDraging') isDraging: boolean = false;
   @State @Watch('showStateChange') showState: boolean = false;
   @StorageLink('openFolderPageIndex') PageIndex: number = 0;
   @StorageLink('openFolderStatus') @Watch('updateFolderData') openFolderStatus: number = FeatureConstants.OPEN_FOLDER_STATUS_CLOSE;
@@ -76,7 +76,7 @@ export default struct FolderOpenComponent {
     folderName: string,
     folderId: string
   } = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
-  private newFolderName: string;
+  @State newFolderName: string = '';
 
   private aboutToAppear(): void  {
     Log.showInfo(TAG, `aboutToAppear start`);
@@ -179,60 +179,52 @@ export default struct FolderOpenComponent {
 
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center }) {
         Stack({ alignContent: Alignment.Center }) {
-          Text(this.mFolderInfo.folderName) {
-          }
-          .fontSize(FolderStyleConstants.DEFAULT_OPEN_FOLDER_NAME_SIZE)
-          .fontColor(Color.White)
-          .textAlign(TextAlign.Center)
-          .width(FolderStyleConstants.PERCENTAGE_100)
-          .visibility(this.isRenaming ? Visibility.Hidden : Visibility.Visible)
-          .onClick(() => {
-            Log.showInfo(TAG, 'title click');
-            this.isRenaming = true;
-          })
-          TextArea({ placeholder: this.mFolderInfo.folderName, text: this.newFolderName })
+          if (this.isRenaming) {
+            Row(){
+              TextInput({ text: this.newFolderName })
+                .maxLength(CommonConstants.FOLDER_NAME_MAX_LENGTH)
+                .caretColor(Color.White)
+                .fontColor(Color.White)
+                .fontSize(FolderStyleConstants.DEFAULT_OPEN_FOLDER_NAME_SIZE)
+                .fontWeight(FontWeight.Normal)
+                .layoutWeight(1)
+                .backgroundColor('rgba(255,255,255,0)')
+                .enterKeyType(EnterKeyType.Done)
+                .onSubmit((enterKey:EnterKeyType) => {
+                  Log.showInfo(TAG, `textinput done: ${enterKey} `)
+                  this.isRenaming = true;
+                  this.saveText();
+                })
+                .onChange((text:string) => {
+                  Log.showInfo(TAG, `textinput: ` + text);
+                  this.newFolderName  = text;
+                })
+              Image(FolderStyleConstants.DEFAULT_CANCEL_APP_IMAGE)
+                .width(FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
+                .height(FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
+                .onClick(()=>{
+                  this.newFolderName = ''
+                })
+            }
             .height(FolderStyleConstants.DEFAULT_OPEN_FOLDER_TEXTAREA_HEIGHT)
-            .textAlign(TextAlign.Center)
-            .fontColor(Color.White)
-            .fontSize(FolderStyleConstants.DEFAULT_OPEN_FOLDER_NAME_SIZE)
-            .fontWeight(FontWeight.Normal)
-            .fontFamily("sans-serif")
-            .fontStyle(FontStyle.Normal)
-            .placeholderColor(Color.White)
-            .caretColor(Color.White)
-            .placeholderFont({
-              size: FolderStyleConstants.DEFAULT_OPEN_FOLDER_NAME_SIZE,
-              weight: FontWeight.Normal,
-              family: "sans-serif"
-            })
-            .backgroundColor('rgba(255,255,255,0.3)')
-            .clip(new Rect({
-              width:FolderStyleConstants.PERCENTAGE_100,
-              height:FolderStyleConstants.DEFAULT_OPEN_FOLDER_TEXTAREA_HEIGHT,
-              radius:[[FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE,FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE],
-              [FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE,FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE],
-              [FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE,FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE],
-              [FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE,FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE]]}))
             .width(FolderStyleConstants.PERCENTAGE_100)
-            .visibility(this.isRenaming ? Visibility.Visible : Visibility.Hidden)
-            .onBlur(()=> {
+            .borderRadius(FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
+            .padding({ left: FolderStyleConstants.DEFAULT_BUTTON_HEIGHT,right: FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN })
+            .backgroundColor('rgba(255,255,255,0.3)')
+          }else{
+            Text(this.mFolderInfo.folderName) {
+            }
+            .fontSize(FolderStyleConstants.DEFAULT_OPEN_FOLDER_NAME_SIZE)
+            .fontColor(Color.White)
+            .textAlign(TextAlign.Center)
+            .maxLines(1)
+            .width(FolderStyleConstants.PERCENTAGE_100)
+            .onClick(() => {
+              Log.showInfo(TAG, 'title click');
               this.isRenaming = true;
-              this.saveText();
+              this.newFolderName = this.mFolderInfo.folderName
             })
-            .onChange((text: string) => {
-              Log.showInfo(TAG, `textinput: ` + text);
-              this.newFolderName  = text;
-            })
-          Image(FolderStyleConstants.DEFAULT_CANCEL_APP_IMAGE)
-            .width(FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
-            .height(FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
-            .position({ x: FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_WIDTH,
-              y: FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_HEIGHT})
-            .visibility(this.isRenaming ? Visibility.Visible : Visibility.Hidden)
-            .onClick(()=>{
-              this.mFolderInfo.folderName = ''
-              this.newFolderName = ''
-            })
+          }
         }
         .margin({ top: mFolderOpenTitle })
         .width(mGridWidth)
@@ -241,9 +233,9 @@ export default struct FolderOpenComponent {
         Stack() {
           Swiper() {
             ForEach(this.mFolderInfo.layoutInfo, (item) => {
-                FolderSwiperPage({
-                  mAppInfo: item
-                })
+              FolderSwiperPage({
+                mAppInfo: item
+              })
             }, (item) => JSON.stringify(item))
           }
           .indicatorStyle({
@@ -437,7 +429,7 @@ struct FolderSwiperPage {
 @Component
 struct FolderAppItem {
   @StorageLink('uninstallAppInfo') appInfo: any = {};
-//  @StorageLink('dragLocation') @Watch('onTouchEventUpdate') dragLocation: string = '';
+  //  @StorageLink('dragLocation') @Watch('onTouchEventUpdate') dragLocation: string = '';
   @State @Watch('onIsDraging') isDraging: boolean = false;
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
   @State item: any = {};
@@ -453,7 +445,7 @@ struct FolderAppItem {
   private aboutToAppear(): void  {
     mFolderModel = BigFolderModel.getInstance();
     ResourceManager.getInstance().getStringByResource(isPad
-      ? $r('app.string.is_delete_form') : $r('app.string.isUninstall')).then((resName) => {
+      ? $r('app.string.delete_app') : $r('app.string.uninstall')).then((resName) => {
       this.dialogName = resName;
     });
   }
@@ -651,12 +643,12 @@ struct FolderAppItem {
         })
       )
       )
-//      .onTouch((event: TouchEvent) => {
-//        Log.showInfo(TAG, `onTouch`);
-//        AppStorage.SetOrCreate('dragFocus', FeatureConstants.FEATURE_NAME);
-//        mBigFolderDragHandler.setDragStateListener(this.mDragStateListener);
-//        mBigFolderDragHandler.notifyTouchEventUpdate(event);
-//      })
+      //      .onTouch((event: TouchEvent) => {
+      //        Log.showInfo(TAG, `onTouch`);
+      //        AppStorage.SetOrCreate('dragFocus', FeatureConstants.FEATURE_NAME);
+      //        mBigFolderDragHandler.setDragStateListener(this.mDragStateListener);
+      //        mBigFolderDragHandler.notifyTouchEventUpdate(event);
+      //      })
     }
     .width(mAppItemWidth)
     .height(mAppItemWidth)
