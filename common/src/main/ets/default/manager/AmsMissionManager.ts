@@ -33,10 +33,10 @@ class AmsMissionManager {
   private static readonly RECENT_MISSIONS_LIMIT_NUM = 20;
 
   static getInstance(): AmsMissionManager {
+    Log.showDebug(TAG, 'getInstance');
     if (globalThis.AmsMissionManagerInstance == null) {
       globalThis.AmsMissionManagerInstance = new AmsMissionManager();
     }
-    Log.showInfo(TAG, 'getInstance!');
     return globalThis.AmsMissionManagerInstance;
   }
 
@@ -47,7 +47,6 @@ class AmsMissionManager {
    * @return {Array} missions list
    */
   async getRecentMissionsList(): Promise<RecentMissionInfo[]> {
-    Log.showInfo(TAG, 'getRecentMissionsList start');
     const recentMissionsList = new Array<RecentMissionInfo>();
     let listData = new Array();
     await missionManager.getMissionInfos('', AmsMissionManager.RECENT_MISSIONS_LIMIT_NUM)
@@ -59,7 +58,7 @@ class AmsMissionManager {
         Log.showError(TAG, `getRecentMissionsList error: ${JSON.stringify(err)}`);
       });
     if (CheckEmptyUtils.isEmptyArr(listData)) {
-      Log.showError(TAG, 'getRecentMissionsList Empty');
+      Log.showInfo(TAG, 'getRecentMissionsList Empty');
       return recentMissionsList;
     }
     for (const recentItem of listData) {
@@ -77,7 +76,7 @@ class AmsMissionManager {
       recentMissionInfo.appName = appInfo.appName;
       recentMissionsList.push(recentMissionInfo);
     }
-    Log.showInfo(TAG, `getRecentMissionsList recentMissionsList.length: ${recentMissionsList.length}`);
+    Log.showInfo(TAG, `getRecentMissionsList recentMissionsList length: ${recentMissionsList.length}`);
     return recentMissionsList;
   }
 
@@ -87,17 +86,16 @@ class AmsMissionManager {
    * @return {Array} missions list
    */
   async getRecentBundleMissionsList(): Promise<RecentBundleMissionInfo[]> {
-    Log.showInfo(TAG, 'getRecentBundleMissionsList start');
     const recentMissionsList = new Array<RecentBundleMissionInfo>();
     let missionInfos = new Array();
     try {
       missionInfos = await missionManager.getMissionInfos('', AmsMissionManager.RECENT_MISSIONS_LIMIT_NUM);
       Log.showInfo(TAG, `getRecentBundleMissionsList missionInfos length: ${missionInfos.length}`);
     } catch (err) {
-      Log.showError(TAG, `getRecentBundleMissionsList error ${JSON.stringify(err)}`);
+      Log.showError(TAG, `getRecentBundleMissionsList error: ${JSON.stringify(err)}`);
     }
     if (CheckEmptyUtils.isEmptyArr(missionInfos)) {
-      Log.showError(TAG, 'getRecentBundleMissionsList Empty');
+      Log.showInfo(TAG, 'getRecentBundleMissionsList Empty');
       return recentMissionsList;
     }
     for (let i = 0; i < missionInfos.length; i++) {
@@ -127,7 +125,7 @@ class AmsMissionManager {
         recentMissionsList.push(recentTaskInfo);
       }
     }
-    Log.showInfo(TAG, `getRecentBundleMissionsList recentMissionsList.length:${recentMissionsList.length}`);
+    Log.showInfo(TAG, `getRecentBundleMissionsList recentMissionsList length:${recentMissionsList.length}`);
     return recentMissionsList;
   }
 
@@ -137,13 +135,13 @@ class AmsMissionManager {
    * @param missionId
    */
   async clearMission(missionId: number): Promise<void> {
-    Log.showInfo(TAG, `clearMission start! missionId:${missionId}`);
+    Log.showInfo(TAG, `clearMission Id:${missionId}`);
     await missionManager.clearMission(missionId)
       .then((data) => {
         Log.showInfo(TAG, `clearMission data:${JSON.stringify(data)}`);
       })
       .catch((err) => {
-        Log.showInfo(TAG, `clearMission err:${JSON.stringify(err)}`);
+        Log.showError(TAG, `clearMission err:${JSON.stringify(err)}`);
       });
   }
 
@@ -154,13 +152,12 @@ class AmsMissionManager {
    * @return nothing.
    */
   async clearAllMissions(): Promise<void> {
-    Log.showInfo(TAG, 'clearAllMissions start!');
     await missionManager.clearAllMissions()
       .then((data) => {
         Log.showInfo(TAG, `clearAllMissions data: ${JSON.stringify(data)}`);
       })
       .catch((err) => {
-        Log.showInfo(TAG, `clearAllMissions err: ${JSON.stringify(err)}`);
+        Log.showError(TAG, `clearAllMissions err: ${JSON.stringify(err)}`);
       });
   }
 
@@ -176,7 +173,7 @@ class AmsMissionManager {
         Log.showInfo(TAG, `lockMission data: ${JSON.stringify(data)}`);
       })
       .catch((err) => {
-        Log.showInfo(TAG, `lockMission err: ${JSON.stringify(err)}`);
+        Log.showError(TAG, `lockMission err: ${JSON.stringify(err)}`);
       });
   }
 
@@ -192,7 +189,7 @@ class AmsMissionManager {
         Log.showInfo(TAG, `unlockMission data: ${JSON.stringify(data)}`);
       })
       .catch((err) => {
-        Log.showInfo(TAG, `unlockMission err: ${JSON.stringify(err)}`);
+        Log.showError(TAG, `unlockMission err: ${JSON.stringify(err)}`);
       });
   }
 

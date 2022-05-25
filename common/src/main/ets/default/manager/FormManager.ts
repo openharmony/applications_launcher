@@ -85,7 +85,7 @@ export default class FormManager {
    * @param bundle
    */
   async getFormsInfoByApp(bundle: string): Promise<CardItemInfo[]> {
-    Log.showInfo(TAG, 'getFormsInfoByApp bundle:' + bundle);
+    Log.showInfo(TAG, `getFormsInfoByApp bundle: ${bundle}`);
     const formList = await formManagerAbility.getFormsInfo(bundle);
     const cardItemInfoList = new Array<CardItemInfo>();
     for (const formItem of formList) {

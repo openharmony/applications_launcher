@@ -67,7 +67,7 @@ export default struct FolderComponent {
   isSelect?: boolean;
 
   private aboutToAppear(): void  {
-    Log.showInfo(TAG, `aboutToAppear`);
+    Log.showInfo(TAG, `aboutToAppear start`);
     this.updateShowList();
     this.mSettingsModel = SettingsModel.getInstance();
     if (this.mSettingsModel.getDevice() != "phone") {

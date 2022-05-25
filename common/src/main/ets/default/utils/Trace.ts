@@ -50,12 +50,12 @@ export default class Trace {
       globalThis.traceIndex++;
       globalThis.taskIdMap.set(methodName, taskId);
     }
-    Log.showInfo(this.TRACE_TAG, `start trace ${taskId}`);
+    Log.showDebug(this.TRACE_TAG, `start trace taskId: ${taskId}`);
     byTrace.startTrace(this.TRACE_TAG + methodName, taskId, Trace.TRACE_LIMIT);
   }
 
   private static init() {
-    Log.showInfo(this.TRACE_TAG, 'init trace parameters');
+    Log.showDebug(this.TRACE_TAG, 'init trace parameters');
     globalThis.taskIdMap = new Map<string, number>();
     globalThis.traceIndex = Trace.TRACE_BASE_INDEX;
   }
@@ -72,10 +72,10 @@ export default class Trace {
     }
     const taskId = globalThis.taskIdMap.get(methodName);
     if (taskId == undefined) {
-      Log.showError(this.TRACE_TAG, `fail to end trace name ${methodName}`);
+      Log.showDebug(this.TRACE_TAG, `fail to end trace name:${methodName}`);
       return;
     }
-    Log.showInfo(this.TRACE_TAG, `end trace ${taskId}`);
+    Log.showDebug(this.TRACE_TAG, `end trace taskId: ${taskId}`);
     byTrace.finishTrace(this.TRACE_TAG + methodName, taskId);
   }
 }

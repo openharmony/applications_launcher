@@ -41,7 +41,7 @@ export default class FileUtils {
       Log.showInfo(TAG, `readJsonFile finish execution content: ${content}`);
       return JSON.parse(content);
     } catch (e) {
-      Log.showInfo(TAG, `readJsonFile error: ${e}`);
+      Log.showError(TAG, `readJsonFile error: ${JSON.stringify(e)}`);
     } finally {
       readStreamSync.closeSync();
     }
@@ -63,7 +63,7 @@ export default class FileUtils {
       Log.showInfo(TAG, 'readStringFromFile finish execution' + content);
       return content;
     } catch (e) {
-      Log.showInfo(TAG, 'readStringFromFile ' + e);
+      Log.showError(TAG, `readStringFromFile error: `);
     } finally {
       readStreamSync.closeSync();
     }
@@ -83,7 +83,7 @@ export default class FileUtils {
       writeStreamSync = Fileio.createStreamSync(filePath, 'w+');
       writeStreamSync.writeSync(string);
     } catch (e) {
-      Log.showInfo(TAG, 'writeStringToFile error: ' + e);
+      Log.showError(TAG, `writeStringToFile error: ${JSON.stringify(e)}`);
     } finally {
       writeStreamSync.closeSync();
       Log.showInfo(TAG, 'writeStringToFile close sync');
@@ -103,7 +103,7 @@ export default class FileUtils {
     let buf = new ArrayBuffer(READ_DATA_SIZE);
     let len = readStreamSync.readSync(buf);
     while (len != 0) {
-      Log.showInfo(TAG, `getContent FileIO reading ${len}`);
+      Log.showDebug(TAG, `getContent FileIO reading ${len}`);
       totalLength += len;
       if (len < READ_DATA_SIZE) {
         buf = buf.slice(0, len);
@@ -118,7 +118,7 @@ export default class FileUtils {
     const contentBuf = new Uint8Array(totalLength);
     let offset = 0;
     for (const bufArr of bufArray) {
-      Log.showInfo(TAG, `getContent collecting: ${offset}`);
+      Log.showDebug(TAG, `getContent collecting: ${offset}`);
       const uInt8Arr = new Uint8Array(bufArr);
       contentBuf.set(uInt8Arr, offset);
       offset += uInt8Arr.byteLength;

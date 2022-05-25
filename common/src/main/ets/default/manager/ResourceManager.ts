@@ -74,7 +74,7 @@ export default class ResourceManager {
 
   getAppIconWithCache(iconId, bundleName: string, callback, defaultAppIcon) {
     if (CheckEmptyUtils.isEmpty(iconId) || iconId <= 0) {
-      Log.showInfo(TAG, 'getAppIconWithCache iconId > ' + defaultAppIcon);
+      Log.showInfo(TAG, 'getAppIconWithCache defaultAppIcon');
       callback(defaultAppIcon);
     } else {
       const cacheKey = iconId + bundleName;
@@ -88,7 +88,7 @@ export default class ResourceManager {
         try {
           const bundleContext = globalThis.desktopContext.createBundleContext(bundleName);
           bundleContext.resourceManager.getMediaBase64(iconId).then((value: string)=> {
-            Log.showInfo(TAG, `getAppIconWithCache getMediaBase64 value> ${value}`);
+            Log.showInfo(TAG, `getAppIconWithCache getMediaBase64 success`);
             if (value != null) {
               this.setAppResourceCache(cacheKey, KEY_ICON, value);
               callback(value);
@@ -116,19 +116,18 @@ export default class ResourceManager {
       Log.showInfo(TAG, `getAppNameSync getResourceManager cacheKey: ${cacheKey}`);
       let resMgrName = null;
       if (this.isResourceManagerEmpty()) {
-        Log.showError(TAG, 'getAppNameSync resourceManager is empty');
+        Log.showInfo(TAG, 'getAppNameSync resourceManager is empty');
         return appName;
       }
       const bundleContext = globalThis.desktopContext.createBundleContext(bundleName);
       await bundleContext.resourceManager.getString(labelId)
         .then((res) => {
-          Log.showInfo(TAG, `getAppNameSync getString res: ${JSON.stringify(res)}`);
           resMgrName = res;
         })
         .catch((err) => {
-          Log.showInfo(TAG, `getAppNameSync getString error: ${JSON.stringify(err)}`);
+          Log.showError(TAG, `getAppNameSync getString error: ${JSON.stringify(err)}`);
         });
-      Log.showInfo(TAG, `getAppNameSync resMgrName: ${JSON.stringify(resMgrName)}`);
+      Log.showInfo(TAG, `getAppNameSync resMgrName: ${resMgrName}`);
       if (resMgrName != null) {
         return resMgrName;
       } else {
@@ -139,21 +138,21 @@ export default class ResourceManager {
 
   getAppNameWithCache(labelId: number, bundleName: string, appName: string, callback) {
     if (CheckEmptyUtils.isEmpty(labelId) || labelId <= 0) {
-      Log.showInfo(TAG, `getAppNameWithCache ResourceManager getAppName callback：${appName}`);
+      Log.showInfo(TAG, `getAppNameWithCache ResourceManager getAppName callback: ${appName}`);
       callback(appName);
     } else {
       const cacheKey = labelId + bundleName;
       const name = this.getAppResourceCache(cacheKey, KEY_NAME);
       if (CheckEmptyUtils.isEmpty(name)) {
         if (this.isResourceManagerEmpty()) {
-          Log.showError(TAG, 'getAppNameWithCache resourceManager is empty');
+          Log.showInfo(TAG, 'getAppNameWithCache resourceManager is empty');
           return appName;
         }
         try {
           const bundleContext = globalThis.desktopContext.createBundleContext(bundleName);
           bundleContext.resourceManager.getString(labelId).then( (value) => {
             if (CheckEmptyUtils.checkStrIsEmpty(value)) {
-              Log.showError(TAG, '`getAppNameWithCache getAppName getString ERROR! value is empty id ${labelId}`');
+              Log.showInfo(TAG, `getAppNameWithCache getAppName getString ERROR! value is empty id ${labelId}`);
               callback(appName);
             } else {
               this.setAppResourceCache(cacheKey, KEY_NAME, value);
@@ -161,7 +160,7 @@ export default class ResourceManager {
             }
           });
         } catch (err) {
-          Log.showError(TAG, 'getAppNameWithCache error');
+          Log.showError(TAG, `getAppNameWithCache error: ${JSON.stringify(err)}`);
           callback(appName);
         }
       } else {
@@ -225,11 +224,11 @@ export default class ResourceManager {
   async getStringByIdSync(resId: number): Promise<string> {
     let resMgrName = '';
     if (resId <= 0) {
-      Log.showInfo(TAG, `getStringByIdSync: ${resId}`);
+      Log.showInfo(TAG, `getStringByIdSync resId: ${resId}`);
       return resMgrName;
     } else {
       if (this.isResourceManagerEmpty()) {
-        Log.showError(TAG, 'getStringByIdSync resourceManager is empty');
+        Log.showInfo(TAG, 'getStringByIdSync resourceManager is empty');
         return resMgrName;
       }
       try {
