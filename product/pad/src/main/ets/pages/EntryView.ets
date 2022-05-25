@@ -28,7 +28,7 @@ import SmartDock from '../../../../../../feature/smartdock/src/main/ets/default/
 import FolderOpenComponent from '../../../../../../feature/bigfolder/src/main/ets/default/view/FolderOpenComponent.ets';
 import FeatureConstants from '../../../../../../feature/bigfolder/src/main/ets/default/common/constants/FeatureConstants';
 import PageDesktopDragHandler from '../../../../../../feature/pagedesktop/src/main/ets/default/common/PageDesktopDragHandler';
-import RecentEvent from '../common/recentEvent';
+import RecentEvent from '../common/RecentEvent';
 import PadStage from '../common/PadStage';
 
 const RAW_IMAGE_CACHE_SIZE = 20000000;

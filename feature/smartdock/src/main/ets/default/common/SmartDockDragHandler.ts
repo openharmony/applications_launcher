@@ -45,12 +45,12 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     if (globalThis.SmartDockDragHandler == null) {
       globalThis.SmartDockDragHandler = new SmartDockDragHandler();
     }
-    Log.showInfo(TAG, 'getInstance!');
+    Log.showDebug(TAG, 'getInstance!');
     return globalThis.SmartDockDragHandler;
   }
 
   setDragEffectArea(effectArea): void {
-    Log.showInfo(TAG, `setDragEffectArea: ${JSON.stringify(effectArea)}`);
+    Log.showDebug(TAG, `setDragEffectArea: ${JSON.stringify(effectArea)}`);
     super.setDragEffectArea(effectArea);
     this.updateDockParam(effectArea);
   }
@@ -60,7 +60,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     const dockWidth = effectArea.right - effectArea.left;
     const dockData: [] = this.getDragRelativeData();
     const dataCount = dockData.length;
-    Log.showInfo(TAG, `updateDockParam dockWidth: ${dockWidth}, dataCount: ${dataCount}`);
+    Log.showDebug(TAG, `updateDockParam dockWidth: ${dockWidth}, dataCount: ${dataCount}`);
     if (dataCount > 0) {
       for (let index = 1; index <= dataCount; index++) {
         this.mDockCoordinateData.push(dockWidth / dataCount * index + effectArea.left);
@@ -68,7 +68,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     } else {
       this.mDockCoordinateData.push(dockWidth);
     }
-    Log.showInfo(TAG, `updateDockParam DockCoordinateData: ${JSON.stringify(this.mDockCoordinateData)}`);
+    Log.showDebug(TAG, `updateDockParam DockCoordinateData: ${JSON.stringify(this.mDockCoordinateData)}`);
   }
 
   protected getDragRelativeData(): any {
@@ -102,7 +102,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     super.onDragStart(event, itemIndex);
     const moveAppX = event.touches[0].screenX;
     const moveAppY = event.touches[0].screenY;
-    Log.showInfo(TAG, `onDragStart itemIndex: ${itemIndex}, dragItemInfo: ${this.getDragItemInfo()}`);
+    Log.showDebug(TAG, `onDragStart itemIndex: ${itemIndex}, dragItemInfo: ${this.getDragItemInfo()}`);
     AppStorage.SetOrCreate('overlayPositionX', moveAppX);
     AppStorage.SetOrCreate('overlayPositionY', moveAppY);
     AppStorage.SetOrCreate('overlayData', {
@@ -115,7 +115,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
 
   protected onDragMove(event: any, insertIndex: number, itemIndex: number): void {
     super.onDragMove(event, insertIndex, itemIndex);
-    Log.showInfo(TAG, `onDragMove insertIndex: ${insertIndex}`);
+    Log.showDebug(TAG, `onDragMove insertIndex: ${insertIndex}`);
     const moveAppX = event.touches[0].screenX;
     const moveAppY = event.touches[0].screenY;
     AppStorage.SetOrCreate('overlayPositionX', moveAppX - (this.mSmartDockStyleConfig.mIconSize / 2));
@@ -125,7 +125,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
   protected onDragDrop(event: any, insertIndex: number, itemIndex: number): boolean {
     this.mDevice = AppStorage.Get('device');
     super.onDragDrop(event, insertIndex, itemIndex);
-    Log.showInfo(TAG, `onDragDrop insertIndex: ${insertIndex}, IsInEffectArea: ${this.mIsInEffectArea}`);
+    Log.showDebug(TAG, `onDragDrop insertIndex: ${insertIndex}, IsInEffectArea: ${this.mIsInEffectArea}`);
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     let isDragSuccess = true;
     if (this.mIsInEffectArea) {
@@ -134,11 +134,11 @@ export default class SmartDockDragHandler extends BaseDragHandler {
         isDragSuccess = true;
       } else if (this.mDevice == CommonConstants.DEFAULT_DEVICE_TYPE) {
         const dragItemInfo = this.getDragItemInfo();
-        Log.showInfo(TAG, `onDragDrop addItem: ${JSON.stringify(dragItemInfo)}`);
+        Log.showDebug(TAG, `onDragDrop addItem: ${JSON.stringify(dragItemInfo)}`);
         isDragSuccess = this.addItemToSmartDock(dragItemInfo, insertIndex);
       }
     } else if (this.mDevice == CommonConstants.DEFAULT_DEVICE_TYPE) {
-      Log.showInfo(TAG, 'onDragDrop remove item');
+      Log.showDebug(TAG, 'onDragDrop remove item');
       const dragItemInfo = this.getDragItemInfo();
       let deleteDockRes = this.mSmartDockModel.deleteDockItem(dragItemInfo.bundleName, SmartDockConstants.RESIDENT_DOCK_TYPE);
       if (deleteDockRes) {
@@ -152,7 +152,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     this.mDevice = AppStorage.Get('device');
     super.onDragEnd(isSuccess);
     if (this.isDropOutSide() && isSuccess) {
-      Log.showInfo(TAG, 'onDragEnd dropOutSide');
+      Log.showDebug(TAG, 'onDragEnd dropOutSide');
     }
   }
 

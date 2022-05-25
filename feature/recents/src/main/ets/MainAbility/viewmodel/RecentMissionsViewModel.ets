@@ -58,7 +58,7 @@ export default class RecentMissionsViewModel {
    * @param {number} missionId
    */
   private async lockMission(missionId: number): Promise<void> {
-    Log.showInfo(TAG, 'lockMission start');
+    Log.showDebug(TAG, 'lockMission start');
     await amsMissionManager.lockMission(missionId);
   }
 
@@ -68,7 +68,7 @@ export default class RecentMissionsViewModel {
    * @param {number} missionId
    */
   private async unlockMission(missionId: number): Promise<void> {
-    Log.showInfo(TAG, 'unlockMission start');
+    Log.showDebug(TAG, 'unlockMission start');
     await amsMissionManager.unlockMission(missionId);
   }
 
@@ -97,9 +97,9 @@ export default class RecentMissionsViewModel {
    * Callback function of getRecentMissionsList.
    */
   async getRecentMissionsList(): Promise<void> {
-    Log.showInfo(TAG, 'getRecentMissionsList start');
+    Log.showDebug(TAG, 'getRecentMissionsList start');
     this.mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
-    Log.showInfo(TAG, `getRecentMissionsList length: ${this.mRecentMissionsList.length}`);
+    Log.showDebug(TAG, `getRecentMissionsList length: ${this.mRecentMissionsList.length}`);
     const snapShotTime = new Date().toString();
     for (let item of this.mRecentMissionsList) {
       item.snapShotTime = snapShotTime;
@@ -114,7 +114,7 @@ export default class RecentMissionsViewModel {
    * @param {number} missionId - The missionId of current recent mission.
    */
   async deleteRecentMission(isClickDelBtn: boolean, missionId: number): Promise<void> {
-    Log.showInfo(TAG, `deleteRecentMissions missionId: ${missionId}`);
+    Log.showDebug(TAG, `deleteRecentMissions missionId: ${missionId}`);
     if (!isClickDelBtn && missionId != -1) {
       await amsMissionManager.clearMission(missionId);
       for (let iRecentMissionsIndex = 0; iRecentMissionsIndex < this.mRecentMissionsList.length; iRecentMissionsIndex++) {
@@ -153,7 +153,7 @@ export default class RecentMissionsViewModel {
    * @param {boolean} lockedState - The lockedState of current recent mission.
    */
   async setRecentMissionLock(missionId: number, lockedState: boolean): Promise<void> {
-    Log.showInfo(TAG, `setRecentMissionLock missionId: ${missionId}, lockedState: ${String(lockedState)}`);
+    Log.showDebug(TAG, `setRecentMissionLock missionId: ${missionId}, lockedState: ${String(lockedState)}`);
     if (lockedState) {
       void this.lockMission(missionId);
     } else {
@@ -169,7 +169,7 @@ export default class RecentMissionsViewModel {
    * @return snapshot - The snapshot of current recent mission.
    */
   async getMissionSnapShot(missionId: number, callback?: any) {
-    Log.showInfo(TAG, `getMissionSnapShot missionId: ${missionId}`);
+    Log.showDebug(TAG, `getMissionSnapShot missionId: ${missionId}`);
     let snapShot = await amsMissionManager.getMissionSnapShot(missionId);
     if (callback != undefined) {
       callback(missionId, snapShot);
@@ -191,7 +191,7 @@ export default class RecentMissionsViewModel {
    * Terminate recent if clear all missions.
    */
   terminateRecentIfAllClear(): void {
-    Log.showInfo(TAG, 'terminateRecentIfAllClear all recent cleared');
+    Log.showDebug(TAG, 'terminateRecentIfAllClear all recent cleared');
     windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
   }
 
@@ -199,7 +199,7 @@ export default class RecentMissionsViewModel {
    * Back to desktop.
    */
   backView(): void {
-    Log.showInfo(TAG, 'backView start');
+    Log.showDebug(TAG, 'backView start');
     windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
   }
 }

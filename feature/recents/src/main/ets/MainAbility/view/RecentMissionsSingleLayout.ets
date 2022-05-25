@@ -84,7 +84,7 @@ export default struct RecentMissionsSingleLayout {
         .margin({bottom: StyleConstants.SINGLE_LIST_DELETE_IMAGE_FULL_BOTTOM_MARGIN})
         .onClick(() => {
           this.isClickSubComponent = true;
-          Log.showInfo(TAG, 'onClick click delete button');
+          Log.showDebug(TAG, 'onClick click delete button');
           this.mRecentMissionsViewModel.deleteRecentMission(true, -1);
           this.mRecentMissionsViewModel.backView();
         })

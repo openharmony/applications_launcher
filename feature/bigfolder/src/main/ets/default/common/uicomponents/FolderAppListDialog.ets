@@ -114,7 +114,7 @@ export default struct FolderAppListDialog {
                     .position({x:-this.mFolderStyleConfig.mFolderToggleSize + this.mFolderStyleConfig.mAddFolderIconMarginHorizontal,
                       y:-this.mFolderStyleConfig.mFolderToggleSize/2})
                     .onChange((isOn: boolean) => {
-                      Log.showInfo(TAG, `Toggle onChange this.isOn: ${isOn}`);
+                      Log.showDebug(TAG, `Toggle onChange this.isOn: ${isOn}`);
                       if (isOn) {
                         item.checked = true;
                         let appItem: any;
@@ -173,7 +173,7 @@ export default struct FolderAppListDialog {
           .height(FolderStyleConstants.DEFAULT_BUTTON_HEIGHT)
           .width(FolderStyleConstants.DEFAULT_BUTTON_WIDTH)
           .onClick(() => {
-            Log.showInfo(TAG, `Dialog confirm start`);
+            Log.showDebug(TAG, `Dialog confirm start`);
             folderViewModel.updateFolderAppList(this.appListChecked, this.folderItem);
             let isDestory = false;
             if (this.folderItem.layoutInfo[0].length < 2) {
@@ -183,7 +183,7 @@ export default struct FolderAppListDialog {
             }
             this.controller.close();
             this.confirm(isDestory);
-            Log.showInfo(TAG, `Dialog confirm end`);
+            Log.showDebug(TAG, `Dialog confirm end`);
           })
         }
       }

@@ -77,15 +77,15 @@ export default class BigFolderDragHandler extends BaseDragHandler {
   private updateFolderParam(effectArea): void {
     const gridWidth = effectArea.right - effectArea.left;
     const gridHeight = effectArea.bottom - effectArea.top;
-    Log.showInfo(TAG, `Launcher OpenFolder updateGridParam gridWidth: ${gridWidth}, gridHeight: ${gridHeight}`);
+    Log.showDebug(TAG, `Launcher OpenFolder updateGridParam gridWidth: ${gridWidth}, gridHeight: ${gridHeight}`);
     this.mOpenGridConfig = this.mBigFolderModel.getFolderOpenLayout();
     const column = this.mOpenGridConfig.column;
     const row = this.mOpenGridConfig.row;
     this.mGridItemHeight = gridHeight / row;
-    Log.showInfo(TAG, `this.mGridItemHeight ${this.mGridItemHeight}`);
+    Log.showDebug(TAG, `this.mGridItemHeight ${this.mGridItemHeight}`);
     this.mGridItemWidth = gridWidth / column;
-    Log.showInfo(TAG, `this.mGridItemWidth ${this.mGridItemWidth}`);
-    Log.showInfo(TAG, `Launcher BigFolder updateGridParam column: ${column}, row: ${row}`);
+    Log.showDebug(TAG, `this.mGridItemWidth ${this.mGridItemWidth}`);
+    Log.showDebug(TAG, `Launcher BigFolder updateGridParam column: ${column}, row: ${row}`);
     this.mFolderCoordinateData.gridYAxis = [];
     for (let i = 1; i <= row; i++) {
       const touchPositioningY = this.mGridItemHeight * i + effectArea.top;
@@ -124,7 +124,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
       }
     }
     const column = this.mOpenGridConfig.column;
-    Log.showInfo(TAG, `Launcher BigFolder getItemIndex column: ${column}, rowVal: ${rowVal}, columnVal: ${columnVal}`);
+    Log.showDebug(TAG, `Launcher BigFolder getItemIndex column: ${column}, rowVal: ${rowVal}, columnVal: ${columnVal}`);
     if (rowVal != CommonConstants.INVALID_VALUE && columnVal != CommonConstants.INVALID_VALUE) {
       return rowVal * column + columnVal;
     }
@@ -133,7 +133,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
 
   protected getItemByIndex(index: number): any {
     const pageIndex: number = this.mFolderViewModel.getIndex();
-    Log.showInfo(TAG, `getItemByIndex: ${index}, pageIndex: ${pageIndex}`);
+    Log.showDebug(TAG, `getItemByIndex: ${index}, pageIndex: ${pageIndex}`);
     const dataObj = this.getDragRelativeData().layoutInfo;
     if (index >= 0 && pageIndex < dataObj.length && index < dataObj[pageIndex].length) {
       return dataObj[pageIndex][index];
@@ -178,7 +178,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     const pageIndex: number = this.mFolderViewModel.getIndex();
     const mItemIndex = this.getItemIndex(event);
     this.mStartIndex = mItemIndex + this.mOpenGridConfig.column * this.mOpenGridConfig.row * pageIndex;
-    Log.showInfo(TAG, `onDragStart mStartIndex: ${this.mStartIndex}`);
+    Log.showDebug(TAG, `onDragStart mStartIndex: ${this.mStartIndex}`);
 
     AppStorage.SetOrCreate('overlayPositionX', moveAppX);
     AppStorage.SetOrCreate('overlayPositionY', moveAppY);
@@ -194,7 +194,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
 
   protected onDragMove(event: any, insertIndex: number, itemIndex: number): void {
     super.onDragMove(event, insertIndex, itemIndex);
-    Log.showInfo(TAG, `Launcher OpenFolder onDragMove insertIndex: ${insertIndex}`);
+    Log.showDebug(TAG, `Launcher OpenFolder onDragMove insertIndex: ${insertIndex}`);
     const moveAppX = event.touches[0].screenX;
     const moveAppY = event.touches[0].screenY;
     AppStorage.SetOrCreate('overlayPositionX', moveAppX);
@@ -219,7 +219,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     }
     this.dropDelay();
     super.onDragDrop(event, insertIndex, itemIndex);
-    Log.showInfo(TAG, `Launcher OpenFolder onDragDrop insertIndex:${insertIndex},mIsInEffectArea: ${this.mIsInEffectArea}`);
+    Log.showDebug(TAG, `Launcher OpenFolder onDragDrop insertIndex:${insertIndex},mIsInEffectArea: ${this.mIsInEffectArea}`);
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     const openingStatus = AppStorage.Get('openFolderStatus');
 
@@ -275,7 +275,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
   }
 
   private layoutAdjustment(startIndex: number, endIndex: number): void {
-    Log.showInfo(TAG, 'layoutAdjustment start');
+    Log.showDebug(TAG, 'layoutAdjustment start');
 
     const item = this.mFolderAppList[startIndex];
     this.mFolderAppList.splice(startIndex, 1);
@@ -289,7 +289,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     openFolderData.layoutInfo = folderLayoutInfo;
     openFolderData = this.mFolderViewModel.addAddIcon(openFolderData);
     AppStorage.SetOrCreate('openFolderData', openFolderData);
-    Log.showInfo(TAG, `layoutAdjustment this.openFolderData.folderId: ${openFolderData.folderId}`);
+    Log.showDebug(TAG, `layoutAdjustment this.openFolderData.folderId: ${openFolderData.folderId}`);
     const info = this.mPageDesktopViewModel.getLayoutInfo();
     const layoutInfo = info.layoutInfo;
 
@@ -304,7 +304,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     info.layoutInfo = layoutInfo;
     this.mPageDesktopViewModel.setLayoutInfo(info);
     this.mPageDesktopViewModel.getGridList();
-    Log.showInfo(TAG, 'layoutAdjustment end');
+    Log.showDebug(TAG, 'layoutAdjustment end');
   }
 
   /**
@@ -320,7 +320,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     let mItemIndex = this.getItemIndex(event);
     const itemCountByPage = this.mOpenGridConfig.column * this.mOpenGridConfig.row;
     mItemIndex = mItemIndex + itemCountByPage * pageIndex;
-    Log.showInfo(TAG, `onDragDrop mItemIndex: ${mItemIndex}`);
+    Log.showDebug(TAG, `onDragDrop mItemIndex: ${mItemIndex}`);
     // remove add icon
     if (this.mFolderAppList.length > 0
       && this.mFolderAppList[this.mFolderAppList.length - 1].type == CommonConstants.TYPE_ADD) {
@@ -331,8 +331,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     } else {
       this.mEndIndex = mItemIndex;
     }
-    Log.showInfo(TAG, `onDragDrop this.mEndIndex: ${this.mEndIndex}`);
-    Log.showInfo(TAG, `onDragDrop this.mStartIndex: ${this.mStartIndex}`);
+    Log.showDebug(TAG, `onDragDrop this.mEndIndex: ${this.mEndIndex}, this.mStartIndex: ${this.mStartIndex}`);
     this.layoutAdjustment(this.mStartIndex, this.mEndIndex);
   }
 

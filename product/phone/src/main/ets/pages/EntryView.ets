@@ -30,7 +30,7 @@ import FolderOpenComponent from '../../../../../../feature/bigfolder/src/main/et
 import FeatureConstants from '../../../../../../feature/bigfolder/src/main/ets/default/common/constants/FeatureConstants';
 import PhoneStage from '../common/PhoneStage';
 import StyleConstants from '../common/constants/StyleConstants';
-import RecentEvent from '../common/recentEvent';
+import RecentEvent from '../common/RecentEvent';
 
 const TAG = "EntryView";
 
@@ -80,7 +80,7 @@ struct EntryView {
 
   private readonly mLocalEventListener = {
     onReceiveEvent: (event, params) => {
-      Log.showInfo(TAG, `receive event: ${event}, params: ${params}`);
+      Log.showDebug(TAG, `receive event: ${event}, params: ${params}`);
       if (event === EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE) {
         this.updateScreenInfo(params);
       }
@@ -100,7 +100,7 @@ struct EntryView {
   }
 
   private updateScreenInfo(navigationBarStatus?: string) {
-    Log.showInfo(TAG, 'updateScreenInfo');
+    Log.showDebug(TAG, 'updateScreenInfo');
     if (this.screenWidth != 0 && this.screenHeight != 0) {
       this.mLayoutViewModel.initScreen(navigationBarStatus);
       globalThis.SmartDockStyleConfig.initConfig();
@@ -112,7 +112,7 @@ struct EntryView {
   }
 
   private createRecent(): void {
-    Log.showInfo(TAG, 'receive Subscriber success');
+    Log.showDebug(TAG, 'receive Subscriber success');
     globalThis.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
   }
 
@@ -136,7 +136,7 @@ struct EntryView {
     AppStorage.SetOrCreate('workSpaceWidth', this.workSpaceWidth);
     AppStorage.SetOrCreate('workSpaceHeight', this.workSpaceHeight);
     AppStorage.SetOrCreate('dockHeight', this.dockHeight);
-    Log.showInfo(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}, workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
+    Log.showDebug(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}, workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
   }
 
   build() {

@@ -40,7 +40,7 @@ export default class FolderViewModel extends BaseAppPresenter {
   private readonly mFolderStyleConfig: BigFolderStyleConfig;
   private readonly mLocalEventListener = {
     onReceiveEvent: (event, params) => {
-      Log.showInfo(TAG, `FolderViewModel receive event: ${event}, params: ${JSON.stringify(params)}`);
+      Log.showDebug(TAG, `FolderViewModel receive event: ${event}, params: ${JSON.stringify(params)}`);
       const openStatus = AppStorage.Get('openFolderStatus');
       if (event === EventConstants.EVENT_BADGE_UPDATE && openStatus == FeatureConstants.OPEN_FOLDER_STATUS_OPEN) {
         const openFolderData: {
@@ -65,7 +65,7 @@ export default class FolderViewModel extends BaseAppPresenter {
         break;
       }
     }
-    Log.showInfo(TAG, `mLocalEventListener openFolderData: ${JSON.stringify(openFolderData)}`);
+    Log.showDebug(TAG, `mLocalEventListener openFolderData: ${JSON.stringify(openFolderData)}`);
     this.refreshFolder(openFolderData);
   }
 
@@ -252,7 +252,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     const dragAppInfo = folderAppList[index];
     if (folderAppList.length > 2) {
       const needNewPage: boolean = this.mPageDesktopViewModel.updateAppItemFromFolder(gridLayoutInfo, dragAppInfo);
-      Log.showInfo(TAG, `deleteAppByDraging needNewPage: ${needNewPage}`);
+      Log.showDebug(TAG, `deleteAppByDraging needNewPage: ${needNewPage}`);
       if (needNewPage) {
         return false;
       }
@@ -381,7 +381,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @param {number} folderId.
    */
   async deleteFolder(folderId) {
-    Log.showInfo(TAG, 'deleteFolder start');
+    Log.showDebug(TAG, 'deleteFolder start');
     let gridLayoutInfo = {
       layoutInfo: []
     };
@@ -449,7 +449,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @param {number} folderId.
    */
   async deleteAppFromFolder(appInfo, folderId) {
-    Log.showInfo(TAG, 'deleteAppFromFolder start');
+    Log.showDebug(TAG, 'deleteAppFromFolder start');
     let gridLayoutInfo = {
       layoutInfo: []
     };
@@ -463,7 +463,7 @@ export default class FolderViewModel extends BaseAppPresenter {
       if (gridLayoutInfo.layoutInfo[i].type === CommonConstants.TYPE_FOLDER
         && gridLayoutInfo.layoutInfo[i].folderId === folderId) {
         const index = gridLayoutInfo.layoutInfo[i].layoutInfo.indexOf(appInfo);
-        Log.showInfo(TAG, `deleteAppFromFolder app index: ${index}`);
+        Log.showDebug(TAG, `deleteAppFromFolder app index: ${index}`);
         gridLayoutInfo.layoutInfo[i].layoutInfo.splice(index, 1);
       }
     }
@@ -477,7 +477,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @param {any} folderItem.
    */
   async updateFolderAppList(appInfos, folderItem) {
-    Log.showInfo(TAG, 'updateFolderAppList start');
+    Log.showDebug(TAG, 'updateFolderAppList start');
     let removeFolderApp = [];
     let gridLayoutInfoTemp: any;
     let gridLayoutInfo = {
@@ -515,7 +515,7 @@ export default class FolderViewModel extends BaseAppPresenter {
       // delete blank page
       this.deleteBlankPage();
     }
-    Log.showInfo(TAG, 'updateFolderAppList end');
+    Log.showDebug(TAG, 'updateFolderAppList end');
   }
 
   /**
@@ -720,7 +720,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @return {array} folderList.
    */
   async getFolderList(folderIds) {
-    Log.showInfo(TAG, 'getFolderList start');
+    Log.showDebug(TAG, 'getFolderList start');
     const folderList = [];
     let gridLayoutInfo = {
       layoutInfo: []
@@ -749,7 +749,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @return {array} folderAppList.
    */
   async getFolderAppList(folderId) {
-    Log.showInfo(TAG, 'getFolderAppList start');
+    Log.showDebug(TAG, 'getFolderAppList start');
     let folderAppList = [];
     let gridLayoutInfo = {
       layoutInfo: []
@@ -778,7 +778,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @return {array} folderList.
    */
   async getAllFolderList() {
-    Log.showInfo(TAG, 'getAllFolderList start');
+    Log.showDebug(TAG, 'getAllFolderList start');
     const folderList = [];
     let gridLayoutInfo = {
       layoutInfo: []
@@ -802,7 +802,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    *
    */
   async getFolderAddAppList(folderId) {
-    Log.showInfo(TAG, 'getFolderAddAppList start');
+    Log.showDebug(TAG, 'getFolderAddAppList start');
     const allAppList = [];
     let appInfos: any;
     let gridLayoutInfo = {
@@ -853,7 +853,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @param {any} folderInfo.
    */
   addAddIcon(folderItem: any): any {
-    Log.showInfo(TAG, 'addAddIcon start');
+    Log.showDebug(TAG, 'addAddIcon start');
 
     if (folderItem.layoutInfo.length == 0) {
       return folderItem;
@@ -879,7 +879,7 @@ export default class FolderViewModel extends BaseAppPresenter {
       folderItem.layoutInfo[folderItem.layoutInfo.length - 1].push(addInfo);
     }
 
-    Log.showInfo(TAG, 'addAddIcon end');
+    Log.showDebug(TAG, 'addAddIcon end');
     return folderItem;
   }
 
@@ -889,7 +889,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @param {any} folderInfo.
    */
   delAddIcon(folderItem: any): any {
-    Log.showInfo(TAG, 'delAddIcon start');
+    Log.showDebug(TAG, 'delAddIcon start');
 
     if (folderItem.layoutInfo.length == 0) {
       return folderItem;
@@ -905,7 +905,7 @@ export default class FolderViewModel extends BaseAppPresenter {
       folderItem.layoutInfo[folderItem.layoutInfo.length - 1] = lastPageItem;
     }
 
-    Log.showInfo(TAG, 'delAddIcon end');
+    Log.showDebug(TAG, 'delAddIcon end');
     return folderItem;
   }
 
@@ -915,21 +915,21 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @param {any} folderInfo.
    */
   async openFolder(isRename: boolean, folderItem: any) {
-    Log.showInfo(TAG, 'openFolder start');
+    Log.showDebug(TAG, 'openFolder start');
     folderItem.enterEditing = isRename;
 
     AppStorage.SetOrCreate('openFolderData', folderItem);
     this.mPageIndex = 0;
     AppStorage.SetOrCreate('openFolderPageIndex', this.mPageIndex);
     AppStorage.SetOrCreate('openFolderStatus', FeatureConstants.OPEN_FOLDER_STATUS_OPEN);
-    Log.showInfo(TAG, 'openFolder end');
+    Log.showDebug(TAG, 'openFolder end');
   }
 
   /**
    * close folder
    */
   async closeFolder() {
-    Log.showInfo(TAG, 'closeFolder start');
+    Log.showDebug(TAG, 'closeFolder start');
 
     this.mPageIndex = 0;
     AppStorage.SetOrCreate('openFolderPageIndex', this.mPageIndex);
@@ -942,7 +942,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @param folderItem
    */
   async refreshFolder(folderItem: any) {
-    Log.showInfo(TAG, 'refreshFolder start');
+    Log.showDebug(TAG, 'refreshFolder start');
     folderItem.enterEditing = false;
     AppStorage.SetOrCreate('openFolderData', folderItem);
     if (folderItem.folderId == '') {
@@ -950,7 +950,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     } else {
       AppStorage.SetOrCreate('openFolderStatus', FeatureConstants.OPEN_FOLDER_STATUS_REFRESH);
     }
-    Log.showInfo(TAG, 'refreshFolder end');
+    Log.showDebug(TAG, 'refreshFolder end');
   }
 
   /**
@@ -997,7 +997,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     if (appListInfo.length % itemCountByPage != 0) {
       pageCount = pageCount + 1;
     }
-    Log.showInfo(TAG, `filterFolderPage pageCount: ${pageCount}`);
+    Log.showDebug(TAG, `filterFolderPage pageCount: ${pageCount}`);
     for (let i = 0; i < pageCount; i++) {
       let pageInfo = [];
       if (itemCountByPage > appListInfo.length) {
@@ -1053,7 +1053,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @return {string} folderName.
    */
   private async generateFolderName() {
-    Log.showInfo(TAG, 'generateFolderName start');
+    Log.showDebug(TAG, 'generateFolderName start');
     const folderList = await this.getAllFolderList();
     let folderName: string = await ResourceManager.getInstance().getStringByIdSync($r('app.string.new_folder_name').id);
     const autoNameFolderList = folderList.filter((element, index, self) => {
@@ -1082,7 +1082,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @param {string} idLength
    */
   private getUUID(): string {
-    Log.showInfo(TAG, 'getUUID start');
+    Log.showDebug(TAG, 'getUUID start');
     let id = Date.now().toString(HEXADECIMAL_VALUE);
     id += Math.random().toString(HEXADECIMAL_VALUE).substr(2);
     return id;
@@ -1152,7 +1152,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @param bundleName
    */
   deleteAppFromFolderByUninstall(bundleName): void {
-    Log.showInfo(TAG, 'deleteAppFromFolderByUninstall start');
+    Log.showDebug(TAG, 'deleteAppFromFolderByUninstall start');
     const gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
     const layoutInfo = gridLayoutInfo.layoutInfo;
     let changeFlag = false;
@@ -1172,7 +1172,7 @@ export default class FolderViewModel extends BaseAppPresenter {
         }
       }
     }
-    Log.showInfo(TAG, 'deleteAppFromFolderByUninstall end');
+    Log.showDebug(TAG, 'deleteAppFromFolderByUninstall end');
   }
 
   /**

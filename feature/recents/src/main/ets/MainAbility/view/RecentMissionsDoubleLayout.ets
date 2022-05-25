@@ -95,7 +95,7 @@ export default struct RecentMissionsDoubleLayout {
         }
         .onClick(() => {
           this.isClickSubComponent = true;
-          Log.showInfo(TAG, 'onClick click delete button');
+          Log.showDebug(TAG, 'onClick click delete button');
           this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
           this.mRecentMissionsViewModel.backView();
         })

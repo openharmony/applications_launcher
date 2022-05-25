@@ -85,7 +85,7 @@ export default struct SmartDock {
 
   onConfirm() {
     if (this.mSelectedItem == null || this.mSelectedDockType == null) {
-      Log.showInfo(TAG, 'onConfirm click menu item null!');
+      Log.showDebug(TAG, 'onConfirm click menu item null!');
       return;
     }
     if (this.device === CommonConstants.PAD_DEVICE_TYPE) {

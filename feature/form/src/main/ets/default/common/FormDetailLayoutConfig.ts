@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 import FormLayoutConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/FormLayoutConfig';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import FeatureConstants from './constants/FeatureConstants';
 

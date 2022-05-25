@@ -29,9 +29,9 @@ export default class GestureNavigationManage {
 
   private constructor() {
     this.uri = settingsDataManager.getUri(CommonConstants.NAVIGATION_BAR_STATUS_KEY);
-    Log.showInfo(TAG, `constructor uri:${this.uri}`);
+    Log.showDebug(TAG, `constructor uri:${this.uri}`);
     this.helper = settingsDataManager.getHelper(globalThis.desktopContext, this.uri);
-    Log.showInfo(TAG, `constructor helper:${this.helper}`);
+    Log.showDebug(TAG, `constructor helper:${this.helper}`);
   }
 
   private setValue(value: string) {
@@ -61,26 +61,26 @@ export default class GestureNavigationManage {
   }
 
   private getGestureNavigationStatus() {
-    Log.showInfo(TAG, 'getGestureNavigationStatus enter');
+    Log.showDebug(TAG, 'getGestureNavigationStatus enter');
     let gestureNavigationStatus = null;
     try{
       gestureNavigationStatus = this.getValue();
-      Log.showInfo(TAG, `getGestureNavigationStatus gestureNavigationStatus:  ${gestureNavigationStatus}`);
+      Log.showDebug(TAG, `getGestureNavigationStatus gestureNavigationStatus:  ${gestureNavigationStatus}`);
       this.handleEventSwitches(gestureNavigationStatus);
       this.registerListenForDataChanges(this.dataChangesCallback.bind(this));
-    }catch (err) {
-      Log.showInfo(TAG, 'getGestureNavigationStatus error');
+    }catch (error) {
+      Log.showError(TAG, `getGestureNavigationStatus error: ${JSON.stringify(error)}`);
     }
   }
 
   private dataChangesCallback(data: any) {
     if (data.code !== 0) {
-      Log.showInfo(TAG, `dataChangesCallback failed, because ${data.message}`);
+      Log.showDebug(TAG, `dataChangesCallback failed, because ${data.message}`);
     } else {
       const getRetValue = this.getValue();
       this.handleEventSwitches(getRetValue);
       AppStorage.SetOrCreate('NavigationBarStatusValue', getRetValue == '0' ? true : false);
-      Log.showInfo(TAG, `dataChangesCallback getRetValue ${getRetValue}`);
+      Log.showDebug(TAG, `dataChangesCallback getRetValue ${getRetValue}`);
     }
   }
 

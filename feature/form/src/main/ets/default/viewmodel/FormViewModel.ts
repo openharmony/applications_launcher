@@ -89,7 +89,7 @@ export default class FormViewModel {
    * Obtains the FormInfo objects provided by all ohos applications on the device.
    */
   async getForms() {
-    Log.showInfo(TAG, 'getForms start');
+    Log.showDebug(TAG, 'getForms start');
     this.mAllFormsInfo = await this.mFormModel.getAllFormsInfo();
     AppStorage.SetOrCreate('allFormsInfo', this.mAllFormsInfo);
   }
@@ -100,7 +100,7 @@ export default class FormViewModel {
    * @param {number} cardId.
    */
   async deleteForm(cardId) {
-    Log.showInfo(TAG, 'deleteForm start');
+    Log.showDebug(TAG, 'deleteForm start');
     let gridLayoutInfo = {
       layoutInfo: []
     };
