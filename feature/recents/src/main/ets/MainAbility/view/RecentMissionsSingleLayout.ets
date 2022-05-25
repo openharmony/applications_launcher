@@ -34,18 +34,13 @@ export default struct RecentMissionsSingleLayout {
   }
 
   build() {
-    Column() {
-      // top blank area
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center })
-      .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
-      .height(StyleConstants.SINGLE_LIST_TOP_AERA_HEIGHT)
-
+    Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceBetween }){
       // middle area, mission list
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-        Scroll(this.mScroll) {
-          Row() {
-            ForEach(this.recentMissionsSingleList, (item) => {
-              RecentMissionCard({
+        List({ space: StyleConstants.SINGLE_LIST_MIDDLE_AREA_SPACE }){
+          ForEach(this.recentMissionsSingleList, (item) => {
+            ListItem(){
+                RecentMissionCard({
                 missionId: item.missionId,
                 appIconId: item.appIconId,
                 appLabelId: item.appLabelId,
@@ -56,17 +51,18 @@ export default struct RecentMissionsSingleLayout {
                 isClickSubComponent: $isClickSubComponent,
                 snapShotTime: item.snapShotTime
               })
+              }
             }, (item) => JSON.stringify(item))
-          }
-        }.height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
-        .scrollable(ScrollDirection.Horizontal)
+        }
+        .listDirection(Axis.Horizontal)
+        .height(StyleConstants.SINGLE_LIST_MISSION_HEIGHT)
       }
+      .padding({top: StyleConstants.SINGLE_LIST_MIDDLE_AREA_TOP_MARGIN})
       .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
       .height(StyleConstants.SINGLE_LIST_MIDDLE_AERA_HEIGHT)
 
       // bottom area, button for cleaning up running applications
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center })
-      {
+      Column() {
         Stack() {
           Column(){
           }
@@ -75,13 +71,11 @@ export default struct RecentMissionsSingleLayout {
           .opacity(StyleConstants.DEFAULT_DELETE_IMAGE_OPACITY)
           .backgroundColor(StyleConstants.DEFAULT_FONT_COLOR)
           .borderRadius(StyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE / 2)
-          .padding(8)
 
           Image(StyleConstants.DEFAULT_DELETE_IMAGE_FULL)
             .width(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
             .height(StyleConstants.RECENT_DELETE_IMAGE_SIZE)
         }
-        .margin({bottom: StyleConstants.SINGLE_LIST_DELETE_IMAGE_FULL_BOTTOM_MARGIN})
         .onClick(() => {
           this.isClickSubComponent = true;
           Log.showInfo(TAG, 'onClick click delete button');
@@ -89,9 +83,10 @@ export default struct RecentMissionsSingleLayout {
           this.mRecentMissionsViewModel.backView();
         })
       }
+      .margin({bottom: StyleConstants.SINGLE_LIST_DELETE_IMAGE_FULL_BOTTOM_MARGIN})
       .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
-      .height(StyleConstants.SINGLE_LIST_BOTTOM_AERA_HEIGHT)
     }
     .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
+
   }
 }

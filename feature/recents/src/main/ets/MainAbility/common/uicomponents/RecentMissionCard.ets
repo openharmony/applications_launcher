@@ -119,7 +119,7 @@ export default struct RecentMissionCard {
           })
         }
         .layoutWeight(this.layoutWeight)
-        .margin({ left: this.margin / 2, bottom: this.mIsSingleLayout ?  this.margin:0 })
+        .margin({ left: StyleConstants.SINGLE_LIST_APP_INFO_LEFT_MARGIN })
         Column() {
           Image(StyleConstants.DEFAULT_LOCKED_IMAGE)
             .visibility(this.lockedState? Visibility.Visible: Visibility.Hidden)
@@ -130,8 +130,7 @@ export default struct RecentMissionCard {
               StyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE_NEW :
               StyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE - 10)
             .margin({
-              right: this.mIsSingleLayout ? (StyleConstants.SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN):(StyleConstants.DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN),
-              bottom: this.mIsSingleLayout ? this.margin : 0
+              right: this.mIsSingleLayout ? (StyleConstants.SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN):(StyleConstants.DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN)
             })
             .onClick(() => {
               this.isClickSubComponent = true;
@@ -142,15 +141,18 @@ export default struct RecentMissionCard {
             })
         }
       }
-      .margin({ bottom: this.mIsSingleLayout ? this.margin / 2 :  StyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN })
+      .margin({
+        top: this.mIsSingleLayout ? StyleConstants.SINGLE_LIST_APP_INFO_TOP_MARGIN :  StyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN,
+        bottom: this.mIsSingleLayout ? StyleConstants.SINGLE_LIST_APP_INFO_BOTTOM_MARGIN :  StyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN
+      })
       Image(this.recentImage)
-        .objectFit(ImageFit.Contain)
+        .objectFit(ImageFit.Cover)
         .borderRadius(StyleConstants.RECENT_IMAGE_RADIUS)
         .width(this.mIsSingleLayout ?
-          StyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH * StyleConstants.DPI_RATIO :
+          StyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH  :
           StyleConstants.DOUBLE_LIST_APP_IMAGE_WIDTH)
         .height(this.mIsSingleLayout ?
-          StyleConstants.SINGLE_LIST_APP_IMAGE_HEIGHT * StyleConstants.DPI_RATIO :
+          StyleConstants.SINGLE_LIST_APP_IMAGE_HEIGHT :
           StyleConstants.DOUBLE_LIST_APP_IMAGE_HEIGHT)
         .onClick(() => {
           this.isClickSubComponent = true;
@@ -160,10 +162,10 @@ export default struct RecentMissionCard {
         })
     }
     .width(this.mIsSingleLayout ?
-      StyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH * StyleConstants.DPI_RATIO :
+      StyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH :
       StyleConstants.DOUBLE_LIST_APP_IMAGE_WIDTH)
     .height(this.mIsSingleLayout ?
-      StyleConstants.SINGLE_LIST_MISSION_HEIGHT * StyleConstants.DPI_RATIO :
+      StyleConstants.SINGLE_LIST_MISSION_HEIGHT :
       StyleConstants.DOUBLE_LIST_MISSION_HEIGHT)
     .margin({ right: this.mIsSingleLayout ? 0 : this.margin })
     .backgroundColor(CommonStyleConstants.DEFAULT_BG_COLOR)
