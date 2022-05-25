@@ -146,7 +146,7 @@ class WindowManager {
           });
         });
       }, (error) => {
-        Log.showInfo(TAG, `createWindow, create error: ${JSON.stringify(error)} `);
+        Log.showError(TAG, `createWindow, create error: ${JSON.stringify(error)}`);
       });
     });
   }
@@ -158,7 +158,7 @@ class WindowManager {
         Log.showInfo(TAG, 'show launcher recent ability');
       });
     }).catch(error => {
-      Log.showInfo(TAG, `${name} ability is not created, because ${error}`);
+      Log.showError(TAG, `${name} ability is not created, because ${error}`);
       this.createWindow(context, name, windowType, loadContent);
     });
   }

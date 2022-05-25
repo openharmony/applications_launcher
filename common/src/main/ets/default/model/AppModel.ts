@@ -217,7 +217,7 @@ export default class AppModel {
    * @param {string} bundleName
    */
   private removeItem(bundleName: string): void {
-    Log.showInfo(TAG, `removeItem bundleName: ${bundleName}`);
+    Log.showDebug(TAG, `removeItem bundleName: ${bundleName}`);
     let originItemIndex = this.getItemIndex(bundleName);
     while (originItemIndex != CommonConstants.INVALID_VALUE) {
       this.mBundleInfoList.splice(originItemIndex, 1);
@@ -232,7 +232,7 @@ export default class AppModel {
    * @param {array} abilityInfos
    */
   private replaceItem(bundleName: string, abilityInfos): void {
-    Log.showInfo(TAG, `replaceItem bundleName: ${bundleName}`);
+    Log.showDebug(TAG, `replaceItem bundleName: ${bundleName}`);
     this.removeItem(bundleName);
     this.appendItem(abilityInfos);
   }

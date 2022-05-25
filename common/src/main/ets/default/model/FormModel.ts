@@ -114,7 +114,7 @@ export default class FormModel {
         }
       })
       .catch(err => {
-        Log.showError(TAG, `getFormsInfoByBundleName err: ${err}`);
+        Log.showError(TAG, `getFormsInfoByBundleName err: ${JSON.stringify(err)}`);
       });
     AppStorage.SetOrCreate('formMgrItem', currentBundleFormsInfo);
     return currentBundleFormsInfo;

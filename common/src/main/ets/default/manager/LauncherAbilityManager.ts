@@ -39,15 +39,15 @@ class LauncherAbilityManager {
 
   private readonly mBundleStatusCallback: BundleStatusCallback = {
     add: (bundleName, userId) => {
-      Log.showInfo(TAG, `mBundleStatusCallback add bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
+      Log.showDebug(TAG, `mBundleStatusCallback add bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
       this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_ADDED, bundleName, userId);
     },
     remove: (bundleName, userId) => {
-      Log.showInfo(TAG, `mBundleStatusCallbackremove bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
+      Log.showDebug(TAG, `mBundleStatusCallbackremove bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
       this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_REMOVED, bundleName, userId);
     },
     update: (bundleName, userId) => {
-      Log.showInfo(TAG, `mBundleStatusCallbackupdate bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
+      Log.showDebug(TAG, `mBundleStatusCallbackupdate bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
       this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_CHANGED, bundleName, userId);
     }
   };
@@ -70,7 +70,7 @@ class LauncherAbilityManager {
   private constructor() {
     const osAccountManager = osaccount.getAccountManager();
     osAccountManager.getOsAccountLocalIdFromProcess((err, localId) => {
-      Log.showInfo(TAG, `getOsAccountLocalIdFromProcess localId ${localId}`);
+      Log.showDebug(TAG, `getOsAccountLocalIdFromProcess localId ${localId}`);
       this.mUserId = localId;
     });
   }
@@ -86,7 +86,7 @@ class LauncherAbilityManager {
         launcherBundleMgr.on(LauncherAbilityManager.BUNDLE_STATUS_CHANGE_KEY, this.mBundleStatusCallback).then(data => {
           Log.showInfo(TAG, `registerCallback success: ${JSON.stringify(data)}`);
         }).catch(err => {
-          Log.showInfo(TAG, `registerCallback fail: ${JSON.stringify(err)}`);
+          Log.showError(TAG, `registerCallback fail: ${JSON.stringify(err)}`);
         });
       }
       const index = this.mLauncherAbilityChangeListeners.indexOf(listener);
@@ -111,7 +111,7 @@ class LauncherAbilityManager {
         launcherBundleMgr.off(LauncherAbilityManager.BUNDLE_STATUS_CHANGE_KEY).then(data => {
           Log.showInfo(TAG, 'unregisterCallback success');
         }).catch(err => {
-          Log.showInfo(TAG, `unregisterCallback fail: ${JSON.stringify(err)}`);
+          Log.showError(TAG, `unregisterCallback fail: ${JSON.stringify(err)}`);
         });
       }
     }
@@ -134,7 +134,7 @@ class LauncherAbilityManager {
         abilityList = res;
       })
       .catch((err) => {
-        Log.showInfo(TAG, `getLauncherAbilityList error: ${JSON.stringify(err)}`);
+        Log.showError(TAG, `getLauncherAbilityList error: ${JSON.stringify(err)}`);
       });
     const appItemInfoList = new Array<AppItemInfo>();
     if (CheckEmptyUtils.isEmpty(abilityList)) {
@@ -162,7 +162,7 @@ class LauncherAbilityManager {
         abilityInfos = res;
       })
       .catch((err) => {
-        Log.showInfo(TAG, `getLauncherAbilityInfo error: ${JSON.stringify(err)}`);
+        Log.showError(TAG, `getLauncherAbilityInfo error: ${JSON.stringify(err)}`);
       });
     const appItemInfoList = new Array<AppItemInfo>();
     if (CheckEmptyUtils.isEmpty(abilityInfos)) {
@@ -201,7 +201,7 @@ class LauncherAbilityManager {
         }
       })
       .catch((err)=>{
-        Log.showInfo(TAG, `getAppInfoByBundleName launcherBundleMgr getLauncherAbilityInfos error: ${JSON.stringify(err)}`);
+        Log.showError(TAG, `getAppInfoByBundleName launcherBundleMgr getLauncherAbilityInfos error: ${JSON.stringify(err)}`);
       });
 
     if (abilityInfos == undefined || abilityInfos.length == 0) {
@@ -237,7 +237,7 @@ class LauncherAbilityManager {
    * @params callback 卸载回调
    */
   async uninstallLauncherAbility(bundleName: string, callback): Promise<void> {
-    Log.showInfo(TAG, `uninstallLauncherAbility bundleName => ${bundleName}`);
+    Log.showInfo(TAG, `uninstallLauncherAbility bundleName: ${bundleName}`);
     const bundlerInstaller = await bundleMgr.getBundleInstaller();
     bundlerInstaller.uninstall(bundleName, {
       param: {
@@ -258,16 +258,16 @@ class LauncherAbilityManager {
    * @params paramBundleName 应用包名
    */
   startLauncherAbility(paramAbilityName, paramBundleName) {
-    Log.showInfo(TAG, `startApplication abilityName => paramAbilityName bundleName: ${paramBundleName}`);
+    Log.showInfo(TAG, `startApplication abilityName: ${paramAbilityName}, bundleName: ${paramBundleName}`);
     const result = globalThis.desktopContext.startAbility({
       bundleName: paramBundleName,
       abilityName: paramAbilityName
     }).then(() => {
       Log.showInfo(TAG, 'startApplication promise success');
     }, (err) => {
-      Log.showInfo(TAG, `startApplication promise error: ${JSON.stringify(err)}`);
+      Log.showError(TAG, `startApplication promise error: ${JSON.stringify(err)}`);
     });
-    Log.showInfo(TAG, `startApplication  AceApplication : startAbility : ${result}`);
+    Log.showDebug(TAG, `startApplication  AceApplication : startAbility : ${result}`);
     Trace.end(Trace.CORE_METHOD_LAUNCH_APP);
   }
 
@@ -291,18 +291,18 @@ class LauncherAbilityManager {
     }, (err) => {
       Log.showError(TAG, `startAbility catch error: ${JSON.stringify(err)}`);
     });
-    Log.showInfo(TAG, `startAbility result: ${JSON.stringify(result)}`);
+    Log.showDebug(TAG, `startAbility result: ${JSON.stringify(result)}`);
   }
 
   async getShortcutInfo(paramBundleName, callback) {
-    Log.showInfo(TAG, `getShortcutInfo paramBundleName: ${paramBundleName}`);
+    Log.showInfo(TAG, `getShortcutInfo bundleName: ${paramBundleName}`);
     await launcherBundleMgr.getShortcutInfos(paramBundleName)
       .then(shortcutInfo => {
         Log.showInfo(TAG, `getShortcutInfo shortcutInfo: ${shortcutInfo}`);
         callback(paramBundleName, shortcutInfo);
       })
       .catch(err => {
-        Log.showInfo(TAG, `getShortcutInfo ${JSON.stringify(err)}`);
+        Log.showError(TAG, `getShortcutInfo error: ${JSON.stringify(err)}`);
       });
   }
 
@@ -320,9 +320,9 @@ class LauncherAbilityManager {
     }).then(() => {
       Log.showInfo(TAG, 'startLauncherAbilityByUri promise success');
     }, (err) => {
-      Log.showInfo(TAG, `startLauncherAbilityByUri promise error: ${JSON.stringify(err)}`);
+      Log.showError(TAG, `startLauncherAbilityByUri promise error: ${JSON.stringify(err)}`);
     });
-    Log.showInfo(TAG, `startLauncherAbilityByUri AceApplication : startAbility : ${result}`);
+    Log.showDebug(TAG, `startLauncherAbilityByUri AceApplication : startAbility : ${result}`);
   }
 
   /**
@@ -344,7 +344,7 @@ class LauncherAbilityManager {
         }
       })
       .catch((err)=>{
-        Log.showInfo(TAG, `getAppInfoByBundleName launcherBundleMgr getLauncherAbilityInfos error: ${JSON.stringify(err)}`);
+        Log.showError(TAG, `getAppInfoByBundleName launcherBundleMgr getLauncherAbilityInfos error: ${JSON.stringify(err)}`);
       });
 
     if (CheckEmptyUtils.isEmptyArr(abilityInfos)) {
@@ -354,7 +354,6 @@ class LauncherAbilityManager {
     let appInfo = abilityInfos.find(item => {
       return item.elementName.abilityName === abilityName;
     });
-    Log.showInfo(TAG, `getAppInfoByBundleAndAbility appInfo: ${JSON.stringify(appInfo)}`);
     const data = await this.convertToAppItemInfo(appInfo);
     Log.showInfo(TAG, `getAppInfoByBundleAndAbility from BMS: ${JSON.stringify(data)}`);
     return data;

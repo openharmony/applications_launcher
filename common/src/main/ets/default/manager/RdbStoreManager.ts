@@ -75,7 +75,7 @@ export default class RdbStoreManager {
       // set default settings data
       await this.updateSettings();
     } catch (error) {
-      Log.showInfo(TAG, `create table error: ${error}`);
+      Log.showError(TAG, `create table error: ${error}`);
     }
     Log.showInfo(TAG, 'create table end');
   }
@@ -97,7 +97,7 @@ export default class RdbStoreManager {
         itemInfo.userId = resultSet.getLong(resultSet.getColumnIndex('user_id'));
         resultList.push(itemInfo);
         isLast = resultSet.goToNextRow();
-        Log.showInfo(TAG, `getAllBadge while isLast: ${isLast}`);
+        Log.showDebug(TAG, `getAllBadge while isLast: ${isLast}`);
       }
       resultSet.close()
       resultSet = null;
@@ -129,7 +129,7 @@ export default class RdbStoreManager {
         itemInfo.userId = resultSet.getLong(resultSet.getColumnIndex('user_id'));
         resultList.push(itemInfo);
         isLast = resultSet.goToNextRow();
-        Log.showInfo(TAG, `getBadgeByBundle while isLast: ${isLast}`);
+        Log.showDebug(TAG, `getBadgeByBundle while isLast: ${isLast}`);
       }
       resultSet.close()
       resultSet = null;

@@ -71,12 +71,12 @@ export default class SettingsModel {
   }
 
   addObserver(observer: SettingsModelObserver): void {
-    Log.showInfo(TAG, 'addObserver');
+    Log.showDebug(TAG, 'addObserver');
     this.mObserverList.push(observer);
   }
 
   private notifyObservers(event: number): void {
-    Log.showInfo(TAG, 'notifyObservers');
+    Log.showDebug(TAG, 'notifyObservers');
     for (let i = 0; i < this.mObserverList.length; i++) {
       this.mObserverList[i](event);
     }

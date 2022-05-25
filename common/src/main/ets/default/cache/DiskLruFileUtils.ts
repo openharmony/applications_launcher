@@ -32,7 +32,7 @@ export default class DiskLruFileUtils {
    * @return {any} read object from file
    */
   static readJsonObj(bundleName: string): any {
-    Log.showInfo(TAG, 'readJsonObj start execution');
+    Log.showDebug(TAG, 'readJsonObj start execution');
     const filePath = writeFilePath + bundleName + '.json';
     return this.readJsonFile(filePath);
   }
@@ -44,15 +44,15 @@ export default class DiskLruFileUtils {
    * @return {any} read object from file
    */
   static readJsonFile(path: string): any {
-    Log.showInfo(TAG, 'readJsonFile start execution');
+    Log.showDebug(TAG, 'readJsonFile start execution');
     let readStreamSync;
     try {
       readStreamSync = fileIO.createStreamSync(path, 'r');
       const content = this.getContent(readStreamSync);
-      Log.showInfo(TAG, `readJsonFile finish execution ${content}`);
+      Log.showDebug(TAG, `readJsonFile finish execution ${content}`);
       return JSON.parse(content);
     } catch (e) {
-      Log.showInfo(TAG, `readJsonFile error: ${e}`);
+      Log.showError(TAG, `readJsonFile error: ${e}`);
     } finally {
       readStreamSync.closeSync();
     }
@@ -65,7 +65,7 @@ export default class DiskLruFileUtils {
    * @param {string} bundleName - use bundleName as target file name
    */
   static writeJsonObj(jsonObj: any, bundleName: string): void {
-    Log.showInfo(TAG, 'writeJsonObj start execution');
+    Log.showDebug(TAG, 'writeJsonObj start execution');
     const filePath = writeFilePath + bundleName + '.json';
     const content = JSON.stringify(jsonObj);
     let writeStreamSync = null;
@@ -73,10 +73,10 @@ export default class DiskLruFileUtils {
       writeStreamSync = fileIO.createStreamSync(filePath, 'w+');
       writeStreamSync.writeSync(content);
     } catch (e) {
-      Log.showInfo(TAG, `writeJsonObj error: ${e}`);
+      Log.showError(TAG, `writeJsonObj error: ${e}`);
     } finally {
       writeStreamSync.closeSync();
-      Log.showInfo(TAG, 'writeJsonObj close sync');
+      Log.showDebug(TAG, 'writeJsonObj close sync');
     }
   }
 
@@ -87,13 +87,13 @@ export default class DiskLruFileUtils {
    * @return {object} object read from file stream
    */
   static getContent(readStreamSync) {
-    Log.showInfo(TAG, 'getContent start');
+    Log.showDebug(TAG, 'getContent start');
     const bufArray: ArrayBuffer[] = [];
     let totalLength = 0;
     let buf = new ArrayBuffer(READ_DATA_SIZE);
     let len = readStreamSync.readSync(buf);
     while (len != 0) {
-      Log.showInfo(TAG, `getContent FileIO reading ${len}`);
+      Log.showDebug(TAG, `getContent FileIO reading ${len}`);
       totalLength += len;
       if (len < READ_DATA_SIZE) {
         buf = buf.slice(0, len);
@@ -104,11 +104,11 @@ export default class DiskLruFileUtils {
       buf = new ArrayBuffer(READ_DATA_SIZE);
       len = readStreamSync.readSync(buf);
     }
-    Log.showInfo(TAG, `getContent read finished ${totalLength}`);
+    Log.showDebug(TAG, `getContent read finished ${totalLength}`);
     const contentBuf = new Uint8Array(totalLength);
     let offset = 0;
     for (const bufArr of bufArray) {
-      Log.showInfo(TAG, `getContent collecting ${offset}`);
+      Log.showDebug(TAG, `getContent collecting ${offset}`);
       const uInt8Arr = new Uint8Array(bufArr);
       contentBuf.set(uInt8Arr, offset);
       offset += uInt8Arr.byteLength;
@@ -125,11 +125,11 @@ export default class DiskLruFileUtils {
    */
   static removeFile(bundleName: string): void {
     try {
-      Log.showInfo(TAG, 'Launcher FileUtil removeFile');
+      Log.showDebug(TAG, 'Launcher FileUtil removeFile');
       //remove file,key : bundlename
       fileIO.unlinkSync(writeFilePath + bundleName + '.json');
     } catch (e) {
-      Log.showInfo(TAG, `removeFile delete has failed for: ${e}`);
+      Log.showError(TAG, `removeFile delete has failed for: ${e}`);
     }
   }
 }
