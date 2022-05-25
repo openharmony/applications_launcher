@@ -40,14 +40,12 @@ export default class StyleConstants {
   static readonly DOUBLE_LIST_DELETE_HEIGHT_PERCENTAGE = '10%';
 
   // layout size
-  static readonly SINGLE_LIST_TOP_AERA_HEIGHT: number = 80;
-  static readonly SINGLE_LIST_MIDDLE_AERA_HEIGHT: number = 600;
-  static readonly SINGLE_LIST_BOTTOM_AERA_HEIGHT: number = 176;
+  static readonly SINGLE_LIST_MIDDLE_AERA_HEIGHT: number = 604;
 
   // image size resources
-  static readonly SINGLE_LIST_APP_IMAGE_WIDTH = 280;
-  static readonly SINGLE_LIST_APP_IMAGE_HEIGHT = 500;
-  static readonly SINGLE_LIST_MISSION_HEIGHT: number = 600;
+  static readonly SINGLE_LIST_APP_IMAGE_WIDTH = 216;
+  static readonly SINGLE_LIST_APP_IMAGE_HEIGHT = 453;
+  static readonly SINGLE_LIST_MISSION_HEIGHT: number = 497;
   static readonly DOUBLE_LIST_APP_IMAGE_WIDTH = 282;
   static readonly DOUBLE_LIST_APP_IMAGE_HEIGHT = 176;
   static readonly DOUBLE_LIST_MISSION_HEIGHT = 214;
@@ -67,11 +65,15 @@ export default class StyleConstants {
   static readonly DOUBLE_LIST_LAYOUT_ROWSGAP = 40;
   static readonly DOUBLE_LIST_RIGHT_MARGIN = 72;
   static readonly DOUBLE_LIST_TOP_MARGIN = 54;
-  static readonly SINGLE_LIST_APPICON_LEFT_MARGIN = 16;
-  static readonly SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN = 40;
+  static readonly SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN = 24;
   static readonly DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN = 43;
-  static readonly DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN = 6;
-  static readonly SINGLE_LIST_DELETE_IMAGE_FULL_BOTTOM_MARGIN = 96;
+  static readonly SINGLE_LIST_APP_INFO_TOP_MARGIN = 6;
+  static readonly SINGLE_LIST_APP_INFO_BOTTOM_MARGIN = 10;
+  static readonly DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN = 8;
+  static readonly SINGLE_LIST_MIDDLE_AREA_SPACE = 16;
+  static readonly SINGLE_LIST_APP_INFO_LEFT_MARGIN = 8;
+  static readonly SINGLE_LIST_MIDDLE_AREA_TOP_MARGIN = 107;
+  static readonly SINGLE_LIST_DELETE_IMAGE_FULL_BOTTOM_MARGIN = 49;
 
 
 

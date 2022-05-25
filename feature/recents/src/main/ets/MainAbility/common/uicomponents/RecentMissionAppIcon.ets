@@ -67,6 +67,5 @@ export default struct RecentMissionAppIcon {
     }
     .width(this.iconSize)
     .height(this.iconSize)
-    .margin({left: this.mIsSingleLayout ? StyleConstants.SINGLE_LIST_APPICON_LEFT_MARGIN : 0})
   }
 }
