@@ -82,8 +82,13 @@ export default class LayoutViewModel {
     this.mSysUITopHeight = this.mLauncherLayoutStyleConfig.mSysTopHeight;
     this.mNavigationBarStatus = navigationBarStatus === '0' ? true : false;
     Log.showInfo(TAG, `initScreen navigationBarStatus: ${this.mNavigationBarStatus}`);
+
     if (!this.mNavigationBarStatus) {
-      this.mSysUIBottomHeight = this.mLauncherLayoutStyleConfig.mSysBottomHeight;
+      if (this.mScreenWidth > this.mScreenHeight) {
+        this.mSysUIBottomHeight = this.mLauncherLayoutStyleConfig.mSysBottomHeight * this.mScreenWidth / 1280;
+      } else {
+        this.mSysUIBottomHeight = this.mLauncherLayoutStyleConfig.mSysBottomHeight * this.mScreenWidth / 360;
+      }
     } else {
       this.mSysUIBottomHeight = 0;
     }
@@ -199,6 +204,20 @@ export default class LayoutViewModel {
     let row = ~~((realHeight + gutter) / (itemSize + gutter));
     let marginTop = ((realHeight + gutter - (itemSize + gutter) * row) / 2);
     Log.showInfo(TAG, `calculateDesktop gutter: ${gutter}, marginTop: ${marginTop}`);
+    if (!this.mIsPad) {
+        if (row > 6) {
+            row = 6;
+        }
+
+        if (this.mNavigationBarStatus) {
+            realHeight = realHeight + this.mLauncherLayoutStyleConfig.mSysBottomHeight;
+        }
+        let remainHeight = (realHeight + gutter - (itemSize + gutter) * row)
+        realHeight -= remainHeight
+        marginTop = remainHeight / 2 + this.mSysUITopHeight
+        Log.showInfo(TAG, `realHeight = ${realHeight} marginTop = ${marginTop}`)
+    }
+    Log.showInfo(TAG, `desktop marginTop ${marginTop}`);
     //set desktop icon
     let ratio = this.mLauncherLayoutStyleConfig.mIconRatio;
     let lines = this.mLauncherLayoutStyleConfig.mNameLines;

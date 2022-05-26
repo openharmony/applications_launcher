@@ -24,12 +24,12 @@ export default class PhonePresetStyleConstants {
   /**
    * systemUI top height
    */
-  static readonly DEFAULT_SYS_TOP_HEIGHT = 48;
+  static readonly DEFAULT_SYS_TOP_HEIGHT = 44;
 
   /**
    * systemUI bottom height
    */
-  static readonly DEFAULT_SYS_BOTTOM_HEIGHT = 72;
+  static readonly DEFAULT_SYS_BOTTOM_HEIGHT = 36;
 
   /**
    * desktop item size

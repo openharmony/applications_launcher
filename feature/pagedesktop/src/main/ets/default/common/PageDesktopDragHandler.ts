@@ -63,8 +63,8 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   }
 
   private updateGridParam(effectArea) {
-    const gridWidth = effectArea.right - effectArea.left;
-    const gridHeight = effectArea.bottom - effectArea.top;
+    const gridWidth = this.mPageDesktopViewModel.getPageDesktopStyleConfig().mGridWidth;
+    const gridHeight = this.mPageDesktopViewModel.getPageDesktopStyleConfig().mGridHeight;
     Log.showInfo(TAG, `updateGridParam gridWidth: ${gridWidth}, gridHeight: ${gridHeight}`);
     this.mGridConfig = this.mPageDesktopViewModel.getGridConfig();
     const column = this.mGridConfig.column;
