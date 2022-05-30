@@ -16,7 +16,6 @@
 import bundleMgr from '@ohos.bundle';
 import {LauncherAbilityInfo} from 'bundle/launcherAbilityInfo';
 import launcherBundleMgr from '@ohos.bundle.innerBundleManager';
-import formManagerAbility from '@ohos.ability.formManager';
 import AppItemInfo from '../bean/AppItemInfo';
 import CheckEmptyUtils from '../utils/CheckEmptyUtils';
 import CommonConstants from '../constants/CommonConstants';
@@ -181,7 +180,7 @@ class LauncherAbilityManager {
    * @params bundleName
    * @return AppItemInfo
    */
-  async getAppInfoByBundleName(bundleName: string): Promise<AppItemInfo | undefined> {
+  async getAppInfoByBundleName(bundleName: string, abilityName?: string): Promise<AppItemInfo | undefined> {
     let appItemInfo: AppItemInfo | undefined = undefined;
     // get from cache
     if (this.mAppMap != null && this.mAppMap.has(bundleName)) {
@@ -208,7 +207,13 @@ class LauncherAbilityManager {
       Log.showInfo(TAG, `${bundleName} has no launcher ability`);
       return undefined;
     }
-    const data = await this.convertToAppItemInfo(abilityInfos[0]);
+    let appInfo = abilityInfos[0];
+    if (abilityName != undefined) {
+      appInfo = abilityInfos.find(item => {
+        return item.elementName.abilityName === abilityName;
+      });
+    }
+    const data = await this.convertToAppItemInfo(appInfo);
     Log.showInfo(TAG, `getAppInfoByBundleName from BMS: ${JSON.stringify(data)}`);
     return data;
   }
@@ -324,41 +329,6 @@ class LauncherAbilityManager {
     });
     Log.showDebug(TAG, `startLauncherAbilityByUri AceApplication : startAbility : ${result}`);
   }
-
-  /**
-   * get AppItemInfo from BMS with bundleName and abilityName
-   * @params bundleName
-   * @params abilityName
-   * @return AppItemInfo
-   */
-  async getAppInfoByBundleAndAbility(bundleName: string, abilityName: string): Promise<AppItemInfo | undefined> {
-    let appItemInfo: AppItemInfo | undefined = undefined;
-
-    // get from system
-    let abilityInfos = new Array<LauncherAbilityInfo>();
-    await launcherBundleMgr.getLauncherAbilityInfos(bundleName, LauncherAbilityManager.CURRENT_USER_ID)
-      .then((res)=>{
-        if (res != undefined) {
-          Log.showInfo(TAG, `getAppInfoByBundleAndAbility res length: ${res.length}`);
-          abilityInfos = res;
-        }
-      })
-      .catch((err)=>{
-        Log.showError(TAG, `getAppInfoByBundleName launcherBundleMgr getLauncherAbilityInfos error: ${JSON.stringify(err)}`);
-      });
-
-    if (CheckEmptyUtils.isEmptyArr(abilityInfos)) {
-      Log.showInfo(TAG, `bundleName: ${bundleName} abilityName: ${abilityName} get appInfo from BMS empty!`);
-      return undefined;
-    }
-    let appInfo = abilityInfos.find(item => {
-      return item.elementName.abilityName === abilityName;
-    });
-    const data = await this.convertToAppItemInfo(appInfo);
-    Log.showInfo(TAG, `getAppInfoByBundleAndAbility from BMS: ${JSON.stringify(data)}`);
-    return data;
-  }
-
 }
 
 const launcherAbilityManager = LauncherAbilityManager.getInstance();
