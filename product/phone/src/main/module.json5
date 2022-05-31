@@ -5,6 +5,7 @@
     "srcEntrance": "./ets/Application/AbilityStage.ts",
     "description": "$string:mainability_description",
     "mainElement": "com.ohos.launcher.MainAbility",
+    "process": "com.ohos.launcher:extension",
     "deviceTypes": [
       "phone"
     ],
