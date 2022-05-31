@@ -67,7 +67,7 @@ class AmsMissionManager {
       recentMissionInfo.bundleName = recentItem.want.bundleName;
       recentMissionInfo.abilityName = recentItem.want.abilityName;
       recentMissionInfo.lockedState = recentItem.lockedState;
-      const appInfo = await launcherAbilityManager.getAppInfoByBundleAndAbility(recentMissionInfo.bundleName, recentMissionInfo.abilityName);
+      const appInfo = await launcherAbilityManager.getAppInfoByBundleName(recentMissionInfo.bundleName, recentMissionInfo.abilityName);
       if (appInfo == undefined) {
         continue;
       }
@@ -110,7 +110,7 @@ class AmsMissionManager {
       } else {
         let recentTaskInfo = new RecentBundleMissionInfo();
         recentTaskInfo.bundleName = bundleName;
-        const appInfo = await launcherAbilityManager.getAppInfoByBundleAndAbility(bundleName, abilityName);
+        const appInfo = await launcherAbilityManager.getAppInfoByBundleName(bundleName, abilityName);
         if (appInfo == undefined) {
           continue;
         }
