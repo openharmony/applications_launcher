@@ -66,8 +66,7 @@ struct AppCenterView {
     this.workSpaceHeight = this.mLayoutViewModel.getWorkSpaceHeight();
     this.dockHeight = this.mLayoutViewModel.getDockHeight();
     this.indicatorHeight = this.mLayoutViewModel.getIndicator();
-    Log.showInfo(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${screenWidth},
-      screenHeight: ${screenHeight}`);
+    Log.showInfo(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${screenWidth}, screenHeight: ${screenHeight}`);
   }
 
   private onBackPress(): boolean {

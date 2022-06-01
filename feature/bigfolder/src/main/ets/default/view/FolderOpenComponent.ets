@@ -64,8 +64,6 @@ let isPad = false;
 @Component
 export default struct FolderOpenComponent {
   @State withBlur: boolean = true;
-  //  @StorageLink('isDraging') isDraging: boolean = false;
-  @State @Watch('showStateChange') showState: boolean = false;
   @StorageLink('openFolderPageIndex') PageIndex: number = 0;
   @StorageLink('openFolderStatus') @Watch('updateFolderData') openFolderStatus: number = FeatureConstants.OPEN_FOLDER_STATUS_CLOSE;
   @State overLayAlpha: number = 0.3;
@@ -86,6 +84,7 @@ export default struct FolderOpenComponent {
     // Folder dialog data preloading
     mFolderViewModel.getFolderAddAppList(this.mFolderInfo.folderId);
     mFolderViewModel.getFolderAppList(this.mFolderInfo.folderId);
+    this.newFolderName = this.mFolderInfo.folderName;
     Log.showInfo(TAG, `aboutToAppear end`);
   }
 
@@ -108,31 +107,22 @@ export default struct FolderOpenComponent {
     mGridIconTopPadding = mBigFolderStyleConfig.mOpenFolderGridIconTopPadding;
   }
 
-  private showStateChange() {
-    Log.showDebug(TAG, `showStateChange start`);
-    if (this.showState) {
-      this.showOpenFolder();
-    } else {
-      this.hideOpenFolder();
-    }
-    Log.showDebug(TAG, `showStateChange end`);
-  }
-
   private updateFolderData() {
     Log.showDebug(TAG, `updateFolderData start`);
     if (this.openFolderStatus == FeatureConstants.OPEN_FOLDER_STATUS_STATIC) {
       return;
     }
     if (this.openFolderStatus == FeatureConstants.OPEN_FOLDER_STATUS_CLOSE) {
-      this.showState = false;
+      this.hideOpenFolder();
       mFolderViewModel.delAddIcon(this.mFolderInfo);
       mPageDesktopViewModel.pagingFiltering();
       this.newFolderName = '';
       return;
     } else {
       this.isRenaming = this.mFolderInfo.enterEditing;
+      this.newFolderName = this.mFolderInfo.folderName;
       this.mFolderInfo = mFolderViewModel.addAddIcon(this.mFolderInfo);
-      this.showState = true;
+      this.showOpenFolder();
     }
     AppStorage.SetOrCreate('openFolderStatus', FeatureConstants.OPEN_FOLDER_STATUS_STATIC);
     AppStorage.SetOrCreate('isDraging', false);
@@ -233,9 +223,12 @@ export default struct FolderOpenComponent {
         Stack() {
           Swiper() {
             ForEach(this.mFolderInfo.layoutInfo, (item) => {
-              FolderSwiperPage({
-                mAppInfo: item
-              })
+                FolderSwiperPage({
+                  mAppInfo: item,
+                  isRenaming: $isRenaming,
+                  newFolderName: this.newFolderName,
+                  mFolderInfo: this.mFolderInfo
+                })
             }, (item) => JSON.stringify(item))
           }
           .indicatorStyle({
@@ -244,9 +237,7 @@ export default struct FolderOpenComponent {
           })
           .onClick(() => {
             Log.showDebug(TAG, `Swiper click`);
-            if (!isOpenFolderDialog) {
-              mFolderViewModel.closeFolder();
-            }
+            this.saveText();
           })
           .height(mSwiperHeight)
           .width(mGridWidth)
@@ -262,7 +253,7 @@ export default struct FolderOpenComponent {
     }
     .width(FolderStyleConstants.PERCENTAGE_100)
     .height(FolderStyleConstants.PERCENTAGE_100)
-    .visibility(this.showState ? Visibility.Visible : Visibility.None)
+    .visibility(this.openFolderStatus == FeatureConstants.OPEN_FOLDER_STATUS_CLOSE ? Visibility.Hidden : Visibility.Visible)
     .opacity(this.overLayAlpha)
     .backgroundColor('rgba(0,0,0,0.25)')
     .onClick(() => {
@@ -296,6 +287,14 @@ export default struct FolderOpenComponent {
 @Component
 struct FolderSwiperPage {
   @StorageLink('isDraging') isDraging: boolean = false;
+  @Link isRenaming: boolean;
+  @Prop newFolderName: string;
+  private mFolderInfo: {
+    layoutInfo: [],
+    enterEditing: boolean,
+    folderName: string,
+    folderId: string
+  } = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
   private mAppInfo: any = {};
   private ColumnsTemplate: string = '';
   private RowsTemplate: string = '';
@@ -346,7 +345,7 @@ struct FolderSwiperPage {
           mFolderViewModel.closeFolder();
         }
       },
-      folderItem:AppStorage.Get('openFolderData')
+      folderItem: AppStorage.Get('openFolderData')
     }),
     customStyle: true,
     alignment: DialogAlignment.Center,
@@ -407,7 +406,7 @@ struct FolderSwiperPage {
       .rowsGap(this.mGridGap)
       .onClick(() => {
         Log.showDebug(TAG, 'Grid click');
-        mFolderViewModel.closeFolder();
+        this.saveText();
       })
       .columnsTemplate(this.ColumnsTemplate)
       .rowsTemplate(this.RowsTemplate)
@@ -424,6 +423,22 @@ struct FolderSwiperPage {
       }
     })
   }
+
+  private saveText() {
+    if (this.isRenaming) {
+      this.isRenaming = false;
+      if (this.newFolderName && this.newFolderName != this.mFolderInfo.folderName) {
+        this.mFolderInfo.folderName = this.newFolderName;
+        mFolderViewModel.modifyFolderName(this.mFolderInfo);
+      }
+    } else {
+      if (!isOpenFolderDialog) {
+        mFolderViewModel.closeFolder();
+      }
+    }
+    InputMethodManager.getInstance().stopInput();
+  }
+
 }
 
 @Component
@@ -619,35 +634,29 @@ struct FolderAppItem {
         }
       })
       .gesture(
-      GestureGroup(GestureMode.Exclusive,
-      TapGesture()
-        .onAction((event: GestureEvent) => {
-          Log.showDebug(TAG, `tap action ${JSON.stringify(event)}`)
-          if (event.source == SourceType.Mouse) {
-            this.mouseClick++;
-            if (this.mouseClick == DOUBLE_CLICK_COUNT) {
-              Log.showDebug(TAG, 'mouse double click');
-              this.mouseClick = 0;
-              this.launchApp();
-            } else {
-              mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName);
-              setTimeout(() => {
-                this.mouseClick = 0;
-              }, 300)
-            }
-          } else {
-            Log.showDebug(TAG, 'tap click');
-            this.launchApp();
-          }
-        })
+        GestureGroup(GestureMode.Exclusive,
+                TapGesture()
+                  .onAction((event: GestureEvent) => {
+                    Log.showDebug(TAG, `tap action ${JSON.stringify(event)}`)
+                    if (event.source == SourceType.Mouse) {
+                      this.mouseClick++;
+                      if (this.mouseClick == DOUBLE_CLICK_COUNT) {
+                        Log.showDebug(TAG, 'mouse double click');
+                        this.mouseClick = 0;
+                        this.launchApp();
+                      } else {
+                        mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName);
+                        setTimeout(() => {
+                          this.mouseClick = 0;
+                        }, 300)
+                      }
+                    } else {
+                      Log.showDebug(TAG, 'tap click');
+                      this.launchApp();
+                    }
+                  })
+        )
       )
-      )
-      //      .onTouch((event: TouchEvent) => {
-      //        Log.showDebug(TAG, `onTouch`);
-      //        AppStorage.SetOrCreate('dragFocus', FeatureConstants.FEATURE_NAME);
-      //        mBigFolderDragHandler.setDragStateListener(this.mDragStateListener);
-      //        mBigFolderDragHandler.notifyTouchEventUpdate(event);
-      //      })
     }
     .width(mAppItemWidth)
     .height(mAppItemWidth)
