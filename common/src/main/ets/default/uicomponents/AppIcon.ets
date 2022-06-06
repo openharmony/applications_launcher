@@ -80,6 +80,7 @@ export default struct AppIcon {
     }
     .onHover((isHover: boolean) => {
       Log.showInfo(TAG, `onHover isHover ${isHover}`);
+      this.scale = isHover ? 1.05 : 1
     })
     .onTouch((event: TouchEvent) => {
       if (event.type === TouchType.Down) {
