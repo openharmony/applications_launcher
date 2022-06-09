@@ -28,6 +28,7 @@ import PageDesktopLayout from '../../../../../../feature/pagedesktop/src/main/et
 import AppListLayout from '../../../../../../feature/appcenter/src/main/ets/default/layout/AppListLayout.ets';
 import FolderOpenComponent from '../../../../../../feature/bigfolder/src/main/ets/default/view/FolderOpenComponent.ets';
 import FeatureConstants from '../../../../../../feature/bigfolder/src/main/ets/default/common/constants/FeatureConstants';
+import SettingsModel from '../../../../../../common/src/main/ets/default/model/SettingsModel';
 import PhoneStage from '../common/PhoneStage';
 import StyleConstants from '../common/constants/StyleConstants';
 import RecentEvent from '../common/RecentEvent';
@@ -46,8 +47,7 @@ struct EntryView {
   @State device: string = 'phone';
   private mStage: PhoneStage = new PhoneStage();
   private mLayoutViewModel: LayoutViewModel;
-  private helper: any = null;
-  private settingsUriVar: string = '';
+  private navigationBarStatus: string | undefined;
 
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
@@ -72,6 +72,7 @@ struct EntryView {
     let mCallback: Record<string, () => void> = {'onStateChange': () => this.createRecent()};
     RecentEvent.registerCallback(mCallback);
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
+    this.navigationBarStatus = SettingsModel.getInstance().getValue();
   }
 
   registerPageDesktopNavigatorStatusChangeEvent(listener): void {
@@ -82,7 +83,8 @@ struct EntryView {
     onReceiveEvent: (event, params) => {
       Log.showDebug(TAG, `receive event: ${event}, params: ${params}`);
       if (event === EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE) {
-        this.updateScreenInfo(params);
+        this.navigationBarStatus = params;
+        this.updateScreenInfo();
       }
     }
   };
@@ -99,10 +101,10 @@ struct EntryView {
     AppStorage.SetOrCreate('openFolderStatus', FeatureConstants.OPEN_FOLDER_STATUS_CLOSE);
   }
 
-  private updateScreenInfo(navigationBarStatus?: string) {
+  private updateScreenInfo(): void {
     Log.showDebug(TAG, 'updateScreenInfo');
     if (this.screenWidth != 0 && this.screenHeight != 0) {
-      this.mLayoutViewModel.initScreen(navigationBarStatus);
+      this.mLayoutViewModel.initScreen(this.navigationBarStatus);
       globalThis.SmartDockStyleConfig.initConfig();
       globalThis.PhonePageDesktopGridStyleConfig.initConfig();
       globalThis.BigFolderStyleConfigInstance.initConfig();
@@ -152,6 +154,16 @@ struct EntryView {
           Column() {
             SmartDock()
           }
+          .onAreaChange((event) => {
+            Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
+            if (this.navigationBarStatus == "1") {
+              setTimeout(() => {
+                SettingsModel.getInstance().setValue(this.navigationBarStatus);
+              }, 50)
+            } else {
+              SettingsModel.getInstance().setValue(this.navigationBarStatus);
+            }
+          })
           .height(this.dockHeight)
         } else {
           AppListLayout();

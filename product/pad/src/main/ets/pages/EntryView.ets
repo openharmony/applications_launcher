@@ -28,6 +28,7 @@ import SmartDock from '../../../../../../feature/smartdock/src/main/ets/default/
 import FolderOpenComponent from '../../../../../../feature/bigfolder/src/main/ets/default/view/FolderOpenComponent.ets';
 import FeatureConstants from '../../../../../../feature/bigfolder/src/main/ets/default/common/constants/FeatureConstants';
 import PageDesktopDragHandler from '../../../../../../feature/pagedesktop/src/main/ets/default/common/PageDesktopDragHandler';
+import SettingsModel from '../../../../../../common/src/main/ets/default/model/SettingsModel';
 import RecentEvent from '../common/RecentEvent';
 import PadStage from '../common/PadStage';
 
@@ -45,8 +46,7 @@ struct EntryView {
   @State device: string = CommonConstants.PAD_DEVICE_TYPE;
   private mStage: PadStage = new PadStage();
   private mLayoutViewModel: LayoutViewModel;
-  private helper: any = null;
-  private settingsUriVar: string = '';
+  private navigationBarStatus: string | undefined;
 
   private aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
@@ -62,6 +62,7 @@ struct EntryView {
     let mCallback: Record<string, () => void> = {'onStateChange': () => this.createRecent()};
     RecentEvent.registerCallback(mCallback);
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
+    this.navigationBarStatus = SettingsModel.getInstance().getValue();
   }
 
   registerPageDesktopNavigatorStatusChangeEvent(listener): void {
@@ -72,15 +73,16 @@ struct EntryView {
     onReceiveEvent: (event, params) => {
       Log.showInfo(TAG, `receive event: ${event}, params: ${params}`);
       if (event === EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE) {
-        this.updateScreenInfo(params);
+        this.navigationBarStatus = params;
+        this.updateScreenInfo();
       }
     }
   };
 
-  private updateScreenInfo(navigationBarStatus?: string) {
+  private updateScreenInfo(): void {
     Log.showInfo(TAG, 'updateScreenInfo');
     if (this.screenWidth != 0 && this.screenHeight != 0) {
-      this.mLayoutViewModel.initScreen(navigationBarStatus);
+      this.mLayoutViewModel.initScreen(this.navigationBarStatus);
       globalThis.SmartDockStyleConfig.initConfig();
       globalThis.PadPageDesktopGridStyleConfig.initConfig();
       globalThis.AppCenterGridStyleConfigInstance.initConfig();
@@ -179,6 +181,16 @@ struct EntryView {
             }
           })
         }
+        .onAreaChange((event) => {
+          Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
+          if (this.navigationBarStatus == "1") {
+            setTimeout(() => {
+              SettingsModel.getInstance().setValue(this.navigationBarStatus);
+            }, 50)
+          } else {
+            SettingsModel.getInstance().setValue(this.navigationBarStatus);
+          }
+        })
         .height(this.dockHeight)
       }
       .width('100%')

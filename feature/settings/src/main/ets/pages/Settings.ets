@@ -221,7 +221,7 @@ struct SettingItem {
           .height(40)
           .onChange((isOn: boolean) => {
             Log.showDebug(TAG, `SettingItemToggle onChange for GestureNavigation Enable: ${isOn}`);
-            mSettingsPresenter.setValue(isOn ? '0' : '1');
+            mSettingsPresenter.sendLocalEvent(isOn ? '0' : '1');
           })
       }
     }

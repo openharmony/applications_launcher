@@ -203,18 +203,13 @@ export default class SettingsPresenter {
     return this.mSettingsModel.getDevice();
   }
 
-  setValue(value: string) {
-    Log.showDebug(TAG, `setValue setValue: ${value}`);
+  sendLocalEvent(value: string) {
+    Log.showDebug(TAG, `setValue value: ${value}`);
     if (value != '1' && value != '0') {
       Log.showDebug(TAG, 'setValue error');
       return;
     }
-    try{
-      LocalEventManager.sendLocalEventSticky(EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE, value);
-      this.mSettingsModel.setValue(value);
-    } catch (e) {
-      Log.showError(TAG, `setValue error:  ${e.toString()}`);
-    }
+    LocalEventManager.sendLocalEventSticky(EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE, value);
   }
 
   initNavigationBarStatusValue() {
