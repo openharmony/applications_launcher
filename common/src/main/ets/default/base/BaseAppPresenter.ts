@@ -83,7 +83,7 @@ export default class BaseAppPresenter {
   }
 
   private uninstallAppCallback(resultData: {code: number}): void {
-    this.informUninstallResult(resultData.status);
+    this.informUninstallResult(resultData.code);
   }
 
   registerAppListChangeCallback(): void {
