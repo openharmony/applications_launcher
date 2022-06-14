@@ -40,8 +40,7 @@ export default struct RecentMissionCard {
   @Prop lockedState: boolean;
   @State margin: number = StyleConstants.SINGLE_LIST_LAYOUT_MARGIN;
   @State layoutWeight: number = StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT;
-  @State recentImage: string | image.PixelMap = '';
-  private mDefaultSnapShot: string = StyleConstants.DEFAULT_APP_IMAGE;
+  @State recentImage: image.PixelMap|Resource = StyleConstants.DEFAULT_APP_IMAGE;
   private mIsSingleLayout: boolean = true;
   private snapShotTime: string = '';
   private mRecentMissionsViewModel: RecentMissionsViewModel;
@@ -55,18 +54,18 @@ export default struct RecentMissionCard {
     this.layoutWeight = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
       StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT : StyleConstants.DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT;
     this.mRecentMissionsViewModel.getMissionSnapShot(this.missionId, this.recentMissionsSnapshotCallback.bind(this));
-    if (CheckEmptyUtils.isEmpty(this.recentImage)) {
-      this.recentImage = this.mDefaultSnapShot;
-    }
   }
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, `aboutToDisappear start ${this.missionId}`);
     Log.showDebug(TAG, `typeof this.recentImage ${typeof this.recentImage}`);
-    if (this.recentImage != this.mDefaultSnapShot) {
+    // typeof Resource or pixelMap is Object
+    if (!CheckEmptyUtils.isEmpty(this.recentImage)
+      && JSON.stringify(this.recentImage) != JSON.stringify(StyleConstants.DEFAULT_APP_IMAGE)) {
       this.recentImage.release().catch((err) => {
         Log.showError(TAG, `image.PixelMap release err: ${err}`);
       })
+      Log.showInfo(TAG, `aboutToDisappear end ${this.missionId}`);
     }
   }
 

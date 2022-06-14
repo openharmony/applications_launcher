@@ -15,8 +15,8 @@
 export default class StyleConstants {
 
   // image resources
-  static readonly DEFAULT_APP_ICON_IMAGE: any = $r('app.media.icon');
-  static readonly DEFAULT_APP_IMAGE: any = $r('app.media.img_app_default');
+  static readonly DEFAULT_APP_ICON_IMAGE: Resource = $r('app.media.icon');
+  static readonly DEFAULT_APP_IMAGE: Resource = $r('app.media.img_app_default');
   static readonly DEFAULT_DELETE_IMAGE = '/common/pics/ic_public_delete.svg';
   static readonly DEFAULT_DELETE_IMAGE_FULL = '/common/pics/ic_public_delete_full.svg';
   static readonly DEFAULT_RECENT_BACKGROUND_IMAGE = '/common/pics/ic_wallpaper_recent.jpg';
