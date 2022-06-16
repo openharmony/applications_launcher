@@ -239,7 +239,7 @@ export default class FolderViewModel extends BaseAppPresenter {
   }
 
   /**
-   * Delete app from folder by draging
+   * Delete app from folder by dragging
    *
    * @param {any} folderAppList.
    * @param {number} index.

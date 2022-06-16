@@ -21,7 +21,7 @@ import AppItemInfo from './AppItemInfo';
 export default class DockItemInfo extends AppItemInfo {
   /**
    * Type of smartdock item:
-   * 0: appications
+   * applications
    * 1: forms
    * 2: launcher functions
    */
