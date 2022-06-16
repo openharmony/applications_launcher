@@ -28,8 +28,6 @@ import ILayoutConfig from './ILayoutConfig';
  * 3.the ability to persist certain configuration values.
  */
 class LayoutConfigManager {
-  private readonly mPreferences = null;
-
   private readonly mCommonConfig: ILayoutConfig[][] = new Array<ILayoutConfig[]>();
 
   private readonly mFeatureConfig: ILayoutConfig[][] = new Array<ILayoutConfig[]>();
