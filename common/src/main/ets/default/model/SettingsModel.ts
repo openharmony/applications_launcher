@@ -155,8 +155,13 @@ export default class SettingsModel {
     return this.mPageDesktopAppModeConfig.getAppListInfo();
   }
 
-  isAppListInfoExit(): boolean {
-    return this.mPageDesktopAppModeConfig.isConfigExit();
+  /**
+   * Determine if there is an application in the workspace.
+   *
+   * @return {boolean} true(exist).
+   */
+  isAppListInfoExist(): boolean {
+    return this.mPageDesktopAppModeConfig.isConfigExist();
   }
 
   /**

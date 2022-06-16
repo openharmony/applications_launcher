@@ -13,90 +13,100 @@
  * limitations under the License.
  */
 
-import storage from '@ohos.data.storage';
+import FileUtils from '../utils/FileUtils';
 
 /**
- * 布局配置基类，定义所有配置对象需要实现的接口
+ * Layout configuration base class,
+ * which defines the interfaces that all configuration objects need to implement.
  */
 export default abstract class ILayoutConfig {
-  private static readonly PREFERENCES_PATH = globalThis.desktopContext.databaseDir + '/LauncherPreference';
-
   private static readonly COMMON_FEATURE_NAME = 'featureCommon';
 
-  protected mPreferences = null;
+  private static readonly FILES_DIR = globalThis.desktopContext.filesDir + '/';
 
   protected constructor() {
-    this.mPreferences = storage.getStorageSync(ILayoutConfig.PREFERENCES_PATH);
   }
 
   /**
-   * 初始化配置，每个配置必须重新此函数
+   * Initialize the configuration,
+   * each configuration must recreate this function.
    */
   abstract initConfig(): void;
 
   /**
-   * 当前配置级别，每个配置必须重新此函数
+   * The current configuration level,
+   * each configuration must reset this function.
    */
   abstract getConfigLevel(): string;
 
   /**
-   * 当前配置类型，每个配置必须重新此函数
+   * The current configuration type,
+   * each configuration must recreate this function.
    */
   abstract getConfigType(): number;
 
   /**
-   * 当前配置名，每个配置必须重新此函数
+   * The current configuration name,
+   * each configuration must recreate this function.
    */
   abstract getConfigName(): string;
 
   /**
-   * 当前配置对应的JSON字串
+   * The JSON string corresponding to the current configuration.
    */
   protected abstract getPersistConfigJson(): string;
 
   /**
-   * 当前配置名，每个配置必须重新此函数
+   * The current configuration name
    */
   protected loadPersistConfig(): any {
-    const defaultConfig = this.getPersistConfigJson();
-    const config = this.mPreferences.getSync(this.getConfigName(), defaultConfig);
-    return JSON.parse(config);
+    let defaultConfig = this.getPersistConfigJson();
+    const configFromFile = FileUtils.readStringFromFile(this.getConfigFileAbsPath());
+    if (configFromFile) {
+      defaultConfig = configFromFile;
+    }
+    return JSON.parse(defaultConfig);
   }
 
   /**
-   * 判断当前属性是否已存在
+   * Check if the current property already exists.
    */
-  isConfigExit(): boolean {
-    return this.mPreferences.hasSync(this.getConfigName());
+  isConfigExist(): boolean {
+    return FileUtils.isExist(this.getConfigFileAbsPath());
   }
 
   /**
-   * 强制重新加载配置值
+   * Force reload of configuration values.
    */
   forceReloadConfig(): void {
     this.initConfig();
   }
 
   /**
-   * 持久化配置值
+   * Persistent configuration values.
    */
   persistConfig(): void {
-    const currentConfig = this.getPersistConfigJson();
-    this.mPreferences.putSync(this.getConfigName(), currentConfig);
-    this.mPreferences.flushSync();
+    FileUtils.writeJsonObjToJsonFile(this.getPersistConfigJson(), this.getConfigFileAbsPath());
   }
 
   /**
-   * 删除配置值
+   * delete configuration value.
    */
   deleteConfig(): void {
-    this.mPreferences.deleteSync(this.getConfigName());
+    FileUtils.deleteConfigFile(this.getConfigFileAbsPath());
   }
 
   /**
-   * 获取当前配置名
+   * Get the current configuration name.
    */
   getFeatureName(): string {
     return ILayoutConfig.COMMON_FEATURE_NAME;
+  }
+
+  /**
+   * Get the absolute path of the current configuration file.
+   */
+  getConfigFileAbsPath(): string {
+    return ILayoutConfig.FILES_DIR + this.getConfigName() + '.json';
   }
 }

@@ -212,7 +212,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     let pageDesktopInfo = this.mSettingsModel.getAppListInfo();
 
     // get from config empty then init pageDesktop app
-    if (!this.mSettingsModel.isAppListInfoExit() && this.ifInfoIsNull(pageDesktopInfo)) {
+    if (!this.mSettingsModel.isAppListInfoExist() && this.ifInfoIsNull(pageDesktopInfo)) {
       for (const i in totalAppInfoList) {
         pageDesktopInfo.push(totalAppInfoList[i]);
       }
@@ -586,6 +586,13 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     for (let i = 0;i < list.length; i++) {
       gridAppsInfos[list[i].page].push(list[i]);
     }
+
+    //If the workspace is not applied,
+    // it needs to be initialized to [].
+    if (gridAppsInfos.length == 0) {
+      gridAppsInfos.push([]);
+    }
+
     this.mGridAppsInfos = gridAppsInfos;
     return gridAppsInfos;
   }
@@ -1023,7 +1030,6 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    */
   changeIndexOnly(newPageIndex: number) {
     this.mPageIndex = newPageIndex;
-    this.updateMenuId();
   }
 
   /**

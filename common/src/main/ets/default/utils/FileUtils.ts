@@ -21,7 +21,6 @@ import Log from './Log';
 
 const TAG = 'FileUtils';
 
-const writeFilePath = globalThis.desktopContext.cacheDir + '/';
 const READ_DATA_SIZE = 4096;
 
 export default class FileUtils {
@@ -29,19 +28,18 @@ export default class FileUtils {
   /**
    * Read Json file from disk by file path.
    *
-   * @param {string} path - path of the target file.
+   * @param {string} filePath - filePath as the absolute path to the target file.
    * @return {any} - read object from file
    */
-  static readJsonFile(path: string): any {
-    Log.showInfo(TAG, 'readJsonFile start execution');
+  static readJsonFile(filePath: string): any {
+    Log.showDebug(TAG, 'readJsonFile start execution');
     let readStreamSync = null;
     try {
-      readStreamSync = Fileio.createStreamSync(path, 'r');
+      readStreamSync = Fileio.createStreamSync(filePath, 'r');
       const content = this.getContent(readStreamSync);
-      Log.showInfo(TAG, `readJsonFile finish execution content: ${content}`);
       return JSON.parse(content);
     } catch (e) {
-      Log.showError(TAG, `readJsonFile error: ${JSON.stringify(e)}`);
+      Log.showError(TAG, `readJsonFile error: ${e.toString()}`);
     } finally {
       readStreamSync.closeSync();
     }
@@ -50,43 +48,62 @@ export default class FileUtils {
   /**
    * Read String from disk by bundleName.
    *
-   * @param {string} bundleName - bundleName as target file name
+   * @param {string} filePath - filePath as the absolute path to the target file.
    * @return {string} - read string from file
    */
-  static readStringFromFile(bundleName: string): string {
-    Log.showInfo(TAG, 'readStringFromFile start execution');
-    const filePath = writeFilePath + bundleName + '.json';
+  static readStringFromFile(filePath: string): string {
+    Log.showDebug(TAG, 'readStringFromFile start execution');
     let readStreamSync = null;
     try {
       readStreamSync = Fileio.createStreamSync(filePath, 'r');
       const content = this.getContent(readStreamSync);
-      Log.showInfo(TAG, 'readStringFromFile finish execution' + content);
       return content;
     } catch (e) {
-      Log.showError(TAG, `readStringFromFile error: `);
+      Log.showError(TAG, `readStringFromFile error: ${e.toString()}`);
     } finally {
-      readStreamSync.closeSync();
+      if (readStreamSync) {
+        readStreamSync.closeSync();
+      }
     }
   }
 
   /**
    * Write string to a file.
    *
-   * @param {string} string - target string will be written to file
-   * @param {string} bundleName - bundleName as target file name
+   * @param {string} string - target string will be written to file.
+   * @param {string} filePath - filePath as the absolute path to the target file.
    */
-  static writeStringToFile(string: string, bundleName: string): void {
-    Log.showInfo(TAG, 'writeStringToFile start execution');
-    const filePath = writeFilePath + bundleName + '.json';
+  static writeStringToFile(string: string, filePath: string): void {
+    Log.showDebug(TAG, 'writeStringToFile start execution');
     let writeStreamSync = null;
     try {
       writeStreamSync = Fileio.createStreamSync(filePath, 'w+');
       writeStreamSync.writeSync(string);
     } catch (e) {
-      Log.showError(TAG, `writeStringToFile error: ${JSON.stringify(e)}`);
+      Log.showError(TAG, `writeStringToFile error: ${e.toString()}`);
     } finally {
       writeStreamSync.closeSync();
-      Log.showInfo(TAG, 'writeStringToFile close sync');
+      Log.showDebug(TAG, 'writeStringToFile close sync');
+    }
+  }
+
+  /**
+ * Write string to a file.
+ *
+ * @param {jsonObj} object - target object will be written to file。
+ * @param {string} filePath - filePath as the absolute path to the target file.
+ */
+  static writeJsonObjToJsonFile(jsonObj: any, filePath: string): void {
+    Log.showDebug(TAG, 'writeJsonObjToJsonFile start execution');
+    let writeStreamSync = null;
+    try {
+      writeStreamSync = Fileio.createStreamSync(filePath, 'w+');
+      writeStreamSync.writeSync(jsonObj);
+    } catch (e) {
+      Log.showError(TAG, `writeJsonObjToJsonFile error: ${e.toString()}`);
+    } finally {
+      writeStreamSync.closeSync();
+      Log.showDebug(TAG, 'writeJsonObjToJsonFile close sync');
     }
   }
 
@@ -96,8 +113,8 @@ export default class FileUtils {
    * @param {object} readStreamSync - stream of target file
    * @return {object} - object read from file stream
    */
-  static getContent(readStreamSync) {
-    Log.showInfo(TAG, 'getContent start');
+  static getContent(readStreamSync: any): string {
+    Log.showDebug(TAG, 'getContent start');
     const bufArray = [];
     let totalLength = 0;
     let buf = new ArrayBuffer(READ_DATA_SIZE);
@@ -114,7 +131,7 @@ export default class FileUtils {
       buf = new ArrayBuffer(READ_DATA_SIZE);
       len = readStreamSync.readSync(buf);
     }
-    Log.showInfo(TAG, `getContent read finished: ${totalLength}`);
+    Log.showDebug(TAG, `getContent read finished: ${totalLength}`);
     const contentBuf = new Uint8Array(totalLength);
     let offset = 0;
     for (const bufArr of bufArray) {
@@ -125,5 +142,35 @@ export default class FileUtils {
     }
     const content = String.fromCharCode.apply(null, new Uint8Array(contentBuf));
     return content;
+  }
+
+  /**
+   * Check if the file exists.
+   *
+   * @param {string} filePath - filePath as the absolute path to the target file.
+   * @return {boolean} - boolean true(Exist)
+   */
+  static isExist(filePath: string): boolean {
+    try {
+      Fileio.accessSync(filePath);
+      Log.showDebug(TAG, 'accessSync success.');
+    } catch(e) {
+      Log.showError(TAG, `isExit error: ${e.toString()}`);
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Delete Files.
+   *
+   * @param {string} filePath - filePath as the absolute path to the target file.
+   */
+  static deleteConfigFile(filePath: string): void {
+    try {
+      Fileio.unlinkSync(filePath);
+    } catch(e) {
+      Log.showError(TAG, `deleteFile error: ${e.toString()}`);
+    }
   }
 }

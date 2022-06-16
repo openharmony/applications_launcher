@@ -15,7 +15,6 @@
 
 import launcherAbilityManager from '../manager/LauncherAbilityManager';
 import AppModel from '../model/AppModel';
-import AppListInfoCacheManager from '../cache/AppListInfoCacheManager';
 import ResourceManager from '../manager/ResourceManager';
 import CommonConstants from '../constants/CommonConstants';
 import { InstallStatus } from 'bundle/bundleinstaller';
@@ -29,13 +28,11 @@ const KEY_NAME = 'name';
  */
 export default class BaseAppPresenter {
   protected mAppModel: AppModel;
-  protected mAppListInfoCacheManager: AppListInfoCacheManager;
   protected mResourceManager: ResourceManager;
   private readonly listener;
 
   protected constructor() {
     this.mAppModel = AppModel.getInstance();
-    this.mAppListInfoCacheManager = new AppListInfoCacheManager();
     this.mResourceManager = ResourceManager.getInstance();
     this.listener = this.appListChangeListener.bind(this);
   }
