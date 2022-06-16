@@ -587,7 +587,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       gridAppsInfos[list[i].page].push(list[i]);
     }
 
-    //If the workspace is not applied,
+    //If the workspace has no applications,
     // it needs to be initialized to [].
     if (gridAppsInfos.length == 0) {
       gridAppsInfos.push([]);
