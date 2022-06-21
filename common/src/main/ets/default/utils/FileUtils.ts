@@ -17,6 +17,7 @@
  * An util that provides io functionality between file and JSON object.
  */
 import Fileio from '@ohos.fileio';
+import util from '@ohos.util';
 import Log from './Log';
 
 const TAG = 'FileUtils';
@@ -140,7 +141,8 @@ export default class FileUtils {
       contentBuf.set(uInt8Arr, offset);
       offset += uInt8Arr.byteLength;
     }
-    const content = String.fromCharCode.apply(null, new Uint8Array(contentBuf));
+    let textDecoder = new util.TextDecoder('utf-8', {ignoreBOM: true});
+    const content = textDecoder.decode(contentBuf, {stream: false});
     return content;
   }
 
