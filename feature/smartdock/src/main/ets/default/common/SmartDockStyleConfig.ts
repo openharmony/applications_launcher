@@ -26,7 +26,7 @@ const TAG = 'SmartDockStyleConfig';
  */
 export default class SmartDockStyleConfig extends AppListStyleConfig {
   /**
-   * dock list hight
+   * dock list height, high
    */
   mDockHeight = 78;
 

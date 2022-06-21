@@ -435,7 +435,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   }
 
   /**
-   * add app to pageDesktop by draging
+   * add app to pageDesktop by dragging
    * @param appInfo
    */
   addToDesktopByDraging(appInfo) {
@@ -1071,7 +1071,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   }
 
   /**
-   * Add or delete the choosen blank page.
+   * Add or delete the chosen blank page.
    */
   addOrDeleteBlankPage(): void {
     if (this.isBlankPage()) {
@@ -1152,7 +1152,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   }
 
   /**
-   * Delete the choosen blank page.
+   * Delete the chosen blank page.
    */
   private deleteBlankPage(): void {
     Log.showInfo(TAG, 'deleteBlankPage ' + this.mPageIndex);

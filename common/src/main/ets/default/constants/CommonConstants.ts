@@ -59,7 +59,7 @@ export default class CommonConstants {
   static FOLDER_APP_VALUE = 1;
 
   /**
-   * Status code if uninstal successed.
+   * Status code if uninstal succeeded, success, successful.
    */
   static UNINSTALL_SUCCESS = 0;
 
