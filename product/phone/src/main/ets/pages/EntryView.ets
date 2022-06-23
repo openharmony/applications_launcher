@@ -40,7 +40,6 @@ const TAG = "EntryView";
 struct EntryView {
   @StorageLink('screenWidth') screenWidth: number = 0;
   @StorageLink('screenHeight') @Watch('updateScreenInfo') screenHeight: number = 0;
-  @StorageLink('AppPageStartConfig') mAppPageStartConfig: string = '';
   @State workSpaceWidth: number = 0;
   @State workSpaceHeight: number = 0;
   @State dockHeight: number = 0;
@@ -51,7 +50,6 @@ struct EntryView {
 
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
-    this.mAppPageStartConfig = LayoutConfigManager.getModeConfig<PageDesktopModeConfig>(PageDesktopModeConfig.DESKTOP_MODE_CONFIG).getAppStartPageType();
   }
 
   private onPageHide(): void {
@@ -144,30 +142,26 @@ struct EntryView {
   build() {
     Stack() {
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
-        if (this.mAppPageStartConfig === 'Grid') {
-          Column() {
-            PageDesktopLayout({
-              device: this.device
-            });
-          }
-          .height(this.workSpaceHeight)
-          Column() {
-            SmartDock()
-          }
-          .onAreaChange((event) => {
-            Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
-            if (this.navigationBarStatus == "1") {
-              setTimeout(() => {
-                SettingsModel.getInstance().setValue(this.navigationBarStatus);
-              }, 50)
-            } else {
-              SettingsModel.getInstance().setValue(this.navigationBarStatus);
-            }
-          })
-          .height(this.dockHeight)
-        } else {
-          AppListLayout();
+        Column() {
+          PageDesktopLayout({
+            device: this.device
+          });
         }
+        .height(this.workSpaceHeight)
+        Column() {
+          SmartDock()
+        }
+        .onAreaChange((event) => {
+          Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
+          if (this.navigationBarStatus == "1") {
+            setTimeout(() => {
+              SettingsModel.getInstance().setValue(this.navigationBarStatus);
+            }, 50)
+          } else {
+            SettingsModel.getInstance().setValue(this.navigationBarStatus);
+          }
+        })
+        .height(this.dockHeight)
       }
       FolderOpenComponent()
       CustomOverlay()

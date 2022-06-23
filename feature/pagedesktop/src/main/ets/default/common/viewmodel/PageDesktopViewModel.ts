@@ -105,6 +105,9 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         case EventConstants.EVENT_REQUEST_JUMP_TO_FORM_VIEW:
           this.showFormManager(params);
           break;
+        case EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_INIT:
+          this.getGridList();
+          break;
         default:
           if (!this.isPad) {
             Log.showInfo(TAG, 'localEventListener hideBundleInfoList!')
@@ -183,6 +186,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     const bundleInfoListTemp = [];
     this.appendAppData(appInfoList, bundleInfoListTemp);
     const folderInfoList = await this.mFolderModel.getFolderList();
+    Log.showInfo(TAG, 'getAppList folderInfoList length: ' + folderInfoList.length);
     this.appendFolderData(folderInfoList, bundleInfoListTemp);
     let formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
     if (formInfoList == CommonConstants.INVALID_VALUE) {
@@ -223,11 +227,6 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         for (const j in totalAppInfoList) {
           if (pageDesktopInfo[i].bundleName == totalAppInfoList[j].bundleName) {
             pageDesktopInfo[i].appName = totalAppInfoList[j].appName;
-            if (pageDesktopInfo[i].appLabelId != totalAppInfoList[j].appLabelId ||
-            pageDesktopInfo[i].appIconId != totalAppInfoList[j].appIconId) {
-              pageDesktopInfo[i].appLabelId = totalAppInfoList[j].appLabelId;
-              pageDesktopInfo[i].appIconId = totalAppInfoList[j].appIconId;
-            }
             hasUninstalled = false;
             break;
           }
@@ -311,7 +310,6 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     this.mBundleInfoList = this.mSettingsModel.getAppListInfo();
     Log.showInfo(TAG, 'addToDesktop bundleName:' + appInfo.bundleName + ', mBundleInfoList length:' + this.mBundleInfoList.length);
     for (let i = 0; i < this.mBundleInfoList.length; i++) {
-      Log.showInfo(TAG, 'addToDesktop in loop:' + JSON.stringify(this.mBundleInfoList[i]));
       if (this.mBundleInfoList[i].bundleName === appInfo.bundleName) {
         Prompt.showToast({
           message: $r('app.string.duplicate_add')
@@ -1548,9 +1546,8 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
 
   private removeBottomBarInfo(pageDesktopInfo) {
     let bottomAppList = [];
-
     bottomAppList = AppStorage.Get('residentList');
-    Log.showInfo(TAG, 'removeBottomBarInfo bottomAppList:' + JSON.stringify(bottomAppList));
+    Log.showInfo(TAG, `removeBottomBarInfo bottomAppList length: ${bottomAppList.length}`);
     if (!CheckEmptyUtils.isEmptyArr(bottomAppList)) {
       for (let i = 0; i < bottomAppList.length; i++) {
         const appInfo = pageDesktopInfo.find(item => {
@@ -1561,7 +1558,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         if (!this.ifInfoIsNull(appInfo)) {
           const index = pageDesktopInfo.indexOf(appInfo);
           pageDesktopInfo.splice(index, 1);
-          Log.showInfo(TAG, 'removeBottomBarInfo appInfo:' + JSON.stringify(appInfo.bundleName));
+          Log.showDebug(TAG, `removeBottomBarInfo bundleName: ${appInfo.bundleName}`);
         }
       }
     }

@@ -60,7 +60,7 @@ export default class FileUtils {
       const content = this.getContent(readStreamSync);
       return content;
     } catch (e) {
-      Log.showError(TAG, `readStringFromFile error: ${e.toString()}`);
+      Log.showError(TAG, `readStringFromFile error: ${e.toString()}, filePath: ${filePath}`);
     } finally {
       if (readStreamSync) {
         readStreamSync.closeSync();
@@ -71,40 +71,21 @@ export default class FileUtils {
   /**
    * Write string to a file.
    *
-   * @param {string} string - target string will be written to file.
+   * @param {string} str - target string will be written to file.
    * @param {string} filePath - filePath as the absolute path to the target file.
    */
-  static writeStringToFile(string: string, filePath: string): void {
+  static writeStringToFile(str: string, filePath: string): void {
     Log.showDebug(TAG, 'writeStringToFile start execution');
     let writeStreamSync = null;
     try {
       writeStreamSync = Fileio.createStreamSync(filePath, 'w+');
-      writeStreamSync.writeSync(string);
+      let number = writeStreamSync.writeSync(str);
+      Log.showInfo(TAG, 'writeStringToFile number: ' + number);
     } catch (e) {
       Log.showError(TAG, `writeStringToFile error: ${e.toString()}`);
     } finally {
       writeStreamSync.closeSync();
       Log.showDebug(TAG, 'writeStringToFile close sync');
-    }
-  }
-
-  /**
- * Write string to a file.
- *
- * @param {jsonObj} object - target object will be written to file。
- * @param {string} filePath - filePath as the absolute path to the target file.
- */
-  static writeJsonObjToJsonFile(jsonObj: any, filePath: string): void {
-    Log.showDebug(TAG, 'writeJsonObjToJsonFile start execution');
-    let writeStreamSync = null;
-    try {
-      writeStreamSync = Fileio.createStreamSync(filePath, 'w+');
-      writeStreamSync.writeSync(jsonObj);
-    } catch (e) {
-      Log.showError(TAG, `writeJsonObjToJsonFile error: ${e.toString()}`);
-    } finally {
-      writeStreamSync.closeSync();
-      Log.showDebug(TAG, 'writeJsonObjToJsonFile close sync');
     }
   }
 

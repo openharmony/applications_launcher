@@ -141,7 +141,8 @@ export default class AppModel {
    */
   private async installationSubscriberCallBack(event, bundleName, userId) {
     Log.showInfo(TAG, `installationSubscriberCallBack event: ${event}`);
-    await this.updateShortcutInfo(bundleName, event);
+    this.updateShortcutInfo(bundleName, event);
+    this.mFormModel.updateAppItemFormInfo(bundleName);
     if (event === EventConstants.EVENT_PACKAGE_REMOVED) {
       this.removeItem(bundleName);
       this.mFormModel.deleteFormByBundleName(bundleName);
@@ -158,19 +159,13 @@ export default class AppModel {
     } else {
       const abilityInfos = await launcherAbilityManager.getLauncherAbilityInfo(bundleName);
       Log.showInfo(TAG, `installationSubscriberCallBack abilityInfos: ${JSON.stringify(abilityInfos)}`);
-      if (event === EventConstants.EVENT_PACKAGE_CHANGED) {
-        if (!CheckEmptyUtils.isEmptyArr(abilityInfos)){
-          let cacheKey = abilityInfos[0].appLabelId + bundleName;
-          globalThis.ResourceManager.setAppResourceCache(cacheKey, 'name', '');
-          cacheKey = abilityInfos[0].appIconId + bundleName;
-          globalThis.ResourceManager.setAppResourceCache(cacheKey, 'icon', '');
-          Log.showInfo(TAG, `installationSubscriberCallBack setAppResourceCache bundleName: ${bundleName}`);
-          localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
-          localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE, abilityInfos[0]);
-        }
+      if (!CheckEmptyUtils.isEmptyArr(abilityInfos)){
+        this.replaceItem(bundleName, abilityInfos);
       }
-      this.replaceItem(bundleName, abilityInfos);
-      this.mFormModel.updateAppItemFormInfo(bundleName);
+      if (event === EventConstants.EVENT_PACKAGE_CHANGED) {
+        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
+        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE, abilityInfos[0]);
+      }
     }
     this.notifyAppStateChangeEvent();
   }
@@ -217,12 +212,26 @@ export default class AppModel {
    * @param {string} bundleName
    */
   private removeItem(bundleName: string): void {
-    Log.showDebug(TAG, `removeItem bundleName: ${bundleName}`);
+    Log.showInfo(TAG, `removeItem bundleName: ${bundleName}`);
     let originItemIndex = this.getItemIndex(bundleName);
     while (originItemIndex != CommonConstants.INVALID_VALUE) {
+      this.removeItemCache(this.mBundleInfoList[originItemIndex]);
       this.mBundleInfoList.splice(originItemIndex, 1);
       originItemIndex = this.getItemIndex(bundleName);
     }
+  }
+
+  /**
+ * Remove app item from the cache.
+ *
+ * @param {string} bundleName
+ */
+  private removeItemCache(appItemInfo: AppItemInfo): void {
+    Log.showInfo(TAG, `removeItemCache bundleName: ${(appItemInfo.bundleName)}`);
+    let cacheKey = appItemInfo.appLabelId + appItemInfo.bundleName;
+    globalThis.ResourceManager.deleteAppResourceCache(cacheKey, 'name');
+    cacheKey = appItemInfo.appIconId + appItemInfo.bundleName;
+    globalThis.ResourceManager.deleteAppResourceCache(cacheKey, 'icon');
   }
 
   /**

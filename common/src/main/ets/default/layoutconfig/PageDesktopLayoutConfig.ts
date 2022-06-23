@@ -96,4 +96,16 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
   getGridLayoutInfo(): any {
     return this.mGridLayoutInfo;
   }
+
+  /**
+   * load configuration
+   */
+  loadPersistConfig(): any {
+    let defaultConfig = super.loadPersistConfig();
+    const configFromFile = this.loadPersistConfigFromFile();
+    if (configFromFile) {
+      defaultConfig = JSON.parse(configFromFile);
+    }
+    return defaultConfig;
+  }
 }

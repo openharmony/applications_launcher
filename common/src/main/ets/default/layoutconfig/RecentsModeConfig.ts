@@ -100,4 +100,16 @@ export default class RecentsModeConfig extends ILayoutConfig {
   getRecentMissionsRowType(): string {
     return this.mRecentMissionsRowType;
   }
+
+  /**
+   * load configuration
+   */
+  loadPersistConfig(): any {
+    let defaultConfig = super.loadPersistConfig();
+    const configFromFile = this.loadPersistConfigFromFile();
+    if (configFromFile) {
+      defaultConfig = JSON.parse(configFromFile);
+    }
+    return defaultConfig;
+  }
 }
