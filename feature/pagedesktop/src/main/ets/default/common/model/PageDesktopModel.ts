@@ -45,7 +45,8 @@ export default class PageDesktopModel {
     LocalEventManager.registerEventListener(listener, [
       EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD,
       EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE,
-      EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE
+      EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE,
+      EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_INIT
     ]);
   }
 

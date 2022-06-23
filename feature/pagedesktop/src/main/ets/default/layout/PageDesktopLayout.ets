@@ -68,7 +68,6 @@ export default struct PageDesktopLayout {
     mPageDesktopViewModel = PageDesktopViewModel.getInstance();
     this.gridConfig = mPageDesktopViewModel.getGridConfig().layout;
     this.updateStyle();
-    mPageDesktopViewModel.getGridList();
     if (this.device != CommonConstants.PAD_DEVICE_TYPE) {
       mPageDesktopViewModel.registerAppListChangeCallback();
     }
@@ -103,7 +102,6 @@ export default struct PageDesktopLayout {
   private changeGridConfig(): void {
     Log.showInfo(TAG, `changeGridConfig GridConfig: ${this.gridConfig}`);
     this.updateDeskTopParams();
-    mPageDesktopViewModel.getGridList();
   }
 
   private buildLog(): boolean {

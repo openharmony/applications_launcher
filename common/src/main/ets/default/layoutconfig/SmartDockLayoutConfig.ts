@@ -84,4 +84,16 @@ export default class SmartDockLayoutConfig extends ILayoutConfig {
   getDockLayoutInfo(): any {
     return this.mDockLayoutInfo;
   }
+
+  /**
+   * load configuration
+   */
+  loadPersistConfig(): any {
+    let defaultConfig = super.loadPersistConfig();
+    const configFromFile = this.loadPersistConfigFromFile();
+    if (configFromFile) {
+      defaultConfig = JSON.parse(configFromFile);
+    }
+    return defaultConfig;
+  }
 }

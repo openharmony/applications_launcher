@@ -15,6 +15,7 @@
 
 import BaseAppPresenter from '../../../../../../../common/src/main/ets/default/base/BaseAppPresenter';
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
+import CheckEmptyUtils from '../../../../../../../common/src/main/ets/default/utils/CheckEmptyUtils';
 import EventConstants from '../../../../../../../common/src/main/ets/default/constants/EventConstants';
 import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
 import SettingsModel from '../../../../../../../common/src/main/ets/default/model/SettingsModel';
@@ -803,6 +804,10 @@ export default class FolderViewModel extends BaseAppPresenter {
    */
   async getFolderAddAppList(folderId) {
     Log.showDebug(TAG, 'getFolderAddAppList start');
+    if (CheckEmptyUtils.checkStrIsEmpty(folderId)) {
+      Log.showDebug(TAG, 'getFolderAddAppList folderId is Empty');
+      return;
+    }
     const allAppList = [];
     let appInfos: any;
     let gridLayoutInfo = {

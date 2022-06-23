@@ -56,9 +56,9 @@ export default class SmartDockModel {
     this.mAppModel = AppModel.getInstance();
     this.mResourceManager = ResourceManager.getInstance();
     this.registerDockListener();
-    this.getResidentList().then(() => {}, () => {});
     this.mDevice = AppStorage.Get('device');
     Log.showDebug(TAG, `dockDevice: ${this.mDevice}`);
+    this.getResidentList().then(() => {}, () => {});
     if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE) {
       this.getRecentDataList().then(() => {}, () => {});
       this.registerMissionListener();
@@ -84,7 +84,7 @@ export default class SmartDockModel {
     let rdbResidentList: DockItemInfo[] = [];
     rdbResidentList = await globalThis.RdbStoreManagerInstance.querySmartDock();
 
-    if (CheckEmptyUtils.isEmptyArr(rdbResidentList)) {
+    if (CheckEmptyUtils.isEmptyArr(rdbResidentList) && !this.mSmartDockLayoutConfig.isConfigExist()) {
       // init preset dock data
       const dockDataList = this.mSmartDockLayoutConfig.getDockLayoutInfo();
       Log.showDebug(TAG, `getResidentList from config length: ${dockDataList.length}`);
@@ -123,6 +123,7 @@ export default class SmartDockModel {
 
       // update persistent data
       globalThis.RdbStoreManagerInstance.insertIntoSmartdock(residentList);
+      this.mSmartDockLayoutConfig.updateDockLayoutInfo(residentList);
     } else {
       residentList = rdbResidentList;
       Log.showDebug(TAG, 'getResidentList from rdb!');
@@ -130,6 +131,9 @@ export default class SmartDockModel {
 
     // trigger component update
     AppStorage.SetOrCreate('residentList', residentList);
+    if (this.mDevice) {
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_INIT, residentList);
+    }
     Log.showDebug(TAG, `getResidentList end residentList.length: ${residentList.length}`);
   }
 

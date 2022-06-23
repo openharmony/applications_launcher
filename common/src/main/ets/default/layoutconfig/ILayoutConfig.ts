@@ -57,15 +57,19 @@ export default abstract class ILayoutConfig {
   protected abstract getPersistConfigJson(): string;
 
   /**
-   * The current configuration name
+   * load configuration.
    */
   protected loadPersistConfig(): any {
     let defaultConfig = this.getPersistConfigJson();
-    const configFromFile = FileUtils.readStringFromFile(this.getConfigFileAbsPath());
-    if (configFromFile) {
-      defaultConfig = configFromFile;
-    }
     return JSON.parse(defaultConfig);
+  }
+
+  /**
+   * load configuration from file.
+   */
+  loadPersistConfigFromFile(): any {
+    const configFromFile = FileUtils.readStringFromFile(this.getConfigFileAbsPath());
+    return configFromFile;
   }
 
   /**
@@ -86,7 +90,7 @@ export default abstract class ILayoutConfig {
    * Persistent configuration values.
    */
   persistConfig(): void {
-    FileUtils.writeJsonObjToJsonFile(this.getPersistConfigJson(), this.getConfigFileAbsPath());
+    FileUtils.writeStringToFile(this.getPersistConfigJson(), this.getConfigFileAbsPath());
   }
 
   /**
