@@ -109,7 +109,7 @@ export default struct PageDesktopLayout {
     return true;
   }
 
-  private getMenu() {
+  private getMenu(): MenuInfo[] {
     let menuInfoList = new Array<MenuInfo>();
     let setting = new MenuInfo();
     setting.menuType = CommonConstants.MENU_TYPE_FIXED
@@ -141,7 +141,7 @@ export default struct PageDesktopLayout {
     if (this.logId()) {
       Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
         AppMenu({
-          menuInfoList: this.getMenu()
+          getMenuInfoList: this.getMenu
         })
       }
       .width(StyleConstants.CONTEXT_MENU_WIDTH)

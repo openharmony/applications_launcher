@@ -24,6 +24,7 @@ const TAG = 'AppMenu';
 @Component
 export default struct AppMenu {
   menuInfoList: Array<MenuInfo> = new Array<MenuInfo>();
+  getMenuInfoList: Function;
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
   fixedMenuList: Array<MenuInfo> = null;
   dynamicMenuList: Array<MenuInfo> = null;
@@ -31,6 +32,9 @@ export default struct AppMenu {
 
   aboutToAppear() {
     Log.showInfo(TAG, 'aboutToAppear start');
+    if (this.getMenuInfoList) {
+      this.menuInfoList = this.getMenuInfoList();
+    }
     this.fixedMenuList = new Array<MenuInfo>();
     this.dynamicMenuList = new Array<MenuInfo>();
     for (let menuInfo of this.menuInfoList) {
