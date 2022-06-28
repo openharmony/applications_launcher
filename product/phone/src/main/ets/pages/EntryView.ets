@@ -92,11 +92,13 @@ struct EntryView {
     Log.showInfo(TAG, 'aboutToDisappear');
   }
 
-  private onBackPress(): void {
+  private onBackPress(): boolean {
+    Log.showInfo(TAG, 'onBackPress');
     ContextMenu.close();
     AppStorage.SetOrCreate('dialogControllerStatus', !AppStorage.Get('dialogControllerStatus'));
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     AppStorage.SetOrCreate('openFolderStatus', FeatureConstants.OPEN_FOLDER_STATUS_CLOSE);
+    return true;
   }
 
   private updateScreenInfo(): void {
