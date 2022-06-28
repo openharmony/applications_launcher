@@ -76,7 +76,7 @@ export default struct FolderOpenComponent {
   } = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
   @State newFolderName: string = '';
 
-  private aboutToAppear(): void  {
+  private aboutToAppear(): void {
     Log.showInfo(TAG, `aboutToAppear start`);
     mFolderViewModel = FolderViewModel.getInstance();
     mPageDesktopViewModel = PageDesktopViewModel.getInstance();
