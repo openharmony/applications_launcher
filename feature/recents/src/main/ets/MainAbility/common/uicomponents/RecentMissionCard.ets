@@ -156,7 +156,9 @@ export default struct RecentMissionCard {
         .onClick(() => {
           this.isClickSubComponent = true;
           Log.showDebug(TAG, 'onClick start launcher ability');
-          windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
+          if (!globalThis.recentMode || !windowManager.isSplitWindowMode(globalThis.recentMode)) {
+            windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
+          }
           this.mRecentMissionsViewModel.moveMissionToFront(this.missionId);
         })
     }

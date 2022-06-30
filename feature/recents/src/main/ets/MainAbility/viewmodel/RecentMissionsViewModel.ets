@@ -99,11 +99,17 @@ export default class RecentMissionsViewModel {
   async getRecentMissionsList(): Promise<void> {
     Log.showDebug(TAG, 'getRecentMissionsList start');
     this.mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
-    Log.showDebug(TAG, `getRecentMissionsList length: ${this.mRecentMissionsList.length}`);
     const snapShotTime = new Date().toString();
-    for (let item of this.mRecentMissionsList) {
-      item.snapShotTime = snapShotTime;
+    this.mRecentMissionsList[0].snapShotTime = snapShotTime;
+    if (globalThis.recentMode && windowManager.isSplitWindowMode(globalThis.recentMode)) {
+      this.mRecentMissionsList.forEach((item, index) => {
+        if (item.missionId == globalThis.splitMissionId) {
+          this.mRecentMissionsList.splice(index, 1);
+          return;
+        }
+      });
     }
+    Log.showDebug(TAG, `getRecentMissionsList length: ${this.mRecentMissionsList.length}`);
     AppStorage.SetOrCreate('recentMissionsList', this.mRecentMissionsList);
   }
 
@@ -184,7 +190,11 @@ export default class RecentMissionsViewModel {
    * @param missionId - The missionId of current recent mission.
    */
   async moveMissionToFront(missionId: number): Promise<void> {
-    await amsMissionManager.moveMissionToFront(missionId);
+    if (globalThis.recentMode && windowManager.isSplitWindowMode(globalThis.recentMode)) {
+      await amsMissionManager.moveMissionToFront(missionId, globalThis.recentMode);
+    } else {
+      await amsMissionManager.moveMissionToFront(missionId);
+    }
   }
 
   /**

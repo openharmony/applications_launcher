@@ -15,6 +15,7 @@
 
 import missionManager from '@ohos.application.missionManager';
 import { MissionSnapshot } from 'application/MissionSnapshot';
+import { MissionInfo as OriginMissionInfo } from 'application/MissionInfo';
 import launcherAbilityManager from './LauncherAbilityManager';
 import RecentBundleMissionInfo from '../bean/RecentBundleMissionInfo';
 import RecentMissionInfo from '../bean/RecentMissionInfo';
@@ -42,26 +43,36 @@ class AmsMissionManager {
 
 
   /**
-   * Get recent missions list
-   *
-   * @return {Array} missions list
-   */
-  async getRecentMissionsList(): Promise<RecentMissionInfo[]> {
-    const recentMissionsList = new Array<RecentMissionInfo>();
-    let listData = new Array();
+  * Get origin recent missions
+  *
+  * @return {Array} missions
+  */
+  async getOriginRecentMissionsList(): Promise<Array<OriginMissionInfo>> {
+    let missionInfos = new Array<OriginMissionInfo>();
     await missionManager.getMissionInfos('', AmsMissionManager.RECENT_MISSIONS_LIMIT_NUM)
       .then((res) => {
         Log.showInfo(TAG, `getRecentMissionsList res.length: ${res.length}`);
-        listData = res;
+        missionInfos = res;
       })
       .catch((err) => {
         Log.showError(TAG, `getRecentMissionsList error: ${JSON.stringify(err)}`);
       });
-    if (CheckEmptyUtils.isEmptyArr(listData)) {
+    return missionInfos;
+  }
+
+  /**
+   * Get recent missions list
+   *
+   * @return {Array} missions list
+   */
+  async getRecentMissionsList(): Promise<Array<RecentMissionInfo>> {
+    const recentMissionsList = new Array<RecentMissionInfo>();
+    let missionInfos: Array<OriginMissionInfo> = await this.getOriginRecentMissionsList();
+    if (CheckEmptyUtils.isEmptyArr(missionInfos)) {
       Log.showInfo(TAG, 'getRecentMissionsList Empty');
       return recentMissionsList;
     }
-    for (const recentItem of listData) {
+    for (const recentItem of missionInfos) {
       const recentMissionInfo = new RecentMissionInfo();
       recentMissionInfo.missionId = recentItem.missionId;
       recentMissionInfo.bundleName = recentItem.want.bundleName;
@@ -85,15 +96,9 @@ class AmsMissionManager {
    *
    * @return {Array} missions list
    */
-  async getRecentBundleMissionsList(): Promise<RecentBundleMissionInfo[]> {
+  async getRecentBundleMissionsList(): Promise<Array<RecentBundleMissionInfo>> {
     const recentMissionsList = new Array<RecentBundleMissionInfo>();
-    let missionInfos = new Array();
-    try {
-      missionInfos = await missionManager.getMissionInfos('', AmsMissionManager.RECENT_MISSIONS_LIMIT_NUM);
-      Log.showInfo(TAG, `getRecentBundleMissionsList missionInfos length: ${missionInfos.length}`);
-    } catch (err) {
-      Log.showError(TAG, `getRecentBundleMissionsList error: ${JSON.stringify(err)}`);
-    }
+    let missionInfos: Array<OriginMissionInfo> = await this.getOriginRecentMissionsList();
     if (CheckEmptyUtils.isEmptyArr(missionInfos)) {
       Log.showInfo(TAG, 'getRecentBundleMissionsList Empty');
       return recentMissionsList;
@@ -221,9 +226,11 @@ class AmsMissionManager {
    *
    * @param missionId
    */
-  async moveMissionToFront(missionId: number) {
+  async moveMissionToFront(missionId: number, winMode?: number) {
     Log.showInfo(TAG, `moveMissionToFront missionId:  ${missionId}`);
-    const res = await missionManager.moveMissionToFront(missionId).catch(err => {
+    let promise = winMode ? missionManager.moveMissionToFront(missionId, {windowMode : winMode}):
+    missionManager.moveMissionToFront(missionId);
+    const res = await promise.catch(err => {
       Log.showError(TAG, `moveMissionToFront err: ${JSON.stringify(err)}`);
     });
     Log.showInfo(TAG, `moveMissionToFront missionId end: ${JSON.stringify(res)}`);
