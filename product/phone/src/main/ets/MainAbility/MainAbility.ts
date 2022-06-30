@@ -44,16 +44,25 @@ export default class MainAbility extends ServiceExtension {
     await dbStore.initRdbConfig();
     await dbStore.createTable();
 
+    windowManager.registerWindowEvent();
+
     // create Launcher entry view
     windowManager.createWindow(globalThis.desktopContext, windowManager.DESKTOP_WINDOW_NAME,
-      windowManager.DESKTOP_RANK, 'pages/EntryView');
+      windowManager.DESKTOP_RANK, 'pages/' + windowManager.DESKTOP_WINDOW_NAME);
+
+    // load recent
+    windowManager.createRecentWindow();
   }
 
   private initGlobalConst(): void {
     // init create window global function
     globalThis.createWindowWithName = ((windowName: string, windowRank: number) => {
       Log.showInfo(TAG, `createWindowWithName begin windowName: ${windowName}`);
-      windowManager.createWindowIfAbsent(globalThis.desktopContext, windowName, windowRank, 'pages/' + windowName);
+      if (windowName == windowManager.RECENT_WINDOW_NAME) {
+        windowManager.createRecentWindow();
+      } else {
+        windowManager.createWindowIfAbsent(globalThis.desktopContext, windowName, windowRank, 'pages/' + windowName);
+      }
     });
   }
 
@@ -67,8 +76,9 @@ export default class MainAbility extends ServiceExtension {
   }
 
   onDestroy(): void {
+    windowManager.unregisterWindowEvent();
     windowManager.destroyWindow(windowManager.DESKTOP_WINDOW_NAME);
-    windowManager.destroyWindow(windowManager.RECENT_WINDOW_NAME);
+    windowManager.destroyRecentWindow();
     Log.showInfo(TAG, 'onDestroy success');
   }
 

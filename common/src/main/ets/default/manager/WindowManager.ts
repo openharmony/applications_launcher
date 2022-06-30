@@ -13,8 +13,10 @@
  * limitations under the License.
  */
 
+import CommonEvent from '@ohos.commonevent';
 import display from '@ohos.display';
 import Window from '@ohos.window';
+import featureAbility from '@ohos.ability.featureAbility';
 import Log from '../utils/Log';
 import StyleConstants from '../constants/StyleConstants';
 import ServiceExtensionContext from 'application/ServiceExtensionContext';
@@ -26,6 +28,8 @@ const TAG = 'WindowManager';
  */
 class WindowManager {
   private mDisplayData = null;
+
+  private subscriber = null;
 
   RECENT_WINDOW_NAME = 'RecentView';
 
@@ -90,6 +94,14 @@ class WindowManager {
     return displayData;
   }
 
+  isSplitWindowMode(mode): boolean {
+    if ((mode == featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_PRIMARY) ||
+    (mode == featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_SECONDARY)) {
+      return true;
+    }
+    return false;
+  }
+
   /**
    * 设置窗口大小
    *
@@ -112,7 +124,7 @@ class WindowManager {
     void abilityWindow.moveTo(x, y);
   }
 
-  createWindow(context: ServiceExtensionContext, name: string, windowType: number, loadContent: string, callback?: Function) {
+  createWindow(context: ServiceExtensionContext, name: string, windowType: number, loadContent: string, isShow: boolean = true, callback?: Function) {
     display.getDefaultDisplay().then((dis: { id: number, width: number, height: number, refreshRate: number }) => {
       Log.showInfo(TAG, `createWindow, name: ${name} windowType: ${windowType}  loadContent: ${loadContent}`);
       Window.create(context, name, windowType).then((win) => {
@@ -121,27 +133,19 @@ class WindowManager {
           Log.showInfo(TAG, `${name} window reset size finish`);
           void win.loadContent(loadContent).then(() => {
             Log.showInfo(TAG, `then begin ${name} window loadContent in then!`);
-            void win.show().then(() => {
-              void win.setSystemBarProperties({
-                navigationBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR,
-                statusBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR
-              }).then(() => {
-                if (name === this.RECENT_WINDOW_NAME) {
-                  // setFullScreen is also need to set system ui bar color to avoid flicker
-                  void win.setFullScreen(true).then(() => {
-                    Log.showInfo(TAG, `${name} setFullScreen`);
-                  });
-                } else {
-                  void win.setLayoutFullScreen(true).then(() => {
-                    Log.showInfo(TAG, `${name} setLayoutFullScreen`);
-                  });
-                }
-                Log.showInfo(TAG, `${name} setSystemBarProperties`);
-              });
+            void win.setSystemBarProperties({
+              navigationBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR,
+              statusBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR
+            }).then(() => {
+              if (name !== this.RECENT_WINDOW_NAME) {
+                void win.setLayoutFullScreen(true).then(() => {
+                  Log.showInfo(TAG, `${name} setLayoutFullScreen`);
+                });
+              }
               if (callback) {
                 callback(win);
               }
-              Log.showInfo(TAG, `${name} window createSuccess!`);
+              isShow && this.showWindow(name);
             });
           });
         });
@@ -155,7 +159,7 @@ class WindowManager {
     Log.showInfo(TAG, `create, name ${name}`);
     Window.find(name).then(win => {
       void win.show().then(() => {
-        Log.showInfo(TAG, 'show launcher recent ability');
+        Log.showDebug(TAG, `show launcher ${name}`);
       });
     }).catch(error => {
       Log.showError(TAG, `${name} ability is not created, because ${error}`);
@@ -236,6 +240,102 @@ class WindowManager {
           callback(win);
         }
       });
+  }
+
+  createRecentWindow(mode?: number) {
+    Log.showInfo(TAG, 'createRecentWindow Begin, mode=' + mode);
+    let setWinMode = (mode && this.isSplitWindowMode(mode)) ? (win) => {
+      globalThis.recentMode = mode;
+      win.setWindowMode(mode).then();
+    } : (win) => {
+      globalThis.recentMode = featureAbility.AbilityWindowConfiguration.WINDOW_MODE_FULLSCREEN;
+      win.setFullScreen(true).then(() => {
+        Log.showInfo(TAG, `${this.RECENT_WINDOW_NAME} setFullScreen`);
+      });
+    };
+    let registerWinEvent = (win) => {
+      Log.showInfo(TAG, 'registerWinEvent Begin');
+      win.on('lifeCycleEvent', (stageEventType) => {
+        Log.showDebug(TAG,`Recent lifeCycleEvent callback stageEventType=${stageEventType}`);
+        if (stageEventType == Window.WindowStageEventType.INACTIVE) {
+          Log.showDebug(TAG,'Recent MainAbility onWindowStageInactive');
+          Window.find(windowManager.RECENT_WINDOW_NAME).then((win) => {
+            Log.showDebug(TAG,'Hide recent on inactive');
+            win.hide();
+          })
+        }
+      })
+    };
+    Window.find(windowManager.RECENT_WINDOW_NAME).then(win => {
+      setWinMode(win);
+      void win.show().then(() => {
+        Log.showInfo(TAG, 'show launcher recent ability');
+      });
+    }).catch(error => {
+      Log.showInfo(TAG, `recent window is not created, because ${error}`);
+      let callback = (win) => {
+        Log.showInfo(TAG, 'Post recent window created');
+        registerWinEvent(win);
+        setWinMode(win);
+      }
+      this.createWindow(globalThis.desktopContext, windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK,
+        "pages/" + windowManager.RECENT_WINDOW_NAME, false, callback);
+    });
+  }
+
+  destroyRecentWindow() {
+    this.findWindow(windowManager.RECENT_WINDOW_NAME, win => {
+      win.off('lifeCycleEvent', (win) => {
+        win.destroy().then(() => {
+          Log.showInfo(TAG, `destroyRecentWindow`);
+        });
+      })
+    });
+  }
+
+  /**
+   * Register window event listener.
+   */
+  public registerWindowEvent() {
+    if (this.subscriber != null) {
+      return
+    }
+    var subscribeInfo = {
+      events: ["common.event.SPLIT_SCREEN"]
+    };
+    CommonEvent.createSubscriber(subscribeInfo).then((data) => {
+      Log.showDebug(TAG, "Launcher createSubscriber callback");
+      this.subscriber = data;
+      CommonEvent.subscribe(this.subscriber, this.winEventCallback.bind(this));
+    }, (err) => {
+      Log.showError(TAG, `Failed to createSubscriber ${err}`)
+    })
+  }
+
+  /**
+   * Unregister window event listener.
+   */
+  public unregisterWindowEvent() {
+    if (this.subscriber == null) {
+      return
+    }
+    CommonEvent.unsubscribe(this.subscriber, null);
+  }
+
+  /**
+   * Window event handler.
+   */
+  private async winEventCallback(err, data) {
+    Log.showDebug(TAG,`Launcher AppModel subscribeCallBack receive event. data: ${JSON.stringify(data)}`);
+    var windowModeMap = {
+      'Primary': featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_PRIMARY,
+      'Secondary': featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_SECONDARY
+    }
+    windowManager.createRecentWindow(windowModeMap[data.parameters.windowMode]);
+    globalThis.splitMissionId = data.parameters.missionId
+
+    await this.subscriber.setCode(0, null)
+    await this.subscriber.finishCommonEvent(null);
   }
 }
 

@@ -34,6 +34,7 @@ import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
 import FeatureConstants from '../common/constants/FeatureConstants';
 import SmartDockStyleConfig from '../common/SmartDockStyleConfig';
+import RecentMissionInfo from '../../../../../../../common/src/main/ets/default/bean/RecentMissionInfo';
 
 const TAG = 'SmartDockModel';
 const KEY_NAME = 'name';
@@ -61,8 +62,8 @@ export default class SmartDockModel {
     this.getResidentList().then(() => {}, () => {});
     if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE) {
       this.getRecentDataList().then(() => {}, () => {});
-      this.registerMissionListener();
     }
+    this.registerMissionListener();
     Log.showInfo(TAG, 'constructor!');
   }
 
@@ -142,6 +143,9 @@ export default class SmartDockModel {
    */
   async getRecentDataList(): Promise<void> {
     Log.showDebug(TAG, 'getRecentDataList start!');
+    if (this.mDevice === CommonConstants.DEFAULT_DEVICE_TYPE) {
+       return;
+    }
     const recentList = await amsMissionManager.getRecentBundleMissionsList();
     if (CheckEmptyUtils.isEmptyArr(recentList)) {
       Log.showDebug(TAG, 'getRecentDataList empty');
@@ -363,6 +367,20 @@ export default class SmartDockModel {
   onMissionCreatedCallback(missionId: number): void {
     Log.showInfo(TAG, 'onMissionCreatedCallback, missionId=' + missionId);
     this.getRecentDataList().then(() => {}, () => {});
+    this.getRecentViewDataList(missionId).then(() => {}, () => {});
+  }
+
+  /**
+   * get recent view list
+   */
+  async getRecentViewDataList(missionId: number): Promise<void> {
+    let mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
+    Log.showDebug(TAG, `getRecentMissionsList length: ${mRecentMissionsList.length}`);
+    const snapShotTime = new Date().toString();
+    mRecentMissionsList.find(item => {
+      return item.missionId === missionId;
+    }).snapShotTime = snapShotTime;
+    AppStorage.SetOrCreate('recentMissionsList', mRecentMissionsList);
   }
 
   onMissionDestroyedCallback(missionId: number): void {
@@ -373,11 +391,13 @@ export default class SmartDockModel {
   onMissionSnapshotChangedCallback(missionId: number): void {
     Log.showInfo(TAG, 'onMissionSnapshotChangedCallback, missionId=' + missionId);
     this.getRecentDataList().then(() => {}, () => {});
+    this.getRecentViewDataList(missionId).then(() => {}, () => {});
   }
 
   onMissionMovedToFrontCallback(missionId: number): void {
     Log.showInfo(TAG, 'onMissionMovedToFrontCallback, missionId=' + missionId);
     this.getRecentDataList().then(() => {}, () => { });
+    this.getRecentViewDataList(missionId).then(() => {}, () => {});
   }
 
   /**
