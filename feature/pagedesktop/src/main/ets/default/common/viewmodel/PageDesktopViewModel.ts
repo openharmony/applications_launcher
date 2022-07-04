@@ -198,7 +198,6 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     this.appendFormData(formInfoList, bundleInfoListTemp);
     this.mBundleInfoList = bundleInfoListTemp;
     this.pagingFiltering();
-
   }
 
   private async updateDesktopInfo(): Promise<void> {
@@ -271,7 +270,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     const gridLayoutInfo = this.getLayoutInfo();
     const layoutInfo = gridLayoutInfo.layoutInfo;
     for (let i = 0; i < layoutInfo.length; i++) {
-      if (layoutInfo[i].type == CommonConstants.TYPE_APP && layoutInfo[i].bundleName == bundleName) {
+      if (layoutInfo[i].typeId == CommonConstants.TYPE_APP && layoutInfo[i].bundleName == bundleName) {
         const page = layoutInfo[i].page;
         gridLayoutInfo.layoutInfo.splice(i, 1);
         this.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
@@ -325,7 +324,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
 
     // Check if app is in folder
     for (let i = 0; i < gridLayoutInfo.layoutInfo.length; i++) {
-      if (gridLayoutInfo.layoutInfo[i].type === CommonConstants.TYPE_FOLDER) {
+      if (gridLayoutInfo.layoutInfo[i].typeId === CommonConstants.TYPE_FOLDER) {
         const appIndex = gridLayoutInfo.layoutInfo[i].layoutInfo[0].findIndex(item => {
           return item.bundleName === appInfo.bundleName && item.abilityName === appInfo.abilityName;
         })
@@ -402,7 +401,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         if (hasFound) {
           break;
         }
-        if (layoutInfo[i].type == CommonConstants.TYPE_FOLDER && !hasFound) {
+        if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER && !hasFound) {
           for (let j = 0; j < layoutInfo[i].layoutInfo.length; j++) {
             appInfo = layoutInfo[i].layoutInfo[j].find(item => {
               return item.bundleName == badgeInfo.bundleName;
@@ -476,7 +475,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       if (this.isInHideAppList(appInfoList[i])) {
         continue;
       }
-      appInfoList[i].type = CommonConstants.TYPE_APP;
+      appInfoList[i].typeId = CommonConstants.TYPE_APP;
       appInfoList[i].area = [1, 1];
       bundleInfoList.push(appInfoList[i]);
     }
@@ -508,7 +507,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
 
   private appendFormData(formInfoList, bundleInfoList) {
     for (let i = 0; i < formInfoList.length; i++) {
-      formInfoList[i].type = CommonConstants.TYPE_CARD;
+      formInfoList[i].typeId = CommonConstants.TYPE_CARD;
       bundleInfoList.push(formInfoList[i]);
     }
   }
@@ -532,10 +531,10 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     const layoutInfo = info.layoutInfo;
 
     for (let i = 0; i < layoutInfo.length; i++) {
-      if (layoutInfo[i].type == CommonConstants.TYPE_APP) {
+      if (layoutInfo[i].typeId == CommonConstants.TYPE_APP) {
         for (let j = 0; j < this.mBundleInfoList.length; j++) {
           if (layoutInfo[i].bundleName == this.mBundleInfoList[j].bundleName
-          && layoutInfo[i].type == this.mBundleInfoList[j].type) {
+          && layoutInfo[i].typeId == this.mBundleInfoList[j].typeId) {
             this.mBundleInfoList[j].area = layoutInfo[i].area;
             this.mBundleInfoList[j].page = layoutInfo[i].page;
             this.mBundleInfoList[j].row = layoutInfo[i].row;
@@ -544,12 +543,12 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
             appListInfo.push(this.mBundleInfoList[j]);
           }
         }
-      } else if (layoutInfo[i].type == CommonConstants.TYPE_FOLDER) {
+      } else if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
         appListInfo.push(layoutInfo[i]);
-      } else if (layoutInfo[i].type == CommonConstants.TYPE_CARD) {
+      } else if (layoutInfo[i].typeId == CommonConstants.TYPE_CARD) {
         for (let j = 0; j < this.mBundleInfoList.length; j++) {
           if (layoutInfo[i].cardId == this.mBundleInfoList[j].cardId
-          && layoutInfo[i].type == this.mBundleInfoList[j].type) {
+          && layoutInfo[i].typeId == this.mBundleInfoList[j].typeId) {
             this.mBundleInfoList[j].cardId = layoutInfo[i].cardId;
             this.mBundleInfoList[j].area = layoutInfo[i].area;
             this.mBundleInfoList[j].page = layoutInfo[i].page;
@@ -668,7 +667,6 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   }
 
   ifDuplicatePosition(layoutInfo) {
-
     const mPositionInfo = [];
     for (let i = 0; i < layoutInfo.length; i++) {
       for(let j = 0; j < layoutInfo[i].area[1]; j++){
@@ -697,7 +695,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     for (let i = 0; i < layoutInfo.length; i++) {
       if (CheckEmptyUtils.isEmpty(count[layoutInfo[i].bundleName])) {
         count[layoutInfo[i].bundleName] = 0;
-      } else if (layoutInfo[i].type == CommonConstants.TYPE_APP) {
+      } else if (layoutInfo[i].typeId == CommonConstants.TYPE_APP) {
         return true;
       }
     }
@@ -719,8 +717,8 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     for (const i in this.mBundleInfoList) {
       let sign = false;
       for (const j in layoutInfo) {
-        if (this.mBundleInfoList[i].type == layoutInfo[j].type
-        && this.mBundleInfoList[i].type == CommonConstants.TYPE_APP
+        if (this.mBundleInfoList[i].typeId == layoutInfo[j].typeId
+        && this.mBundleInfoList[i].typeId == CommonConstants.TYPE_APP
         && this.mBundleInfoList[i].bundleName == layoutInfo[j].bundleName) {
           sign = true;
           break;
@@ -732,7 +730,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     }
     //Detect uninstalled apps
     for (const i in layoutInfo) {
-      if (layoutInfo[i].type == CommonConstants.TYPE_FOLDER || layoutInfo[i].type == CommonConstants.TYPE_CARD) {
+      if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER || layoutInfo[i].typeId == CommonConstants.TYPE_CARD) {
         continue;
       }
       let sign = false;
@@ -749,7 +747,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
 
     // Add new app
     for (let i = 0; i < newApp.length; i++) {
-      if (newApp[i].type == CommonConstants.TYPE_APP) {
+      if (newApp[i].typeId == CommonConstants.TYPE_APP) {
         this.updateAppItemLayoutInfo(info, layoutDescription, newApp[i]);
       }
     }
@@ -802,7 +800,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
             isNeedNewPage = false;
             layoutInfo.push({
               bundleName: item.bundleName,
-              type: item.type,
+              typeId: item.typeId,
               area: item.area,
               page: i,
               column: x,
@@ -816,7 +814,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     if (isNeedNewPage) {
       layoutInfo.push({
         bundleName: item.bundleName,
-        type: item.type,
+        typeId: item.typeId,
         area: item.area,
         page: pageCount,
         column: 0,
@@ -1455,7 +1453,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       const gridLayoutInfo = this.getLayoutInfo();
       const cardItemLayoutInfo = {
         cardId: cardItemInfo.cardId,
-        type: CommonConstants.TYPE_CARD,
+        typeId: CommonConstants.TYPE_CARD,
         area: FormManager.getInstance().getCardSize(cardItemInfo.cardDimension),
         page: 0,
         row: 0,
@@ -1568,7 +1566,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     const gridLayoutInfo = this.getLayoutInfo();
     const layoutInfo = gridLayoutInfo.layoutInfo;
     for (let i = 0; i < layoutInfo.length; i++) {
-      if (layoutInfo[i].type == CommonConstants.TYPE_FOLDER) {
+      if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
         for (let j = 0; j < layoutInfo[i].layoutInfo.length; j++) {
           for (let k = 0; k < layoutInfo[i].layoutInfo[j].length; k++) {
             const appInfo = pageDesktopInfo.find(item => {

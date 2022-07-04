@@ -74,7 +74,7 @@ export default class BigFolderModel {
     gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
     const layoutInfo = gridLayoutInfo.layoutInfo;
     for (let i = 0; i < layoutInfo.length; i++) {
-      if (layoutInfo[i].type == CommonConstants.TYPE_FOLDER) {
+      if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
         this.mFolderInfoList.push(layoutInfo[i]);
       }
     }

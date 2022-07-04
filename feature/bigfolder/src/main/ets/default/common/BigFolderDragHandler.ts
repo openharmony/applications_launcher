@@ -238,7 +238,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
       const endLayoutInfo = this.getEndLayoutInfo(event);
 
       if (endLayoutInfo != undefined
-        && endLayoutInfo.type === CommonConstants.TYPE_FOLDER
+        && endLayoutInfo.typeId === CommonConstants.TYPE_FOLDER
         && endLayoutInfo.folderId === openFolderData.folderId) {
         return false;
       }
@@ -247,7 +247,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
       const dragAppInfo = this.mFolderAppList[this.mStartIndex];
       result = this.mFolderViewModel.deleteAppByDraging(this.mFolderAppList, this.mStartIndex);
 
-      if (endLayoutInfo != undefined && endLayoutInfo.type == CommonConstants.TYPE_FOLDER) {
+      if (endLayoutInfo != undefined && endLayoutInfo.typeId == CommonConstants.TYPE_FOLDER) {
         this.mFolderViewModel.addOneAppToFolder(dragAppInfo, endLayoutInfo.folderId);
       }
 
@@ -294,7 +294,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     const layoutInfo = info.layoutInfo;
 
     for (let i = 0; i < layoutInfo.length; i++) {
-      if (layoutInfo[i].type === CommonConstants.TYPE_FOLDER) {
+      if (layoutInfo[i].typeId === CommonConstants.TYPE_FOLDER) {
         if (layoutInfo[i].folderId === openFolderData.folderId) {
           layoutInfo[i].layoutInfo = folderLayoutInfo;
           break;
@@ -323,7 +323,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     Log.showDebug(TAG, `onDragDrop mItemIndex: ${mItemIndex}`);
     // remove add icon
     if (this.mFolderAppList.length > 0
-      && this.mFolderAppList[this.mFolderAppList.length - 1].type == CommonConstants.TYPE_ADD) {
+      && this.mFolderAppList[this.mFolderAppList.length - 1].typeId == CommonConstants.TYPE_ADD) {
       this.mFolderAppList.pop();
     }
     if (mItemIndex > this.mFolderAppList.length - 1) {
@@ -349,7 +349,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     const info = this.mPageDesktopViewModel.getLayoutInfo();
     const layoutInfo = info.layoutInfo;
     const endLayoutInfo = layoutInfo.find(item => {
-      if (item.type === CommonConstants.TYPE_FOLDER) {
+      if (item.typeId === CommonConstants.TYPE_FOLDER) {
         return item.page === mDesktopPosition.page
           && (item.row <= mDesktopPosition.row && mDesktopPosition.row <= item.row + 1)
           && (item.column <= mDesktopPosition.column && mDesktopPosition.column <= item.column + 1);

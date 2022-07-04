@@ -15,6 +15,9 @@
 
 import ILayoutConfig from './ILayoutConfig';
 import CommonConstants from '../constants/CommonConstants';
+import Log from '../utils/Log';
+
+const TAG = 'PageDesktopAppModeConfig';
 
 /**
  * Desktop Workspace App Configuration
@@ -45,8 +48,7 @@ export default class PageDesktopAppModeConfig extends ILayoutConfig {
   }
 
   initConfig(): void {
-    const config = this.loadPersistConfig();
-    this.mAppListInfo = config;
+    this.loadPersistConfig();
   }
 
   getConfigLevel(): string {
@@ -73,6 +75,11 @@ export default class PageDesktopAppModeConfig extends ILayoutConfig {
   updateAppListInfo(appListInfo: object): void {
     this.mAppListInfo = appListInfo;
     super.persistConfig();
+    globalThis.RdbStoreManagerInstance.insertDesktopApplication(appListInfo).then((result) => {
+      Log.showInfo(TAG, 'updateAppListInfo success.');
+    }).catch((err) => {
+      Log.showError(TAG, `updateAppListInfo error: ${err.toString()}`);
+    });
   }
 
   /**
@@ -87,12 +94,15 @@ export default class PageDesktopAppModeConfig extends ILayoutConfig {
   /**
    * load configuration
    */
-  loadPersistConfig(): any {
+  loadPersistConfig(): void {
     let defaultConfig = super.loadPersistConfig();
-    const configFromFile = this.loadPersistConfigFromFile();
-    if (configFromFile) {
-      defaultConfig = JSON.parse(configFromFile);
-    }
-    return defaultConfig;
+    globalThis.RdbStoreManagerInstance.queryDesktopApplication()
+      .then((config) => {
+        Log.showInfo(TAG, 'loadPersistConfig configFromRdb success.');
+        this.mAppListInfo = config;
+    }).catch((err) => {
+      Log.showError(TAG, `loadPersistConfig configFromRdb err: ${err.toString()}`);
+      this.mAppListInfo = defaultConfig;
+    });
   }
 }

@@ -240,7 +240,7 @@ export default class FormModel {
       if (formInfo.bundleName === bundleName) {
         tempFormInfoList.splice(i, 1);
         for(let j = layoutInfo.layoutInfo.length - 1; j >= 0; j--) {
-          if (layoutInfo.layoutInfo[j].type === CommonConstants.TYPE_CARD && formInfo.cardId == layoutInfo.layoutInfo[j].cardId) {
+          if (layoutInfo.layoutInfo[j].typeId === CommonConstants.TYPE_CARD && formInfo.cardId == layoutInfo.layoutInfo[j].cardId) {
             const tmpPage = layoutInfo.layoutInfo[j].page.toString();
             pageItemMap.set(tmpPage, pageItemMap.get(tmpPage) - 1);
             layoutInfo.layoutInfo.splice(j, 1);
