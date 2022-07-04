@@ -358,7 +358,7 @@ struct FolderSwiperPage {
       Grid() {
         ForEach(this.mAppInfo, (item) => {
           GridItem() {
-            if (item.type === CommonConstants.TYPE_ADD) {
+            if (item.typeId === CommonConstants.TYPE_ADD) {
               Column() {
                 Stack({ alignContent: Alignment.Center }) {
                   Column()

@@ -15,6 +15,10 @@
 
 import ILayoutConfig from './ILayoutConfig';
 import CommonConstants from '../constants/CommonConstants';
+import Log from '../utils/Log';
+import FileUtils from '../utils/FileUtils';
+
+const TAG = 'PageDesktopLayoutConfig';
 
 /**
  * Desktop workspace function layout configuration.
@@ -58,8 +62,7 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
   }
 
   initConfig(): void {
-    const config = this.loadPersistConfig();
-    this.mGridLayoutInfo = config;
+    this.loadPersistConfig();
   }
 
   getConfigLevel(): string {
@@ -83,9 +86,19 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
    *
    * @params gridLayoutInfo
    */
-  updateGridLayoutInfo(gridLayoutInfo: object): void {
+  updateGridLayoutInfo(gridLayoutInfo: any): void {
+    const temp = {
+      layoutDescription: {},
+      layoutInfo: []
+    };
+    temp.layoutDescription = gridLayoutInfo.layoutDescription;
+    FileUtils.writeStringToFile(JSON.stringify(temp), this.getConfigFileAbsPath());
     this.mGridLayoutInfo = gridLayoutInfo;
-    super.persistConfig();
+    globalThis.RdbStoreManagerInstance.insertGridLayoutInfo(gridLayoutInfo).then((result) => {
+      Log.showInfo(TAG, 'updateGridLayoutInfo success.');
+    }).catch((err) => {
+      Log.showError(TAG, `updateGridLayoutInfo error: ${err.toString()}`);
+    });
   }
 
   /**
@@ -100,12 +113,17 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
   /**
    * load configuration
    */
-  loadPersistConfig(): any {
+  async loadPersistConfig(): Promise<void> {
+    Log.showError(TAG, `loadPersistConfig start`);
     let defaultConfig = super.loadPersistConfig();
-    const configFromFile = this.loadPersistConfigFromFile();
+    const configFromFile = FileUtils.readStringFromFile(this.getConfigFileAbsPath());
     if (configFromFile) {
       defaultConfig = JSON.parse(configFromFile);
     }
-    return defaultConfig;
+    const configFromRdb = await globalThis.RdbStoreManagerInstance.queryGridLayoutInfo();
+    if (configFromRdb) {
+      defaultConfig.layoutInfo = configFromRdb;
+    }
+    this.mGridLayoutInfo = defaultConfig;
   }
 }

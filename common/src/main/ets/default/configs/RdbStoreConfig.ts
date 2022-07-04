@@ -64,6 +64,54 @@ const RdbStoreConfig = {
     'app_label_id INTEGER, ' +
     'app_name TEXT, ' +
     'install_time TEXT)'
+  },
+
+  DesktopApplicationInfo: {
+    TABLE_NAME: 'DESKTOPAPPLICATIONINFO',
+    CREATE_TABLE: 'CREATE TABLE IF NOT EXISTS DESKTOPAPPLICATIONINFO ' +
+    '(id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+    'app_name TEXT, ' +
+    'is_system_app INTEGER, ' +
+    'is_uninstallAble INTEGER, ' +
+    'appIcon_id INTEGER, ' +
+    'appLabel_id INTEGER, ' +
+    'bundle_name TEXT, ' +
+    'module_name TEXT, ' +
+    'ability_name TEXT, ' +
+    'key_name TEXT UNIQUE, ' +
+    'install_time TEXT, ' +
+    'extend1 TEXT, ' +
+    'extend2 TEXT, ' +
+    'extend3 INTEGER)'
+  },
+
+  GridLayoutInfo: {
+    TABLE_NAME: 'GRIDLAYOUTINFO',
+    CREATE_TABLE: 'CREATE TABLE IF NOT EXISTS GRIDLAYOUTINFO ' +
+    '(id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+    'card_id INTEGER, ' +
+    'folder_id TEXT UNIQUE, ' +
+    'container INTEGER, ' +
+    'folder_name TEXT, ' +
+    'badge_number INTEGER, ' +
+    'type_id INTEGER, ' +
+    'area TEXT, ' +
+    'page INTEGER, ' +
+    'column INTEGER, ' +
+    'row INTEGER, ' +
+    'app_name TEXT, ' +
+    'is_system_app INTEGER, ' +
+    'is_uninstallAble INTEGER, ' +
+    'appIcon_id INTEGER, ' +
+    'appLabel_id INTEGER, ' +
+    'bundle_name TEXT UNIQUE, ' +
+    'module_name TEXT, ' +
+    'ability_name TEXT, ' +
+    'key_name TEXT UNIQUE, ' +
+    'install_time TEXT, ' +
+    'extend1 TEXT, ' +
+    'extend2 TEXT, ' +
+    'extend3 INTEGER)'
   }
 };
 

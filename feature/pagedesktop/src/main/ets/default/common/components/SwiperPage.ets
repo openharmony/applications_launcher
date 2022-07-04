@@ -82,13 +82,13 @@ export default struct SwiperPage {
       ForEach(this.mAppListInfo, (item) => {
         GridItem() {
           if(this.buildLog(item)){}
-          if (item.type == CommonConstants.TYPE_APP) {
+          if (item.typeId == CommonConstants.TYPE_APP) {
             AppItem({
               item: item,
               mPageDesktopViewModel: this.mPageDesktopViewModel,
               mNameLines: this.mNameLines
             })
-          } else if (item.type == CommonConstants.TYPE_FOLDER) {
+          } else if (item.typeId == CommonConstants.TYPE_FOLDER) {
             FolderItem({
               folderItem: item,
               mNameLines: this.mNameLines
@@ -105,10 +105,10 @@ export default struct SwiperPage {
         .rowEnd(item.row + item.area[1] - 1)
         .columnEnd(item.column + item.area[0] - 1)
       }, (item) => {
-        if (item.type == CommonConstants.TYPE_FOLDER) {
+        if (item.typeId == CommonConstants.TYPE_FOLDER) {
           return JSON.stringify(item);
         } else {
-          return `${item.type}${item.row}${item.column}`;
+          return `${item.typeId}${item.row}${item.column}`;
         }
       })
     }

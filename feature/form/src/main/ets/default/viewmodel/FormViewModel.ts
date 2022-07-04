@@ -106,7 +106,7 @@ export default class FormViewModel {
     };
     gridLayoutInfo = this.mPageDesktopViewModel.getLayoutInfo();
     const cardIndex = gridLayoutInfo.layoutInfo.findIndex(item => {
-      return item.type === CommonConstants.TYPE_CARD && item.cardId === cardId;
+      return item.typeId === CommonConstants.TYPE_CARD && item.cardId === cardId;
     });
     if (cardIndex != CommonConstants.INVALID_VALUE) {
       this.mFormModel.deleteFormById(cardId);

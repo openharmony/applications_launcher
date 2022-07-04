@@ -120,7 +120,7 @@ export default struct FolderAppListDialog {
                         let appItem: any;
                         appItem = item;
                         appItem.area = [1, 1];
-                        appItem.type = CommonConstants.TYPE_APP;
+                        appItem.typeId = CommonConstants.TYPE_APP;
                         this.appListChecked.push(appItem);
                       } else {
                         item.checked = false;

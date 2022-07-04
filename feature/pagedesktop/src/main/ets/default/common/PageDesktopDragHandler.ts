@@ -127,9 +127,9 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     Log.showInfo(TAG, `getItemByIndex pageIndex: ${pageIndex}, appGridInfo length: ${appGridInfo.length},
     column: ${column}, row: ${row}`);
     const itemInfo = appGridInfo[pageIndex].find(item => {
-      if (item.type == CommonConstants.TYPE_APP) {
+      if (item.typeId == CommonConstants.TYPE_APP) {
         return item.column == column && item.row == row;
-      } else if (item.type == CommonConstants.TYPE_FOLDER || item.type == CommonConstants.TYPE_CARD) {
+      } else if (item.typeId == CommonConstants.TYPE_FOLDER || item.typeId == CommonConstants.TYPE_CARD) {
         return this.isItemInRowColumn(row, column, item);
       }
     });
@@ -188,7 +188,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     const dragItemInfo = this.getDragItemInfo();
 
     this.mStartPosition = this.getTouchPosition(moveAppX, moveAppY);
-    if (dragItemInfo.type == CommonConstants.TYPE_FOLDER || dragItemInfo.type == CommonConstants.TYPE_CARD) {
+    if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER || dragItemInfo.typeId == CommonConstants.TYPE_CARD) {
       const rowOffset = this.mStartPosition.row - dragItemInfo.row;
       const columnOffset = this.mStartPosition.column - dragItemInfo.column;
       const positionOffset = [columnOffset, rowOffset];
@@ -207,13 +207,13 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
 
     AppStorage.SetOrCreate('overlayPositionX', moveAppX);
     AppStorage.SetOrCreate('overlayPositionY', moveAppY);
-    if (dragItemInfo.type == CommonConstants.TYPE_APP){
+    if (dragItemInfo.typeId == CommonConstants.TYPE_APP){
       this.setAppOverlayData();
       AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_APP_ICON);
-    } else if (dragItemInfo.type == CommonConstants.TYPE_FOLDER) {
+    } else if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER) {
       this.setFolderOverlayData();
       AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_FOLDER);
-    } else if (dragItemInfo.type == CommonConstants.TYPE_CARD) {
+    } else if (dragItemInfo.typeId == CommonConstants.TYPE_CARD) {
       this.setFormOverlayData(dragItemInfo);
       AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_CARD);
     }
@@ -268,7 +268,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     const moveAppX = event.touches[0].screenX;
     const moveAppY = event.touches[0].screenY;
     const dragItemInfo = this.getDragItemInfo();
-    if (dragItemInfo.type == CommonConstants.TYPE_FOLDER || dragItemInfo.type == CommonConstants.TYPE_CARD) {
+    if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER || dragItemInfo.typeId == CommonConstants.TYPE_CARD) {
       const moveOffset = AppStorage.Get('moveOffset');
       AppStorage.SetOrCreate('overlayPositionX', moveAppX - moveOffset[0]);
       AppStorage.SetOrCreate('overlayPositionY', moveAppY - moveOffset[1]);
@@ -294,11 +294,11 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
       const dragItemInfo = this.getDragItemInfo();
       const info = this.mPageDesktopViewModel.getLayoutInfo();
       const layoutInfo = info.layoutInfo;
-      if (dragItemInfo.type == CommonConstants.TYPE_FOLDER || dragItemInfo.type == CommonConstants.TYPE_CARD ) {
+      if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER || dragItemInfo.typeId == CommonConstants.TYPE_CARD ) {
         this.updateEndPosition(dragItemInfo);
         AppStorage.SetOrCreate('positionOffset', []);
         AppStorage.SetOrCreate('moveOffset', []);
-      } else if(dragItemInfo.type === CommonConstants.TYPE_APP) {
+      } else if(dragItemInfo.typeId === CommonConstants.TYPE_APP) {
         // end position is the same as start position
         if (this.isMoveToSamePosition(dragItemInfo)) {
           this.deleteBlankPageAfterDragging(startPosition, endPosition);
@@ -306,13 +306,13 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
         }
         const endLayoutInfo = this.getEndLayoutInfo(layoutInfo);
         if (endLayoutInfo != undefined) {
-          if (endLayoutInfo.type === CommonConstants.TYPE_FOLDER) {
+          if (endLayoutInfo.typeId === CommonConstants.TYPE_FOLDER) {
             const appInfo = this.createNewAppInfo(dragItemInfo);
             // add app to folder
             this.mFolderViewModel.addOneAppToFolder(appInfo, endLayoutInfo.folderId);
             this.deleteBlankPageAfterDragging(startPosition, endPosition);
             return true;
-          } else if (endLayoutInfo.type === CommonConstants.TYPE_APP) {
+          } else if (endLayoutInfo.typeId === CommonConstants.TYPE_APP) {
             // create a new folder
             const appListInfo = [endLayoutInfo];
             const startLayoutInfo = this.getStartLayoutInfo(layoutInfo, dragItemInfo);
@@ -436,7 +436,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     const appInfo = {
       appName: '',
       bundleName: dragItemInfo.bundleName,
-      type: dragItemInfo.type,
+      typeId: dragItemInfo.typeId,
       area: dragItemInfo.area,
       page: dragItemInfo.page,
       column: dragItemInfo.column,
@@ -454,9 +454,9 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
 
   private getEndLayoutInfo(layoutInfo) {
     const endLayoutInfo = layoutInfo.find(item => {
-      if (item.type == CommonConstants.TYPE_FOLDER || item.type == CommonConstants.TYPE_CARD) {
+      if (item.typeId == CommonConstants.TYPE_FOLDER || item.typeId == CommonConstants.TYPE_CARD) {
         return item.page === this.mEndPosition.page && this.isItemInRowColumn(this.mEndPosition.row, this.mEndPosition.column, item);
-      } else if (item.type == CommonConstants.TYPE_APP) {
+      } else if (item.typeId == CommonConstants.TYPE_APP) {
         return item.page === this.mEndPosition.page && item.row === this.mEndPosition.row && item.column === this.mEndPosition.column;
       }
     });
@@ -492,7 +492,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     }
     const moveItem = {
       bundleName: itemInfo.bundleName,
-      type: CommonConstants.TYPE_APP,
+      typeId: CommonConstants.TYPE_APP,
       page: -1,
       row: -1,
       column: -1
@@ -640,9 +640,9 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     for (let index = 0; index < layoutInfo.length; index++) {
       for (let row = allPositions.length - 1; row >= 0 ; row--) {
         for (let column = allPositions[row].length - 1; column >= 0 ; column--) {
-          if (layoutInfo[index].type == CommonConstants.TYPE_APP && layoutInfo[index].bundleName == allPositions[row][column].bundleName ||
-          layoutInfo[index].type == CommonConstants.TYPE_FOLDER && layoutInfo[index].folderId == allPositions[row][column].bundleName ||
-          layoutInfo[index].type == CommonConstants.TYPE_CARD && layoutInfo[index].cardId == allPositions[row][column].bundleName) {
+          if (layoutInfo[index].typeId == CommonConstants.TYPE_APP && layoutInfo[index].bundleName == allPositions[row][column].bundleName ||
+          layoutInfo[index].typeId == CommonConstants.TYPE_FOLDER && layoutInfo[index].folderId == allPositions[row][column].bundleName ||
+          layoutInfo[index].typeId == CommonConstants.TYPE_CARD && layoutInfo[index].cardId == allPositions[row][column].bundleName) {
             layoutInfo[index].row = row;
             layoutInfo[index].column = column;
             layoutInfo[index].page = destination.page;
@@ -667,16 +667,16 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     // set position in layoutInfo to all positions
     for (let i = 0; i < layoutInfo.length; i++) {
       if (layoutInfo[i].page == destination.page) {
-        if (layoutInfo[i].type == CommonConstants.TYPE_FOLDER || layoutInfo[i].type == CommonConstants.TYPE_CARD) {
+        if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER || layoutInfo[i].typeId == CommonConstants.TYPE_CARD) {
           let bundleName = '';
-          if (layoutInfo[i].type == CommonConstants.TYPE_FOLDER) {
+          if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
             bundleName = layoutInfo[i].folderId;
-          } else if (layoutInfo[i].type == CommonConstants.TYPE_CARD) {
+          } else if (layoutInfo[i].typeId == CommonConstants.TYPE_CARD) {
             bundleName = layoutInfo[i].cardId;
           }
 
           const positionInLayoutInfo = {
-            type: layoutInfo[i].type,
+            typeId: layoutInfo[i].typeId,
             bundleName: bundleName,
             area: layoutInfo[i].area
           };
@@ -685,9 +685,9 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
               allPositions[layoutInfo[i].row + k][layoutInfo[i].column + j] = positionInLayoutInfo;
             }
           }
-        } else if (layoutInfo[i].type == CommonConstants.TYPE_APP) {
+        } else if (layoutInfo[i].typeId == CommonConstants.TYPE_APP) {
           const positionInLayoutInfo = {
-            type: layoutInfo[i].type,
+            typeId: layoutInfo[i].typeId,
             bundleName: layoutInfo[i].bundleName,
             area: layoutInfo[i].area
           };
@@ -709,7 +709,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
       const rowPositions = [];
       for (let column = 0; column < pageColumn; column++) {
         const position = {
-          type: -1,
+          typeId: -1,
           bundleName: 'null',
           area: []
         };
@@ -733,11 +733,11 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
       if (layoutInfo[i].page == destination.page) {
         const count = layoutInfo[i].area[0] * layoutInfo[i].area[1];
         let bundleName = '';
-        if (layoutInfo[i].type == CommonConstants.TYPE_FOLDER) {
+        if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
           bundleName = layoutInfo[i].folderId;
-        } else if (layoutInfo[i].type == CommonConstants.TYPE_CARD) {
+        } else if (layoutInfo[i].typeId == CommonConstants.TYPE_CARD) {
           bundleName = layoutInfo[i].cardId;
-        } else if (layoutInfo[i].type == CommonConstants.TYPE_APP) {
+        } else if (layoutInfo[i].typeId == CommonConstants.TYPE_APP) {
           bundleName = layoutInfo[i].bundleName;
         }
         objectPositionCount.set(bundleName, count);
@@ -764,12 +764,12 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
 
     for (let j = 0; j < dragItemInfo.area[1]; j++) {
       for (let i = 0; i < dragItemInfo.area[0]; i++) {
-        if (allPositions[row + j][column + i].type == CommonConstants.TYPE_APP) {
+        if (allPositions[row + j][column + i].typeId == CommonConstants.TYPE_APP) {
           apps.push(allPositions[row + j][column + i]);
-        } else if (allPositions[row + j][column + i].type == CommonConstants.TYPE_FOLDER &&
+        } else if (allPositions[row + j][column + i].typeId == CommonConstants.TYPE_FOLDER &&
         allPositions[row + j][column + i].bundleName != dragItemInfo.folderId) {
           foldersAndForms.push(allPositions[row + j][column + i]);
-        } else if (allPositions[row + j][column + i].type == CommonConstants.TYPE_CARD &&
+        } else if (allPositions[row + j][column + i].typeId == CommonConstants.TYPE_CARD &&
         allPositions[row + j][column + i].bundleName != dragItemInfo.cardId) {
           foldersAndForms.push(allPositions[row + j][column + i]);
         }
@@ -801,7 +801,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     }
 
     if (foldersAndForms.length == 1) {
-      if (dragItemInfo.type == CommonConstants.TYPE_APP && foldersAndForms[0].type == CommonConstants.TYPE_CARD) {
+      if (dragItemInfo.typeId == CommonConstants.TYPE_APP && foldersAndForms[0].typeId == CommonConstants.TYPE_CARD) {
         return true;
       }
     }
@@ -836,7 +836,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     let count = 0;
     for (let i = 0; i < allPositions.length; i++) {
       for (let j = 0; j < allPositions[i].length; j++) {
-        if (allPositions[i][j].type == -1) {
+        if (allPositions[i][j].typeId == -1) {
           count++;
         }
       }
@@ -861,7 +861,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     for (let j = 0; j < dragItemInfo.area[1]; j++) {
       for (let i = 0; i < dragItemInfo.area[0]; i++) {
         const nullPosition = {
-          type: -1,
+          typeId: -1,
           bundleName: 'null',
           area: []
         };
@@ -881,19 +881,19 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   private setDestinationPosition(destination, allPositions, dragItemInfo): void {
     Log.showInfo(TAG, 'setDestinationPosition start');
     let bundleName = '';
-    if (dragItemInfo.type == CommonConstants.TYPE_FOLDER) {
+    if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER) {
       bundleName = dragItemInfo.folderId;
-    } else if (dragItemInfo.type == CommonConstants.TYPE_CARD) {
+    } else if (dragItemInfo.typeId == CommonConstants.TYPE_CARD) {
       bundleName = dragItemInfo.cardId;
-    } else if (dragItemInfo.type == CommonConstants.TYPE_APP) {
+    } else if (dragItemInfo.typeId == CommonConstants.TYPE_APP) {
       bundleName = dragItemInfo.bundleName;
     }
 
     for (let j = 0; j < dragItemInfo.area[1]; j++) {
       for (let i = 0; i < dragItemInfo.area[0]; i++) {
-        if (allPositions[destination.row + j][destination.column+ i].type == -1) {
+        if (allPositions[destination.row + j][destination.column+ i].typeId == -1) {
           const destinationPosition = {
-            type: dragItemInfo.type,
+            typeId: dragItemInfo.typeId,
             bundleName: bundleName,
             area: dragItemInfo.area
           };
@@ -966,7 +966,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     let getUsablePositionCount = 0;
     for (let j = 0; j < moveFolderOrForm.area[1]; j++) {
       for (let i = 0; i < moveFolderOrForm.area[0]; i++) {
-        if (row + j < allPositions.length && column + i < allPositions[row].length && allPositions[row + j][column + i].type == -1) {
+        if (row + j < allPositions.length && column + i < allPositions[row].length && allPositions[row + j][column + i].typeId == -1) {
           getUsablePositionCount++;
         }
       }
@@ -998,7 +998,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     }
     if (!destinationFlag) {
       const nullPosition = {
-        type: -1,
+        typeId: -1,
         bundleName: 'null',
         area: []
       };
@@ -1015,18 +1015,18 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
    */
   private updateDestinationByDragItem(dragItemInfo, destination, allPositions): void {
     let bundleName = '';
-    if (dragItemInfo.type == CommonConstants.TYPE_FOLDER) {
+    if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER) {
       bundleName = dragItemInfo.folderId;
-    } else if (dragItemInfo.type == CommonConstants.TYPE_CARD) {
+    } else if (dragItemInfo.typeId == CommonConstants.TYPE_CARD) {
       bundleName = dragItemInfo.cardId;
-    } else if (dragItemInfo.type == CommonConstants.TYPE_APP) {
+    } else if (dragItemInfo.typeId == CommonConstants.TYPE_APP) {
       bundleName = dragItemInfo.bundleName;
     }
 
     for (let j = 0; j < dragItemInfo.area[1]; j++) {
       for (let i = 0; i < dragItemInfo.area[0]; i++) {
         const dragItemPosition = {
-          type: dragItemInfo.type,
+          typeId: dragItemInfo.typeId,
           bundleName: bundleName,
           area: dragItemInfo.area
         };
@@ -1047,7 +1047,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     for (let j = 0; j < moveFolderOrForm.area[1]; j++) {
       for (let i = 0; i < moveFolderOrForm.area[0]; i++) {
         const movePosition = {
-          type: moveFolderOrForm.type,
+          typeId: moveFolderOrForm.typeId,
           bundleName: moveFolderOrForm.bundleName,
           area: moveFolderOrForm.area
         };
@@ -1071,9 +1071,9 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
           break;
         }
         for (let column = 0; column < allPositions[row].length; column++) {
-          if (allPositions[row][column].type == -1) {
+          if (allPositions[row][column].typeId == -1) {
             const appPosition = {
-              type: app.type,
+              typeId: app.typeId,
               bundleName: app.bundleName,
               area: app.area
             };

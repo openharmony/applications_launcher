@@ -65,4 +65,33 @@ export default class AppItemInfo {
   checked: boolean | undefined;
 
   installTime: string | undefined;
+
+  moduleName: string | undefined;
+
+  keyName: string | undefined;
+
+  /**
+ * GridLayoutItemInfo: type  0:app  1:card  3:bigfolder
+ */
+  typeId: number | undefined;
+
+  /**
+   * GridLayoutItemInfo: area
+   */
+  area: number[] | undefined;
+
+  /**
+   * GridLayoutItemInfo: page
+   */
+  page: number | undefined;
+
+  /**
+   * GridLayoutItemInfo: column of positons
+   */
+  column: number | undefined;
+
+  /**
+   * GridLayoutItemInfo: row of positons
+   */
+  row: number | undefined;
 }
