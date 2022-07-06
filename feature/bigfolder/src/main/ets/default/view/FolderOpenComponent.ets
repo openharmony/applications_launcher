@@ -76,7 +76,7 @@ export default struct FolderOpenComponent {
   } = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
   @State newFolderName: string = '';
 
-  private aboutToAppear(): void {
+  aboutToAppear(): void {
     Log.showInfo(TAG, `aboutToAppear start`);
     mFolderViewModel = FolderViewModel.getInstance();
     mPageDesktopViewModel = PageDesktopViewModel.getInstance();
@@ -300,7 +300,7 @@ struct FolderSwiperPage {
   private RowsTemplate: string = '';
   private mGridGap;
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     mFolderModel = BigFolderModel.getInstance();
     mBigFolderDragHandler = BigFolderDragHandler.getInstance();
     this.updateConfig();
@@ -377,9 +377,7 @@ struct FolderSwiperPage {
                   nameHeight: mAppNameHeight,
                   nameSize: mAppNameSize,
                   nameFontColor: FolderStyleConstants.DEFAULT_FONT_COLOR,
-                  bundleName: '',
                   appName: item.appName,
-                  labelId: '',
                   useCache: false,
                   nameLines: mNameLines,
                   marginTop: mIconNameMargin
@@ -457,7 +455,7 @@ struct FolderAppItem {
   private dialogName: string = "";
   private clearForm: Function = null;
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     mFolderModel = BigFolderModel.getInstance();
     ResourceManager.getInstance().getStringByResource(isPad
       ? $r('app.string.is_delete_form') : $r('app.string.isUninstall')).then((resName) => {
@@ -512,7 +510,7 @@ struct FolderAppItem {
         mPageDesktopViewModel.createCardToDeskTop(formCardItem);
       },
       bundleName: this.item.bundleName,
-      appName: mPageDesktopViewModel.getAppName(this.item.appLabelId + this.item.bundleName),
+      appName: mPageDesktopViewModel.getAppName(this.item.appLabelId + this.item.bundleName +  this.item.moduleName),
       appLabelId: this.item.appLabelId
     }),
     cancel: this.cancelFormDialog,
@@ -595,7 +593,7 @@ struct FolderAppItem {
 
   private launchApp() {
     Trace.start(Trace.CORE_METHOD_LAUNCH_APP);
-    mPageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName);
+    mPageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
   }
 
   build() {
@@ -608,10 +606,12 @@ struct FolderAppItem {
           nameFontColor: FolderStyleConstants.DEFAULT_FONT_COLOR,
           appName: this.item.appName,
           bundleName: this.item.bundleName,
+          abilityName: this.item.abilityName,
+          moduleName: this.item.moduleName,
           appIconId: this.item.appIconId,
           appLabelId: this.item.appLabelId,
           badgeNumber: this.item.badgeNumber,
-          isSelect: this.selectDesktopAppItem === this.item.bundleName,
+          isSelect: this.selectDesktopAppItem == this.item.keyName,
           mPaddingTop: mGridIconTopPadding,
           menuInfo: mPageDesktopViewModel.buildMenuInfoList(this.item, this.uninstallDialogController,
             this.formManagerDialogController, this.removeAppOutOfFolder.bind(this)),
@@ -624,13 +624,14 @@ struct FolderAppItem {
       .visibility(this.isDraging ? Visibility.Hidden : Visibility.Visible)
       .onClick(() => {
         Log.showDebug(TAG, 'App click');
-        mPageDesktopViewModel.openApplication(this.item.abilityName, this.item.bundleName);
+        mPageDesktopViewModel.openApplication(this.item.abilityName, this.item.bundleName, this.item.moduleName);
       })
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
           event.stopPropagation();
           Log.showDebug(TAG, 'FolderAppItem onMouse MouseButton Right');
-          AppStorage.SetOrCreate('selectDesktopAppItem', this.item.bundleName);
+          Log.showError(TAG, `nmsDebug keyName ${this.item.keyName}`);
+          AppStorage.SetOrCreate('selectDesktopAppItem', this.item.keyName);
         }
       })
       .gesture(
@@ -645,7 +646,7 @@ struct FolderAppItem {
                         this.mouseClick = 0;
                         this.launchApp();
                       } else {
-                        mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName);
+                        mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
                         setTimeout(() => {
                           this.mouseClick = 0;
                         }, 300)

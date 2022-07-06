@@ -32,6 +32,7 @@ export default struct UninstallDialog {
   @State icon: string = '';
   appIcon: string;
   bundleName: string;
+  moduleName: string;
   mUninstallDialogWidth: string;
   private mLayoutViewModel: LayoutViewModel;
 
@@ -42,13 +43,14 @@ export default struct UninstallDialog {
   private mResourceManager;
   private mDefaultAppIcon;
 
-  public aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mLayoutViewModel = LayoutViewModel.getInstance();
     this.updateScreenSize();
     this.mResourceManager = ResourceManager.getInstance();
 
-    this.appIcon = this.appInfo.appIconId
-    this.bundleName = this.appInfo.bundleName
+    this.appIcon = this.appInfo.appIconId;
+    this.bundleName = this.appInfo.bundleName;
+    this.moduleName = this.appInfo.moduleName;
 
     if (CheckEmptyUtils.isEmpty(this.icon)) {
       this.updateIcon();
@@ -60,7 +62,8 @@ export default struct UninstallDialog {
   }
 
   public updateIcon() {
-    this.mResourceManager.getAppIconWithCache(this.appIcon, this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    this.mResourceManager.getAppIconWithCache(this.appIcon, this.bundleName, this.moduleName,
+      this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
   }
 
   build() {

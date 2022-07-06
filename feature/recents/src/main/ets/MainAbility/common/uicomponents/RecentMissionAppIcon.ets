@@ -27,6 +27,7 @@ export default struct RecentMissionAppIcon {
   @Prop iconSize: number;
   @Prop @Watch("updateIcon") appIcon: string;
   @Prop bundleName: string;
+  @Prop moduleName: string;
   @Prop labelId: string;
   @State icon: string = ' ';
   @State useCache: boolean = true;
@@ -58,7 +59,7 @@ export default struct RecentMissionAppIcon {
    */
   updateIcon(): void {
     this.mResourceManager.getAppIconWithCache(this.appIcon,
-      this.bundleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+      this.bundleName, this.moduleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
   }
 
   build() {

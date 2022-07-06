@@ -29,7 +29,7 @@ export default struct RecentMissionsSingleLayout {
   private mRecentMissionsViewModel: RecentMissionsViewModel;
   private mScroll: Scroller = new Scroller();
 
-  private aboutToAppear(): void {
+  aboutToAppear(): void {
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
   }
 
@@ -46,6 +46,7 @@ export default struct RecentMissionsSingleLayout {
                 appLabelId: item.appLabelId,
                 appName: item.appName,
                 bundleName: item.bundleName,
+                moduleName: item.moduleName,
                 abilityName: item.abilityName,
                 lockedState: item.lockedState,
                 isClickSubComponent: $isClickSubComponent,

@@ -17,7 +17,6 @@ import CommonConstants from '../constants/CommonConstants';
 import StyleConstants from '../constants/StyleConstants';
 import ResourceManager from '../manager/ResourceManager';
 import OverlayAppIcon from './OverlayAppIcon.ets';
-import AppIcon from './AppIcon.ets';
 import FolderComponent from './FolderComponent.ets';
 import MenuInfo from '../bean/MenuInfo'
 import FormItemComponent from './FormItemComponent.ets';
@@ -80,7 +79,8 @@ export default struct CustomOverlay {
             iconSize: this.overlayData.iconSize,
             appIcon: this.overlayData.appInfo.appIconId,
             icon: ResourceManager.getInstance()
-              .getCachedAppIcon(this.overlayData.appInfo.appIconId, this.overlayData.appInfo.bundleName),
+              .getCachedAppIcon(this.overlayData.appInfo.appIconId,
+                this.overlayData.appInfo.bundleName, this.overlayData.appInfo.moduleName),
             bundleName: this.overlayData.appInfo.bundleName,
             badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
           })

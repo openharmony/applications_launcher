@@ -42,7 +42,7 @@ export default struct SwiperPage {
   private mGridWidth : number;
   private mGridHeight: number;
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mPageDesktopStyleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
     this.mMargin = this.mPageDesktopStyleConfig.mMargin;
     this.mColumnsGap = this.mPageDesktopStyleConfig.mColumnsGap;

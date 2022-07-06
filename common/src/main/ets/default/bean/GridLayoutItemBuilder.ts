@@ -90,6 +90,11 @@ export default class GridLayoutItemBuilder {
     bundleName: string | undefined;
 
     /**
+     * Indicates keyName.
+     */
+    keyName: string | undefined;
+
+    /**
      * GridLayoutItemInfo: extend1
      */
     extend1: string | undefined;
@@ -121,6 +126,7 @@ export default class GridLayoutItemBuilder {
         gridlayoutItemBuilder.setColumn(resultSet.getLong(resultSet.getColumnIndex(GridLayoutInfoColumns.COLUMN)));
         gridlayoutItemBuilder.setRow(resultSet.getLong(resultSet.getColumnIndex(GridLayoutInfoColumns.ROW)));
         gridlayoutItemBuilder.setBundleName(resultSet.getString(resultSet.getColumnIndex(GridLayoutInfoColumns.BUNDLE_NAME)));
+        gridlayoutItemBuilder.setKeyName(resultSet.getString(resultSet.getColumnIndex(GridLayoutInfoColumns.KEY_NAME)));
         gridlayoutItemBuilder.setExtend1(resultSet.getString(resultSet.getColumnIndex(GridLayoutInfoColumns.EXTEND1)));
         gridlayoutItemBuilder.setExtend2(resultSet.getString(resultSet.getColumnIndex(GridLayoutInfoColumns.EXTEND2)));
         gridlayoutItemBuilder.setExtend3(resultSet.getLong(resultSet.getColumnIndex(GridLayoutInfoColumns.EXTEND3)));
@@ -215,6 +221,11 @@ export default class GridLayoutItemBuilder {
 
     private setBundleName(bundleName: string) {
         this.bundleName = bundleName;
+        return this;
+    }
+
+    private setKeyName(keyName: string) {
+        this.keyName = keyName;
         return this;
     }
 

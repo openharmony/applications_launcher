@@ -3,7 +3,7 @@
     "name": "recents",
     "type": "har",
     "deviceTypes": [
-      "phone",
+      "default",
     ],
     "uiSyntax": "ets"
   }

@@ -64,7 +64,7 @@ export default struct FormItem {
   private mForm: string = '';
   private clearForm: Function = null;
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mFormViewModel = FormViewModel.getInstance();
     this.mFormStyleConfig = this.mFormViewModel.getFormStyleConfig();
@@ -83,6 +83,7 @@ export default struct FormItem {
     const resourceManager = ResourceManager.getInstance();
     resourceManager.getStringById($r('app.string.is_delete_form').id, this.getDialogNamePre.bind(this));
     resourceManager.getStringById($r('app.string.form').id, this.getDialogNameAft.bind(this));
+    Log.showInfo(TAG, "nmsDebug formItem:" + JSON.stringify(this.formItem));
   }
 
   /**
@@ -127,7 +128,7 @@ export default struct FormItem {
    * get dialogName
    */
   private getDialogName(): string {
-    const appName = this.mPageDesktopViewModel.getAppName(this.formItem.appLabelId + this.formItem.bundleName);
+    const appName = this.mPageDesktopViewModel.getAppName(this.formItem.appLabelId + this.formItem.bundleName + this.formItem.moduleName);
     const dialogName = `${this.mIsDeleteForm}"${appName}"${this.mForm}`;
     return dialogName;
   }
@@ -174,7 +175,7 @@ export default struct FormItem {
         // delete other form
       },
       bundleName: this.formItem.bundleName,
-      appName: this.mPageDesktopViewModel.getAppName(this.formItem.appLabelId + this.formItem.bundleName),
+      appName: this.mPageDesktopViewModel.getAppName(this.formItem.appLabelId + this.formItem.bundleName + this.formItem.moduleName),
       appLabelId: this.formItem.appLabelId
     }),
     cancel: this.cancelFormDialog,
@@ -249,7 +250,7 @@ export default struct FormItem {
             menuInfo: this.mPageDesktopViewModel.buildCardMenuInfoList(this.formItem,
               this.dialogController, this.formManagerDialogController),
             clickForm: (event, formItem) => {
-              this.mPageDesktopViewModel.openApplication(this.formItem.abilityName, this.formItem.bundleName);
+              this.mPageDesktopViewModel.openApplication(this.formItem.abilityName, this.formItem.bundleName, this.formItem.moduleName);
             }
           })
         }
@@ -266,7 +267,7 @@ export default struct FormItem {
           TapGesture({ count: 2 })
             .onAction((event: GestureEvent) => {
               Log.showInfo(TAG, 'mouse double click');
-              this.mPageDesktopViewModel.onAppDoubleClick(this.formItem.abilityName, this.formItem.bundleName);
+              this.mPageDesktopViewModel.onAppDoubleClick(this.formItem.abilityName, this.formItem.bundleNam, this.formItem.moduleName);
             })
           )
         )

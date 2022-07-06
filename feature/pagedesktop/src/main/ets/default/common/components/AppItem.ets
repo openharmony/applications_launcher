@@ -107,7 +107,7 @@ export default struct AppItem {
     this.clearForm();
   }
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.isPad = this.mPageDesktopViewModel.getDevice();
     let styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
@@ -192,10 +192,12 @@ export default struct AppItem {
           nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
           appName: this.item.appName,
           bundleName: this.item.bundleName,
+          abilityName: this.item.abilityName,
+          moduleName: this.item.moduleName,
           appIconId: this.item.appIconId,
           appLabelId: this.item.appLabelId,
           badgeNumber: this.item.badgeNumber,
-          isSelect: this.selectDesktopAppItem === this.item.bundleName,
+          isSelect: this.selectDesktopAppItem == this.item.keyName,
           menuInfo:this.mPageDesktopViewModel.buildMenuInfoList(this.item,
             this.dialogController, this.formManagerDialogController),
           mPaddingTop: this.mMarginVertical,
@@ -208,7 +210,7 @@ export default struct AppItem {
         if (event.button == MouseButton.Right) {
           event.stopPropagation();
           Log.showInfo(TAG, 'onMouse mouse button right');
-          AppStorage.SetOrCreate('selectDesktopAppItem', this.item.bundleName);
+          AppStorage.SetOrCreate('selectDesktopAppItem', this.item.keyName);
         }
       })
       .gesture(
@@ -223,7 +225,7 @@ export default struct AppItem {
                 this.mouseClick = 0;
                 this.launchApp();
               } else {
-                this.mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName);
+                this.mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
                 setTimeout(() => {
                   this.mouseClick = 0;
                 }, 300)
@@ -251,6 +253,6 @@ export default struct AppItem {
    */
   private launchApp() {
     Trace.start(Trace.CORE_METHOD_LAUNCH_APP);
-    this.mPageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName);
+    this.mPageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
   }
 }

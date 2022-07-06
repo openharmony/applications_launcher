@@ -21,6 +21,7 @@ export default struct AppName {
   @Prop nameSize: number;
   @Prop nameHeight: number;
   bundleName: string;
+  moduleName: string;
   labelId: string;
   nameFontColor: string;
   @State @Watch("updateName") appName: string = '';
@@ -30,7 +31,7 @@ export default struct AppName {
   marginLeft: number = PresetStyleConstants.DEFAULT_DESKTOP_NAME_MARGIN;
   private mResourceManager;
 
-  public aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateName();
   }
@@ -40,7 +41,8 @@ export default struct AppName {
   }
 
   public updateName() {
-    this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
+    this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.moduleName,
+      this.appName, this.appNameLoadCallback.bind(this));
   }
 
   build() {

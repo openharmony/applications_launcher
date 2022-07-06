@@ -15,8 +15,8 @@
  */
 
 import commonEvent from '@ohos.commonEvent';
+import { CommonEventSubscriber } from 'commonEvent/commonEventSubscriber';
 import { CommonEventSubscribeInfo } from 'commonEvent/commonEventSubscribeInfo';
-import { CommonEventData } from 'commonEvent/commonEventData';
 import { BusinessError } from 'basic';
 import Log from '../../../../../../common/src/main/ets/default/utils/Log';
 
@@ -26,7 +26,7 @@ const commonEventSubscribeInfo: CommonEventSubscribeInfo = {
   events: ['CREATE_RECENT_WINDOW_EVENT']
 };
 
-let commonEventSubscriber: CommonEventData | undefined;
+let commonEventSubscriber: CommonEventSubscriber | null = null;
 
 class RecentEvent {
   mCallback: Record<string, () => void> = {};
@@ -39,10 +39,10 @@ class RecentEvent {
     }
   }
 
-  private createRecentCallBack(error: BusinessError, data: CommonEventData): void {
+  private createRecentCallBack(error: BusinessError, data: CommonEventSubscriber): void {
     Log.showInfo(TAG, `createRecentCallBack error: ${JSON.stringify(error)}, data: ${JSON.stringify(data)}`);
     commonEventSubscriber = data;
-    commonEvent.subscribe(data, (error, data) => {
+    commonEvent.subscribe(commonEventSubscriber, (error, data) => {
       Log.showError(TAG, `subscribe error: ${JSON.stringify(error)}, data: ${JSON.stringify(data)}`);
       if (error.code == 0) {
         this.mCallback.onStateChange();

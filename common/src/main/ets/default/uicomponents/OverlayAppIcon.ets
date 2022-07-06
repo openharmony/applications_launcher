@@ -26,14 +26,14 @@ export default struct OverlayAppIcon {
   @Prop icon: string;
 
   // 0.9(pressed size) / 1.05(hover size) = 0.8571
-  @State size: number = 0.8571;
+  @State overlaySize: number = 0.8571;
   useCache: boolean = true;
   @Prop badgeNumber: number;
   @State badge: number = 0;
   private mResourceManager;
   private mDefaultAppIcon;
 
-  public aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
   }
 
@@ -44,13 +44,13 @@ export default struct OverlayAppIcon {
       .height(this.iconSize)
       .onComplete(() => {
         Log.showInfo(TAG, 'OverlayAppIcon complete');
-        this.size = 1;
+        this.overlaySize = 1;
         AppStorage.SetOrCreate('isOverlayComplete', true);
        })
     }
     .width(this.iconSize)
     .height(this.iconSize)
-    .scale({ x: this.size, y: this.size })
+    .scale({ x: this.overlaySize, y: this.overlaySize })
     .animation({ duration: 100 })
   }
 }

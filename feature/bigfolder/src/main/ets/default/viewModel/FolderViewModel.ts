@@ -107,7 +107,8 @@ export default class FolderViewModel extends BaseAppPresenter {
     const folderAppInfo = [];
     for (let j = 0; j < appListInfo.length; j++) {
       for (let i = 0; i < settingAppInfoList.length; i++) {
-        if (settingAppInfoList[i].bundleName === appListInfo[j].bundleName) {
+        Log.showInfo(TAG, "addNewFolder" + JSON.stringify(settingAppInfoList[i]) + " applistinfo" + JSON.stringify(appListInfo[j]))
+        if (settingAppInfoList[i].keyName === appListInfo[j].keyName) {
           folderAppInfo.push(settingAppInfoList[i]);
           break;
         }

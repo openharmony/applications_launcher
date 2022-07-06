@@ -68,12 +68,12 @@ export default class GridLayoutItemInfo {
     page: number | undefined;
 
     /**
-     * GridLayoutItemInfo: column of positons
+     * GridLayoutItemInfo: column of positions
      */
     column: number | undefined;
 
     /**
-     * GridLayoutItemInfo: row of positons
+     * GridLayoutItemInfo: row of positions
      */
     row: number | undefined;
 
@@ -83,7 +83,12 @@ export default class GridLayoutItemInfo {
     bundleName: string | undefined;
 
     /**
-     * GridLayoutItemInfo: bigfolder apps info
+     * Indicates keyName.
+     */
+    keyName: string | undefined;
+
+    /**
+     * GridLayoutItemInfo: bigFolder apps info
      */
     layoutInfo: any | undefined;
 
@@ -115,6 +120,7 @@ export default class GridLayoutItemInfo {
         this.column = gridLayoutItemBuilder.column;
         this.row = gridLayoutItemBuilder.row;
         this.bundleName = gridLayoutItemBuilder.bundleName;
+        this.keyName = gridLayoutItemBuilder.keyName;
         this.layoutInfo = [gridLayoutItemBuilder.layoutInfo];
         this.extend1 = gridLayoutItemBuilder.extend1;
         this.extend2 = gridLayoutItemBuilder.extend2;

@@ -36,10 +36,10 @@ export default struct SmartDockContent {
   };
   onHoverEvent: Function;
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
   }
 
-  private aboutToDisappear() {
+  aboutToDisappear(): void  {
   }
 
   build() {

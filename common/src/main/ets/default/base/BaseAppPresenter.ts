@@ -44,8 +44,8 @@ export default class BaseAppPresenter {
    * @param bundleName target bundle name
    * @param abilityName target ability name
    */
-  jumpTo(abilityName: string, bundleName: string): void {
-    launcherAbilityManager.startLauncherAbility(abilityName, bundleName);
+  jumpTo(abilityName: string, bundleName: string, moduleName: string): void {
+    launcherAbilityManager.startLauncherAbility(abilityName, bundleName, moduleName);
   }
 
   /**
@@ -54,15 +54,15 @@ export default class BaseAppPresenter {
    * @param bundleName
    * @param abilityName
    */
-  jumpToForm(abilityName: string, bundleName: string, cardId: number): void {
-    launcherAbilityManager.startAbilityFormEdit(abilityName, bundleName, cardId);
+  jumpToForm(abilityName: string, bundleName: string, moduleName: string, cardId: number): void {
+    launcherAbilityManager.startAbilityFormEdit(abilityName, bundleName, moduleName, cardId);
   }
 
   /**
    * Start launcher settings page.
    */
   jumpToSetting(): void {
-    this.jumpTo(CommonConstants.SETTING_ABILITY, CommonConstants.LAUNCHER_BUNDLE);
+    this.jumpTo(CommonConstants.SETTING_ABILITY, CommonConstants.LAUNCHER_BUNDLE, CommonConstants.SETTING_MODULE);
   }
 
   /**

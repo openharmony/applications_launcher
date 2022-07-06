@@ -26,6 +26,8 @@ const TAG = 'AppBubble';
 @Component
 export default struct AppBubble {
   @Prop bundleName: string;
+  @Prop abilityName: string;
+  @Prop moduleName: string;
   @Prop appIconId: string;
   @Prop appLabelId: string;
   @Prop iconSize: number;
@@ -59,7 +61,8 @@ export default struct AppBubble {
           iconSize: this.iconSize,
           iconId: this.appIconId,
           bundleName: this.bundleName,
-          icon: ResourceManager.getInstance().getCachedAppIcon(this.appIconId, this.bundleName),
+          moduleName: this.moduleName,
+          icon: ResourceManager.getInstance().getCachedAppIcon(this.appIconId, this.bundleName, this.moduleName),
           badgeNumber: this.badgeNumber,
           useCache: this.useCache
         })
@@ -68,6 +71,7 @@ export default struct AppBubble {
           nameSize: this.nameSize,
           nameFontColor: this.nameFontColor,
           bundleName: this.bundleName,
+          moduleName: this.moduleName,
           appName: this.appName,
           labelId: this.appLabelId,
           useCache: this.useCache,
@@ -95,7 +99,8 @@ export default struct AppBubble {
       .onAction((event: GestureEvent) => {
         Log.showInfo(TAG, `long press source ${event.source}`);
         if (event.source == SourceType.Mouse) {
-          AppStorage.SetOrCreate('selectDesktopAppItem', this.bundleName);
+          Log.showError(TAG, `nmsDebug keyName ${this.bundleName + this.abilityName + this.moduleName}`);
+          AppStorage.SetOrCreate('selectDesktopAppItem', this.bundleName + this.abilityName + this.moduleName);
         } else {
           AppStorage.SetOrCreate('selectDesktopAppItem', '');
         }

@@ -228,9 +228,9 @@ export default class AppModel {
  */
   private removeItemCache(appItemInfo: AppItemInfo): void {
     Log.showInfo(TAG, `removeItemCache bundleName: ${(appItemInfo.bundleName)}`);
-    let cacheKey = appItemInfo.appLabelId + appItemInfo.bundleName;
+    let cacheKey = appItemInfo.appLabelId + appItemInfo.bundleName + appItemInfo.moduleName;
     globalThis.ResourceManager.deleteAppResourceCache(cacheKey, 'name');
-    cacheKey = appItemInfo.appIconId + appItemInfo.bundleName;
+    cacheKey = appItemInfo.appIconId + appItemInfo.bundleName + appItemInfo.moduleName;
     globalThis.ResourceManager.deleteAppResourceCache(cacheKey, 'icon');
   }
 

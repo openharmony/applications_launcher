@@ -89,7 +89,7 @@ export default class SmartDockViewModel extends BaseAppPresenter {
       return;
     }
     // app entry
-    launcherAbilityManager.startLauncherAbility(item.abilityName, item.bundleName);
+    launcherAbilityManager.startLauncherAbility(item.abilityName, item.bundleName, item.moduleName);
   }
 
   /**
@@ -182,10 +182,13 @@ export default class SmartDockViewModel extends BaseAppPresenter {
         menu.shortcutIconId = value.iconId;
         menu.shortcutLabelId = value.labelId;
         menu.bundleName = value.bundleName;
+        menu.moduleName = value.moduleName;
         menu.onMenuClick = () => {
-          launcherAbilityManager.startLauncherAbility(value.wants[0].targetClass, value.wants[0].targetBundle);
+          launcherAbilityManager.startLauncherAbility(value.wants[0].targetClass, value.wants[0].targetBundle, value.wants[0].targetModule);
         };
-        menuInfoList.push(menu);
+        Log.showInfo(TAG, "nmsDebug shortcutInfo" + JSON.stringify(shortcutInfo));
+        Log.showInfo(TAG, "nmsDebug appInfo" + JSON.stringify(appInfo));
+        value.bundleName == appInfo.bundleName && value.moduleName == appInfo.moduleName && menuInfoList.push(menu);
       });
     }
 
@@ -218,7 +221,7 @@ export default class SmartDockViewModel extends BaseAppPresenter {
       removeMenu.menuText = this.mDevice === CommonConstants.PAD_DEVICE_TYPE ? $r('app.string.delete_app') : $r('app.string.uninstall');
       removeMenu.onMenuClick = () => {
         Log.showDebug(TAG, `onMenuClick item remove: ${JSON.stringify(appInfo)},dockType: ${dockType}`);
-        const cacheKey = appInfo.appLabelId + appInfo.bundleName;
+        const cacheKey = appInfo.appLabelId + appInfo.bundleName + appInfo.moduleName;
         const appName = this.mSmartDockModel.getAppName(cacheKey);
         Log.showDebug(TAG, `onMenuClick item remove appName: ${appName}`);
         if (appName != null) {
