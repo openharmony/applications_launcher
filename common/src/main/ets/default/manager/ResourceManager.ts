@@ -51,6 +51,10 @@ export default class ResourceManager {
     this.getAppResourceCacheManager().setCache(cacheKey, cacheType, value);
   }
 
+  deleteAppResourceCache(cacheKey: string, cacheType: string): void {
+    this.getAppResourceCacheManager().deleteCache(cacheKey, cacheType);
+  }
+
   async updateIconCache(iconId, bundleName: string): Promise<void> {
     try {
       let cacheKey = `${iconId}${bundleName}`;

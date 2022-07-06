@@ -75,6 +75,13 @@ export default class AppResourceCacheManager {
     this.memoryCache.clear();
   }
 
+  deleteCache(cacheKey: string, cacheType: string): void {
+    this.memoryCache.remove(cacheKey);
+    if (cacheType === KEY_ICON) {
+      this.diskCache.remove(cacheKey);
+    }
+  }
+
   private getCacheFromMemory(cacheKey: string, cacheType: string) {
     const cache = this.memoryCache.getCache(cacheKey);
     if (cache == undefined || cache == null || cache == '' || cache === -1) {

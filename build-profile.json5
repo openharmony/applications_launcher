@@ -5,23 +5,8 @@
     "products": [
       {
         "name": "default",
-        "signingConfig": "default"
       }
     ],
-    "signingConfigs": [
-      {
-        "name": "default",
-        "material": {
-          "storePassword": "000000165261B8B103F818308D14E6A8B08543FDF07AB611EB026BD223521C9968DE404F2B4D",
-          "certpath": "C:/Users/zhangchao/Desktop/workspace/signature/OpenHarmonyApplication.cer",
-          "keyAlias": "OpenHarmony Application Release",
-          "keyPassword": "00000016B5D46D808A815AB3F802A76053ED1B45641CDFAE3AD76603C25ECF9F3311310F84DD",
-          "profile": "C:/Users/zhangchao/Desktop/workspace/signature/launcher.p7b",
-          "signAlg": "SHA256withECDSA",
-          "storeFile": "C:/Users/zhangchao/Desktop/workspace/signcenter_tool-master/key/OpenHarmony.p12"
-        }
-      }
-    ]
   },
   "modules": [
     {
