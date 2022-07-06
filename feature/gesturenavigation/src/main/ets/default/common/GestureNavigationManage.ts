@@ -25,7 +25,7 @@ export default class GestureNavigationManage {
   private readonly uri: string | null = null;
   private readonly helper: any = null;
   private readonly sGestureNavigationExecutors: GestureNavigationExecutors = GestureNavigationExecutors.getInstance();
-  private touchEventCallback: Function | null = null;
+  private touchEventCallback: inputMonitor.TouchEventReceiver | null = null;
 
   private constructor() {
     this.uri = settingsDataManager.getUri(CommonConstants.NAVIGATION_BAR_STATUS_KEY);

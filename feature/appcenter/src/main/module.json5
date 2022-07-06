@@ -3,7 +3,7 @@
     "name": "appcenter",
     "type": "har",
     "deviceTypes": [
-      "phone",
+      "default",
     ],
     "uiSyntax": "ets"
   }

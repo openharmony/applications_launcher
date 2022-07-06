@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import CommonEvent from '@ohos.commonevent';
+import CommonEvent from '@ohos.commonEvent';
 import display from '@ohos.display';
 import Window from '@ohos.window';
 import featureAbility from '@ohos.ability.featureAbility';

@@ -30,7 +30,7 @@ export default class MainAbility extends ServiceExtension {
   }
 
   async initLauncher(): Promise<void> {
-    // init Launcehr context
+    // init Launcher context
     globalThis.desktopContext = this.context;
 
     // init global const

@@ -36,7 +36,7 @@ struct AppCenterView {
   mAppGridPresenter: AppGridPresenter = null;
   private mStage: PadStage = new PadStage();
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
     this.mStage.onCreate();
     AppStorage.SetOrCreate('device', this.device);
@@ -69,7 +69,7 @@ struct AppCenterView {
     Log.showInfo(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${screenWidth}, screenHeight: ${screenHeight}`);
   }
 
-  private onBackPress(): boolean {
+  onBackPress(): boolean {
     Log.showInfo(TAG, `onBackPress`);
     ContextMenu.close();
     AppStorage.SetOrCreate('selectDesktopAppItem', '');

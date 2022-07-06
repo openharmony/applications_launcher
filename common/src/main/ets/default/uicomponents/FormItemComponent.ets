@@ -43,7 +43,7 @@ export default struct FormItemComponent {
   getFormId: (id: number) => void;
   clickForm?: Function = null;
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mFormModel = FormModel.getInstance();
   }
 
@@ -90,6 +90,7 @@ export default struct FormItemComponent {
       Column() {
         AppName({
           bundleName: this.formItem.bundleName,
+          moduleName: this.formItem.moduleName,
           labelId: this.formItem.appLabelId,
           nameHeight: this.formNameHeight,
           nameSize: this.formNameSize,

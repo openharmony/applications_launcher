@@ -63,7 +63,7 @@ export default struct PageDesktopLayout {
     mPageDesktopViewModel.intoSetting();
   }
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     mPageDesktopViewModel = PageDesktopViewModel.getInstance();
     this.gridConfig = mPageDesktopViewModel.getGridConfig().layout;

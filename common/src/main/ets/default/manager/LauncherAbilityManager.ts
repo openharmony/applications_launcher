@@ -221,35 +221,36 @@ class LauncherAbilityManager {
   private async convertToAppItemInfo(info): Promise<AppItemInfo> {
     const appItemInfo = new AppItemInfo();
     appItemInfo.appName = await ResourceManager.getInstance().getAppNameSync(
-      info.labelId, info.elementName.bundleName, info.applicationInfo.label
+      info.labelId, info.elementName.bundleName, info.elementName.moduleName, info.applicationInfo.label
     );
+    Log.showInfo(TAG, `convertToAppItemInfo from BMS: ${JSON.stringify(info)}`);
     appItemInfo.isSystemApp = info.applicationInfo.systemApp;
     appItemInfo.isUninstallAble = info.applicationInfo.removable;
     appItemInfo.appIconId = info.iconId;
     appItemInfo.appLabelId = info.labelId;
     appItemInfo.bundleName = info.elementName.bundleName;
     appItemInfo.abilityName = info.elementName.abilityName;
+    appItemInfo.moduleName = info.elementName.moduleName;
+    appItemInfo.keyName = info.elementName.bundleName + info.elementName.abilityName + info.elementName.moduleName;
     appItemInfo.installTime = String(new Date());
-    await ResourceManager.getInstance().updateIconCache(appItemInfo.appIconId, appItemInfo.bundleName);
+    await ResourceManager.getInstance().updateIconCache(appItemInfo.appIconId, appItemInfo.bundleName, appItemInfo.moduleName);
     this.mAppMap.set(appItemInfo.bundleName, appItemInfo);
     return appItemInfo;
   }
 
   /**
-   * 卸载应用
+   * uninstall application, notice the userId need to be the login user
    *
-   * @params bundleName 应用包名
-   * @params callback 卸载回调
+   * @params bundleName application bundleName
+   * @params callback to get result
    */
   async uninstallLauncherAbility(bundleName: string, callback): Promise<void> {
     Log.showInfo(TAG, `uninstallLauncherAbility bundleName: ${bundleName}`);
     const bundlerInstaller = await bundleMgr.getBundleInstaller();
     bundlerInstaller.uninstall(bundleName, {
-      param: {
-        userId: 0,
-        installFlag: 0,
-        isKeepData: false
-      }
+      userId: this.mUserId,
+      installFlag: 0,
+      isKeepData: false
     }, (result) => {
       Log.showInfo(TAG, `uninstallLauncherAbility result => ${JSON.stringify(result)}`);
       callback(result);
@@ -262,11 +263,12 @@ class LauncherAbilityManager {
    * @params paramAbilityName Ability名
    * @params paramBundleName 应用包名
    */
-  startLauncherAbility(paramAbilityName, paramBundleName) {
-    Log.showInfo(TAG, `startApplication abilityName: ${paramAbilityName}, bundleName: ${paramBundleName}`);
+  startLauncherAbility(paramAbilityName: string, paramBundleName: string, paramModuleName: string) {
+    Log.showInfo(TAG, `startApplication abilityName: ${paramAbilityName}, bundleName: ${paramBundleName}, moduleName ${paramModuleName}`);
     const result = globalThis.desktopContext.startAbility({
       bundleName: paramBundleName,
-      abilityName: paramAbilityName
+      abilityName: paramAbilityName,
+      moduleName: paramModuleName
     }).then(() => {
       Log.showInfo(TAG, 'startApplication promise success');
     }, (err) => {
@@ -282,11 +284,12 @@ class LauncherAbilityManager {
    * @params paramAbilityName
    * @params paramBundleName
    */
-  startAbilityFormEdit(paramAbilityName: string, paramBundleName: string, paramCardId: number) {
-    Log.showInfo(TAG, `startAbility abilityName: ${paramAbilityName},bundleName: ${paramBundleName},paramCardId: ${paramCardId}`);
+  startAbilityFormEdit(paramAbilityName: string, paramBundleName: string, paramModuleName: string, paramCardId: number) {
+    Log.showInfo(TAG, `startAbility abilityName: ${paramAbilityName},bundleName: ${paramBundleName}, moduleName: ${paramModuleName} ,paramCardId: ${paramCardId}`);
     const result = globalThis.desktopContext.startAbility({
       bundleName: paramBundleName,
       abilityName: paramAbilityName,
+      moduleName: paramModuleName,
       parameters:
         {
           formId: paramCardId.toString()
@@ -303,7 +306,7 @@ class LauncherAbilityManager {
     Log.showInfo(TAG, `getShortcutInfo bundleName: ${paramBundleName}`);
     await launcherBundleMgr.getShortcutInfos(paramBundleName)
       .then(shortcutInfo => {
-        Log.showInfo(TAG, `getShortcutInfo shortcutInfo: ${shortcutInfo}`);
+        Log.showInfo(TAG, `getShortcutInfo shortcutInfo: ${JSON.stringify(shortcutInfo)}`);
         callback(paramBundleName, shortcutInfo);
       })
       .catch(err => {

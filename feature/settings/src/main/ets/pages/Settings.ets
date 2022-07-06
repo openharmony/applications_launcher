@@ -40,7 +40,7 @@ struct Index {
     mSettingsPresenter = SettingsPresenter.getInstance();
   }
 
-  aboutToDisappear() {
+  aboutToDisappear(): void  {
     this.mSettingsStage.onDestroy();
   }
 
@@ -121,12 +121,12 @@ struct top_bar {
 struct SettingPage {
   @State SettingList: SettingItemInfo[] = [];
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.SettingList = mSettingsPresenter.getSettingList();
     Log.showInfo(TAG, `aboutToAppear SettingList length: ${this.SettingList.length}`);
   }
 
-  private onPageShow(): void {
+  onPageShow(): void {
     this.SettingList = mSettingsPresenter.getSettingList();
   }
 
@@ -167,7 +167,7 @@ struct SettingItem {
     Log.showDebug(TAG, 'cancelDialog');
   }
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     mSettingsPresenter.initNavigationBarStatusValue();
     if (this.settingType == 1) {
       mSettingsPresenter.registerValueCallback(this.ida, this.callback.bind(this));

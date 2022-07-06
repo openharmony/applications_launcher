@@ -24,9 +24,10 @@ const TAG = 'Recent-RecentMissionAppName';
 export default struct RecentMissionAppName {
   @Prop @Watch("updateName") appName: string;
   @State nameSize: number = StyleConstants.DEFAULT_FONT_SIZE;
-  @State margin: number = StyleConstants.APP_NAME_MARGIN;
+  @State nameMargin: number = StyleConstants.APP_NAME_MARGIN;
   @State name: string = ''
   @Prop bundleName: string;
+  @Prop moduleName: string;
   @Prop labelId: string;
   private mResourceManager;
 
@@ -50,7 +51,7 @@ export default struct RecentMissionAppName {
   updateName(): void {
     if (this.bundleName && this.bundleName.length > 0) {
       this.mResourceManager.getAppNameWithCache(this.labelId,
-        this.bundleName, this.appName, this.appNameLoadCallback.bind(this));
+        this.bundleName, this.moduleName, this.appName, this.appNameLoadCallback.bind(this));
     }
   }
 
@@ -60,7 +61,7 @@ export default struct RecentMissionAppName {
         .fontSize(this.nameSize)
         .fontColor(StyleConstants.DEFAULT_FONT_COLOR)
         .textOverflow({overflow: TextOverflow.Ellipsis})
-        .margin({ left: this.margin })
+        .margin({ left: this.nameMargin })
     }
   }
 }

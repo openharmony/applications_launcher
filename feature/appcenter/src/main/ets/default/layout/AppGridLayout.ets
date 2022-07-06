@@ -83,19 +83,20 @@ export default struct AppGridLayout {
     let menuInfoList = new Array<MenuInfo>();
     let shortcutInfo = this.mAppGridPresenter.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
-      let Menu = null;
+      let menu = null;
       shortcutInfo.forEach((value) => {
-        Menu = new MenuInfo();
-        Menu.menuType = CommonConstants.MENU_TYPE_DYNAMIC;
-        Menu.menuImgSrc = value.icon;
-        Menu.menuText = value.label;
-        Menu.shortcutIconId = value.iconId;
-        Menu.shortcutLabelId =  value.labelId;
-        Menu.bundleName = value.bundleName;
-        Menu.onMenuClick = () => {
-          this.mAppGridPresenter.jumpTo(value.wants[0].targetClass, value.wants[0].targetBundle);
+        menu = new MenuInfo();
+        menu.menuType = CommonConstants.MENU_TYPE_DYNAMIC;
+        menu.menuImgSrc = value.icon;
+        menu.menuText = value.label;
+        menu.shortcutIconId = value.iconId;
+        menu.shortcutLabelId =  value.labelId;
+        menu.bundleName = value.bundleName;
+        menu.moduleName = value.moduleName;
+        menu.onMenuClick = () => {
+          this.mAppGridPresenter.jumpTo(value.wants[0].targetClass, value.wants[0].targetBundle, value.wants[0].targetModule);
         };
-        menuInfoList.push(Menu);
+        value.bundleName == appInfo.bundleName && value.moduleName == appInfo.moduleName && menuInfoList.push(menu);
       });
     }
 
@@ -104,7 +105,7 @@ export default struct AppGridLayout {
     open.menuImgSrc = "/common/pics/ic_public_add_norm.svg";
     open.menuText = $r('app.string.app_menu_open');
     open.onMenuClick = () => {
-      this.mAppGridPresenter.jumpTo(appInfo.abilityName, appInfo.bundleName);
+      this.mAppGridPresenter.jumpTo(appInfo.abilityName, appInfo.bundleName, appInfo.moduleName);
     };
     menuInfoList.push(open);
 
@@ -134,7 +135,7 @@ export default struct AppGridLayout {
     uninstallMenu.menuText = $r('app.string.uninstall');
     uninstallMenu.onMenuClick = () => {
       Log.showDebug(TAG, `click menu item uninstall: ${JSON.stringify(appInfo)}`);
-      let cacheKey = appInfo.appLabelId + appInfo.bundleName;
+      let cacheKey = appInfo.appLabelId + appInfo.bundleName + appInfo.moduleName;
       let appName = this.mAppGridPresenter.getAppName(cacheKey);
       Log.showDebug(TAG, `buildMenuInfoList appName: ${appName}`);
       if (appName != null) {
@@ -157,7 +158,7 @@ export default struct AppGridLayout {
           isScroll: true,
           appGridStyleConfig: this.mAppCenterGridStyleConfig,
           onItemClick: (event, item) => {
-            this.mAppGridPresenter.jumpTo(item.abilityName, item.bundleName);
+            this.mAppGridPresenter.jumpTo(item.abilityName, item.bundleName, item.moduleName);
           },
           buildMenu: (item) => this.buildMenuInfoList(item)
         })

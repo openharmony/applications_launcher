@@ -15,6 +15,7 @@
 
 import Prompt from '@ohos.prompt';
 import missionManager from '@ohos.application.missionManager';
+import { MissionListener } from 'application/MissionListener';
 import launcherAbilityManager from '../../../../../../../common/src/main/ets/default/manager/LauncherAbilityManager';
 import MissionInfo from '../../../../../../../common/src/main/ets/default/bean/MissionInfo';
 import amsMissionManager from '../../../../../../../common/src/main/ets/default/manager/AmsMissionManager';
@@ -101,6 +102,7 @@ export default class SmartDockModel {
           dockItemInfo.editable = dockDataList[i].editable;
           dockItemInfo.appName = typeof (appData) === 'undefined' ? dockDataList[i].appName : appData.appName;
           dockItemInfo.bundleName = typeof (appData) === 'undefined' ? dockDataList[i].bundleName : appData.bundleName;
+          dockItemInfo.moduleName = typeof (appData) === 'undefined' ? dockDataList[i].bundleName : appData.moduleName;
           dockItemInfo.abilityName = typeof (appData) === 'undefined' ? dockItemInfo.abilityName : appData.abilityName;
           dockItemInfo.appIconId = typeof (appData) === 'undefined' ? dockItemInfo.appIconId : appData.appIconId;
           dockItemInfo.appLabelId = typeof (appData) === 'undefined' ? dockItemInfo.appLabelId : appData.appLabelId;
@@ -113,10 +115,11 @@ export default class SmartDockModel {
           dockItemInfo.editable = dockDataList[i].editable;
           dockItemInfo.bundleName = dockDataList[i].bundleName;
           dockItemInfo.abilityName = dockDataList[i].abilityName;
+          dockItemInfo.moduleName = dockDataList[i].moduleName;
           dockItemInfo.appIconId = typeof (dockDataList[i].appIconId) != 'undefined' ? dockDataList[i].appIconId : dockDataList[i].iconId.id;
           dockItemInfo.appLabelId = typeof (dockDataList[i].appLabelId) != 'undefined' ? dockDataList[i].appLabelId : dockDataList[i].labelId.id;
           const loadAppName = await this.mResourceManager
-            .getAppNameSync(dockItemInfo.appLabelId, dockItemInfo.bundleName, '');
+            .getAppNameSync(dockItemInfo.appLabelId, dockItemInfo.bundleName, dockItemInfo.moduleName, '');
           dockItemInfo.appName = loadAppName;
           residentList.push(dockItemInfo);
         }
@@ -215,6 +218,7 @@ export default class SmartDockModel {
       dockItemInfo.appName = appInfo.appName;
       dockItemInfo.bundleName = appInfo.bundleName;
       dockItemInfo.abilityName = appInfo.abilityName;
+      dockItemInfo.moduleName = appInfo.moduleName;
       dockItemInfo.appIconId = appInfo.appIconId;
       dockItemInfo.appLabelId = appInfo.appLabelId;
       if (dockItemCount == 0 || index == undefined || index >= dockItemCount || index < 0) {
@@ -255,7 +259,7 @@ export default class SmartDockModel {
    */
   private idDuplicate(list: AppItemInfo[], appInfo: AppItemInfo): boolean {
     for (let i = 0; i < list.length; i++) {
-      if (list[i].bundleName === appInfo.bundleName) {
+      if (list[i].keyName === appInfo.keyName) {
         Prompt.showToast({
           message: $r('app.string.duplicate_add')
         });
@@ -354,14 +358,14 @@ export default class SmartDockModel {
 
   private registerMissionListener(): void {
     Log.showDebug(TAG, 'registerMissionListener');
-    const listener = {
+    const listener: MissionListener = {
       onMissionCreated: this.onMissionCreatedCallback.bind(this),
       onMissionDestroyed: this.onMissionDestroyedCallback.bind(this),
       onMissionSnapshotChanged: this.onMissionSnapshotChangedCallback.bind(this),
-      onMissionMovedToFront: this.onMissionMovedToFrontCallback.bind(this)
+      onMissionMovedToFront: this.onMissionMovedToFrontCallback.bind(this),
+      onMissionIconUpdated: () => {}
     };
     missionManager.registerMissionListener(listener);
-
   }
 
   onMissionCreatedCallback(missionId: number): void {
@@ -509,6 +513,7 @@ export default class SmartDockModel {
           dockItemInfo.appName = appInfo.appName;
           dockItemInfo.bundleName = appInfo.bundleName;
           dockItemInfo.abilityName = appInfo.abilityName;
+          dockItemInfo.moduleName = appInfo.moduleName;
           dockItemInfo.appIconId = appInfo.appIconId;
           dockItemInfo.appLabelId = appInfo.appLabelId;
           dockItemInfo.installTime = appInfo.installTime;

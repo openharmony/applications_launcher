@@ -58,4 +58,9 @@ export default class MenuInfo {
    * bundleName
    */
   bundleName: string | undefined;
+
+  /**
+  * moduleName
+  */
+  moduleName: string | undefined;
 }

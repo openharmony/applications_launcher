@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import inputMethod from '@ohos.inputMethod';
+import inputMethod from '@ohos.inputmethod';
 
 /**
  * Wrapper class for inputMethod interfaces.

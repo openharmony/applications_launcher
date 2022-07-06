@@ -20,7 +20,7 @@ const TAG = "EmptyPage";
 @Entry
 @Component
 struct EmptyPage {
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
   }
 

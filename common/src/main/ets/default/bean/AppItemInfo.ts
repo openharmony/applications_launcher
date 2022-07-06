@@ -71,8 +71,8 @@ export default class AppItemInfo {
   keyName: string | undefined;
 
   /**
- * GridLayoutItemInfo: type  0:app  1:card  3:bigfolder
- */
+   * GridLayoutItemInfo: type  0:app  1:card  3:bigFolder
+   */
   typeId: number | undefined;
 
   /**
@@ -86,12 +86,12 @@ export default class AppItemInfo {
   page: number | undefined;
 
   /**
-   * GridLayoutItemInfo: column of positons
+   * GridLayoutItemInfo: column of positions
    */
   column: number | undefined;
 
   /**
-   * GridLayoutItemInfo: row of positons
+   * GridLayoutItemInfo: row of positions
    */
   row: number | undefined;
 }

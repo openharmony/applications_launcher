@@ -29,20 +29,20 @@ export default struct RecentMissionsDoubleLayout {
   @Link isClickSubComponent: boolean;
   private mRecentMissionsViewModel: RecentMissionsViewModel;
 
-  private aboutToAppear(): void {
+  aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear start');
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
   }
 
-  private aboutToDisappear(): void {
+  aboutToDisappear(): void {
     Log.showInfo(TAG, `aboutToDisappear start`);
   }
 
-  private onPageShow(): void {
+  onPageShow(): void {
     Log.showInfo(TAG, `onPageShow start`);
   }
 
-  private onPageHide(): void {
+  onPageHide(): void {
     Log.showInfo(TAG, `onPageHide start`);
   }
 
@@ -58,6 +58,7 @@ export default struct RecentMissionsDoubleLayout {
                   appLabelId: item.appLabelId,
                   appName: item.appName,
                   bundleName: item.bundleName,
+                  moduleName: item.moduleName,
                   abilityName: item.abilityName,
                   lockedState: item.lockedState,
                   isClickSubComponent: $isClickSubComponent,

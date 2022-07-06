@@ -39,6 +39,11 @@ export default class CommonConstants {
   static SETTING_ABILITY = 'com.ohos.launcher.settings.MainAbility';
 
   /**
+  * Module name of launcher settings.
+  */
+  static SETTING_MODULE = 'launcher_settings';
+
+  /**
    * Ability name of launcher Recents.
    */
   static RECENT_ABILITY = 'com.ohos.launcher.recents.MainAbility';

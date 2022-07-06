@@ -107,7 +107,8 @@ export default class FolderViewModel extends BaseAppPresenter {
     const folderAppInfo = [];
     for (let j = 0; j < appListInfo.length; j++) {
       for (let i = 0; i < settingAppInfoList.length; i++) {
-        if (settingAppInfoList[i].bundleName === appListInfo[j].bundleName) {
+        Log.showInfo(TAG, "addNewFolder" + JSON.stringify(settingAppInfoList[i]) + " applistinfo" + JSON.stringify(appListInfo[j]))
+        if (settingAppInfoList[i].keyName === appListInfo[j].keyName) {
           folderAppInfo.push(settingAppInfoList[i]);
           break;
         }
@@ -160,8 +161,9 @@ export default class FolderViewModel extends BaseAppPresenter {
    */
   addOneAppToFolder(appInfo, folderId): void {
     const gridLayoutInfo = this.mPageDesktopViewModel.getLayoutInfo();
-    const appListInfo = this.mSettingsModel.getAppListInfo();
-    this.setAppInfo(appInfo, appListInfo);
+    let appListInfo = this.mSettingsModel.getAppListInfo();
+    // this.setAppInfo(appInfo, appListInfo);
+    appListInfo = appListInfo.filter(item => item.keyName !== appInfo.keyName);
     // add App
     for (let i = 0; i < gridLayoutInfo.layoutInfo.length; i++) {
       const layoutInfo = gridLayoutInfo.layoutInfo[i];
@@ -190,7 +192,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     }
 
     // delete app from desktop
-    this.deleteAppLayoutInfo(gridLayoutInfo, appInfo.bundleName);
+    this.deleteAppLayoutInfo(gridLayoutInfo, appInfo.keyName);
     this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfo);
     if (!this.getIsPad()) {
       this.mSettingsModel.setAppListInfo(appListInfo);
@@ -206,14 +208,13 @@ export default class FolderViewModel extends BaseAppPresenter {
    */
   private setAppInfo(appInfo, appListInfo): void {
     for (let i = 0; i < appListInfo.length; i++) {
-      if (appInfo.bundleName === appListInfo[i].bundleName) {
+      if (appInfo.keyName === appListInfo[i].keyName) {
         appInfo.appId = appListInfo[i].appId;
         appInfo.appName = appListInfo[i].appName;
         appInfo.isSystemApp = appListInfo[i].isSystemApp;
         appInfo.isUninstallAble = appListInfo[i].isUninstallAble;
         appInfo.appIconId = appListInfo[i].appIconId;
         appInfo.appLabelId = appListInfo[i].appLabelId;
-        appInfo.abilityName = appListInfo[i].abilityName;
         appInfo.x = appListInfo[i].x;
         appInfo.badgeNumber = appListInfo[i].badgeNumber;
         appListInfo.splice(i, 1);
@@ -223,15 +224,15 @@ export default class FolderViewModel extends BaseAppPresenter {
   }
 
   /**
-   * delete app layoutInfo by bundleName
+   * delete app layoutInfo by keyName
    *
    * @param gridLayoutInfo
-   * @param bundleName
+   * @param keyName
    */
-  private deleteAppLayoutInfo(gridLayoutInfo, bundleName): void {
+  private deleteAppLayoutInfo(gridLayoutInfo, keyName): void {
     for (let i = 0; i < gridLayoutInfo.layoutInfo.length; i++) {
       if (gridLayoutInfo.layoutInfo[i].typeId === CommonConstants.TYPE_APP) {
-        if (gridLayoutInfo.layoutInfo[i].bundleName === bundleName) {
+        if (gridLayoutInfo.layoutInfo[i].keyName === keyName) {
           gridLayoutInfo.layoutInfo.splice(i, 1);
           break;
         }

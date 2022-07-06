@@ -30,7 +30,7 @@ export default struct AppMenu {
   dynamicMenuList: Array<MenuInfo> = null;
   isBothTypeMenuExist: boolean = true;
 
-  aboutToAppear() {
+  aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear start');
     if (this.getMenuInfoList) {
       this.menuInfoList = this.getMenuInfoList();
@@ -48,7 +48,7 @@ export default struct AppMenu {
     AppStorage.SetOrCreate('isLongPress', true);
   }
 
-  aboutToDisappear() {
+  aboutToDisappear(): void  {
     Log.showInfo(TAG, 'aboutToDisappear start');
     this.fixedMenuList = null;
     this.dynamicMenuList = null;
@@ -105,7 +105,7 @@ struct HorizontalMenuItem {
   menuInfo: MenuInfo;
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
 
-  public aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateIcon();
     this.updateName();
@@ -121,7 +121,8 @@ struct HorizontalMenuItem {
 
   public updateIcon() {
     if (this.menuInfo.shortcutIconId != -1 && this.menuInfo.menuImgSrc != "" && this.menuInfo.menuImgSrc != null) {
-      this.mResourceManager.getAppIconWithCache(this.menuInfo.shortcutIconId, this.menuInfo.bundleName, this.shortcutIconLoadCallback.bind(this), StyleConstants.DEFAULT_ICON);
+      this.mResourceManager.getAppIconWithCache(this.menuInfo.shortcutIconId, this.menuInfo.bundleName,
+        this.menuInfo.moduleName, this.shortcutIconLoadCallback.bind(this), StyleConstants.DEFAULT_ICON);
     } else {
       this.shortcutIconLoadCallback(this.menuInfo.menuImgSrc);
     }
@@ -129,7 +130,8 @@ struct HorizontalMenuItem {
 
   public updateName() {
     if (this.menuInfo.shortcutLabelId != -1 && this.menuInfo.menuText != "" && this.menuInfo.menuText != null) {
-      this.mResourceManager.getAppNameWithCache(this.menuInfo.shortcutLabelId, this.menuInfo.bundleName, this.shortcutName, this.shortcutNameLoadCallback.bind(this));
+      this.mResourceManager.getAppNameWithCache(this.menuInfo.shortcutLabelId, this.menuInfo.bundleName,
+        this.menuInfo.moduleName, this.shortcutName, this.shortcutNameLoadCallback.bind(this));
     } else {
       this.shortcutNameLoadCallback(this.menuInfo.menuText);
     }

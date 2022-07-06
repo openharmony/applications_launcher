@@ -46,7 +46,7 @@ export default struct SmartDock {
   private mSelectedDockType = 0;
   private dialogName = "";
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear start!');
     AppStorage.SetOrCreate('device', this.device);
     try {
@@ -62,7 +62,7 @@ export default struct SmartDock {
     });
   }
 
-  private aboutToDisappear() {
+  aboutToDisappear(): void  {
     Log.showInfo(TAG, 'aboutToDisappear!');
   }
 

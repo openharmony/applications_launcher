@@ -52,11 +52,11 @@ struct EntryView {
     Log.showInfo(TAG, 'onPageShow');
   }
 
-  private onPageHide(): void {
+  onPageHide(): void {
     Log.showInfo(TAG, 'onPageHide');
   }
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
     AppStorage.SetOrCreate('device', this.device);
     this.mStage.onCreate();
@@ -87,12 +87,12 @@ struct EntryView {
     }
   };
 
-  private aboutToDisappear(): void {
+  aboutToDisappear(): void {
     this.mStage.onDestroy();
     Log.showInfo(TAG, 'aboutToDisappear');
   }
 
-  private onBackPress(): boolean {
+  onBackPress(): boolean {
     Log.showInfo(TAG, 'onBackPress');
     ContextMenu.close();
     AppStorage.SetOrCreate('dialogControllerStatus', !AppStorage.Get('dialogControllerStatus'));

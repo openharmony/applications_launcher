@@ -35,7 +35,7 @@ export default struct ListLayout {
 
   mAppCenterListStyleConfig: AppCenterListStyleConfig = null;
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     mAppListPresenter = AppListPresenter.getInstance();
     mAppListPresenter.getAppList();
     mAppListPresenter.registerAppListChangeCallback();
@@ -80,7 +80,7 @@ export default struct ListLayout {
         appList: $appListInfo,
         appListStyleConfig: this.mAppCenterListStyleConfig,
         onItemClick: (event, item) => {
-          mAppListPresenter.openApplication(item.abilityName, item.bundleName);
+          mAppListPresenter.openApplication(item.abilityName, item.bundleName, item.moduleName);
         },
         onItemLongPress: (event, item) => {
           AppStorage.SetOrCreate('uninstallAppInfo', item);
