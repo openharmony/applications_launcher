@@ -219,8 +219,9 @@ export default class SmartDockViewModel extends BaseAppPresenter {
       removeMenu.menuImgSrc = this.mDevice === CommonConstants.PAD_DEVICE_TYPE ? '/common/pics/ic_public_remove.svg' : '/common/pics/ic_public_delete.svg';
       removeMenu.menuText = this.mDevice === CommonConstants.PAD_DEVICE_TYPE ? $r('app.string.delete_app') : $r('app.string.uninstall');
       removeMenu.onMenuClick = () => {
-        Log.showDebug(TAG, `onMenuClick item remove: ${JSON.stringify(appInfo)},dockType: ${dockType}`);
+        Log.showDebug(TAG, `onMenuClick item remove: ${JSON.stringify(appInfo)}`);
         const cacheKey = appInfo.appLabelId + appInfo.bundleName + appInfo.moduleName;
+        appInfo.keyName = appInfo.bundleName + appInfo.abilityName + appInfo.moduleName;
         const appName = this.mSmartDockModel.getAppName(cacheKey);
         Log.showDebug(TAG, `onMenuClick item remove appName: ${appName}`);
         if (appName != null) {
@@ -237,8 +238,8 @@ export default class SmartDockViewModel extends BaseAppPresenter {
     return menuInfoList;
   }
 
-  deleteDockItem(bundleName: string, dockType: number) {
-    this.mSmartDockModel.deleteDockItem(bundleName, dockType);
+  deleteDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}, dockType: number) {
+    this.mSmartDockModel.deleteDockItem(dockItem, dockType);
   }
 
   getSelectedItem(): any {

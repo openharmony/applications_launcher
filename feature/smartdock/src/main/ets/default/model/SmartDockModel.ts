@@ -104,6 +104,7 @@ export default class SmartDockModel {
           dockItemInfo.bundleName = typeof (appData) === 'undefined' ? dockDataList[i].bundleName : appData.bundleName;
           dockItemInfo.moduleName = typeof (appData) === 'undefined' ? dockDataList[i].bundleName : appData.moduleName;
           dockItemInfo.abilityName = typeof (appData) === 'undefined' ? dockItemInfo.abilityName : appData.abilityName;
+          dockItemInfo.keyName = `${dockItemInfo.bundleName}${dockItemInfo.abilityName}${dockItemInfo.moduleName}`;
           dockItemInfo.appIconId = typeof (appData) === 'undefined' ? dockItemInfo.appIconId : appData.appIconId;
           dockItemInfo.appLabelId = typeof (appData) === 'undefined' ? dockItemInfo.appLabelId : appData.appLabelId;
           dockItemInfo.installTime = typeof (appData) === 'undefined' ? dockItemInfo.installTime : appData.installTime;
@@ -116,6 +117,7 @@ export default class SmartDockModel {
           dockItemInfo.bundleName = dockDataList[i].bundleName;
           dockItemInfo.abilityName = dockDataList[i].abilityName;
           dockItemInfo.moduleName = dockDataList[i].moduleName;
+          dockItemInfo.keyName = `${dockItemInfo.bundleName}${dockItemInfo.abilityName}${dockItemInfo.moduleName}`;
           dockItemInfo.appIconId = typeof (dockDataList[i].appIconId) != 'undefined' ? dockDataList[i].appIconId : dockDataList[i].iconId.id;
           dockItemInfo.appLabelId = typeof (dockDataList[i].appLabelId) != 'undefined' ? dockDataList[i].appLabelId : dockDataList[i].labelId.id;
           const loadAppName = await this.mResourceManager
@@ -180,19 +182,16 @@ export default class SmartDockModel {
 
   /**
    * delete app from smartdock
-   * @param appInfo
+   * @param dockItem
    * @param dockType
    */
-  deleteDockItem(bundleName: string, dockType: number): boolean {
-    if (CheckEmptyUtils.checkStrIsEmpty(bundleName)) {
-      return false;
-    }
+  deleteDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}, dockType: number): boolean {
     if (SmartDockConstants.RESIDENT_DOCK_TYPE === dockType) {
-      return this.deleteResistDockItem(bundleName);
+      return this.deleteResistDockItem(dockItem);
 
     }
     else if (SmartDockConstants.RECENT_DOCK_TYPE === dockType) {
-      return this.deleteRecentDockItem(bundleName);
+      return this.deleteRecentDockItem(dockItem);
     }
   }
 
@@ -204,7 +203,6 @@ export default class SmartDockModel {
    */
   addToSmartdock(appInfo: AppItemInfo, index?: number): boolean {
     this.mResidentList = AppStorage.Get('residentList');
-
     const dockItemCount = this.mResidentList.length;
     if (this.checkDockNum(dockItemCount)) {
       return false;
@@ -219,6 +217,7 @@ export default class SmartDockModel {
       dockItemInfo.bundleName = appInfo.bundleName;
       dockItemInfo.abilityName = appInfo.abilityName;
       dockItemInfo.moduleName = appInfo.moduleName;
+      dockItemInfo.keyName = appInfo.keyName;
       dockItemInfo.appIconId = appInfo.appIconId;
       dockItemInfo.appLabelId = appInfo.appLabelId;
       if (dockItemCount == 0 || index == undefined || index >= dockItemCount || index < 0) {
@@ -228,7 +227,7 @@ export default class SmartDockModel {
       }
       AppStorage.SetOrCreate('residentList', this.mResidentList);
       globalThis.RdbStoreManagerInstance.insertIntoSmartdock(this.mResidentList);
-      Log.showDebug(TAG, `addToSmartdock appInfo: ${appInfo.bundleName}`);
+      Log.showDebug(TAG, `addToSmartdock appInfo: ${appInfo.keyName}`);
       return true;
     }
     return false;
@@ -259,6 +258,7 @@ export default class SmartDockModel {
    */
   private idDuplicate(list: AppItemInfo[], appInfo: AppItemInfo): boolean {
     for (let i = 0; i < list.length; i++) {
+      Log.showInfo(TAG, `nmsDebug ${JSON.stringify(list[i])}) keyName: ${appInfo.keyName}`)
       if (list[i].keyName === appInfo.keyName) {
         Prompt.showToast({
           message: $r('app.string.duplicate_add')
@@ -405,7 +405,7 @@ export default class SmartDockModel {
   }
 
   /**
-   * 通过bundleName获取shortcutInfo
+   * get ShortcutInfo by bundleName
    * @param bundleName
    */
   getShortcutInfo(bundleName: string): any {
@@ -458,13 +458,14 @@ export default class SmartDockModel {
     return snapshotList;
   }
 
-  private deleteResistDockItem(bundleName: string): boolean {
+  private deleteResistDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}): boolean {
     let res = false;
     this.mResidentList = AppStorage.Get('residentList');
     if (!CheckEmptyUtils.isEmptyArr(this.mResidentList)) {
       for (let i = 0; i < this.mResidentList.length; i++) {
-        if (bundleName === this.mResidentList[i].bundleName) {
-          // checkt right to delete
+        if (dockItem.bundleName === this.mResidentList[i].bundleName
+          || dockItem.keyName === this.mResidentList[i].keyName) {
+          // check right to delete
           if (!this.mResidentList[i].editable) {
             Prompt.showToast({
               message: $r('app.string.disable_add_to_delete')
@@ -473,9 +474,8 @@ export default class SmartDockModel {
             this.mResidentList.splice(i, 1);
             AppStorage.SetOrCreate('residentList', this.mResidentList);
             globalThis.RdbStoreManagerInstance.insertIntoSmartdock(this.mResidentList);
-            Log.showDebug(TAG, `deleteRecentDockItem resist dockItem: ${bundleName}`);
+            Log.showDebug(TAG, `deleteResistDockItem resist dockItem: ${JSON.stringify(dockItem)}`);
             res = true;
-            return res;
           }
         }
       }
@@ -483,17 +483,17 @@ export default class SmartDockModel {
     return res;
   }
 
-  private deleteRecentDockItem(bundleName: string): boolean {
+  private deleteRecentDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}): boolean {
     let res = false;
     this.mRecentDataList = AppStorage.Get('recentList');
     if (!CheckEmptyUtils.isEmptyArr(this.mResidentList)) {
       for (let i = 0; i < this.mRecentDataList.length; i++) {
-        if (bundleName === this.mRecentDataList[i].bundleName) {
+        if (dockItem.bundleName === this.mResidentList[i].bundleName
+        || dockItem.keyName === this.mResidentList[i].keyName) {
           this.mRecentDataList.splice(i, 1);
           AppStorage.SetOrCreate('recentList', this.mRecentDataList);
-          Log.showDebug(TAG, `deleteRecentDockItem recent dockItem: ${bundleName}`);
+          Log.showDebug(TAG, `deleteRecentDockItem recent dockItem: ${JSON.stringify(dockItem)}`);
           res = true;
-          return res;
         }
       }
     }
@@ -514,6 +514,7 @@ export default class SmartDockModel {
           dockItemInfo.bundleName = appInfo.bundleName;
           dockItemInfo.abilityName = appInfo.abilityName;
           dockItemInfo.moduleName = appInfo.moduleName;
+          dockItemInfo.keyName = appInfo.keyName;
           dockItemInfo.appIconId = appInfo.appIconId;
           dockItemInfo.appLabelId = appInfo.appLabelId;
           dockItemInfo.installTime = appInfo.installTime;

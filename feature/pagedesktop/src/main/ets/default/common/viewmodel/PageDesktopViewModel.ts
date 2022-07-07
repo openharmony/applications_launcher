@@ -255,22 +255,21 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * @param abilityName
    * @param bundleName
    */
-  deleteAppItem(bundleName) {
+  deleteAppItem(appItem: {bundleName: string | undefined, keyName: string | undefined}) {
     this.mBundleInfoList = this.mSettingsModel.getAppListInfo();
-    Log.showInfo(TAG, 'deleteAppItem mBundleInfoList:' + this.mBundleInfoList.length);
-    for (let i = 0; i < this.mBundleInfoList.length; i++) {
-      if (this.mBundleInfoList[i].bundleName === bundleName) {
-        Log.showInfo(TAG, 'deleteAppItem:abilityName:' + bundleName);
-        this.mBundleInfoList.splice(i, 1);
-        break;
-      }
+    Log.showInfo(TAG, `deleteAppItem appItem: ${JSON.stringify(appItem)}`);
+    if (appItem.bundleName) {
+      this.mBundleInfoList = this.mBundleInfoList.filter(item => item.bundleName !== appItem.bundleName);
+    } else if(appItem.keyName) {
+      this.mBundleInfoList = this.mBundleInfoList.filter(item => item.keyName !== appItem.keyName);
     }
     this.mSettingsModel.setAppListInfo(this.mBundleInfoList);
 
     const gridLayoutInfo = this.getLayoutInfo();
     const layoutInfo = gridLayoutInfo.layoutInfo;
     for (let i = 0; i < layoutInfo.length; i++) {
-      if (layoutInfo[i].typeId == CommonConstants.TYPE_APP && layoutInfo[i].bundleName == bundleName) {
+      if (layoutInfo[i].typeId == CommonConstants.TYPE_APP &&
+        (layoutInfo[i].bundleName == appItem.bundleName || layoutInfo[i].keyName == appItem.keyName)) {
         const page = layoutInfo[i].page;
         gridLayoutInfo.layoutInfo.splice(i, 1);
         this.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
@@ -1536,7 +1535,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     for (const i in totalAppInfoList) {
       let hasInstalled = false;
       for (const j in pageDesktopInfo) {
-        if (totalAppInfoList[i].bundleName == pageDesktopInfo[j].bundleName) {
+        if (totalAppInfoList[i].keyName == pageDesktopInfo[j].keyName) {
           hasInstalled = true;
           break;
         }
@@ -1553,15 +1552,16 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     Log.showInfo(TAG, `removeBottomBarInfo bottomAppList length: ${bottomAppList.length}`);
     if (!CheckEmptyUtils.isEmptyArr(bottomAppList)) {
       for (let i = 0; i < bottomAppList.length; i++) {
+        Log.showInfo(TAG, `removeBottomBarInfo bottomAppList[i]: ${JSON.stringify(bottomAppList[i])}`);
         const appInfo = pageDesktopInfo.find(item => {
-          if (item.bundleName == bottomAppList[i].bundleName && item.moduleName == bottomAppList[i].moduleName) {
+          if (item.keyName == bottomAppList[i].keyName) {
             return true;
           }
         });
         if (!this.ifInfoIsNull(appInfo)) {
           const index = pageDesktopInfo.indexOf(appInfo);
           pageDesktopInfo.splice(index, 1);
-          Log.showDebug(TAG, `removeBottomBarInfo bundleName: ${appInfo.bundleName}`);
+          Log.showDebug(TAG, `removeBottomBarInfo keyName: ${appInfo.keyName}`);
         }
       }
     }
@@ -1575,14 +1575,14 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         for (let j = 0; j < layoutInfo[i].layoutInfo.length; j++) {
           for (let k = 0; k < layoutInfo[i].layoutInfo[j].length; k++) {
             const appInfo = pageDesktopInfo.find(item => {
-              if (item.bundleName == layoutInfo[i].layoutInfo[j][k].bundleName) {
+              if (item.keyName == layoutInfo[i].layoutInfo[j][k].keyName) {
                 return true;
               }
             });
             if (!this.ifInfoIsNull(appInfo)) {
               const index = pageDesktopInfo.indexOf(appInfo);
               pageDesktopInfo.splice(index, 1);
-              Log.showInfo(TAG, 'removeFolderInfo appInfo:' + JSON.stringify(appInfo.bundleName));
+              Log.showDebug(TAG, `removeFolderInfo keyName: ${appInfo.keyName}`);
             }
           }
         }

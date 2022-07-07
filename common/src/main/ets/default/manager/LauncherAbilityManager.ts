@@ -42,11 +42,11 @@ class LauncherAbilityManager {
       this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_ADDED, bundleName, userId);
     },
     remove: (bundleName, userId) => {
-      Log.showDebug(TAG, `mBundleStatusCallbackremove bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
+      Log.showDebug(TAG, `mBundleStatusCallback remove bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
       this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_REMOVED, bundleName, userId);
     },
     update: (bundleName, userId) => {
-      Log.showDebug(TAG, `mBundleStatusCallbackupdate bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
+      Log.showDebug(TAG, `mBundleStatusCallback update bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
       this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_CHANGED, bundleName, userId);
     }
   };
@@ -155,7 +155,7 @@ class LauncherAbilityManager {
    */
   async getLauncherAbilityInfo(bundleName: string): Promise<AppItemInfo[]> {
     let abilityInfos: LauncherAbilityInfo[];
-    await launcherBundleMgr.getLauncherAbilityInfos(bundleName, LauncherAbilityManager.CURRENT_USER_ID)
+    await launcherBundleMgr.getLauncherAbilityInfos(bundleName, this.mUserId)
       .then((res) => {
         Log.showInfo(TAG, `getLauncherAbilityInfo length: ${res.length}`);
         abilityInfos = res;
