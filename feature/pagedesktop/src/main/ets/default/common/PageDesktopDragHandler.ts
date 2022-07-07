@@ -327,7 +327,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
         this.checkAndMove(this.mStartPosition, this.mEndPosition, layoutInfo, dragItemInfo);
         info.layoutInfo = layoutInfo;
         this.mPageDesktopViewModel.setLayoutInfo(info);
-        this.mPageDesktopViewModel.pagingFiltering();
+        this.mPageDesktopViewModel.  pagingFiltering();
         isDragSuccess = true;
       } else {
         Log.showInfo(TAG, 'onDragEnd not selfDrag');

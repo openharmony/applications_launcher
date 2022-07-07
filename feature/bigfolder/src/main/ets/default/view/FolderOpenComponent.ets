@@ -624,7 +624,7 @@ struct FolderAppItem {
       .visibility(this.isDraging ? Visibility.Hidden : Visibility.Visible)
       .onClick(() => {
         Log.showDebug(TAG, 'App click');
-        mPageDesktopViewModel.openApplication(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+        mPageDesktopViewModel.openApplication(this.item.abilityName, this.item.bundleName);
       })
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
