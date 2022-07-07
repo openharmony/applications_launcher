@@ -188,7 +188,6 @@ export default class SmartDockModel {
   deleteDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}, dockType: number): boolean {
     if (SmartDockConstants.RESIDENT_DOCK_TYPE === dockType) {
       return this.deleteResistDockItem(dockItem);
-
     }
     else if (SmartDockConstants.RECENT_DOCK_TYPE === dockType) {
       return this.deleteRecentDockItem(dockItem);
@@ -459,28 +458,31 @@ export default class SmartDockModel {
   }
 
   private deleteResistDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}): boolean {
-    let res = false;
     this.mResidentList = AppStorage.Get('residentList');
+    Log.showError(TAG, `deleteResistDockItem residentList length ${this.mResidentList.length}`);
     if (!CheckEmptyUtils.isEmptyArr(this.mResidentList)) {
-      for (let i = 0; i < this.mResidentList.length; i++) {
-        if (dockItem.bundleName === this.mResidentList[i].bundleName
-          || dockItem.keyName === this.mResidentList[i].keyName) {
-          // check right to delete
-          if (!this.mResidentList[i].editable) {
-            Prompt.showToast({
-              message: $r('app.string.disable_add_to_delete')
-            });
-          } else {
-            this.mResidentList.splice(i, 1);
-            AppStorage.SetOrCreate('residentList', this.mResidentList);
-            globalThis.RdbStoreManagerInstance.insertIntoSmartdock(this.mResidentList);
-            Log.showDebug(TAG, `deleteResistDockItem resist dockItem: ${JSON.stringify(dockItem)}`);
-            res = true;
-          }
-        }
+      const findResidentList = this.mResidentList.find(item => {
+        return dockItem.bundleName == item.bundleName || dockItem.keyName == item.keyName;
+      })
+      // check right to delete
+      if (!findResidentList.editable) {
+        Prompt.showToast({
+          message: $r('app.string.disable_add_to_delete')
+        });
+        return false;
       }
+      this.mResidentList = this.mResidentList.filter(item => {
+        if (dockItem.bundleName) {
+          return dockItem.bundleName != item.bundleName;
+        } else if (dockItem.keyName) {
+          return dockItem.keyName != item.keyName;
+        }
+      })
+      AppStorage.SetOrCreate('residentList', this.mResidentList);
+      globalThis.RdbStoreManagerInstance.insertIntoSmartdock(this.mResidentList);
+      Log.showDebug(TAG, `deleteResistDockItem resist dockItem: ${JSON.stringify(dockItem)}`);
     }
-    return res;
+    return true;
   }
 
   private deleteRecentDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}): boolean {
@@ -491,11 +493,11 @@ export default class SmartDockModel {
         if (dockItem.bundleName === this.mResidentList[i].bundleName
         || dockItem.keyName === this.mResidentList[i].keyName) {
           this.mRecentDataList.splice(i, 1);
-          AppStorage.SetOrCreate('recentList', this.mRecentDataList);
-          Log.showDebug(TAG, `deleteRecentDockItem recent dockItem: ${JSON.stringify(dockItem)}`);
-          res = true;
         }
       }
+      AppStorage.SetOrCreate('recentList', this.mRecentDataList);
+      Log.showDebug(TAG, `deleteRecentDockItem recent dockItem: ${JSON.stringify(dockItem)}`);
+      res = true;
     }
     return res;
   }

@@ -54,6 +54,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     }
   };
 
+  // badge will be designed lastly
   private updateBadge(openFolderData, params): void {
     for (let i = 0; i < openFolderData.layoutInfo.length; i++) {
       const appInfo: any = openFolderData.layoutInfo[i].find(item => {
@@ -107,7 +108,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     const folderAppInfo = [];
     for (let j = 0; j < appListInfo.length; j++) {
       for (let i = 0; i < settingAppInfoList.length; i++) {
-        Log.showInfo(TAG, "addNewFolder" + JSON.stringify(settingAppInfoList[i]) + " applistinfo" + JSON.stringify(appListInfo[j]))
+        Log.showInfo(TAG, `addNewFolder ${JSON.stringify(settingAppInfoList[i])} applistinfo: ${JSON.stringify(appListInfo[j])}`)
         if (settingAppInfoList[i].keyName === appListInfo[j].keyName) {
           folderAppInfo.push(settingAppInfoList[i]);
           break;
@@ -305,6 +306,9 @@ export default class FolderViewModel extends BaseAppPresenter {
   private createAppLayoutInfo(appInfo): any {
     const appLayout = {
       bundleName: appInfo.bundleName,
+      abilityName: appInfo.abilityName,
+      moduleName: appInfo.moduleName,
+      keyName: appInfo.keyName,
       typeId: appInfo.typeId,
       area: appInfo.area,
       page: appInfo.page,
@@ -354,6 +358,9 @@ export default class FolderViewModel extends BaseAppPresenter {
       // delete from folder and add app to desktop
       const appLayout = {
         bundleName: folderLayoutInfo[0][0].bundleName,
+        abilityName: folderLayoutInfo[0][0].abilityName,
+        moduleName: folderLayoutInfo[0][0].moduleName,
+        keyName: folderLayoutInfo[0][0].keyName,
         typeId: folderLayoutInfo[0][0].typeId,
         area: folderLayoutInfo[0][0].area,
         page: gridLayoutInfo.layoutInfo[folderIndex].page,
@@ -567,7 +574,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     const appInfosRemaining = [];
     for (let m = 0; m < folderAppList.length; m++) {
       const appIndex = appInfos.findIndex(item => {
-        return item.bundleName === folderAppList[m].bundleName;
+        return item.keyName === folderAppList[m].keyName;
       });
       if (appIndex == CommonConstants.INVALID_VALUE) {
         appInfosRemaining.push(folderAppList[m]);
@@ -657,7 +664,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     for (let i = 0; i < appInfos.length; i++) {
       for (let j = 0; j < gridLayoutInfo.layoutInfo.length; j++) {
         if (gridLayoutInfo.layoutInfo[j].typeId == CommonConstants.TYPE_APP &&
-          appInfos[i].bundleName == gridLayoutInfo.layoutInfo[j].bundleName) {
+          appInfos[i].keyName == gridLayoutInfo.layoutInfo[j].keyName) {
           appDesktopToFolder.push(gridLayoutInfo.layoutInfo[j]);
           break;
         }
@@ -686,7 +693,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     for (let i = 0; i < removeFolderApp.length; i++) {
       let remainFlag = false;
       for (let j = 0; j < appInfos.length; j++) {
-        if (appInfos[j].bundleName == removeFolderApp[i].bundleName) {
+        if (appInfos[j].keyName == removeFolderApp[i].keyName) {
           remainFlag = true;
           break;
         }
@@ -839,7 +846,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     for (let i = 0; i < appListInfo.length; i++) {
       let isExist = false;
       for (let j = 0; j < allAppList.length; j++) {
-        if (appListInfo[i].bundleName === allAppList[j].bundleName) {
+        if (appListInfo[i].keyName === allAppList[j].keyName) {
           isExist = true;
           break;
         }
@@ -1161,20 +1168,12 @@ export default class FolderViewModel extends BaseAppPresenter {
     Log.showDebug(TAG, 'deleteAppFromFolderByUninstall start');
     const gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
     const layoutInfo = gridLayoutInfo.layoutInfo;
-    let changeFlag = false;
     for (let i = 0; i < layoutInfo.length; i++) {
-      if (changeFlag) {
-        break;
-      }
       if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
-        const folderAppList = this.layoutInfoToList(layoutInfo[i]);
+        let folderAppList = this.layoutInfoToList(layoutInfo[i]);
         for (let m = 0; m < folderAppList.length; m++) {
-          if (folderAppList[m].bundleName == bundleName) {
-            folderAppList.splice(m, 1);
-            this.updateFolderInfo(folderAppList, gridLayoutInfo, i);
-            changeFlag = true;
-            break;
-          }
+          folderAppList = folderAppList.filter(item => item.bundleName != bundleName);
+          this.updateFolderInfo(folderAppList, gridLayoutInfo, i);
         }
       }
     }
@@ -1189,14 +1188,21 @@ export default class FolderViewModel extends BaseAppPresenter {
    * @param index
    */
   private updateFolderInfo(folderAppList, gridLayoutInfo, index): void {
-    if (folderAppList.length == 1) {
+    if (folderAppList.length == 0) {
+      gridLayoutInfo.layoutInfo.splice(index, 1);
+      this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
+      this.mPageDesktopViewModel.getGridList();
+    } else if (folderAppList.length == 1) {
       const appLayoutInfo = {
-        'bundleName': folderAppList[0].bundleName,
-        'typeId': CommonConstants.TYPE_APP,
-        'area': [1, 1],
-        'page': gridLayoutInfo.layoutInfo[index].page,
-        'column': gridLayoutInfo.layoutInfo[index].column,
-        'row': gridLayoutInfo.layoutInfo[index].row
+        bundleName: folderAppList[0].bundleName,
+        abilityName: folderAppList[0].abilityName,
+        moduleName: folderAppList[0].moduleName,
+        keyName: folderAppList[0].keyName,
+        typeId: CommonConstants.TYPE_APP,
+        area: [1, 1],
+        page: gridLayoutInfo.layoutInfo[index].page,
+        column: gridLayoutInfo.layoutInfo[index].column,
+        row: gridLayoutInfo.layoutInfo[index].row
       };
       gridLayoutInfo.layoutInfo.splice(index, 1);
       gridLayoutInfo.layoutInfo.push(appLayoutInfo);
@@ -1256,7 +1262,7 @@ export default class FolderViewModel extends BaseAppPresenter {
       const gridLayout = this.createAppLayoutInfo(removeAppInfos[i]);
       gridLayoutInfo.layoutInfo.push(gridLayout);
       const appIndex = appListInfo.findIndex(item => {
-        return item.bundleName === removeAppInfos[i].bundleName && item.abilityName === removeAppInfos[i].abilityName;
+        return item.keyName === removeAppInfos[i].keyName;
       })
       if (appIndex == CommonConstants.INVALID_VALUE) {
         appListInfo.push(removeAppInfos[i]);
@@ -1292,7 +1298,7 @@ export default class FolderViewModel extends BaseAppPresenter {
    */
   private deleteAppFromFolderAppList(appInfo, folderAppList): void {
     const appIndex = folderAppList.findIndex(item => {
-      return item.bundleName === appInfo.bundleName;
+      return item.keyName === appInfo.keyName;
     });
     folderAppList.splice(appIndex, 1);
   }
@@ -1322,7 +1328,7 @@ export default class FolderViewModel extends BaseAppPresenter {
   private getFolderLayoutInfo(openFolderData, appInfo): any {
     let folderAppList = this.getAppListInFolder(openFolderData);
     const index = folderAppList.findIndex(item => {
-      return item.bundleName === appInfo.bundleName;
+      return item.keyName === appInfo.keyName;
     });
     folderAppList.splice(index, 1);
     return this.filterFolderPage(folderAppList);
