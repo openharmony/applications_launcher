@@ -20,6 +20,7 @@ import RdbStoreManager from '../../../../../../common/src/main/ets/default/manag
 import windowManager from '../../../../../../common/src/main/ets/default/manager/WindowManager';
 import Log from '../../../../../../common/src/main/ets/default/utils/Log';
 import GestureNavigationManage from '../../../../../../feature/gesturenavigation/src/main/ets/default/common/GestureNavigationManage';
+import StyleConstants from '../common/constants/StyleConstants';
 
 const TAG = 'LauncherMainAbility';
 
@@ -86,5 +87,11 @@ export default class MainAbility extends ServiceExtension {
     Log.showInfo(TAG,`onRequest, want:${want.abilityName}`);
     windowManager.minimizeAllApps();
     windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
+    this.closeFolder();
+  }
+
+  private closeFolder(): void {
+    AppStorage.SetOrCreate('openFolderPageIndex', StyleConstants.DEFAULT_NUMBER_0);
+    AppStorage.SetOrCreate('openFolderStatus', StyleConstants.DEFAULT_NUMBER_0);
   }
 }
