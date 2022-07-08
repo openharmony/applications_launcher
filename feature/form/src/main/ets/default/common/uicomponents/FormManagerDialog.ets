@@ -50,7 +50,7 @@ export default struct FormManagerDialog {
   appName: string;
   appLabelId: string;
 
-  private aboutToAppear(): void {
+  aboutToAppear(): void {
     this.mFormModel = FormModel.getInstance();
     this.cancel(this.clearAllFormById.bind(this));
     this.getCurrentFormInfo();

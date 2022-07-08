@@ -50,7 +50,7 @@ export default struct AppList {
   autoCancel: boolean = false;
   private updateData: Function = null;
 
-  private aboutToAppear(): void {
+  aboutToAppear(): void {
     mAppListStyleConfig = this.appListStyleConfig;
   }
 
@@ -186,7 +186,7 @@ struct HorizontalListItem {
   itemOffset: {} = { x: 0, y: 0 }
   private menuInfo;
 
-  private aboutToAppear(): void {
+  aboutToAppear(): void {
     this.menuInfo = this.buildMenu(this.appInfo);
   }
 
@@ -266,7 +266,9 @@ struct VerticalListItem {
         iconSize: mAppListStyleConfig.mIconSize,
         iconId: this.appInfo.appIconId,
         bundleName: this.appInfo.bundleName,
-        icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId, this.appInfo.bundleName),
+        moduleName: this.appInfo.moduleName,
+        icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId,
+          this.appInfo.bundleName, this.appInfo.moduleName),
         badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
       })
       if (mAppListStyleConfig.mWithAppName) {
@@ -276,6 +278,7 @@ struct VerticalListItem {
             nameSize: mAppListStyleConfig.mNameSize,
             nameFontColor: mAppListStyleConfig.mNameFontColor,
             bundleName: this.appInfo.bundleName,
+            moduleName: this.appInfo.moduleName,
             appName: this.appInfo.appName,
             labelId: this.appInfo.appLabelId
           })
@@ -311,7 +314,9 @@ struct AppItem {
         iconSize: mAppListStyleConfig.mIconSize,
         iconId: this.appInfo.appIconId,
         bundleName: this.appInfo.bundleName,
-        icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId, this.appInfo.bundleName),
+        moduleName: this.appInfo.moduleName,
+        icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId,
+          this.appInfo.bundleName, this.appInfo.moduleName),
         badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
       })
       if (mAppListStyleConfig.mWithAppName) {
@@ -321,6 +326,7 @@ struct AppItem {
             nameSize: mAppListStyleConfig.mNameSize,
             nameFontColor: mAppListStyleConfig.mNameFontColor,
             bundleName: this.appInfo.bundleName,
+            moduleName: this.appInfo.moduleName,
             appName: this.appInfo.appName,
             labelId: this.appInfo.appLabelId
           })

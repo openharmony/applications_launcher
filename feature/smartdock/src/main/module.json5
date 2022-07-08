@@ -3,7 +3,7 @@
     "name": "smartdock",
     "type": "har",
     "deviceTypes": [
-      "phone",
+      "default",
     ],
     "uiSyntax": "ets"
   }

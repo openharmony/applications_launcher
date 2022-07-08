@@ -140,7 +140,10 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     } else if (this.mDevice == CommonConstants.DEFAULT_DEVICE_TYPE) {
       Log.showDebug(TAG, 'onDragDrop remove item');
       const dragItemInfo = this.getDragItemInfo();
-      let deleteDockRes = this.mSmartDockModel.deleteDockItem(dragItemInfo.bundleName, SmartDockConstants.RESIDENT_DOCK_TYPE);
+      let deleteDockRes = this.mSmartDockModel.deleteDockItem({
+        bundleName: undefined,
+        keyName: dragItemInfo.keyName
+      }, SmartDockConstants.RESIDENT_DOCK_TYPE);
       if (deleteDockRes) {
         localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, dragItemInfo);
       }
@@ -163,7 +166,10 @@ export default class SmartDockDragHandler extends BaseDragHandler {
   private addItemToSmartDock(dragItemInfo: any, insertIndex: number): boolean {
     let addToDockRes = this.mSmartDockModel.addToSmartdock(dragItemInfo, insertIndex);
     if (addToDockRes) {
-      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE, dragItemInfo.bundleName);
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE, {
+        bundleName: undefined,
+        keyName: dragItemInfo.keyName
+      });
     }
     return true;
   }

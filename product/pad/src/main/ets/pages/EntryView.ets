@@ -48,7 +48,7 @@ struct EntryView {
   private mLayoutViewModel: LayoutViewModel;
   private navigationBarStatus: string | undefined;
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
     AppStorage.SetOrCreate('device', this.device);
     this.mStage.onCreate();
@@ -97,7 +97,7 @@ struct EntryView {
     globalThis.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
   }
 
-  private onPageShow(): void {
+  onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
     if (typeof globalThis.IsSetImageRawDataCacheSize === 'undefined') {
       Log.showInfo(TAG, 'onPageShow setImageRawDataCacheSize');
@@ -132,11 +132,11 @@ struct EntryView {
     Log.showInfo(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}, workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
   }
 
-  private aboutToDisappear(): void {
+  aboutToDisappear(): void {
     this.mStage.onDestroy();
   }
 
-  private onBackPress(): boolean {
+  onBackPress(): boolean {
     Log.showInfo(TAG, 'onBackPress');
     ContextMenu.close();
     AppStorage.SetOrCreate('dialogControllerStatus', !AppStorage.Get('dialogControllerStatus'));

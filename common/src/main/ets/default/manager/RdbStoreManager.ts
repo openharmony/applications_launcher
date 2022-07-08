@@ -527,9 +527,11 @@ export default class RdbStoreManager {
       for (let i in layoutinfo) {
         let element = layoutinfo[i];
         let item = {};
+        Log.showError(TAG, 'nmsDebug insertGridLayoutInfo' + JSON.stringify(element));
         if (element.typeId === CommonConstants.TYPE_APP) {
           item = {
             'bundle_name': element.bundleName,
+            'key_name': element.bundleName + element.abilityName + element.moduleName,
             'type_id': element.typeId,
             'area': element.area[0] + ',' + element.area[1],
             'page': element.page,
@@ -542,6 +544,8 @@ export default class RdbStoreManager {
         } else if (element.typeId === CommonConstants.TYPE_CARD) {
           item = {
             'bundle_name':element.bundleName,
+            'ability_name': element.abilityName,
+            'module_name': element.moduleName,
             'card_id': element.cardId,
             'type_id': element.typeId,
             'area': element.area[0] + ',' + element.area[1],
@@ -555,6 +559,8 @@ export default class RdbStoreManager {
         } else {
           item = {
             'bundle_name':element.bundleName,
+            'ability_name': element.abilityName,
+            'module_name': element.moduleName,
             'folder_id': element.folderId,
             'folder_name': element.folderName,
             'type_id': element.typeId,
@@ -637,13 +643,13 @@ export default class RdbStoreManager {
       Log.showDebug(TAG, `queryGridLayoutInfo before isLast:${isLast}`);
       while (isLast) {
         let typeId: number = resultSet.getLong(resultSet.getColumnIndex(GridLayoutInfoColumns.TYPE_ID));
-        const builer: GridLayoutItemBuilder = GridLayoutItemBuilder.fromResultSet(resultSet);
+        const builder: GridLayoutItemBuilder = GridLayoutItemBuilder.fromResultSet(resultSet);
         if (typeId === CommonConstants.TYPE_FOLDER) {
           let id = resultSet.getLong(resultSet.getColumnIndex(GridLayoutInfoColumns.ID));
           let layoutInfo:AppItemInfo[] = await this.queryLayoutInfo(id);
-          builer.setLayoutInfo(layoutInfo);
+          builder.setLayoutInfo(layoutInfo);
         }
-        resultList.push(builer.buildGridLayoutItem());
+        resultList.push(builder.buildGridLayoutItem());
         isLast = resultSet.goToNextRow();
         Log.showDebug(TAG, `queryGridLayoutInfo while isLast:${isLast}`);
       }
@@ -668,6 +674,7 @@ export default class RdbStoreManager {
       GridLayoutInfoColumns.APPLABEL_ID,
       GridLayoutInfoColumns.BUNDLE_NAME,
       GridLayoutInfoColumns.ABILITY_NAME,
+      GridLayoutInfoColumns.MODULE_NAME,
       GridLayoutInfoColumns.KEY_NAME,
       GridLayoutInfoColumns.CONTAINER,
       GridLayoutInfoColumns.TYPE_ID,

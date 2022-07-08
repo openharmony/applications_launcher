@@ -66,7 +66,7 @@ export default struct FolderComponent {
   iconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
   isSelect?: boolean;
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     Log.showInfo(TAG, `aboutToAppear start`);
     this.updateShowList();
     this.mSettingsModel = SettingsModel.getInstance();
@@ -199,8 +199,9 @@ export default struct FolderComponent {
                   AppIcon({
                     iconSize: this.appIconSize,
                     iconId: item.appIconId,
-                    icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName),
+                    icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
                     bundleName: item.bundleName,
+                    moduleName: item.moduleName,
                     badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
                   })
                 }
@@ -236,8 +237,9 @@ export default struct FolderComponent {
                             AppIcon({
                               iconSize: '100%',
                               iconId: item.appIconId,
-                              icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName),
+                              icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
                               bundleName: item.bundleName,
+                              moduleName: item.moduleName,
                               badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
                             })
                           }

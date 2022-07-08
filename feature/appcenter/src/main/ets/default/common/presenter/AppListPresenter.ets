@@ -48,13 +48,14 @@ export default class AppListPresenter extends BaseAppPresenter {
 
   public async regroupDataAppListChange(callbackList) {
     for (let item of callbackList) {
-      let cacheKey = item.appLabelId + item.bundleName;
+      let cacheKey = item.appLabelId + item.bundleName + item.moduleName;
       let appName = this.mResourceManager.getAppResourceCache(cacheKey, KEY_NAME);
       Log.showDebug(TAG, `regroupDataAppListChange appName: ${appName}`);
       if (appName != null) {
         item.appName = appName;
       } else {
-        let loadAppName = await this.mResourceManager.getAppNameSync(item.appLabelId, item.bundleName, item.appName);
+        let loadAppName = await this.mResourceManager.getAppNameSync(item.appLabelId, item.bundleName,
+          item.moduleName, item.appName);
         Log.showDebug(TAG, `regroupDataAppListChange loadAppName: ${loadAppName}`);
         item.appName = loadAppName;
       }
@@ -102,8 +103,8 @@ export default class AppListPresenter extends BaseAppPresenter {
    * @param {string} abilityName - ability name of the application to be jump to.
    * @param {string} bundleName - bundle name of the application to be jump to.
    */
-  public openApplication(abilityName, bundleName) {
+  public openApplication(abilityName: string, bundleName: string, moduleName: string) {
     Log.showDebug(TAG, `openApplication abilityName: ${abilityName}`);
-    this.jumpTo(abilityName, bundleName);
+    this.jumpTo(abilityName, bundleName, moduleName);
   }
 }

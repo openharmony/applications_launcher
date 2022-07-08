@@ -48,7 +48,7 @@ export default struct FolderAppListDialog {
   folderItem: any;
   addToString: string = '';
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     Log.showInfo(TAG, `aboutToAppear`);
     folderViewModel = FolderViewModel.getInstance();
     this.mFolderStyleConfig = folderViewModel.getFolderStyleConfig();
@@ -98,6 +98,8 @@ export default struct FolderAppListDialog {
                       nameHeight: this.mFolderStyleConfig.mAddFolderTextLines,
                       appName: item.appName,
                       bundleName: item.bundleName,
+                      moduleName: item.moduleName,
+                      abilityName: item.abilityName,
                       appIconId: item.appIconId,
                       appLabelId: item.appLabelId,
                       isSelect:false,

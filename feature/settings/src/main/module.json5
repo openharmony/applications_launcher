@@ -6,7 +6,7 @@
     "description": "$string:mainability_description",
     "mainElement": "com.ohos.launcher.settings.MainAbility",
     "deviceTypes": [
-      "phone"
+      "default"
     ],
     "deliveryWithInstall": true,
     "installationFree": false,
@@ -16,6 +16,8 @@
       {
         "name": "com.ohos.launcher.settings.MainAbility",
         "srcEntrance": "./ets/MainAbility/MainAbility.ts",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:startWindowBackground",
         "icon": "$media:icon",
         "description": "$string:mainability_description",
         "label": "$string:settings_MainAbility",

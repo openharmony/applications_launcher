@@ -104,7 +104,7 @@ const RdbStoreConfig = {
     'is_uninstallAble INTEGER, ' +
     'appIcon_id INTEGER, ' +
     'appLabel_id INTEGER, ' +
-    'bundle_name TEXT UNIQUE, ' +
+    'bundle_name TEXT, ' +
     'module_name TEXT, ' +
     'ability_name TEXT, ' +
     'key_name TEXT UNIQUE, ' +

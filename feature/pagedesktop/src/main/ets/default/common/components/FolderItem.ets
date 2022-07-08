@@ -50,7 +50,7 @@ export default struct FolderItem {
   private mFolderStyleConfig: BigFolderStyleConfig;
   mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mFolderViewModel = FolderViewModel.getInstance();
     this.mFolderStyleConfig = this.mFolderViewModel.getFolderStyleConfig();
@@ -141,7 +141,7 @@ export default struct FolderItem {
           nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
           onAppIconClick: (event, appItem) => {
             Log.showInfo(TAG, "onAppIconClick");
-            this.mPageDesktopViewModel.openApplication(appItem.abilityName, appItem.bundleName);
+            this.mPageDesktopViewModel.openApplication(appItem.abilityName, appItem.bundleName, appItem.moduleName);
           },
           onOpenFolderClick: (event, folderItem) => {
             Log.showInfo(TAG, "onOpenFolderClick");

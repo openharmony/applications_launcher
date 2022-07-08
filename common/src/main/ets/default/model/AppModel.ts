@@ -151,11 +151,20 @@ export default class AppModel {
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_FOLDER_PACKAGE_REMOVED, bundleName);
 
       // delete app form dock
-      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE, bundleName);
-      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RECENT_DOCK_ITEM_DELETE, bundleName);
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE, {
+        bundleName: bundleName,
+        keyName: undefined
+      });
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RECENT_DOCK_ITEM_DELETE, {
+        bundleName: bundleName,
+        keyName: undefined
+      });
 
       // delete app from pageDesktop
-      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE, bundleName);
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE, {
+        bundleName: bundleName,
+        keyName: undefined
+      });
     } else {
       const abilityInfos = await launcherAbilityManager.getLauncherAbilityInfo(bundleName);
       Log.showInfo(TAG, `installationSubscriberCallBack abilityInfos: ${JSON.stringify(abilityInfos)}`);
@@ -228,9 +237,9 @@ export default class AppModel {
  */
   private removeItemCache(appItemInfo: AppItemInfo): void {
     Log.showInfo(TAG, `removeItemCache bundleName: ${(appItemInfo.bundleName)}`);
-    let cacheKey = appItemInfo.appLabelId + appItemInfo.bundleName;
+    let cacheKey = appItemInfo.appLabelId + appItemInfo.bundleName + appItemInfo.moduleName;
     globalThis.ResourceManager.deleteAppResourceCache(cacheKey, 'name');
-    cacheKey = appItemInfo.appIconId + appItemInfo.bundleName;
+    cacheKey = appItemInfo.appIconId + appItemInfo.bundleName + appItemInfo.moduleName;
     globalThis.ResourceManager.deleteAppResourceCache(cacheKey, 'icon');
   }
 

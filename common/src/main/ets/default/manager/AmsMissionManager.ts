@@ -37,6 +37,8 @@ class AmsMissionManager {
     Log.showDebug(TAG, 'getInstance');
     if (globalThis.AmsMissionManagerInstance == null) {
       globalThis.AmsMissionManagerInstance = new AmsMissionManager();
+      // remove this if toolchain fix requireNApi bug
+      image.toString();
     }
     return globalThis.AmsMissionManagerInstance;
   }
@@ -208,8 +210,17 @@ class AmsMissionManager {
     let snapShotInfo: SnapShotInfo = new SnapShotInfo();
     Log.showInfo(TAG, `getMissionSnapShot start! missionId: ${missionId}`);
     try {
-      const missionSnapshot: MissionSnapshot = await missionManager.getMissionSnapShot('', missionId);
+      let missionSnapshot: MissionSnapshot = null;
+      await missionManager.getMissionSnapShot('', missionId)
+        .then((res) => {
+          Log.showInfo(TAG, `getMissionSnapShot ${missionId} success ${JSON.stringify(res)}`);
+          missionSnapshot = res;
+        })
+        .catch((err) => {
+          Log.showError(TAG, `getMissionSnapShot error: ${JSON.stringify(err)}`);
+        });
       const imageInfo = await missionSnapshot.snapshot.getImageInfo();
+      Log.showInfo(TAG, `getMissionSnapShot success ${JSON.stringify(imageInfo)}`);
       snapShotInfo.missionId = missionId;
       snapShotInfo.snapShotImage = missionSnapshot.snapshot;
       snapShotInfo.snapShotImageWidth = imageInfo.size.width;

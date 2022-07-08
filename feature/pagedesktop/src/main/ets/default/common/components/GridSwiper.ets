@@ -27,11 +27,11 @@ export default struct GridSwiper {
   @State mAppGridInfo: [[]] = [[]];
   private swiperController: SwiperController = new SwiperController();
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     this.mPageDesktopViewModel.setSwiperController(this.swiperController);
   }
 
-  private aboutToDisappear(): void  {
+  aboutToDisappear(): void  {
     Log.showInfo(TAG, 'aboutToDisappear');
     this.mPageDesktopViewModel.setPageIndex();
   }

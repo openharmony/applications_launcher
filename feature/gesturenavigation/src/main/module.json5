@@ -3,7 +3,7 @@
     "name": "gesturenavigation",
     "type": "har",
     "deviceTypes": [
-      "phone",
+      "default",
     ],
     "uiSyntax": "ets"
   }

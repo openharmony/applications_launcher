@@ -49,7 +49,7 @@ export default struct AppGrid {
     return rowsTemplate;
   }
 
-  private aboutToAppear(): void {
+  aboutToAppear(): void {
     mAppGridStyleConfig = this.appGridStyleConfig;
   }
 
@@ -65,6 +65,7 @@ export default struct AppGrid {
               nameHeight: mAppGridStyleConfig.mNameHeight,
               appName: item.appName,
               bundleName: item.bundleName,
+              moduleName: item.moduleName,
               appIconId: item.appIconId,
               appLabelId: item.appLabelId,
               badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE,

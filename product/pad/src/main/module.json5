@@ -6,7 +6,7 @@
     "description": "$string:mainability_description",
     "mainElement": "com.ohos.launcher.MainAbility",
     "deviceTypes": [
-      "phone"
+      "default"
     ],
     "deliveryWithInstall": true,
     "installationFree": false,

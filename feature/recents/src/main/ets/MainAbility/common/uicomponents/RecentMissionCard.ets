@@ -36,22 +36,27 @@ export default struct RecentMissionCard {
   @Prop appLabelId: string;
   @Prop appName: string;
   @Prop bundleName: string;
+  @Prop moduleName: string;
   @Prop abilityName: string;
   @Prop lockedState: boolean;
-  @State margin: number = StyleConstants.SINGLE_LIST_LAYOUT_MARGIN;
-  @State layoutWeight: number = StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT;
-  @State recentImage: image.PixelMap|Resource = StyleConstants.DEFAULT_APP_IMAGE;
+  @State cardMargin: number = StyleConstants.SINGLE_LIST_LAYOUT_MARGIN;
+  @State cardLayoutWeight: number = StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT;
+  // recentImage default is Resource type, to avoid toolchain typeCheck
+  @State recentImage: any = StyleConstants.DEFAULT_APP_IMAGE;
   private mIsSingleLayout: boolean = true;
   private snapShotTime: string = '';
+
   private mRecentMissionsViewModel: RecentMissionsViewModel;
 
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear start');
+    // remove this if toolchain fix requireNApi bug
+    image.toString();
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
     this.mIsSingleLayout = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ? true : false;
-    this.margin = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
+    this.cardMargin = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
       StyleConstants.SINGLE_LIST_LAYOUT_MARGIN * StyleConstants.DPI_RATIO : StyleConstants.DOUBLE_LIST_LAYOUT_MARGIN;
-    this.layoutWeight = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
+    this.cardLayoutWeight = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
       StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT : StyleConstants.DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT;
     this.mRecentMissionsViewModel.getMissionSnapShot(this.missionId, this.recentMissionsSnapshotCallback.bind(this));
   }
@@ -69,11 +74,11 @@ export default struct RecentMissionCard {
     }
   }
 
-  private onPageShow(): void {
+  onPageShow(): void {
     Log.showInfo(TAG, `onPageShow start`);
   }
 
-  private onPageHide(): void {
+  onPageHide(): void {
     Log.showInfo(TAG, `onPageHide start`);
   }
 
@@ -104,6 +109,7 @@ export default struct RecentMissionCard {
               StyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE,
             appIcon: this.appIconId,
             bundleName: this.bundleName,
+            moduleName: this.moduleName,
             labelId: this.appLabelId,
             useCache: false
           })
@@ -113,11 +119,12 @@ export default struct RecentMissionCard {
               StyleConstants.DEFAULT_APP_NAME_SIZE * StyleConstants.DPI_RATIO :
               StyleConstants.DEFAULT_APP_NAME_SIZE,
             bundleName: this.bundleName,
+            moduleName: this.moduleName,
             labelId: this.appLabelId,
-            margin: this.margin / 2
+            nameMargin: this.cardMargin / 2
           })
         }
-        .layoutWeight(this.layoutWeight)
+        .layoutWeight(this.cardLayoutWeight)
         .margin({ left: StyleConstants.SINGLE_LIST_APP_INFO_LEFT_MARGIN })
         Column() {
           Image(StyleConstants.DEFAULT_LOCKED_IMAGE)
@@ -145,6 +152,7 @@ export default struct RecentMissionCard {
         bottom: this.mIsSingleLayout ? StyleConstants.SINGLE_LIST_APP_INFO_BOTTOM_MARGIN :  StyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN
       })
       Image(this.recentImage)
+        .alt(StyleConstants.DEFAULT_APP_IMAGE)
         .objectFit(ImageFit.Cover)
         .borderRadius(StyleConstants.RECENT_IMAGE_RADIUS)
         .width(this.mIsSingleLayout ?
@@ -168,7 +176,7 @@ export default struct RecentMissionCard {
     .height(this.mIsSingleLayout ?
       StyleConstants.SINGLE_LIST_MISSION_HEIGHT :
       StyleConstants.DOUBLE_LIST_MISSION_HEIGHT)
-    .margin({ right: this.mIsSingleLayout ? 0 : this.margin })
+    .margin({ right: this.mIsSingleLayout ? 0 : this.cardMargin })
     .backgroundColor(CommonStyleConstants.DEFAULT_BG_COLOR)
     .gesture(
     PanGesture({ fingers: 1, direction: PanDirection.Vertical, distance: 5 })

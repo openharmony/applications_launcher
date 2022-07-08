@@ -17,6 +17,7 @@ export default class StyleConstants {
   // image resources
   static readonly DEFAULT_APP_ICON_IMAGE: Resource = $r('app.media.icon');
   static readonly DEFAULT_APP_IMAGE: Resource = $r('app.media.img_app_default');
+  static readonly DEFAULT_APP_IMAGE_PATH: string = '/common/pics/img_app_default.png';
   static readonly DEFAULT_DELETE_IMAGE = '/common/pics/ic_public_delete.svg';
   static readonly DEFAULT_DELETE_IMAGE_FULL = '/common/pics/ic_public_delete_full.svg';
   static readonly DEFAULT_RECENT_BACKGROUND_IMAGE = '/common/pics/ic_wallpaper_recent.jpg';
@@ -57,9 +58,9 @@ export default class StyleConstants {
   static readonly RECENT_DELETE_IMAGE_RADIUS = 24;
   static readonly RECENT_DELETE_IMAGE_SIZE = 24;
   static readonly RECENT_DELETE_IMAGE_COLUMN_SIZE = 48;
-  static readonly SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT = 1;
+  static readonly SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT: number = 1;
   static readonly SINGLE_LIST_LAYOUT_MARGIN = 10;
-  static readonly DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT = 2;
+  static readonly DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT: number = 2;
   static readonly DOUBLE_LIST_LAYOUT_MARGIN = 20;
   static readonly DOUBLE_LIST_LAYOUT_COLUMNSGAP = 20;
   static readonly DOUBLE_LIST_LAYOUT_ROWSGAP = 40;

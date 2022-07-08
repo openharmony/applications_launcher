@@ -46,7 +46,7 @@ export default struct SmartDock {
   private mSelectedDockType = 0;
   private dialogName = "";
 
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear start!');
     AppStorage.SetOrCreate('device', this.device);
     try {
@@ -62,7 +62,7 @@ export default struct SmartDock {
     });
   }
 
-  private aboutToDisappear() {
+  aboutToDisappear(): void  {
     Log.showInfo(TAG, 'aboutToDisappear!');
   }
 
@@ -89,7 +89,10 @@ export default struct SmartDock {
       return;
     }
     if (this.device === CommonConstants.PAD_DEVICE_TYPE) {
-      this.mSmartDockViewModel.deleteDockItem(this.mSelectedItem.bundleName, this.mSelectedDockType);
+      this.mSmartDockViewModel.deleteDockItem({
+        bundleName: undefined,
+        keyName: this.mSelectedItem.keyName
+      }, this.mSelectedDockType);
     } else {
       this.mSmartDockViewModel.uninstallApp(this.mSelectedItem.bundleName, this.mSelectedItem.bundleName.isUninstallAble);
     }

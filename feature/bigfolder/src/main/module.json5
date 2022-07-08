@@ -3,7 +3,7 @@
     "name": "bigfolder",
     "type": "har",
     "deviceTypes": [
-      "phone",
+      "default",
     ],
     "uiSyntax": "ets"
   }
