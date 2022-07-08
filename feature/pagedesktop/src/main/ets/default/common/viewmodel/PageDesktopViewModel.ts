@@ -281,28 +281,6 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   }
 
   /**
-   * delete apps in pageDesktop
-   * @param appListInfo
-   */
-  deleteAppItems(appListInfo) {
-    this.mBundleInfoList = this.mSettingsModel.getAppListInfo();
-    Log.showInfo(TAG, 'deleteAppItems mBundleInfoList:' + this.mBundleInfoList.length);
-    for (let j = 0; j < appListInfo.length; j++) {
-      for (let i = 0; i < this.mBundleInfoList.length; i++) {
-        if (this.mBundleInfoList[i].bundleName === appListInfo[j].bundleName
-          && this.mBundleInfoList[i].abilityName === appListInfo[j].abilityName
-          && this.mBundleInfoList[i].moduleName === appListInfo[j].moduleName) {
-          this.mBundleInfoList.splice(i, 1);
-          break;
-        }
-      }
-    }
-
-    this.mSettingsModel.setAppListInfo(this.mBundleInfoList);
-    this.getGridList();
-  }
-
-  /**
    * add app to pageDesktop
    * @param appInfo
    */
@@ -482,7 +460,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
 
   private isInHideAppList(appInfo): boolean {
     for (const hideInfo of this.mHideBundleInfoList) {
-      if (appInfo.bundleName == hideInfo.bundleName && appInfo.abilityName == hideInfo.abilityName) {
+      if (appInfo.keyName == hideInfo.keyName) {
         return true;
       }
     }

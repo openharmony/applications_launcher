@@ -313,10 +313,10 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
             return true;
           } else if (endLayoutInfo.typeId === CommonConstants.TYPE_APP) {
             // create a new folder
-            const appListInfo = [endLayoutInfo];
+            const appLayoutInfo = [endLayoutInfo];
             const startLayoutInfo = this.getStartLayoutInfo(layoutInfo, dragItemInfo);
-            appListInfo.push(startLayoutInfo);
-            this.mFolderViewModel.addNewFolder(appListInfo).then(()=> {
+            appLayoutInfo.push(startLayoutInfo);
+            this.mFolderViewModel.addNewFolder(appLayoutInfo).then(()=> {
               this.deleteBlankPageAfterDragging(startPosition, endPosition);
             });
             return true;
