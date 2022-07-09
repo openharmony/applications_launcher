@@ -41,11 +41,12 @@ struct AppCenterView {
     this.mStage.onCreate();
     AppStorage.SetOrCreate('device', this.device);
     this.mLayoutViewModel = LayoutViewModel.getInstance();
-    this.updateScreenSize();
   }
 
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
+    // move appCenter startup front when power on
+    this.updateScreenSize();
     this.mAppGridPresenter = AppGridPresenter.getInstance();
     this.mAppGridPresenter.getAppList();
     this.mAppGridPresenter.registerAppListChange();

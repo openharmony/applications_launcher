@@ -99,7 +99,8 @@ export default abstract class BaseDragHandler {
    */
   protected getDragItemInfo() {
     const dragItemInfo: any = AppStorage.Get('dragItemInfo');
-    return dragItemInfo;
+    // avoid dragItemInfo from AppStorage is undefined
+    return dragItemInfo ? dragItemInfo : {};
   }
 
   /**
