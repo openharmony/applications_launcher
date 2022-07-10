@@ -107,7 +107,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     const settingAppInfoList = this.mSettingsModel.getAppListInfo();
     const folderAppInfo = [];
     for (let j = 0; j < appLayoutInfo.length; j++) {
-      Log.showDebug(TAG, `addNewFolder appLayoutInfo: ${JSON.stringify(appLayoutInfo[j])}`)
+      Log.showDebug(TAG, `addNewFolder appLayoutInfo: ${JSON.stringify(appLayoutInfo[j])}`);
       for (let i = 0; i < settingAppInfoList.length; i++) {
         if (settingAppInfoList[i].keyName === appLayoutInfo[j].keyName) {
           folderAppInfo.push(settingAppInfoList[i]);
@@ -191,10 +191,8 @@ export default class FolderViewModel extends BaseAppPresenter {
     }
 
     // delete app from desktop
+    this.mSettingsModel.setAppListInfo(appListInfo);
     this.deleteAppLayoutItems(gridLayoutInfo, [appInfo]);
-    if (!this.getIsPad()) {
-      this.mSettingsModel.setAppListInfo(appListInfo);
-    }
   }
 
   /**
@@ -202,11 +200,10 @@ export default class FolderViewModel extends BaseAppPresenter {
  * @param appListInfo
  */
   private deleteAppLayoutItems(gridLayoutInfo, appLayoutInfo) {
-    Log.showInfo(TAG, 'deleteAppItems mBundleInfoList:' + gridLayoutInfo.layoutInfo.length);
     for (let i = 0; i < appLayoutInfo.length; i++) {
-      Log.showInfo(TAG, `nmsDebug ${JSON.stringify(appLayoutInfo[i])}`);
-      gridLayoutInfo.layoutInfo = gridLayoutInfo.layoutInfo .filter(item => item.keyName != appLayoutInfo[i].keyName)
+      gridLayoutInfo.layoutInfo = gridLayoutInfo.layoutInfo.filter(item => item.keyName != appLayoutInfo[i].keyName);
     }
+    Log.showDebug(TAG, `deleteAppItems gridLayoutInfo.layoutInfo: ${gridLayoutInfo.layoutInfo.length}`);
     this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfo);
     this.mPageDesktopViewModel.getGridList();
   }
@@ -284,10 +281,8 @@ export default class FolderViewModel extends BaseAppPresenter {
       gridLayoutInfo.layoutInfo.push(gridLayout);
       appListInfo.push(removeAppInfos[i]);
     }
+    this.mSettingsModel.setAppListInfo(appListInfo);
     this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfo);
-    if (!this.getIsPad()) {
-      this.mSettingsModel.setAppListInfo(appListInfo);
-    }
     return true;
   }
 
@@ -370,10 +365,8 @@ export default class FolderViewModel extends BaseAppPresenter {
       this.updateBadgeNumber(gridLayoutInfo.layoutInfo[folderIndex], appInfo);
       openFolderData.layoutInfo = folderLayoutInfo;
     }
+    this.mSettingsModel.setAppListInfo(appListInfo);
     this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfo);
-    if (!this.getIsPad()) {
-      this.mSettingsModel.setAppListInfo(appListInfo);
-    }
     return openFolderData;
   }
 
@@ -1256,10 +1249,8 @@ export default class FolderViewModel extends BaseAppPresenter {
         appListInfo.push(removeAppInfos[i]);
       }
     }
+    this.mSettingsModel.setAppListInfo(appListInfo);
     this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfo);
-    if (!this.getIsPad()) {
-      this.mSettingsModel.setAppListInfo(appListInfo);
-    }
     this.mPageDesktopViewModel.getGridList();
     this.updateOpenFolderStatus(openFolderData);
   }

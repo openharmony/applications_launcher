@@ -216,24 +216,20 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
 
     // get from config empty then init pageDesktop app
     if (!this.mSettingsModel.isAppListInfoExist() && this.ifInfoIsNull(pageDesktopInfo)) {
-      for (const i in totalAppInfoList) {
-        pageDesktopInfo.push(totalAppInfoList[i]);
+      for (const appInfo of totalAppInfoList) {
+        pageDesktopInfo.push(appInfo);
       }
     } else {
       // remove uninstalled app
-      for (const i in pageDesktopInfo) {
-        let hasUninstalled = true;
-        for (const j in totalAppInfoList) {
-          if (pageDesktopInfo[i].bundleName == totalAppInfoList[j].bundleName) {
-            pageDesktopInfo[i].appName = totalAppInfoList[j].appName;
-            hasUninstalled = false;
-            break;
+      pageDesktopInfo = pageDesktopInfo.filter(item => {
+        for (const appInfo of totalAppInfoList) {
+          if (item.keyName == appInfo.keyName) {
+            item.appName = appInfo.appName;
+            return true;
           }
         }
-        if (hasUninstalled) {
-          pageDesktopInfo.splice(i, 1);
-        }
-      }
+        return false;
+      });
     }
 
     // product phone logic
@@ -245,7 +241,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
 
     // update pageDesktop app config
     this.mSettingsModel.setAppListInfo(pageDesktopInfo);
-    Log.showInfo(TAG, 'getAppList:' + pageDesktopInfo.length);
+    Log.showInfo(TAG, `getAppList: ${pageDesktopInfo.length}`);
     AppStorage.SetOrCreate('isDesktopLoadFinished', true);
     return pageDesktopInfo;
   }
@@ -286,9 +282,9 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    */
   addToDesktop(appInfo) {
     this.mBundleInfoList = this.mSettingsModel.getAppListInfo();
-    Log.showInfo(TAG, 'appInfo: ' + JSON.stringify(appInfo) + 'addToDesktop bundleName:' + appInfo.bundleName + ', mBundleInfoList length:' + this.mBundleInfoList.length);
+    Log.showInfo(TAG, `addToDesktop keyName: ${appInfo.keyName} mBundleInfoList length: ${this.mBundleInfoList.length}`);
     for (let i = 0; i < this.mBundleInfoList.length; i++) {
-      Log.showInfo(TAG, 'addToDesktop in loop:' + JSON.stringify(this.mBundleInfoList[i]));
+      Log.showDebug(TAG, `addToDesktop in loop: ${JSON.stringify(this.mBundleInfoList[i])}`);
       if (this.mBundleInfoList[i].keyName === appInfo.keyName) {
         Prompt.showToast({
           message: $r('app.string.duplicate_add')
@@ -472,7 +468,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       for (let j = 0; j < folderInfoList[i].layoutInfo.length; j++) {
         for (let k = 0; k < folderInfoList[i].layoutInfo[j].length; k++) {
           const appIndex = bundleInfoList.findIndex(item => {
-            return item.bundleName === folderInfoList[i].layoutInfo[j][k].bundleName;
+            return item.keyName === folderInfoList[i].layoutInfo[j][k].keyName;
           });
           if (appIndex != CommonConstants.INVALID_VALUE) {
             bundleInfoList.splice(appIndex, 1);
@@ -511,6 +507,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       Log.showDebug(TAG, `pagingFiltering layoutInfo: ${JSON.stringify(layoutInfo[i])}`);
       if (layoutInfo[i].typeId == CommonConstants.TYPE_APP) {
         for (let j = 0; j < this.mBundleInfoList.length; j++) {
+          Log.showDebug(TAG, `pagingFiltering mBundleInfoList: ${JSON.stringify(this.mBundleInfoList[j])}`);
           if (layoutInfo[i].keyName == this.mBundleInfoList[j].keyName
           && layoutInfo[i].typeId == this.mBundleInfoList[j].typeId) {
             this.mBundleInfoList[j].area = layoutInfo[i].area;
@@ -677,16 +674,12 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
   }
 
   private updateLayoutInfo(info) {
-    const layoutDescription = info.layoutDescription;
-    const layoutInfo = info.layoutInfo;
+    let layoutInfo = info.layoutInfo;
     this.mGridConfig = this.getGridConfig();
-    Log.showInfo(TAG, 'updateLayoutInfo layoutDescription:' + JSON.stringify(layoutDescription));
-    Log.showInfo(TAG, 'updateLayoutInfo mGridConfig:' + JSON.stringify(this.getGridConfig()));
-    const column = this.mGridConfig.column;
-    const row = this.mGridConfig.row;
+    Log.showDebug(TAG, 'updateLayoutInfo mGridConfig:' + JSON.stringify(this.mGridConfig));
+    info.layoutDescription.row = this.mGridConfig.row;
+    info.layoutDescription.column = this.mGridConfig.column;
     const newApp = [];
-    layoutDescription.row = row;
-    layoutDescription.column = column;
     //Detect newly installed apps
     for (const i in this.mBundleInfoList) {
       let sign = false;
@@ -702,31 +695,26 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         newApp.push(this.mBundleInfoList[i]);
       }
     }
+
     //Detect uninstalled apps, remove all apps which have same bundleName when one app is uninstalled
-    for (const i in layoutInfo) {
-      if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER || layoutInfo[i].typeId == CommonConstants.TYPE_CARD) {
-        continue;
+    layoutInfo = layoutInfo.filter(item => {
+      if (item.typeId == CommonConstants.TYPE_FOLDER || item.typeId == CommonConstants.TYPE_CARD) {
+        return true;
       }
-      let sign = false;
-      for (const j in this.mBundleInfoList) {
-        if (layoutInfo[i].keyName == this.mBundleInfoList[j].keyName) {
-          sign = true;
-          break;
+      for (const bundleInfo of this.mBundleInfoList) {
+        if (item.keyName == bundleInfo.keyName) {
+          return true;
         }
       }
-      if (!sign) {
-        layoutInfo.splice(i, 1);
-      }
-    }
+      return false;
+    })
 
-    // Add new app
+    // calculate the layout of new apps
     for (let i = 0; i < newApp.length; i++) {
       if (newApp[i].typeId == CommonConstants.TYPE_APP) {
-        this.updateAppItemLayoutInfo(info, layoutDescription, newApp[i]);
+        this.updateAppItemLayoutInfo(info, newApp[i]);
       }
     }
-    info.layoutDescription = layoutDescription;
-    info.layoutInfo = layoutInfo;
     return info;
   }
 
@@ -759,7 +747,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     return isNeedNewPage;
   }
 
-  private updateAppItemLayoutInfo(info, layoutDescription, item): void {
+  private updateAppItemLayoutInfo(info, item): void {
     const pageCount = info.layoutDescription.pageCount;
     const row = info.layoutDescription.row;
     const column = info.layoutDescription.column;
@@ -800,7 +788,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
         column: 0,
         row: 0
       });
-      layoutDescription.pageCount = layoutDescription.pageCount + 1;
+      ++info.layoutDescription.pageCount;
     }
   }
 
@@ -1113,7 +1101,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
    * @return {number} PageCount.
    */
   getGridPageCount(): number {
-    return this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount;
+    return this.getLayoutInfo().layoutDescription.pageCount;
   }
 
   /**

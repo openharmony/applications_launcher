@@ -527,7 +527,7 @@ export default class RdbStoreManager {
       for (let i in layoutinfo) {
         let element = layoutinfo[i];
         let item = {};
-        Log.showError(TAG, 'nmsDebug insertGridLayoutInfo' + JSON.stringify(element));
+        Log.showDebug(TAG, 'insertGridLayoutInfo' + JSON.stringify(element));
         if (element.typeId === CommonConstants.TYPE_APP) {
           item = {
             'bundle_name': element.bundleName,

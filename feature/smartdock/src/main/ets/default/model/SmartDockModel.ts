@@ -257,7 +257,6 @@ export default class SmartDockModel {
    */
   private idDuplicate(list: AppItemInfo[], appInfo: AppItemInfo): boolean {
     for (let i = 0; i < list.length; i++) {
-      Log.showInfo(TAG, `nmsDebug ${JSON.stringify(list[i])}) keyName: ${appInfo.keyName}`)
       if (list[i].keyName === appInfo.keyName) {
         Prompt.showToast({
           message: $r('app.string.duplicate_add')
