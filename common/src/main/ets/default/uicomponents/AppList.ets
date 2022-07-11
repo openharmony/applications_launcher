@@ -15,12 +15,12 @@
 
 import AppItemInfo from '../bean/AppItemInfo';
 import AppListStyleConfig from '../layoutconfig/AppListStyleConfig';
-import AppIcon from './AppIcon.ets';
-import AppName from './AppName.ets';
-import AppMenu from './AppMenu.ets';
+import AppIcon from './AppIcon';
+import AppName from './AppName';
+import AppMenu from './AppMenu';
 import CommonConstants from '../constants/CommonConstants';
 import StyleConstants from '../constants/StyleConstants';
-import ScrollerComponent from './ScrollerComponent.ets';
+import ScrollerComponent from './ScrollerComponent';
 import ResourceManager from '../manager/ResourceManager';
 import CheckEmptyUtils from '../utils/CheckEmptyUtils';
 import Log from '../utils/Log';

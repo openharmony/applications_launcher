@@ -15,7 +15,7 @@
 
 import ResourceManager from '../../../../../../../../common/src/main/ets/default/manager/ResourceManager';
 import StyleConstants from '../constants/StyleConstants';
-import RecentMissionsViewModel from '../../viewmodel/RecentMissionsViewModel.ets';
+import RecentMissionsViewModel from '../../viewmodel/RecentMissionsViewModel';
 
 const TAG = 'Recent-RecentMissionAppIcon';
 

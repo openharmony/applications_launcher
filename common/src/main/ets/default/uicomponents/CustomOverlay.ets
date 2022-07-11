@@ -16,10 +16,10 @@
 import CommonConstants from '../constants/CommonConstants';
 import StyleConstants from '../constants/StyleConstants';
 import ResourceManager from '../manager/ResourceManager';
-import OverlayAppIcon from './OverlayAppIcon.ets';
-import FolderComponent from './FolderComponent.ets';
+import OverlayAppIcon from './OverlayAppIcon';
+import FolderComponent from './FolderComponent';
 import MenuInfo from '../bean/MenuInfo'
-import FormItemComponent from './FormItemComponent.ets';
+import FormItemComponent from './FormItemComponent';
 
 @Component
 export default struct CustomOverlay {

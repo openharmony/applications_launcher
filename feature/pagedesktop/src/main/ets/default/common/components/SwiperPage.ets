@@ -15,9 +15,9 @@
 
 import CommonConstants from '../../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import PresetStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
-import AppItem from './AppItem.ets';
-import FolderItem from './FolderItem.ets';
-import FormItem from './FormItem.ets';
+import AppItem from './AppItem';
+import FolderItem from './FolderItem';
+import FormItem from './FormItem';
 import PageDesktopGridStyleConfig from '../PageDesktopGridStyleConfig';
 import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
 

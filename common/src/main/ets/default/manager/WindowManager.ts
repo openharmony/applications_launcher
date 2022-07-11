@@ -133,29 +133,22 @@ class WindowManager {
   }
 
   createWindow(context: ServiceExtensionContext, name: string, windowType: number, loadContent: string, isShow: boolean = true, callback?: Function) {
-    display.getDefaultDisplay().then((dis: { id: number, width: number, height: number, refreshRate: number }) => {
-      Log.showInfo(TAG, `createWindow, name: ${name} windowType: ${windowType}  loadContent: ${loadContent}`);
-      Window.create(context, name, windowType).then((win) => {
-        Log.showInfo(TAG, `createWindow, resetSize then name: ${name}`);
-        void win.resetSize(dis.width, dis.height).then(() => {
-          Log.showInfo(TAG, `${name} window reset size finish`);
-          void win.loadContent(loadContent).then(() => {
-            Log.showInfo(TAG, `then begin ${name} window loadContent in then!`);
-            void win.setSystemBarProperties({
-              navigationBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR,
-              statusBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR
-            }).then(() => {
-              if (name !== this.RECENT_WINDOW_NAME) {
-                void win.setLayoutFullScreen(true).then(() => {
-                  Log.showInfo(TAG, `${name} setLayoutFullScreen`);
-                });
-              }
-              if (callback) {
-                callback(win);
-              }
-              isShow && this.showWindow(name);
+    Window.create(context, name, windowType).then((win) => {
+      void win.loadContent(loadContent).then(() => {
+        Log.showInfo(TAG, `then begin ${name} window loadContent in then!`);
+        void win.setSystemBarProperties({
+          navigationBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR,
+          statusBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR
+        }).then(() => {
+          if (name !== this.RECENT_WINDOW_NAME) {
+            void win.setLayoutFullScreen(true).then(() => {
+              Log.showInfo(TAG, `${name} setLayoutFullScreen`);
             });
-          });
+          }
+          if (callback) {
+            callback(win);
+          }
+          isShow && this.showWindow(name);
         });
       }, (error) => {
         Log.showError(TAG, `createWindow, create error: ${JSON.stringify(error)}`);

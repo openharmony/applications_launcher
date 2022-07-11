@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 
-import AppIcon from './AppIcon.ets';
-import AppName from './AppName.ets';
+import AppIcon from './AppIcon';
+import AppName from './AppName';
 import StyleConstants from '../constants/StyleConstants';
 import CommonConstants from '../constants/CommonConstants';
 import PresetStyleConstants from '../constants/PresetStyleConstants';
 import SettingsModel from '../model/SettingsModel';
-import AppMenu from './AppMenu.ets';
+import AppMenu from './AppMenu';
 import Log from '../utils/Log';
 import ResourceManager from '../manager/ResourceManager';
 

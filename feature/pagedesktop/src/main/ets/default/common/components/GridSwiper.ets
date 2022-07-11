@@ -14,7 +14,7 @@
  */
 
 import StyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import SwiperPage from './SwiperPage.ets';
+import SwiperPage from './SwiperPage';
 import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
 
 const TAG = "GridSwiper";

@@ -15,7 +15,7 @@
 import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import StyleConstants from '../common/constants/StyleConstants';
-import RecentMissionCard from '../common/uicomponents/RecentMissionCard.ets';
+import RecentMissionCard from '../common/uicomponents/RecentMissionCard';
 import RecentMissionsViewModel from '../viewmodel/RecentMissionsViewModel';
 
 const TAG = 'RecentMissionsDoubleLayout';

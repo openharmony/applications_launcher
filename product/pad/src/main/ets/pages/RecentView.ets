@@ -19,10 +19,9 @@ import Trace from '../../../../../../common/src/main/ets/default/utils/Trace';
 import RecentMissionInfo from '../../../../../../common/src/main/ets/default/bean/RecentMissionInfo';
 import StyleConstants from '../../../../../../feature/recents/src/main/ets/MainAbility/common/constants/StyleConstants';
 import RecentMissionsStage from '../../../../../../feature/recents/src/main/ets/MainAbility/common/RecentMissionsStage';
-import RecentMissionsViewModel from '../../../../../../feature/recents/src/main/ets/MainAbility/viewmodel/RecentMissionsViewModel.ets';
-import EmptyMsgDisplay from '../../../../../../feature/recents/src/main/ets/MainAbility/view/EmptyMsgDisplay.ets';
-import RecentMissionsDoubleLayout from '../../../../../../feature/recents/src/main/ets/MainAbility/view/RecentMissionsDoubleLayout.ets';
-import RecentMissionsSingleLayout from '../../../../../../feature/recents/src/main/ets/MainAbility/view/RecentMissionsSingleLayout.ets';
+import RecentMissionsViewModel from '../../../../../../feature/recents/src/main/ets/MainAbility/viewmodel/RecentMissionsViewModel';
+import RecentMissionsDoubleLayout from '../../../../../../feature/recents/src/main/ets/MainAbility/view/RecentMissionsDoubleLayout';
+import RecentMissionsSingleLayout from '../../../../../../feature/recents/src/main/ets/MainAbility/view/RecentMissionsSingleLayout';
 
 const TAG = "RecentView";
 
@@ -64,14 +63,20 @@ struct RecentView {
   build() {
     Column() {
       if (this.recentMissionsList.length === 0) {
-        EmptyMsgDisplay();
+        Text($r('app.string.No_running_apps_recently'))
+          .fontColor(StyleConstants.DEFAULT_FONT_COLOR)
+          .fontSize(StyleConstants.DEFAULT_FONT_SIZE);
       } else {
         if (this.traceLoadData() && this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single') {
-          RecentMissionsSingleLayout({ recentMissionsSingleList: $recentMissionsList,
-            isClickSubComponent: $isClickSubComponent});
+          RecentMissionsSingleLayout({
+            recentMissionsSingleList: $recentMissionsList,
+            isClickSubComponent: $isClickSubComponent
+          });
         } else {
-          RecentMissionsDoubleLayout({ recentMissionsDoubleList: $recentMissionsList,
-            isClickSubComponent: $isClickSubComponent});
+          RecentMissionsDoubleLayout({
+            recentMissionsDoubleList: $recentMissionsList,
+            isClickSubComponent: $isClickSubComponent
+          });
         }
       }
     }

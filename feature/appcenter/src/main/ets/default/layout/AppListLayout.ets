@@ -17,10 +17,10 @@ import LayoutConfigManager from '../../../../../../../common/src/main/ets/defaul
 import AppCenterListStyleConfig from '../common/AppCenterListStyleConfig';
 import AppListPresenter from '../common/presenter/AppListPresenter';
 import FeatureConstants from '../common/constants/FeatureConstants';
-import AppList from '../../../../../../../common/src/main/ets/default/uicomponents/AppList.ets';
+import AppList from '../../../../../../../common/src/main/ets/default/uicomponents/AppList';
 import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
 import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
-import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog.ets';
+import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog';
 import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
 
 const TAG = 'ListLayout';

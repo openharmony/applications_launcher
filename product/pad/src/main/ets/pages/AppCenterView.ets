@@ -18,8 +18,8 @@ import CommonConstants from '../../../../../../common/src/main/ets/default/const
 import LayoutViewModel from '../../../../../../common/src/main/ets/default/viewmodel/LayoutViewModel';
 import StyleConstants from '../../../../../../common/src/main/ets/default/constants/StyleConstants';
 import Log from '../../../../../../common/src/main/ets/default/utils/Log';
-import AppGridLayout from '../../../../../../feature/appcenter/src/main/ets/default/layout/AppGridLayout.ets';
-import SmartDock from '../../../../../../feature/smartdock/src/main/ets/default/layout/SmartDock.ets';
+import AppGridLayout from '../../../../../../feature/appcenter/src/main/ets/default/layout/AppGridLayout';
+import SmartDock from '../../../../../../feature/smartdock/src/main/ets/default/layout/SmartDock';
 import AppGridPresenter from '../../../../../../feature/appcenter/src/main/ets/default/common/presenter/AppGridPresenter';
 import PadStage from '../common/PadStage';
 

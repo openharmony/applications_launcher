@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
-import RecentMissionCard from '../common/uicomponents/RecentMissionCard.ets';
-import RecentMissionsViewModel from '../viewmodel/RecentMissionsViewModel.ets';
+import RecentMissionCard from '../common/uicomponents/RecentMissionCard';
+import RecentMissionsViewModel from '../viewmodel/RecentMissionsViewModel';
 import StyleConstants from '../common/constants/StyleConstants';
 
 const TAG = 'RecentMissionsSingleLayout';
@@ -27,7 +27,6 @@ export default struct RecentMissionsSingleLayout {
   @Link recentMissionsSingleList: [];
   @Link isClickSubComponent: boolean;
   private mRecentMissionsViewModel: RecentMissionsViewModel;
-  private mScroll: Scroller = new Scroller();
 
   aboutToAppear(): void {
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
