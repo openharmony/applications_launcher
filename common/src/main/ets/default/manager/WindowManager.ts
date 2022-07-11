@@ -17,9 +17,15 @@ import CommonEvent from '@ohos.commonEvent';
 import display from '@ohos.display';
 import Window from '@ohos.window';
 import featureAbility from '@ohos.ability.featureAbility';
+import ServiceExtensionContext from 'application/ServiceExtensionContext';
+import { AsyncCallback, BusinessError} from 'basic';
+import { CommonEventData } from 'commonEvent/commonEventData';
+import { CommonEventSubscriber } from 'commonEvent/commonEventSubscriber';
+import { CommonEventSubscribeInfo } from 'commonEvent/commonEventSubscribeInfo';
+
+import commonEventManager from './CommonEventManager'
 import Log from '../utils/Log';
 import StyleConstants from '../constants/StyleConstants';
-import ServiceExtensionContext from 'application/ServiceExtensionContext';
 
 const TAG = 'WindowManager';
 
@@ -29,7 +35,9 @@ const TAG = 'WindowManager';
 class WindowManager {
   private mDisplayData = null;
 
-  private subscriber = null;
+  private static subscriber: CommonEventSubscriber;
+
+  private static eventCallback: AsyncCallback<CommonEventData>;
 
   RECENT_WINDOW_NAME = 'RecentView';
 
@@ -39,30 +47,30 @@ class WindowManager {
 
   FORM_MANAGER_WINDOW_NAME = 'FormManagerView';
 
-  DESKTOP_RANK = 2001;
+  DESKTOP_RANK = Window.WindowType.TYPE_DESKTOP;
 
-  FORM_MANAGER_RANK = 2100;
+  RECENT_RANK = Window.WindowType.TYPE_LAUNCHER_RECENT;
 
-  RECENT_RANK = 2115;
-
-  DOCK_RANK = 2116;
+  DOCK_RANK = Window.WindowType.TYPE_LAUNCHER_DOCK;
 
   /**
-   * 获取窗口管理类对象
+   * get WindowManager instance
    *
-   * @return 窗口管理类对象单一实例
+   * @return WindowManager singleton
    */
   static getInstance(): WindowManager {
     if (globalThis.WindowManager == null) {
       globalThis.WindowManager = new WindowManager();
+      this.eventCallback = this.winEventCallback.bind(this);
+      this.initSubscriber();
     }
     return globalThis.WindowManager;
   }
 
   /**
-   * 获取窗口宽度
+   * get window width
    *
-   * @return 窗口宽度
+   * @return windowWidth
    */
   async getWindowWidth() {
     if (this.mDisplayData == null) {
@@ -72,10 +80,10 @@ class WindowManager {
   }
 
   /**
-   * 获取窗口高度
-   *
-   * @return 窗口高度
-   */
+    * get window height
+    *
+    * @return windowHeight
+    */
   async getWindowHeight() {
     if (this.mDisplayData == null) {
       this.mDisplayData = await this.getWindowDisplayData();
@@ -103,10 +111,10 @@ class WindowManager {
   }
 
   /**
-   * 设置窗口大小
+   * set window size
    *
-   * @param width 窗口宽度
-   * @param width 窗口高度
+   * @param width window width
+   * @param height window height
    */
   async setWindowSize(width: number, height: number): Promise<void> {
     const abilityWindow = await Window.getTopWindow();
@@ -114,10 +122,10 @@ class WindowManager {
   }
 
   /**
-   * 设置窗口位置
+   * set window position
    *
-   * @param x 窗口横坐标
-   * @param y 窗口纵坐标
+   * @param x coordinate x
+   * @param y coordinate y
    */
   async setWindowPosition(x: number, y: number): Promise<void> {
     const abilityWindow = await Window.getTopWindow();
@@ -279,7 +287,7 @@ class WindowManager {
         setWinMode(win);
       }
       this.createWindow(globalThis.desktopContext, windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK,
-        "pages/" + windowManager.RECENT_WINDOW_NAME, false, callback);
+        'pages/' + windowManager.RECENT_WINDOW_NAME, false, callback);
     });
   }
 
@@ -287,55 +295,70 @@ class WindowManager {
     this.findWindow(windowManager.RECENT_WINDOW_NAME, win => {
       win.off('lifeCycleEvent', (win) => {
         win.destroy().then(() => {
-          Log.showInfo(TAG, `destroyRecentWindow`);
+          Log.showInfo(TAG, 'destroyRecentWindow');
         });
       })
     });
   }
 
-  /**
-   * Register window event listener.
-   */
-  public registerWindowEvent() {
-    if (this.subscriber != null) {
-      return
+  private static initSubscriber() {
+    if (WindowManager.subscriber != null) {
+      return;
     }
-    var subscribeInfo = {
-      events: ["common.event.SPLIT_SCREEN"]
+    const subscribeInfo: CommonEventSubscribeInfo = {
+      events: [commonEventManager.RECENT_FULL_SCREEN, commonEventManager.RECENT_SPLIT_SCREEN]
     };
-    CommonEvent.createSubscriber(subscribeInfo).then((data) => {
-      Log.showDebug(TAG, "Launcher createSubscriber callback");
-      this.subscriber = data;
-      CommonEvent.subscribe(this.subscriber, this.winEventCallback.bind(this));
+    CommonEvent.createSubscriber(subscribeInfo).then((commonEventSubscriber: CommonEventSubscriber) => {
+      Log.showDebug(TAG, "init SPLIT_SCREEN subscriber success");
+      WindowManager.subscriber = commonEventSubscriber;
     }, (err) => {
       Log.showError(TAG, `Failed to createSubscriber ${err}`)
     })
   }
 
   /**
+   * Register window event listener.
+   */
+  public registerWindowEvent() {
+    commonEventManager.registerCommonEvent(WindowManager.subscriber, WindowManager.eventCallback);
+  }
+
+  /**
    * Unregister window event listener.
    */
   public unregisterWindowEvent() {
-    if (this.subscriber == null) {
-      return
-    }
-    CommonEvent.unsubscribe(this.subscriber, null);
+    commonEventManager.unregisterCommonEvent(WindowManager.subscriber, WindowManager.eventCallback);
   }
 
   /**
    * Window event handler.
    */
-  private async winEventCallback(err, data) {
-    Log.showDebug(TAG,`Launcher AppModel subscribeCallBack receive event. data: ${JSON.stringify(data)}`);
-    var windowModeMap = {
-      'Primary': featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_PRIMARY,
-      'Secondary': featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_SECONDARY
+  private static async winEventCallback(error: BusinessError, data: CommonEventData) {
+    Log.showDebug(TAG,`Launcher WindowManager winEventCallback receive data: ${JSON.stringify(data)}.`);
+    if (error.code != 0) {
+      Log.showError(TAG, `get winEventCallback error: ${JSON.stringify(error)}`);
+      return;
     }
-    windowManager.createRecentWindow(windowModeMap[data.parameters.windowMode]);
-    globalThis.splitMissionId = data.parameters.missionId
 
-    await this.subscriber.setCode(0, null)
-    await this.subscriber.finishCommonEvent(null);
+    switch (data.event) {
+      case commonEventManager.RECENT_FULL_SCREEN:
+        // full screen recent window
+        windowManager.createRecentWindow();
+        break;
+      case commonEventManager.RECENT_SPLIT_SCREEN:
+        // split window mode
+        const windowModeMap = {
+          'Primary': featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_PRIMARY,
+          'Secondary': featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_SECONDARY
+        };
+        windowManager.createRecentWindow(windowModeMap[data.parameters.windowMode]);
+        globalThis.splitMissionId = data.parameters.missionId;
+        await WindowManager.subscriber.setCode(0)
+        await WindowManager.subscriber.finishCommonEvent();
+        break;
+      default:
+        break;
+    }
   }
 }
 

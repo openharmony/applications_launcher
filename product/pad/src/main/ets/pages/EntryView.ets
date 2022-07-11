@@ -29,7 +29,6 @@ import FolderOpenComponent from '../../../../../../feature/bigfolder/src/main/et
 import FeatureConstants from '../../../../../../feature/bigfolder/src/main/ets/default/common/constants/FeatureConstants';
 import PageDesktopDragHandler from '../../../../../../feature/pagedesktop/src/main/ets/default/common/PageDesktopDragHandler';
 import SettingsModel from '../../../../../../common/src/main/ets/default/model/SettingsModel';
-import RecentEvent from '../common/RecentEvent';
 import PadStage from '../common/PadStage';
 
 const RAW_IMAGE_CACHE_SIZE = 20000000;
@@ -58,9 +57,6 @@ struct EntryView {
     this.getWindowSize();
     this.updateScreenSize();
 
-    // register recentEvent callback
-    let mCallback: Record<string, () => void> = {'onStateChange': () => this.createRecent()};
-    RecentEvent.registerCallback(mCallback);
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
     this.navigationBarStatus = SettingsModel.getInstance().getValue();
   }
@@ -90,11 +86,6 @@ struct EntryView {
       globalThis.FormStyleConfigInstance.initConfig();
       this.updateScreenSize();
     }
-  }
-
-  private createRecent(): void {
-    Log.showInfo(TAG, 'receive Subscriber success');
-    globalThis.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
   }
 
   onPageShow(): void {

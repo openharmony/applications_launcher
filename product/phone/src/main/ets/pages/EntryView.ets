@@ -31,7 +31,6 @@ import FeatureConstants from '../../../../../../feature/bigfolder/src/main/ets/d
 import SettingsModel from '../../../../../../common/src/main/ets/default/model/SettingsModel';
 import PhoneStage from '../common/PhoneStage';
 import StyleConstants from '../common/constants/StyleConstants';
-import RecentEvent from '../common/RecentEvent';
 
 const TAG = "EntryView";
 
@@ -66,9 +65,6 @@ struct EntryView {
     this.getWindowSize();
     this.updateScreenSize();
 
-    // register recentEvent callback
-    let mCallback: Record<string, () => void> = {'onStateChange': () => this.createRecent()};
-    RecentEvent.registerCallback(mCallback);
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
     this.navigationBarStatus = SettingsModel.getInstance().getValue();
   }
@@ -111,11 +107,6 @@ struct EntryView {
       globalThis.FormStyleConfigInstance.initConfig();
       this.updateScreenSize();
     }
-  }
-
-  private createRecent(): void {
-    Log.showDebug(TAG, 'receive Subscriber success');
-    globalThis.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
   }
 
   private async getWindowSize(): Promise<void> {
