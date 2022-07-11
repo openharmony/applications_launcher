@@ -66,7 +66,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
 
   async showFormManager(params) {
     Log.showInfo(TAG, `showFormManager params: ${JSON.stringify(params)}`);
-    globalThis.createWindowWithName(windowManager.FORM_MANAGER_WINDOW_NAME, windowManager.FORM_MANAGER_RANK);
+    globalThis.createWindowWithName(windowManager.FORM_MANAGER_WINDOW_NAME, windowManager.RECENT_RANK);
   }
   
   setSwiperController(swiperController: SwiperController): void {
@@ -708,6 +708,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
       }
       return false;
     })
+    info.layoutInfo = layoutInfo;
 
     // calculate the layout of new apps
     for (let i = 0; i < newApp.length; i++) {
