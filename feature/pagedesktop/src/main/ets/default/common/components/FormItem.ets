@@ -267,7 +267,7 @@ export default struct FormItem {
           TapGesture({ count: 2 })
             .onAction((event: GestureEvent) => {
               Log.showInfo(TAG, 'mouse double click');
-              this.mPageDesktopViewModel.onAppDoubleClick(this.formItem.abilityName, this.formItem.bundleNam, this.formItem.moduleName);
+              this.mPageDesktopViewModel.onAppDoubleClick(this.formItem.abilityName, this.formItem.bundleName, this.formItem.moduleName);
             })
           )
         )
