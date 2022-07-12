@@ -63,6 +63,9 @@ const RdbStoreConfig = {
     'app_icon_id INTEGER, ' +
     'app_label_id INTEGER, ' +
     'app_name TEXT, ' +
+    'is_system_app INTEGER, ' +
+    'is_uninstallAble INTEGER, ' +
+    'key_name TEXT, ' +
     'install_time TEXT)'
   },
 

@@ -389,6 +389,9 @@ export default class RdbStoreManager {
           'app_icon_id': dockInfoList[i].appIconId,
           'app_label_id': dockInfoList[i].appLabelId,
           'app_name': dockInfoList[i].appName,
+          'is_system_app': this.booleanToNumber(dockInfoList[i].isSystemApp),
+          'is_uninstallAble': this.booleanToNumber(dockInfoList[i].isUninstallAble),
+          'key_name': dockInfoList[i].keyName,
           'install_time': dockInfoList[i].installTime
         }
         let ret = await this.mRdbStore.insert(RdbStoreConfig.SmartDock.TABLE_NAME, smartdockDbItem);
@@ -430,6 +433,9 @@ export default class RdbStoreManager {
         itemInfo.appLabelId = resultSet.getLong(resultSet.getColumnIndex('app_label_id'));
         itemInfo.appName = resultSet.getString(resultSet.getColumnIndex('app_name'));
         itemInfo.installTime = resultSet.getString(resultSet.getColumnIndex('install_time'));
+        itemInfo.isSystemApp = this.numberToBoolean(resultSet.getLong(resultSet.getColumnIndex('is_system_app')));
+        itemInfo.isUninstallAble = this.numberToBoolean(resultSet.getLong(resultSet.getColumnIndex('is_uninstallAble')));
+        itemInfo.keyName = resultSet.getString(resultSet.getColumnIndex('key_name'));
         resultList.push(itemInfo);
         isLast = resultSet.goToNextRow();
         Log.showInfo(TAG, `querySmartDock while isLast:${isLast}`);
