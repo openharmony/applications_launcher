@@ -235,9 +235,9 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     // product phone logic
     if (!this.isPad) {
       this.addNewInstalledInfo(totalAppInfoList, pageDesktopInfo);
-      this.removeFolderInfo(pageDesktopInfo);
       this.removeBottomBarInfo(pageDesktopInfo);
     }
+    this.removeFolderInfo(pageDesktopInfo);
 
     // update pageDesktop app config
     this.mSettingsModel.setAppListInfo(pageDesktopInfo);
