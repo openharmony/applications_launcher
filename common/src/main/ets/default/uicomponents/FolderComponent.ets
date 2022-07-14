@@ -333,6 +333,5 @@ export default struct FolderComponent {
     .borderRadius(this.isSelect ? StyleConstants.DEFAULT_15 : StyleConstants.DEFAULT_0)
     .padding(this.isSelect ? { left: StyleConstants.DEFAULT_20,
                                right: StyleConstants.DEFAULT_20, top: this.mPaddingTop + StyleConstants.DEFAULT_10 } : { top: this.mPaddingTop })
-
   }
 }

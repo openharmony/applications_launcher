@@ -88,10 +88,10 @@ export default struct AppBubble {
       .padding(this.isSelect ? { left: StyleConstants.DEFAULT_20,
                                  right: StyleConstants.DEFAULT_20, top: this.mPaddingTop } : { top: this.mPaddingTop })
       .gesture(
-          LongPressGesture({ repeat: false })
-            .onAction((event: GestureEvent) => {
-              AppStorage.SetOrCreate('isLongPress', true);
-            })
+        LongPressGesture({ repeat: false })
+          .onAction((event: GestureEvent) => {
+            AppStorage.SetOrCreate('isLongPress', true);
+          })
       )
     }
     .parallelGesture(
