@@ -205,6 +205,9 @@ export default class SmartDockModel {
    * @param index
    */
   addToSmartdock(appInfo: AppItemInfo, index?: number): boolean {
+    if (appInfo.typeId != CommonConstants.TYPE_APP) {
+      return false;
+    }
     this.mResidentList = AppStorage.Get('residentList');
     const dockItemCount = this.mResidentList.length;
     if (this.checkDockNum(dockItemCount)) {
