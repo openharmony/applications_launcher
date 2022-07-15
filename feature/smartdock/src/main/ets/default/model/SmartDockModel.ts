@@ -496,15 +496,16 @@ export default class SmartDockModel {
   private deleteRecentDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}): boolean {
     let res = false;
     this.mRecentDataList = AppStorage.Get('recentList');
-    if (!CheckEmptyUtils.isEmptyArr(this.mResidentList)) {
-      for (let i = 0; i < this.mRecentDataList.length; i++) {
-        if (dockItem.bundleName === this.mResidentList[i].bundleName
-        || dockItem.keyName === this.mResidentList[i].keyName) {
-          this.mRecentDataList.splice(i, 1);
+    Log.showDebug(TAG, `deleteRecentDockItem recent dockItem: ${JSON.stringify(dockItem)}`);
+    if (!CheckEmptyUtils.isEmptyArr(this.mRecentDataList)) {
+      this.mRecentDataList = this.mRecentDataList.filter(item => {
+        if (dockItem.bundleName) {
+          return dockItem.bundleName != item.bundleName;
+        } else if (dockItem.keyName) {
+          return dockItem.keyName != item.keyName;
         }
-      }
+      })
       AppStorage.SetOrCreate('recentList', this.mRecentDataList);
-      Log.showDebug(TAG, `deleteRecentDockItem recent dockItem: ${JSON.stringify(dockItem)}`);
       res = true;
     }
     return res;
