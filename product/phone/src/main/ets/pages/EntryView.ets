@@ -14,18 +14,14 @@
  */
 
 import windowManager from '../../../../../../common/src/main/ets/default/manager/WindowManager';
-import RdbStoreManager from '../../../../../../common/src/main/ets/default/manager/RdbStoreManager';
-import LayoutConfigManager from '../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
 import CommonConstants from '../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import CustomOverlay from '../../../../../../common/src/main/ets/default/uicomponents/CustomOverlay.ets';
-import PageDesktopModeConfig from '../../../../../../common/src/main/ets/default/layoutconfig/PageDesktopModeConfig';
 import LayoutViewModel from '../../../../../../common/src/main/ets/default/viewmodel/LayoutViewModel';
 import LocalEventManager from '../../../../../../common/src/main/ets/default/manager/LocalEventManager';
 import EventConstants from '../../../../../../common/src/main/ets/default/constants/EventConstants';
 import Log from '../../../../../../common/src/main/ets/default/utils/Log';
 import SmartDock from '../../../../../../feature/smartdock/src/main/ets/default/layout/SmartDock.ets';
 import PageDesktopLayout from '../../../../../../feature/pagedesktop/src/main/ets/default/layout/PageDesktopLayout.ets';
-import AppListLayout from '../../../../../../feature/appcenter/src/main/ets/default/layout/AppListLayout.ets';
 import FolderOpenComponent from '../../../../../../feature/bigfolder/src/main/ets/default/view/FolderOpenComponent.ets';
 import FeatureConstants from '../../../../../../feature/bigfolder/src/main/ets/default/common/constants/FeatureConstants';
 import SettingsModel from '../../../../../../common/src/main/ets/default/model/SettingsModel';
