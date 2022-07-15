@@ -60,7 +60,10 @@ export default struct AppItem {
       cancel: () => {},
       confirm: () => {
         if (this.isPad) {
-          this.mPageDesktopViewModel.deleteAppItem(this.appInfo.bundleName);
+          this.mPageDesktopViewModel.deleteAppItem({
+            bundleName: this.appInfo.bundleName,
+            keyName: undefined
+          });
         } else {
           this.mPageDesktopViewModel.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
         }
