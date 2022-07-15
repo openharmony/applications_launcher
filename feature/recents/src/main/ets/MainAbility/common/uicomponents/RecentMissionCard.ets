@@ -153,7 +153,7 @@ export default struct RecentMissionCard {
       })
       Image(this.recentImage)
         .alt(StyleConstants.DEFAULT_APP_IMAGE)
-        .objectFit(ImageFit.Cover)
+        .objectFit(ImageFit.Contain)
         .borderRadius(StyleConstants.RECENT_IMAGE_RADIUS)
         .width(this.mIsSingleLayout ?
           StyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH  :
