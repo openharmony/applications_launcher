@@ -386,9 +386,13 @@ export default class RdbStoreManager {
           'editable': this.booleanToNumber(dockInfoList[i].editable),
           'bundle_name': dockInfoList[i].bundleName,
           'ability_name': dockInfoList[i].abilityName,
+          'module_name': dockInfoList[i].moduleName,
           'app_icon_id': dockInfoList[i].appIconId,
           'app_label_id': dockInfoList[i].appLabelId,
           'app_name': dockInfoList[i].appName,
+          'is_system_app': this.booleanToNumber(dockInfoList[i].isSystemApp),
+          'is_uninstallAble': this.booleanToNumber(dockInfoList[i].isUninstallAble),
+          'key_name': dockInfoList[i].keyName,
           'install_time': dockInfoList[i].installTime
         }
         let ret = await this.mRdbStore.insert(RdbStoreConfig.SmartDock.TABLE_NAME, smartdockDbItem);
@@ -426,10 +430,14 @@ export default class RdbStoreManager {
         itemInfo.editable = this.numberToBoolean(resultSet.getLong(resultSet.getColumnIndex('editable')));
         itemInfo.bundleName = resultSet.getString(resultSet.getColumnIndex('bundle_name'));
         itemInfo.abilityName = resultSet.getString(resultSet.getColumnIndex('ability_name'));
+        itemInfo.moduleName = resultSet.getString(resultSet.getColumnIndex('module_name'));
         itemInfo.appIconId = resultSet.getLong(resultSet.getColumnIndex('app_icon_id'));
         itemInfo.appLabelId = resultSet.getLong(resultSet.getColumnIndex('app_label_id'));
         itemInfo.appName = resultSet.getString(resultSet.getColumnIndex('app_name'));
         itemInfo.installTime = resultSet.getString(resultSet.getColumnIndex('install_time'));
+        itemInfo.isSystemApp = this.numberToBoolean(resultSet.getLong(resultSet.getColumnIndex('is_system_app')));
+        itemInfo.isUninstallAble = this.numberToBoolean(resultSet.getLong(resultSet.getColumnIndex('is_uninstallAble')));
+        itemInfo.keyName = resultSet.getString(resultSet.getColumnIndex('key_name'));
         resultList.push(itemInfo);
         isLast = resultSet.goToNextRow();
         Log.showInfo(TAG, `querySmartDock while isLast:${isLast}`);
@@ -452,6 +460,7 @@ export default class RdbStoreManager {
       return result;
     }
     try {
+      this.mRdbStore.beginTransaction();
       // delete desktopApplicationInfo table
       await this.deleteTable(RdbStoreConfig.DesktopApplicationInfo.TABLE_NAME);
       // insert into desktopApplicationInfo
@@ -471,9 +480,14 @@ export default class RdbStoreManager {
         }
         let ret = await this.mRdbStore.insert(RdbStoreConfig.DesktopApplicationInfo.TABLE_NAME, item);
         Log.showDebug(TAG, `insertDesktopApplication ${i} ret: ${ret}`);
+        if (ret === -1) {
+          result = false;
+        }
+        this.mRdbStore.commit();
       }
     } catch (e) {
       Log.showError(TAG, 'insertDesktopApplication error:' + e);
+      this.mRdbStore.rollBack();
     }
     return result;
   }
@@ -511,15 +525,14 @@ export default class RdbStoreManager {
     return resultList;
   }
 
-  async insertGridLayoutInfo(gridlayoutinfo: any): Promise<boolean> {
+  async insertGridLayoutInfo(gridlayoutinfo: any): Promise<void> {
     Log.showInfo(TAG, 'insertGridLayoutInfo start');
-    let result: boolean = true;
     if (CheckEmptyUtils.isEmpty(gridlayoutinfo) || CheckEmptyUtils.isEmptyArr(gridlayoutinfo.layoutInfo)) {
       Log.showError(TAG, 'insertGridLayoutInfo gridlayoutinfo is empty');
-      result = false;
-      return result;
+      return;
     }
     try {
+      this.mRdbStore.beginTransaction();
       // delete gridlayoutinfo table
       await this.deleteTable(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
       // insert into gridlayoutinfo
@@ -572,19 +585,19 @@ export default class RdbStoreManager {
             'badge_number': element.badgeNumber
           }
           this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item).then(ret => {
-            if (ret === -1) {
-              result = false;
-            } else {
+            if (ret != -1) {
               this.insertLayoutInfo(element.layoutInfo, ret);
             }
             Log.showDebug(TAG, `insertGridLayoutInfo type is bigfolder ${i} ret: ${ret}`);
           });
         }
       }
+
+      this.mRdbStore.commit();
     } catch (e) {
       Log.showError(TAG, 'insertGridLayoutInfo error:' + e);
+      this.mRdbStore.rollBack();
     }
-    return result;
   }
 
   private async insertLayoutInfo(layoutInfo: [[]], container: number): Promise<boolean> {
@@ -623,10 +636,11 @@ export default class RdbStoreManager {
             if (ret === -1) {
               result = false;
             }
-            Log.showDebug(TAG, `insertLayoutInfo ret: ${ret}`);
+            Log.showDebug(TAG, `insertLayoutInfo ret : ${ret}`);
           });
         }
       }
+
     } catch (e) {
       Log.showError(TAG, 'insertLayoutInfo error:' + e);
     }

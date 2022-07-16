@@ -134,7 +134,6 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
       }
     });
     return itemInfo;
-
   }
 
   /**
@@ -343,7 +342,6 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
     if (this.isDropOutSide() && isSuccess) {
       Log.showInfo(TAG, 'onDragEnd dropOutSide');
     }
-
     this.mStartPosition = null;
     this.mEndPosition = null;
     AppStorage.SetOrCreate('dragFocus', '');
@@ -787,7 +785,6 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
           break;
         }
         for (let column = 0; column < allPositions[row].length; column++) {
-          
           const usablePositionCount =this.getUsablePositionCount(moveFolderOrForm, allPositions, row , column);
           if (usablePositionCount == moveFolderOrForm.area[1] * moveFolderOrForm.area[0]) {
             isUsablePosition = true;

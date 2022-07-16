@@ -27,6 +27,7 @@ import BigFolderModel from '../common/BigFolderModel';
 import FolderStyleConstants from '../common/constants/FolderStyleConstants';
 import FeatureConstants from '../common/constants/FeatureConstants';
 import BigFolderStyleConfig from '../common/BigFolderStyleConfig';
+import FolderLayoutConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/FolderLayoutConfig';
 
 const TAG = 'FolderViewModel';
 const HEXADECIMAL_VALUE = 36;
@@ -39,6 +40,7 @@ export default class FolderViewModel extends BaseAppPresenter {
   private readonly mGridConfig;
   private mPageIndex = 0;
   private readonly mFolderStyleConfig: BigFolderStyleConfig;
+  private readonly mFolderLayoutConfig: FolderLayoutConfig;
   private readonly mLocalEventListener = {
     onReceiveEvent: (event, params) => {
       Log.showDebug(TAG, `FolderViewModel receive event: ${event}, params: ${JSON.stringify(params)}`);
@@ -81,6 +83,7 @@ export default class FolderViewModel extends BaseAppPresenter {
     this.mFolderModel.registerFolderUpdateEvent(this.mLocalEventListener);
     this.mFolderStyleConfig = LayoutConfigManager.getStyleConfig(BigFolderStyleConfig.APP_LIST_STYLE_CONFIG,
       FeatureConstants.FEATURE_NAME);
+    this.mFolderLayoutConfig = LayoutConfigManager.getFunctionConfig(FolderLayoutConfig.FOLDER_GRID_LAYOUT_INFO);
   }
 
   static getInstance(): FolderViewModel {
@@ -95,6 +98,13 @@ export default class FolderViewModel extends BaseAppPresenter {
    */
   getFolderStyleConfig(): BigFolderStyleConfig {
     return this.mFolderStyleConfig;
+  }
+
+  /**
+    * return folderOpenLayoutTable
+    */
+  getFolderLayoutConfig(): any {
+    return this.mFolderLayoutConfig.getFolderLayoutInfo().folderOpenLayoutTable;
   }
 
   /**
@@ -127,7 +137,9 @@ export default class FolderViewModel extends BaseAppPresenter {
     // Delete {the app list} from desktop app list
     for (let i = 0; i < appLayoutInfo.length; i++) {
       const index = gridLayoutInfo.layoutInfo.indexOf(appLayoutInfo[i]);
-      gridLayoutInfo.layoutInfo.splice(index, 1);
+      if (index != CommonConstants.INVALID_VALUE) {
+        gridLayoutInfo.layoutInfo.splice(index, 1);
+      }
     }
 
     const folderInfo = await this.createNewFolderInfo();
@@ -797,7 +809,7 @@ export default class FolderViewModel extends BaseAppPresenter {
       Log.showDebug(TAG, 'getFolderAddAppList folderId is Empty');
       return;
     }
-    const allAppList = [];
+    let allAppList = [];
     let appInfos: any;
     let gridLayoutInfo = {
       layoutInfo: []
@@ -835,6 +847,19 @@ export default class FolderViewModel extends BaseAppPresenter {
       if (!isExist) {
         appListInfo[i].checked = false;
         allAppList.push(appListInfo[i]);
+      }
+    }
+    if (!this.getIsPad()) {
+      let bottomAppList: any = AppStorage.Get('residentList');
+      if (!CheckEmptyUtils.isEmptyArr(bottomAppList)) {
+        for (let i = 0; i < bottomAppList.length; i++) {
+          allAppList = allAppList.filter((item) => {
+            if (bottomAppList[i].keyName == item.keyName) {
+              return false;
+            }
+            return true;
+          })
+        }
       }
     }
     AppStorage.SetOrCreate('allAppListForFolder', allAppList);

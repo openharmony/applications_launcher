@@ -107,6 +107,8 @@ export default class SmartDockModel {
           dockItemInfo.keyName = `${dockItemInfo.bundleName}${dockItemInfo.abilityName}${dockItemInfo.moduleName}`;
           dockItemInfo.appIconId = typeof (appData) === 'undefined' ? dockItemInfo.appIconId : appData.appIconId;
           dockItemInfo.appLabelId = typeof (appData) === 'undefined' ? dockItemInfo.appLabelId : appData.appLabelId;
+          dockItemInfo.isSystemApp = typeof (appData) === 'undefined' ? dockItemInfo.isSystemApp : appData.isSystemApp;
+          dockItemInfo.isUninstallAble = typeof (appData) === 'undefined' ? dockItemInfo.isUninstallAble : appData.isUninstallAble;
           dockItemInfo.installTime = typeof (appData) === 'undefined' ? dockItemInfo.installTime : appData.installTime;
           residentList.push(dockItemInfo);
         } else if (dockDataList[i].itemType == CommonConstants.TYPE_CARD) {
@@ -120,6 +122,8 @@ export default class SmartDockModel {
           dockItemInfo.keyName = `${dockItemInfo.bundleName}${dockItemInfo.abilityName}${dockItemInfo.moduleName}`;
           dockItemInfo.appIconId = typeof (dockDataList[i].appIconId) != 'undefined' ? dockDataList[i].appIconId : dockDataList[i].iconId.id;
           dockItemInfo.appLabelId = typeof (dockDataList[i].appLabelId) != 'undefined' ? dockDataList[i].appLabelId : dockDataList[i].labelId.id;
+          dockItemInfo.isSystemApp = typeof (dockDataList[i].isSystemApp) === 'undefined' ? true : dockDataList[i].isSystemApp;
+          dockItemInfo.isUninstallAble = typeof (dockDataList[i].isUninstallAble) === 'undefined' ? true : dockDataList[i].isUninstallAble;
           const loadAppName = await this.mResourceManager
             .getAppNameSync(dockItemInfo.appLabelId, dockItemInfo.bundleName, dockItemInfo.moduleName, '');
           dockItemInfo.appName = loadAppName;
@@ -201,7 +205,6 @@ export default class SmartDockModel {
    * @param index
    */
   addToSmartdock(appInfo: AppItemInfo, index?: number): boolean {
-    // now smartDock only support app
     if (appInfo.typeId != CommonConstants.TYPE_APP) {
       return false;
     }
@@ -223,6 +226,8 @@ export default class SmartDockModel {
       dockItemInfo.keyName = appInfo.keyName;
       dockItemInfo.appIconId = appInfo.appIconId;
       dockItemInfo.appLabelId = appInfo.appLabelId;
+      dockItemInfo.isSystemApp = appInfo.isSystemApp;
+      dockItemInfo.isUninstallAble = appInfo.isUninstallAble;
       if (dockItemCount == 0 || index == undefined || index >= dockItemCount || index < 0) {
         this.mResidentList.push(dockItemInfo);
       } else {
@@ -491,15 +496,16 @@ export default class SmartDockModel {
   private deleteRecentDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}): boolean {
     let res = false;
     this.mRecentDataList = AppStorage.Get('recentList');
-    if (!CheckEmptyUtils.isEmptyArr(this.mResidentList)) {
-      for (let i = 0; i < this.mRecentDataList.length; i++) {
-        if (dockItem.bundleName === this.mResidentList[i].bundleName
-        || dockItem.keyName === this.mResidentList[i].keyName) {
-          this.mRecentDataList.splice(i, 1);
+    Log.showDebug(TAG, `deleteRecentDockItem recent dockItem: ${JSON.stringify(dockItem)}`);
+    if (!CheckEmptyUtils.isEmptyArr(this.mRecentDataList)) {
+      this.mRecentDataList = this.mRecentDataList.filter(item => {
+        if (dockItem.bundleName) {
+          return dockItem.bundleName != item.bundleName;
+        } else if (dockItem.keyName) {
+          return dockItem.keyName != item.keyName;
         }
-      }
+      })
       AppStorage.SetOrCreate('recentList', this.mRecentDataList);
-      Log.showDebug(TAG, `deleteRecentDockItem recent dockItem: ${JSON.stringify(dockItem)}`);
       res = true;
     }
     return res;
@@ -523,6 +529,8 @@ export default class SmartDockModel {
           dockItemInfo.appIconId = appInfo.appIconId;
           dockItemInfo.appLabelId = appInfo.appLabelId;
           dockItemInfo.installTime = appInfo.installTime;
+          dockItemInfo.isSystemApp = appInfo.isSystemApp;
+          dockItemInfo.isUninstallAble = appInfo.isUninstallAble;
           resistDockItem[i] = dockItemInfo;
           AppStorage.SetOrCreate('residentList', resistDockItem);
         }

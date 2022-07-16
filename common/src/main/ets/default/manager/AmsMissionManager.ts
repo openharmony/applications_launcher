@@ -122,6 +122,8 @@ class AmsMissionManager {
           continue;
         }
         recentTaskInfo.abilityName = appInfo.abilityName;
+        recentTaskInfo.moduleName = appInfo.moduleName;
+        recentTaskInfo.keyName = bundleName + appInfo.abilityName + appInfo.moduleName;
         recentTaskInfo.appLabelId = appInfo.appLabelId;
         recentTaskInfo.appIconId = appInfo.appIconId;
         recentTaskInfo.appName = appInfo.appName;

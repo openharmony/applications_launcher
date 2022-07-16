@@ -235,9 +235,9 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     // product phone logic
     if (!this.isPad) {
       this.addNewInstalledInfo(totalAppInfoList, pageDesktopInfo);
-      this.removeFolderInfo(pageDesktopInfo);
       this.removeBottomBarInfo(pageDesktopInfo);
     }
+    this.removeFolderInfo(pageDesktopInfo);
 
     // update pageDesktop app config
     this.mSettingsModel.setAppListInfo(pageDesktopInfo);
@@ -502,12 +502,10 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     const appListInfo = [];
     const info = this.getAndSetLayoutInfo();
     const layoutInfo = info.layoutInfo;
-
     for (let i = 0; i < layoutInfo.length; i++) {
-      Log.showDebug(TAG, `pagingFiltering layoutInfo: ${JSON.stringify(layoutInfo[i])}`);
+      Log.showDebug(TAG, `pagingFiltering keyName: ${layoutInfo[i].keyName}`);
       if (layoutInfo[i].typeId == CommonConstants.TYPE_APP) {
         for (let j = 0; j < this.mBundleInfoList.length; j++) {
-          Log.showDebug(TAG, `pagingFiltering mBundleInfoList: ${JSON.stringify(this.mBundleInfoList[j])}`);
           if (layoutInfo[i].keyName == this.mBundleInfoList[j].keyName
           && layoutInfo[i].typeId == this.mBundleInfoList[j].typeId) {
             this.mBundleInfoList[j].area = layoutInfo[i].area;
@@ -1519,7 +1517,7 @@ export default class PageDesktopViewModel extends BaseAppPresenter {
     Log.showInfo(TAG, `removeBottomBarInfo bottomAppList length: ${bottomAppList.length}`);
     if (!CheckEmptyUtils.isEmptyArr(bottomAppList)) {
       for (let i = 0; i < bottomAppList.length; i++) {
-        Log.showInfo(TAG, `removeBottomBarInfo bottomAppList[i]: ${JSON.stringify(bottomAppList[i])}`);
+        Log.showDebug(TAG, `removeBottomBarInfo bottomAppList[${i}]: ${JSON.stringify(bottomAppList[i])}`);
         const appInfo = pageDesktopInfo.find(item => {
           if (item.keyName == bottomAppList[i].keyName) {
             return true;

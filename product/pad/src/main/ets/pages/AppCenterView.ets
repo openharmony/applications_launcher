@@ -21,7 +21,6 @@ import Log from '../../../../../../common/src/main/ets/default/utils/Log';
 import AppGridLayout from '../../../../../../feature/appcenter/src/main/ets/default/layout/AppGridLayout';
 import SmartDock from '../../../../../../feature/smartdock/src/main/ets/default/layout/SmartDock';
 import AppGridPresenter from '../../../../../../feature/appcenter/src/main/ets/default/common/presenter/AppGridPresenter';
-import PadStage from '../common/PadStage';
 
 const TAG = "AppCenterView";
 
@@ -30,15 +29,12 @@ const TAG = "AppCenterView";
 struct AppCenterView {
   @State workSpaceHeight: number = 0;
   @State dockHeight: number = 0;
-  @State indicatorHeight: number = 0;
   @State device: string = CommonConstants.PAD_DEVICE_TYPE;
   private mLayoutViewModel: LayoutViewModel;
   mAppGridPresenter: AppGridPresenter = null;
-  private mStage: PadStage = new PadStage();
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
-    this.mStage.onCreate();
     AppStorage.SetOrCreate('device', this.device);
     this.mLayoutViewModel = LayoutViewModel.getInstance();
   }
@@ -48,7 +44,6 @@ struct AppCenterView {
     // move appCenter startup front when power on
     this.updateScreenSize();
     this.mAppGridPresenter = AppGridPresenter.getInstance();
-    this.mAppGridPresenter.getAppList();
     this.mAppGridPresenter.registerAppListChange();
   }
 
@@ -66,7 +61,6 @@ struct AppCenterView {
     let screenHeight = await windowManager.getWindowHeight();
     this.workSpaceHeight = this.mLayoutViewModel.getWorkSpaceHeight();
     this.dockHeight = this.mLayoutViewModel.getDockHeight();
-    this.indicatorHeight = this.mLayoutViewModel.getIndicator();
     Log.showInfo(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${screenWidth}, screenHeight: ${screenHeight}`);
   }
 

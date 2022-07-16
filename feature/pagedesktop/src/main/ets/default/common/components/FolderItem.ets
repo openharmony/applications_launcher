@@ -64,6 +64,29 @@ export default struct FolderItem {
     this.mMargin = styleConfig.mMargin;
     this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
+    this.formatFolderInfo();
+  }
+
+  /**
+   * format FolderInfo
+   */
+  private formatFolderInfo() {
+    let column = this.mFolderViewModel.getFolderLayoutConfig().column;
+    let row = this.mFolderViewModel.getFolderLayoutConfig().row;
+    const allCount = column * row;
+    if (this.folderItem.layoutInfo[0].length > allCount) {
+      let folderLayoutInfoList = [];
+      let integer = Math.floor(this.folderItem.layoutInfo[0].length / allCount);
+      let remainder = this.folderItem.layoutInfo[0].length % allCount;
+      for (let i = 0; i < integer; i++) {
+        folderLayoutInfoList.push(this.folderItem.layoutInfo[0].slice(i * allCount, (i + 1) * allCount));
+      }
+      if (remainder != 0) {
+        folderLayoutInfoList.push(this.folderItem.layoutInfo[0].slice(integer * allCount, integer * allCount + remainder));
+      }
+      this.folderItem.layoutInfo.splice(0, 1);
+      this.folderItem.layoutInfo = folderLayoutInfoList;
+    }
   }
 
   /**
