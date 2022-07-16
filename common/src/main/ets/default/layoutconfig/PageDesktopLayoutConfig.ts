@@ -94,7 +94,7 @@ export default class PageDesktopLayoutConfig extends ILayoutConfig {
     temp.layoutDescription = gridLayoutInfo.layoutDescription;
     FileUtils.writeStringToFile(JSON.stringify(temp), this.getConfigFileAbsPath());
     this.mGridLayoutInfo = gridLayoutInfo;
-    globalThis.RdbStoreManagerInstance.insertGridLayoutInfo(gridLayoutInfo).then((result) => {
+    globalThis.RdbStoreManagerInstance.insertGridLayoutInfo(gridLayoutInfo).then(() => {
       Log.showInfo(TAG, 'updateGridLayoutInfo success.');
     }).catch((err) => {
       Log.showError(TAG, `updateGridLayoutInfo error: ${err.toString()}`);
