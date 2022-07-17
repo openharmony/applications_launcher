@@ -17,11 +17,11 @@ import StyleConstants from '../../../../../../../common/src/main/ets/default/con
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import PageDesktopViewModel from '../common/viewmodel/PageDesktopViewModel';
 import PageDesktopDragHandler from '../common/PageDesktopDragHandler';
-import GridSwiper from '../common/components/GridSwiper.ets';
+import GridSwiper from '../common/components/GridSwiper';
 import FeatureConstants from '../common/constants/FeatureConstants';
 import Trace from '../../../../../../../common/src/main/ets/default/utils/Trace';
 import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
-import AppMenu from '../../../../../../../common/src/main/ets/default/uicomponents/AppMenu.ets';
+import AppMenu from '../../../../../../../common/src/main/ets/default/uicomponents/AppMenu';
 import MenuInfo from '../../../../../../../common/src/main/ets/default/bean/MenuInfo';
 
 let mPageDesktopViewModel: PageDesktopViewModel = null;

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import AppBubble from '../../../../../../../../common/src/main/ets/default/uicomponents/AppBubble.ets';
+import AppBubble from '../../../../../../../../common/src/main/ets/default/uicomponents/AppBubble';
 import CommonConstants from '../../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import PresetStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
 import CommonStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
@@ -21,7 +21,7 @@ import ResourceManager from '../../../../../../../../common/src/main/ets/default
 import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
 import FolderStyleConstants from '../constants/FolderStyleConstants';
 import FolderViewModel from '../../viewmodel/FolderViewModel';
-import TitleDescriptionComponent from './TitleDescriptionComponent.ets';
+import TitleDescriptionComponent from './TitleDescriptionComponent';
 import BigFolderStyleConfig from '../BigFolderStyleConfig';
 
 const TAG = 'FolderAppListDialog';

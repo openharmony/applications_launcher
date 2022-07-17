@@ -17,9 +17,9 @@ import CheckEmptyUtils from '../../../../../../../../common/src/main/ets/default
 import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
 import CommonStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
 import StyleConstants from '../../common/constants/StyleConstants';
-import RecentMissionAppIcon from './RecentMissionAppIcon.ets';
-import RecentMissionAppName from './RecentMissionAppName.ets';
-import RecentMissionsViewModel from '../../viewmodel/RecentMissionsViewModel.ets';
+import RecentMissionAppIcon from './RecentMissionAppIcon';
+import RecentMissionAppName from './RecentMissionAppName';
+import RecentMissionsViewModel from '../../viewmodel/RecentMissionsViewModel';
 import windowManager from  '../../../../../../../../common/src/main/ets/default/manager/WindowManager';
 import SnapShotInfo from '../../../../../../../../common/src/main/ets/default/bean/SnapShotInfo';
 

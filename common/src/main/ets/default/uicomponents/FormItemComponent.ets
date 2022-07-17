@@ -15,8 +15,8 @@
 
 import StyleConstants from '../constants/StyleConstants';
 import PresetStyleConstants from '../constants/PresetStyleConstants';
-import AppMenu from './AppMenu.ets';
-import AppName from './AppName.ets';
+import AppMenu from './AppMenu';
+import AppName from './AppName';
 import Log from '../utils/Log';
 import FormModel from '../model/FormModel';
 

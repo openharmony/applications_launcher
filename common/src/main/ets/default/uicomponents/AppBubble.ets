@@ -14,9 +14,9 @@
  */
 
 import StyleConstants from '../constants/StyleConstants';
-import AppIcon from './AppIcon.ets';
-import AppName from './AppName.ets';
-import AppMenu from './AppMenu.ets';
+import AppIcon from './AppIcon';
+import AppName from './AppName';
+import AppMenu from './AppMenu';
 import PresetStyleConstants from '../constants/PresetStyleConstants';
 import ResourceManager from '../manager/ResourceManager';
 import Log from '../utils/Log';

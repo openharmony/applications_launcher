@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 
-import AppBubble from '../../../../../../../../common/src/main/ets/default/uicomponents/AppBubble.ets';
+import AppBubble from '../../../../../../../../common/src/main/ets/default/uicomponents/AppBubble';
 import StyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
 import ResourceManager from '../../../../../../../../common/src/main/ets/default/manager/ResourceManager';
 import PresetStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
-import UninstallDialog from '../../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog.ets';
+import UninstallDialog from '../../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog';
 import PageDesktopDragHandler from '../PageDesktopDragHandler';
-import FormManagerDialog from '../../../../../../../form/src/main/ets/default/common/uicomponents/FormManagerDialog.ets';
+import FormManagerDialog from '../../../../../../../form/src/main/ets/default/common/uicomponents/FormManagerDialog';
 import FeatureConstants from '../constants/FeatureConstants';
 import Trace from '../../../../../../../../common/src/main/ets/default/utils/Trace';
 import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';

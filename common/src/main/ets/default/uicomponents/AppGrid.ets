@@ -14,7 +14,7 @@
  */
 
 import AppItemInfo from '../bean/AppItemInfo';
-import AppBubble from './AppBubble.ets';
+import AppBubble from './AppBubble';
 import AppGridStyleConfig from '../layoutconfig/AppGridStyleConfig';
 import CommonConstants from '../constants/CommonConstants';
 import Log from '../utils/Log';

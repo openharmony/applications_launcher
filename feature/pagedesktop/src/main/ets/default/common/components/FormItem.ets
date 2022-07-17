@@ -20,9 +20,9 @@ import PageDesktopViewModel from '../../../../../../../pagedesktop/src/main/ets/
 import FormViewModel from '../../../../../../../form/src/main/ets/default/viewmodel/FormViewModel';
 import FormStyleConfig from '../../../../../../../form/src/main/ets/default/common/FormStyleConfig';
 import PageDesktopDragHandler from '../PageDesktopDragHandler';
-import RemoveFormDialog from '../../../../../../../../common/src/main/ets/default/uicomponents/RemoveFormDialog.ets';
-import FormManagerDialog from '../../../../../../../form/src/main/ets/default/common/uicomponents/FormManagerDialog.ets';
-import FormItemComponent from '../../../../../../../../common/src/main/ets/default/uicomponents/FormItemComponent.ets';
+import RemoveFormDialog from '../../../../../../../../common/src/main/ets/default/uicomponents/RemoveFormDialog';
+import FormManagerDialog from '../../../../../../../form/src/main/ets/default/common/uicomponents/FormManagerDialog';
+import FormItemComponent from '../../../../../../../../common/src/main/ets/default/uicomponents/FormItemComponent';
 import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
 import FeatureConstants from '../constants/FeatureConstants';
 

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import FolderComponent from '../../../../../../../../common/src/main/ets/default/uicomponents/FolderComponent.ets'
+import FolderComponent from '../../../../../../../../common/src/main/ets/default/uicomponents/FolderComponent'
 import StyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
 import CommonConstants from '../../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import PresetStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';

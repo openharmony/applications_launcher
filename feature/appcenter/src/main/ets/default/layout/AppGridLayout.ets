@@ -18,15 +18,15 @@ import StyleConstants from '../../../../../../../common/src/main/ets/default/con
 import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
 import MenuInfo from '../../../../../../../common/src/main/ets/default/bean/MenuInfo';
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import AppGrid from '../../../../../../../common/src/main/ets/default/uicomponents/AppGrid.ets';
-import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog.ets';
+import AppGrid from '../../../../../../../common/src/main/ets/default/uicomponents/AppGrid';
+import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog';
 import AppGridPresenter from '../common/presenter/AppGridPresenter';
 import AppCenterGridStyleConfig from '../common/AppCenterGridStyleConfig';
 import FeatureConstants from '../common/constants/FeatureConstants';
 import localEventManager from '../../../../../../../common/src/main/ets/default/manager/LocalEventManager';
 import EventConstants from '../../../../../../../common/src/main/ets/default/constants/EventConstants';
 import Trace from '../../../../../../../common/src/main/ets/default/utils/Trace';
-import AppCenterViewModel from '../common/viewmodel/AppCenterViewModel.ets';
+import AppCenterViewModel from '../common/viewmodel/AppCenterViewModel';
 import windowManager from '../../../../../../../common/src/main/ets/default/manager/WindowManager';
 import Log from '../../../../../../../common/src/main/ets/default/utils/Log'
 

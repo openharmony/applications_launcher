@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import SmartDockContent from '../../../../../../../common/src/main/ets/default/uicomponents/SmartDockContent.ets';
-import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog.ets';
+import SmartDockContent from '../../../../../../../common/src/main/ets/default/uicomponents/SmartDockContent';
+import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog';
 import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
 import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
 import SmartDockConstants from '../common/constants/SmartDockConstants';

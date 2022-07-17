@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import AppList from './AppList.ets';
+import AppList from './AppList';
 import DockItemInfo from '../bean/DockItemInfo';
 import SmartDockStyleConfig from '../layoutconfig/SmartDockStyleConfig';
 import FeatureConstants from '../../../../../../feature/smartdock/src/main/ets/default/common/constants/FeatureConstants';
