@@ -29,6 +29,11 @@ export class CommonConstants {
   static LAUNCHER_BUNDLE = 'com.ohos.launcher';
 
   /**
+  * Module name of AppCenter.
+  */
+  static MODULE_NAME = 'pad-launcher';
+
+  /**
    * Ability name of AppCenter.
    */
   static APPCENTER_ABILITY = 'com.ohos.launcher.appcenter.MainAbility';
