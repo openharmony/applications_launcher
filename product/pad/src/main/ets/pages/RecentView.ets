@@ -63,9 +63,11 @@ struct RecentView {
   build() {
     Column() {
       if (this.recentMissionsList.length === 0) {
-        Text($r('app.string.No_running_apps_recently'))
-          .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)
-          .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE);
+        Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
+          Text($r('app.string.No_running_apps_recently'))
+            .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)
+            .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE);
+        }
       } else {
         if (this.traceLoadData() && this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single') {
           RecentMissionsSingleLayout({

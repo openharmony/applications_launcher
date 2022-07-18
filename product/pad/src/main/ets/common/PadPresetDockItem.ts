@@ -22,6 +22,7 @@ const presetDockItem = [
     labelId: $r('app.string.dock_all_app_entry'),
     bundleName: CommonConstants.LAUNCHER_BUNDLE,
     abilityName: CommonConstants.APPCENTER_ABILITY,
+    moduleName: CommonConstants.MODULE_NAME,
     editable: false
   },
   {
@@ -30,6 +31,7 @@ const presetDockItem = [
     labelId: $r('app.string.dock_recents_entry'),
     bundleName: CommonConstants.LAUNCHER_BUNDLE,
     abilityName: CommonConstants.RECENT_ABILITY,
+    moduleName: CommonConstants.MODULE_NAME,
     editable: false
   },
   {

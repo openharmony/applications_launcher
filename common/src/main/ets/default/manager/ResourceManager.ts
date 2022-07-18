@@ -63,7 +63,7 @@ export class ResourceManager {
         return;
       }
       Log.showDebug(TAG, `updateIconCache bundleName:${bundleName}, moduleName:${moduleName}, iconId: ${iconId}`);
-      let moduleContext = globalThis.desktopContext.createBundleContext(bundleName);
+      let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
       if (moduleContext == null) {
         return;
       }
@@ -97,7 +97,7 @@ export class ResourceManager {
         }
         try {
           Log.showDebug(TAG, `getAppIconWithCache bundleName:${bundleName}, moduleName:${moduleName}, iconId:${iconId}`);
-          let moduleContext = globalThis.desktopContext.createBundleContext(bundleName);
+          let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
           moduleContext.resourceManager
             .getMediaBase64(iconId)
             .then((value: string)=> {
@@ -136,7 +136,7 @@ export class ResourceManager {
         return appName;
       }
       Log.showDebug(TAG, `getAppNameSync bundleName:${bundleName}, moduleName:${moduleName}, iconId:${labelId}`);
-      let moduleContext = globalThis.desktopContext.createBundleContext(bundleName);
+      let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
       await moduleContext.resourceManager
         .getString(labelId)
         .then((res) => {
@@ -171,7 +171,7 @@ export class ResourceManager {
         }
         try {
           Log.showDebug(TAG, `getAppNameWithCache bundleName:${bundleName}, moduleName:${moduleName}, iconId:${labelId}`);
-          let moduleContext = globalThis.desktopContext.createBundleContext(bundleName);
+          let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
           moduleContext.resourceManager
             .getString(labelId)
             .then((value) => {
