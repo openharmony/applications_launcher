@@ -10,6 +10,102 @@
   },
   "modules": [
     {
+      "name": "launcher_common",
+      "srcPath": "./common",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    },
+    {
+      "name": "launcher_appcenter",
+      "srcPath": "./feature/appcenter",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    },
+    {
+      "name": "launcher_bigfolder",
+      "srcPath": "./feature/bigfolder",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    },
+    {
+      "name": "launcher_form",
+      "srcPath": "./feature/form",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    },
+    {
+      "name": "launcher_gesturenavigation",
+      "srcPath": "./feature/gesturenavigation",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    },
+    {
+      "name": "launcher_pagedesktop",
+      "srcPath": "./feature/pagedesktop",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    },
+    {
+      "name": "launcher_recents",
+      "srcPath": "./feature/recents",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    },
+    {
+      "name": "launcher_smartDock",
+      "srcPath": "./feature/smartdock",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    },
+    {
       "name": "phone-launcher",
       "srcPath": "./product/phone",
       "targets": [

@@ -13,15 +13,15 @@
  * limitations under the License.
  */
 
-import ILayoutConfig from './ILayoutConfig';
-import CommonConstants from '../constants/CommonConstants';
-import StyleConstants from '../constants/StyleConstants';
-import PresetStyleConstants from '../constants/PresetStyleConstants';
+import { ILayoutConfig } from './ILayoutConfig';
+import { CommonConstants } from '../constants/CommonConstants';
+import { StyleConstants } from '../constants/StyleConstants';
+import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 
 /**
  * list style config
  */
-export default class AppListStyleConfig extends ILayoutConfig {
+export class AppListStyleConfig extends ILayoutConfig {
   /**
    * list style config
    */
@@ -112,7 +112,7 @@ export default class AppListStyleConfig extends ILayoutConfig {
   */
   mItemOffset: {x: number, y: number} = {x: 0, y: 0};
 
-  protected constructor() {
+  constructor() {
     super();
   }
 
@@ -142,7 +142,7 @@ export default class AppListStyleConfig extends ILayoutConfig {
     return AppListStyleConfig.APP_LIST_STYLE_CONFIG;
   }
 
-  protected getPersistConfigJson(): string {
+  getPersistConfigJson(): string {
     const persistConfig = {
     };
     return JSON.stringify(persistConfig);

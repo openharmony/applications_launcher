@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-import ILayoutConfig from './ILayoutConfig';
-import CommonConstants from '../constants/CommonConstants';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { ILayoutConfig } from './ILayoutConfig';
+import { CommonConstants } from '../constants/CommonConstants';
 import FileUtils from '../utils/FileUtils';
 
 const TAG = 'PageDesktopLayoutConfig';
@@ -23,7 +23,7 @@ const TAG = 'PageDesktopLayoutConfig';
 /**
  * Desktop workspace function layout configuration.
  */
-export default class PageDesktopLayoutConfig extends ILayoutConfig {
+export class PageDesktopLayoutConfig extends ILayoutConfig {
   /**
    * Workspace Feature Layout Configuration Index.
    */

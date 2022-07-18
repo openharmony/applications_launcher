@@ -17,7 +17,7 @@
  * Module initial content loader base class.
  * Perform early loading of configuration and data.
  */
-export default abstract class BaseModulePreLoader {
+export abstract class BaseModulePreLoader {
 
   /**
    * Perform initial loading action.

@@ -14,22 +14,22 @@
  */
 
 import { ShortcutInfo } from 'bundle/shortcutInfo';
-import launcherAbilityManager from '../manager/LauncherAbilityManager';
-import localEventManager from '../manager/LocalEventManager';
+import { Log } from '../utils/Log';
+import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
+import { EventConstants } from '../constants/EventConstants';
+import { CommonConstants } from '../constants/CommonConstants';
+import { FormModel } from './FormModel';
+import { AppItemInfo } from '../bean/AppItemInfo';
+import { localEventManager } from '../manager/LocalEventManager';
+import { launcherAbilityManager } from '../manager/LauncherAbilityManager';
 import SystemApplication from '../configs/SystemApplication';
-import CheckEmptyUtils from '../utils/CheckEmptyUtils';
-import CommonConstants from '../constants/CommonConstants';
-import EventConstants from '../constants/EventConstants';
-import AppItemInfo from '../bean/AppItemInfo';
-import FormModel from './FormModel';
-import Log from '../utils/Log';
 
 const TAG = 'AppModel';
 
 /**
  * Desktop application information data model.
  */
-export default class AppModel {
+export class AppModel {
   private mBundleInfoList: AppItemInfo[] = [];
   private readonly mSystemApplicationName = [];
   private readonly mAppStateChangeListener = [];
@@ -172,6 +172,7 @@ export default class AppModel {
         this.replaceItem(bundleName, abilityInfos);
       }
       if (event === EventConstants.EVENT_PACKAGE_CHANGED) {
+        await this.getAppListAsync();
         localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
         localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE, abilityInfos[0]);
       }

@@ -18,7 +18,7 @@ const TAG = 'Launcher_Default';
 /**
  * Basic log class
  */
-export default class Log {
+export class Log {
 
   /**
      * print info level log

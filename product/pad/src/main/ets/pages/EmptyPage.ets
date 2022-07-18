@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import Log from '../../../../../../common/src/main/ets/default/utils/Log';
+import { Log } from '@ohos/common';
 
 const TAG = "EmptyPage";
 

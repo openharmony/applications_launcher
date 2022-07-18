@@ -13,28 +13,26 @@
  * limitations under the License.
  */
 
-import BaseModulePreLoader from '../../../../../../../common/src/main/ets/default/base/BaseModulePreLoader';
-import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import FolderLayoutConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/FolderLayoutConfig';
-import BigFolderStyleConfig from './BigFolderStyleConfig';
+import { BaseModulePreLoader } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import { FolderLayoutConfig } from '@ohos/common';
+import { BigFolderStyleConfig } from './BigFolderStyleConfig';
 
 /**
  * bigfolder layer initialization loader
  */
 class BigFolderPreLoader extends BaseModulePreLoader {
   protected loadConfig(): void {
-    LayoutConfigManager.addConfigToManager(FolderLayoutConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(BigFolderStyleConfig.getInstance());
+    layoutConfigManager.addConfigToManager(FolderLayoutConfig.getInstance());
+    layoutConfigManager.addConfigToManager(BigFolderStyleConfig.getInstance());
   }
 
   protected loadData(): void {
   }
 
   releaseConfigAndData(): void {
-    LayoutConfigManager.removeConfigFromManager();
+    layoutConfigManager.removeConfigFromManager();
   }
 }
 
-const bigFolderPreLoader: BaseModulePreLoader = new BigFolderPreLoader();
-
-export default bigFolderPreLoader;
+export const bigFolderPreLoader: BaseModulePreLoader = new BigFolderPreLoader();

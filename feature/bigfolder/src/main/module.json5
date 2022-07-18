@@ -1,6 +1,6 @@
 {
   "module": {
-    "name": "bigfolder",
+    "name": "launcher_bigfolder",
     "type": "har",
     "deviceTypes": [
       "default",

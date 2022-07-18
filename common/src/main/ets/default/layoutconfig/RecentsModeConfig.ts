@@ -12,14 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import CommonConstants from '../constants/CommonConstants';
+import { ILayoutConfig } from './ILayoutConfig';
+import { CommonConstants } from '../constants/CommonConstants';
 import defaultLayoutConfig from '../configs/DefaultLayoutConfig';
-import ILayoutConfig from './ILayoutConfig';
 
 /**
  * Recent missions layout mode configuration
  */
-export default class RecentsModeConfig extends ILayoutConfig {
+export class RecentsModeConfig extends ILayoutConfig {
   
   /**
    * The index of recent missions layout mode configuration

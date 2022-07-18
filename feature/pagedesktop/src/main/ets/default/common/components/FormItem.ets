@@ -13,18 +13,18 @@
  * limitations under the License.
  */
 
-import StyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import PresetStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
-import ResourceManager from '../../../../../../../../common/src/main/ets/default/manager/ResourceManager';
-import PageDesktopViewModel from '../../../../../../../pagedesktop/src/main/ets/default/common/viewmodel/PageDesktopViewModel';
-import FormViewModel from '../../../../../../../form/src/main/ets/default/viewmodel/FormViewModel';
-import FormStyleConfig from '../../../../../../../form/src/main/ets/default/common/FormStyleConfig';
-import PageDesktopDragHandler from '../PageDesktopDragHandler';
-import RemoveFormDialog from '../../../../../../../../common/src/main/ets/default/uicomponents/RemoveFormDialog';
-import FormManagerDialog from '../../../../../../../form/src/main/ets/default/common/uicomponents/FormManagerDialog';
-import FormItemComponent from '../../../../../../../../common/src/main/ets/default/uicomponents/FormItemComponent';
-import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
-import FeatureConstants from '../constants/FeatureConstants';
+import { Log } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
+import { PresetStyleConstants } from '@ohos/common';
+import { ResourceManager } from '@ohos/common';
+import { RemoveFormDialog } from '@ohos/common';
+import { FormManagerDialog } from '@ohos/common';
+import { FormItemComponent } from '@ohos/common';
+import { FormViewModel } from '@ohos/form';
+import { FormStyleConfig } from '@ohos/form';
+import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
+import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel';
+import PagedesktopConstants from '../constants/PagedesktopConstants';
 
 const FORM_INFO_REFRESH_DELAY = 500;
 const TAG = 'FormItem';
@@ -272,7 +272,7 @@ export default struct FormItem {
           )
         )
         .onTouch((event: TouchEvent) => {
-          AppStorage.SetOrCreate('dragFocus', FeatureConstants.FEATURE_NAME);
+          AppStorage.SetOrCreate('dragFocus', PagedesktopConstants.FEATURE_NAME);
           this.mPageDesktopDragHandler.setDragStateListener(this.mDragStateListener);
           this.mPageDesktopDragHandler.notifyTouchEventUpdate(event);
         })

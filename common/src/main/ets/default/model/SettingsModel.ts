@@ -13,27 +13,25 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../constants/CommonConstants';
-import GridLayoutConfigs from '../configs/GridLayoutConfigs';
-import LayoutConfigManager from '../layoutconfig/LayoutConfigManager';
+import { Log } from '../utils/Log';
 import FileUtils from '../utils/FileUtils';
 import GridLayoutUtil from '../utils/GridLayoutUtil';
-import PageDesktopModeConfig from '../layoutconfig/PageDesktopModeConfig';
-import PageDesktopLayoutConfig from '../layoutconfig/PageDesktopLayoutConfig';
-import PageDesktopAppModeConfig from '../layoutconfig/PageDesktopAppModeConfig';
-import RecentsModeConfig from '../layoutconfig/RecentsModeConfig';
-import settingsDataManager from '../manager/SettingsDataManager';
-import SettingsModelObserver from './SettingsModelObserver';
-import Log from '../utils/Log';
+import { CommonConstants } from '../constants/CommonConstants';
+import { RecentsModeConfig } from '../layoutconfig/RecentsModeConfig';
+import { layoutConfigManager } from '../layoutconfig/LayoutConfigManager';
+import { settingsDataManager } from '../manager/SettingsDataManager';
+import { PageDesktopModeConfig } from '../layoutconfig/PageDesktopModeConfig';
+import { PageDesktopLayoutConfig } from '../layoutconfig/PageDesktopLayoutConfig';
+import { PageDesktopAppModeConfig } from '../layoutconfig/PageDesktopAppModeConfig';
+import { SettingsModelObserver } from './SettingsModelObserver';
+import GridLayoutConfigs from '../configs/GridLayoutConfigs';
 
 const TAG = 'SettingsModel';
-
-const defaultLayoutInfoFilePath = globalThis.desktopContext.filesDir + '/layoutInfo.json';
 
 /**
  * Data model for launcher settings ability.
  */
-export default class SettingsModel {
+export class SettingsModel {
   static readonly EVENT_FORCE_RELOAD: number = 1;
   private static readonly DEFAULT_VALUE: string = '1';
   private readonly mPageDesktopModeConfig: PageDesktopModeConfig;
@@ -47,7 +45,7 @@ export default class SettingsModel {
   private readonly mObserverList: SettingsModelObserver[] = [];
 
   private constructor() {
-    this.mPageDesktopModeConfig = LayoutConfigManager.getModeConfig(PageDesktopModeConfig.DESKTOP_MODE_CONFIG);
+    this.mPageDesktopModeConfig = layoutConfigManager.getModeConfig(PageDesktopModeConfig.DESKTOP_MODE_CONFIG);
     const deviceType = this.mPageDesktopModeConfig.getDeviceType();
     if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
       this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
@@ -56,9 +54,9 @@ export default class SettingsModel {
     } else {
       this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTableHorizontal;
     }
-    this.mPageDesktopLayoutConfig = LayoutConfigManager.getFunctionConfig<PageDesktopLayoutConfig>(PageDesktopLayoutConfig.GRID_LAYOUT_INFO);
-    this.mRecentsModeConfig = LayoutConfigManager.getModeConfig(RecentsModeConfig.RECENT_MISSIONS_MODE_CONFIG);
-    this.mPageDesktopAppModeConfig = LayoutConfigManager.getModeConfig(PageDesktopAppModeConfig.DESKTOP_APPLICATION_INFO);
+    this.mPageDesktopLayoutConfig = layoutConfigManager.getFunctionConfig<PageDesktopLayoutConfig>(PageDesktopLayoutConfig.GRID_LAYOUT_INFO);
+    this.mRecentsModeConfig = layoutConfigManager.getModeConfig(RecentsModeConfig.RECENT_MISSIONS_MODE_CONFIG);
+    this.mPageDesktopAppModeConfig = layoutConfigManager.getModeConfig(PageDesktopAppModeConfig.DESKTOP_APPLICATION_INFO);
     this.uri = settingsDataManager.getUri(CommonConstants.NAVIGATION_BAR_STATUS_KEY);
     this.helper = settingsDataManager.getHelper(globalThis.desktopContext, this.uri);
   }
@@ -110,6 +108,7 @@ export default class SettingsModel {
    * @return {object} Default layout information of grid view.
    */
   getDefaultLayoutInfo(): any {
+    let defaultLayoutInfoFilePath = globalThis.desktopContext.filesDir + '/layoutInfo.json';
     return FileUtils.readJsonFile(defaultLayoutInfoFilePath);
   }
 
@@ -223,6 +222,7 @@ export default class SettingsModel {
    * @return {object} layout information.
    */
   getLayoutInfo(): any {
+    this.updateMenuId();
     return this.mPageDesktopLayoutConfig.getGridLayoutInfo();
   }
 
@@ -280,5 +280,11 @@ export default class SettingsModel {
    */
   registerListenForDataChanges(callback): void {
     this.helper.on('dataChange', this.uri, callback);
+  }
+
+  private updateMenuId(): void {
+    let currentId: number = AppStorage.Get('menuId') as number ?? 0;
+    currentId++;
+    AppStorage.SetOrCreate('menuId', currentId % 100);
   }
 }

@@ -18,7 +18,7 @@ import inputMethod from '@ohos.inputmethod';
 /**
  * Wrapper class for inputMethod interfaces.
  */
-export default class InputMethodManager {
+export class InputMethodManager {
 
   static getInstance(): InputMethodManager {
     if (globalThis.InputMethodManagerInstance == null) {

@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-import StyleConstants from '../constants/StyleConstants';
-import ResourceManager from '../manager/ResourceManager';
-import CheckEmptyUtils from '../utils/CheckEmptyUtils';
-import LayoutViewModel from '../viewmodel/LayoutViewModel';
+import { StyleConstants } from '../constants/StyleConstants';
+import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
+import { ResourceManager } from '../manager/ResourceManager';
+import { LayoutViewModel } from '../viewmodel/LayoutViewModel';
 
 
 @CustomDialog
-export default struct UninstallDialog {
+export struct UninstallDialog {
   @StorageLink('uninstallAppInfo') appInfo: any = {};
   @StorageLink('isPad') isPad: boolean = false;
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;

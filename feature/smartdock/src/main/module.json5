@@ -1,6 +1,6 @@
 {
   "module": {
-    "name": "smartdock",
+    "name": "launcher_smartDock",
     "type": "har",
     "deviceTypes": [
       "default",

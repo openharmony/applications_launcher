@@ -13,21 +13,21 @@
  * limitations under the License.
  */
 
-import FolderStyleConstants from '../constants/FolderStyleConstants';
+import { BigFolderStyleConstants } from '../constants/BigFolderStyleConstants';
 
 @Component
 export default struct TitleDescriptionComponent {
   @Link mTitleDescription: any;
-  @State mTextSize: number = FolderStyleConstants.DEFAULT_APP_GRID_TEXT_FONT_SIZE;
+  @State mTextSize: number = BigFolderStyleConstants.DEFAULT_APP_GRID_TEXT_FONT_SIZE;
 
   build() {
     Text(this.mTitleDescription)
       .fontSize(this.mTextSize)
-      .fontWeight(FolderStyleConstants.DEFAULT_APP_GRID_TEXT_FONT_WEIGHT)
+      .fontWeight(BigFolderStyleConstants.DEFAULT_APP_GRID_TEXT_FONT_WEIGHT)
       .margin({
-        top: FolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
-        bottom: FolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
-        left: FolderStyleConstants.DEFAULT_APP_ADD_TEXT_MARGIN
+        top: BigFolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
+        bottom: BigFolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
+        left: BigFolderStyleConstants.DEFAULT_APP_ADD_TEXT_MARGIN
       })
   }
 }

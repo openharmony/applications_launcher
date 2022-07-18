@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-import MissionInfo from './MissionInfo';
-import AppItemInfo from './AppItemInfo';
+import { MissionInfo } from './MissionInfo';
+import { AppItemInfo } from './AppItemInfo';
 
 /**
  * Recent mission info
  */
-export default class RecentBundleMissionInfo extends AppItemInfo {
+export class RecentBundleMissionInfo extends AppItemInfo {
   missionInfoList: MissionInfo[] | undefined;
 }

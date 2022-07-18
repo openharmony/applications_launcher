@@ -13,15 +13,14 @@
  * limitations under the License.
  */
 
-import FormManager from '../manager/FormManager';
-import LocalEventManager from '../manager/LocalEventManager';
-import RdbStoreManager from '../manager/RdbStoreManager';
-import EventConstants from '../constants/EventConstants';
-import CardItemInfo from '../bean/CardItemInfo';
-import FormListInfoCacheManager from '../cache/FormListInfoCacheManager';
-import CommonConstants from '../constants/CommonConstants';
-import SettingsModel from './SettingsModel';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { EventConstants } from '../constants/EventConstants';
+import { CommonConstants } from '../constants/CommonConstants';
+import { CardItemInfo } from '../bean/CardItemInfo';
+import { SettingsModel } from './SettingsModel';
+import { FormManager } from '../manager/FormManager';
+import { RdbStoreManager } from '../manager/RdbStoreManager';
+import { FormListInfoCacheManager } from '../cache/FormListInfoCacheManager';
 
 const TAG = 'FormModel';
 const KEY_FORM_LIST = 'formListInfo';
@@ -29,7 +28,7 @@ const KEY_FORM_LIST = 'formListInfo';
 /**
  * form model.
  */
-export default class FormModel {
+export class FormModel {
   private readonly mRdbStoreManager: RdbStoreManager;
   private readonly mFormManager: FormManager;
   private readonly mFormListInfoCacheManager: FormListInfoCacheManager;
@@ -52,35 +51,6 @@ export default class FormModel {
       globalThis.FormModelInstance = new FormModel();
     }
     return globalThis.FormModelInstance;
-  }
-
-  /**
-   * Register the form card change event listener.
-   *
-   * @param listener
-   */
-  registerJumpToFormViewEvent(listener): void {
-    LocalEventManager.registerEventListener(listener, [
-      EventConstants.EVENT_REQUEST_JUMP_TO_FORM_VIEW
-    ]);
-  }
-
-  /**
-   * Unregister event listener.
-   *
-   * @param listener
-   */
-  unregisterEventListener(listener): void {
-    LocalEventManager.unregisterEventListener(listener);
-  }
-
-  /**
-   * Send the event of jump to form manager view.
-   *
-   * @param {array} formViewInfo
-   */
-  sendJumpFormViewEvent(formViewInfo): void {
-    LocalEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_JUMP_TO_FORM_VIEW, formViewInfo);
   }
 
   /**
@@ -161,9 +131,16 @@ export default class FormModel {
    *
    * @param {number} cardId
    */
-  deleteFormById(cardId: number) {
-    this.mRdbStoreManager.deleteFormInfoById(cardId);
-    this.mFormManager.deleteCard(cardId.toString());
+  async deleteFormById(cardId: number): Promise<boolean> {
+    try{
+      await this.mRdbStoreManager.deleteFormInfoById(cardId);
+      await this.mFormManager.deleteCard(cardId.toString());
+    } catch(error){
+      Log.showError(TAG, `deleteFormById err: ${JSON.stringify(error)}`);
+      return false;
+    }
+    return true;
+
   }
 
   /**

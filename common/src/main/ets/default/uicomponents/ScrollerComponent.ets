@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import amsMissionManager from '../manager/AmsMissionManager.ts'
-import StyleConstants from '../constants/StyleConstants';
+import { StyleConstants } from '../constants/StyleConstants';
+import { amsMissionManager }from '../manager/AmsMissionManager'
 
 @Component
 export default struct ScrollerComponent {

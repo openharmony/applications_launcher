@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../constants/CommonConstants';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { CommonConstants } from '../constants/CommonConstants';
 
 const TAG = 'LocalEventManager';
 
@@ -122,5 +122,4 @@ class LocalEventManager {
   }
 }
 
-const localEventManager = LocalEventManager.getInstance();
-export default localEventManager;
+export const localEventManager = LocalEventManager.getInstance();

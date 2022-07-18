@@ -14,31 +14,30 @@
  */
 
 import Prompt from '@ohos.prompt';
-import CheckEmptyUtils from '../../../../../../../common/src/main/ets/default/utils/CheckEmptyUtils';
-import Trace from '../../../../../../../common/src/main/ets/default/utils/Trace';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
-import DockItemInfo from '../../../../../../../common/src/main/ets/default/bean/DockItemInfo';
-import MissionInfo from '../../../../../../../common/src/main/ets/default/bean/MissionInfo';
-import MenuInfo from '../../../../../../../common/src/main/ets/default/bean/MenuInfo';
-import BaseAppPresenter from '../../../../../../../common/src/main/ets/default/base/BaseAppPresenter';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import SmartDockLayoutConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/SmartDockLayoutConfig';
-import launcherAbilityManager from '../../../../../../../common/src/main/ets/default/manager/LauncherAbilityManager';
-import amsMissionManager from '../../../../../../../common/src/main/ets/default/manager/AmsMissionManager';
-import windowManager from '../../../../../../../common/src/main/ets/default/manager/WindowManager';
-import SmartDockConstants from '../common/constants/SmartDockConstants';
-import FeatureConstants from '../common/constants/FeatureConstants';
-import SmartDockStyleConfig from '../common/SmartDockStyleConfig';
-import SmartDockDragHandler from '../common/SmartDockDragHandler';
+import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
+import { CheckEmptyUtils } from '@ohos/common';
+import { MenuInfo } from '@ohos/common';
+import { MissionInfo } from '@ohos/common';
+import { DockItemInfo } from '@ohos/common';
+import { windowManager } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import { amsMissionManager }from '@ohos/common';
+import { launcherAbilityManager } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { BaseViewModel } from '@ohos/common';
 import SmartDockModel from '../model/SmartDockModel';
+import SmartDockDragHandler from '../common/SmartDockDragHandler';
+import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
+import SmartDockConstants from '../common/constants/SmartDockConstants';
+import { SmartDockLayoutConfig } from '../config/SmartDockLayoutConfig';
 
 const TAG = 'SmartDockViewModel';
 
 /**
  * SmartDock Viewmodel
  */
-export default class SmartDockViewModel extends BaseAppPresenter {
+export default class SmartDockViewModel extends BaseViewModel {
   private readonly mSmartDockLayoutConfig: SmartDockLayoutConfig;
   private readonly mSmartDockStyleConfig: SmartDockStyleConfig;
   private readonly mSmartDockDragHandler: SmartDockDragHandler;
@@ -49,8 +48,8 @@ export default class SmartDockViewModel extends BaseAppPresenter {
 
   constructor() {
     super();
-    this.mSmartDockLayoutConfig = LayoutConfigManager.getFunctionConfig(SmartDockLayoutConfig.SMART_DOCK_LAYOUT_INFO);
-    this.mSmartDockStyleConfig = LayoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, FeatureConstants.FEATURE_NAME);
+    this.mSmartDockLayoutConfig = layoutConfigManager.getFunctionConfig(SmartDockLayoutConfig.SMART_DOCK_LAYOUT_INFO);
+    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
     this.mSmartDockDragHandler = SmartDockDragHandler.getInstance();
     this.mSmartDockModel = SmartDockModel.getInstance();
     Log.showInfo(TAG, 'constructor!');
@@ -68,7 +67,7 @@ export default class SmartDockViewModel extends BaseAppPresenter {
    * get SmartDockStyleConfig
    */
   getStyleConfig(): SmartDockStyleConfig{
-    return LayoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, FeatureConstants.FEATURE_NAME);
+    return layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
   }
 
   /**

@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-import ResourceManager from '../manager/ResourceManager';
-import PresetStyleConstants from '../constants/PresetStyleConstants';
+import { ResourceManager } from '../manager/ResourceManager';
+import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 
 @Component
-export default struct AppName {
+export struct AppName {
   @Prop nameSize: number;
   @Prop nameHeight: number;
   bundleName: string;

@@ -13,8 +13,7 @@
  * limitations under the License.
  */
 
-import DiskLruFileUtils from './DiskLruFileUtils';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
 
 const TAG = 'DiskLruCache';
 
@@ -52,7 +51,7 @@ export default class DiskLruCache {
       //update the cache to recent use
       this.cache.set(key, temp);
       //update local cache to recent use
-      return DiskLruFileUtils.readJsonObj(key)[key];
+      return temp;
     }
     return -1;
   }
@@ -73,10 +72,6 @@ export default class DiskLruCache {
     }
     //update the cache to recent use
     this.cache.set(key, value);
-    //update local cache to recent use
-    DiskLruFileUtils.writeJsonObj({
-      [key]: value
-    }, key);
   }
 
   /**
@@ -86,16 +81,12 @@ export default class DiskLruCache {
    */
   remove(key: string): void {
     this.cache.delete(key);
-    DiskLruFileUtils.removeFile(key);
   }
 
   /**
    * Clear cache of disk.
    */
   clear(): void {
-    this.cache.forEach(function (value, key) {
-      DiskLruFileUtils.removeFile(key);
-    });
     this.cache.clear();
   }
 }

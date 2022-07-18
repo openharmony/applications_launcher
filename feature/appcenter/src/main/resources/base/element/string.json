@@ -19,6 +19,30 @@
     {
       "name": "app_center_menu_uninstall",
       "value": "卸载"
+    },
+    {
+      "name": "launcher_edit",
+      "value": "桌面编辑"
+    },
+    {
+      "name": "into_settings",
+      "value": "桌面设置"
+    },
+    {
+      "name": "uninstall",
+      "value": "卸载"
+    },
+    {
+      "name": "isUninstall",
+      "value": "是否卸载"
+    },
+    {
+      "name": "app_menu_open",
+      "value": "打开"
+    },
+    {
+      "name": "app_center_menu_add_desktop",
+      "value": "添加到工作区"
     }
   ]
 }

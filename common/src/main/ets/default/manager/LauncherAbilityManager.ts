@@ -14,16 +14,16 @@
  */
 
 import bundleMgr from '@ohos.bundle';
-import {LauncherAbilityInfo} from 'bundle/launcherAbilityInfo';
-import launcherBundleMgr from '@ohos.bundle.innerBundleManager';
-import AppItemInfo from '../bean/AppItemInfo';
-import CheckEmptyUtils from '../utils/CheckEmptyUtils';
-import CommonConstants from '../constants/CommonConstants';
-import EventConstants from '../constants/EventConstants';
-import ResourceManager from './ResourceManager';
 import osaccount from '@ohos.account.osAccount';
-import Trace from '../utils/Trace';
-import Log from '../utils/Log';
+import launcherBundleMgr from '@ohos.bundle.innerBundleManager';
+import { LauncherAbilityInfo } from 'bundle/launcherAbilityInfo';
+import { Log } from '../utils/Log';
+import { Trace } from '../utils/Trace';
+import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
+import { AppItemInfo } from '../bean/AppItemInfo';
+import { CommonConstants } from '../constants/CommonConstants';
+import { ResourceManager } from './ResourceManager';
+import { EventConstants } from '../constants/EventConstants';
 
 const TAG = 'LauncherAbilityManager';
 
@@ -232,6 +232,7 @@ class LauncherAbilityManager {
     appItemInfo.abilityName = info.elementName.abilityName;
     appItemInfo.moduleName = info.elementName.moduleName;
     appItemInfo.keyName = info.elementName.bundleName + info.elementName.abilityName + info.elementName.moduleName;
+    appItemInfo.typeId = CommonConstants.TYPE_APP;
     appItemInfo.installTime = String(new Date());
     await ResourceManager.getInstance().updateIconCache(appItemInfo.appIconId, appItemInfo.bundleName, appItemInfo.moduleName);
     this.mAppMap.set(appItemInfo.bundleName, appItemInfo);
@@ -334,5 +335,4 @@ class LauncherAbilityManager {
   }
 }
 
-const launcherAbilityManager = LauncherAbilityManager.getInstance();
-export default launcherAbilityManager;
+export const launcherAbilityManager = LauncherAbilityManager.getInstance();

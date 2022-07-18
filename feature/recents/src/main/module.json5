@@ -1,6 +1,6 @@
 {
   "module": {
-    "name": "recents",
+    "name": "launcher_recents",
     "type": "har",
     "deviceTypes": [
       "default",

@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-import CommonEvent from '@ohos.commonEvent';
-import display from '@ohos.display';
 import Window from '@ohos.window';
+import display from '@ohos.display';
+import CommonEvent from '@ohos.commonEvent';
 import featureAbility from '@ohos.ability.featureAbility';
 import ServiceExtensionContext from 'application/ServiceExtensionContext';
 import { AsyncCallback, BusinessError} from 'basic';
@@ -24,8 +24,8 @@ import { CommonEventSubscriber } from 'commonEvent/commonEventSubscriber';
 import { CommonEventSubscribeInfo } from 'commonEvent/commonEventSubscribeInfo';
 
 import commonEventManager from './CommonEventManager'
-import Log from '../utils/Log';
-import StyleConstants from '../constants/StyleConstants';
+import { Log } from '../utils/Log';
+import { StyleConstants } from '../constants/StyleConstants';
 
 const TAG = 'WindowManager';
 
@@ -355,5 +355,4 @@ class WindowManager {
   }
 }
 
-const windowManager = WindowManager.getInstance();
-export default windowManager;
+export const windowManager = WindowManager.getInstance();

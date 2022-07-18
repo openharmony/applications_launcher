@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import BaseStage from '../../../../../../common/src/main/ets/default/base/BaseStage';
+import { BaseStage } from '@ohos/common';
 import settingsPreLoader from './SettingsPreLoader';
 
 /**

@@ -16,7 +16,7 @@
 /**
  * mission info
  */
-export default class MissionInfo {
+export class MissionInfo {
   /**
    * Indicates mission id.
    */

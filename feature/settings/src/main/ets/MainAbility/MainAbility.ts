@@ -14,9 +14,9 @@
  */
 
 import Ability from '@ohos.application.Ability';
-import Log from '../../../../../../common/src/main/ets/default/utils/Log';
+import { Log } from '@ohos/common';
 
-const TAG = 'Settings MainAbility';
+const TAG = 'Launcher Settings MainAbility';
 
 export default class MainAbility extends Ability {
   onCreate(want, launchParam) {

@@ -13,22 +13,22 @@
  * limitations under the License.
  */
 
-import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import PageDesktopViewModel from '../common/viewmodel/PageDesktopViewModel';
-import PageDesktopDragHandler from '../common/PageDesktopDragHandler';
+import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
+import { AppMenu } from '@ohos/common';
+import { MenuInfo } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
 import GridSwiper from '../common/components/GridSwiper';
-import FeatureConstants from '../common/constants/FeatureConstants';
-import Trace from '../../../../../../../common/src/main/ets/default/utils/Trace';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
-import AppMenu from '../../../../../../../common/src/main/ets/default/uicomponents/AppMenu';
-import MenuInfo from '../../../../../../../common/src/main/ets/default/bean/MenuInfo';
+import PagedesktopConstants from '../common/constants/PagedesktopConstants';
+import { PageDesktopDragHandler } from '../common/PageDesktopDragHandler';
+import PageDesktopViewModel from '../viewmodel/PageDesktopViewModel';
 
 let mPageDesktopViewModel: PageDesktopViewModel = null;
 const TAG = "PageDesktopLayout";
 
 @Component
-export default struct PageDesktopLayout {
+export struct PageDesktopLayout {
   @StorageLink('appListInfo') AppListInfo: {
     appGridInfo: [[]]
   } = { appGridInfo: [[]] };
@@ -94,7 +94,7 @@ export default struct PageDesktopLayout {
   }
 
   private onTouchEventUpdate() {
-    if (AppStorage.Get('device') === 'phone' || AppStorage.Get('dragFocus') == FeatureConstants.FEATURE_NAME) {
+    if (AppStorage.Get('device') === 'phone' || AppStorage.Get('dragFocus') == PagedesktopConstants.FEATURE_NAME) {
       this.mPageDesktopDragHandler.onTouchEventUpdate(AppStorage.Get('dragEvent'));
     }
   }

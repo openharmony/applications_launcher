@@ -13,29 +13,28 @@
  * limitations under the License.
  */
 
-import BaseModulePreLoader from '../../../../../../../common/src/main/ets/default/base/BaseModulePreLoader';
-import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import SmartDockLayoutConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/SmartDockLayoutConfig';
-import SmartDockModeConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/SmartDockModeConfig';
-import SmartDockStyleConfig from './SmartDockStyleConfig';
+import { BaseModulePreLoader } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import SmartDockModeConfig from '../config/SmartDockModeConfig';
+import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
+import { SmartDockLayoutConfig } from '../config/SmartDockLayoutConfig';
 
 /**
  * smartDock config preLoader
  */
 class SmartDockPreLoader extends BaseModulePreLoader {
   protected loadConfig(): void {
-    LayoutConfigManager.addConfigToManager(SmartDockLayoutConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(SmartDockModeConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(SmartDockStyleConfig.getInstance());
+    layoutConfigManager.addConfigToManager(SmartDockLayoutConfig.getInstance());
+    layoutConfigManager.addConfigToManager(SmartDockModeConfig.getInstance());
+    layoutConfigManager.addConfigToManager(SmartDockStyleConfig.getInstance());
   }
 
   protected loadData(): void {
   }
 
   releaseConfigAndData(): void {
-    LayoutConfigManager.removeConfigFromManager();
+    layoutConfigManager.removeConfigFromManager();
   }
 }
 
-const smartDockPreLoader: BaseModulePreLoader = new SmartDockPreLoader();
-export default smartDockPreLoader;
+export const smartDockPreLoader: SmartDockPreLoader = new SmartDockPreLoader();

@@ -13,22 +13,22 @@
  * limitations under the License.
  */
 
-import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
+import { Log } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
+import { AppList } from '@ohos/common';
+import { UninstallDialog } from '@ohos/common';
+import { ResourceManager } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import { AppListViewModel } from '../viewmodel/AppListViewModel';
+import AppcenterConstants from '../common/constants/AppcenterConstants';
 import AppCenterListStyleConfig from '../common/AppCenterListStyleConfig';
-import AppListPresenter from '../common/presenter/AppListPresenter';
-import FeatureConstants from '../common/constants/FeatureConstants';
-import AppList from '../../../../../../../common/src/main/ets/default/uicomponents/AppList';
-import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
-import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
 
-const TAG = 'ListLayout';
+const TAG = 'AppListLayout';
 
-let mAppListPresenter: AppListPresenter;
+let mAppListViewModel: AppListViewModel;
 
 @Component
-export default struct ListLayout {
+export struct AppListLayout {
   @StorageLink('listInfo') appListInfo: [] = [];
   @StorageLink('uninstallAppInfo') appInfo: any = {};
   dialogName: string = "";
@@ -36,10 +36,10 @@ export default struct ListLayout {
   mAppCenterListStyleConfig: AppCenterListStyleConfig = null;
 
   aboutToAppear(): void  {
-    mAppListPresenter = AppListPresenter.getInstance();
-    mAppListPresenter.getAppList();
-    mAppListPresenter.registerAppListChangeCallback();
-    this.mAppCenterListStyleConfig = LayoutConfigManager.getStyleConfig(AppCenterListStyleConfig.APP_LIST_STYLE_CONFIG, FeatureConstants.FEATURE_NAME);
+    mAppListViewModel = AppListViewModel.getInstance();
+    mAppListViewModel.getAppList();
+    mAppListViewModel.registerAppListChangeCallback();
+    this.mAppCenterListStyleConfig = layoutConfigManager.getStyleConfig(AppCenterListStyleConfig.APP_LIST_STYLE_CONFIG, AppcenterConstants.FEATURE_NAME);
     ResourceManager.getInstance().getStringByResource($r('app.string.uninstall')).then((resName) => {
       this.dialogName = resName;
     });
@@ -55,7 +55,7 @@ export default struct ListLayout {
     builder: UninstallDialog({
       cancel: () => {},
       confirm: () => {
-        mAppListPresenter.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
+        mAppListViewModel.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
       },
       dialogName: this.dialogName,
       dialogContent: this.appInfo.appName + ' ?',
@@ -80,7 +80,7 @@ export default struct ListLayout {
         appList: $appListInfo,
         appListStyleConfig: this.mAppCenterListStyleConfig,
         onItemClick: (event, item) => {
-          mAppListPresenter.openApplication(item.abilityName, item.bundleName, item.moduleName);
+          mAppListViewModel.openApplication(item.abilityName, item.bundleName, item.moduleName);
         },
         onItemLongPress: (event, item) => {
           AppStorage.SetOrCreate('uninstallAppInfo', item);
@@ -115,7 +115,7 @@ struct ShowDialog {
         .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
         .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
         .onClick(() => {
-          mAppListPresenter.intoSetting();
+          mAppListViewModel.intoSetting();
           this.controller.close();
         })
 
@@ -133,7 +133,7 @@ struct ShowDialog {
         .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
         .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
         .onClick(() => {
-          mAppListPresenter.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
+          mAppListViewModel.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
           this.controller.close();
         })
       }

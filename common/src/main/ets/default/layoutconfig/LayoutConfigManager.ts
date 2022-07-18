@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../constants/CommonConstants';
-import ILayoutConfig from './ILayoutConfig';
+import { ILayoutConfig } from './ILayoutConfig';
+import { CommonConstants } from '../constants/CommonConstants';
 
 /**
  * Layout configuration management
@@ -145,5 +145,4 @@ class LayoutConfigManager {
   }
 }
 
-const layoutConfigManager = LayoutConfigManager.getInstance();
-export default layoutConfigManager;
+export const layoutConfigManager = LayoutConfigManager.getInstance();

@@ -13,20 +13,20 @@
  * limitations under the License.
  */
 
-import Log from '../utils/Log';
-import LayoutConfigManager from '../layoutconfig/LayoutConfigManager';
-import PresetStyleConstants from '../constants/PresetStyleConstants';
-import StyleConstants from '../constants/StyleConstants';
-import CommonConstants from '../constants/CommonConstants';
-import LauncherLayoutStyleConfig from '../layoutconfig/LauncherLayoutStyleConfig';
-import SettingsModel from '../model/SettingsModel';
+import { Log } from '../utils/Log';
+import { SettingsModel } from '../model/SettingsModel';
+import { StyleConstants } from '../constants/StyleConstants';
+import { CommonConstants } from '../constants/CommonConstants';
+import { PresetStyleConstants } from '../constants/PresetStyleConstants';
+import { layoutConfigManager } from '../layoutconfig/LayoutConfigManager';
+import { LauncherLayoutStyleConfig } from '../layoutconfig/LauncherLayoutStyleConfig';
 
 const TAG = 'LayoutViewModel';
 
 /**
  * layout viewmodel
  */
-export default class LayoutViewModel {
+export class LayoutViewModel {
   private mIsPad = true;
   private mScreenHeight: number | undefined;
   private mScreenWidth: number | undefined;
@@ -52,7 +52,7 @@ export default class LayoutViewModel {
 
   private constructor() {
     Log.showInfo(TAG, 'constructor');
-    this.mLauncherLayoutStyleConfig = LayoutConfigManager.getStyleConfig(
+    this.mLauncherLayoutStyleConfig = layoutConfigManager.getStyleConfig(
       LauncherLayoutStyleConfig.LAUNCHER_COMMON_STYLE_CONFIG, LauncherLayoutStyleConfig.LAUNCHER_PRODUCT_STYLE_CONFIG);
   }
 

@@ -12,16 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import router from '@system.router';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
-import FormModel from '../../../../../../../common/src/main/ets/default/model/FormModel';
-import EventConstants from '../../../../../../../common/src/main/ets/default/constants/EventConstants';
-import PageDesktopViewModel from '../../../../../../pagedesktop/src/main/ets/default/common/viewmodel/PageDesktopViewModel';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import FormStyleConfig from '../common/FormStyleConfig';
-import FeatureConstants from '../common/constants/FeatureConstants';
-import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import FormListInfoCacheManager from '../../../../../../../common/src/main/ets/default/cache/FormListInfoCacheManager';
+import { Log } from '@ohos/common';
+import { FormModel } from '@ohos/common';
+import { SettingsModel } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import { FormListInfoCacheManager } from '@ohos/common';
+import { FormStyleConfig } from '../common/FormStyleConfig';
+import FormConstants from '../common/constants/FormConstants';
 
 const TAG = 'FormViewModel';
 const KEY_FORM_LIST = 'formListInfo';
@@ -29,9 +27,9 @@ const KEY_FORM_LIST = 'formListInfo';
 /**
  * Class FormViewModel.
  */
-export default class FormViewModel {
-  private readonly mPageDesktopViewModel: PageDesktopViewModel;
+export class FormViewModel {
   private readonly mFormModel: FormModel;
+  private readonly mSettingsModel: SettingsModel;
   private readonly mFormStyleConfig: FormStyleConfig;
   private readonly mFormListInfoCacheManager: FormListInfoCacheManager;
   private mAllFormsInfo;
@@ -39,9 +37,9 @@ export default class FormViewModel {
   private constructor() {
     Log.showInfo(TAG, 'constructor start');
     this.mFormModel = FormModel.getInstance();
-    this.mFormStyleConfig = LayoutConfigManager.getStyleConfig(FormStyleConfig.APP_LIST_STYLE_CONFIG,
-      FeatureConstants.FEATURE_NAME);
-    this.mPageDesktopViewModel = PageDesktopViewModel.getInstance();
+    this.mSettingsModel = SettingsModel.getInstance();
+    this.mFormStyleConfig = layoutConfigManager.getStyleConfig(FormStyleConfig.APP_LIST_STYLE_CONFIG,
+      FormConstants.FEATURE_NAME);
     this.mFormListInfoCacheManager = FormListInfoCacheManager.getInstance();
   }
 
@@ -104,7 +102,7 @@ export default class FormViewModel {
     let gridLayoutInfo = {
       layoutInfo: []
     };
-    gridLayoutInfo = this.mPageDesktopViewModel.getLayoutInfo();
+    gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
     const cardIndex = gridLayoutInfo.layoutInfo.findIndex(item => {
       return item.typeId === CommonConstants.TYPE_CARD && item.cardId === cardId;
     });
@@ -112,8 +110,8 @@ export default class FormViewModel {
       this.mFormModel.deleteFormById(cardId);
       const page = gridLayoutInfo.layoutInfo[cardIndex].page;
       gridLayoutInfo.layoutInfo.splice(cardIndex, 1);
-      this.mPageDesktopViewModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
-      this.mPageDesktopViewModel.setLayoutInfo(gridLayoutInfo);
+      globalThis.PageDesktopViewModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
+      this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
     }
     const formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
     if (formInfoList === CommonConstants.INVALID_VALUE) {

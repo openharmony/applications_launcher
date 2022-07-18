@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-import FeatureConstants from './constants/FeatureConstants';
-import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import AppListStyleConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/AppListStyleConfig';
+import { StyleConstants } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { AppListStyleConfig } from '@ohos/common';
+import AppcenterConstants from './constants/AppcenterConstants';
 
 /**
  * App center list style configuration class
@@ -92,6 +92,6 @@ export default class AppCenterListStyleConfig extends AppListStyleConfig {
   }
 
   getFeatureName(): string {
-    return FeatureConstants.FEATURE_NAME;
+    return AppcenterConstants.FEATURE_NAME;
   }
 }

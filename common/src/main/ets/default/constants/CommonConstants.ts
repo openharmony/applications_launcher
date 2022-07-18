@@ -16,7 +16,7 @@
 /**
  * Common constants for all features.
  */
-export default class CommonConstants {
+export class CommonConstants {
 
   /**
    * dock space

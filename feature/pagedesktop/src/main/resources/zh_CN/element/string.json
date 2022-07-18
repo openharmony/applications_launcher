@@ -59,6 +59,14 @@
     {
       "name": "add_form_to_desktop_more",
       "value": "更多服务卡片"
+    },
+    {
+      "name": "is_delete_form",
+      "value": "是否移除"
+    },
+    {
+      "name": "isUninstall",
+      "value": "是否卸载"
     }
   ]
 }

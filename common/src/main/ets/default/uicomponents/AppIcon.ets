@@ -13,17 +13,16 @@
  * limitations under the License.
  */
 
-import ResourceManager from '../manager/ResourceManager';
-import BadgeManager from '../manager/BadgeManager';
-import StyleConstants from '../constants/StyleConstants';
-import CheckEmptyUtils from '../utils/CheckEmptyUtils';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { BadgeManager } from '../manager/BadgeManager';
+import { StyleConstants } from '../constants/StyleConstants';
+import { ResourceManager } from '../manager/ResourceManager';
 
 const TAG = 'AppIcon';
 
 @Component
-export default struct AppIcon {
-  @Prop iconSize: number | string;
+export struct AppIcon {
+  @Prop iconSize: number;
   @Prop iconId: string;
   @Prop bundleName: string;
   @Prop moduleName: string;

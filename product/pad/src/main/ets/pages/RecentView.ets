@@ -13,15 +13,15 @@
  * limitations under the License.
  */
 
-import windowManager from '../../../../../../common/src/main/ets/default/manager/WindowManager';
-import Log from '../../../../../../common/src/main/ets/default/utils/Log';
-import Trace from '../../../../../../common/src/main/ets/default/utils/Trace';
-import RecentMissionInfo from '../../../../../../common/src/main/ets/default/bean/RecentMissionInfo';
-import StyleConstants from '../../../../../../feature/recents/src/main/ets/MainAbility/common/constants/StyleConstants';
-import RecentMissionsStage from '../../../../../../feature/recents/src/main/ets/MainAbility/common/RecentMissionsStage';
-import RecentMissionsViewModel from '../../../../../../feature/recents/src/main/ets/MainAbility/viewmodel/RecentMissionsViewModel';
-import RecentMissionsDoubleLayout from '../../../../../../feature/recents/src/main/ets/MainAbility/view/RecentMissionsDoubleLayout';
-import RecentMissionsSingleLayout from '../../../../../../feature/recents/src/main/ets/MainAbility/view/RecentMissionsSingleLayout';
+import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
+import { windowManager } from '@ohos/common';
+import { RecentMissionInfo } from '@ohos/common';
+import { RecentsStyleConstants } from '@ohos/recents';
+import { RecentMissionsStage } from '@ohos/recents';
+import { RecentMissionsViewModel } from '@ohos/recents';
+import { RecentMissionsSingleLayout } from '@ohos/recents';
+import { RecentMissionsDoubleLayout } from '@ohos/recents';
 
 const TAG = "RecentView";
 
@@ -64,8 +64,8 @@ struct RecentView {
     Column() {
       if (this.recentMissionsList.length === 0) {
         Text($r('app.string.No_running_apps_recently'))
-          .fontColor(StyleConstants.DEFAULT_FONT_COLOR)
-          .fontSize(StyleConstants.DEFAULT_FONT_SIZE);
+          .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)
+          .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE);
       } else {
         if (this.traceLoadData() && this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single') {
           RecentMissionsSingleLayout({
@@ -80,9 +80,9 @@ struct RecentView {
         }
       }
     }
-    .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
-    .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
-    .backgroundImage(StyleConstants.DEFAULT_RECENT_BACKGROUND_IMAGE)
+    .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
+    .height(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
+    .backgroundImage(RecentsStyleConstants.DEFAULT_RECENT_BACKGROUND_IMAGE)
     .onClick(() => {
       if (!this.isClickSubComponent) {
         Log.showInfo(TAG, 'click recent missions area');

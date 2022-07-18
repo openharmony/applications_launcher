@@ -14,21 +14,20 @@
  */
 
 import app from '@system.app';
-import windowManager from '../../../../../../common/src/main/ets/default/manager/WindowManager';
-import RdbStoreManager from '../../../../../../common/src/main/ets/default/manager/RdbStoreManager';
-import CustomOverlay from '../../../../../../common/src/main/ets/default/uicomponents/CustomOverlay';
-import CommonConstants from '../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import LayoutViewModel from '../../../../../../common/src/main/ets/default/viewmodel/LayoutViewModel';
-import Trace from '../../../../../../common/src/main/ets/default/utils/Trace';
-import LocalEventManager from '../../../../../../common/src/main/ets/default/manager/LocalEventManager';
-import EventConstants from '../../../../../../common/src/main/ets/default/constants/EventConstants';
-import Log from '../../../../../../common/src/main/ets/default/utils/Log';
-import PageDesktopLayout from '../../../../../../feature/pagedesktop/src/main/ets/default/layout/PageDesktopLayout';
-import SmartDock from '../../../../../../feature/smartdock/src/main/ets/default/layout/SmartDock';
-import FolderOpenComponent from '../../../../../../feature/bigfolder/src/main/ets/default/view/FolderOpenComponent';
-import FeatureConstants from '../../../../../../feature/bigfolder/src/main/ets/default/common/constants/FeatureConstants';
-import PageDesktopDragHandler from '../../../../../../feature/pagedesktop/src/main/ets/default/common/PageDesktopDragHandler';
-import SettingsModel from '../../../../../../common/src/main/ets/default/model/SettingsModel';
+import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { EventConstants } from '@ohos/common';
+import { windowManager } from '@ohos/common';
+import { localEventManager } from '@ohos/common';
+import { CustomOverlay } from '@ohos/common';
+import { SettingsModel } from '@ohos/common';
+import { LayoutViewModel } from '@ohos/common';
+import { SmartDock } from '@ohos/smartdock';
+import { PageDesktopLayout } from '@ohos/pagedesktop';
+import { PageDesktopDragHandler } from '@ohos/pagedesktop';
+import { BigFolderConstants } from '@ohos/bigfolder';
+import { FolderOpenComponent } from '@ohos/bigfolder';
 import PadStage from '../common/PadStage';
 
 const RAW_IMAGE_CACHE_SIZE = 20000000;
@@ -62,7 +61,7 @@ struct EntryView {
   }
 
   registerPageDesktopNavigatorStatusChangeEvent(listener): void {
-    LocalEventManager.registerEventListener(listener, [EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE]);
+    localEventManager.registerEventListener(listener, [EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE]);
   }
 
   private readonly mLocalEventListener = {
@@ -132,7 +131,7 @@ struct EntryView {
     ContextMenu.close();
     AppStorage.SetOrCreate('dialogControllerStatus', !AppStorage.Get('dialogControllerStatus'));
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
-    AppStorage.SetOrCreate('openFolderStatus', FeatureConstants.OPEN_FOLDER_STATUS_CLOSE);
+    AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
     AppStorage.SetOrCreate('selectDesktopAppItem', '');
     PageDesktopDragHandler.getInstance().reset();
     this.closeRecentDockPopup();

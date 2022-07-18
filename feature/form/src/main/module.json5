@@ -1,6 +1,6 @@
 {
   "module": {
-    "name": "form",
+    "name": "launcher_form",
     "type": "har",
     "deviceTypes": [
       "default",

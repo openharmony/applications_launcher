@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import BaseModulePreLoader from '../../../../../../../common/src/main/ets/default/base/BaseModulePreLoader';
-import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
+import { BaseModulePreLoader } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
 import AppCenterListStyleConfig from './AppCenterListStyleConfig';
 import AppCenterGridStyleConfig from './AppCenterGridStyleConfig';
 
@@ -23,8 +23,8 @@ import AppCenterGridStyleConfig from './AppCenterGridStyleConfig';
  */
 class AppCenterPreLoader extends BaseModulePreLoader {
   protected loadConfig(): void {
-    LayoutConfigManager.addConfigToManager(AppCenterListStyleConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(AppCenterGridStyleConfig.getInstance());
+    layoutConfigManager.addConfigToManager(AppCenterListStyleConfig.getInstance());
+    layoutConfigManager.addConfigToManager(AppCenterGridStyleConfig.getInstance());
   }
 
   protected loadData(): void {
@@ -34,5 +34,4 @@ class AppCenterPreLoader extends BaseModulePreLoader {
   }
 }
 
-const appCenterPreLoader: BaseModulePreLoader = new AppCenterPreLoader();
-export default appCenterPreLoader;
+export const appCenterPreLoader: BaseModulePreLoader = new AppCenterPreLoader();

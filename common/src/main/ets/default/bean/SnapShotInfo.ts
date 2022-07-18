@@ -16,7 +16,7 @@
 /**
  * Recent mission SnapShotInfo
  */
-export default class SnapShotInfo {
+export class SnapShotInfo {
   /**
    * snapShot info: mission id
    */

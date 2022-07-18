@@ -16,10 +16,10 @@
 import ServiceExtension from '@ohos.application.ServiceExtensionAbility';
 import display from '@ohos.display';
 import Want from '@ohos.application.Want';
-import RdbStoreManager from '../../../../../../common/src/main/ets/default/manager/RdbStoreManager';
-import windowManager from '../../../../../../common/src/main/ets/default/manager/WindowManager';
-import Log from '../../../../../../common/src/main/ets/default/utils/Log';
-import GestureNavigationManage from '../../../../../../feature/gesturenavigation/src/main/ets/default/common/GestureNavigationManage';
+import { Log } from '@ohos/common';
+import { windowManager } from '@ohos/common';
+import { RdbStoreManager } from '@ohos/common';
+import { GestureNavigationManager } from '@ohos/gesturenavigation';
 import StyleConstants from '../common/constants/StyleConstants';
 
 const TAG = 'LauncherMainAbility';
@@ -71,7 +71,7 @@ export default class MainAbility extends ServiceExtension {
   }
 
   private startGestureNavigation(): void {
-    const gestureNavigationManage = GestureNavigationManage.getInstance();
+    const gestureNavigationManage = GestureNavigationManager.getInstance();
     display.getDefaultDisplay()
       .then((dis: { id: number, width: number, height: number, refreshRate: number }) => {
         Log.showInfo(TAG, `startGestureNavigation display: ${JSON.stringify(dis)}`);

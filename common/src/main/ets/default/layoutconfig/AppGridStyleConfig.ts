@@ -13,15 +13,15 @@
  * limitations under the License.
  */
 
-import ILayoutConfig from './ILayoutConfig';
-import CommonConstants from '../constants/CommonConstants';
-import StyleConstants from '../constants/StyleConstants';
-import PresetStyleConstants from '../constants/PresetStyleConstants';
+import { ILayoutConfig } from './ILayoutConfig';
+import { CommonConstants } from '../constants/CommonConstants';
+import { StyleConstants } from '../constants/StyleConstants';
+import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 
 /**
  * Style config for app grid.
  */
-export default class AppGridStyleConfig extends ILayoutConfig {
+export class AppGridStyleConfig extends ILayoutConfig {
   /**
    * Style config symbol for app grid
    */
@@ -112,7 +112,7 @@ export default class AppGridStyleConfig extends ILayoutConfig {
    */
   mIconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
 
-  protected constructor() {
+  constructor() {
     super();
   }
 
@@ -142,7 +142,7 @@ export default class AppGridStyleConfig extends ILayoutConfig {
     return AppGridStyleConfig.APP_GRID_STYLE_CONFIG;
   }
 
-  protected getPersistConfigJson(): string {
+  getPersistConfigJson(): string {
     const persistConfig = {
     };
     return JSON.stringify(persistConfig);

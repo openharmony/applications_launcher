@@ -1,6 +1,6 @@
 {
   "module": {
-    "name": "gesturenavigation",
+    "name": "launcher_gesturenavigation",
     "type": "har",
     "deviceTypes": [
       "default",

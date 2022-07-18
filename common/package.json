@@ -7,6 +7,6 @@
     "buildTool": "hvigor",
     "directoryLevel": "module"
   },
-  "dependencies": {
-  }
+  "main": "index.ets",
+  "dependencies": {}
 }

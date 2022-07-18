@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-import StyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
+import { Log } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
 import SwiperPage from './SwiperPage';
-import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
 
 const TAG = "GridSwiper";
 

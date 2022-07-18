@@ -16,11 +16,11 @@
 /**
  * Stage base class
  */
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
 
 const TAG = 'BaseStage';
 
-export default class BaseStage {
+export class BaseStage {
   constructor() {
   }
 
