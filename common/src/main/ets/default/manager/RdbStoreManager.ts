@@ -460,7 +460,6 @@ export class RdbStoreManager {
       return result;
     }
     try {
-      this.mRdbStore.beginTransaction();
       // delete desktopApplicationInfo table
       await this.deleteTable(RdbStoreConfig.DesktopApplicationInfo.TABLE_NAME);
       // insert into desktopApplicationInfo
@@ -483,11 +482,9 @@ export class RdbStoreManager {
         if (ret === -1) {
           result = false;
         }
-        this.mRdbStore.commit();
       }
     } catch (e) {
       Log.showError(TAG, 'insertDesktopApplication error:' + e);
-      this.mRdbStore.rollBack();
     }
     return result;
   }
@@ -532,7 +529,6 @@ export class RdbStoreManager {
       return;
     }
     try {
-      this.mRdbStore.beginTransaction();
       // delete gridlayoutinfo table
       await this.deleteTable(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
       // insert into gridlayoutinfo
@@ -544,6 +540,8 @@ export class RdbStoreManager {
         if (element.typeId === CommonConstants.TYPE_APP) {
           item = {
             'bundle_name': element.bundleName,
+			'ability_name': element.abilityName,
+            'module_name': element.moduleName,
             'key_name': element.bundleName + element.abilityName + element.moduleName,
             'type_id': element.typeId,
             'area': element.area[0] + ',' + element.area[1],
@@ -593,10 +591,8 @@ export class RdbStoreManager {
         }
       }
 
-      this.mRdbStore.commit();
     } catch (e) {
       Log.showError(TAG, 'insertGridLayoutInfo error:' + e);
-      this.mRdbStore.rollBack();
     }
   }
 

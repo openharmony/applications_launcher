@@ -89,6 +89,13 @@ export default class GridLayoutItemBuilder {
      */
     bundleName: string | undefined;
 
+	/**
+     * Indicates abilityName.
+     */
+	abilityName: string | undefined;
+
+	moduleName: string | undefined;
+
     /**
      * Indicates keyName.
      */
@@ -126,6 +133,8 @@ export default class GridLayoutItemBuilder {
         gridlayoutItemBuilder.setColumn(resultSet.getLong(resultSet.getColumnIndex(GridLayoutInfoColumns.COLUMN)));
         gridlayoutItemBuilder.setRow(resultSet.getLong(resultSet.getColumnIndex(GridLayoutInfoColumns.ROW)));
         gridlayoutItemBuilder.setBundleName(resultSet.getString(resultSet.getColumnIndex(GridLayoutInfoColumns.BUNDLE_NAME)));
+		gridlayoutItemBuilder.setAbilityName(resultSet.getString(resultSet.getColumnIndex(GridLayoutInfoColumns.ABILITY_NAME)));
+		gridlayoutItemBuilder.setModuleName(resultSet.getString(resultSet.getColumnIndex(GridLayoutInfoColumns.MODULE_NAME)));
         gridlayoutItemBuilder.setKeyName(resultSet.getString(resultSet.getColumnIndex(GridLayoutInfoColumns.KEY_NAME)));
         gridlayoutItemBuilder.setExtend1(resultSet.getString(resultSet.getColumnIndex(GridLayoutInfoColumns.EXTEND1)));
         gridlayoutItemBuilder.setExtend2(resultSet.getString(resultSet.getColumnIndex(GridLayoutInfoColumns.EXTEND2)));
@@ -221,6 +230,16 @@ export default class GridLayoutItemBuilder {
 
     private setBundleName(bundleName: string) {
         this.bundleName = bundleName;
+        return this;
+    }
+
+	private setAbilityName(abilityName: string) {
+        this.abilityName = abilityName;
+        return this;
+    }
+
+	private setModuleName(moduleName: string) {
+        this.moduleName = moduleName;
         return this;
     }
 
