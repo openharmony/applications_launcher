@@ -13,16 +13,16 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../constants/CommonConstants';
-import StyleConstants from '../constants/StyleConstants';
-import ResourceManager from '../manager/ResourceManager';
-import OverlayAppIcon from './OverlayAppIcon.ets';
-import FolderComponent from './FolderComponent.ets';
-import MenuInfo from '../bean/MenuInfo'
-import FormItemComponent from './FormItemComponent.ets';
+import OverlayAppIcon from './OverlayAppIcon';
+import { FolderComponent } from './FolderComponent';
+import { FormItemComponent } from './FormItemComponent';
+import { MenuInfo } from '../bean/MenuInfo'
+import { StyleConstants } from '../constants/StyleConstants';
+import { ResourceManager } from '../manager/ResourceManager';
+import { CommonConstants } from '../constants/CommonConstants';
 
 @Component
-export default struct CustomOverlay {
+export struct CustomOverlay {
   @State @Watch('showStateChange') overLayShow: boolean = false;
   @State overLayAlpha: number = 0;
   @StorageLink('withBlur') withBlur: boolean = true;

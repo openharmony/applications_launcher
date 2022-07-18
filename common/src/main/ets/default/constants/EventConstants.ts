@@ -16,23 +16,29 @@
 /**
  * Constants of events that will be registered to system.
  */
-const EventConstants = {
+export const EventConstants = {
+  // system events
   EVENT_PACKAGE_ADDED: 'usual.event.PACKAGE_ADDED',
   EVENT_PACKAGE_CHANGED: 'usual.event.PACKAGE_CHANGED',
   EVENT_PACKAGE_REMOVED: 'usual.event.PACKAGE_REMOVED',
-  EVENT_REQUEST_DOCK_ITEM_ADD: 'launcher.event.REQUEST_DOCK_ITEM_ADD',  //request add item to smartDock
-  EVENT_REQUEST_PAGEDESK_ITEM_ADD: 'launcher.event.REQUEST_PAGEDESK_ITEM_ADD',  //request add item to pageDesk
-  EVENT_REQUEST_PAGEDESK_ITEM_UPDATE: 'launcher.event.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE',  //request update item to pageDesk
-  EVENT_REQUEST_PAGEDESK_ITEM_DELETE: 'launcher.event.REQUEST_PAGEDESK_ITEM_DELETE',  //request delete item to pageDesk
-  EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE: 'launcher.event.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE',  //request update item to smartDock
-  EVENT_REQUEST_RESIDENT_DOCK_ITEM_INIT: 'launcher.event.EVENT_REQUEST_RESIDENT_DOCK_ITEM_INIT',  //request reset resident item to pageDesk
-  EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE: 'launcher.event.REQUEST_DOCK_ITEM_DELETE',  //request delete resident item
-  EVENT_REQUEST_RECENT_DOCK_ITEM_DELETE: 'launcher.event.RECENT_DOCK_ITEM_DELETE',  //request delete recent item
-  EVENT_BADGE_UPDATE: 'launcher.event.EVENT_BADGE_UPDATE',
-  EVENT_REQUEST_JUMP_TO_FORM_VIEW: 'launcher.event.EVENT_REQUEST_JUMP_TO_FORM_VIEW',
-  EVENT_REQUEST_FORM_ITEM_ADD: 'launcher.event.REQUEST_FORM_ITEM_ADD',
-  EVENT_FOLDER_PACKAGE_REMOVED: 'usual.event.FOLDER_PACKAGE_REMOVED',
-  EVENT_NAVIGATOR_BAR_STATUS_CHANGE: 'usual.event.NAVIGATOR_BAR_STATUS_CHANGE'
-};
 
-export default EventConstants;
+  // pagedesktop events
+  EVENT_REQUEST_PAGEDESK_ITEM_ADD: 'launcher.event.REQUEST_PAGEDESK_ITEM_ADD',  //request add app to pageDesk
+  EVENT_REQUEST_PAGEDESK_ITEM_DELETE: 'launcher.event.REQUEST_PAGEDESK_ITEM_DELETE',  //request delete app from pageDesk
+  EVENT_REQUEST_PAGEDESK_ITEM_UPDATE: 'launcher.event.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE',  //request pagedesktop rebuild layout
+  EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD: 'launcher.event.EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD',
+  EVENT_SMARTDOCK_INIT_FINISHED: 'launcher.event.EVENT_SMARTDOCK_INIT_FINISHED',
+  EVENT_BADGE_UPDATE: 'launcher.event.EVENT_BADGE_UPDATE',
+
+  // smartdock events
+  EVENT_REQUEST_DOCK_ITEM_ADD: 'launcher.event.REQUEST_DOCK_ITEM_ADD',  //request add app to smartDock
+  EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE: 'launcher.event.REQUEST_DOCK_ITEM_DELETE',  //request delete app from resident dock
+  EVENT_REQUEST_RECENT_DOCK_ITEM_DELETE: 'launcher.event.RECENT_DOCK_ITEM_DELETE',  //request delete app from recent dock
+  EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE: 'launcher.event.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE',  //request update item from smartDock
+
+  // bigfolder events
+  EVENT_FOLDER_PACKAGE_REMOVED: 'usual.event.FOLDER_PACKAGE_REMOVED',
+
+  // gesturenavigation events
+  EVENT_NAVIGATOR_BAR_STATUS_CHANGE: 'usual.event.NAVIGATOR_BAR_STATUS_CHANGE',
+};

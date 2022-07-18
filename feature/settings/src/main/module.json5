@@ -16,7 +16,7 @@
       {
         "name": "com.ohos.launcher.settings.MainAbility",
         "srcEntrance": "./ets/MainAbility/MainAbility.ts",
-        "startWindowIcon": "$media:icon",
+        "startWindowIcon": "$media:startWindowIcon",
         "startWindowBackground": "$color:startWindowBackground",
         "icon": "$media:icon",
         "description": "$string:mainability_description",

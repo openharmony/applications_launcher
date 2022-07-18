@@ -13,43 +13,43 @@
  * limitations under the License.
  */
 
-import windowManager from '../../../../../../../common/src/main/ets/default/manager/WindowManager';
-import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
-import AppBubble from '../../../../../../../common/src/main/ets/default/uicomponents/AppBubble.ets';
-import AppName from '../../../../../../../common/src/main/ets/default/uicomponents/AppName.ets';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog.ets';
-import Trace from '../../../../../../../common/src/main/ets/default/utils/Trace';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
-import PresetStyleConstants from '../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
-import InputMethodManager from '../../../../../../../common/src/main/ets/default/manager/InputMethodManager';
-import PageDesktopViewModel from '../../../../../../pagedesktop/src/main/ets/default/common/viewmodel/PageDesktopViewModel';
-import FormManagerDialog from '../../../../../../../feature/form/src/main/ets/default/common/uicomponents/FormManagerDialog.ets';
-import FolderViewModel from '../viewmodel/FolderViewModel';
-import BigFolderModel from '../common/BigFolderModel';
-import FolderAppListDialog from '../common/uicomponents/FolderAppListDialog.ets';
-import FolderStyleConstants from '../common/constants/FolderStyleConstants';
-import FeatureConstants from '../common/constants/FeatureConstants';
+import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
+import { EventConstants } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { PresetStyleConstants } from '@ohos/common';
+import { AppName } from '@ohos/common';
+import { AppBubble } from '@ohos/common';
+import { UninstallDialog } from '@ohos/common';
+import { FormManagerDialog } from '@ohos/common';
+import { windowManager } from '@ohos/common';
+import { ResourceManager } from '@ohos/common';
+import { localEventManager } from '@ohos/common';
+import { InputMethodManager } from '@ohos/common';
+import { BigFolderModel } from '../model/BigFolderModel';
+import { BigFolderViewModel } from '../viewmodel/BigFolderViewModel';
 import BigFolderDragHandler from '../common/BigFolderDragHandler';
-import BigFolderStyleConfig from '../common/BigFolderStyleConfig';
+import { BigFolderStyleConfig } from '../common/BigFolderStyleConfig';
+import { BigFolderConstants } from '../common/constants/BigFolderConstants';
+import { BigFolderStyleConstants } from '../common/constants/BigFolderStyleConstants';
+import FolderAppListDialog from '../common/uicomponents/FolderAppListDialog';
 
 const TAG = 'FolderOpenComponent';
 const DOUBLE_CLICK_COUNT = 2;
 
 const APP_INFO_REFRESH_DELAY = 500;
 const FOLDER_CLOSE_DELAY = 500;
-let mFolderViewModel: FolderViewModel;
-let mPageDesktopViewModel: PageDesktopViewModel;
+let mBigFolderViewModel: BigFolderViewModel;
 let mBigFolderDragHandler: BigFolderDragHandler;
 let mBigFolderStyleConfig: BigFolderStyleConfig;
 let mFolderModel: BigFolderModel;
 let isOpenFolderDialog: boolean = false;
-let mAppNameHeight = FolderStyleConstants.DEFAULT_APP_NAME_HEIGHT;
-let mAppItemWidth = FolderStyleConstants.DEFAULT_APP_ITEM_WIDTH;
-let mAppNameSize = FolderStyleConstants.DEFAULT_APP_NAME_SIZE;
-let mAppIconSize = FolderStyleConstants.DEFAULT_APP_ITEM_WIDTH;
-let mAddIconSize = FolderStyleConstants.DEFAULT_ADD_APP_SIZE;
+let mAppNameHeight = BigFolderStyleConstants.DEFAULT_APP_NAME_HEIGHT;
+let mAppItemWidth = BigFolderStyleConstants.DEFAULT_APP_ITEM_WIDTH;
+let mAppNameSize = BigFolderStyleConstants.DEFAULT_APP_NAME_SIZE;
+let mAppIconSize = BigFolderStyleConstants.DEFAULT_APP_ITEM_WIDTH;
+let mAddIconSize = BigFolderStyleConstants.DEFAULT_ADD_APP_SIZE;
 let mNameLines = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
 let mIconNameMargin = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
 let mSwiperHeight;
@@ -62,10 +62,10 @@ let mGridIconTopPadding;
 let isPad = false;
 
 @Component
-export default struct FolderOpenComponent {
+export struct FolderOpenComponent {
   @State withBlur: boolean = true;
   @StorageLink('openFolderPageIndex') PageIndex: number = 0;
-  @StorageLink('openFolderStatus') @Watch('updateFolderData') openFolderStatus: number = FeatureConstants.OPEN_FOLDER_STATUS_CLOSE;
+  @StorageLink('openFolderStatus') @Watch('updateFolderData') openFolderStatus: number = BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
   @State overLayAlpha: number = 0.3;
   @State isRenaming: boolean = false;
   @StorageLink('openFolderData') mFolderInfo: {
@@ -78,19 +78,18 @@ export default struct FolderOpenComponent {
 
   aboutToAppear(): void {
     Log.showInfo(TAG, `aboutToAppear start`);
-    mFolderViewModel = FolderViewModel.getInstance();
-    mPageDesktopViewModel = PageDesktopViewModel.getInstance();
+    mBigFolderViewModel = BigFolderViewModel.getInstance();
     this.updateStyle();
     // Folder dialog data preloading
-    mFolderViewModel.getFolderAddAppList(this.mFolderInfo.folderId);
-    mFolderViewModel.getFolderAppList(this.mFolderInfo.folderId);
+    mBigFolderViewModel.getFolderAddAppList(this.mFolderInfo.folderId);
+    mBigFolderViewModel.getFolderAppList(this.mFolderInfo.folderId);
     this.newFolderName = this.mFolderInfo.folderName;
     Log.showInfo(TAG, `aboutToAppear end`);
   }
 
   private updateStyle() {
-    isPad = mFolderViewModel.getIsPad();
-    mBigFolderStyleConfig = mFolderViewModel.getFolderStyleConfig();
+    isPad = mBigFolderViewModel.getIsPad();
+    mBigFolderStyleConfig = mBigFolderViewModel.getFolderStyleConfig();
     mAppItemWidth = mBigFolderStyleConfig.mOpenFolderAppSize;
     mAppIconSize = mBigFolderStyleConfig.mOpenFolderIconSize;
     mAddIconSize = mBigFolderStyleConfig.mOpenFolderAddIconSize;
@@ -109,22 +108,22 @@ export default struct FolderOpenComponent {
 
   private updateFolderData() {
     Log.showDebug(TAG, `updateFolderData start`);
-    if (this.openFolderStatus == FeatureConstants.OPEN_FOLDER_STATUS_STATIC) {
+    if (this.openFolderStatus == BigFolderConstants.OPEN_FOLDER_STATUS_STATIC) {
       return;
     }
-    if (this.openFolderStatus == FeatureConstants.OPEN_FOLDER_STATUS_CLOSE) {
+    if (this.openFolderStatus == BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE) {
       this.hideOpenFolder();
-      mFolderViewModel.delAddIcon(this.mFolderInfo);
-      mPageDesktopViewModel.pagingFiltering();
+      mBigFolderViewModel.delAddIcon(this.mFolderInfo);
+      globalThis.PageDesktopViewModel.pagingFiltering();
       this.newFolderName = '';
       return;
     } else {
       this.isRenaming = this.mFolderInfo.enterEditing;
       this.newFolderName = this.mFolderInfo.folderName;
-      this.mFolderInfo = mFolderViewModel.addAddIcon(this.mFolderInfo);
+      this.mFolderInfo = mBigFolderViewModel.addAddIcon(this.mFolderInfo);
       this.showOpenFolder();
     }
-    AppStorage.SetOrCreate('openFolderStatus', FeatureConstants.OPEN_FOLDER_STATUS_STATIC);
+    AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_STATIC);
     AppStorage.SetOrCreate('isDraging', false);
     Log.showDebug(TAG, `updateFolderData end`);
   }
@@ -133,7 +132,7 @@ export default struct FolderOpenComponent {
     Log.showDebug(TAG, `hideOpenFolder start`);
     this.isRenaming = false;
     this.withBlur = false;
-    this.openFolderStatus = FeatureConstants.OPEN_FOLDER_STATUS_CLOSE;
+    this.openFolderStatus = BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
     this.showAnimate(0.3, Curve.EaseOut);
     Log.showDebug(TAG, `hideOpenFolder end`);
   }
@@ -163,52 +162,55 @@ export default struct FolderOpenComponent {
       if (this.withBlur) {
         Column()
           .blur(CommonConstants.OVERLAY_BLUR_RADIUS)
-          .width(FolderStyleConstants.PERCENTAGE_100)
-          .height(FolderStyleConstants.PERCENTAGE_100)
+          .width(BigFolderStyleConstants.PERCENTAGE_100)
+          .height(BigFolderStyleConstants.PERCENTAGE_100)
       }
 
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center }) {
         Stack({ alignContent: Alignment.Center }) {
           if (this.isRenaming) {
-            Row(){
+            Row() {
               TextInput({ text: this.newFolderName })
                 .maxLength(CommonConstants.FOLDER_NAME_MAX_LENGTH)
                 .caretColor(Color.White)
                 .fontColor(Color.White)
-                .fontSize(FolderStyleConstants.DEFAULT_OPEN_FOLDER_NAME_SIZE)
+                .fontSize(BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_NAME_SIZE)
                 .fontWeight(FontWeight.Normal)
                 .layoutWeight(1)
                 .backgroundColor('rgba(255,255,255,0)')
                 .enterKeyType(EnterKeyType.Done)
-                .onSubmit((enterKey:EnterKeyType) => {
+                .onSubmit((enterKey: EnterKeyType) => {
                   Log.showDebug(TAG, `textinput done: ${enterKey} `)
                   this.isRenaming = true;
                   this.saveText();
                 })
-                .onChange((text:string) => {
+                .onChange((text: string) => {
                   Log.showDebug(TAG, `textinput: ` + text);
-                  this.newFolderName  = text;
+                  this.newFolderName = text;
                 })
-              Image(FolderStyleConstants.DEFAULT_CANCEL_APP_IMAGE)
-                .width(FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
-                .height(FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
-                .onClick(()=>{
+              Image(BigFolderStyleConstants.DEFAULT_CANCEL_APP_IMAGE)
+                .width(BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
+                .height(BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
+                .onClick(() => {
                   this.newFolderName = ''
                 })
             }
-            .height(FolderStyleConstants.DEFAULT_OPEN_FOLDER_TEXTAREA_HEIGHT)
-            .width(FolderStyleConstants.PERCENTAGE_100)
-            .borderRadius(FolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
-            .padding({ left: FolderStyleConstants.DEFAULT_BUTTON_HEIGHT,right: FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN })
+            .height(BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_TEXTAREA_HEIGHT)
+            .width(BigFolderStyleConstants.PERCENTAGE_100)
+            .borderRadius(BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
+            .padding({
+              left: BigFolderStyleConstants.DEFAULT_BUTTON_HEIGHT,
+              right: BigFolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN
+            })
             .backgroundColor('rgba(255,255,255,0.3)')
-          }else{
+          } else {
             Text(this.mFolderInfo.folderName) {
             }
-            .fontSize(FolderStyleConstants.DEFAULT_OPEN_FOLDER_NAME_SIZE)
+            .fontSize(BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_NAME_SIZE)
             .fontColor(Color.White)
             .textAlign(TextAlign.Center)
             .maxLines(1)
-            .width(FolderStyleConstants.PERCENTAGE_100)
+            .width(BigFolderStyleConstants.PERCENTAGE_100)
             .onClick(() => {
               Log.showDebug(TAG, 'title click');
               this.isRenaming = true;
@@ -223,17 +225,17 @@ export default struct FolderOpenComponent {
         Stack() {
           Swiper() {
             ForEach(this.mFolderInfo.layoutInfo, (item) => {
-                FolderSwiperPage({
-                  mAppInfo: item,
-                  isRenaming: $isRenaming,
-                  newFolderName: this.newFolderName,
-                  mFolderInfo: this.mFolderInfo
-                })
+              FolderSwiperPage({
+                mAppInfo: item,
+                isRenaming: $isRenaming,
+                newFolderName: this.newFolderName,
+                mFolderInfo: this.mFolderInfo
+              })
             }, (item) => JSON.stringify(item))
           }
           .indicatorStyle({
             selectedColor: StyleConstants.DEFAULT_FONT_COLOR,
-            bottom: FolderStyleConstants.DEFAULT_OPEN_FOLDER_INDICATOR
+            bottom: BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_INDICATOR
           })
           .onClick(() => {
             Log.showDebug(TAG, `Swiper click`);
@@ -244,16 +246,16 @@ export default struct FolderOpenComponent {
           .index(this.PageIndex)
           .loop(false)
           .onChange((index) => {
-            Log.showDebug(TAG, `mFolderViewModel.changeIndex(index):${index}`);
-            mFolderViewModel.changeIndex(index);
+            Log.showDebug(TAG, `mBigFolderViewModel.changeIndex(index):${index}`);
+            mBigFolderViewModel.changeIndex(index);
           })
         }
       }
       .width(mGridWidth)
     }
-    .width(FolderStyleConstants.PERCENTAGE_100)
-    .height(FolderStyleConstants.PERCENTAGE_100)
-    .visibility(this.openFolderStatus == FeatureConstants.OPEN_FOLDER_STATUS_CLOSE ? Visibility.Hidden : Visibility.Visible)
+    .width(BigFolderStyleConstants.PERCENTAGE_100)
+    .height(BigFolderStyleConstants.PERCENTAGE_100)
+    .visibility(this.openFolderStatus == BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE ? Visibility.Hidden : Visibility.Visible)
     .opacity(this.overLayAlpha)
     .backgroundColor('rgba(0,0,0,0.25)')
     .onClick(() => {
@@ -273,11 +275,11 @@ export default struct FolderOpenComponent {
       this.isRenaming = false;
       if (this.newFolderName && this.newFolderName != this.mFolderInfo.folderName) {
         this.mFolderInfo.folderName = this.newFolderName;
-        mFolderViewModel.modifyFolderName(this.mFolderInfo)
+        mBigFolderViewModel.modifyFolderName(this.mFolderInfo)
       }
     } else {
       if (!isOpenFolderDialog) {
-        mFolderViewModel.closeFolder();
+        mBigFolderViewModel.closeFolder();
       }
     }
     InputMethodManager.getInstance().stopInput();
@@ -308,7 +310,7 @@ struct FolderSwiperPage {
   }
 
   private updateConfig() {
-    let styleConfig = mFolderViewModel.getFolderStyleConfig();
+    let styleConfig = mBigFolderViewModel.getFolderStyleConfig();
     this.mGridGap = styleConfig.mOpenFolderGridGap;
     let openFolderConfig = mFolderModel.getFolderOpenLayout();
 
@@ -339,17 +341,19 @@ struct FolderSwiperPage {
 
   folderDialogController: CustomDialogController = new CustomDialogController({
     builder: FolderAppListDialog({
-      cancel: () => {},
-      confirm:  (isDestory) => {
+      cancel: () => {
+      },
+      confirm: (isDestory) => {
         if (isDestory) {
-          mFolderViewModel.closeFolder();
+          mBigFolderViewModel.closeFolder();
         }
       },
       folderItem: AppStorage.Get('openFolderData')
     }),
     customStyle: true,
     alignment: DialogAlignment.Center,
-    cancel: () => {},
+    cancel: () => {
+    },
     autoCancel: true
   })
 
@@ -368,23 +372,23 @@ struct FolderSwiperPage {
                     .borderRadius(10)
                     .backgroundColor(Color.White)
 
-                  Image(FolderStyleConstants.DEFAULT_ADD_FOLDER_APP_IMAGE)
-                    .width(FolderStyleConstants.DEFAULT_ADD_APP_ICON_SIZE)
-                    .height(FolderStyleConstants.DEFAULT_ADD_APP_ICON_SIZE)
-                }.margin({top: mGridIconTopPadding})
+                  Image(BigFolderStyleConstants.DEFAULT_ADD_FOLDER_APP_IMAGE)
+                    .width(BigFolderStyleConstants.DEFAULT_ADD_APP_ICON_SIZE)
+                    .height(BigFolderStyleConstants.DEFAULT_ADD_APP_ICON_SIZE)
+                }.margin({ top: mGridIconTopPadding })
 
                 AppName({
                   nameHeight: mAppNameHeight,
                   nameSize: mAppNameSize,
-                  nameFontColor: FolderStyleConstants.DEFAULT_FONT_COLOR,
+                  nameFontColor: BigFolderStyleConstants.DEFAULT_FONT_COLOR,
                   appName: item.appName,
                   useCache: false,
                   nameLines: mNameLines,
                   marginTop: mIconNameMargin
                 })
               }
-              .width(FolderStyleConstants.PERCENTAGE_100)
-              .height(FolderStyleConstants.PERCENTAGE_100)
+              .width(BigFolderStyleConstants.PERCENTAGE_100)
+              .height(BigFolderStyleConstants.PERCENTAGE_100)
               .onClick(() => {
                 Log.showDebug(TAG, `add app to this folder`);
                 this.folderDialogController.open();
@@ -427,16 +431,15 @@ struct FolderSwiperPage {
       this.isRenaming = false;
       if (this.newFolderName && this.newFolderName != this.mFolderInfo.folderName) {
         this.mFolderInfo.folderName = this.newFolderName;
-        mFolderViewModel.modifyFolderName(this.mFolderInfo);
+        mBigFolderViewModel.modifyFolderName(this.mFolderInfo);
       }
     } else {
       if (!isOpenFolderDialog) {
-        mFolderViewModel.closeFolder();
+        mBigFolderViewModel.closeFolder();
       }
     }
     InputMethodManager.getInstance().stopInput();
   }
-
 }
 
 @Component
@@ -464,7 +467,7 @@ struct FolderAppItem {
   }
 
   private onTouchEventUpdate() {
-    if (AppStorage.Get('dragFocus') == FeatureConstants.FEATURE_NAME) {
+    if (AppStorage.Get('dragFocus') == BigFolderConstants.FEATURE_NAME) {
       mBigFolderDragHandler.onTouchEventUpdate(AppStorage.Get('dragEvent'));
     }
   }
@@ -474,28 +477,29 @@ struct FolderAppItem {
   }
 
   uninstallDialogController: CustomDialogController = new CustomDialogController({
-    builder:  UninstallDialog({
-      cancel: () => {},
+    builder: UninstallDialog({
+      cancel: () => {
+      },
       confirm: () => {
         if (isPad) {
-          this.mFolderInfo = mFolderViewModel.deleteAppFromOpenFolder(this.appInfo);
+          this.mFolderInfo = mBigFolderViewModel.deleteAppFromOpenFolder(this.appInfo);
         } else {
-          mPageDesktopViewModel.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
+          mBigFolderViewModel.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
           if (this.appInfo.isUninstallAble) {
-            this.mFolderInfo = mFolderViewModel.deleteAppFromOpenFolder(this.appInfo);
+            this.mFolderInfo = mBigFolderViewModel.deleteAppFromOpenFolder(this.appInfo);
           }
         }
-        mFolderViewModel.refreshFolder(this.mFolderInfo);
-        mPageDesktopViewModel.getGridList();
+        mBigFolderViewModel.refreshFolder(this.mFolderInfo);
+        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
       },
       dialogName: this.dialogName,
       dialogContent: this.appInfo.appName + ' ?',
     }),
-    cancel: () => {},
+    cancel: () => {
+    },
     autoCancel: true,
     customStyle: true
   });
-
   formManagerDialogController: CustomDialogController = new CustomDialogController({
     builder: FormManagerDialog({
       cancel: (callback?) => {
@@ -507,10 +511,10 @@ struct FolderAppItem {
       confirm: (formCardItem) => {
         // add form to desktop
         Log.showDebug(TAG, `createCardToDeskTop formCardItem: ${JSON.stringify(formCardItem)}`);
-        mPageDesktopViewModel.createCardToDeskTop(formCardItem);
+        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD, formCardItem);
       },
       bundleName: this.item.bundleName,
-      appName: mPageDesktopViewModel.getAppName(this.item.appLabelId + this.item.bundleName +  this.item.moduleName),
+      appName: globalThis.PageDesktopViewModel.getAppName(this.item.appLabelId + this.item.bundleName + this.item.moduleName),
       appLabelId: this.item.appLabelId
     }),
     cancel: this.cancelFormDialog,
@@ -542,7 +546,7 @@ struct FolderAppItem {
       this.mFolderInfo = AppStorage.Get('openFolderData');
       let pageCount = this.mFolderInfo.layoutInfo.length;
 
-      let pageIndex: number = mFolderViewModel.getIndex();
+      let pageIndex: number = mBigFolderViewModel.getIndex();
       Log.showDebug(TAG, `FolderOpenComponent onItemDragMove pageIndex: ${pageIndex},
         dragEffectArea.left: ${dragEffectArea.left},
         dragEffectArea.bottom: ${dragEffectArea.bottom},
@@ -550,19 +554,19 @@ struct FolderAppItem {
 
       if ((moveX - mAppIconSize / 2) < dragEffectArea.left && moveY < dragEffectArea.bottom) {
         if (pageIndex > 0) {
-          mFolderViewModel.changeIndex(pageIndex - 1);
+          mBigFolderViewModel.changeIndex(pageIndex - 1);
           this.movingIconSwapPageDelay();
         } else if (this.willCloseFolder) {
-          mFolderViewModel.closeFolder();
+          mBigFolderViewModel.closeFolder();
         } else {
           this.closeFolderDelay();
         }
       } else if ((moveX + mAppIconSize / 2) > dragEffectArea.right && moveY < dragEffectArea.bottom) {
         if (pageIndex < pageCount - 1) {
-          mFolderViewModel.changeIndex(pageIndex + 1);
+          mBigFolderViewModel.changeIndex(pageIndex + 1);
           this.movingIconSwapPageDelay();
         } else if (this.willCloseFolder) {
-          mFolderViewModel.closeFolder();
+          mBigFolderViewModel.closeFolder();
         } else {
           this.closeFolderDelay();
         }
@@ -588,12 +592,12 @@ struct FolderAppItem {
   }
 
   removeAppOutOfFolder(appInfo) {
-    mFolderViewModel.removeAppOutOfFolder(appInfo);
+    mBigFolderViewModel.removeAppOutOfFolder(appInfo);
   }
 
   private launchApp() {
     Trace.start(Trace.CORE_METHOD_LAUNCH_APP);
-    mPageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+    globalThis.PageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
   }
 
   build() {
@@ -603,7 +607,7 @@ struct FolderAppItem {
           iconSize: mAppIconSize,
           nameSize: mAppNameSize,
           nameHeight: mAppNameHeight,
-          nameFontColor: FolderStyleConstants.DEFAULT_FONT_COLOR,
+          nameFontColor: BigFolderStyleConstants.DEFAULT_FONT_COLOR,
           appName: this.item.appName,
           bundleName: this.item.bundleName,
           abilityName: this.item.abilityName,
@@ -613,7 +617,7 @@ struct FolderAppItem {
           badgeNumber: this.item.badgeNumber,
           isSelect: this.selectDesktopAppItem == this.item.keyName,
           mPaddingTop: mGridIconTopPadding,
-          menuInfo: mPageDesktopViewModel.buildMenuInfoList(this.item, this.uninstallDialogController,
+          menuInfo: globalThis.PageDesktopViewModel.buildMenuInfoList(this.item, this.uninstallDialogController,
             this.formManagerDialogController, this.removeAppOutOfFolder.bind(this)),
           nameLines: mNameLines,
           mIconNameMargin: mIconNameMargin
@@ -624,7 +628,7 @@ struct FolderAppItem {
       .visibility(this.isDraging ? Visibility.Hidden : Visibility.Visible)
       .onClick(() => {
         Log.showDebug(TAG, 'App click');
-        mPageDesktopViewModel.openApplication(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+        globalThis.PageDesktopViewModel.openApplication(this.item.abilityName, this.item.bundleName, this.item.moduleName);
       })
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
@@ -634,28 +638,28 @@ struct FolderAppItem {
         }
       })
       .gesture(
-        GestureGroup(GestureMode.Exclusive,
-                TapGesture()
-                  .onAction((event: GestureEvent) => {
-                    Log.showDebug(TAG, `tap action ${JSON.stringify(event)}`)
-                    if (event.source == SourceType.Mouse) {
-                      this.mouseClick++;
-                      if (this.mouseClick == DOUBLE_CLICK_COUNT) {
-                        Log.showDebug(TAG, 'mouse double click');
-                        this.mouseClick = 0;
-                        this.launchApp();
-                      } else {
-                        mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
-                        setTimeout(() => {
-                          this.mouseClick = 0;
-                        }, 300)
-                      }
-                    } else {
-                      Log.showDebug(TAG, 'tap click');
-                      this.launchApp();
-                    }
-                  })
-        )
+      GestureGroup(GestureMode.Exclusive,
+      TapGesture()
+        .onAction((event: GestureEvent) => {
+          Log.showDebug(TAG, `tap action ${JSON.stringify(event)}`)
+          if (event.source == SourceType.Mouse) {
+            this.mouseClick++;
+            if (this.mouseClick == DOUBLE_CLICK_COUNT) {
+              Log.showDebug(TAG, 'mouse double click');
+              this.mouseClick = 0;
+              this.launchApp();
+            } else {
+              globalThis.PageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+              setTimeout(() => {
+                this.mouseClick = 0;
+              }, 300)
+            }
+          } else {
+            Log.showDebug(TAG, 'tap click');
+            this.launchApp();
+          }
+        })
+      )
       )
     }
     .width(mAppItemWidth)

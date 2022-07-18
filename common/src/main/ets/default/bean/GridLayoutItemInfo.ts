@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-import AppItemInfo from './AppItemInfo';
 import GridLayoutItemBuilder from './GridLayoutItemBuilder';
 
 /**

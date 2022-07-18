@@ -13,31 +13,27 @@
  * limitations under the License.
  */
 
-import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
-import MenuInfo from '../../../../../../../common/src/main/ets/default/bean/MenuInfo';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import AppGrid from '../../../../../../../common/src/main/ets/default/uicomponents/AppGrid.ets';
-import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog.ets';
-import AppGridPresenter from '../common/presenter/AppGridPresenter';
+import { Log } from '@ohos/common'
+import { Trace } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { EventConstants } from '@ohos/common';
+import { AppGrid } from '@ohos/common';
+import { UninstallDialog } from '@ohos/common';
+import { MenuInfo } from '@ohos/common';
+import { ResourceManager } from '@ohos/common';
+import { localEventManager } from '@ohos/common';
+import { AppGridViewModel } from '../viewmodel/AppGridViewModel';
 import AppCenterGridStyleConfig from '../common/AppCenterGridStyleConfig';
-import FeatureConstants from '../common/constants/FeatureConstants';
-import localEventManager from '../../../../../../../common/src/main/ets/default/manager/LocalEventManager';
-import EventConstants from '../../../../../../../common/src/main/ets/default/constants/EventConstants';
-import Trace from '../../../../../../../common/src/main/ets/default/utils/Trace';
-import AppCenterViewModel from '../common/viewmodel/AppCenterViewModel.ets';
-import windowManager from '../../../../../../../common/src/main/ets/default/manager/WindowManager';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log'
 
 const TAG = 'AppGridLayout'
 
 @Component
-export default struct AppGridLayout {
+export struct AppGridLayout {
   @State mColumns: number = StyleConstants.DEFAULT_APP_GRID_COLUMN;
   @State mRows: number = StyleConstants.DEFAULT_APP_GRID_ROW;
   @StorageLink('listInfo') appGridList: [] = [];
-  mAppGridPresenter: AppGridPresenter = null;
+  mAppGridViewModel: AppGridViewModel = null;
   mAppCenterGridStyleConfig: AppCenterGridStyleConfig = null;
   mSelectItem = null;
   private dialogName: string = "";
@@ -61,7 +57,7 @@ export default struct AppGridLayout {
     if (this.mSelectItem == null) {
       return;
     }
-    this.mAppGridPresenter.uninstallApp(this.mSelectItem.bundleName, this.mSelectItem.isUninstallAble);
+    this.mAppGridViewModel.uninstallApp(this.mSelectItem.bundleName, this.mSelectItem.isUninstallAble);
     this.mDialogController.close();
   }
 
@@ -71,9 +67,9 @@ export default struct AppGridLayout {
 
   aboutToAppear(): void {
     Log.showInfo(TAG, "aboutToAppear")
-    this.mAppGridPresenter = AppGridPresenter.getInstance();
-    this.mAppGridPresenter.getAppList();
-    this.mAppCenterGridStyleConfig = AppCenterViewModel.getInstance().getAppGridStyleConfig();
+    this.mAppGridViewModel = AppGridViewModel.getInstance();
+    this.mAppGridViewModel.getAppList();
+    this.mAppCenterGridStyleConfig = this.mAppGridViewModel.getAppGridStyleConfig();
     ResourceManager.getInstance().getStringByResource($r('app.string.isUninstall')).then((resName) => {
       this.dialogName = resName;
     });
@@ -81,7 +77,7 @@ export default struct AppGridLayout {
 
   public buildMenuInfoList(appInfo) {
     let menuInfoList = new Array<MenuInfo>();
-    let shortcutInfo = this.mAppGridPresenter.getShortcutInfo(appInfo.bundleName);
+    let shortcutInfo = this.mAppGridViewModel.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
       let menu = null;
       shortcutInfo.forEach((value) => {
@@ -94,7 +90,7 @@ export default struct AppGridLayout {
         menu.bundleName = value.bundleName;
         menu.moduleName = value.moduleName;
         menu.onMenuClick = () => {
-          this.mAppGridPresenter.jumpTo(value.wants[0].targetClass, value.wants[0].targetBundle, value.wants[0].targetModule);
+          this.mAppGridViewModel.jumpTo(value.wants[0].targetClass, value.wants[0].targetBundle, value.wants[0].targetModule);
         };
         value.bundleName == appInfo.bundleName && value.moduleName == appInfo.moduleName && menuInfoList.push(menu);
       });
@@ -105,7 +101,7 @@ export default struct AppGridLayout {
     open.menuImgSrc = "/common/pics/ic_public_add_norm.svg";
     open.menuText = $r('app.string.app_menu_open');
     open.onMenuClick = () => {
-      this.mAppGridPresenter.jumpTo(appInfo.abilityName, appInfo.bundleName, appInfo.moduleName);
+      this.mAppGridViewModel.jumpTo(appInfo.abilityName, appInfo.bundleName, appInfo.moduleName);
     };
     menuInfoList.push(open);
 
@@ -136,7 +132,7 @@ export default struct AppGridLayout {
     uninstallMenu.onMenuClick = () => {
       Log.showDebug(TAG, `click menu item uninstall: ${JSON.stringify(appInfo)}`);
       let cacheKey = appInfo.appLabelId + appInfo.bundleName + appInfo.moduleName;
-      let appName = this.mAppGridPresenter.getAppName(cacheKey);
+      let appName = this.mAppGridViewModel.getAppName(cacheKey);
       Log.showDebug(TAG, `buildMenuInfoList appName: ${appName}`);
       if (appName != null) {
         appInfo.appName = appName;
@@ -158,7 +154,7 @@ export default struct AppGridLayout {
           isScroll: true,
           appGridStyleConfig: this.mAppCenterGridStyleConfig,
           onItemClick: (event, item) => {
-            this.mAppGridPresenter.jumpTo(item.abilityName, item.bundleName, item.moduleName);
+            this.mAppGridViewModel.jumpTo(item.abilityName, item.bundleName, item.moduleName);
           },
           buildMenu: (item) => this.buildMenuInfoList(item)
         })

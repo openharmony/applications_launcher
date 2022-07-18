@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-import SettingItemOptionsChecker from '../../../../../../../common/src/main/ets/default/settings/SettingItemOptionsChecker';
-import SettingItemsManager from '../../../../../../../common/src/main/ets/default/settings/SettingItemsManager';
-import SettingItemInfo from '../../../../../../../common/src/main/ets/default/bean/SettingItemInfo';
-import SettingItemsConfig from '../../../../../../../common/src/main/ets/default/configs/SettingItemsConfig';
-import SettingsModel from '../../../../../../../common/src/main/ets/default/model/SettingsModel';
-import LocalEventManager from '../../../../../../../common/src/main/ets/default/manager/LocalEventManager';
-import EventConstants from '../../../../../../../common/src/main/ets/default/constants/EventConstants';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
+import { Log } from '@ohos/common';
+import { EventConstants } from '@ohos/common';
+import { localEventManager } from '@ohos/common';
+import { SettingsModel } from '@ohos/common';
+import { SettingItemInfo } from '@ohos/common';
+import { SettingItemsConfig } from '@ohos/common';
+import { SettingItemsManager } from '@ohos/common';
+import { SettingItemOptionsChecker } from '@ohos/common';
 
 const TAG = 'SettingsPresenter';
 
@@ -209,7 +209,7 @@ export default class SettingsPresenter {
       Log.showDebug(TAG, 'setValue error');
       return;
     }
-    LocalEventManager.sendLocalEventSticky(EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE, value);
+    localEventManager.sendLocalEventSticky(EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE, value);
   }
 
   initNavigationBarStatusValue() {

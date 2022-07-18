@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-import BaseModulePreLoader from '../../../../../../common/src/main/ets/default/base/BaseModulePreLoader';
-import LayoutConfigManager from '../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import LayoutViewModel from '../../../../../../common/src/main/ets/default/viewmodel/LayoutViewModel';
-import CommonConstants from '../../../../../../common/src/main/ets/default/constants/CommonConstants';
+import { LayoutViewModel } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import { BaseModulePreLoader } from '@ohos/common';
 import PhoneLauncherLayoutStyleConfig from './PhoneLauncherLayoutStyleConfig';
 
 /**
@@ -24,7 +24,7 @@ import PhoneLauncherLayoutStyleConfig from './PhoneLauncherLayoutStyleConfig';
  */
 class LauncherLayoutPreLoader extends BaseModulePreLoader {
   protected loadConfig(): void {
-    LayoutConfigManager.addConfigToManager(PhoneLauncherLayoutStyleConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PhoneLauncherLayoutStyleConfig.getInstance());
   }
 
   protected loadData(): void {
@@ -32,7 +32,7 @@ class LauncherLayoutPreLoader extends BaseModulePreLoader {
   }
 
   public releaseConfigAndData(): void {
-    LayoutConfigManager.removeConfigFromManager();
+    layoutConfigManager.removeConfigFromManager();
   }
 }
 

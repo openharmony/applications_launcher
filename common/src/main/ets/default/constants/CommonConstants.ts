@@ -16,7 +16,7 @@
 /**
  * Common constants for all features.
  */
-export default class CommonConstants {
+export class CommonConstants {
 
   /**
    * dock space
@@ -27,6 +27,11 @@ export default class CommonConstants {
    * Bundle name of launcher
    */
   static LAUNCHER_BUNDLE = 'com.ohos.launcher';
+
+  /**
+  * Module name of AppCenter.
+  */
+  static MODULE_NAME = 'pad-launcher';
 
   /**
    * Ability name of AppCenter.

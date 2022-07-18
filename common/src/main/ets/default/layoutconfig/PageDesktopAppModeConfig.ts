@@ -13,16 +13,16 @@
  * limitations under the License.
  */
 
-import ILayoutConfig from './ILayoutConfig';
-import CommonConstants from '../constants/CommonConstants';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { ILayoutConfig } from './ILayoutConfig';
+import { CommonConstants } from '../constants/CommonConstants';
 
 const TAG = 'PageDesktopAppModeConfig';
 
 /**
  * Desktop Workspace App Configuration
  */
-export default class PageDesktopAppModeConfig extends ILayoutConfig {
+export class PageDesktopAppModeConfig extends ILayoutConfig {
   /**
    * Workspace Feature Layout Configuration Index
    */

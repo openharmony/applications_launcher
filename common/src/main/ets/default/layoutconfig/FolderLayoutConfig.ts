@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../constants/CommonConstants';
+import { ILayoutConfig } from './ILayoutConfig';
+import { CommonConstants } from '../constants/CommonConstants';
 import folderLayoutInfo from '../configs/FolderLayoutInfo';
-import ILayoutConfig from './ILayoutConfig';
 
 /**
  * Folder layout configuration
  */
-export default class FolderLayoutConfig extends ILayoutConfig {
+export class FolderLayoutConfig extends ILayoutConfig {
 
   /**
    *  The index of Folder layout configuration
@@ -28,7 +28,7 @@ export default class FolderLayoutConfig extends ILayoutConfig {
   static FOLDER_GRID_LAYOUT_INFO = 'FolderGridLayoutInfo';
   protected mFolderLayoutInfo: any = folderLayoutInfo;
 
-  protected constructor() {
+  constructor() {
     super();
   }
 
@@ -60,7 +60,7 @@ export default class FolderLayoutConfig extends ILayoutConfig {
     return FolderLayoutConfig.FOLDER_GRID_LAYOUT_INFO;
   }
 
-  protected getPersistConfigJson(): string {
+  getPersistConfigJson(): string {
     return JSON.stringify(this.mFolderLayoutInfo);
   }
 

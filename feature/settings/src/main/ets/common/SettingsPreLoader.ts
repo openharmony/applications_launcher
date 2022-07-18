@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import BaseModulePreLoader from '../../../../../../common/src/main/ets/default/base/BaseModulePreLoader';
+import { BaseModulePreLoader } from '@ohos/common';
 
 /**
  * Launcher settings preLoader

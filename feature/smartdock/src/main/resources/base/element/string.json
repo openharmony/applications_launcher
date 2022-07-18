@@ -7,6 +7,46 @@
     {
       "name": "mainability_description",
       "value": "JS_Phone_Empty Feature Ability"
+    },
+    {
+      "name": "is_delete_form",
+      "value": "是否移除"
+    },
+    {
+      "name": "isUninstall",
+      "value": "是否卸载"
+    },
+    {
+      "name": "app_menu_open",
+      "value": "打开"
+    },
+    {
+      "name": "app_center_menu_add_desktop",
+      "value": "添加到工作区"
+    },
+    {
+      "name": "delete_app",
+      "value": "移除"
+    },
+    {
+      "name": "no_space_for_add",
+      "value": "没有足够空间"
+    },
+    {
+      "name": "duplicate_add",
+      "value": "重复添加"
+    },
+    {
+      "name": "disable_add_to_dock",
+      "value": "禁止添加"
+    },
+    {
+      "name": "disable_to_move",
+      "value": "禁止移动"
+    },
+    {
+      "name": "disable_add_to_delete",
+      "value": "禁止移除"
     }
   ]
 }

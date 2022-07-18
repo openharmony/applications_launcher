@@ -16,7 +16,7 @@
 /**
  * Setting item configuration class, read-only
  */
-export default class SettingItemsConfig {
+export class SettingItemsConfig {
   /**
    * layout options: grid or list
    */

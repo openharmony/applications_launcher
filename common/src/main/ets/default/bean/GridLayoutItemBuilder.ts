@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-import AppItemInfo from './AppItemInfo';
+import { AppItemInfo } from './AppItemInfo';
 import GridLayoutInfoColumns from './GridLayoutInfoColumns';
 import GridLayoutItemInfo from './GridLayoutItemInfo';
-import CheckEmptyUtils from '../utils/CheckEmptyUtils';
+import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
 
 /**
  * Item info of GridLayoutInfo item.

@@ -16,6 +16,7 @@
 export default class PhonePresetStyleConstants {
   //----------- desktop layout-------------
 
+  static readonly DEFAULT_PERCENTAGE = '100%';
   /**
    * UninstallDialog width
    */

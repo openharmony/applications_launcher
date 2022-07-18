@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import ResourceManager from '../manager/ResourceManager';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { ResourceManager } from '../manager/ResourceManager';
 
 const TAG = 'OverlayAppIcon';
 

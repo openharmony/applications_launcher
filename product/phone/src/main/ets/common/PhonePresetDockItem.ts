@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../../../../../../common/src/main/ets/default/constants/CommonConstants';
+import { CommonConstants } from '@ohos/common';
 
 const phonePresetDockItem = [
   {

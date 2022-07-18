@@ -13,20 +13,20 @@
  * limitations under the License.
  */
 
-import SmartDockContent from '../../../../../../../common/src/main/ets/default/uicomponents/SmartDockContent.ets';
-import UninstallDialog from '../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog.ets';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
-import SmartDockConstants from '../common/constants/SmartDockConstants';
+import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { windowManager } from '@ohos/common';
+import { ResourceManager } from '@ohos/common';
+import { UninstallDialog } from '@ohos/common';
+import { SmartDockContent } from '../layout/SmartDockContent';
 import SmartDockViewModel from '../viewmodel/SmartDockViewModel';
-import Trace from '../../../../../../../common/src/main/ets/default/utils/Trace';
-import windowManager from '../../../../../../../common/src/main/ets/default/manager/WindowManager';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
+import SmartDockConstants from '../common/constants/SmartDockConstants';
 
 const TAG = 'SmartDock';
 
 @Component
-export default struct SmartDock {
+export struct SmartDock {
   @State device: string = 'phone';
   @State popup: {
     show: boolean,

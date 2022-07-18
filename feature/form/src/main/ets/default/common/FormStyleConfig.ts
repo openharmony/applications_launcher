@@ -13,15 +13,15 @@
  * limitations under the License.
  */
 
-import AppListStyleConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/AppListStyleConfig';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import FeatureConstants from './constants/FeatureConstants';
-import LayoutViewModel from '../../../../../../../common/src/main/ets/default/viewmodel/LayoutViewModel';
+import { CommonConstants } from '@ohos/common';
+import { LayoutViewModel } from '@ohos/common';
+import { AppListStyleConfig } from '@ohos/common';
+import FormConstants from './constants/FormConstants';
 
 /**
  * Form style config
  */
-export default class FormStyleConfig extends AppListStyleConfig {
+export class FormStyleConfig extends AppListStyleConfig {
 
   mFormWidth: Map<string,number> = new Map<string,number>();
 
@@ -130,6 +130,6 @@ export default class FormStyleConfig extends AppListStyleConfig {
    * @return {string} feature name
    */
   getFeatureName(): string {
-    return FeatureConstants.FEATURE_NAME;
+    return FormConstants.FEATURE_NAME;
   }
 }

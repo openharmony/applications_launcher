@@ -13,24 +13,25 @@
  * limitations under the License.
  */
 
-import Prompt from '@ohos.prompt';
-import BaseDragHandler from '../../../../../../../common/src/main/ets/default/base/BaseDragHandler';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import PageDesktopViewModel from './viewmodel/PageDesktopViewModel';
-import FolderViewModel from '../../../../../../bigfolder/src/main/ets/default/viewmodel/FolderViewModel';
-import FormViewModel from '../../../../../../form/src/main/ets/default/viewmodel/FormViewModel';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
-import CheckEmptyUtils from '../../../../../../../common/src/main/ets/default/utils/CheckEmptyUtils';
+import { Log } from '@ohos/common';
+import { BaseDragHandler } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { CheckEmptyUtils } from '@ohos/common';
+import { SettingsModel } from '@ohos/common';
+import { FormViewModel } from '@ohos/form';
+import { BigFolderViewModel } from '@ohos/bigfolder';
+import PageDesktopViewModel from '../viewmodel/PageDesktopViewModel';
 
 const TAG = 'PageDesktopDragHandler';
 
 /**
  * Desktop workspace drag and drop processing class
  */
-export default class PageDesktopDragHandler extends BaseDragHandler {
+export class PageDesktopDragHandler extends BaseDragHandler {
   private readonly mPageDesktopViewModel: PageDesktopViewModel;
-  private readonly mFolderViewModel: FolderViewModel;
+  private readonly mBigFolderViewModel: BigFolderViewModel;
   private readonly mFormViewModel: FormViewModel;
+  private readonly mSettingsModel: SettingsModel;
   private mGridConfig;
   private mPageCoordinateData = {
     gridXAxis: [],
@@ -44,7 +45,8 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   private constructor() {
     super();
     this.mPageDesktopViewModel = PageDesktopViewModel.getInstance();
-    this.mFolderViewModel = FolderViewModel.getInstance();
+    this.mBigFolderViewModel = BigFolderViewModel.getInstance();
+    this.mSettingsModel = SettingsModel.getInstance();
     this.mFormViewModel = FormViewModel.getInstance();
     this.styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
   }
@@ -233,7 +235,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
   }
 
   private setFolderOverlayData(): void {
-    const folderStyleConfig = this.mFolderViewModel.getFolderStyleConfig();
+    const folderStyleConfig = this.mBigFolderViewModel.getFolderStyleConfig();
     const folderSize = folderStyleConfig.mGridSize * 1.05;
     const iconSize = folderStyleConfig.mFolderAppSize * 1.05;
     const gridMargin = folderStyleConfig.mGridMargin * 1.05;
@@ -291,7 +293,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
       this.mEndPosition = this.getTouchPosition(moveAppX, moveAppY);
       endPosition = this.copyPosition(this.mEndPosition);
       const dragItemInfo = this.getDragItemInfo();
-      const info = this.mPageDesktopViewModel.getLayoutInfo();
+      const info = this.mSettingsModel.getLayoutInfo();
       const layoutInfo = info.layoutInfo;
       if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER || dragItemInfo.typeId == CommonConstants.TYPE_CARD ) {
         this.updateEndPosition(dragItemInfo);
@@ -307,7 +309,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
         if (endLayoutInfo != undefined) {
           if (endLayoutInfo.typeId === CommonConstants.TYPE_FOLDER) {
             // add app to folder
-            this.mFolderViewModel.addOneAppToFolder(dragItemInfo, endLayoutInfo.folderId);
+            this.mBigFolderViewModel.addOneAppToFolder(dragItemInfo, endLayoutInfo.folderId);
             this.deleteBlankPageAfterDragging(startPosition, endPosition);
             return true;
           } else if (endLayoutInfo.typeId === CommonConstants.TYPE_APP) {
@@ -315,7 +317,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
             const appLayoutInfo = [endLayoutInfo];
             const startLayoutInfo = this.getStartLayoutInfo(layoutInfo, dragItemInfo);
             appLayoutInfo.push(startLayoutInfo);
-            this.mFolderViewModel.addNewFolder(appLayoutInfo).then(()=> {
+            this.mBigFolderViewModel.addNewFolder(appLayoutInfo).then(()=> {
               this.deleteBlankPageAfterDragging(startPosition, endPosition);
             });
             return true;
@@ -325,7 +327,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
       if (this.isSelfDrag()) {
         this.checkAndMove(this.mStartPosition, this.mEndPosition, layoutInfo, dragItemInfo);
         info.layoutInfo = layoutInfo;
-        this.mPageDesktopViewModel.setLayoutInfo(info);
+        this.mSettingsModel.setLayoutInfo(info);
         this.mPageDesktopViewModel.pagingFiltering();
         isDragSuccess = true;
       } else {
@@ -373,7 +375,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
    * @param endPosition - drag end position
    */
   private deleteBlankPageAfterDragging(startPosition, endPosition): void {
-    const layoutInfo = this.mPageDesktopViewModel.getLayoutInfo();
+    const layoutInfo = this.mSettingsModel.getLayoutInfo();
     const pageCount = layoutInfo.layoutDescription.pageCount;
     const isAddByDraggingFlag = this.mPageDesktopViewModel.isAddByDragging();
     let deleteLastFlag = false;
@@ -397,7 +399,7 @@ export default class PageDesktopDragHandler extends BaseDragHandler {
       }
     }
     if (deleteLastFlag || deleteStartFlag) {
-      this.mPageDesktopViewModel.setLayoutInfo(layoutInfo);
+      this.mSettingsModel.setLayoutInfo(layoutInfo);
       this.mPageDesktopViewModel.pagingFiltering();
     }
     this.mPageDesktopViewModel.setAddByDragging(false);

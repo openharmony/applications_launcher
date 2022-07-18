@@ -18,7 +18,7 @@ import Pinyin from './Pinyin';
 /**
  * An util that provides sort for pinyin and other character(such as $#%^).
  */
-export default class PinyinSort {
+export class PinyinSort {
   private readonly pinyin;
 
   /**

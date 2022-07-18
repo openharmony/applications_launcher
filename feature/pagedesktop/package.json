@@ -7,5 +7,10 @@
     "buildTool": "hvigor",
     "directoryLevel": "module"
   },
-  "dependencies": {}
+  "main": "index.ets",
+  "dependencies": {
+    "@ohos/common": "../../common",
+    "@ohos/bigfolder": "../bigfolder",
+    "@ohos/form": "../form"
+  }
 }

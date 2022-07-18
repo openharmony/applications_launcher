@@ -14,8 +14,8 @@
  */
 
 import LruCache from './LruCache';
-import CommonConstants from '../constants/CommonConstants';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { CommonConstants } from '../constants/CommonConstants';
 
 const TAG = 'AppListInfoCacheManager';
 

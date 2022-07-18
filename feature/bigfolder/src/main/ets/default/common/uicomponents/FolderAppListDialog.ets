@@ -13,21 +13,17 @@
  * limitations under the License.
  */
 
-import AppBubble from '../../../../../../../../common/src/main/ets/default/uicomponents/AppBubble.ets';
-import CommonConstants from '../../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import PresetStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
-import CommonStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import ResourceManager from '../../../../../../../../common/src/main/ets/default/manager/ResourceManager';
-import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
-import FolderStyleConstants from '../constants/FolderStyleConstants';
-import FolderViewModel from '../../viewmodel/FolderViewModel';
-import TitleDescriptionComponent from './TitleDescriptionComponent.ets';
-import BigFolderStyleConfig from '../BigFolderStyleConfig';
+import { Log } from '@ohos/common';
+import { AppBubble } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
+import { ResourceManager } from '@ohos/common';
+import { BigFolderStyleConfig } from '../BigFolderStyleConfig';
+import TitleDescriptionComponent from './TitleDescriptionComponent';
+import { BigFolderViewModel } from '../../viewmodel/BigFolderViewModel';
+import { BigFolderStyleConstants } from '../constants/BigFolderStyleConstants';
 
 const TAG = 'FolderAppListDialog';
-const FOLDER_ADD_APP_LIST_LENGTH = 16;
-
-let folderViewModel: FolderViewModel;
 
 @CustomDialog
 export default struct FolderAppListDialog {
@@ -37,7 +33,8 @@ export default struct FolderAppListDialog {
   @StorageLink('folderAppList') folderAppList: [] = [];
   @StorageLink('appListChecked') @Watch('onAppListChecked') appListChecked: any = [];
   @StorageLink('titleDescription') titleDescription: any = '';
-  @State mNameFontColor: string = FolderStyleConstants.FOLDER_ADD_APP_FONT_COLOR;
+  @State mNameFontColor: string = BigFolderStyleConstants.FOLDER_ADD_APP_FONT_COLOR;
+  private mBigFolderViewModel: BigFolderViewModel;
   private mFolderStyleConfig: BigFolderStyleConfig;
   private mColumnsTemplate: string;
   private mDialogHeight: number = 0;
@@ -50,15 +47,15 @@ export default struct FolderAppListDialog {
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, `aboutToAppear`);
-    folderViewModel = FolderViewModel.getInstance();
-    this.mFolderStyleConfig = folderViewModel.getFolderStyleConfig();
-    folderViewModel.getFolderAddAppList(this.folderItem.folderId);
-    folderViewModel.getFolderAppList(this.folderItem.folderId);
+    this.mBigFolderViewModel = BigFolderViewModel.getInstance();
+    this.mFolderStyleConfig = this.mBigFolderViewModel.getFolderStyleConfig();
+    this.mBigFolderViewModel.getFolderAddAppList(this.folderItem.folderId);
+    this.mBigFolderViewModel.getFolderAppList(this.folderItem.folderId);
     this.appListChecked = this.folderAppList;
     ResourceManager.getInstance().getStringById($r('app.string.add_to').id, this.updateTitleDes.bind(this));
-    this.mDialogHeight = folderViewModel.getDialogHeight(this.allAppInfoList);
-    this.mGridHeight = this.mDialogHeight - FolderStyleConstants.DEFAULT_APP_ADD_TITLE_SIZE -
-    FolderStyleConstants.DEFAULT_BUTTON_HEIGHT - FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN;
+    this.mDialogHeight = this.mBigFolderViewModel.getDialogHeight(this.allAppInfoList);
+    this.mGridHeight = this.mDialogHeight - BigFolderStyleConstants.DEFAULT_APP_ADD_TITLE_SIZE -
+    BigFolderStyleConstants.DEFAULT_BUTTON_HEIGHT - BigFolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN;
   }
 
   private updateTitleDes(value: string) {
@@ -73,7 +70,7 @@ export default struct FolderAppListDialog {
 
   private getColumnsTemplate() {
     let columnsTemplate = '';
-    for (let index = 0; index < folderViewModel.getAddListColumn(); index++) {
+    for (let index = 0; index < this.mBigFolderViewModel.getAddListColumn(); index++) {
       columnsTemplate += '1fr ';
     }
     return columnsTemplate;
@@ -105,7 +102,7 @@ export default struct FolderAppListDialog {
                       isSelect:false,
                       badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE,
                       nameLines: this.mFolderStyleConfig.mAddFolderTextLines,
-                      mPaddingTop: FolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
+                      mPaddingTop: BigFolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
                       mIconNameMargin: this.mFolderStyleConfig.mIconNameMargin
                     })
                   }
@@ -149,12 +146,12 @@ export default struct FolderAppListDialog {
           Button() {
             Text($r('app.string.cancel_dialog'))
               .fontSize(this.mFolderStyleConfig.mAddFolderButtonSize)
-              .fontColor(CommonStyleConstants.BUTTON_FONT_COLOR)
+              .fontColor(StyleConstants.BUTTON_FONT_COLOR)
           }
           .flexGrow(1)
-          .backgroundColor(CommonStyleConstants.DEFAULT_BG_COLOR)
-          .width(FolderStyleConstants.DEFAULT_BUTTON_WIDTH)
-          .height(FolderStyleConstants.DEFAULT_BUTTON_HEIGHT)
+          .backgroundColor(StyleConstants.DEFAULT_BG_COLOR)
+          .width(BigFolderStyleConstants.DEFAULT_BUTTON_WIDTH)
+          .height(BigFolderStyleConstants.DEFAULT_BUTTON_HEIGHT)
           .onClick(() => {
             this.controller.close();
             this.cancel()
@@ -162,26 +159,26 @@ export default struct FolderAppListDialog {
 
           Divider()
             .vertical(true)
-            .color(CommonStyleConstants.DEFAULT_DIVIDER_COLOR)
-            .height(FolderStyleConstants.DEFAULT_DIVIDER_HEIGHT)
+            .color(StyleConstants.DEFAULT_DIVIDER_COLOR)
+            .height(BigFolderStyleConstants.DEFAULT_DIVIDER_HEIGHT)
 
           Button() {
             Text($r('app.string.confirm_dialog'))
               .fontSize(this.mFolderStyleConfig.mAddFolderButtonSize)
-              .fontColor(CommonStyleConstants.BUTTON_FONT_COLOR)
+              .fontColor(StyleConstants.BUTTON_FONT_COLOR)
           }
           .flexGrow(1)
-          .backgroundColor(CommonStyleConstants.DEFAULT_BG_COLOR)
-          .height(FolderStyleConstants.DEFAULT_BUTTON_HEIGHT)
-          .width(FolderStyleConstants.DEFAULT_BUTTON_WIDTH)
+          .backgroundColor(StyleConstants.DEFAULT_BG_COLOR)
+          .height(BigFolderStyleConstants.DEFAULT_BUTTON_HEIGHT)
+          .width(BigFolderStyleConstants.DEFAULT_BUTTON_WIDTH)
           .onClick(() => {
             Log.showDebug(TAG, `Dialog confirm start`);
-            folderViewModel.updateFolderAppList(this.appListChecked, this.folderItem);
+            this.mBigFolderViewModel.updateFolderAppList(this.appListChecked, this.folderItem);
             let isDestory = false;
             if (this.folderItem.layoutInfo[0].length < 2) {
               isDestory = true;
             } else {
-              folderViewModel.refreshFolder(this.folderItem);
+              this.mBigFolderViewModel.refreshFolder(this.folderItem);
             }
             this.controller.close();
             this.confirm(isDestory);
@@ -190,20 +187,20 @@ export default struct FolderAppListDialog {
         }
       }
       .backgroundColor(Color.White)
-      .opacity(FolderStyleConstants.DEFAULT_DIALOG_OPACITY)
+      .opacity(BigFolderStyleConstants.DEFAULT_DIALOG_OPACITY)
       .padding({
-        bottom: FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN
+        bottom: BigFolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN
       })
       .border({
-        radius: CommonStyleConstants.DEFAULT_DIALOG_RADIUS
+        radius: StyleConstants.DEFAULT_DIALOG_RADIUS
       })
       .margin({
-        bottom: FolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN
+        bottom: BigFolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN
       })
       .width(this.mFolderStyleConfig.mAddFolderDialogWidth)
       .height(this.mDialogHeight)
       if (!this.navigationBarStatusValue){
-        Stack().width(this.mFolderStyleConfig.mAddFolderDialogWidth).height(FolderStyleConstants.DEFAULT_APP_GRID_TOGGLE_SIZE)
+        Stack().width(this.mFolderStyleConfig.mAddFolderDialogWidth).height(BigFolderStyleConstants.DEFAULT_APP_GRID_TOGGLE_SIZE)
       }
     }.width('100%').height('100%').justifyContent(this.isPad ? FlexAlign.Center : FlexAlign.End)
   }

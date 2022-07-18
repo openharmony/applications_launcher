@@ -13,19 +13,19 @@
  * limitations under the License.
  */
 
-import AppListStyleConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/AppListStyleConfig';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import PresetStyleConstants from '../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
-import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import LayoutViewModel from '../../../../../../../common/src/main/ets/default/viewmodel/LayoutViewModel';
-import FeatureConstants from './constants/FeatureConstants';
-import FolderStyleConstants from './constants/FolderStyleConstants';
-import BigFolderModel from './BigFolderModel';
+import { StyleConstants } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { LayoutViewModel } from '@ohos/common';
+import { AppListStyleConfig } from '@ohos/common';
+import { PresetStyleConstants } from '@ohos/common';
+import { BigFolderModel } from '../model/BigFolderModel';
+import { BigFolderConstants } from './constants/BigFolderConstants';
+import { BigFolderStyleConstants } from './constants/BigFolderStyleConstants';
 
 /**
  * folder style config
  */
-export default class BigFolderStyleConfig extends AppListStyleConfig {
+export class BigFolderStyleConfig extends AppListStyleConfig {
   /**
    * folder grid size
    */
@@ -109,17 +109,17 @@ export default class BigFolderStyleConfig extends AppListStyleConfig {
   /**
    * width of add app dialog
    */
-  mAddFolderDialogWidth: number = FolderStyleConstants.DEFAULT_APP_ADD_DIALOG_WIDTH;
+  mAddFolderDialogWidth: number = BigFolderStyleConstants.DEFAULT_APP_ADD_DIALOG_WIDTH;
 
   /**
    * height of add app dialog
    */
-  mAddFolderDialogHeight: number = FolderStyleConstants.DEFAULT_APP_ADD_DIALOG_HEIGHT;
+  mAddFolderDialogHeight: number = BigFolderStyleConstants.DEFAULT_APP_ADD_DIALOG_HEIGHT;
 
   /**
    * width of add app container
    */
-  mAddFolderGridWidth: number = FolderStyleConstants.DEFAULT_FOLDER_APP_GRID_LIST;
+  mAddFolderGridWidth: number = BigFolderStyleConstants.DEFAULT_FOLDER_APP_GRID_LIST;
 
   /**
    * gap of add app container
@@ -259,6 +259,6 @@ export default class BigFolderStyleConfig extends AppListStyleConfig {
   }
 
   getFeatureName(): string {
-    return FeatureConstants.FEATURE_NAME;
+    return BigFolderConstants.FEATURE_NAME;
   }
 }

@@ -13,14 +13,15 @@
  * limitations under the License.
  */
 
-import windowManager from '../../../../../../common/src/main/ets/default/manager/WindowManager';
-import CommonConstants from '../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import LayoutViewModel from '../../../../../../common/src/main/ets/default/viewmodel/LayoutViewModel';
-import StyleConstants from '../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import Log from '../../../../../../common/src/main/ets/default/utils/Log';
-import AppGridLayout from '../../../../../../feature/appcenter/src/main/ets/default/layout/AppGridLayout.ets';
-import SmartDock from '../../../../../../feature/smartdock/src/main/ets/default/layout/SmartDock.ets';
-import AppGridPresenter from '../../../../../../feature/appcenter/src/main/ets/default/common/presenter/AppGridPresenter';
+import { Log } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { windowManager } from '@ohos/common';
+import { LayoutViewModel } from '@ohos/common';
+import { SmartDock } from '@ohos/smartdock';
+import { AppGridLayout } from '@ohos/appcenter';
+import { AppGridViewModel } from '@ohos/appcenter';
+import PadStage from '../common/PadStage';
 
 const TAG = "AppCenterView";
 
@@ -31,7 +32,7 @@ struct AppCenterView {
   @State dockHeight: number = 0;
   @State device: string = CommonConstants.PAD_DEVICE_TYPE;
   private mLayoutViewModel: LayoutViewModel;
-  mAppGridPresenter: AppGridPresenter = null;
+  mAppGridViewModel: AppGridViewModel = null;
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
@@ -43,13 +44,13 @@ struct AppCenterView {
     Log.showInfo(TAG, 'onPageShow');
     // move appCenter startup front when power on
     this.updateScreenSize();
-    this.mAppGridPresenter = AppGridPresenter.getInstance();
-    this.mAppGridPresenter.registerAppListChange();
+    this.mAppGridViewModel = AppGridViewModel.getInstance();
+    this.mAppGridViewModel.registerAppListChange();
   }
 
   onPageHide(): void {
     Log.showInfo(TAG, 'onPageHide');
-    this.mAppGridPresenter.unregisterAppListChange();
+    this.mAppGridViewModel.unregisterAppListChange();
   }
 
   aboutToDisappear(): void {

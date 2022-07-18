@@ -1,6 +1,6 @@
 {
   "module": {
-    "name": "pagedesktop",
+    "name": "launcher_pagedesktop",
     "type": "har",
     "deviceTypes": [
       "default",

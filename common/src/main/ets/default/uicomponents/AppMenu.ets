@@ -13,16 +13,16 @@
  * limitations under the License.
  */
 
-import MenuInfo from '../bean/MenuInfo';
-import CommonConstants from '../constants/CommonConstants';
-import StyleConstants from '../constants/StyleConstants';
-import ResourceManager from '../manager/ResourceManager';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { MenuInfo } from '../bean/MenuInfo';
+import { StyleConstants } from '../constants/StyleConstants';
+import { CommonConstants } from '../constants/CommonConstants';
+import { ResourceManager } from '../manager/ResourceManager';
 
 const TAG = 'AppMenu';
 
 @Component
-export default struct AppMenu {
+export struct AppMenu {
   menuInfoList: Array<MenuInfo> = new Array<MenuInfo>();
   getMenuInfoList: Function;
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;

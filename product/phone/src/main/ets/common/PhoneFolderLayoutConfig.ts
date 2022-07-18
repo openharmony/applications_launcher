@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import FolderLayoutConfig from '../../../../../../common/src/main/ets/default/layoutconfig/FolderLayoutConfig';
+import { CommonConstants } from '@ohos/common';
+import { FolderLayoutConfig } from '@ohos/common';
 import phoneFolderLayoutInfo from './configs/PhoneFolderLayoutInfo';
 
 /**

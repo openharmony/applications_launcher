@@ -1,6 +1,6 @@
 {
   "module": {
-    "name": "appcenter",
+    "name": "launcher_appcenter",
     "type": "har",
     "deviceTypes": [
       "default",

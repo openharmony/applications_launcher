@@ -12,16 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import EventConstants from '../../../../../../../common/src/main/ets/default/constants/EventConstants';
-import localEventManager from '../../../../../../../common/src/main/ets/default/manager/LocalEventManager';
-import BaseDragHandler from '../../../../../../../common/src/main/ets/default/base/BaseDragHandler';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import FeatureConstants from '../common/constants/FeatureConstants';
-import SmartDockConstants from '../common/constants/SmartDockConstants';
+import { Log } from '@ohos/common';
+import { EventConstants } from '@ohos/common';
+import { localEventManager } from '@ohos/common';
+import { BaseDragHandler } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
 import SmartDockModel from '../model/SmartDockModel';
-import SmartDockStyleConfig from './SmartDockStyleConfig';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
+import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
+import SmartDockConstants from '../common/constants/SmartDockConstants';
 
 const TAG = 'SmartDockDragHandler';
 
@@ -37,7 +36,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
   constructor() {
     super();
     this.mSmartDockModel = SmartDockModel.getInstance();
-    this.mSmartDockStyleConfig = LayoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, FeatureConstants.FEATURE_NAME);
+    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
     Log.showInfo(TAG, 'constructor!');
   }
 

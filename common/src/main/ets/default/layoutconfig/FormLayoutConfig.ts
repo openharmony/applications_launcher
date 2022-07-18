@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../constants/CommonConstants';
+import { ILayoutConfig } from './ILayoutConfig';
+import { CommonConstants } from '../constants/CommonConstants';
 import formLayoutInfo from '../configs/FormLayoutInfo';
-import ILayoutConfig from './ILayoutConfig';
 
 /**
  * Form layout configuration
  */
-export default class FormLayoutConfig extends ILayoutConfig {
+export class FormLayoutConfig extends ILayoutConfig {
 
   /**
    *  The index of form layout configuration
@@ -28,7 +28,7 @@ export default class FormLayoutConfig extends ILayoutConfig {
   static FORM_LAYOUT_INFO = 'FormLayoutInfo';
   protected mFormLayoutInfo: any = formLayoutInfo;
 
-  protected constructor() {
+  constructor() {
     super();
   }
 
@@ -60,7 +60,7 @@ export default class FormLayoutConfig extends ILayoutConfig {
     return FormLayoutConfig.FORM_LAYOUT_INFO;
   }
 
-  protected getPersistConfigJson(): string {
+  getPersistConfigJson(): string {
     return JSON.stringify(this.mFormLayoutInfo);
   }
 

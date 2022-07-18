@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import SmartDockStyleConfig from '../../../../../../feature/smartdock/src/main/ets/default/common/SmartDockStyleConfig';
-import CommonConstants from '../../../../../../common/src/main/ets/default/constants/CommonConstants';
+import { CommonConstants } from '@ohos/common';
+import { SmartDockStyleConfig } from '@ohos/smartdock';
 
 /**
  * Dock style configuration class

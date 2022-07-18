@@ -13,17 +13,17 @@
  * limitations under the License.
  */
 
+import image from '@ohos.multimedia.image';
 import missionManager from '@ohos.application.missionManager';
 import { MissionSnapshot } from 'application/MissionSnapshot';
 import { MissionInfo as OriginMissionInfo } from 'application/MissionInfo';
-import launcherAbilityManager from './LauncherAbilityManager';
-import RecentBundleMissionInfo from '../bean/RecentBundleMissionInfo';
-import RecentMissionInfo from '../bean/RecentMissionInfo';
-import SnapShotInfo from '../bean/SnapShotInfo';
-import MissionInfo from '../bean/MissionInfo';
-import CheckEmptyUtils from '../utils/CheckEmptyUtils';
-import image from '@ohos.multimedia.image';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
+import { launcherAbilityManager } from './LauncherAbilityManager';
+import { SnapShotInfo } from '../bean/SnapShotInfo';
+import { MissionInfo } from '../bean/MissionInfo';
+import { RecentMissionInfo } from '../bean/RecentMissionInfo';
+import { RecentBundleMissionInfo } from '../bean/RecentBundleMissionInfo';
 
 const TAG = 'AmsMissionManager';
 
@@ -122,6 +122,8 @@ class AmsMissionManager {
           continue;
         }
         recentTaskInfo.abilityName = appInfo.abilityName;
+        recentTaskInfo.moduleName = appInfo.moduleName;
+        recentTaskInfo.keyName = bundleName + appInfo.abilityName + appInfo.moduleName;
         recentTaskInfo.appLabelId = appInfo.appLabelId;
         recentTaskInfo.appIconId = appInfo.appIconId;
         recentTaskInfo.appName = appInfo.appName;
@@ -249,6 +251,4 @@ class AmsMissionManager {
   }
 }
 
-const amsMissionManager = AmsMissionManager.getInstance();
-
-export default amsMissionManager;
+export const amsMissionManager = AmsMissionManager.getInstance();

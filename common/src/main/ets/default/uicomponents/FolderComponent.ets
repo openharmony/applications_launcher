@@ -13,20 +13,20 @@
  * limitations under the License.
  */
 
-import AppIcon from './AppIcon.ets';
-import AppName from './AppName.ets';
-import StyleConstants from '../constants/StyleConstants';
-import CommonConstants from '../constants/CommonConstants';
-import PresetStyleConstants from '../constants/PresetStyleConstants';
-import SettingsModel from '../model/SettingsModel';
-import AppMenu from './AppMenu.ets';
-import Log from '../utils/Log';
-import ResourceManager from '../manager/ResourceManager';
+import { Log } from '../utils/Log';
+import { SettingsModel } from '../model/SettingsModel';
+import { StyleConstants } from '../constants/StyleConstants';
+import { CommonConstants } from '../constants/CommonConstants';
+import { ResourceManager } from '../manager/ResourceManager';
+import { PresetStyleConstants } from '../constants/PresetStyleConstants';
+import { AppIcon } from './AppIcon';
+import { AppName } from './AppName';
+import { AppMenu } from './AppMenu';
 
 const TAG = 'FolderComponent';
 
 @Component
-export default struct FolderComponent {
+export struct FolderComponent {
   @StorageLink('openFolderStatus') @Watch('updateFolderAnimate') openFolderStatus: number = 1;
   @State folderAnimateData: {
     folderId: string,
@@ -235,7 +235,7 @@ export default struct FolderComponent {
                         } else {
                           Column() {
                             AppIcon({
-                              iconSize: '100%',
+                              iconSize: this.appIconSize * StyleConstants.PERCENTAGE_80_number,
                               iconId: item.appIconId,
                               icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
                               bundleName: item.bundleName,

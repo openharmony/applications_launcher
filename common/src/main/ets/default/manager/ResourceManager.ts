@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
+import { Log } from '../utils/Log';
+import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
 import AppResourceCacheManager from '../cache/AppResourceCacheManager';
-import CheckEmptyUtils from '../utils/CheckEmptyUtils';
-import Log from '../utils/Log';
 
 const KEY_ICON = 'icon';
 const KEY_NAME = 'name';
@@ -24,7 +24,7 @@ const TAG = 'ResourceManager';
 /**
  * Wrapper class for resourceManager interfaces.
  */
-export default class ResourceManager {
+export class ResourceManager {
   private constructor() {
   }
 
@@ -63,15 +63,20 @@ export default class ResourceManager {
         return;
       }
       Log.showDebug(TAG, `updateIconCache bundleName:${bundleName}, moduleName:${moduleName}, iconId: ${iconId}`);
-      const moduleContext = globalThis.desktopContext.createBundleContext(bundleName);
+      let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
       if (moduleContext == null) {
         return;
       }
-      await moduleContext.resourceManager.getMediaBase64(iconId).then((value)=> {
-        if (value != null) {
-          this.setAppResourceCache(cacheKey, KEY_ICON, value);
-        }
-      });
+      await moduleContext.resourceManager
+        .getMediaBase64(iconId)
+        .then((value)=> {
+          if (value != null) {
+            this.setAppResourceCache(cacheKey, KEY_ICON, value);
+          }
+        })
+        .finally(() => {
+          moduleContext = null;
+        });
     } catch (error) {
       Log.showError(TAG, `updateIconCache error ${error}`);
     }
@@ -92,17 +97,22 @@ export default class ResourceManager {
         }
         try {
           Log.showDebug(TAG, `getAppIconWithCache bundleName:${bundleName}, moduleName:${moduleName}, iconId:${iconId}`);
-          const moduleContext = globalThis.desktopContext.createBundleContext(bundleName);
-          moduleContext.resourceManager.getMediaBase64(iconId).then((value: string)=> {
-            Log.showInfo(TAG, `getAppIconWithCache getMediaBase64 success`);
-            if (value != null) {
-              this.setAppResourceCache(cacheKey, KEY_ICON, value);
-              callback(value);
-            }
-            else {
-              callback(defaultAppIcon);
-            }
-          });
+          let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
+          moduleContext.resourceManager
+            .getMediaBase64(iconId)
+            .then((value: string)=> {
+              Log.showInfo(TAG, `getAppIconWithCache getMediaBase64 success`);
+              if (value != null) {
+                this.setAppResourceCache(cacheKey, KEY_ICON, value);
+                callback(value);
+              }
+              else {
+                callback(defaultAppIcon);
+              }
+            })
+            .finally(() => {
+              moduleContext = null;
+            });
         } catch (error) {
           Log.showError(TAG, `getAppIconWithCache error ${error}`);
           callback(defaultAppIcon);
@@ -126,13 +136,17 @@ export default class ResourceManager {
         return appName;
       }
       Log.showDebug(TAG, `getAppNameSync bundleName:${bundleName}, moduleName:${moduleName}, iconId:${labelId}`);
-      const moduleContext = globalThis.desktopContext.createBundleContext(bundleName);
-      await moduleContext.resourceManager.getString(labelId)
+      let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
+      await moduleContext.resourceManager
+        .getString(labelId)
         .then((res) => {
           resMgrName = res;
         })
         .catch((err) => {
           Log.showError(TAG, `getAppNameSync getString error: ${JSON.stringify(err)}`);
+        })
+        .finally(() => {
+          moduleContext = null;
         });
       Log.showInfo(TAG, `getAppNameSync resMgrName: ${resMgrName}`);
       if (resMgrName != null) {
@@ -157,16 +171,21 @@ export default class ResourceManager {
         }
         try {
           Log.showDebug(TAG, `getAppNameWithCache bundleName:${bundleName}, moduleName:${moduleName}, iconId:${labelId}`);
-          const moduleContext = globalThis.desktopContext.createBundleContext(bundleName);
-          moduleContext.resourceManager.getString(labelId).then((value) => {
-            if (CheckEmptyUtils.checkStrIsEmpty(value)) {
-              Log.showInfo(TAG, `getAppNameWithCache getAppName getString ERROR! value is empty id ${labelId}`);
-              callback(appName);
-            } else {
-              this.setAppResourceCache(cacheKey, KEY_NAME, value);
-              callback(value);
-            }
-          });
+          let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
+          moduleContext.resourceManager
+            .getString(labelId)
+            .then((value) => {
+              if (CheckEmptyUtils.checkStrIsEmpty(value)) {
+                Log.showInfo(TAG, `getAppNameWithCache getAppName getString ERROR! value is empty id ${labelId}`);
+                callback(appName);
+              } else {
+                this.setAppResourceCache(cacheKey, KEY_NAME, value);
+                callback(value);
+              }
+            })
+            .finally(() => {
+              moduleContext = null;
+            });
         } catch (err) {
           Log.showError(TAG, `getAppNameWithCache error: ${JSON.stringify(err)}`);
           callback(appName);

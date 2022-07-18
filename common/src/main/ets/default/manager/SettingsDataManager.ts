@@ -21,7 +21,6 @@ import settings from '@ohos.settings';
  * Wrapper class for settings interfaces.
  */
 class SettingsDataManager {
-
   private readonly uri = 'dataability:///com.ohos.settingsdata.DataAbility';
 
   private constructor() {
@@ -43,6 +42,9 @@ class SettingsDataManager {
    * Update settingData by settingDataKey.
    */
   setValue(helper: any, settingDataKey: string, value: string): void {
+    if (helper == null || helper == undefined) {
+      return;
+    }
     settings.setValueSync(helper, settingDataKey, value);
   }
 
@@ -52,6 +54,9 @@ class SettingsDataManager {
    * @return settingsDataValue by settingDataKey.
    */
   getValue(helper: any, settingDataKey: string, defaultValue: string): string {
+    if (helper == null || helper == undefined) {
+      return '';
+    }
     return settings.getValueSync(helper, settingDataKey, defaultValue);
   }
 
@@ -70,9 +75,9 @@ class SettingsDataManager {
    * @return settingDataHelper by settingDataUri.
    */
   getHelper(context: any, uri: string) {
+// @ts-ignore
     return featureAbility.acquireDataAbilityHelper(context, this.uri);
   }
 }
 
-const settingsDataManager = SettingsDataManager.getInstance();
-export default settingsDataManager;
+export const settingsDataManager = SettingsDataManager.getInstance();

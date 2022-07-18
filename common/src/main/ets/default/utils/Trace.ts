@@ -14,12 +14,12 @@
  */
 
 import byTrace from '@ohos.bytrace';
-import Log from './Log';
+import { Log } from './Log';
 
 /**
  * Add method trace. Modify RECORD_TRACE before using.
  */
-export default class Trace {
+export class Trace {
   static readonly CORE_METHOD_LAUNCH_APP = 'launchApp';
   static readonly CORE_METHOD_START_APP_CENTER = 'startAppCenter';
   static readonly CORE_METHOD_START_RECENTS = 'startRecents';

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-export default {
+export class CheckEmptyUtils{
 
   /**
    * Check obj is empty.
@@ -21,9 +21,9 @@ export default {
    * @param {any} obj
    * @return {boolean} true(empty)
    */
-  isEmpty(obj: any): boolean {
+  static isEmpty(obj: any): boolean {
     return (typeof obj === 'undefined' || obj == null || obj === '');
-  },
+  }
 
   /**
    * Check str is empty.
@@ -31,9 +31,9 @@ export default {
    * @param {string} str
    * @return {boolean} true(empty)
    */
-  checkStrIsEmpty(str: string): boolean {
+  static checkStrIsEmpty(str: string): boolean {
     return str == undefined || str == null || str.trim().length == 0;
-  },
+  }
 
   /**
    * Check array is empty.
@@ -41,7 +41,7 @@ export default {
    * @param {Array} arr An array to check if is empty.
    * @return {boolean} true(empty)
    */
-  isEmptyArr<T>(arr: T[]): boolean {
+  static isEmptyArr<T>(arr: T[]): boolean {
     return arr == undefined || arr == null || arr.length == 0;
   }
-};
+}

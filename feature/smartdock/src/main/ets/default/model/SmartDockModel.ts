@@ -16,26 +16,24 @@
 import Prompt from '@ohos.prompt';
 import missionManager from '@ohos.application.missionManager';
 import { MissionListener } from 'application/MissionListener';
-import launcherAbilityManager from '../../../../../../../common/src/main/ets/default/manager/LauncherAbilityManager';
-import MissionInfo from '../../../../../../../common/src/main/ets/default/bean/MissionInfo';
-import amsMissionManager from '../../../../../../../common/src/main/ets/default/manager/AmsMissionManager';
-import SmartDockLayoutConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/SmartDockLayoutConfig';
-import layoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import localEventManager from '../../../../../../../common/src/main/ets/default/manager/LocalEventManager';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import StyleConstants from '../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import ResourceManager from '../../../../../../../common/src/main/ets/default/manager/ResourceManager';
-import EventConstants from '../../../../../../../common/src/main/ets/default/constants/EventConstants';
-import CheckEmptyUtils from '../../../../../../../common/src/main/ets/default/utils/CheckEmptyUtils';
-import RecentBundleMissionInfo from '../../../../../../../common/src/main/ets/default/bean/RecentBundleMissionInfo';
-import DockItemInfo from '../../../../../../../common/src/main/ets/default/bean/DockItemInfo';
-import AppItemInfo from '../../../../../../../common/src/main/ets/default/bean/AppItemInfo';
-import AppModel from '../../../../../../../common/src/main/ets/default/model/AppModel';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
+import { Log } from '@ohos/common';
+import { CheckEmptyUtils } from '@ohos/common';
+import { EventConstants } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { AppModel } from '@ohos/common';
+import { AppItemInfo } from '@ohos/common';
+import { DockItemInfo } from '@ohos/common';
+import { MissionInfo } from '@ohos/common';
+import { RecentBundleMissionInfo } from '@ohos/common';
+import { ResourceManager } from '@ohos/common';
+import { amsMissionManager } from '@ohos/common';
+import { localEventManager } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import { launcherAbilityManager } from '@ohos/common';
+import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
+import { SmartDockLayoutConfig } from '../config/SmartDockLayoutConfig';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
-import FeatureConstants from '../common/constants/FeatureConstants';
-import SmartDockStyleConfig from '../common/SmartDockStyleConfig';
-import RecentMissionInfo from '../../../../../../../common/src/main/ets/default/bean/RecentMissionInfo';
 
 const TAG = 'SmartDockModel';
 const KEY_NAME = 'name';
@@ -54,7 +52,7 @@ export default class SmartDockModel {
 
   private constructor() {
     this.mSmartDockLayoutConfig = layoutConfigManager.getFunctionConfig(SmartDockLayoutConfig.SMART_DOCK_LAYOUT_INFO);
-    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, FeatureConstants.FEATURE_NAME);
+    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
     this.mAppModel = AppModel.getInstance();
     this.mResourceManager = ResourceManager.getInstance();
     this.registerDockListener();
@@ -142,7 +140,7 @@ export default class SmartDockModel {
     // trigger component update
     AppStorage.SetOrCreate('residentList', residentList);
     if (this.mDevice) {
-      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_INIT, residentList);
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_SMARTDOCK_INIT_FINISHED, residentList);
     }
     Log.showDebug(TAG, `getResidentList end residentList.length: ${residentList.length}`);
   }
@@ -496,15 +494,16 @@ export default class SmartDockModel {
   private deleteRecentDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}): boolean {
     let res = false;
     this.mRecentDataList = AppStorage.Get('recentList');
-    if (!CheckEmptyUtils.isEmptyArr(this.mResidentList)) {
-      for (let i = 0; i < this.mRecentDataList.length; i++) {
-        if (dockItem.bundleName === this.mResidentList[i].bundleName
-        || dockItem.keyName === this.mResidentList[i].keyName) {
-          this.mRecentDataList.splice(i, 1);
+    Log.showDebug(TAG, `deleteRecentDockItem recent dockItem: ${JSON.stringify(dockItem)}`);
+    if (!CheckEmptyUtils.isEmptyArr(this.mRecentDataList)) {
+      this.mRecentDataList = this.mRecentDataList.filter(item => {
+        if (dockItem.bundleName) {
+          return dockItem.bundleName != item.bundleName;
+        } else if (dockItem.keyName) {
+          return dockItem.keyName != item.keyName;
         }
-      }
+      })
       AppStorage.SetOrCreate('recentList', this.mRecentDataList);
-      Log.showDebug(TAG, `deleteRecentDockItem recent dockItem: ${JSON.stringify(dockItem)}`);
       res = true;
     }
     return res;

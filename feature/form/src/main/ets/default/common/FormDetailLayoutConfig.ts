@@ -12,16 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import FormLayoutConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/FormLayoutConfig';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import FeatureConstants from './constants/FeatureConstants';
+import { CommonConstants } from '@ohos/common';
+import { FormLayoutConfig } from '@ohos/common';
+import FormConstants from './constants/FormConstants';
 
 const TAG = 'FormDetailLayoutConfig';
 
 /**
  * Form information data model.
  */
-export default class FormDetailLayoutConfig extends FormLayoutConfig{
+export class FormDetailLayoutConfig extends FormLayoutConfig{
 
   private constructor() {
     super();
@@ -61,6 +61,6 @@ export default class FormDetailLayoutConfig extends FormLayoutConfig{
    * @return {string} feature name
    */
   getFeatureName(): string {
-    return FeatureConstants.FEATURE_NAME;
+    return FormConstants.FEATURE_NAME;
   }
 }

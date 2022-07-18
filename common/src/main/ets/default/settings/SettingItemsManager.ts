@@ -12,18 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SettingItemOptionsChecker from './SettingItemOptionsChecker';
-import SettingItemsConfig from '../configs/SettingItemsConfig';
-import SettingItemInfo from '../bean/SettingItemInfo';
+import { Log } from '../utils/Log';
+import { SettingItemInfo } from '../bean/SettingItemInfo';
 import SettingItemOption from '../bean/SettingItemOption';
-import Log from '../utils/Log';
+import { SettingItemsConfig } from '../configs/SettingItemsConfig';
+import { SettingItemOptionsChecker } from './SettingItemOptionsChecker';
 
 const TAG = 'SettingItemsManager';
 
 /**
  * Manager class for launcher settings item.
  */
-export default class SettingItemsManager {
+export class SettingItemsManager {
   private static readonly INVALID_INDEX: number = -1;
 
   /**

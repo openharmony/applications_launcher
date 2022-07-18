@@ -13,15 +13,15 @@
  * limitations under the License.
  */
 
-import amsMissionManager from '../manager/AmsMissionManager';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { amsMissionManager }from '../manager/AmsMissionManager';
 
 const TAG = 'RecentMissionsModel';
 
 /**
  * Recent missions data model.
  */
-export default class RecentMissionsModel {
+export class RecentMissionsModel {
 
   private constructor() {
   }

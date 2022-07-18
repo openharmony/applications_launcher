@@ -17,8 +17,6 @@ import CommonEvent from '@ohos.commonEvent';
 import { AsyncCallback } from 'basic';
 import { CommonEventData } from 'commonEvent/commonEventData';
 import { CommonEventSubscriber } from 'commonEvent/commonEventSubscriber';
-import { CommonEventSubscribeInfo } from 'commonEvent/commonEventSubscribeInfo';
-import Log from '../utils/Log';
 
 const TAG = 'CommonEventManager';
 

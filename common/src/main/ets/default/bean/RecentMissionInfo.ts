@@ -12,12 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SnapShotInfo from './SnapShotInfo';
 
 /**
  * Recent mission info
  */
-export default class RecentMissionInfo {
+export class RecentMissionInfo {
   /**
    * Recent mission: mission id
    */

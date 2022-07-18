@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-import StyleConstants from '../constants/StyleConstants';
+import { StyleConstants } from '../constants/StyleConstants';
 
 @CustomDialog
-export default struct RemoveFormDialog {
+export struct RemoveFormDialog {
   controller: CustomDialogController;
   cancel: () => void
   confirm: () => void

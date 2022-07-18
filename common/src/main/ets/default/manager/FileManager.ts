@@ -15,7 +15,7 @@
 
 import featureAbility from '@ohos.ability.featureAbility';
 import fileIo from '@ohos.fileio';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
 
 const TAG = 'FileManager';
 const READ_DATA_SIZE = 4096;

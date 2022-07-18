@@ -16,6 +16,6 @@
 /**
  * Interface for launcher settings items.
  */
-export default interface SettingItemOptionsChecker {
+export interface SettingItemOptionsChecker {
   (): string
 }

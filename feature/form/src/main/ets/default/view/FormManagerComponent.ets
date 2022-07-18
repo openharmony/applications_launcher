@@ -13,11 +13,12 @@
  * limitations under the License.
  */
 
-import StyleConstants from '../common/constants/StyleConstants';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
-import windowManager from '../../../../../../../common/src/main/ets/default/manager/WindowManager';
-import FormModel from '../../../../../../../common/src/main/ets/default/model/FormModel';
-import PageDesktopViewModel from '../../../../../../../feature/pagedesktop/src/main/ets/default/common/viewmodel/PageDesktopViewModel';
+import { Log } from '@ohos/common';
+import { FormModel } from '@ohos/common';
+import { windowManager } from '@ohos/common';
+import { localEventManager } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
+import { EventConstants } from '@ohos/common';
 
 const TAG = 'FormManagerComponent';
 
@@ -25,11 +26,10 @@ const TAG = 'FormManagerComponent';
  * Form manager view  Component (phone adaptation).
  */
 @Component
-export default struct FormManagerComponent {
+export struct FormManagerComponent {
   @StorageLink('formAppInfo') formAppInfo: any = {};
   @StorageLink('formMgrItem') formItem: any = [];
   @State allowUpdate: boolean = false;
-  private mPageDesktopViewModel: PageDesktopViewModel = PageDesktopViewModel.getInstance();
   private mSwiperController: SwiperController = new SwiperController();
   private mFormModel: FormModel;
   private mSwiperIndex: number = 0;
@@ -206,13 +206,13 @@ export default struct FormManagerComponent {
         right: StyleConstants.FORM_MGR_ADD_TO_DESKTOP_BUTTON_RIGHT_MARGIN * StyleConstants.DPI_RATIO})
       .onClick(() => {
         Log.showDebug(TAG, 'form add to desktop');
-        this.mPageDesktopViewModel.createCardToDeskTop(this.getChooseCard());
+        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD, this.getChooseCard());
         this.clearNoUseFormById();
         windowManager.destroyWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
       })
     }
-    .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
     .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
+    .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
     .backgroundImage(StyleConstants.DEFAULT_FORM_MGR_BACKGROUND_IMAGE)
   }
 }

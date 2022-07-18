@@ -14,25 +14,25 @@
  */
 
 import dataRdb from '@ohos.data.rdb';
-import CommonConstants from '../constants/CommonConstants';
-import CheckEmptyUtils from '../utils/CheckEmptyUtils';
+import { Log } from '../utils/Log';
+import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
+import { CommonConstants } from '../constants/CommonConstants';
 import RdbStoreConfig from '../configs/RdbStoreConfig';
 import BadgeItemInfo from '../bean/BadgeItemInfo';
-import CardItemInfo from '../bean/CardItemInfo';
-import DockItemInfo from '../bean/DockItemInfo';
-import Log from '../utils/Log';
+import { AppItemInfo } from '../bean/AppItemInfo';
+import { DockItemInfo } from '../bean/DockItemInfo';
+import { CardItemInfo } from '../bean/CardItemInfo';
 import GridLayoutItemInfo from '../bean/GridLayoutItemInfo';
 import GridLayoutItemBuilder from '../bean/GridLayoutItemBuilder';
 import GridLayoutInfoColumns from '../bean/GridLayoutInfoColumns';
 import DesktopApplicationColumns from '../bean/DesktopApplicationColumns';
-import AppItemInfo from '../bean/AppItemInfo';
 
 const TAG = 'RdbStoreManager';
 
 /**
  * Wrapper class for rdb interfaces.
  */
-export default class RdbStoreManager {
+export class RdbStoreManager {
   private mRdbStore;
 
   private constructor() {
@@ -386,6 +386,7 @@ export default class RdbStoreManager {
           'editable': this.booleanToNumber(dockInfoList[i].editable),
           'bundle_name': dockInfoList[i].bundleName,
           'ability_name': dockInfoList[i].abilityName,
+          'module_name': dockInfoList[i].moduleName,
           'app_icon_id': dockInfoList[i].appIconId,
           'app_label_id': dockInfoList[i].appLabelId,
           'app_name': dockInfoList[i].appName,
@@ -429,6 +430,7 @@ export default class RdbStoreManager {
         itemInfo.editable = this.numberToBoolean(resultSet.getLong(resultSet.getColumnIndex('editable')));
         itemInfo.bundleName = resultSet.getString(resultSet.getColumnIndex('bundle_name'));
         itemInfo.abilityName = resultSet.getString(resultSet.getColumnIndex('ability_name'));
+        itemInfo.moduleName = resultSet.getString(resultSet.getColumnIndex('module_name'));
         itemInfo.appIconId = resultSet.getLong(resultSet.getColumnIndex('app_icon_id'));
         itemInfo.appLabelId = resultSet.getLong(resultSet.getColumnIndex('app_label_id'));
         itemInfo.appName = resultSet.getString(resultSet.getColumnIndex('app_name'));

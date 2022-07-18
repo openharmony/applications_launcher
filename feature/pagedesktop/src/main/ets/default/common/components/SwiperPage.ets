@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import PresetStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
-import AppItem from './AppItem.ets';
-import FolderItem from './FolderItem.ets';
-import FormItem from './FormItem.ets';
-import PageDesktopGridStyleConfig from '../PageDesktopGridStyleConfig';
-import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
+import { Log } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { PresetStyleConstants } from '@ohos/common';
+import AppItem from './AppItem';
+import FormItem from './FormItem';
+import FolderItem from './FolderItem';
+import { PageDesktopGridStyleConfig } from '../PageDesktopGridStyleConfig';
 
 const TAG = "SwiperPage";
 

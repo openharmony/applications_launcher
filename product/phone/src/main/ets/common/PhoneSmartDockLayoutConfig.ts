@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import SmartDockLayoutConfig from '../../../../../../common/src/main/ets/default/layoutconfig/SmartDockLayoutConfig';
+import { CommonConstants } from '@ohos/common';
+import { SmartDockLayoutConfig } from '@ohos/smartdock';
 import phonePresetDockItem from './PhonePresetDockItem';
 
 /**

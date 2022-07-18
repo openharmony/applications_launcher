@@ -13,32 +13,30 @@
  * limitations under the License.
  */
 
-import BaseModulePreLoader from '../../../../../../../common/src/main/ets/default/base/BaseModulePreLoader';
-import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import PageDesktopLayoutConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/PageDesktopLayoutConfig';
-import PageDesktopModeConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/PageDesktopModeConfig';
-import PageDesktopAppModeConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/PageDesktopAppModeConfig';
-import PageDesktopGridStyleConfig from './PageDesktopGridStyleConfig';
+import { BaseModulePreLoader } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import { PageDesktopLayoutConfig } from '@ohos/common';
+import { PageDesktopModeConfig } from '@ohos/common';
+import { PageDesktopAppModeConfig } from '@ohos/common';
+import { PageDesktopGridStyleConfig } from './PageDesktopGridStyleConfig';
 
 /**
  * public layer initialization loader
  */
 class PageDesktopPreLoader extends BaseModulePreLoader {
   protected loadConfig(): void {
-    LayoutConfigManager.addConfigToManager(PageDesktopLayoutConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(PageDesktopModeConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(PageDesktopAppModeConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(PageDesktopGridStyleConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PageDesktopLayoutConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PageDesktopModeConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PageDesktopAppModeConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PageDesktopGridStyleConfig.getInstance());
   }
 
   protected loadData(): void {
   }
 
   releaseConfigAndData(): void {
-    LayoutConfigManager.removeConfigFromManager();
+    layoutConfigManager.removeConfigFromManager();
   }
 }
 
-const pageDesktopPreLoader: BaseModulePreLoader = new PageDesktopPreLoader();
-
-export default pageDesktopPreLoader;
+export const pageDesktopPreLoader: BaseModulePreLoader = new PageDesktopPreLoader();
