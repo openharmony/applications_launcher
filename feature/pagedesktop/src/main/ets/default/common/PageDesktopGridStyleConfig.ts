@@ -13,15 +13,15 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import PresetStyleConstants from '../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
-import FeatureConstants from './constants/FeatureConstants';
-import AppGridStyleConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/AppGridStyleConfig';
+import { CommonConstants } from '@ohos/common';
+import { PresetStyleConstants } from '@ohos/common';
+import { AppGridStyleConfig } from '@ohos/common';
+import PagedesktopConstants from './constants/PagedesktopConstants';
 
 /**
  * Work control grid style configuration class
  */
-export default class PageDesktopGridStyleConfig extends AppGridStyleConfig {
+export class PageDesktopGridStyleConfig extends AppGridStyleConfig {
   /**
    * margin
    */
@@ -54,6 +54,6 @@ export default class PageDesktopGridStyleConfig extends AppGridStyleConfig {
   }
 
   getFeatureName(): string {
-    return FeatureConstants.FEATURE_NAME;
+    return PagedesktopConstants.FEATURE_NAME;
   }
 }

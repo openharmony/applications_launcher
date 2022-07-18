@@ -13,17 +13,17 @@
  * limitations under the License.
  */
 
-import StyleConstants from '../constants/StyleConstants';
-import PresetStyleConstants from '../constants/PresetStyleConstants';
-import AppMenu from './AppMenu';
-import AppName from './AppName';
-import Log from '../utils/Log';
-import FormModel from '../model/FormModel';
+import { Log } from '../utils/Log';
+import { AppName } from './AppName';
+import { AppMenu } from './AppMenu';
+import { FormModel } from '../model/FormModel';
+import { StyleConstants } from '../constants/StyleConstants';
+import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 
 const TAG = 'FormItemComponent';
 
 @Component
-export default struct FormItemComponent {
+export struct FormItemComponent {
   @State showFormName: boolean = true;
   @State isAllowUpdate: boolean = true;
   @State isShow: boolean = true;

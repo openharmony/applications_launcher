@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-import windowManager from '../../../../../../common/src/main/ets/default/manager/WindowManager';
-import Log from '../../../../../../common/src/main/ets/default/utils/Log';
-import FormManagerComponent from '../../../../../../feature/form/src/main/ets/default/view/FormManagerComponent';
-import StyleConstants from '../../../../../../feature/form/src/main/ets/default/common/constants/StyleConstants';
+import { Log } from '@ohos/common';
+import { windowManager } from '@ohos/common';
+import { FormManagerComponent } from '@ohos/form';
+import PhonePresetStyleConstants from '../common/constants/PhonePresetStyleConstants';
 
 const TAG = "FormManagerView";
 
@@ -40,10 +40,10 @@ struct FormManagerView {
   }
 
   build() {
-      Column() {
-        FormManagerComponent()
-      }
-      .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
-      .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
+    Column() {
+      FormManagerComponent()
+    }
+    .width(PhonePresetStyleConstants.DEFAULT_PERCENTAGE)
+    .height(PhonePresetStyleConstants.DEFAULT_PERCENTAGE)
   }
 }

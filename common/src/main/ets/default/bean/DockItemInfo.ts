@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-import AppItemInfo from './AppItemInfo';
+import { AppItemInfo } from './AppItemInfo';
 
 /**
  * Item info of smartdock item.
  */
-export default class DockItemInfo extends AppItemInfo {
+export class DockItemInfo extends AppItemInfo {
   /**
    * Type of smartDock item:
    * applications

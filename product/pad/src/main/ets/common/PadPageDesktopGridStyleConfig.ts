@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import PageDesktopGridStyleConfig from '../../../../../../feature/pagedesktop/src/main/ets/default/common/PageDesktopGridStyleConfig';
-import LayoutViewModel from '../../../../../../common/src/main/ets/default/viewmodel/LayoutViewModel';
+import { CommonConstants } from '@ohos/common';
+import { LayoutViewModel } from '@ohos/common';
+import { PageDesktopGridStyleConfig } from '@ohos/pagedesktop';
 import StyleConstants from './constants/StyleConstants';
 
 /**

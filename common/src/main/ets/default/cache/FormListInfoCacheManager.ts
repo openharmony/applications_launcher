@@ -14,15 +14,15 @@
  */
 
 import LruCache from './LruCache';
-import CommonConstants from '../constants/CommonConstants';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { CommonConstants } from '../constants/CommonConstants';
 
 const TAG = 'FormListInfoCacheManager';
 
 /**
  * A Manager class that provides get/set/clear cache methods for form list data.
  */
-export default class FormListInfoCacheManager {
+export class FormListInfoCacheManager {
   private readonly lruCache;
 
   constructor() {

@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-import Trace from '../../../../../../common/src/main/ets/default/utils/Trace';
-import windowManager from '../../../../../../common/src/main/ets/default/manager/WindowManager';
-import SettingItemInfo from '../../../../../../common/src/main/ets/default/bean/SettingItemInfo';
-import Log from '../../../../../../common/src/main/ets/default/utils/Log';
+import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
+import { windowManager } from '@ohos/common';
+import { SettingItemInfo } from '@ohos/common';
 import SettingsStage from '../common/SettingsStage';
-import StyleConstants from '../common/constants/StyleConstants';
+import SettingsStyleConstants from '../common/constants/SettingsStyleConstants';
 import SettingsPresenter from '../common/presenter/SettingsPresenter';
 
 let mSettingsPresenter: SettingsPresenter;
@@ -28,7 +28,7 @@ const TAG = 'Settings';
 @Component
 struct Index {
   private mSettingsStage = new SettingsStage();
-  private mDevice = StyleConstants.DEFAULT_DEVICE_TYPE_PHONE;
+  private mDevice = SettingsStyleConstants.DEFAULT_DEVICE_TYPE_PHONE;
 
   onPageShow(): void {
     Trace.end(Trace.CORE_METHOD_START_SETTINGS)
@@ -49,7 +49,7 @@ struct Index {
       let sysWidth = await windowManager.getWindowWidth();
       let sysHeigh = await windowManager.getWindowHeight();
       if (sysWidth > sysHeigh) {
-        this.mDevice = StyleConstants.DEFAULT_DEVICE_TYPE_PAD;
+        this.mDevice = SettingsStyleConstants.DEFAULT_DEVICE_TYPE_PAD;
       }
     } catch (e) {
       Log.showError(TAG, 'getWindowWidth or getWindowHeight error:' + e);
@@ -63,33 +63,33 @@ struct Index {
           top_bar()
         }
         .alignItems(HorizontalAlign.Start)
-        .width(StyleConstants.PERCENTAGE_100)
-        .height(StyleConstants.DEFAULT_VP_56)
+        .width(SettingsStyleConstants.PERCENTAGE_100)
+        .height(SettingsStyleConstants.DEFAULT_VP_56)
 
         Column() {
           Text($r('app.string.layout'))
             .fontSize($r('app.float.layout_title_font_size'))
-            .fontColor(StyleConstants.DEFAULT_LAYOUT_FONT_COLOR)
-            .width(StyleConstants.PERCENTAGE_100)
-            .height(StyleConstants.PERCENTAGE_100)
+            .fontColor(SettingsStyleConstants.DEFAULT_LAYOUT_FONT_COLOR)
+            .width(SettingsStyleConstants.PERCENTAGE_100)
+            .height(SettingsStyleConstants.PERCENTAGE_100)
             .align(Alignment.BottomStart)
         }
         .padding({ left: 24, bottom: 10 })
-        .width(StyleConstants.PERCENTAGE_100)
-        .height(StyleConstants.DEFAULT_VP_48)
+        .width(SettingsStyleConstants.PERCENTAGE_100)
+        .height(SettingsStyleConstants.DEFAULT_VP_48)
 
         Column() {
           SettingPage()
         }
         .alignItems(HorizontalAlign.Center)
-        .width(StyleConstants.PERCENTAGE_100)
+        .width(SettingsStyleConstants.PERCENTAGE_100)
       }
-      .width(this.mDevice === StyleConstants.DEFAULT_DEVICE_TYPE_PHONE ? StyleConstants.PERCENTAGE_100 : 976)
-      .height(StyleConstants.PERCENTAGE_100)
+      .width(this.mDevice === SettingsStyleConstants.DEFAULT_DEVICE_TYPE_PHONE ? SettingsStyleConstants.PERCENTAGE_100 : 976)
+      .height(SettingsStyleConstants.PERCENTAGE_100)
     }
-    .backgroundColor(StyleConstants.DEFAULT_BACKGROUND_COLOR)
-    .width(StyleConstants.PERCENTAGE_100)
-    .height(StyleConstants.PERCENTAGE_100)
+    .backgroundColor(SettingsStyleConstants.DEFAULT_BACKGROUND_COLOR)
+    .width(SettingsStyleConstants.PERCENTAGE_100)
+    .height(SettingsStyleConstants.PERCENTAGE_100)
   }
 }
 
@@ -100,20 +100,20 @@ struct top_bar {
       Image($r('app.media.ic_back'))
         .margin({ left: 24 })
         .objectFit(ImageFit.Contain)
-        .width(StyleConstants.DEFAULT_VP_24)
-        .height(StyleConstants.DEFAULT_VP_24)
+        .width(SettingsStyleConstants.DEFAULT_VP_24)
+        .height(SettingsStyleConstants.DEFAULT_VP_24)
         .onClick(() => {
           mSettingsPresenter.backToTheDesktop();
         })
 
       Text($r('app.string.into_settings'))
-        .fontSize(StyleConstants.DEFAULT_VP_20)
+        .fontSize(SettingsStyleConstants.DEFAULT_VP_20)
         .fontWeight(FontWeight.Medium)
-        .height(StyleConstants.DEFAULT_VP_28)
-        .width(StyleConstants.DEFAULT_VP_296)
+        .height(SettingsStyleConstants.DEFAULT_VP_28)
+        .width(SettingsStyleConstants.DEFAULT_VP_296)
     }
-    .width(StyleConstants.PERCENTAGE_100)
-    .height(StyleConstants.PERCENTAGE_100)
+    .width(SettingsStyleConstants.PERCENTAGE_100)
+    .height(SettingsStyleConstants.PERCENTAGE_100)
   }
 }
 
@@ -142,8 +142,8 @@ struct SettingPage {
         })
       }, (item: any) => JSON.stringify(item))
     }
-    .width(StyleConstants.PERCENTAGE_100)
-    .height(StyleConstants.DEFAULT_VP_56)
+    .width(SettingsStyleConstants.PERCENTAGE_100)
+    .height(SettingsStyleConstants.DEFAULT_VP_56)
     .align(Alignment.Center)
     .padding({ left: 12, right: 12 })
   }
@@ -186,10 +186,10 @@ struct SettingItem {
     }) {
       Column() {
         Text(this.settingName)
-          .lineHeight(StyleConstants.DEFAULT_VP_22)
-          .height(StyleConstants.DEFAULT_VP_22)
-          .width(StyleConstants.DEFAULT_VP_230)
-          .fontSize(StyleConstants.DEFAULT_VP_16)
+          .lineHeight(SettingsStyleConstants.DEFAULT_VP_22)
+          .height(SettingsStyleConstants.DEFAULT_VP_22)
+          .width(SettingsStyleConstants.DEFAULT_VP_230)
+          .fontSize(SettingsStyleConstants.DEFAULT_VP_16)
           .align(Alignment.Start)
       }
 
@@ -197,15 +197,15 @@ struct SettingItem {
         Column() {
           Row() {
             Text(this.settingValue)
-              .lineHeight(StyleConstants.DEFAULT_VP_48)
-              .height(StyleConstants.DEFAULT_VP_48)
-              .width(StyleConstants.DEFAULT_VP_60)
-              .fontSize(StyleConstants.DEFAULT_VP_16)
+              .lineHeight(SettingsStyleConstants.DEFAULT_VP_48)
+              .height(SettingsStyleConstants.DEFAULT_VP_48)
+              .width(SettingsStyleConstants.DEFAULT_VP_60)
+              .fontSize(SettingsStyleConstants.DEFAULT_VP_16)
               .align(Alignment.End)
             Image($r('app.media.ic_settings_arrow'))
-              .margin({ top: StyleConstants.DEFAULT_VP_16 })
-              .height(StyleConstants.DEFAULT_VP_16)
-              .width(StyleConstants.DEFAULT_VP_20)
+              .margin({ top: SettingsStyleConstants.DEFAULT_VP_16 })
+              .height(SettingsStyleConstants.DEFAULT_VP_16)
+              .width(SettingsStyleConstants.DEFAULT_VP_20)
               .align(Alignment.End)
           }
         }
@@ -225,11 +225,11 @@ struct SettingItem {
           })
       }
     }
-    .width(StyleConstants.PERCENTAGE_100)
-    .height(StyleConstants.PERCENTAGE_100)
+    .width(SettingsStyleConstants.PERCENTAGE_100)
+    .height(SettingsStyleConstants.PERCENTAGE_100)
     .padding({ left: 12, right: 12 })
-    .borderRadius(StyleConstants.DEFAULT_VP_16)
-    .backgroundColor(StyleConstants.DEFAULT_SETTING_PAGE_COLOR)
+    .borderRadius(SettingsStyleConstants.DEFAULT_VP_16)
+    .backgroundColor(SettingsStyleConstants.DEFAULT_SETTING_PAGE_COLOR)
   }
 }
 
@@ -248,19 +248,19 @@ struct SettingsDialog {
       ForEach(this.valueList, (item: any) => {
         Row() {
           Text(item.name)
-            .margin({ left: StyleConstants.DEFAULT_VP_10 })
+            .margin({ left: SettingsStyleConstants.DEFAULT_VP_10 })
             .align(Alignment.Start)
-            .width(StyleConstants.PERCENTAGE_85)
-            .fontSize(StyleConstants.DEFAULT_VP_30)
-            .fontColor(StyleConstants.DEFAULT_DIALOG_FONT_COLOR)
+            .width(SettingsStyleConstants.PERCENTAGE_85)
+            .fontSize(SettingsStyleConstants.DEFAULT_VP_30)
+            .fontColor(SettingsStyleConstants.DEFAULT_DIALOG_FONT_COLOR)
           Radio({ value: item.value, group: ('' + this.ida) })
             .enabled(false)
             .checked(item.name === this.settingValue)
-            .width(StyleConstants.DEFAULT_VP_30)
-            .height(StyleConstants.DEFAULT_VP_30)
+            .width(SettingsStyleConstants.DEFAULT_VP_30)
+            .height(SettingsStyleConstants.DEFAULT_VP_30)
             .onChange((isChecked) => {})
-        }.width(StyleConstants.PERCENTAGE_100)
-        .height(StyleConstants.DEFAULT_VP_80)
+        }.width(SettingsStyleConstants.PERCENTAGE_100)
+        .height(SettingsStyleConstants.DEFAULT_VP_80)
         .onClick(() => {
           mSettingsPresenter.changeSettingValue(this.ida, item.name);
           mSettingsPresenter.setSettingsValue(this.ida, item.value);
@@ -270,16 +270,16 @@ struct SettingsDialog {
       }, (item: any) => JSON.stringify(item))
       Text($r('app.string.cancel'))
         .textAlign(TextAlign.Center)
-        .height(StyleConstants.DEFAULT_VP_80)
-        .width(StyleConstants.PERCENTAGE_100)
-        .fontSize(StyleConstants.DEFAULT_VP_30)
+        .height(SettingsStyleConstants.DEFAULT_VP_80)
+        .width(SettingsStyleConstants.PERCENTAGE_100)
+        .fontSize(SettingsStyleConstants.DEFAULT_VP_30)
         .fontColor(Color.Blue)
         .onClick(() => {
           this.controller.close();
           this.action();
         })
-    }.padding(StyleConstants.DEFAULT_VP_20)
-    .backgroundColor(StyleConstants.DEFAULT_SETTING_PAGE_COLOR)
-    .borderRadius(StyleConstants.DEFAULT_VP_30)
+    }.padding(SettingsStyleConstants.DEFAULT_VP_20)
+    .backgroundColor(SettingsStyleConstants.DEFAULT_SETTING_PAGE_COLOR)
+    .borderRadius(SettingsStyleConstants.DEFAULT_VP_30)
   }
 }

@@ -13,17 +13,17 @@
  * limitations under the License.
  */
 
-import BaseStage from '../../../../../../common/src/main/ets/default/base/BaseStage';
-import LayoutConfigManager from '../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import smartDockPreLoader from '../../../../../../feature/smartdock/src/main/ets/default/common/SmartDockPreLoader';
-import appCenterPreLoader from '../../../../../../feature/appcenter/src/main/ets/default/common/AppCenterPreLoader';
-import bigFolderPreLoader from '../../../../../../feature/bigfolder/src/main/ets/default/common/BigFolderPreLoader';
-import pageDesktopPreLoader from '../../../../../../feature/pagedesktop/src/main/ets/default/common/PageDesktopPreLoader';
-import formPreLoader from '../../../../../../feature/form/src/main/ets/default/common/FormPreLoader';
-import PadSmartDockLayoutConfig from './PadSmartDockLayoutConfig';
-import PadFolderLayoutConfig from './PadFolderLayoutConfig';
-import PadFormLayoutConfig from './PadFormLayoutConfig';
+import { BaseStage } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import { appCenterPreLoader } from '@ohos/appcenter';
+import { bigFolderPreLoader } from '@ohos/bigfolder';
+import { formPreLoader } from '@ohos/form';
+import { pageDesktopPreLoader } from '@ohos/pagedesktop';
+import { smartDockPreLoader } from '@ohos/smartdock';
 import launcherLayoutPreLoader from './LauncherLayoutPreLoader';
+import PadFormLayoutConfig from './PadFormLayoutConfig';
+import PadFolderLayoutConfig from './PadFolderLayoutConfig';
+import PadSmartDockLayoutConfig from './PadSmartDockLayoutConfig';
 import PadPageDesktopGridStyleConfig from './PadPageDesktopGridStyleConfig';
 
 /**
@@ -39,7 +39,7 @@ export default class PadStage extends BaseStage {
     launcherLayoutPreLoader.load();
     smartDockPreLoader.load();
     pageDesktopPreLoader.load();
-    LayoutConfigManager.addConfigToManager(PadPageDesktopGridStyleConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PadPageDesktopGridStyleConfig.getInstance());
     appCenterPreLoader.load();
     bigFolderPreLoader.load();
     formPreLoader.load();
@@ -49,9 +49,9 @@ export default class PadStage extends BaseStage {
    * init pad layout config
    */
   private initPadConfig(): void {
-    LayoutConfigManager.addConfigToManager(PadSmartDockLayoutConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(PadFolderLayoutConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(PadFormLayoutConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PadSmartDockLayoutConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PadFolderLayoutConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PadFormLayoutConfig.getInstance());
   }
 
   /**

@@ -13,13 +13,12 @@
  * limitations under the License.
  */
 
-import BaseStage from '../../../../../../common/src/main/ets/default/base/BaseStage';
-import LayoutConfigManager from '../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import appCenterPreLoader from '../../../../../../feature/appcenter/src/main/ets/default/common/AppCenterPreLoader';
-import bigFolderPreLoader from '../../../../../../feature/bigfolder/src/main/ets/default/common/BigFolderPreLoader';
-import smartDockPreLoader from '../../../../../../feature/smartdock/src/main/ets/default/common/SmartDockPreLoader';
-import pageDesktopPreLoader from '../../../../../../feature/pagedesktop/src/main/ets/default/common/PageDesktopPreLoader';
-import formPreLoader from '../../../../../../feature/form/src/main/ets/default/common/FormPreLoader';
+import { BaseStage } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import { bigFolderPreLoader } from '@ohos/bigfolder';
+import { formPreLoader } from '@ohos/form';
+import { pageDesktopPreLoader } from '@ohos/pagedesktop';
+import { smartDockPreLoader } from '@ohos/smartdock';
 import PhoneSmartDockLayoutConfig from './PhoneSmartDockLayoutConfig';
 import PhonePageDesktopGridStyleConfig from './PhonePageDesktopGridStyleConfig';
 import PhoneFolderLayoutConfig from './PhoneFolderLayoutConfig';
@@ -39,8 +38,7 @@ export default class PhoneStage extends BaseStage {
     launcherLayoutPreLoader.load();
     smartDockPreLoader.load();
     pageDesktopPreLoader.load();
-    LayoutConfigManager.addConfigToManager(PhonePageDesktopGridStyleConfig.getInstance());
-    appCenterPreLoader.load();
+    layoutConfigManager.addConfigToManager(PhonePageDesktopGridStyleConfig.getInstance());
     bigFolderPreLoader.load();
     formPreLoader.load();
   }
@@ -49,9 +47,9 @@ export default class PhoneStage extends BaseStage {
    * init phone layout config
    */
   private initPhoneConfig(): void {
-    LayoutConfigManager.addConfigToManager(PhoneSmartDockLayoutConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(PhoneFolderLayoutConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(PhoneFormLayoutConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PhoneSmartDockLayoutConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PhoneFolderLayoutConfig.getInstance());
+    layoutConfigManager.addConfigToManager(PhoneFormLayoutConfig.getInstance());
   }
 
   /**
@@ -60,7 +58,6 @@ export default class PhoneStage extends BaseStage {
   onDestroy(): void {
     super.onDestroy();
     smartDockPreLoader.releaseConfigAndData();
-    appCenterPreLoader.releaseConfigAndData();
     pageDesktopPreLoader.releaseConfigAndData();
     bigFolderPreLoader.releaseConfigAndData();
     formPreLoader.releaseConfigAndData();

@@ -13,17 +13,17 @@
  * limitations under the License.
  */
 
-import AppItemInfo from '../bean/AppItemInfo';
-import AppBubble from './AppBubble';
-import AppGridStyleConfig from '../layoutconfig/AppGridStyleConfig';
-import CommonConstants from '../constants/CommonConstants';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { AppBubble } from './AppBubble';
+import { AppItemInfo } from '../bean/AppItemInfo';
+import { CommonConstants } from '../constants/CommonConstants';
+import { AppGridStyleConfig } from '../layoutconfig/AppGridStyleConfig';
 
 let mAppGridStyleConfig: AppGridStyleConfig = null;
 const TAG = 'AppGrid';
 
 @Component
-export default struct AppGrid {
+export struct AppGrid {
   @Link appGridList: Array<AppItemInfo>;
   appGridStyleConfig: AppGridStyleConfig;
   onItemClick: Function = null;

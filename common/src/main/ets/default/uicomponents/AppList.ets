@@ -13,23 +13,22 @@
  * limitations under the License.
  */
 
-import AppItemInfo from '../bean/AppItemInfo';
-import AppListStyleConfig from '../layoutconfig/AppListStyleConfig';
-import AppIcon from './AppIcon';
-import AppName from './AppName';
-import AppMenu from './AppMenu';
-import CommonConstants from '../constants/CommonConstants';
-import StyleConstants from '../constants/StyleConstants';
+import { Log } from '../utils/Log';
+import { AppItemInfo } from '../bean/AppItemInfo';
+import { StyleConstants } from '../constants/StyleConstants';
+import { CommonConstants } from '../constants/CommonConstants';
+import { ResourceManager } from '../manager/ResourceManager';
+import { AppListStyleConfig } from '../layoutconfig/AppListStyleConfig';
+import { AppIcon } from './AppIcon';
+import { AppName } from './AppName';
+import { AppMenu } from './AppMenu';
 import ScrollerComponent from './ScrollerComponent';
-import ResourceManager from '../manager/ResourceManager';
-import CheckEmptyUtils from '../utils/CheckEmptyUtils';
-import Log from '../utils/Log';
 
 let mAppListStyleConfig: AppListStyleConfig = null;
 const TAG = 'AppList';
 
 @Component
-export default struct AppList {
+export struct AppList {
   @StorageLink('sysUiRecentOnClickEvent') @Watch('sysUiRecentOnClick') sysUiRecentOnClickEvent: number = 0;
   @State isHover: boolean = false;
   @State showPopup: boolean = false;

@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
+import { Log } from '../utils/Log';
 import LruCache from './LruCache';
 import DiskLruCache from './DiskLruCache';
-import Log from '../utils/Log';
 
 const TAG = 'AppResourceCacheManager';
 const KEY_ICON = 'icon';

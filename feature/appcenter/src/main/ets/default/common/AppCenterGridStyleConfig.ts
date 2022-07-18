@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import FeatureConstants from './constants/FeatureConstants';
-import AppGridStyleConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/AppGridStyleConfig';
-import PresetStyleConstants from '../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
-import LayoutViewModel from '../../../../../../../common/src/main/ets/default/viewmodel/LayoutViewModel';
+import { CommonConstants } from '@ohos/common';
+import { PresetStyleConstants } from '@ohos/common';
+import { LayoutViewModel } from '@ohos/common';
+import { AppGridStyleConfig } from '@ohos/common';
+import AppcenterConstants from './constants/AppcenterConstants';
 
 /**
  * style config of AppCenter
@@ -65,6 +65,6 @@ export default class AppCenterGridStyleConfig extends AppGridStyleConfig {
   }
 
   getFeatureName(): string {
-    return FeatureConstants.FEATURE_NAME;
+    return AppcenterConstants.FEATURE_NAME;
   }
 }

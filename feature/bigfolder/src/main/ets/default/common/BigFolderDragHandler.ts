@@ -13,20 +13,21 @@
  * limitations under the License.
  */
 
-import BaseDragHandler from '../../../../../../../common/src/main/ets/default/base/BaseDragHandler';
-import CommonConstants from '../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import Log from '../../../../../../../common/src/main/ets/default/utils/Log';
-import PageDesktopGridStyleConfig from '../../../../../../pagedesktop/src/main/ets/default/common/PageDesktopGridStyleConfig';
-import PageDesktopFeatureConstants from '../../../../../../pagedesktop/src/main/ets/default/common/constants/FeatureConstants';
-import PageDesktopDragHandler from '../../../../../../pagedesktop/src/main/ets/default/common/PageDesktopDragHandler';
-import PageDesktopViewModel from '../../../../../../pagedesktop/src/main/ets/default/common/viewmodel/PageDesktopViewModel';
-import FeatureConstants from './constants/FeatureConstants';
-import BigFolderModel from './BigFolderModel';
-import FolderViewModel from '../viewmodel/FolderViewModel';
+import { Log } from '@ohos/common';
+import { EventConstants } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { localEventManager } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import { SettingsModel } from '@ohos/common';
+import { BaseDragHandler } from '@ohos/common';
+import { AppGridStyleConfig } from '@ohos/common';
+import { BigFolderModel } from '../model/BigFolderModel';
+import { BigFolderViewModel } from '../viewmodel/BigFolderViewModel';
+import { BigFolderConstants } from './constants/BigFolderConstants';
 
 const TAG = 'BigFolderDragHandler';
 const DRAG_DROP_DELAY = 500;
+
 /**
  * bigfolder drag handler class
  */
@@ -39,23 +40,22 @@ export default class BigFolderDragHandler extends BaseDragHandler {
   private mEndIndex = 0;
   private mStartPosition: any = null;
   private mEndPosition: any = null;
+  private readonly mSettingsModel: SettingsModel;
   private readonly mBigFolderModel: BigFolderModel = null;
   private mFolderAppList: any[] = [];
-  private readonly mFolderViewModel: FolderViewModel = null;
+  private readonly mBigFolderViewModel: BigFolderViewModel = null;
   private mOpenGridConfig;
   private mGridItemHeight: any = null;
   private mGridItemWidth: any = null;
-  private readonly mDesktopStyleConfig: PageDesktopGridStyleConfig = null;
-  private readonly mPageDesktopViewModel: PageDesktopViewModel;
+  private readonly mDesktopStyleConfig: AppGridStyleConfig = null;
   private hasDroped = false;
 
   constructor() {
     super();
     this.mBigFolderModel = BigFolderModel.getInstance();
-    this.mFolderViewModel = FolderViewModel.getInstance();
-    this.mDesktopStyleConfig = LayoutConfigManager.getStyleConfig(PageDesktopGridStyleConfig.APP_GRID_STYLE_CONFIG,
-      PageDesktopFeatureConstants.FEATURE_NAME);
-    this.mPageDesktopViewModel = PageDesktopViewModel.getInstance();
+    this.mBigFolderViewModel = BigFolderViewModel.getInstance();
+    this.mDesktopStyleConfig = layoutConfigManager.getStyleConfig(AppGridStyleConfig.APP_GRID_STYLE_CONFIG,
+      BigFolderConstants.PAGEDESKTOP_FEATURE_NAME);
   }
 
   static getInstance(): BigFolderDragHandler {
@@ -132,7 +132,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
   }
 
   protected getItemByIndex(index: number): any {
-    const pageIndex: number = this.mFolderViewModel.getIndex();
+    const pageIndex: number = this.mBigFolderViewModel.getIndex();
     Log.showDebug(TAG, `getItemByIndex: ${index}, pageIndex: ${pageIndex}`);
     const dataObj = this.getDragRelativeData().layoutInfo;
     if (index >= 0 && pageIndex < dataObj.length && index < dataObj[pageIndex].length) {
@@ -142,7 +142,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
   }
 
   private getTouchPosition(x, y): any {
-    const pageIndex: number = this.mFolderViewModel.getIndex();
+    const pageIndex: number = this.mBigFolderViewModel.getIndex();
     const position = {
       page: pageIndex,
       row: 0,
@@ -175,7 +175,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     const moveAppX = event.touches[0].screenX;
     const moveAppY = event.touches[0].screenY;
     this.mStartPosition = this.getTouchPosition(moveAppX, moveAppY);
-    const pageIndex: number = this.mFolderViewModel.getIndex();
+    const pageIndex: number = this.mBigFolderViewModel.getIndex();
     const mItemIndex = this.getItemIndex(event);
     this.mStartIndex = mItemIndex + this.mOpenGridConfig.column * this.mOpenGridConfig.row * pageIndex;
     Log.showDebug(TAG, `onDragStart mStartIndex: ${this.mStartIndex}`);
@@ -208,7 +208,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     const dragEffectArea = this.getEffectArea();
 
     if (moveAppY >= dragEffectArea.bottom || moveAppY <= dragEffectArea.top) {
-      this.mFolderViewModel.closeFolder();
+      this.mBigFolderViewModel.closeFolder();
     }
 
   }
@@ -223,7 +223,7 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     const openingStatus = AppStorage.Get('openFolderStatus');
 
-    const pageIndex: number = this.mFolderViewModel.getIndex();
+    const pageIndex: number = this.mBigFolderViewModel.getIndex();
     const openFolderData: {
       folderId: string,
       layoutInfo: any
@@ -231,9 +231,9 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     for (let i = 0; i < openFolderData.layoutInfo.length; i++) {
       this.mFolderAppList = this.mFolderAppList.concat(openFolderData.layoutInfo[i]);
     }
-    if (this.mIsInEffectArea && openingStatus !== FeatureConstants.OPEN_FOLDER_STATUS_CLOSE) {
+    if (this.mIsInEffectArea && openingStatus !== BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE) {
       this.updateFolderNotClose(event, pageIndex);
-    } else if (openingStatus === FeatureConstants.OPEN_FOLDER_STATUS_CLOSE) {
+    } else if (openingStatus === BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE) {
       // effectarea in desktop
       const endLayoutInfo = this.getEndLayoutInfo(event);
 
@@ -245,14 +245,14 @@ export default class BigFolderDragHandler extends BaseDragHandler {
 
       let result = false;
       const dragAppInfo = this.mFolderAppList[this.mStartIndex];
-      result = this.mFolderViewModel.deleteAppByDraging(this.mFolderAppList, this.mStartIndex);
+      result = this.mBigFolderViewModel.deleteAppByDraging(this.mFolderAppList, this.mStartIndex);
 
       if (endLayoutInfo != undefined && endLayoutInfo.typeId == CommonConstants.TYPE_FOLDER) {
-        this.mFolderViewModel.addOneAppToFolder(dragAppInfo, endLayoutInfo.folderId);
+        this.mBigFolderViewModel.addOneAppToFolder(dragAppInfo, endLayoutInfo.folderId);
       }
 
       AppStorage.SetOrCreate('openFolderData', {});
-      this.mPageDesktopViewModel.getGridList();
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
       if (!result) {
         return false;
       }
@@ -281,16 +281,17 @@ export default class BigFolderDragHandler extends BaseDragHandler {
     this.mFolderAppList.splice(startIndex, 1);
     this.mFolderAppList.splice(endIndex, 0, item);
 
-    const folderLayoutInfo = this.mFolderViewModel.filterFolderPage(this.mFolderAppList);
+    const folderLayoutInfo = this.mBigFolderViewModel.filterFolderPage(this.mFolderAppList);
     let openFolderData: {
       folderId: string,
       layoutInfo: any
     } = AppStorage.Get('openFolderData');
     openFolderData.layoutInfo = folderLayoutInfo;
-    openFolderData = this.mFolderViewModel.addAddIcon(openFolderData);
+    openFolderData = this.mBigFolderViewModel.addAddIcon(openFolderData);
     AppStorage.SetOrCreate('openFolderData', openFolderData);
     Log.showDebug(TAG, `layoutAdjustment this.openFolderData.folderId: ${openFolderData.folderId}`);
-    const info = this.mPageDesktopViewModel.getLayoutInfo();
+
+    const info = this.mSettingsModel.getLayoutInfo();
     const layoutInfo = info.layoutInfo;
 
     for (let i = 0; i < layoutInfo.length; i++) {
@@ -302,8 +303,8 @@ export default class BigFolderDragHandler extends BaseDragHandler {
       }
     }
     info.layoutInfo = layoutInfo;
-    this.mPageDesktopViewModel.setLayoutInfo(info);
-    this.mPageDesktopViewModel.getGridList();
+    this.mSettingsModel.setLayoutInfo(info);
+    localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
     Log.showDebug(TAG, 'layoutAdjustment end');
   }
 
@@ -343,10 +344,9 @@ export default class BigFolderDragHandler extends BaseDragHandler {
   private getEndLayoutInfo(event) {
     const moveAppX = event.touches[0].screenX;
     const moveAppY = event.touches[0].screenY;
-    const desktopInstance = PageDesktopDragHandler.getInstance();
-    const mDesktopPosition = desktopInstance.getCalPosition(moveAppX, moveAppY);
+    const mDesktopPosition = globalThis.PageDesktopDragHandler.getTouchPosition(moveAppX, moveAppY);
 
-    const info = this.mPageDesktopViewModel.getLayoutInfo();
+    const info = this.mSettingsModel.getLayoutInfo();
     const layoutInfo = info.layoutInfo;
     const endLayoutInfo = layoutInfo.find(item => {
       if (item.typeId === CommonConstants.TYPE_FOLDER) {

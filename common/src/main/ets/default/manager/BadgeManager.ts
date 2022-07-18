@@ -13,19 +13,19 @@
  * limitations under the License.
  */
 
-import EventConstants from '../constants/EventConstants';
+import { Log } from '../utils/Log';
+import { RdbStoreManager } from './RdbStoreManager';
+import { localEventManager } from './LocalEventManager';
+import { launcherAbilityManager } from './LauncherAbilityManager';
 import BadgeItemInfo from '../bean/BadgeItemInfo';
-import launcherAbilityManager from './LauncherAbilityManager';
-import RdbStoreManager from './RdbStoreManager';
-import localEventManager from './LocalEventManager';
-import Log from '../utils/Log';
+import { EventConstants } from '../constants/EventConstants';
 
 const TAG = 'BadgeManager';
 
 /**
  * badge manager
  */
-export default class BadgeManager {
+export class BadgeManager {
   private readonly mDbStoreManager: RdbStoreManager;
 
   static UPDATE_BADGE = 'updateBadge';

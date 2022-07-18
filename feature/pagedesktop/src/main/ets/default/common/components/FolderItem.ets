@@ -13,17 +13,17 @@
  * limitations under the License.
  */
 
-import FolderComponent from '../../../../../../../../common/src/main/ets/default/uicomponents/FolderComponent'
-import StyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import CommonConstants from '../../../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import PresetStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
-import FolderViewModel from '../../../../../../../bigfolder/src/main/ets/default/viewmodel/FolderViewModel';
-import BigFolderStyleConfig from '../../../../../../../bigfolder/src/main/ets/default/common/BigFolderStyleConfig';
-import PageDesktopViewModel from '../../../../../../../pagedesktop/src/main/ets/default/common/viewmodel/PageDesktopViewModel'
-import PageDesktopDragHandler from '../PageDesktopDragHandler';
-import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
-import Trace from '../../../../../../../../common/src/main/ets/default/utils/Trace';
-import FeatureConstants from '../constants/FeatureConstants';
+import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
+import { FolderComponent } from '@ohos/common'
+import { PresetStyleConstants } from '@ohos/common';
+import { BigFolderViewModel } from '@ohos/bigfolder';
+import { BigFolderStyleConfig } from '@ohos/bigfolder';
+import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
+import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel'
+import PagedesktopConstants from '../constants/PagedesktopConstants';
 
 const FOLDER_INFO_REFRESH_DELAY = 500;
 const TAG = 'FolderItem';
@@ -41,7 +41,7 @@ export default struct FolderItem {
   private isSwappingPage = false;
   private mAppItemWidth: number = 0;
   private mPageDesktopViewModel: PageDesktopViewModel;
-  private mFolderViewModel: FolderViewModel;
+  private mBigFolderViewModel: BigFolderViewModel;
   private mMargin: number = 0;
   private mGridSpaceWidth: number = 0;
   private mGridSpaceHeight: number = 0;
@@ -52,8 +52,8 @@ export default struct FolderItem {
 
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
-    this.mFolderViewModel = FolderViewModel.getInstance();
-    this.mFolderStyleConfig = this.mFolderViewModel.getFolderStyleConfig();
+    this.mBigFolderViewModel = BigFolderViewModel.getInstance();
+    this.mFolderStyleConfig = this.mBigFolderViewModel.getFolderStyleConfig();
     this.mPageDesktopViewModel = PageDesktopViewModel.getInstance();
     let mGridConfig = this.mPageDesktopViewModel.getGridConfig();
     let styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
@@ -71,8 +71,8 @@ export default struct FolderItem {
    * format FolderInfo
    */
   private formatFolderInfo() {
-    let column = this.mFolderViewModel.getFolderLayoutConfig().column;
-    let row = this.mFolderViewModel.getFolderLayoutConfig().row;
+    let column = this.mBigFolderViewModel.getFolderLayoutConfig().column;
+    let row = this.mBigFolderViewModel.getFolderLayoutConfig().row;
     const allCount = column * row;
     if (this.folderItem.layoutInfo[0].length > allCount) {
       let folderLayoutInfoList = [];
@@ -127,7 +127,7 @@ export default struct FolderItem {
   private renameClick() {
     Log.showInfo(TAG, 'click menu folder rename');
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
-    this.mFolderViewModel.openFolder(true, this.folderItem);
+    this.mBigFolderViewModel.openFolder(true, this.folderItem);
   }
 
   /**
@@ -169,11 +169,11 @@ export default struct FolderItem {
           onOpenFolderClick: (event, folderItem) => {
             Log.showInfo(TAG, "onOpenFolderClick");
             Trace.start(Trace.CORE_METHOD_OPEN_FOLDER);
-            this.mFolderViewModel.openFolder(false, folderItem);
+            this.mBigFolderViewModel.openFolder(false, folderItem);
           },
           onFolderTouch: (event, folderItem) => {
             Log.showInfo(TAG, "onFolderTouch");
-            AppStorage.SetOrCreate('dragFocus', FeatureConstants.FEATURE_NAME);
+            AppStorage.SetOrCreate('dragFocus', PagedesktopConstants.FEATURE_NAME);
             this.mPageDesktopDragHandler.setDragStateListener(this.mDragStateListener);
             this.mPageDesktopDragHandler.notifyTouchEventUpdate(event);
           },
@@ -207,7 +207,7 @@ export default struct FolderItem {
       TapGesture({ count: 2 })
         .onAction((event: GestureEvent) => {
           Log.showInfo(TAG, 'TapGesture double click');
-          this.mFolderViewModel.openFolder(false, this.folderItem);
+          this.mBigFolderViewModel.openFolder(false, this.folderItem);
         })
       )
       )

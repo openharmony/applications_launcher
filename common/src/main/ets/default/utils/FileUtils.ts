@@ -18,7 +18,7 @@
  */
 import Fileio from '@ohos.fileio';
 import util from '@ohos.util';
-import Log from './Log';
+import { Log } from './Log';
 
 const TAG = 'FileUtils';
 

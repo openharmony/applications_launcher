@@ -17,6 +17,6 @@
 /**
  * use to notify other role, settings is changed
  */
-export default interface SettingsModelObserver {
+export interface SettingsModelObserver {
   (event: number): void
 }

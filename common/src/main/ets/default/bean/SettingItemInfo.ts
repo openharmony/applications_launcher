@@ -17,7 +17,7 @@ import SettingItemOption from './SettingItemOption';
 /**
  * Item info for launcher settings.
  */
-export default class SettingItemInfo {
+export class SettingItemInfo {
   /**
    * Index for setting item.
    */

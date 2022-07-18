@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import FormLayoutConfig from '../../../../../../common/src/main/ets/default/layoutconfig/FormLayoutConfig';
+import { CommonConstants } from '@ohos/common';
+import { FormLayoutConfig } from '@ohos/common';
 import phoneFormLayoutInfo from './configs/PhoneFormLayoutInfo';
 
 /**

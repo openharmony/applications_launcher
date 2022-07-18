@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
+import { Log } from '../utils/Log';
+import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
 import AppResourceCacheManager from '../cache/AppResourceCacheManager';
-import CheckEmptyUtils from '../utils/CheckEmptyUtils';
-import Log from '../utils/Log';
 
 const KEY_ICON = 'icon';
 const KEY_NAME = 'name';
@@ -24,7 +24,7 @@ const TAG = 'ResourceManager';
 /**
  * Wrapper class for resourceManager interfaces.
  */
-export default class ResourceManager {
+export class ResourceManager {
   private constructor() {
   }
 

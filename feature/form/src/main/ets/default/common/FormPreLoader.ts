@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-import BaseModulePreLoader from '../../../../../../../common/src/main/ets/default/base/BaseModulePreLoader';
-import LayoutConfigManager from '../../../../../../../common/src/main/ets/default/layoutconfig/LayoutConfigManager';
-import FormStyleConfig from './FormStyleConfig';
-import FormLayoutConfig from '../../../../../../../common/src/main/ets/default/layoutconfig/FormLayoutConfig';
+import { FormLayoutConfig } from '@ohos/common';
+import { BaseModulePreLoader } from '@ohos/common';
+import { layoutConfigManager } from '@ohos/common';
+import { FormStyleConfig } from './FormStyleConfig';
 
 /**
  * Form layer initialization loader
@@ -27,8 +27,8 @@ class FormPreLoader extends BaseModulePreLoader {
    * Add configuration objects to layout configuration management class.
    */
   protected loadConfig(): void {
-    LayoutConfigManager.addConfigToManager(FormLayoutConfig.getInstance());
-    LayoutConfigManager.addConfigToManager(FormStyleConfig.getInstance());
+    layoutConfigManager.addConfigToManager(FormLayoutConfig.getInstance());
+    layoutConfigManager.addConfigToManager(FormStyleConfig.getInstance());
   }
 
   /**
@@ -41,9 +41,8 @@ class FormPreLoader extends BaseModulePreLoader {
    * Release module config and data.
    */
   releaseConfigAndData(): void {
-    LayoutConfigManager.removeConfigFromManager();
+    layoutConfigManager.removeConfigFromManager();
   }
 }
 
-const formPreLoader = new FormPreLoader();
-export default formPreLoader;
+export const formPreLoader = new FormPreLoader();

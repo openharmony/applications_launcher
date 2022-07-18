@@ -13,18 +13,18 @@
  * limitations under the License.
  */
 
-import StyleConstants from '../constants/StyleConstants';
-import AppIcon from './AppIcon';
-import AppName from './AppName';
-import AppMenu from './AppMenu';
-import PresetStyleConstants from '../constants/PresetStyleConstants';
-import ResourceManager from '../manager/ResourceManager';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { AppIcon } from './AppIcon';
+import { AppName } from './AppName';
+import { AppMenu } from './AppMenu';
+import { StyleConstants } from '../constants/StyleConstants';
+import { ResourceManager } from '../manager/ResourceManager';
+import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 
 const TAG = 'AppBubble';
 
 @Component
-export default struct AppBubble {
+export struct AppBubble {
   @Prop bundleName: string;
   @Prop abilityName: string;
   @Prop moduleName: string;

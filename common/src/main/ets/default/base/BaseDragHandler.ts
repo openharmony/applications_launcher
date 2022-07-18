@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../constants/CommonConstants';
-import Log from '../utils/Log';
+import { Log } from '../utils/Log';
+import { CommonConstants } from '../constants/CommonConstants';
 
 const TAG = 'BaseDragHandler';
 
@@ -31,7 +31,7 @@ interface Area {
  * 2.Initialize drag function related parameters.
  * 3.Adjust and refresh the desktop layout according to the drag results.
  */
-export default abstract class BaseDragHandler {
+export abstract class BaseDragHandler {
   protected mIsInEffectArea = false;
 
   protected mDragEffectArea: Area | undefined;

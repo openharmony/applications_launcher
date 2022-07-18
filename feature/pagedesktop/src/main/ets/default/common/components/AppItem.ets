@@ -13,16 +13,18 @@
  * limitations under the License.
  */
 
-import AppBubble from '../../../../../../../../common/src/main/ets/default/uicomponents/AppBubble';
-import StyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
-import ResourceManager from '../../../../../../../../common/src/main/ets/default/manager/ResourceManager';
-import PresetStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
-import UninstallDialog from '../../../../../../../../common/src/main/ets/default/uicomponents/UninstallDialog';
-import PageDesktopDragHandler from '../PageDesktopDragHandler';
-import FormManagerDialog from '../../../../../../../form/src/main/ets/default/common/uicomponents/FormManagerDialog';
-import FeatureConstants from '../constants/FeatureConstants';
-import Trace from '../../../../../../../../common/src/main/ets/default/utils/Trace';
-import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
+import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
+import { PresetStyleConstants } from '@ohos/common';
+import { SettingsModel } from '@ohos/common';
+import { AppBubble } from '@ohos/common';
+import { UninstallDialog } from '@ohos/common';
+import { FormManagerDialog } from '@ohos/common';
+import { ResourceManager } from '@ohos/common';
+import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
+import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel';
+import PagedesktopConstants from '../constants/PagedesktopConstants';
 
 const APP_INFO_REFRESH_DELAY = 500;
 const DOUBLE_CLICK_COUNT = 2
@@ -48,9 +50,10 @@ export default struct AppItem {
   private mGridSpaceHeight : number;
   private isSwappingPage = false;
   private item: any;
-  private mPageDesktopViewModel;
+  private mPageDesktopViewModel: PageDesktopViewModel;
+  private mSettingsModel: SettingsModel;
   private isPad: boolean = false;
-  private mPageDesktopDragHandler : PageDesktopDragHandler;
+  private mPageDesktopDragHandler: PageDesktopDragHandler;
   private mouseClick: number = 0;
   private dialogName: string = "";
   private clearForm: Function = null;
@@ -112,10 +115,11 @@ export default struct AppItem {
 
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
+    this.mSettingsModel = SettingsModel.getInstance();
     this.isPad = this.mPageDesktopViewModel.getDevice();
     let styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
     this.mAppNameHeight = styleConfig.mNameHeight;
-    this.mAppItemWidth = styleConfig.mAppWidth;
+    this.mAppItemWidth = styleConfig.mAppItemSize;
     this.mAppNameSize = styleConfig.mNameSize;
     this.mMargin = styleConfig.mMargin;
     this.mIconSize = styleConfig.mIconSize;
@@ -149,7 +153,8 @@ export default struct AppItem {
         this.mPageDesktopViewModel.showPrevious();
         this.movingIconSwapPageDelay();
       } else if ((moveX + this.mIconSize / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
-        let cachePageIndex = this.mPageDesktopViewModel.getLayoutInfo().layoutDescription.pageCount;
+        let cachePageIndex = this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount;
+
         if (curPageIndex == cachePageIndex - 1 && !this.mPageDesktopViewModel.isBlankPage()) {
           this.mPageDesktopViewModel.addBlankPage(true);
         } else if(curPageIndex < cachePageIndex - 1) {
@@ -241,7 +246,7 @@ export default struct AppItem {
         )
       )
       .onTouch((event: TouchEvent) => {
-        AppStorage.SetOrCreate('dragFocus', FeatureConstants.FEATURE_NAME);
+        AppStorage.SetOrCreate('dragFocus', PagedesktopConstants.FEATURE_NAME);
         this.mPageDesktopDragHandler.setDragStateListener(this.mDragStateListener);
         Log.showInfo(TAG, `tap click notifyTouchEventUpdate x: ${event.touches[0].screenX}, y: ${event.touches[0].screenY}`);
         this.mPageDesktopDragHandler.notifyTouchEventUpdate(event);

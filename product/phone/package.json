@@ -8,13 +8,12 @@
 	},
 	"version": "1.0.0",
 	"dependencies": {
-		"bigfolder": "file:../../feature/bigfolder",
-		"common": "file:../../common",
-		"form": "file:../../feature/form",
-		"appcenter": "file:../../feature/appcenter",
-		"smartdock": "file:../../feature/smartdock",
-		"recents": "file:../../feature/recents",
-		"pagedesktop": "file:../../feature/pagedesktop",
-		"gesturenavigation": "file:../../feature/gesturenavigation"
+		"@ohos/common": "../../common",
+		"@ohos/bigfolder": "../../feature/bigfolder",
+		"@ohos/form": "../../feature/form",
+		"@ohos/gesturenavigation": "../../feature/gesturenavigation",
+		"@ohos/pagedesktop": "../../feature/pagedesktop",
+		"@ohos/recents": "../../feature/recents",
+		"@ohos/smartdock": "../../feature/smartdock"
 	}
 }

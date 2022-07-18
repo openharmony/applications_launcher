@@ -14,25 +14,25 @@
  */
 
 import dataRdb from '@ohos.data.rdb';
-import CommonConstants from '../constants/CommonConstants';
-import CheckEmptyUtils from '../utils/CheckEmptyUtils';
+import { Log } from '../utils/Log';
+import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
+import { CommonConstants } from '../constants/CommonConstants';
 import RdbStoreConfig from '../configs/RdbStoreConfig';
 import BadgeItemInfo from '../bean/BadgeItemInfo';
-import CardItemInfo from '../bean/CardItemInfo';
-import DockItemInfo from '../bean/DockItemInfo';
-import Log from '../utils/Log';
+import { AppItemInfo } from '../bean/AppItemInfo';
+import { DockItemInfo } from '../bean/DockItemInfo';
+import { CardItemInfo } from '../bean/CardItemInfo';
 import GridLayoutItemInfo from '../bean/GridLayoutItemInfo';
 import GridLayoutItemBuilder from '../bean/GridLayoutItemBuilder';
 import GridLayoutInfoColumns from '../bean/GridLayoutInfoColumns';
 import DesktopApplicationColumns from '../bean/DesktopApplicationColumns';
-import AppItemInfo from '../bean/AppItemInfo';
 
 const TAG = 'RdbStoreManager';
 
 /**
  * Wrapper class for rdb interfaces.
  */
-export default class RdbStoreManager {
+export class RdbStoreManager {
   private mRdbStore;
 
   private constructor() {

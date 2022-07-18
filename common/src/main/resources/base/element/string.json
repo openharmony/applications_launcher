@@ -11,6 +11,34 @@
     {
       "name": "launcher_layout",
       "value": "Launcher Layout"
+    },
+    {
+      "name": "add_to_desktop",
+      "value": "添加到桌面"
+    },
+    {
+      "name": "cancel",
+      "value": "取消"
+    },
+    {
+      "name": "remove_form_dialog_content",
+      "value": "通过长按应用进入“卡片管理”界面可以重新添加"
+    },
+    {
+      "name": "delete_form",
+      "value": "移除"
+    },
+    {
+      "name": "uninstall",
+      "value": "卸载"
+    },
+    {
+      "name": "submit",
+      "value": "确认"
+    },
+    {
+      "name": "gesture_navigation_options",
+      "value": "手势导航开关"
     }
   ]
 }

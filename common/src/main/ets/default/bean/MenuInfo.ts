@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../constants/CommonConstants';
+import { CommonConstants } from '../constants/CommonConstants';
 
 /**
  * Item info of long press menu.
  */
-export default class MenuInfo {
+export class MenuInfo {
   /**
    * Item type. see CommonConstants.MENU_TYPE_FIXED and CommonConstants.MENU_TYPE_DYNAMIC.
    */

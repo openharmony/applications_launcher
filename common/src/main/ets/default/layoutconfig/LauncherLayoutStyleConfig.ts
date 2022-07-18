@@ -12,14 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import CommonConstants from '../constants/CommonConstants';
-import ILayoutConfig from './ILayoutConfig';
-import PresetStyleConstants from '../constants/PresetStyleConstants';
+import { ILayoutConfig } from './ILayoutConfig';
+import { CommonConstants } from '../constants/CommonConstants';
+import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 
 /**
  * Launcher_layout style
  */
-export default class LauncherLayoutStyleConfig extends ILayoutConfig {
+export class LauncherLayoutStyleConfig extends ILayoutConfig {
 
   static LAUNCHER_COMMON_STYLE_CONFIG: string = 'launcherStyleCommon';
 

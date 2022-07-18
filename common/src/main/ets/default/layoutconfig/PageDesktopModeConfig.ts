@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../constants/CommonConstants';
+import { ILayoutConfig } from './ILayoutConfig';
+import { CommonConstants } from '../constants/CommonConstants';
 import defaultLayoutConfig from '../configs/DefaultLayoutConfig';
-import ILayoutConfig from './ILayoutConfig';
 
 /**
  * Desktop Workspace Layout Mode Configuration
  */
-export default class PageDesktopModeConfig extends ILayoutConfig {
+export class PageDesktopModeConfig extends ILayoutConfig {
   /**
    * Workspace layout mode configuration index
    */

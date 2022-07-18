@@ -1,7 +1,6 @@
  {
   "module": {
-    "package": "com.ohos.launcher",
-    "name": "common",
+    "name": "launcher_common",
     "type": "har",
     "deviceTypes": [
       "default",

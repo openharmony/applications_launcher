@@ -19,10 +19,9 @@ import FileUtils from '../utils/FileUtils';
  * Layout configuration base class,
  * which defines the interfaces that all configuration objects need to implement.
  */
-export default abstract class ILayoutConfig {
-  private static readonly COMMON_FEATURE_NAME = 'featureCommon';
+export abstract class ILayoutConfig {
 
-  private static readonly FILES_DIR = globalThis.desktopContext.filesDir + '/';
+  private static readonly COMMON_FEATURE_NAME = 'featureCommon';
 
   protected constructor() {
   }
@@ -111,6 +110,7 @@ export default abstract class ILayoutConfig {
    * Get the absolute path of the current configuration file.
    */
   getConfigFileAbsPath(): string {
-    return ILayoutConfig.FILES_DIR + this.getConfigName() + '.json';
+    let filesDir = globalThis.desktopContext.filesDir + '/'
+    return filesDir + this.getConfigName() + '.json';
   }
 }

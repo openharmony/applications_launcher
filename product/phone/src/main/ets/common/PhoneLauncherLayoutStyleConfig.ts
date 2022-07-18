@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-import CommonConstants from '../../../../../../common/src/main/ets/default/constants/CommonConstants';
-import LauncherLayoutStyleConfig from '../../../../../../common/src/main/ets/default/layoutconfig/LauncherLayoutStyleConfig';
-import PresetStyleConstants from '../../../../../../common/src/main/ets/default/constants/PresetStyleConstants';
+import { CommonConstants } from '@ohos/common';
+import { PresetStyleConstants } from '@ohos/common';
+import { LauncherLayoutStyleConfig } from '@ohos/common';
 import PhonePresetStyleConstants from './constants/PhonePresetStyleConstants';
 
 /**

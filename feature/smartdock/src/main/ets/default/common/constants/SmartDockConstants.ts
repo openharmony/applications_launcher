@@ -14,6 +14,7 @@
  */
 
 export default class SmartDockConstants {
+  static readonly FEATURE_NAME = 'featureSmartDock';
 
   static readonly LIST_DIRECTION: Axis = Axis.Horizontal;
 
