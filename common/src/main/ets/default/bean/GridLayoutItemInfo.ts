@@ -82,6 +82,13 @@ export default class GridLayoutItemInfo {
      */
     bundleName: string | undefined;
 
+	/**
+     * Indicates abilityName.
+     */
+	abilityName: string | undefined;
+
+	moduleName: string | undefined;
+
     /**
      * Indicates keyName.
      */
@@ -120,6 +127,8 @@ export default class GridLayoutItemInfo {
         this.column = gridLayoutItemBuilder.column;
         this.row = gridLayoutItemBuilder.row;
         this.bundleName = gridLayoutItemBuilder.bundleName;
+		this.abilityName = gridLayoutItemBuilder.abilityName;
+		this.moduleName = gridLayoutItemBuilder.moduleName;
         this.keyName = gridLayoutItemBuilder.keyName;
         this.layoutInfo = [gridLayoutItemBuilder.layoutInfo];
         this.extend1 = gridLayoutItemBuilder.extend1;
