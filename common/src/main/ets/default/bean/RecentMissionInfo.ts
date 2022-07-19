@@ -48,6 +48,11 @@ export class RecentMissionInfo {
   abilityName: string | undefined;
 
   /**
+  * Recent mission: module name
+  */
+  moduleName: string | undefined;
+
+  /**
    * Recent mission: lock status
    */
   lockedState: boolean | undefined;

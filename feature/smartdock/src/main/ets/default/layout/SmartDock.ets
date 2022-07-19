@@ -94,7 +94,7 @@ export struct SmartDock {
         keyName: this.mSelectedItem.keyName
       }, this.mSelectedDockType);
     } else {
-      this.mSmartDockViewModel.uninstallApp(this.mSelectedItem.bundleName, this.mSelectedItem.bundleName.isUninstallAble);
+      this.mSmartDockViewModel.uninstallApp(this.mSelectedItem.bundleName, this.mSelectedItem.isUninstallAble);
     }
     this.mDialogController.close();
   }
