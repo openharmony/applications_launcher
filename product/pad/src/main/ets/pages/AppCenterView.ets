@@ -67,7 +67,6 @@ struct AppCenterView {
 
   onBackPress(): boolean {
     Log.showInfo(TAG, `onBackPress`);
-    ContextMenu.close();
     AppStorage.SetOrCreate('selectDesktopAppItem', '');
     windowManager.hideWindow(windowManager.APP_CENTER_WINDOW_NAME);
     return true;
@@ -111,7 +110,6 @@ struct AppCenterView {
       Log.showInfo(TAG, 'click appcenter area');
       let contextFlag = AppStorage.Get('contextMenuState');
       if (contextFlag) {
-        ContextMenu.close();
         AppStorage.SetOrCreate('contextMenuState', false);
       }else {
         this.onBackPress();
