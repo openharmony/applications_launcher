@@ -53,7 +53,6 @@ export struct AppMenu {
     Log.showInfo(TAG, 'aboutToDisappear start');
     this.fixedMenuList = null;
     this.dynamicMenuList = null;
-
   }
 
   build() {
