@@ -46,12 +46,14 @@ export struct AppMenu {
     }
     this.isBothTypeMenuExist = this.fixedMenuList.length > 0 && this.dynamicMenuList.length > 0;
     AppStorage.SetOrCreate('isLongPress', true);
+    AppStorage.SetOrCreate('contextMenuState', true);
   }
 
   aboutToDisappear(): void  {
     Log.showInfo(TAG, 'aboutToDisappear start');
     this.fixedMenuList = null;
     this.dynamicMenuList = null;
+
   }
 
   build() {
