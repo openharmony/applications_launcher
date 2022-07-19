@@ -109,7 +109,13 @@ struct AppCenterView {
     .height('100%')
     .onClick(() => {
       Log.showInfo(TAG, 'click appcenter area');
-      this.onBackPress();
+      let contextFlag = AppStorage.Get('contextMenuState');
+      if (contextFlag) {
+        ContextMenu.close();
+        AppStorage.SetOrCreate('contextMenuState', false);
+      }else {
+        this.onBackPress();
+      }
     })
   }
 }
