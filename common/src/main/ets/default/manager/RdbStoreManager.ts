@@ -460,6 +460,7 @@ export class RdbStoreManager {
       return result;
     }
     try {
+      this.mRdbStore.beginTransaction();
       // delete desktopApplicationInfo table
       await this.deleteTable(RdbStoreConfig.DesktopApplicationInfo.TABLE_NAME);
       // insert into desktopApplicationInfo
@@ -477,14 +478,18 @@ export class RdbStoreManager {
           'key_name': element.bundleName + element.abilityName + element.moduleName,
           'install_time': element.installTime
         }
-        let ret = await this.mRdbStore.insert(RdbStoreConfig.DesktopApplicationInfo.TABLE_NAME, item);
-        Log.showDebug(TAG, `insertDesktopApplication ${i} ret: ${ret}`);
-        if (ret === -1) {
-          result = false;
-        }
+        this.mRdbStore.insert(RdbStoreConfig.DesktopApplicationInfo.TABLE_NAME, item)
+          .then((ret) => {
+            Log.showDebug(TAG, `insertDesktopApplication ${i} ret: ${ret}`);
+            if (ret === -1) {
+              result = false;
+            }
+          });
       }
+      this.mRdbStore.commit();
     } catch (e) {
       Log.showError(TAG, 'insertDesktopApplication error:' + e);
+      this.mRdbStore.rollBack();
     }
     return result;
   }
@@ -528,7 +533,9 @@ export class RdbStoreManager {
       Log.showError(TAG, 'insertGridLayoutInfo gridlayoutinfo is empty');
       return;
     }
+
     try {
+      this.mRdbStore.beginTransaction();
       // delete gridlayoutinfo table
       await this.deleteTable(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
       // insert into gridlayoutinfo
@@ -540,7 +547,7 @@ export class RdbStoreManager {
         if (element.typeId === CommonConstants.TYPE_APP) {
           item = {
             'bundle_name': element.bundleName,
-			'ability_name': element.abilityName,
+            'ability_name': element.abilityName,
             'module_name': element.moduleName,
             'key_name': element.bundleName + element.abilityName + element.moduleName,
             'type_id': element.typeId,
@@ -550,8 +557,10 @@ export class RdbStoreManager {
             'row': element.row,
             'container': -100
           }
-          let ret = await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
-          Log.showDebug(TAG, `insertGridLayoutInfo type is app ${i} ret: ${ret}`);
+          this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item)
+            .then((ret) => {
+              Log.showDebug(TAG, `insertGridLayoutInfo type is app ${i} ret: ${ret}`);
+            });
         } else if (element.typeId === CommonConstants.TYPE_CARD) {
           item = {
             'bundle_name':element.bundleName,
@@ -565,8 +574,10 @@ export class RdbStoreManager {
             'row': element.row,
             'container': -100
           }
-          let ret = await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
-          Log.showDebug(TAG, `insertGridLayoutInfo type is card ${i} ret: ${ret}`);
+          this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item)
+            .then((ret) => {
+              Log.showDebug(TAG, `insertGridLayoutInfo type is card ${i} ret: ${ret}`);
+            });
         } else {
           item = {
             'bundle_name':element.bundleName,
@@ -590,9 +601,10 @@ export class RdbStoreManager {
           });
         }
       }
-
+      this.mRdbStore.commit();
     } catch (e) {
       Log.showError(TAG, 'insertGridLayoutInfo error:' + e);
+      this.mRdbStore.rollBack();
     }
   }
 
@@ -604,42 +616,40 @@ export class RdbStoreManager {
       result = false;
       return result;
     }
-    try {
-      for (var i in layoutInfo) {
-        let curItem = layoutInfo[i];
-        for (let j in curItem) {
-          let bigFolderApp: any = curItem[j];
-          let item = {
-            'container': container,
-            'app_name': bigFolderApp.appName,
-            'is_system_app': bigFolderApp.isSystemApp ? 1 : 0,
-            'is_uninstallAble': bigFolderApp.isUninstallAble ? 1 : 0,
-            'appIcon_id': bigFolderApp.appIconId,
-            'appLabel_id': bigFolderApp.appLabelId,
-            'bundle_name': bigFolderApp.bundleName,
-            'module_name': bigFolderApp.moduleName,
-            'ability_name': bigFolderApp.abilityName,
-            'key_name': bigFolderApp.bundleName + bigFolderApp.abilityName + bigFolderApp.moduleName,
-            'install_time': bigFolderApp.installTime,
-            'type_id': bigFolderApp.typeId,
-            'area': bigFolderApp.area[0] + ',' + bigFolderApp.area[1],
-            'page': bigFolderApp.page,
-            'column': bigFolderApp.column,
-            'row': bigFolderApp.row,
-          }
-
-          this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item).then(ret => {
-            if (ret === -1) {
-              result = false;
-            }
-            Log.showDebug(TAG, `insertLayoutInfo ret : ${ret}`);
-          });
+    //    try {
+    for (var i in layoutInfo) {
+      let curItem = layoutInfo[i];
+      for (let j in curItem) {
+        let bigFolderApp: any = curItem[j];
+        let item = {
+          'container': container,
+          'app_name': bigFolderApp.appName,
+          'is_system_app': bigFolderApp.isSystemApp ? 1 : 0,
+          'is_uninstallAble': bigFolderApp.isUninstallAble ? 1 : 0,
+          'appIcon_id': bigFolderApp.appIconId,
+          'appLabel_id': bigFolderApp.appLabelId,
+          'bundle_name': bigFolderApp.bundleName,
+          'module_name': bigFolderApp.moduleName,
+          'ability_name': bigFolderApp.abilityName,
+          'key_name': bigFolderApp.bundleName + bigFolderApp.abilityName + bigFolderApp.moduleName,
+          'install_time': bigFolderApp.installTime,
+          'type_id': bigFolderApp.typeId,
+          'area': bigFolderApp.area[0] + ',' + bigFolderApp.area[1],
+          'page': bigFolderApp.page,
+          'column': bigFolderApp.column,
+          'row': bigFolderApp.row,
         }
+        this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item).then(ret => {
+          if (ret === -1) {
+            result = false;
+          }
+          Log.showDebug(TAG, `insertLayoutInfo ret : ${ret}`);
+        });
       }
-
-    } catch (e) {
-      Log.showError(TAG, 'insertLayoutInfo error:' + e);
     }
+    //    } catch (e) {
+    //      Log.showError(TAG, 'insertLayoutInfo error:' + e);
+    //    }
     return result;
   }
 
