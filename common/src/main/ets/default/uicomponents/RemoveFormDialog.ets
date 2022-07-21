@@ -17,70 +17,77 @@ import { StyleConstants } from '../constants/StyleConstants';
 
 @CustomDialog
 export struct RemoveFormDialog {
+  @StorageLink('isPad') isPad: boolean = false;
+  @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
   controller: CustomDialogController;
   cancel: () => void
   confirm: () => void
-  dialogName: string
+  dialogName: string;
 
   build() {
-    Column() {
-      Row() {
-        Text(this.dialogName)
-          .width(StyleConstants.PERCENTAGE_70)
-          .fontSize(StyleConstants.DEFAULT_FORM_FONT_CONTENT_SIZE)
-          .fontWeight(StyleConstants.DEFAULT_FORM_FONT_TITLE_WEIGHT)
-      }
-      .alignItems(VerticalAlign.Center)
-      .margin({ top: StyleConstants.DEFAULT_20 })
-      Row() {
-        Text($r('app.string.remove_form_dialog_content'))
-          .width(StyleConstants.PERCENTAGE_70)
-          .fontSize(StyleConstants.DEFAULT_FORM_FONT_TITLE_SIZE)
-          .fontWeight(StyleConstants.DEFAULT_FORM_FONT_CONTENT_WEIGHT)
-      }
-      .alignItems(VerticalAlign.Center)
-      .margin({ top: StyleConstants.DEFAULT_20 })
-
-      Flex({justifyContent: FlexAlign.SpaceEvenly}) {
-        Button() {
-          Text($r('app.string.cancel'))
-            .fontSize(StyleConstants.DEFAULT_BADGE_FONT_SIZE)
-            .fontColor(StyleConstants.BUTTON_FONT_COLOR)
+    Flex({ direction: FlexDirection.Column, justifyContent: this.isPad ? FlexAlign.Center : FlexAlign.End }) {
+      Column() {
+        Row() {
+          Text(this.dialogName)
+            .width(StyleConstants.PERCENTAGE_70)
+            .fontSize(StyleConstants.DEFAULT_FORM_FONT_CONTENT_SIZE)
+            .fontWeight(StyleConstants.DEFAULT_FORM_FONT_TITLE_WEIGHT)
         }
-        .backgroundColor(StyleConstants.DEFAULT_BG_COLOR)
-        .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
-        .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
-        .onClick(() => {
-          this.controller.close();
-          this.cancel()
-        })
+        .alignItems(VerticalAlign.Center)
+        .margin({ top: StyleConstants.DEFAULT_20 })
 
-        Divider()
-          .vertical(true)
-          .color(StyleConstants.DEFAULT_DIVIDER_COLOR)
+        Row() {
+          Text($r('app.string.remove_form_dialog_content'))
+            .width(StyleConstants.PERCENTAGE_70)
+            .fontSize(StyleConstants.DEFAULT_FORM_FONT_TITLE_SIZE)
+            .fontWeight(StyleConstants.DEFAULT_FORM_FONT_CONTENT_WEIGHT)
+        }
+        .alignItems(VerticalAlign.Center)
+        .margin({ top: StyleConstants.DEFAULT_20 })
+
+        Flex({ justifyContent: FlexAlign.SpaceEvenly }) {
+          Button() {
+            Text($r('app.string.cancel'))
+              .fontSize(StyleConstants.DEFAULT_BADGE_FONT_SIZE)
+              .fontColor(StyleConstants.BUTTON_FONT_COLOR)
+          }
+          .backgroundColor(StyleConstants.DEFAULT_BG_COLOR)
           .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
+          .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
+          .onClick(() => {
+            this.controller.close();
+            this.cancel()
+          })
 
-        Button() {
-          Text($r('app.string.delete_form'))
-            .fontSize(StyleConstants.DEFAULT_BADGE_FONT_SIZE)
-            .fontColor(StyleConstants.DEFAULT_COLOR_ERROR)
+          Divider()
+            .vertical(true)
+            .color(StyleConstants.DEFAULT_DIVIDER_COLOR)
+            .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
+
+          Button() {
+            Text($r('app.string.delete_form'))
+              .fontSize(StyleConstants.DEFAULT_BADGE_FONT_SIZE)
+              .fontColor(StyleConstants.DEFAULT_COLOR_ERROR)
+          }
+          .backgroundColor(StyleConstants.DEFAULT_BG_COLOR)
+          .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
+          .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
+          .onClick(() => {
+            this.controller.close();
+            this.confirm()
+          })
         }
-        .backgroundColor(StyleConstants.DEFAULT_BG_COLOR)
-        .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
-        .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
-        .onClick(() => {
-          this.controller.close();
-          this.confirm()
-        })
       }
+      .backgroundColor(Color.White)
+      .padding({
+        bottom: StyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN
+      })
+      .border({
+        radius: StyleConstants.DEFAULT_DIALOG_RADIUS
+      })
+      .width(StyleConstants.DEFAULT_DIALOG_WIDTH)
     }
-    .backgroundColor(Color.White)
-    .padding({
-      bottom: StyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN
-    })
-    .border({
-      radius: StyleConstants.DEFAULT_DIALOG_RADIUS
-    })
-    .width(StyleConstants.DEFAULT_DIALOG_WIDTH)
+    .margin({ bottom: this.navigationBarStatusValue ? StyleConstants.DEFAULT_12 : StyleConstants.DEFAULT_40 })
+    .padding({ left: StyleConstants.DEFAULT_12, right: StyleConstants.DEFAULT_12 })
   }
 }
