@@ -566,6 +566,7 @@ export class RdbStoreManager {
             'bundle_name':element.bundleName,
             'ability_name': element.abilityName,
             'module_name': element.moduleName,
+            'key_name': "" + element.cardId,
             'card_id': element.cardId,
             'type_id': element.typeId,
             'area': element.area[0] + ',' + element.area[1],
@@ -616,7 +617,6 @@ export class RdbStoreManager {
       result = false;
       return result;
     }
-    //    try {
     for (var i in layoutInfo) {
       let curItem = layoutInfo[i];
       for (let j in curItem) {
@@ -647,9 +647,6 @@ export class RdbStoreManager {
         });
       }
     }
-    //    } catch (e) {
-    //      Log.showError(TAG, 'insertLayoutInfo error:' + e);
-    //    }
     return result;
   }
 
