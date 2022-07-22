@@ -238,7 +238,7 @@ struct HorizontalListItem {
         Log.showInfo(TAG, `onMouse MouseType: ${event.button}`);
         if (event.button == MouseButton.Right) {
           event.stopPropagation();
-          AppStorage.SetOrCreate('selectDesktopAppItem', null);
+          AppStorage.SetOrCreate('selectDesktopAppItem', '');
           this.isShow = true;
         }
       })

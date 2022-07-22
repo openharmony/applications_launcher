@@ -123,5 +123,13 @@ export default struct SwiperPage {
       left: this.mMargin,
       top: this.navigationBarStatusValue ? this.mPageDesktopStyleConfig.mDesktopMarginTop : this.mPageDesktopStyleConfig.mDesktopMarginTop + 0
     })
+    .onMouse((event: MouseEvent) => {
+      if (event.button == MouseButton.Right) {
+        AppStorage.SetOrCreate('selectDesktopAppItem', '');
+      }
+    })
+    .onClick(() => {
+      AppStorage.SetOrCreate('selectDesktopAppItem', '')
+    })
   }
 }
