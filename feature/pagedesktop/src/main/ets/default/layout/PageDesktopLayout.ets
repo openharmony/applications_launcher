@@ -173,9 +173,6 @@ export struct PageDesktopLayout {
       .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
       .width(StyleConstants.PERCENTAGE_100)
       .height(StyleConstants.PERCENTAGE_100)
-      .onClick(() => {
-        AppStorage.SetOrCreate('selectDesktopAppItem', null)
-      })
     } else {
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
         if (this.buildLog()) {
@@ -194,9 +191,6 @@ export struct PageDesktopLayout {
       .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
       .width(StyleConstants.PERCENTAGE_100)
       .height(StyleConstants.PERCENTAGE_100)
-      .onClick(() => {
-        AppStorage.SetOrCreate('selectDesktopAppItem', null)
-      })
     }
   }
 }
