@@ -15,8 +15,10 @@
  */
 
 import featureAbility from '@ohos.ability.featureAbility';
-import settings from '@ohos.settings';
+import { DataAbilityHelper } from 'ability/dataAbilityHelper';
 
+import settings from '@ohos.settings';
+import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
 /**
  * Wrapper class for settings interfaces.
  */
@@ -41,8 +43,8 @@ class SettingsDataManager {
   /**
    * Update settingData by settingDataKey.
    */
-  setValue(helper: any, settingDataKey: string, value: string): void {
-    if (helper == null || helper == undefined) {
+  setValue(helper: DataAbilityHelper, settingDataKey: string, value: string): void {
+    if (CheckEmptyUtils.isEmpty(helper)) {
       return;
     }
     settings.setValueSync(helper, settingDataKey, value);
@@ -53,8 +55,8 @@ class SettingsDataManager {
    *
    * @return settingsDataValue by settingDataKey.
    */
-  getValue(helper: any, settingDataKey: string, defaultValue: string): string {
-    if (helper == null || helper == undefined) {
+  getValue(helper: DataAbilityHelper, settingDataKey: string, defaultValue: string): string {
+    if (CheckEmptyUtils.isEmpty(helper)) {
       return '';
     }
     return settings.getValueSync(helper, settingDataKey, defaultValue);
@@ -74,8 +76,8 @@ class SettingsDataManager {
    *
    * @return settingDataHelper by settingDataUri.
    */
-  getHelper(context: any, uri: string) {
-// @ts-ignore
+  getHelper(context: any, uri: string): DataAbilityHelper{
+    // @ts-ignore api8 d.ts
     return featureAbility.acquireDataAbilityHelper(context, this.uri);
   }
 }

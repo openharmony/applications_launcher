@@ -13,7 +13,10 @@
  * limitations under the License.
  */
 
+import { AsyncCallback} from 'basic';
+import { DataAbilityHelper } from 'ability/dataAbilityHelper';
 import inputMonitor from '@ohos.multimodalInput.inputMonitor';
+
 import { Log } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { settingsDataManager } from '@ohos/common';
@@ -23,7 +26,7 @@ const TAG = 'GestureNavigationManage';
 
 export class GestureNavigationManager {
   private readonly uri: string | null = null;
-  private readonly helper: any = null;
+  private readonly helper: DataAbilityHelper = null;
   private readonly sGestureNavigationExecutors: GestureNavigationExecutors = GestureNavigationExecutors.getInstance();
   private touchEventCallback: inputMonitor.TouchEventReceiver | null = null;
 
@@ -31,7 +34,7 @@ export class GestureNavigationManager {
     this.uri = settingsDataManager.getUri(CommonConstants.NAVIGATION_BAR_STATUS_KEY);
     Log.showDebug(TAG, `constructor uri:${this.uri}`);
     this.helper = settingsDataManager.getHelper(globalThis.desktopContext, this.uri);
-    Log.showDebug(TAG, `constructor helper:${this.helper}`);
+    Log.showInfo(TAG, `constructor helper:${this.helper}`);
   }
 
   private setValue(value: string) {
@@ -46,7 +49,7 @@ export class GestureNavigationManager {
    * Monitor data changes.
    * @param callback
    */
-  private registerListenForDataChanges(callback: Function) {
+  private registerListenForDataChanges(callback: AsyncCallback<void>) {
     this.helper.on('dataChange', this.uri, callback);
   }
 

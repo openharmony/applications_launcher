@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-import Prompt from '@ohos.prompt';
 import { Log } from '@ohos/common';
 import { PinyinSort } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
@@ -76,23 +75,6 @@ export class AppListViewModel extends BaseViewModel {
     }, () => {
       AppStorage.SetOrCreate('listInfo', callbackList);
     })
-  }
-
-  public informUninstallResult(resultCode) {
-    Log.showDebug(TAG, `Launcher AppListView getUninstallApp uninstallationResult: ${resultCode}`);
-    if (resultCode === CommonConstants.UNINSTALL_FORBID) {
-      Prompt.showToast({
-        message: $r("app.string.disable_uninstall")
-      });
-    } else if (resultCode === CommonConstants.UNINSTALL_SUCCESS) {
-      Prompt.showToast({
-        message: $r("app.string.uninstall_success")
-      });
-    } else {
-      Prompt.showToast({
-        message: $r("app.string.uninstall_failed")
-      });
-    }
   }
 
   public intoSetting() {

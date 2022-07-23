@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { DataAbilityHelper } from 'ability/dataAbilityHelper';
 
 import { Log } from '../utils/Log';
 import FileUtils from '../utils/FileUtils';
@@ -41,7 +42,7 @@ export class SettingsModel {
   private mGridConfig = 1;
   private mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
   private readonly uri: string = null;
-  private readonly helper: any = null;
+  private readonly helper: DataAbilityHelper = null;
   private readonly mObserverList: SettingsModelObserver[] = [];
 
   private constructor() {

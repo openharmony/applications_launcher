@@ -1,18 +1,6 @@
 {
   "string": [
     {
-      "name": "uninstall_success",
-      "value": "卸载成功"
-    },
-    {
-      "name": "uninstall_failed",
-      "value": "卸载失败"
-    },
-    {
-      "name": "disable_uninstall",
-      "value": "禁止卸载"
-    },
-    {
       "name": "app_center_menu_add_dock",
       "value": "添加到快捷栏"
     },

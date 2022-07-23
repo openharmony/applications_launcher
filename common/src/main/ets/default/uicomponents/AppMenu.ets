@@ -23,6 +23,7 @@ const TAG = 'AppMenu';
 
 @Component
 export struct AppMenu {
+  isContextMenu: boolean = false;
   menuInfoList: Array<MenuInfo> = new Array<MenuInfo>();
   getMenuInfoList: Function;
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
@@ -63,6 +64,7 @@ export struct AppMenu {
             HorizontalMenuItem({
               menuInfo: item,
               menuMode: this.menuMode,
+              isContextMenu: this.isContextMenu,
             })
           }
         }, item => JSON.stringify(item))
@@ -82,6 +84,7 @@ export struct AppMenu {
             HorizontalMenuItem({
               menuInfo: item,
               menuMode: this.menuMode,
+              isContextMenu: this.isContextMenu
             })
           }
         }, item => JSON.stringify(item))
@@ -102,6 +105,7 @@ export struct AppMenu {
 struct HorizontalMenuItem {
   @State shortcutIcon: string = StyleConstants.DEFAULT_ICON;
   @State shortcutName: string = "";
+  isContextMenu: boolean;
   private mResourceManager;
   menuInfo: MenuInfo;
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
@@ -175,7 +179,9 @@ struct HorizontalMenuItem {
     .width(235)
     .onClick(() => {
       this.menuInfo.onMenuClick();
-      ContextMenu.close();
+      if (this.isContextMenu) {
+        ContextMenu.close();
+      }
     })
   }
 }
