@@ -908,28 +908,6 @@ export default class PageDesktopViewModel extends BaseViewModel {
   }
 
   /**
-   * The application uninstallation result is displayed.
-   *
-   * @param resultCode: Application uninstallation result
-   */
-  informUninstallResult(resultCode) {
-    Log.showInfo(TAG, 'informUninstallResult resultCode = ' + resultCode);
-    if (resultCode === CommonConstants.UNINSTALL_FORBID) {
-      Prompt.showToast({
-        message: $r('app.string.disable_uninstall')
-      });
-    } else if (resultCode === CommonConstants.UNINSTALL_SUCCESS) {
-      Prompt.showToast({
-        message: $r('app.string.uninstall_success')
-      });
-    } else {
-      Prompt.showToast({
-        message: $r('app.string.uninstall_failed')
-      });
-    }
-  }
-
-  /**
    * Open the app.
    *
    * @param abilityName

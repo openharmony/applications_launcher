@@ -39,6 +39,18 @@
     {
       "name": "gesture_navigation_options",
       "value": "手势导航开关"
+    },
+    {
+      "name": "uninstall_success",
+      "value": "卸载成功"
+    },
+    {
+      "name": "uninstall_failed",
+      "value": "卸载失败"
+    },
+    {
+      "name": "disable_uninstall",
+      "value": "禁止卸载"
     }
   ]
 }

@@ -266,12 +266,12 @@ export class CommonConstants {
   /**
    * form config ability prefix
    */
-  static FORM_CONFIG_ABILITY_PREFIX = 'ability://';
+  static FORM_CONFIG_ABILITY_PREFIX: string = 'ability://';
 
   /**
    * navigationbar status settingDataKey.
    */
-  static NAVIGATION_BAR_STATUS_KEY = 'settings.display.navigationbar_status';
+  static NAVIGATION_BAR_STATUS_KEY: string = 'settings.display.navigationbar_status';
 
   /**
    * setting data ability uri

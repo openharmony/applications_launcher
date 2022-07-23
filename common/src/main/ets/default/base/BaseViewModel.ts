@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import Prompt from '@ohos.prompt';
 import { Log } from '../utils/Log';
 import { AppModel } from '../model/AppModel';
 import { ResourceManager } from '../manager/ResourceManager';
@@ -100,6 +101,20 @@ const KEY_NAME = 'name';
   }
 
   informUninstallResult(resultCode: number): void {
+      Log.showDebug(TAG, `Launcher AppListView getUninstallApp uninstallationResult: ${resultCode}`);
+    if (resultCode === CommonConstants.UNINSTALL_FORBID) {
+      Prompt.showToast({
+        message: $r("app.string.disable_uninstall")
+      });
+    } else if (resultCode === CommonConstants.UNINSTALL_SUCCESS) {
+      Prompt.showToast({
+        message: $r("app.string.uninstall_success")
+      });
+    } else {
+      Prompt.showToast({
+        message: $r("app.string.uninstall_failed")
+      });
+    }
   }
 
   getAppName(cacheKey: string) {

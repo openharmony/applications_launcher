@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-import Prompt from '@ohos.prompt';
 import { Log } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
@@ -264,28 +263,6 @@ export default class SmartDockViewModel extends BaseViewModel {
       width = this.mSmartDockStyleConfig.mDockPadding * 2 + num * (this.mSmartDockStyleConfig.mListItemWidth) + (num - 1) * (this.mSmartDockStyleConfig.mListItemGap);
     }
     return width;
-  }
-
-  /**
-   * The application uninstallation result is displayed.
-   *
-   * @param resultCode: Application uninstallation result
-   */
-  informUninstallResult(resultCode) {
-    Log.showDebug(TAG, 'informUninstallResult resultCode:' + resultCode);
-    if (resultCode === CommonConstants.UNINSTALL_FORBID) {
-      Prompt.showToast({
-        message: $r('app.string.disable_uninstall')
-      });
-    } else if (resultCode === CommonConstants.UNINSTALL_SUCCESS) {
-      Prompt.showToast({
-        message: $r('app.string.uninstall_success')
-      });
-    } else {
-      Prompt.showToast({
-        message: $r('app.string.uninstall_failed')
-      });
-    }
   }
 
   /**

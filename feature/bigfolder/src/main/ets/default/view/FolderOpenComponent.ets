@@ -485,9 +485,10 @@ struct FolderAppItem {
           this.mFolderInfo = mBigFolderViewModel.deleteAppFromOpenFolder(this.appInfo);
         } else {
           mBigFolderViewModel.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
-          if (this.appInfo.isUninstallAble) {
-            this.mFolderInfo = mBigFolderViewModel.deleteAppFromOpenFolder(this.appInfo);
+          if (!this.appInfo.isUninstallAble) {
+            return;
           }
+          this.mFolderInfo = mBigFolderViewModel.deleteAppFromOpenFolder(this.appInfo);
         }
         mBigFolderViewModel.refreshFolder(this.mFolderInfo);
         localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
