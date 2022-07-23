@@ -37,7 +37,7 @@ export struct UninstallDialog {
   private mLayoutViewModel: LayoutViewModel;
 
   private async updateScreenSize() {
-    this.mUninstallDialogWidth = this.mLayoutViewModel.getUninstallDialogWidth();
+    this.mUninstallDialogWidth = this.mLayoutViewModel.getCommonDialogWidth();
   }
 
   private mResourceManager;
@@ -68,17 +68,6 @@ export struct UninstallDialog {
 
   build() {
     Flex({ direction: FlexDirection.Column, justifyContent: this.isPad ? FlexAlign.Center : FlexAlign.End }) {
-      Stack() {
-        Column() {
-
-        }
-        .blur(StyleConstants.DEFAULT_40)
-        .width(this.mUninstallDialogWidth)
-        .height(StyleConstants.PIXEL_200)
-        .border({
-          radius: StyleConstants.DEFAULT_24
-        })
-
         Column() {
           Image(this.icon).width(StyleConstants.DEFAULT_APP_ITEM_HEIGHT).height(StyleConstants.DEFAULT_APP_ITEM_HEIGHT)
 
@@ -124,8 +113,8 @@ export struct UninstallDialog {
             })
           }
         }
-        .backgroundColor(Color.White)
-        .opacity(0.85)
+        .backgroundColor($r("app.color.default_dialog_background"))
+        .backgroundBlurStyle(BlurStyle.Regular)
         .padding({
           top: StyleConstants.DEFAULT_24,
           bottom: StyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN
@@ -135,7 +124,6 @@ export struct UninstallDialog {
         })
         .width(this.mUninstallDialogWidth)
       }
-    }
     .margin({ bottom: this.navigationBarStatusValue ? StyleConstants.DEFAULT_12 : StyleConstants.DEFAULT_40 })
     .padding({ left: StyleConstants.DEFAULT_12, right: StyleConstants.DEFAULT_12 })
   }

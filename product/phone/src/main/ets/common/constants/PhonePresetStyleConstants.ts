@@ -18,9 +18,9 @@ export default class PhonePresetStyleConstants {
 
   static readonly DEFAULT_PERCENTAGE = '100%';
   /**
-   * UninstallDialog width
+   * CommonDialog width
    */
-  static readonly DEFAULT_UNINSTALLDIALOG_WIDTH = '100%';
+  static readonly DEFAULT_COMMONDIALOG_WIDTH = '100%';
 
   /**
    * systemUI top height

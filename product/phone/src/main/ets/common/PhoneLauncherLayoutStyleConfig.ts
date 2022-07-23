@@ -24,9 +24,9 @@ import PhonePresetStyleConstants from './constants/PhonePresetStyleConstants';
 export default class PhoneLauncherLayoutStyleConfig extends LauncherLayoutStyleConfig {
 
   /**
-   * UninstallDialog width
+   * CommonDialog width
    */
-  mUninstallDialogWidth = PhonePresetStyleConstants.DEFAULT_UNINSTALLDIALOG_WIDTH;
+  mCommonDialogWidth = PhonePresetStyleConstants.DEFAULT_COMMONDIALOG_WIDTH;
 
   /**
    * systemUI top height

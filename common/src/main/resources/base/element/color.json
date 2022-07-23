@@ -23,6 +23,10 @@
     {
       "name": "menu_text_color_light",
       "value": "#e5000000"
+    },
+    {
+      "name": "default_dialog_background",
+      "value": "#D9FFFFFF"
     }
   ]
 }

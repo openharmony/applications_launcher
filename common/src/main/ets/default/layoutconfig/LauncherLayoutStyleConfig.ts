@@ -26,9 +26,9 @@ export class LauncherLayoutStyleConfig extends ILayoutConfig {
   static LAUNCHER_PRODUCT_STYLE_CONFIG: string = 'launcherStyleProduct';
 
   /**
-     * UninstallDialog width
+     * CommonDialogWidth width
    */
-  mUninstallDialogWidth = PresetStyleConstants.DEFAULT_UNINSTALLDIALOG_WIDTH;
+  mCommonDialogWidth = PresetStyleConstants.DEFAULT_COMMONDIALOG_WIDTH;
 
   /**
    * systemUI top height

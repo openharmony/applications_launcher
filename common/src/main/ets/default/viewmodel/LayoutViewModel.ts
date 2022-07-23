@@ -48,7 +48,7 @@ export class LayoutViewModel {
   private mDesktopNameSize: number | undefined;
   private mDesktopFolderSize: number | undefined;
   private mGridRealHeight: number | undefined;
-  private mUninstallDialogWidth = '';
+  private mCommonDialogWidth = '';
 
   private constructor() {
     Log.showInfo(TAG, 'constructor');
@@ -97,7 +97,7 @@ export class LayoutViewModel {
     Log.showInfo(TAG, `initScreen SysUIBottomHeight: ${this.mSysUIBottomHeight},
       IndicatorHeight: ${this.mIndicatorHeight}, SysUITopHeight: ${this.mSysUITopHeight},
       SysUIBottomHeight: ${this.mSysUIBottomHeight}`);
-    this.mUninstallDialogWidth = this.mLauncherLayoutStyleConfig.mUninstallDialogWidth;
+    this.mCommonDialogWidth = this.mLauncherLayoutStyleConfig.mCommonDialogWidth;
   }
 
   /**
@@ -129,8 +129,8 @@ export class LayoutViewModel {
   /**
   * get UninstallDialogWidth
   */
-  getUninstallDialogWidth(): string {
-    return this.mUninstallDialogWidth;
+  getCommonDialogWidth(): string {
+    return this.mCommonDialogWidth;
   }
 
   /**
