@@ -17,9 +17,9 @@ export default class PadPresetStyleConstants {
   //----------- desktop layout-------------
 
   /**
-   * UninstallDialog width
+   * CommonDialog width
    */
-  static readonly DEFAULT_UNINSTALLDIALOG_WIDTH = '395vp';
+  static readonly DEFAULT_COMMONDIALOG_WIDTH = '395vp';
 
   /**
    * systemUI top height

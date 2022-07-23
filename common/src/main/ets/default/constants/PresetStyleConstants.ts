@@ -16,9 +16,9 @@ export class PresetStyleConstants {
   //----------- default constants----------
 
   /**
-    * UninstallDialog width
+    * CommonDialog width
    */
-  static readonly DEFAULT_UNINSTALLDIALOG_WIDTH = '';
+  static readonly DEFAULT_COMMONDIALOG_WIDTH = '';
 
   /**
    * systemUI top height
