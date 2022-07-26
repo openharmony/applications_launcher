@@ -404,6 +404,12 @@ export class RdbStoreManager {
     return result;
   }
 
+  /**
+   * 1.clear table content
+   * 2.updata table
+   *
+   * @param tableName
+   */
   async deleteTable(tableName: string): Promise<void> {
     Log.showInfo(TAG, 'deleteTable start');
     try {
@@ -414,6 +420,24 @@ export class RdbStoreManager {
       Log.showInfo(TAG, 'deleteTable end');
     } catch (e) {
       Log.showError(TAG, `deleteTable err: ${e}`);
+    }
+  }
+
+  /**
+   * 1.deleta table
+   * 2.create table
+   *
+   * @param tableName
+   */
+  async dropTable(tableName: string): Promise<void> {
+    Log.showInfo(TAG, 'dropTable start');
+    try {
+      let dropSql = `DROP TABLE ${tableName};`
+      await this.mRdbStore.executeSql(dropSql, function () {});
+      await this.mRdbStore.executeSql(RdbStoreConfig.GridLayoutInfo.CREATE_TABLE, []);
+      Log.showInfo(TAG, 'dropTable end');
+    } catch (e) {
+      Log.showError(TAG, `dropTable err: ${e}`);
     }
   }
 
@@ -537,7 +561,7 @@ export class RdbStoreManager {
     try {
       this.mRdbStore.beginTransaction();
       // delete gridlayoutinfo table
-      await this.deleteTable(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
+      await this.dropTable(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
       // insert into gridlayoutinfo
       let layoutinfo: any[] = gridlayoutinfo.layoutInfo;
       for (let i in layoutinfo) {
@@ -637,8 +661,9 @@ export class RdbStoreManager {
           'area': bigFolderApp.area[0] + ',' + bigFolderApp.area[1],
           'page': bigFolderApp.page,
           'column': bigFolderApp.column,
-          'row': bigFolderApp.row,
+          'row': bigFolderApp.row
         }
+        Log.showDebug(TAG, `insertLayoutInfo element is ${JSON.stringify(item)}`);
         this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item).then(ret => {
           if (ret === -1) {
             result = false;
