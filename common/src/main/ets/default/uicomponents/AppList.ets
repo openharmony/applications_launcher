@@ -196,8 +196,7 @@ struct HorizontalListItem {
   @Builder MenuBuilder() {
     Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
       AppMenu({
-        menuInfoList: this.menuInfo,
-        isContextMenu: false
+        menuInfoList: this.menuInfo
       })
     }
     .width(StyleConstants.CONTEXT_MENU_WIDTH)
