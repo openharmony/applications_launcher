@@ -156,7 +156,6 @@ export class BigFolderViewModel extends BaseViewModel {
 
     // Push folder into the layoutInfo,include {the app list}
     gridLayoutInfo.layoutInfo.push(folderInfo);
-    this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
     this.deleteAppLayoutItems(gridLayoutInfo, appLayoutInfo);
     if (needNewPage) {
       globalThis.PageDesktopViewModel.changeIndex(globalThis.PageDesktopViewModel.getIndex() + 1);
