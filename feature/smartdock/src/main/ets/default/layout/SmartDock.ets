@@ -91,7 +91,7 @@ export default struct SmartDock {
     if (this.device === CommonConstants.PAD_DEVICE_TYPE) {
       this.mSmartDockViewModel.deleteDockItem(this.mSelectedItem.bundleName, this.mSelectedDockType);
     } else {
-      this.mSmartDockViewModel.uninstallApp(this.mSelectedItem.bundleName, this.mSelectedItem.bundleName.isUninstallAble);
+      this.mSmartDockViewModel.uninstallApp(this.mSelectedItem.bundleName, this.mSelectedItem.isUninstallAble);
     }
     this.mDialogController.close();
   }
