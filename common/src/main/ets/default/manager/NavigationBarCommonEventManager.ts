@@ -29,7 +29,7 @@ const TAG = 'NavigationBarCommonEventManager';
  * Wrapper class for NavigationBarCommonEvent interfaces.
  */
 class NavigationBarCommonEventManager {
-    private static NAVIGATION_BAR_HIDE = 'systemui_navigationBar_hide';
+    private static NAVIGATION_BAR_HIDE = 'systemui.event.NAVIGATIONBAR_HIDE';
     private static subscriber: CommonEventSubscriber;
     private static eventCallback: AsyncCallback<CommonEventData>;
 

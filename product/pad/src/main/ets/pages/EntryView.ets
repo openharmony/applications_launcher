@@ -107,8 +107,6 @@ struct EntryView {
       AppStorage.SetOrCreate('screenHeight', this.screenHeight);
     } catch (error) {
       Log.showError(TAG, `getWindowWidth or getWindowHeight error: ${error}`);
-      AppStorage.SetOrCreate('screenWidth', 0);
-      AppStorage.SetOrCreate('screenHeight', 0);
     }
   }
 
