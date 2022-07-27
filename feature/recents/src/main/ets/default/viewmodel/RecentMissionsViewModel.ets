@@ -15,7 +15,7 @@
 
 import { Log } from '@ohos/common';
 import { windowManager } from '@ohos/common';
-import { amsMissionManager }from '@ohos/common';
+import { amsMissionManager } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
 import { RecentMissionInfo } from '@ohos/common';
 import { RecentMissionsModel } from '@ohos/common';
@@ -37,7 +37,7 @@ export class RecentMissionsViewModel {
     this.mRecentMissionsModel = RecentMissionsModel.getInstance();
     let config = layoutConfigManager.getModeConfig(RecentModeFeatureConfig.RECENT_MISSIONS_MODE_CONFIG);
     if (config instanceof RecentModeFeatureConfig) {
-      this.mRecentModeFeatureConfig = <RecentModeFeatureConfig>config;
+      this.mRecentModeFeatureConfig = <RecentModeFeatureConfig> config;
       this.mRecentMissionsLimit = this.mRecentModeFeatureConfig.getRecentMissionsLimit();
     }
   }
@@ -48,26 +48,6 @@ export class RecentMissionsViewModel {
    */
   private async deleteRecentMissions(): Promise<void> {
     await amsMissionManager.clearAllMissions();
-  }
-
-  /**
-   * Set lock mission state into amsMissionManager.
-   *
-   * @param {number} missionId
-   */
-  private async lockMission(missionId: number): Promise<void> {
-    Log.showDebug(TAG, 'lockMission start');
-    await amsMissionManager.lockMission(missionId);
-  }
-
-  /**
-   * Set unlock mission state into amsMissionManager.
-   *
-   * @param {number} missionId
-   */
-  private async unlockMission(missionId: number): Promise<void> {
-    Log.showDebug(TAG, 'unlockMission start');
-    await amsMissionManager.unlockMission(missionId);
   }
 
   /**
@@ -123,12 +103,7 @@ export class RecentMissionsViewModel {
     Log.showDebug(TAG, `deleteRecentMissions missionId: ${missionId}`);
     if (!isClickDelBtn && missionId != -1) {
       await amsMissionManager.clearMission(missionId);
-      for (let iRecentMissionsIndex = 0; iRecentMissionsIndex < this.mRecentMissionsList.length; iRecentMissionsIndex++) {
-        if (this.mRecentMissionsList[iRecentMissionsIndex].missionId === missionId) {
-          this.mRecentMissionsList.splice(iRecentMissionsIndex, 1);
-          break;
-        }
-      }
+      this.mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
     } else {
       this.mRecentMissionsList = [];
       AppStorage.SetOrCreate('recentMissionsList', this.mRecentMissionsList);
@@ -147,7 +122,7 @@ export class RecentMissionsViewModel {
     }, () => {
       AppStorage.SetOrCreate('recentMissionsList', this.mRecentMissionsList);
     });
-    if(this.mRecentMissionsList.length == 0) {
+    if (this.mRecentMissionsList.length == 0) {
       this.terminateRecentIfAllClear();
     }
   }
@@ -158,12 +133,11 @@ export class RecentMissionsViewModel {
    * @param {string} missionId - The missionId of current recent mission.
    * @param {boolean} lockedState - The lockedState of current recent mission.
    */
-  async setRecentMissionLock(missionId: number, lockedState: boolean): Promise<void> {
-    Log.showDebug(TAG, `setRecentMissionLock missionId: ${missionId}, lockedState: ${String(lockedState)}`);
+  setRecentMissionLock(missionId: number, lockedState: boolean): void {
     if (lockedState) {
-      void this.lockMission(missionId);
+      amsMissionManager.lockMission(missionId);
     } else {
-      void this.unlockMission(missionId);
+      amsMissionManager.unlockMission(missionId);
     }
   }
 

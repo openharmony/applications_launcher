@@ -15,7 +15,7 @@
 import image from '@ohos.multimedia.image';
 import { Log } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
-import { windowManager } from  '@ohos/common';
+import { windowManager } from '@ohos/common';
 import { SnapShotInfo } from '@ohos/common';
 import RecentMissionAppIcon from './RecentMissionAppIcon';
 import RecentMissionAppName from './RecentMissionAppName';
@@ -44,7 +44,6 @@ export default struct RecentMissionCard {
   @State recentImage: any = RecentsStyleConstants.DEFAULT_APP_IMAGE;
   private mIsSingleLayout: boolean = true;
   private snapShotTime: string = '';
-
   private mRecentMissionsViewModel: RecentMissionsViewModel;
 
   aboutToAppear(): void {
@@ -65,7 +64,7 @@ export default struct RecentMissionCard {
     Log.showDebug(TAG, `typeof this.recentImage ${typeof this.recentImage}`);
     // typeof Resource or pixelMap is Object
     if (!CheckEmptyUtils.isEmpty(this.recentImage)
-      && JSON.stringify(this.recentImage) != JSON.stringify(RecentsStyleConstants.DEFAULT_APP_IMAGE)) {
+    && JSON.stringify(this.recentImage) != JSON.stringify(RecentsStyleConstants.DEFAULT_APP_IMAGE)) {
       this.recentImage.release().catch((err) => {
         Log.showError(TAG, `image.PixelMap release err: ${err}`);
       })
@@ -117,9 +116,10 @@ export default struct RecentMissionCard {
         }
         .layoutWeight(this.cardLayoutWeight)
         .margin({ left: RecentsStyleConstants.SINGLE_LIST_APP_INFO_LEFT_MARGIN })
+
         Column() {
           Image(RecentsStyleConstants.DEFAULT_LOCKED_IMAGE)
-            .visibility(this.lockedState? Visibility.Visible: Visibility.Hidden)
+            .visibility(this.lockedState ? Visibility.Visible : Visibility.Hidden)
             .width(this.mIsSingleLayout ?
               RecentsStyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE_NEW :
               RecentsStyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE - 10)
@@ -127,27 +127,27 @@ export default struct RecentMissionCard {
               RecentsStyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE_NEW :
               RecentsStyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE - 10)
             .margin({
-              right: this.mIsSingleLayout ? (RecentsStyleConstants.SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN):(RecentsStyleConstants.DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN)
+              right: this.mIsSingleLayout ? (RecentsStyleConstants.SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN) : (RecentsStyleConstants.DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN)
             })
             .onClick(() => {
               this.isClickSubComponent = true;
-              this.lockedState = !this.lockedState;
-              Log.showDebug(TAG, `onClick set recent mission Locked status: ${this.lockedState}`);
-              this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId, this.lockedState);
+              Log.showDebug(TAG, `click set recent mission: ${this.missionId} Locked status: ${!this.lockedState}`);
+              this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId,!this.lockedState);
               this.isClickSubComponent = false;
             })
         }
       }
       .margin({
-        top: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_INFO_TOP_MARGIN :  RecentsStyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN,
-        bottom: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_INFO_BOTTOM_MARGIN :  RecentsStyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN
+        top: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_INFO_TOP_MARGIN : RecentsStyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN,
+        bottom: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_INFO_BOTTOM_MARGIN : RecentsStyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN
       })
+
       Image(this.recentImage)
         .alt(RecentsStyleConstants.DEFAULT_APP_IMAGE)
         .objectFit(ImageFit.Contain)
         .borderRadius(RecentsStyleConstants.RECENT_IMAGE_RADIUS)
         .width(this.mIsSingleLayout ?
-          RecentsStyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH  :
+          RecentsStyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH :
           RecentsStyleConstants.DOUBLE_LIST_APP_IMAGE_WIDTH)
         .height(this.mIsSingleLayout ?
           RecentsStyleConstants.SINGLE_LIST_APP_IMAGE_HEIGHT :
@@ -178,9 +178,8 @@ export default struct RecentMissionCard {
         if (e.offsetY < -50 && e.offsetX <= offsetWidth && -offsetWidth <= e.offsetX) {
           this.mRecentMissionsViewModel.deleteRecentMission(false, this.missionId);
         } else if (e.offsetY > 50 && e.offsetX <= offsetWidth && -offsetWidth <= e.offsetX) {
-          this.lockedState = !this.lockedState;
-          Log.showDebug(TAG, `gesture set recent mission Locked status: ${this.lockedState}`);
-          this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId, this.lockedState);
+          Log.showDebug(TAG, `gesture set recent mission: ${this.missionId} Locked status: ${!this.lockedState}`);
+          this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId,!this.lockedState);
         }
       }))
   }

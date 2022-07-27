@@ -32,6 +32,8 @@ const TAG = 'AmsMissionManager';
  */
 class AmsMissionManager {
   private static readonly RECENT_MISSIONS_LIMIT_NUM = 20;
+  private mMissionId: number;
+  private mLockState: boolean;
 
   static getInstance(): AmsMissionManager {
     Log.showDebug(TAG, 'getInstance');
@@ -176,15 +178,11 @@ class AmsMissionManager {
    *
    * @param missionId mission id to lock.
    */
-  async lockMission(missionId: number): Promise<void> {
+  lockMission(missionId: number): void {
     Log.showInfo(TAG, `lockMission start! missionId: ${missionId}`);
-    await missionManager.lockMission(missionId)
-      .then((data) => {
-        Log.showInfo(TAG, `lockMission data: ${JSON.stringify(data)}`);
-      })
-      .catch((err) => {
-        Log.showError(TAG, `lockMission err: ${JSON.stringify(err)}`);
-      });
+    this.mMissionId = missionId;
+    this.mLockState = true;
+    missionManager.lockMission(missionId, this.lockCallback.bind(this));
   }
 
   /**
@@ -192,16 +190,22 @@ class AmsMissionManager {
    *
    * @param missionId mission id to unlock.
    */
-  async unlockMission(missionId: number): Promise<void> {
+  unlockMission(missionId: number): void {
     Log.showInfo(TAG, `unlockMission start! missionId: ${missionId}`);
-    await missionManager.unlockMission(missionId)
-      .then((data) => {
-        Log.showInfo(TAG, `unlockMission data: ${JSON.stringify(data)}`);
-      })
-      .catch((err) => {
-        Log.showError(TAG, `unlockMission err: ${JSON.stringify(err)}`);
-      });
+    this.mMissionId = missionId;
+    this.mLockState = false;
+    missionManager.unlockMission(missionId, this.lockCallback.bind(this));
   }
+
+  private async lockCallback(): Promise<void> {
+    Log.showInfo(TAG, `lockCallback start`);
+    // update mission recent card
+    let mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
+    mRecentMissionsList.find(item => {
+      return item.missionId === this.mMissionId;
+    }).lockedState = this.mLockState;
+    AppStorage.SetOrCreate('recentMissionsList', mRecentMissionsList);
+  };
 
   /**
    * Get recent mission snapshot info
@@ -242,7 +246,7 @@ class AmsMissionManager {
    */
   async moveMissionToFront(missionId: number, winMode?: number) {
     Log.showInfo(TAG, `moveMissionToFront missionId:  ${missionId}`);
-    let promise = winMode ? missionManager.moveMissionToFront(missionId, {windowMode : winMode}):
+    let promise = winMode ? missionManager.moveMissionToFront(missionId, { windowMode: winMode }) :
     missionManager.moveMissionToFront(missionId);
     const res = await promise.catch(err => {
       Log.showError(TAG, `moveMissionToFront err: ${JSON.stringify(err)}`);
