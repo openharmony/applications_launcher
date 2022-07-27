@@ -113,8 +113,6 @@ struct EntryView {
       AppStorage.SetOrCreate('screenHeight', this.screenHeight);
     } catch (error) {
       Log.showError(TAG, `getWindowWidth or getWindowHeight error: ${error}`);
-      AppStorage.SetOrCreate('screenWidth', 0);
-      AppStorage.SetOrCreate('screenHeight', 0);
     }
   }
 
@@ -146,8 +144,6 @@ struct EntryView {
             setTimeout(() => {
               SettingsModel.getInstance().setValue(this.navigationBarStatus);
             }, 50)
-          } else {
-            SettingsModel.getInstance().setValue(this.navigationBarStatus);
           }
         })
         .height(this.dockHeight)

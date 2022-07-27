@@ -209,7 +209,11 @@ export default class SettingsPresenter {
       Log.showDebug(TAG, 'setValue error');
       return;
     }
-    localEventManager.sendLocalEventSticky(EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE, value);
+    if (value == '0') {
+      this.mSettingsModel.setValue(value);
+    } else {
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE, value);
+    }
   }
 
   initNavigationBarStatusValue() {

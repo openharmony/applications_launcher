@@ -176,9 +176,7 @@ struct EntryView {
           if (this.navigationBarStatus == "1") {
             setTimeout(() => {
               SettingsModel.getInstance().setValue(this.navigationBarStatus);
-            }, 50)
-          } else {
-            SettingsModel.getInstance().setValue(this.navigationBarStatus);
+            }, 30)
           }
         })
         .height(this.dockHeight)

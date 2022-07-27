@@ -21,6 +21,7 @@ import { windowManager } from '@ohos/common';
 import { RdbStoreManager } from '@ohos/common';
 import { GestureNavigationManager } from '@ohos/gesturenavigation';
 import StyleConstants from '../common/constants/StyleConstants';
+import { navigationBarCommonEventManager }  from '@ohos/common';
 
 const TAG = 'LauncherMainAbility';
 
@@ -46,7 +47,7 @@ export default class MainAbility extends ServiceExtension {
     await dbStore.createTable();
 
     windowManager.registerWindowEvent();
-
+    navigationBarCommonEventManager.registerNavigationBarEvent();
     // create Launcher entry view
     windowManager.createWindow(globalThis.desktopContext, windowManager.DESKTOP_WINDOW_NAME,
       windowManager.DESKTOP_RANK, 'pages/' + windowManager.DESKTOP_WINDOW_NAME);
@@ -81,6 +82,7 @@ export default class MainAbility extends ServiceExtension {
 
   onDestroy(): void {
     windowManager.unregisterWindowEvent();
+    navigationBarCommonEventManager.unregisterNavigationBarEvent();
     windowManager.destroyWindow(windowManager.DESKTOP_WINDOW_NAME);
     windowManager.destroyRecentWindow();
     windowManager.destroyWindow(windowManager.APP_CENTER_WINDOW_NAME);

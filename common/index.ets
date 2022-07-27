@@ -52,6 +52,7 @@ export { InputMethodManager }  from './src/main/ets/default/manager/InputMethodM
 export { settingsDataManager }  from './src/main/ets/default/manager/SettingsDataManager'
 export { layoutConfigManager }  from './src/main/ets/default/layoutconfig/LayoutConfigManager'
 export { launcherAbilityManager }  from './src/main/ets/default/manager/LauncherAbilityManager'
+export { navigationBarCommonEventManager }  from './src/main/ets/default/manager/NavigationBarCommonEventManager'
 export { ILayoutConfig }  from './src/main/ets/default/layoutconfig/ILayoutConfig'
 export { FormLayoutConfig }  from './src/main/ets/default/layoutconfig/FormLayoutConfig'
 export { FolderLayoutConfig }  from './src/main/ets/default/layoutconfig/FolderLayoutConfig'
