@@ -57,7 +57,6 @@ export struct RecentMissionsDoubleLayout {
                   snapShotTime: item.snapShotTime
                 })
               }
-              .height(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
               .align(Alignment.Center)
           },(item) => JSON.stringify(item))
         }
@@ -67,7 +66,10 @@ export struct RecentMissionsDoubleLayout {
         .columnsGap(RecentsStyleConstants.DOUBLE_LIST_LAYOUT_COLUMNSGAP)
         .rowsGap(RecentsStyleConstants.DOUBLE_LIST_LAYOUT_ROWSGAP)
       }
-      .margin({top: RecentsStyleConstants.DOUBLE_LIST_TOP_MARGIN})
+      .margin({
+        top: RecentsStyleConstants.DOUBLE_LIST_TOP_MARGIN,
+        left: RecentsStyleConstants.DOUBLE_LIST_LEFT_MARGIN
+      })
       .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
       .height(RecentsStyleConstants.DOUBLE_LIST_GRID_HEIGHT_PERCENTAGE)
 
