@@ -167,7 +167,6 @@ export default struct RecentMissionCard {
     .height(this.mIsSingleLayout ?
       RecentsStyleConstants.SINGLE_LIST_MISSION_HEIGHT :
       RecentsStyleConstants.DOUBLE_LIST_MISSION_HEIGHT)
-    .margin({ right: this.mIsSingleLayout ? 0 : this.cardMargin })
     .backgroundColor(RecentsStyleConstants.DEFAULT_BG_COLOR)
     .gesture(
     PanGesture({ fingers: 1, direction: PanDirection.Vertical, distance: 5 })
