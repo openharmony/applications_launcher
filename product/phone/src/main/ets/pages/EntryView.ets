@@ -154,15 +154,15 @@ struct EntryView {
           }
           .height(this.workSpaceHeight)
           Column() {
-            SmartDock()
+            SmartDock();
           }
           .height(this.dockHeight)
         } else {
           AppListLayout();
         }
       }
-      FolderOpenComponent()
-      CustomOverlay()
+      FolderOpenComponent();
+      CustomOverlay();
     }
     .backgroundImage(StyleConstants.DEFAULT_BACKGROUND_IMAGE)
     .backgroundImageSize(ImageSize.Cover)
