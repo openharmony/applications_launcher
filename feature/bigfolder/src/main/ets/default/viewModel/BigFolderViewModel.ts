@@ -1174,10 +1174,8 @@ export class BigFolderViewModel extends BaseViewModel {
     for (let i = 0; i < layoutInfo.length; i++) {
       if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
         let folderAppList = this.layoutInfoToList(layoutInfo[i]);
-        for (let m = 0; m < folderAppList.length; m++) {
-          folderAppList = folderAppList.filter(item => item.bundleName != bundleName);
-          this.updateFolderInfo(folderAppList, gridLayoutInfo, i);
-        }
+        folderAppList = folderAppList.filter(item => item.bundleName != bundleName);
+        this.updateFolderInfo(folderAppList, gridLayoutInfo, i);
       }
     }
     Log.showDebug(TAG, 'deleteAppFromFolderByUninstall end');
