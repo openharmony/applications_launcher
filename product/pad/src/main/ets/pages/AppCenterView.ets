@@ -68,7 +68,7 @@ struct AppCenterView {
   onBackPress(): boolean {
     Log.showInfo(TAG, `onBackPress`);
     AppStorage.SetOrCreate('selectDesktopAppItem', '');
-    windowManager.hideWindow(windowManager.APP_CENTER_WINDOW_NAME);
+    windowManager.destroyWindow(windowManager.APP_CENTER_WINDOW_NAME);
     return true;
   }
 

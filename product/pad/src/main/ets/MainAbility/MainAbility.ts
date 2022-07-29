@@ -52,11 +52,8 @@ export default class MainAbility extends ServiceExtension {
     windowManager.createWindow(globalThis.desktopContext, windowManager.DESKTOP_WINDOW_NAME,
       windowManager.DESKTOP_RANK, 'pages/' + windowManager.DESKTOP_WINDOW_NAME);
 
-    // load recent and AppCenter
+    // load recent
     windowManager.createRecentWindow();
-
-    windowManager.createWindow(globalThis.desktopContext, windowManager.APP_CENTER_WINDOW_NAME,
-      windowManager.DESKTOP_RANK, 'pages/' + windowManager.APP_CENTER_WINDOW_NAME, false);
   }
 
   private initGlobalConst(): void {
@@ -93,7 +90,7 @@ export default class MainAbility extends ServiceExtension {
     Log.showInfo(TAG,`onRequest, want: ${want.abilityName}`);
     windowManager.minimizeAllApps();
     windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
-    windowManager.hideWindow(windowManager.APP_CENTER_WINDOW_NAME);
+    windowManager.destroyWindow(windowManager.APP_CENTER_WINDOW_NAME);
     this.closeFolder();
     this.closeRecentDockPopup();
   }
