@@ -90,7 +90,7 @@ struct AppCenterView {
             top: StyleConstants.DEFAULT_28
           })
         }
-        .height(this.workSpaceHeight)
+        .height(this.workSpaceHeight) 
 
         Column() {
           SmartDock({
