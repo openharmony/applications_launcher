@@ -51,7 +51,7 @@ export default class MainAbility extends ServiceExtension {
     windowManager.createWindow(globalThis.desktopContext, windowManager.DESKTOP_WINDOW_NAME,
       windowManager.DESKTOP_RANK, 'pages/' + windowManager.DESKTOP_WINDOW_NAME);
 
-    // load recent and AppCenter
+    // load recent
     windowManager.createRecentWindow();
   }
 
