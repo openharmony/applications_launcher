@@ -135,20 +135,25 @@ class WindowManager {
   createWindow(context: ServiceExtensionContext, name: string, windowType: number, loadContent: string, isShow: boolean = true, callback?: Function) {
     Window.create(context, name, windowType).then((win) => {
       void win.loadContent(loadContent).then(() => {
-        Log.showInfo(TAG, `then begin ${name} window loadContent in then!`);
         void win.setSystemBarProperties({
           navigationBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR,
           statusBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR
         }).then(() => {
-          if (name !== this.RECENT_WINDOW_NAME) {
-            void win.setLayoutFullScreen(true).then(() => {
-              Log.showInfo(TAG, `${name} setLayoutFullScreen`);
-            });
-          }
-          if (callback) {
-            callback(win);
-          }
-          isShow && this.showWindow(name);
+          win.setBackgroundColor(StyleConstants.DEFAULT_SYSTEM_UI_COLOR, () => {
+            Log.showInfo(TAG, `then begin ${name} window loadContent in then!`);
+            if (name !== this.RECENT_WINDOW_NAME) {
+              void win.setLayoutFullScreen(true).then(() => {
+                Log.showInfo(TAG, `${name} setLayoutFullScreen`);
+              });
+            }
+            if (callback) {
+              callback(win);
+            }
+            // there is a low probability that white flashes when no delay because of setBackgroundColor is asynchronous
+            setTimeout(() => {
+              isShow && this.showWindow(name);
+            }, StyleConstants.WINDOW_SHOW_DELAY)
+          })
         });
       }, (error) => {
         Log.showError(TAG, `createWindow, create error: ${JSON.stringify(error)}`);
