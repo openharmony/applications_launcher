@@ -99,6 +99,7 @@ export class StyleConstants {
   static readonly DEFAULT_56 = 56;
   static readonly DEFAULT_60 = 60;
   static readonly DEFAULT_80 = 80;
+  static readonly WINDOW_SHOW_DELAY: number = 150;
   static readonly DEFAULT_DIVIDER_COLOR = 'rgb(207, 195, 195)';
   static readonly DEFAULT_FOLDER_APP_ITEM_WIDTH = 36;
   static readonly DEFAULT_FOLDER_APP_ITEM_WIDTH_SMALL = 45;
