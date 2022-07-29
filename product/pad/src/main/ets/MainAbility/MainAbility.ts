@@ -19,9 +19,11 @@ import Want from '@ohos.application.Want';
 import { Log } from '@ohos/common';
 import { windowManager } from '@ohos/common';
 import { RdbStoreManager } from '@ohos/common';
+import { FormConstants } from '@ohos/common';
 import { GestureNavigationManager } from '@ohos/gesturenavigation';
 import StyleConstants from '../common/constants/StyleConstants';
 import { navigationBarCommonEventManager }  from '@ohos/common';
+import PageDesktopViewModel from '../../../../../../feature/pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
 
 const TAG = 'LauncherMainAbility';
 
@@ -88,6 +90,10 @@ export default class MainAbility extends ServiceExtension {
 
   onRequest(want: Want, startId: number): void {
     Log.showInfo(TAG,`onRequest, want: ${want.abilityName}`);
+    // if app publish card to launcher
+    if(want.action == FormConstants.ACTION_PUBLISH_FORM) {
+      PageDesktopViewModel.getInstance().publishCardToDesktop(want.parameters);
+    }
     windowManager.minimizeAllApps();
     windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
     windowManager.destroyWindow(windowManager.APP_CENTER_WINDOW_NAME);
