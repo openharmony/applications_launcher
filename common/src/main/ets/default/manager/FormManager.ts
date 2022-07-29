@@ -14,9 +14,11 @@
  */
 
 import formManagerAbility from '@ohos.application.formHost';
+import { FormConstants } from '@ohos/common';
 import { Log } from '../utils/Log';
 import { CardItemInfo } from '../bean/CardItemInfo';
 import { CommonConstants } from '../constants/CommonConstants';
+import { launcherAbilityManager } from './LauncherAbilityManager';
 
 const TAG = 'FormManager';
 
@@ -102,6 +104,50 @@ export class FormManager {
       cardItemInfoList.push(cardItemInfo);
     }
     return cardItemInfoList;
+  }
+
+  /**
+   * get formCardItem by want parameters
+   *
+   * @param parameters
+   * @return formCardItem
+   */
+  async getFormCardItemByWant(params) {
+    Log.showInfo(TAG, 'getFormCardItemByWant');
+    let formCardItem: any = {};
+    formCardItem.id = params[FormConstants.ID_PARAM];
+    formCardItem.name = params[FormConstants.NAME_PARAM];
+    formCardItem.bundleName = params[FormConstants.BUNDLE_PARAM];
+    formCardItem.abilityName = params[FormConstants.ABILITY_PARAM];
+    formCardItem.moduleName = params[FormConstants.MODULE_PARAM];
+    formCardItem.dimension = params[FormConstants.DIMENSION_PARAM];
+    formCardItem.formConfigAbility = await this.getFormConfigAbility(params[FormConstants.BUNDLE_PARAM],
+      params[FormConstants.MODULE_PARAM], params[FormConstants.ABILITY_PARAM], params[FormConstants.NAME_PARAM]);
+    const appInfo = await launcherAbilityManager.getAppInfoByBundleName(params[FormConstants.BUNDLE_PARAM] ,
+      params[FormConstants.ABILITY_PARAM]);
+    formCardItem.appLabelId = appInfo.appLabelId;
+    return formCardItem;
+  }
+
+  /**
+   * get formConfigAbility by bundleName moduleName abilityName and cardName
+   *
+   * @param bundle
+   * @param moduleName
+   * @param abilityName
+   * @param cardName
+   * @return formConfigAbility
+   */
+  async getFormConfigAbility(bundle:string, moduleName:string, abilityName:string, cardName:string) : Promise<string> {
+    const formList = await formManagerAbility.getFormsInfo(bundle);
+    let formConfigAbility = "";
+    for (const formItem of formList) {
+      if(formItem.moduleName == moduleName && formItem.abilityName == abilityName && formItem.name == cardName ) {
+        formConfigAbility = formItem.formConfigAbility;
+        break;
+      }
+    }
+    return formConfigAbility;
   }
 
   /**

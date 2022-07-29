@@ -32,6 +32,7 @@ import { MenuInfo } from '@ohos/common';
 import { CardItemInfo } from '@ohos/common';
 import { BigFolderModel } from '@ohos/bigfolder';
 import { FormDetailLayoutConfig } from '@ohos/form';
+import { localEventManager } from '@ohos/common';
 import PageDesktopModel from '../model/PageDesktopModel';
 import PagedesktopConstants from '../common/constants/PagedesktopConstants';
 import { PageDesktopGridStyleConfig } from '../common/PageDesktopGridStyleConfig';
@@ -1340,6 +1341,17 @@ export default class PageDesktopViewModel extends BaseViewModel {
   onAppDoubleClick(abilityName: string, bundleName: string, moduleName: string): void {
     AppStorage.SetOrCreate('selectDesktopAppItem', '');
     this.jumpTo(abilityName, bundleName, moduleName);
+  }
+
+  /**
+   * other app publish card to pageDesktop
+   *
+   * @param parameters
+   */
+  async publishCardToDesktop(parameters:any) {
+    Log.showInfo(TAG, 'publishCardToDesktop');
+    const formItem = await FormManager.getInstance().getFormCardItemByWant(parameters);
+    localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD, formItem);
   }
 
   /**

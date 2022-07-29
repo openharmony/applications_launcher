@@ -23,7 +23,8 @@
             ],
             "actions": [
               "action.system.home",
-              "com.ohos.action.main"
+              "com.ohos.action.main",
+              "action.form.publish"
             ]
           }
         ],
