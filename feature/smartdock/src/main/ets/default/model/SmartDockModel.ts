@@ -330,7 +330,8 @@ export default class SmartDockModel {
       EventConstants.EVENT_REQUEST_DOCK_ITEM_ADD,
       EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE,
       EventConstants.EVENT_REQUEST_RECENT_DOCK_ITEM_DELETE,
-      EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE
+      EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE,
+      EventConstants.EVENT_BADGE_UPDATE
     ]);
     Log.showDebug(TAG, 'local listener on create');
   }
@@ -357,9 +358,69 @@ export default class SmartDockModel {
         this.deleteDockItem(params, SmartDockConstants.RECENT_DOCK_TYPE);
       } else if (event === EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE) {
         this.updateResistDockItem(params);
+      } else if (event === EventConstants.EVENT_BADGE_UPDATE) {
+        this.updateBadgeNum(params);
       }
     }
   };
+
+  private updateBadgeNum(badgeInfo) {
+    Log.showInfo(TAG, `updateBadgeNum badgeInfo is ${JSON.stringify(badgeInfo)}`);
+    let residentListTemp: DockItemInfo[] = AppStorage.Get('residentList');
+    if (!CheckEmptyUtils.isEmptyArr(residentListTemp)) {
+      for (var i = 0; i < residentListTemp.length; i++) {
+        if (badgeInfo.bundleName === residentListTemp[i].bundleName) {
+          let dockItemInfo = new DockItemInfo();
+          dockItemInfo.itemType = CommonConstants.TYPE_APP;
+          dockItemInfo.editable = true;
+          dockItemInfo.appId = residentListTemp[i].appId;
+          dockItemInfo.appName = residentListTemp[i].appName;
+          dockItemInfo.bundleName = residentListTemp[i].bundleName;
+          dockItemInfo.abilityName = residentListTemp[i].abilityName;
+          dockItemInfo.moduleName = residentListTemp[i].moduleName;
+          dockItemInfo.keyName = residentListTemp[i].keyName;
+          dockItemInfo.appIconId = residentListTemp[i].appIconId;
+          dockItemInfo.appLabelId = residentListTemp[i].appLabelId;
+          dockItemInfo.installTime = residentListTemp[i].installTime;
+          dockItemInfo.isSystemApp = residentListTemp[i].isSystemApp;
+          dockItemInfo.isUninstallAble = residentListTemp[i].isUninstallAble;
+          dockItemInfo.badgeNumber = badgeInfo.badgeNumber;
+          residentListTemp[i] = dockItemInfo;
+          Log.showDebug(TAG, `updateBadgeNum dockItemInfo is ${JSON.stringify(dockItemInfo)}`);
+          AppStorage.SetOrCreate('residentList', residentListTemp);
+        }
+      }
+    }
+
+    if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE) {
+      this.mRecentDataList = AppStorage.Get('recentList');
+      Log.showDebug(TAG, `updateBadgeNum recent `);
+      if (!CheckEmptyUtils.isEmptyArr(this.mRecentDataList)) {
+        for (var i = 0; i < this.mRecentDataList.length; i++) {
+          let curRecentData: RecentBundleMissionInfo = this.mRecentDataList[i];
+          Log.showDebug(TAG, `updateBadgeNum curRecentData is ${JSON.stringify(curRecentData)}`);
+          if (curRecentData.bundleName === badgeInfo.bundleName) {
+            let recentBundleMission: RecentBundleMissionInfo = new RecentBundleMissionInfo();
+            recentBundleMission.appId = curRecentData.appId;
+            recentBundleMission.appName = curRecentData.appName;
+            recentBundleMission.bundleName = curRecentData.bundleName;
+            recentBundleMission.abilityName = curRecentData.abilityName;
+            recentBundleMission.moduleName = curRecentData.moduleName;
+            recentBundleMission.keyName = curRecentData.keyName;
+            recentBundleMission.appIconId = curRecentData.appIconId;
+            recentBundleMission.appLabelId = curRecentData.appLabelId;
+            recentBundleMission.installTime = curRecentData.installTime;
+            recentBundleMission.isSystemApp = curRecentData.isSystemApp;
+            recentBundleMission.isUninstallAble = curRecentData.isUninstallAble;
+            recentBundleMission.badgeNumber = badgeInfo.badgeNumber;
+            this.mRecentDataList[i] = recentBundleMission;
+            Log.showDebug(TAG, `updateBadgeNum dockItemInfo is ${JSON.stringify(recentBundleMission)}`);
+            AppStorage.SetOrCreate('recentList', this.mRecentDataList);
+          }
+        }
+      }
+    }
+  }
 
   private registerMissionListener(): void {
     Log.showDebug(TAG, 'registerMissionListener');

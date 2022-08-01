@@ -23,11 +23,9 @@ export default class GridLayoutInfoColumns extends DesktopApplicationColumns {
     static readonly FOLDER_ID: string = "folder_id";
     static readonly CONTAINER: string = "container";
     static readonly FOLDER_NAME: string = "folder_name";
-    static readonly BADGE_NUMBER: string = "badge_number";
     static readonly TYPE_ID: string = "type_id";
     static readonly AREA: string = "area";
     static readonly PAGE: string = "page";
     static readonly COLUMN: string = "column";
     static readonly ROW: string = "row";
-    static readonly BUNDLE_NAME: string = "bundle_name";
 }

@@ -20,6 +20,7 @@ import { bigFolderPreLoader } from '@ohos/bigfolder';
 import { formPreLoader } from '@ohos/form';
 import { pageDesktopPreLoader } from '@ohos/pagedesktop';
 import { smartDockPreLoader } from '@ohos/smartdock';
+import { NumBadgeManager } from '@ohos/numbadge';
 import launcherLayoutPreLoader from './LauncherLayoutPreLoader';
 import PadFormLayoutConfig from './PadFormLayoutConfig';
 import PadFolderLayoutConfig from './PadFolderLayoutConfig';
@@ -43,6 +44,7 @@ export default class PadStage extends BaseStage {
     appCenterPreLoader.load();
     bigFolderPreLoader.load();
     formPreLoader.load();
+    NumBadgeManager.getInstance().registerNumBadge();
   }
 
   /**
@@ -65,5 +67,6 @@ export default class PadStage extends BaseStage {
     bigFolderPreLoader.releaseConfigAndData();
     formPreLoader.releaseConfigAndData();
     launcherLayoutPreLoader.releaseConfigAndData();
+    NumBadgeManager.getInstance().unRegisterNumBadge();
   }
 }

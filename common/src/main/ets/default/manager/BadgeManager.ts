@@ -63,6 +63,15 @@ export class BadgeManager {
     }
   }
 
+  async getBadgeByBundleSync(bundleName: string): Promise<number> {
+    const badgeList = await this.mDbStoreManager.getBadgeByBundle(bundleName);
+    if (badgeList.length > 0) {
+      return badgeList[0].badgeNumber;
+    } else {
+      return 0;
+    }
+  }
+
   async updateBadgeNumber(bundleName: string, badgeNum: number): Promise<boolean> {
     Log.showInfo(TAG, `updateBadgeNumber, bundleName:${bundleName}, badgeNum:${badgeNum}`);
     let result = false;

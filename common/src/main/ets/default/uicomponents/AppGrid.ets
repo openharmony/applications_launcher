@@ -68,7 +68,7 @@ export struct AppGrid {
               moduleName: item.moduleName,
               appIconId: item.appIconId,
               appLabelId: item.appLabelId,
-              badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE,
+              badgeNumber: item.badgeNumber,
               menuInfo: this.buildMenu(item),
               nameLines: mAppGridStyleConfig.mNameLines,
               mPaddingTop: mAppGridStyleConfig.mIconMarginVertical

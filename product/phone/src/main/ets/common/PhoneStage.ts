@@ -19,6 +19,7 @@ import { bigFolderPreLoader } from '@ohos/bigfolder';
 import { formPreLoader } from '@ohos/form';
 import { pageDesktopPreLoader } from '@ohos/pagedesktop';
 import { smartDockPreLoader } from '@ohos/smartdock';
+import { NumBadgeManager } from '@ohos/numbadge';
 import PhoneSmartDockLayoutConfig from './PhoneSmartDockLayoutConfig';
 import PhonePageDesktopGridStyleConfig from './PhonePageDesktopGridStyleConfig';
 import PhoneFolderLayoutConfig from './PhoneFolderLayoutConfig';
@@ -41,6 +42,7 @@ export default class PhoneStage extends BaseStage {
     layoutConfigManager.addConfigToManager(PhonePageDesktopGridStyleConfig.getInstance());
     bigFolderPreLoader.load();
     formPreLoader.load();
+    NumBadgeManager.getInstance().registerNumBadge();
   }
 
   /**
@@ -62,5 +64,6 @@ export default class PhoneStage extends BaseStage {
     bigFolderPreLoader.releaseConfigAndData();
     formPreLoader.releaseConfigAndData();
     launcherLayoutPreLoader.releaseConfigAndData();
+    NumBadgeManager.getInstance().unRegisterNumBadge();
   }
 }

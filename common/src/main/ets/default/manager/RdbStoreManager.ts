@@ -494,6 +494,7 @@ export class RdbStoreManager {
           'app_name': element.appName,
           'is_system_app': element.isSystemApp ? 1 : 0,
           'is_uninstallAble': element.isUninstallAble ? 1 : 0,
+          'badge_number':element.badgeNumber,
           'appIcon_id': element.appIconId,
           'appLabel_id': element.appLabelId,
           'bundle_name': element.bundleName,
@@ -532,6 +533,7 @@ export class RdbStoreManager {
         appItemInfo.isUninstallAble = resultSet.getLong(resultSet.getColumnIndex(DesktopApplicationColumns.IS_UNINSTALLABLE)) > 0 ? true : false;
         appItemInfo.appIconId = resultSet.getLong(resultSet.getColumnIndex(DesktopApplicationColumns.APPICON_ID));
         appItemInfo.appLabelId = resultSet.getLong(resultSet.getColumnIndex(DesktopApplicationColumns.APPLABEL_ID));
+        appItemInfo.badgeNumber = resultSet.getLong(resultSet.getColumnIndex(DesktopApplicationColumns.BADGE_NUMBER));
         appItemInfo.bundleName = resultSet.getString(resultSet.getColumnIndex(DesktopApplicationColumns.BUNDLE_NAME));
         appItemInfo.abilityName = resultSet.getString(resultSet.getColumnIndex(DesktopApplicationColumns.ABILITY_NAME));
         appItemInfo.moduleName = resultSet.getString(resultSet.getColumnIndex(DesktopApplicationColumns.MODULE_NAME));
@@ -579,7 +581,8 @@ export class RdbStoreManager {
             'page': element.page,
             'column': element.column,
             'row': element.row,
-            'container': -100
+            'container': -100,
+            'badge_number': element.badgeNumber
           }
           this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item)
             .then((ret) => {
@@ -597,7 +600,8 @@ export class RdbStoreManager {
             'page': element.page,
             'column': element.column,
             'row': element.row,
-            'container': -100
+            'container': -100,
+            'badge_number': element.badgeNumber
           }
           this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item)
             .then((ret) => {
@@ -661,7 +665,8 @@ export class RdbStoreManager {
           'area': bigFolderApp.area[0] + ',' + bigFolderApp.area[1],
           'page': bigFolderApp.page,
           'column': bigFolderApp.column,
-          'row': bigFolderApp.row
+          'row': bigFolderApp.row,
+          'badge_number': bigFolderApp.badgeNumber
         }
         Log.showDebug(TAG, `insertLayoutInfo element is ${JSON.stringify(item)}`);
         this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item).then(ret => {

@@ -25,7 +25,7 @@ import { windowManager } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
 import { BaseViewModel } from '@ohos/common';
 import { SettingsModelObserver } from '@ohos/common';
-import { FormListInfoCacheManager } from '@ohos/common';
+import { FormListInfoCacheManager, localEventManager } from '@ohos/common';
 import { FormModel } from '@ohos/common';
 import { SettingsModel } from '@ohos/common';
 import { MenuInfo } from '@ohos/common';
@@ -351,10 +351,12 @@ export default class PageDesktopViewModel extends BaseViewModel {
       return item.bundleName == badgeInfo.bundleName;
     });
     if (!this.ifInfoIsNull(appInfo)) {
+      Log.showInfo(TAG, 'updateBadgeNumber appInfo ' + JSON.stringify(appInfo));
       appInfo.badgeNumber = badgeInfo.badgeNumber;
       this.mSettingsModel.setAppListInfo(this.mBundleInfoList);
       this.getGridList();
     } else {
+      Log.showInfo(TAG, 'updateBadgeNumber appInfo is null ');
       const gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
       const layoutInfo = gridLayoutInfo.layoutInfo;
       let hasFound = false;
@@ -665,6 +667,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
         if (this.mBundleInfoList[i].typeId == layoutInfo[j].typeId
         && this.mBundleInfoList[i].typeId == CommonConstants.TYPE_APP
         && this.mBundleInfoList[i].keyName == layoutInfo[j].keyName) {
+          layoutInfo[j].badgeNumber = this.mBundleInfoList[i].badgeNumber;
           sign = true;
           break;
         }
@@ -745,6 +748,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
               abilityName: item.abilityName,
               moduleName: item.moduleName,
               keyName: item.keyName,
+              badgeNumber:item.badgeNumber,
               area: item.area,
               page: i,
               column: x,
@@ -762,6 +766,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
         abilityName: item.abilityName,
         moduleName: item.moduleName,
         keyName: item.keyName,
+        badgeNumber:item.badgeNumber,
         area: item.area,
         page: pageCount,
         column: 0,

@@ -118,6 +118,10 @@ export class AppModel {
     }
   }
 
+  getUserId(): number {
+    return launcherAbilityManager.getUserId();
+  }
+
   /**
    * Start listening to the system application status.
    */

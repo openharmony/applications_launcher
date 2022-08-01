@@ -41,7 +41,7 @@ export default struct AppItem {
   @State mAppNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   @State mAppItemWidth: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
   @State mAppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
-  @State mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
+  mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   @State mIconSize: number = StyleConstants.DEFAULT_APP_ICON_SIZE_WIDTH;
   mIconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
   private mMargin: number = 0;

@@ -17,7 +17,7 @@ import { Log } from '@ohos/common';
 import { PinyinSort } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { BaseViewModel } from '@ohos/common';
-import { layoutConfigManager } from '@ohos/common';
+import { layoutConfigManager, localEventManager, EventConstants } from '@ohos/common';
 import AppcenterConstants from '../common/constants/AppcenterConstants';
 import AppCenterGridStyleConfig from '../common/AppCenterGridStyleConfig';
 
@@ -33,6 +33,7 @@ export class AppListViewModel extends BaseViewModel {
     super();
     this.mPinyinSort = new PinyinSort();
     this.mAppGridStyleConfig = layoutConfigManager.getStyleConfig(AppCenterGridStyleConfig.APP_GRID_STYLE_CONFIG, AppcenterConstants.FEATURE_NAME);
+    this.onAppListViewCreate();
   }
 
   public static getInstance(): AppListViewModel {
@@ -40,6 +41,42 @@ export class AppListViewModel extends BaseViewModel {
       globalThis.AppListViewModel = new AppListViewModel();
     }
     return globalThis.AppListViewModel;
+  }
+
+  private readonly mLocalEventListener = {
+    onReceiveEvent: (event, params) => {
+      Log.showInfo(TAG, `localEventListener receive event: ${event}, params: ${JSON.stringify(params)}`);
+      this.updateBadgeNum(params);
+    }
+  }
+
+  /**
+   * Registering Listening Events.
+   */
+  private onAppListViewCreate(): void {
+    localEventManager.registerEventListener(this.mLocalEventListener, [
+      EventConstants.EVENT_BADGE_UPDATE
+    ]);
+  }
+
+  /**
+   * Unregistering Listening Events.
+   */
+  private onAppListViewDestroy(): void {
+    localEventManager.unregisterEventListener(this.mLocalEventListener);
+  }
+
+  private async updateBadgeNum(badgeInfo) {
+    let appList = await this.mAppModel.getAppList();
+
+    let appItem = appList.find(item => {
+      Log.showDebug(TAG, `updateBadgeNum appItem is ${JSON.stringify(item)}`);
+      return item.bundleName == badgeInfo.bundleName;
+    });
+
+    appItem.badgeNumber = badgeInfo.badgeNumber;
+    appList.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
+    AppStorage.SetOrCreate('listInfo', appList);
   }
 
   public async getAppList(): Promise<void> {

@@ -34,7 +34,7 @@ export struct AppBubble {
   @Prop nameHeight: number;
   @Prop nameSize: number;
   @Prop nameFontColor: string;
-  @Prop badgeNumber: number;
+  badgeNumber: number = 0;
   mPaddingTop: number = StyleConstants.DEFAULT_10;
   nameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   mIconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;

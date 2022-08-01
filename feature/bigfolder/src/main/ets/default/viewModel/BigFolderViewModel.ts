@@ -44,7 +44,7 @@ export class BigFolderViewModel extends BaseViewModel {
     onReceiveEvent: (event, params) => {
       Log.showDebug(TAG, `FolderViewModel receive event: ${event}, params: ${JSON.stringify(params)}`);
       const openStatus = AppStorage.Get('openFolderStatus');
-      if (event === EventConstants.EVENT_BADGE_UPDATE && openStatus == BigFolderConstants.OPEN_FOLDER_STATUS_OPEN) {
+      if (event === EventConstants.EVENT_BADGE_UPDATE && (openStatus == BigFolderConstants.OPEN_FOLDER_STATUS_OPEN || openStatus == BigFolderConstants.OPEN_FOLDER_STATUS_STATIC)) {
         const openFolderData: {
           layoutInfo: [[]]
         } = AppStorage.Get('openFolderData');

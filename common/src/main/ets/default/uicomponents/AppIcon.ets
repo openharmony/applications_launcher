@@ -27,8 +27,7 @@ export struct AppIcon {
   @Prop bundleName: string;
   @Prop moduleName: string;
   @Prop icon: string;
-  @Prop badgeNumber: number;
-  @State badge: number = 0;
+  @State badgeNumber: number = 0;
   @State iconScale: number = 1;
   useCache: boolean = true;
   badgeFontSize: number = StyleConstants.DEFAULT_BADGE_FONT_SIZE;
@@ -40,6 +39,7 @@ export struct AppIcon {
     this.mResourceManager = ResourceManager.getInstance();
     this.mBadgeManager = BadgeManager.getInstance();
     this.updateIcon();
+    this.initBadge();
   }
 
   public iconLoadCallback(image: string) {
@@ -48,29 +48,30 @@ export struct AppIcon {
 
   public updateIcon() {
     this.mResourceManager.getAppIconWithCache(this.iconId, this.bundleName, this.moduleName,
-      this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
   }
 
-  public badgeLoadCallback(badgeNumber) {
-    this.badge = badgeNumber;
-  }
-
-  public updateBadge() {
-    if (this.badgeNumber < 0) {
-      return;
+  public badgeInitCallback(badgeNumber) {
+    Log.showInfo(TAG, `badgeInitCallback badgeNumber is ${badgeNumber}`);
+    if (this.badgeNumber != badgeNumber) {
+      this.badgeNumber = badgeNumber;
     }
-    this.mBadgeManager.getBadgeByBundle(this.bundleName, this.badgeLoadCallback.bind(this));
+  }
+
+  public initBadge() {
+    Log.showInfo(TAG, `initBadge called !`);
+    this.mBadgeManager.getBadgeByBundle(this.bundleName, this.badgeInitCallback.bind(this));
   }
 
   build() {
     Column() {
       Badge({
-        count: this.badge,
+        count: this.badgeNumber,
         maxCount: StyleConstants.MAX_BADGE_COUNT,
         style: {
           color: StyleConstants.DEFAULT_FONT_COLOR,
           fontSize: this.badgeFontSize,
-          badgeSize: (this.badge > 0 ? StyleConstants.DEFAULT_BADGE_SIZE : 0),
+          badgeSize: (this.badgeNumber > 0 ? StyleConstants.DEFAULT_BADGE_SIZE : 0),
           badgeColor: Color.Red
         }
       }) {
