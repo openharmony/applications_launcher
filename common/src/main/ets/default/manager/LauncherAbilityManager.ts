@@ -24,6 +24,7 @@ import { AppItemInfo } from '../bean/AppItemInfo';
 import { CommonConstants } from '../constants/CommonConstants';
 import { ResourceManager } from './ResourceManager';
 import { EventConstants } from '../constants/EventConstants';
+import { BadgeManager } from '../manager/BadgeManager';
 
 const TAG = 'LauncherAbilityManager';
 
@@ -72,6 +73,10 @@ class LauncherAbilityManager {
       Log.showDebug(TAG, `getOsAccountLocalIdFromProcess localId ${localId}`);
       this.mUserId = localId;
     });
+  }
+
+  getUserId(): number {
+    return this.mUserId;
   }
 
   /**
@@ -234,6 +239,7 @@ class LauncherAbilityManager {
     appItemInfo.keyName = info.elementName.bundleName + info.elementName.abilityName + info.elementName.moduleName;
     appItemInfo.typeId = CommonConstants.TYPE_APP;
     appItemInfo.installTime = String(new Date());
+    appItemInfo.badgeNumber = await BadgeManager.getInstance().getBadgeByBundleSync(info.elementName.bundleName);
     await ResourceManager.getInstance().updateIconCache(appItemInfo.appIconId, appItemInfo.bundleName, appItemInfo.moduleName);
     this.mAppMap.set(appItemInfo.bundleName, appItemInfo);
     return appItemInfo;

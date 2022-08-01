@@ -55,6 +55,9 @@
       },
       {
         "name": "ohos.permission.INPUT_MONITORING"
+      },
+      {
+        "name": "ohos.permission.NOTIFICATION_CONTROLLER"
       }
     ]
   }

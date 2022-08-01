@@ -22,6 +22,7 @@ export default class DesktopApplicationColumns extends BaseColumns {
     static readonly APP_NAME: string = "app_name";
     static readonly IS_SYSTEM_APP: string = "is_system_app";
     static readonly IS_UNINSTALLABLE: string = "is_uninstallAble";
+    static readonly BADGE_NUMBER: string = "badge_number";
     static readonly APPICON_ID: string = "appIcon_id";
     static readonly APPLABEL_ID: string = "appLabel_id";
     static readonly BUNDLE_NAME: string = "bundle_name";

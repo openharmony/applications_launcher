@@ -70,6 +70,18 @@
       ],
     },
     {
+      "name": "launcher_numbadge",
+      "srcPath": "./feature/numbadge",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+          ],
+        },
+      ],
+    },
+    {
       "name": "launcher_pagedesktop",
       "srcPath": "./feature/pagedesktop",
       "targets": [

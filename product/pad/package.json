@@ -15,6 +15,7 @@
 		"@ohos/gesturenavigation": "../../feature/gesturenavigation",
 		"@ohos/pagedesktop": "../../feature/pagedesktop",
 		"@ohos/recents": "../../feature/recents",
-		"@ohos/smartdock": "../../feature/smartdock"
+		"@ohos/smartdock": "../../feature/smartdock",
+		"@ohos/numbadge": "../../feature/numbadge"
 	}
 }

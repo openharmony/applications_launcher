@@ -76,6 +76,7 @@ const RdbStoreConfig = {
     '(id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
     'app_name TEXT, ' +
     'is_system_app INTEGER, ' +
+    'badge_number INTEGER, ' +
     'is_uninstallAble INTEGER, ' +
     'appIcon_id INTEGER, ' +
     'appLabel_id INTEGER, ' +
