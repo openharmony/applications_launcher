@@ -24,6 +24,7 @@ import { BigFolderStyleConfig } from '@ohos/bigfolder';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
 import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel'
 import PagedesktopConstants from '../constants/PagedesktopConstants';
+import { BigFolderConstants } from '@ohos/bigfolder';
 
 const FOLDER_INFO_REFRESH_DELAY = 500;
 const TAG = 'FolderItem';
@@ -33,6 +34,7 @@ const TAG = 'FolderItem';
  */
 @Component
 export default struct FolderItem {
+  @StorageLink('openFolderStatus') openFolderStatus: number = 0;
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
   @State isDragging: boolean = false;
   @State mAppNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
@@ -64,6 +66,7 @@ export default struct FolderItem {
     this.mMargin = styleConfig.mMargin;
     this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
+    this.openFolderStatus = AppStorage.Get('openFolderStatus') != 'undefined' ? AppStorage.Get('openFolderStatus') : 0;
     this.formatFolderInfo();
   }
 
@@ -140,6 +143,15 @@ export default struct FolderItem {
     }, FOLDER_INFO_REFRESH_DELAY);
   }
 
+  private getOpenFolder(): String {
+    let openFolderData: {
+      folderId: string,
+      layoutInfo: any
+    } = AppStorage.Get('openFolderData');
+
+    return openFolderData.folderId;
+  }
+
   build() {
     Flex({
       direction: FlexDirection.Column,
@@ -194,7 +206,7 @@ export default struct FolderItem {
           this.mPageDesktopViewModel.buildRenameMenuInfoList(folderItem, this.renameClick.bind(this))
         })
       }
-      .visibility(this.isDragging ? Visibility.Hidden : Visibility.Visible)
+      .visibility((this.isDragging || (this.openFolderStatus != 0 && this.getOpenFolder() == this.folderItem.folderId)) ? Visibility.Hidden : Visibility.Visible)
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
           event.stopPropagation();
