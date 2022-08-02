@@ -17,27 +17,26 @@ import { Log } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
 import { PresetStyleConstants } from '@ohos/common';
-import { SettingsModel } from '@ohos/common';
 import { AppBubble } from '@ohos/common';
+import { AppIcon } from '@ohos/common';
 import { UninstallDialog } from '@ohos/common';
 import { FormManagerDialog } from '@ohos/common';
 import { ResourceManager } from '@ohos/common';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
+import { CommonConstants } from '@ohos/common';
 import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel';
-import PagedesktopConstants from '../constants/PagedesktopConstants';
 
-const APP_INFO_REFRESH_DELAY = 500;
 const DOUBLE_CLICK_COUNT = 2
 
 const TAG = "AppItem";
 
 @Component
 export default struct AppItem {
+  @StorageLink('dragItemInfo') pageDesktopDragItemInfo: any = {};
+  @StorageLink('dragItemType') dragItemType: number = CommonConstants.DRAG_FROM_DESKTOP;
   @StorageLink('uninstallAppInfo') appInfo: any = {};
   @StorageLink('formAppInfo') formAppInfo: any = {};
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
-  @StorageLink('isOverlayComplete') isOverlayComplete: boolean = false;
-  @State isDragging: boolean = false;
   @State mAppNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   @State mAppItemWidth: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
   @State mAppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
@@ -51,7 +50,6 @@ export default struct AppItem {
   private isSwappingPage = false;
   private item: any;
   private mPageDesktopViewModel: PageDesktopViewModel;
-  private mSettingsModel: SettingsModel;
   private isPad: boolean = false;
   private mPageDesktopDragHandler: PageDesktopDragHandler;
   private mouseClick: number = 0;
@@ -105,6 +103,19 @@ export default struct AppItem {
     customStyle: true
   });
 
+  @Builder dragLayerBuilder() {
+    Column() {
+      AppIcon({
+        iconSize: this.mIconSize * 1.05,
+        iconId: this.item.appIconId,
+        bundleName: this.item.bundleName,
+        moduleName: this.item.moduleName,
+        icon: ResourceManager.getInstance().getCachedAppIcon(this.item.appIconId, this.item.bundleName, this.item.moduleName),
+        badgeNumber: this.item.badgeNumber
+      })
+    }
+  }
+
   /**
    * When click cancel dialog, this function will be called.
    */
@@ -115,7 +126,6 @@ export default struct AppItem {
 
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
-    this.mSettingsModel = SettingsModel.getInstance();
     this.isPad = this.mPageDesktopViewModel.getDevice();
     let styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
     this.mAppNameHeight = styleConfig.mNameHeight;
@@ -134,56 +144,10 @@ export default struct AppItem {
   }
 
   /**
-   * The app item on desktop workspace: drag state listener.
-   */
-  private mDragStateListener = {
-    onItemDragStart: (event: any, itemIndex: number) => {
-      this.dialogController.close();
-      this.formManagerDialogController.close();
-      this.isDragging = true;
-    },
-    onItemDragMove: (event: any, insertIndex: number, itemIndex: number) => {
-      if (this.isSwappingPage) {
-        return;
-      }
-      let moveX = event.touches[0].screenX;
-      let moveY = event.touches[0].screenY;
-      let curPageIndex = this.mPageDesktopViewModel.getIndex();
-      if ((moveX - this.mIconSize / 2) < this.mMargin && curPageIndex > 0 && moveY < this.mGridSpaceHeight) {
-        this.mPageDesktopViewModel.showPrevious();
-        this.movingIconSwapPageDelay();
-      } else if ((moveX + this.mIconSize / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
-        let cachePageIndex = this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount;
-
-        if (curPageIndex == cachePageIndex - 1 && !this.mPageDesktopViewModel.isBlankPage()) {
-          this.mPageDesktopViewModel.addBlankPage(true);
-        } else if(curPageIndex < cachePageIndex - 1) {
-          this.mPageDesktopViewModel.showNext();
-        }
-        this.movingIconSwapPageDelay();
-      }
-    },
-    onItemDragEnd: () => {
-      this.isDragging = false;
-      AppStorage.SetOrCreate('isOverlayComplete', false);
-    }
-  };
-
-  /**
    * When click cancel dialog, this function will be called.
    */
   cancelDialog() {
     Log.showInfo(TAG, 'cancel app uninstall dialog');
-  }
-
-  /**
-   * Increase delay when dragging app to other page.
-   */
-  movingIconSwapPageDelay() {
-    this.isSwappingPage = true;
-    setTimeout(() => {
-      this.isSwappingPage = false;
-    }, APP_INFO_REFRESH_DELAY);
   }
 
   build() {
@@ -210,10 +174,12 @@ export default struct AppItem {
             this.dialogController, this.formManagerDialogController),
           mPaddingTop: this.mMarginVertical,
           nameLines: this.mNameLines,
-          mIconNameMargin: this.mIconNameMargin
+          mIconNameMargin: this.mIconNameMargin,
+          dragStart: this.dragStart.bind(this)
         })
       }
-      .visibility((this.isDragging && this.isOverlayComplete) ? Visibility.Hidden : Visibility.Visible)
+      .visibility(this.dragItemType === CommonConstants.DRAG_FROM_DESKTOP && this.pageDesktopDragItemInfo.keyName === this.item.keyName ?
+        Visibility.None : Visibility.Visible)
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
           event.stopPropagation();
@@ -246,10 +212,16 @@ export default struct AppItem {
         )
       )
       .onTouch((event: TouchEvent) => {
-        AppStorage.SetOrCreate('dragFocus', PagedesktopConstants.FEATURE_NAME);
-        this.mPageDesktopDragHandler.setDragStateListener(this.mDragStateListener);
-        Log.showInfo(TAG, `tap click notifyTouchEventUpdate x: ${event.touches[0].screenX}, y: ${event.touches[0].screenY}`);
-        this.mPageDesktopDragHandler.notifyTouchEventUpdate(event);
+        Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].screenX}, y: ${event.touches[0].screenY}`);
+        if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {
+          let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
+          Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
+          if (!mIsDragEffectArea) {
+            this.pageDesktopDragItemInfo = {};
+            AppStorage.SetOrCreate('selectAppIndex', null);
+            AppStorage.SetOrCreate('isDrag', false);
+          }
+        }
       })
     }
     .width(this.mAppItemWidth)
@@ -262,5 +234,15 @@ export default struct AppItem {
   private launchApp() {
     Trace.start(Trace.CORE_METHOD_LAUNCH_APP);
     this.mPageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+  }
+
+  dragStart(event: DragEvent): CustomBuilder {
+    AppStorage.SetOrCreate('isDrag', true);
+    ContextMenu.close();
+    this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
+    this.pageDesktopDragItemInfo = this.item;
+    Log.showInfo(TAG, `pageDesktopDragItemInfo: ${JSON.stringify(this.pageDesktopDragItemInfo)}`);
+    globalThis.PageDesktopDragHandler.onDragStart(event.getX(), event.getY());
+    return this.dragLayerBuilder();
   }
 }

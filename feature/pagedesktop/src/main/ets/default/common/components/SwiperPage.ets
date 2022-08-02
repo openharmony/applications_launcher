@@ -22,11 +22,11 @@ import FolderItem from './FolderItem';
 import { PageDesktopGridStyleConfig } from '../PageDesktopGridStyleConfig';
 
 const TAG = "SwiperPage";
+const APP_INFO_REFRESH_DELAY = 500;
 
 @Component
 export default struct SwiperPage {
   @StorageLink('workSpaceWidth') workSpaceWidth: number = 0;
-  @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
   @State ColumnsTemplate: string = '';
   @State RowsTemplate: string = ''
   @Prop @Watch('changeColumnAndRow') gridConfig: string;
@@ -41,6 +41,10 @@ export default struct SwiperPage {
   private mPageDesktopStyleConfig:PageDesktopGridStyleConfig;
   private mGridWidth : number;
   private mGridHeight: number;
+  private mIconSize: number;
+  private mGridSpaceWidth : number;
+  private mGridSpaceHeight: number;
+  private isSwappingPage = false;
 
   aboutToAppear(): void  {
     this.mPageDesktopStyleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
@@ -52,7 +56,38 @@ export default struct SwiperPage {
     this.mMarginTop = this.mPageDesktopStyleConfig.mDesktopMarginTop;
     this.mGridWidth = this.mPageDesktopStyleConfig.mGridWidth;
     this.mGridHeight = this.mPageDesktopStyleConfig.mGridHeight;
+    this.mIconSize = this.mPageDesktopStyleConfig.mIconSize;
+    this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
+    this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
     this.changeConfig();
+  }
+
+  itemMove(moveX: number, moveY: number){
+    if (this.isSwappingPage) {
+      return;
+    }
+    let curPageIndex: number = AppStorage.Get('pageIndex');
+    if ((moveX - this.mIconSize / 2) < this.mMargin && curPageIndex > 0 && moveY < this.mGridSpaceHeight) {
+      this.mPageDesktopViewModel.showPrevious();
+      this.movingIconSwapPageDelay();
+    } else if ((moveX + this.mIconSize / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
+      let cachePageIndex = this.mPageDesktopViewModel.getGridPageCount();
+      if (curPageIndex == cachePageIndex - 1 && !this.mPageDesktopViewModel.isBlankPage()) {
+        this.mPageDesktopViewModel.addBlankPage(true);
+      } else if(curPageIndex < cachePageIndex - 1) {
+        this.mPageDesktopViewModel.showNext();
+      }
+      this.movingIconSwapPageDelay();
+    }
+  }
+  /**
+   * Increase delay when dragging app to other page.
+   */
+  movingIconSwapPageDelay() {
+    this.isSwappingPage = true;
+    setTimeout(() => {
+      this.isSwappingPage = false;
+    }, APP_INFO_REFRESH_DELAY);
   }
 
   private changeColumnAndRow(): void {
@@ -77,6 +112,7 @@ export default struct SwiperPage {
     Log.showInfo(TAG, `build item bundleName: ${item.bundleName}`);
     return true;
   }
+
   build() {
     Grid() {
       ForEach(this.mAppListInfo, (item) => {
@@ -120,8 +156,7 @@ export default struct SwiperPage {
     .height(this.mGridHeight)
     .margin({
       right: this.mMargin,
-      left: this.mMargin,
-      top: this.navigationBarStatusValue ? this.mPageDesktopStyleConfig.mDesktopMarginTop : this.mPageDesktopStyleConfig.mDesktopMarginTop + 0
+      left: this.mMargin
     })
     .onMouse((event: MouseEvent) => {
       if (event.button == MouseButton.Right) {
@@ -130,6 +165,38 @@ export default struct SwiperPage {
     })
     .onClick(() => {
       AppStorage.SetOrCreate('selectDesktopAppItem', '')
+    })
+    .onDragEnter((event: DragEvent, extraParams: string) => {
+      Log.showInfo(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getX()}, ${event.getY()}]`);
+    })
+    .onDragMove((event: DragEvent, extraParams: string) => {
+      Log.showInfo(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
+      if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE
+      || (AppStorage.Get('deviceType') != CommonConstants.DEFAULT_DEVICE_TYPE && AppStorage.Get('dragItemType') !== 1)) {
+        this.itemMove(event.getX(), event.getY());
+      }
+    })
+    .onDragLeave((event: DragEvent, extraParams: string) => {
+      Log.showInfo(TAG, `onDragLeave event: [${event.getX()}, ${event.getY()}]`);
+    })
+    .onDrop((event: DragEvent, extraParams: string) => {
+      Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
+      let dragItemInfo: any = AppStorage.Get('dragItemInfo');
+      // Drag within its own component
+      if (dragItemInfo && AppStorage.Get('dragItemType') === 2) {
+        globalThis.PageDesktopDragHandler.onDragDrop(event.getX(), event.getY());
+      }
+      // Drag from other components
+      if (dragItemInfo && AppStorage.Get('dragItemType') === 1 && AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+        dragItemInfo.typeId = 0;
+        dragItemInfo.area = [1, 1];
+        dragItemInfo.page = AppStorage.Get('pageIndex');
+        AppStorage.SetOrCreate('dragItemInfo', dragItemInfo);
+        globalThis.PageDesktopDragHandler.onDragDrop(event.getX(), event.getY());
+      }
+      AppStorage.SetOrCreate('dragItemInfo', {});
+      AppStorage.SetOrCreate('selectAppIndex', null);
+      AppStorage.SetOrCreate('isDrag', false);
     })
   }
 }

@@ -29,7 +29,6 @@ import { localEventManager } from '@ohos/common';
 import { InputMethodManager } from '@ohos/common';
 import { BigFolderModel } from '../model/BigFolderModel';
 import { BigFolderViewModel } from '../viewmodel/BigFolderViewModel';
-import BigFolderDragHandler from '../common/BigFolderDragHandler';
 import { BigFolderStyleConfig } from '../common/BigFolderStyleConfig';
 import { BigFolderConstants } from '../common/constants/BigFolderConstants';
 import { BigFolderStyleConstants } from '../common/constants/BigFolderStyleConstants';
@@ -38,10 +37,8 @@ import FolderAppListDialog from '../common/uicomponents/FolderAppListDialog';
 const TAG = 'FolderOpenComponent';
 const DOUBLE_CLICK_COUNT = 2;
 
-const APP_INFO_REFRESH_DELAY = 500;
 const FOLDER_CLOSE_DELAY = 500;
 let mBigFolderViewModel: BigFolderViewModel;
-let mBigFolderDragHandler: BigFolderDragHandler;
 let mBigFolderStyleConfig: BigFolderStyleConfig;
 let mFolderModel: BigFolderModel;
 let isOpenFolderDialog: boolean = false;
@@ -304,9 +301,7 @@ struct FolderSwiperPage {
 
   aboutToAppear(): void  {
     mFolderModel = BigFolderModel.getInstance();
-    mBigFolderDragHandler = BigFolderDragHandler.getInstance();
     this.updateConfig();
-    this.updateOpenFolderParams();
   }
 
   private updateConfig() {
@@ -323,19 +318,6 @@ struct FolderSwiperPage {
     }
     for (let i = 0; i < row; i++) {
       this.RowsTemplate += '1fr '
-    }
-  }
-
-  private async updateOpenFolderParams() {
-    let screenWidth = await windowManager.getWindowWidth();
-
-    if (mBigFolderDragHandler != null) {
-      mBigFolderDragHandler.setDragEffectArea({
-        left: (screenWidth - mGridWidth) / 2,
-        top: mGridMarginTop,
-        right: (screenWidth - mGridWidth) / 2 + mGridWidth,
-        bottom: mGridMarginTop + mGridHeight
-      });
     }
   }
 
@@ -445,8 +427,6 @@ struct FolderSwiperPage {
 @Component
 struct FolderAppItem {
   @StorageLink('uninstallAppInfo') appInfo: any = {};
-  //  @StorageLink('dragLocation') @Watch('onTouchEventUpdate') dragLocation: string = '';
-  @State @Watch('onIsDraging') isDraging: boolean = false;
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
   @State item: any = {};
   private ColumnsTemplate: string = '';
@@ -464,16 +444,6 @@ struct FolderAppItem {
       ? $r('app.string.is_delete_form') : $r('app.string.isUninstall')).then((resName) => {
       this.dialogName = resName;
     });
-  }
-
-  private onTouchEventUpdate() {
-    if (AppStorage.Get('dragFocus') == BigFolderConstants.FEATURE_NAME) {
-      mBigFolderDragHandler.onTouchEventUpdate(AppStorage.Get('dragEvent'));
-    }
-  }
-
-  private onIsDraging() {
-    AppStorage.SetOrCreate('isDraging', this.isDraging);
   }
 
   uninstallDialogController: CustomDialogController = new CustomDialogController({
@@ -501,6 +471,7 @@ struct FolderAppItem {
     autoCancel: true,
     customStyle: true
   });
+
   formManagerDialogController: CustomDialogController = new CustomDialogController({
     builder: FormManagerDialog({
       cancel: (callback?) => {
@@ -528,68 +499,11 @@ struct FolderAppItem {
     this.clearForm();
   }
 
-  private mDragStateListener = {
-    onItemDragStart: (event: any, itemIndex: number) => {
-      this.isDraging = true;
-    },
-    onItemDragMove: (event: any, insertIndex: number, itemIndex: number) => {
-      Log.showDebug(TAG, "FolderOpenComponent onItemDragMove start");
-      this.uninstallDialogController.close();
-
-      if (this.isSwappingPage) {
-        return;
-      }
-
-      let moveX = event.touches[0].screenX;
-      let moveY = event.touches[0].screenY;
-      let dragEffectArea = mBigFolderDragHandler.getEffectArea();
-
-      this.mFolderInfo = AppStorage.Get('openFolderData');
-      let pageCount = this.mFolderInfo.layoutInfo.length;
-
-      let pageIndex: number = mBigFolderViewModel.getIndex();
-      Log.showDebug(TAG, `FolderOpenComponent onItemDragMove pageIndex: ${pageIndex},
-        dragEffectArea.left: ${dragEffectArea.left},
-        dragEffectArea.bottom: ${dragEffectArea.bottom},
-        dragEffectArea.right: ${dragEffectArea.right}`);
-
-      if ((moveX - mAppIconSize / 2) < dragEffectArea.left && moveY < dragEffectArea.bottom) {
-        if (pageIndex > 0) {
-          mBigFolderViewModel.changeIndex(pageIndex - 1);
-          this.movingIconSwapPageDelay();
-        } else if (this.willCloseFolder) {
-          mBigFolderViewModel.closeFolder();
-        } else {
-          this.closeFolderDelay();
-        }
-      } else if ((moveX + mAppIconSize / 2) > dragEffectArea.right && moveY < dragEffectArea.bottom) {
-        if (pageIndex < pageCount - 1) {
-          mBigFolderViewModel.changeIndex(pageIndex + 1);
-          this.movingIconSwapPageDelay();
-        } else if (this.willCloseFolder) {
-          mBigFolderViewModel.closeFolder();
-        } else {
-          this.closeFolderDelay();
-        }
-      }
-    },
-    onItemDragEnd: () => {
-      this.isDraging = false;
-    }
-  };
-
   closeFolderDelay() {
     this.willCloseFolder = false;
     setTimeout(() => {
       this.willCloseFolder = true;
     }, FOLDER_CLOSE_DELAY);
-  }
-
-  movingIconSwapPageDelay() {
-    this.isSwappingPage = true;
-    setTimeout(() => {
-      this.isSwappingPage = false;
-    }, APP_INFO_REFRESH_DELAY);
   }
 
   removeAppOutOfFolder(appInfo) {
@@ -626,7 +540,6 @@ struct FolderAppItem {
       }
       .width(mAppItemWidth)
       .height(mAppItemWidth)
-      .visibility(this.isDraging ? Visibility.Hidden : Visibility.Visible)
       .onClick(() => {
         Log.showDebug(TAG, 'App click');
         globalThis.PageDesktopViewModel.openApplication(this.item.abilityName, this.item.bundleName, this.item.moduleName);

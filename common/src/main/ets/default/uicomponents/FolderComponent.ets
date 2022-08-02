@@ -65,6 +65,7 @@ export struct FolderComponent {
   folderNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   iconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
   isSelect?: boolean;
+  dragStart: Function;
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, `aboutToAppear start`);
@@ -274,6 +275,9 @@ export struct FolderComponent {
                 })
               }
             }
+            .onDragStart((event: DragEvent) => {
+              return this.dragStart(event);
+            })
             .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
             .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
             .padding(this.gridMargin)

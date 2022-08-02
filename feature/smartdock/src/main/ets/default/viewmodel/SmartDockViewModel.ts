@@ -118,15 +118,6 @@ export default class SmartDockViewModel extends BaseViewModel {
   }
 
   /**
-   * resident dock item onTouch function
-   * @param event
-   */
-  residentOnTouch(event) {
-    Log.showDebug(TAG, 'residentOnTouch event:' + event.type);
-    this.mSmartDockDragHandler.notifyTouchEventUpdate(event);
-  }
-
-  /**
    * what SmartDockContent.dockItemList onChange
    */
   onDockListChange() {
@@ -141,24 +132,39 @@ export default class SmartDockViewModel extends BaseViewModel {
     const screenHeight: number = AppStorage.Get('screenHeight');
     const sysUIBottomHeight: number = AppStorage.Get('sysUIBottomHeight');
     const dockHeight: number = AppStorage.Get('dockHeight');
-    const mResidentWidth: number = this.getListWidth(AppStorage.Get('residentList'));
+    let mResidentWidth: number = this.getListWidth(AppStorage.Get('residentList'));
+    if (AppStorage.Get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE) {
+      const maxDockNum = this.getStyleConfig().mMaxDockNum;
+      mResidentWidth = this.mSmartDockStyleConfig.mDockPadding * 2 + maxDockNum * (this.mSmartDockStyleConfig.mListItemWidth) + (maxDockNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
+    }
+    AppStorage.SetOrCreate('residentWidth', mResidentWidth);
+    AppStorage.SetOrCreate("dockPadding", this.getDockPadding(mResidentWidth));
     const mRecentWidth: number = this.getListWidth(AppStorage.Get('recentList'));
-
+    Log.showInfo(TAG, `updateDockParams screenWidth:${screenWidth}, screenHeight:${screenHeight}, sysUIBottomHeight:${sysUIBottomHeight}, dockHeight:${dockHeight}, mResidentWidth:${mResidentWidth}, mRecentWidth:${mRecentWidth}`);
     if (typeof (this.mSmartDockDragHandler) != 'undefined') {
+      let left = mResidentWidth === 0 ? 0 : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2;
+      let right = mResidentWidth === 0 ? screenWidth : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2 + mResidentWidth;
+      if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+        left = (screenWidth - mResidentWidth) / 2;
+        right = screenWidth - left;
+      }
       this.mSmartDockDragHandler.setDragEffectArea({
-        left: mResidentWidth === 0 ? 0 : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2,
-        right: mResidentWidth === 0 ? screenWidth : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2 + mResidentWidth,
+        left: left,
+        right: right,
         top: screenHeight - sysUIBottomHeight - dockHeight,
-        bottom: screenHeight - sysUIBottomHeight
+        bottom: screenHeight - sysUIBottomHeight - this.mSmartDockStyleConfig.mMarginBottom
       });
     }
   }
 
-  /**
-   * what SmartDockContent.dragLocation onChange
-   */
-  onTouchEventUpdate() {
-    this.mSmartDockDragHandler.onTouchEventUpdate(AppStorage.Get('dragEvent'));
+  private getDockPadding(residentWidth: number): {right: number, left: number, top: number, bottom: number} {
+    let paddingNum: number = this.mSmartDockStyleConfig.mDockPadding;
+    const residentList: [] = AppStorage.Get('residentList');
+    if (AppStorage.Get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE) {
+      paddingNum = (residentWidth - (residentList.length * this.mSmartDockStyleConfig.mListItemWidth + (residentList.length - 1) * (this.mSmartDockStyleConfig.mListItemGap))) / 2;
+    }
+    Log.showInfo(TAG, `getDockPadding paddingNum: ${paddingNum}`);
+    return {right: paddingNum, left: paddingNum, top: this.mSmartDockStyleConfig.mDockPadding, bottom: this.mSmartDockStyleConfig.mDockPadding};
   }
 
   /**
@@ -199,7 +205,7 @@ export default class SmartDockViewModel extends BaseViewModel {
     menuInfoList.push(open);
 
     if (appInfo.itemType != CommonConstants.TYPE_FUNCTION) {
-      this.mDevice = AppStorage.Get('device');
+      this.mDevice = AppStorage.Get('deviceType');
       if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE && dockType === SmartDockConstants.RESIDENT_DOCK_TYPE) {
         const addToWorkSpaceMenu = new MenuInfo();
         addToWorkSpaceMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
@@ -254,14 +260,13 @@ export default class SmartDockViewModel extends BaseViewModel {
    * calcaulate dock list width after list change
    * @param itemList
    */
-  private getListWidth(itemList): number {
+  private getListWidth(itemList: []): number {
     let width = 0;
     if (typeof itemList === 'undefined' || itemList == null || itemList.length === 0) {
       return width;
-    } else {
-      const num = itemList.length;
-      width = this.mSmartDockStyleConfig.mDockPadding * 2 + num * (this.mSmartDockStyleConfig.mListItemWidth) + (num - 1) * (this.mSmartDockStyleConfig.mListItemGap);
     }
+    const num =  itemList.length;
+    width = this.mSmartDockStyleConfig.mDockPadding * 2 + num * (this.mSmartDockStyleConfig.mListItemWidth) + (num - 1) * (this.mSmartDockStyleConfig.mListItemGap);
     return width;
   }
 

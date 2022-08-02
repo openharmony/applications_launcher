@@ -58,11 +58,8 @@ struct AppCenterView {
   }
 
   private async updateScreenSize() {
-    let screenWidth = await windowManager.getWindowWidth();
-    let screenHeight = await windowManager.getWindowHeight();
     this.workSpaceHeight = this.mLayoutViewModel.getWorkSpaceHeight();
     this.dockHeight = this.mLayoutViewModel.getDockHeight();
-    Log.showInfo(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${screenWidth}, screenHeight: ${screenHeight}`);
   }
 
   onBackPress(): boolean {
@@ -93,9 +90,7 @@ struct AppCenterView {
         .height(this.workSpaceHeight)
 
         Column() {
-          SmartDock({
-            device: this.device,
-          })
+          SmartDock();
         }
         .height(this.dockHeight)
       }

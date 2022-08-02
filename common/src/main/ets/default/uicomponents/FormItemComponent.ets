@@ -42,6 +42,7 @@ export struct FormItemComponent {
   mPaddingTop: number = StyleConstants.DEFAULT_10;
   getFormId: (id: number) => void;
   clickForm?: Function = null;
+  dragStart: Function;
 
   aboutToAppear(): void  {
     this.mFormModel = FormModel.getInstance();
@@ -114,5 +115,8 @@ export struct FormItemComponent {
     .width(StyleConstants.PERCENTAGE_100)
     .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
     .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+    .onDragStart((event: DragEvent, extraParams: string) => {
+      return this.dragStart(event);
+    })
   }
 }

@@ -23,10 +23,9 @@ import { FormItemComponent } from '@ohos/common';
 import { FormViewModel } from '@ohos/form';
 import { FormStyleConfig } from '@ohos/form';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
+import { CommonConstants } from '@ohos/common';
 import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel';
-import PagedesktopConstants from '../constants/PagedesktopConstants';
 
-const FORM_INFO_REFRESH_DELAY = 500;
 const TAG = 'FormItem';
 
 /**
@@ -34,7 +33,9 @@ const TAG = 'FormItem';
  */
 @Component
 export default struct FormItem {
+  @StorageLink('dragItemInfo') pageDesktopDragItemInfo: any = {};
   @StorageLink('isRemoveForm') @Watch('removeFormAnimate') isRemoveForm: boolean = false;
+  @StorageLink('dragItemType') dragItemType: number = CommonConstants.DRAG_FROM_DESKTOP;
   @StorageLink('formAnimateData') formAnimateData: {
     cardId: number,
     isOpenRemoveFormDialog: boolean,
@@ -48,7 +49,6 @@ export default struct FormItem {
   private mFormViewModel: FormViewModel;
   private mFormStyleConfig: FormStyleConfig;
   private mPageDesktopDragHandler: PageDesktopDragHandler;
-  @State isDragging: boolean = false;
   @State mFormNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   @State mAppItemWidth: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
   @State mFormNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
@@ -64,11 +64,24 @@ export default struct FormItem {
   private mForm: string = '';
   private clearForm: Function = null;
 
+  @Builder dragLayerBuilder() {
+    Column() {
+      FormItemComponent({
+        formItem: this.formItem,
+        formItemWidth: this.mFormItemWidth * 1.05,
+        formItemHeight: this.mFormItemHeight * 1.05,
+        formNameHeight: 0,
+        formNameSize: 0
+      })
+    }
+    .height(this.mFormNameHeight * 1.05)
+    .width(this.mFormItemWidth * 1.05)
+  }
+
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mFormViewModel = FormViewModel.getInstance();
     this.mFormStyleConfig = this.mFormViewModel.getFormStyleConfig();
-    let mGridConfig = this.mPageDesktopViewModel.getGridConfig();
     let styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
     this.mFormNameHeight = styleConfig.mNameHeight;
     this.mAppItemWidth = styleConfig.mIconSize;
@@ -191,94 +204,75 @@ export default struct FormItem {
     this.clearForm();
   }
 
-  /**
-   * The form item on desktop workspace: drag state listener.
-   */
-  private mDragStateListener = {
-    onItemDragStart: (event: any, itemIndex: number) => {
-      this.isDragging = true;
-    },
-    onItemDragMove: (event: any, insertIndex: number, itemIndex: number) => {
-      if (this.isSwappingPage) {
-        return;
-      }
-      let moveX = event.touches[0].screenX;
-      let moveY = event.touches[0].screenY;
-      if ((moveX - this.mAppItemWidth / 2) < this.mMargin
-      && this.mPageDesktopViewModel.getIndex() > 0 && moveY < this.mGridSpaceHeight) {
-        this.mPageDesktopViewModel.showPrevious();
-        this.movingFormSwapPageDelay();
-      } else if ((moveX + this.mAppItemWidth / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
-        if (this.mPageDesktopViewModel.getIndex() === this.mPageDesktopViewModel.getGridPageCount() - 1
-        && !this.mPageDesktopViewModel.isBlankPage()) {
-          this.mPageDesktopViewModel.addBlankPage(true);
-        } else if (this.mPageDesktopViewModel.getIndex() < this.mPageDesktopViewModel.getGridPageCount() - 1) {
-          this.mPageDesktopViewModel.showNext();
-        }
-        this.movingFormSwapPageDelay();
-      }
-    },
-    onItemDragEnd: (event: any, insertIndex: number, itemIndex: number) => {
-      this.isDragging = false;
-    }
-  };
-
-  /**
-   * Increase delay when dragging card to other page.
-   */
-  movingFormSwapPageDelay() {
-    this.isSwappingPage = true;
-    setTimeout(() => {
-      this.isSwappingPage = false;
-    }, FORM_INFO_REFRESH_DELAY);
+  dragStart(event: DragEvent): CustomBuilder {
+    AppStorage.SetOrCreate('isDrag', true);
+    ContextMenu.close();
+    this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
+    this.pageDesktopDragItemInfo = this.formItem;
+    const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getX(), event.getY());
+    const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getX(), event.getY())
+    globalThis.PageDesktopDragHandler.mStartPosition = startPosition;
+    AppStorage.SetOrCreate('selectAppIndex', selectAppIndex);
+    Log.showInfo(TAG, `onDragStart event: [${event.getX()}, ${event.getY()}], selectAppIndex: ${selectAppIndex}`);
+    const rowOffset = startPosition.row - this.pageDesktopDragItemInfo.row;
+    const columnOffset = startPosition.column - this.pageDesktopDragItemInfo.column;
+    const positionOffset = [columnOffset, rowOffset];
+    AppStorage.SetOrCreate('positionOffset', positionOffset);
+    return this.dragLayerBuilder();
   }
 
   build() {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceAround }) {
-      if (!this.isDragging) {
-        Column() {
-          FormItemComponent({
-            formItemWidth: this.mFormItemWidth,
-            formItemHeight: this.mFormItemHeight,
-            formNameHeight: this.mFormNameHeight,
-            formNameSize: this.mFormNameSize,
-            nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
-            formItem: this.formItem,
-            nameLines: this.mNameLines,
-            mPaddingTop: this.mIconMarginVertical,
-            iconNameMargin: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mIconNameMargin,
-            menuInfo: this.mPageDesktopViewModel.buildCardMenuInfoList(this.formItem,
-              this.dialogController, this.formManagerDialogController),
-            clickForm: (event, formItem) => {
-              this.mPageDesktopViewModel.openApplication(this.formItem.abilityName, this.formItem.bundleName, this.formItem.moduleName);
-            }
-          })
-        }
-        .scale({ x: this.animateScale, y: this.animateScale })
-        .opacity(this.animateOpacity)
-        .onMouse((event: MouseEvent) => {
-          if (event.button === MouseButton.Right) {
-            event.stopPropagation();
-            Log.showInfo(TAG, 'onMouse mouse button right');
-          }
+      Column() {
+        FormItemComponent({
+          formItemWidth: this.mFormItemWidth,
+          formItemHeight: this.mFormItemHeight,
+          formNameHeight: this.mFormNameHeight,
+          formNameSize: this.mFormNameSize,
+          nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
+          formItem: this.formItem,
+          nameLines: this.mNameLines,
+          mPaddingTop: this.mIconMarginVertical,
+          iconNameMargin: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mIconNameMargin,
+          menuInfo: this.mPageDesktopViewModel.buildCardMenuInfoList(this.formItem,
+            this.dialogController, this.formManagerDialogController),
+          clickForm: (event, formItem) => {
+            this.mPageDesktopViewModel.openApplication(this.formItem.abilityName, this.formItem.bundleName, this.formItem.moduleName);
+          },
+          dragStart: this.dragStart.bind(this)
         })
-        .gesture(
-          GestureGroup(GestureMode.Exclusive,
-          TapGesture({ count: 2 })
-            .onAction((event: GestureEvent) => {
-              Log.showInfo(TAG, 'mouse double click');
-              this.mPageDesktopViewModel.onAppDoubleClick(this.formItem.abilityName, this.formItem.bundleName, this.formItem.moduleName);
-            })
-          )
-        )
-        .onTouch((event: TouchEvent) => {
-          AppStorage.SetOrCreate('dragFocus', PagedesktopConstants.FEATURE_NAME);
-          this.mPageDesktopDragHandler.setDragStateListener(this.mDragStateListener);
-          this.mPageDesktopDragHandler.notifyTouchEventUpdate(event);
-        })
-        .width(StyleConstants.PERCENTAGE_100)
-        .height(StyleConstants.PERCENTAGE_100)
       }
+      .visibility(this.pageDesktopDragItemInfo.cardId === this.formItem.cardId ? Visibility.None : Visibility.Visible)
+      .scale({ x: this.animateScale, y: this.animateScale })
+      .opacity(this.animateOpacity)
+      .onMouse((event: MouseEvent) => {
+        if (event.button === MouseButton.Right) {
+          event.stopPropagation();
+          Log.showInfo(TAG, 'onMouse mouse button right');
+        }
+      })
+      .gesture(
+      GestureGroup(GestureMode.Exclusive,
+      TapGesture({ count: 2 })
+        .onAction((event: GestureEvent) => {
+          Log.showInfo(TAG, 'mouse double click');
+          this.mPageDesktopViewModel.onAppDoubleClick(this.formItem.abilityName, this.formItem.bundleName, this.formItem.moduleName);
+        })
+      )
+      )
+      .onTouch((event: TouchEvent) => {
+        if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {
+          let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
+          Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
+          if (!mIsDragEffectArea) {
+            this.pageDesktopDragItemInfo = {};
+            AppStorage.SetOrCreate('selectAppIndex', null);
+            AppStorage.SetOrCreate('isDrag', false);
+          }
+        }
+      })
+      .width(StyleConstants.PERCENTAGE_100)
+      .height(StyleConstants.PERCENTAGE_100)
     }
     .width(StyleConstants.PERCENTAGE_100)
     .height(StyleConstants.PERCENTAGE_100)

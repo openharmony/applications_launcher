@@ -277,4 +277,14 @@ export class CommonConstants {
    * setting data ability uri
    */
   static SETTING_DATA_ABILITY_URI: string = 'dataability:///com.ohos.settingsdata.DataAbility';
+
+  /**
+   * Drag events from the smartDock.
+   */
+  static DRAG_FROM_DOCK = 1;
+
+  /**
+   * Drag events from the workspace.
+   */
+  static DRAG_FROM_DESKTOP = 2;
 }

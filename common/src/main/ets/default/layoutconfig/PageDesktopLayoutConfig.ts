@@ -87,13 +87,13 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
    * @params gridLayoutInfo
    */
   updateGridLayoutInfo(gridLayoutInfo: any): void {
+    this.mGridLayoutInfo = gridLayoutInfo;
     const temp = {
       layoutDescription: {},
       layoutInfo: []
     };
     temp.layoutDescription = gridLayoutInfo.layoutDescription;
     FileUtils.writeStringToFile(JSON.stringify(temp), this.getConfigFileAbsPath());
-    this.mGridLayoutInfo = gridLayoutInfo;
     globalThis.RdbStoreManagerInstance.insertGridLayoutInfo(gridLayoutInfo).then(() => {
       Log.showInfo(TAG, 'updateGridLayoutInfo success.');
     }).catch((err) => {

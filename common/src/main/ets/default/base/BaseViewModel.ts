@@ -117,7 +117,7 @@ const KEY_NAME = 'name';
     }
   }
 
-  getAppName(cacheKey: string) {
+  getAppName(cacheKey: string): string {
     return this.mResourceManager.getAppResourceCache(cacheKey, KEY_NAME);
   }
 }

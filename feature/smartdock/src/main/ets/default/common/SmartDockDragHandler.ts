@@ -13,13 +13,14 @@
  * limitations under the License.
  */
 import { Log } from '@ohos/common';
+import { DragArea } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
 import { BaseDragHandler } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
-import SmartDockModel from '../model/SmartDockModel';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
+import SmartDockModel from '../model/SmartDockModel';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
 
 const TAG = 'SmartDockDragHandler';
@@ -50,19 +51,45 @@ export default class SmartDockDragHandler extends BaseDragHandler {
 
   setDragEffectArea(effectArea): void {
     Log.showDebug(TAG, `setDragEffectArea: ${JSON.stringify(effectArea)}`);
+    AppStorage.SetOrCreate('smartDockDragEffectArea', effectArea);
     super.setDragEffectArea(effectArea);
     this.updateDockParam(effectArea);
   }
 
-  private updateDockParam(effectArea) {
+  isDragEffectArea(x: number, y: number): boolean {
+    const isInEffectArea = super.isDragEffectArea(x, y);
+    Log.showDebug(TAG, `isDragEffectArea x: ${x}, y: ${y}, isInEffectArea: ${isInEffectArea}`);
+    const deviceType = AppStorage.Get('deviceType');
+    const pageDesktopDragEffectArea: DragArea = AppStorage.Get('pageDesktopDragEffectArea');
+    Log.showDebug(TAG, `isDragEffectArea pageDesktopDragEffectArea: ${JSON.stringify(pageDesktopDragEffectArea)}`);
+    if (pageDesktopDragEffectArea) {
+      if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
+        if (isInEffectArea || (y < pageDesktopDragEffectArea.bottom && y > pageDesktopDragEffectArea.top)
+        && x < pageDesktopDragEffectArea.right && x > pageDesktopDragEffectArea.left) {
+          return true;
+        }
+        return false;
+      }
+      return isInEffectArea;
+    }
+    return false;
+  }
+
+  private updateDockParam(effectArea: DragArea): void {
     this.mDockCoordinateData = [];
     const dockWidth = effectArea.right - effectArea.left;
     const dockData: [] = this.getDragRelativeData();
     const dataCount = dockData.length;
-    Log.showDebug(TAG, `updateDockParam dockWidth: ${dockWidth}, dataCount: ${dataCount}`);
+    const dockPadding: {right: number, left: number, top: number, bottom: number} = AppStorage.Get('dockPadding');
+    const itemSize = this.mSmartDockStyleConfig.mListItemWidth;
+    const itemGap = this.mSmartDockStyleConfig.mListItemGap;
     if (dataCount > 0) {
-      for (let index = 1; index <= dataCount; index++) {
-        this.mDockCoordinateData.push(dockWidth / dataCount * index + effectArea.left);
+      for (let index = 0; index < dataCount; index++) {
+        if (index == dataCount - 1) {
+          this.mDockCoordinateData.push(effectArea.right - dockPadding.left - (itemSize / 2));
+          return;
+        }
+        this.mDockCoordinateData.push(effectArea.left + dockPadding.left + (itemSize / 2) + ((itemSize + itemGap) * index));
       }
     } else {
       this.mDockCoordinateData.push(dockWidth);
@@ -75,13 +102,28 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     return dockData;
   }
 
-  protected getItemIndex(event: any): number {
-    const x = event.touches[0].screenX;
-    const y = event.touches[0].screenY;
-    if (x > this.mDragEffectArea.left && x < this.mDragEffectArea.right
-    && y > this.mDragEffectArea.top && y < this.mDragEffectArea.bottom) {
+  protected getItemIndex(x: number, y: number): number {
+    if (super.isDragEffectArea(x, y)) {
       for (let index = 0; index < this.mDockCoordinateData.length; index++) {
         if (this.mDockCoordinateData[index] > x) {
+          return index;
+        }
+      }
+      return this.mDockCoordinateData.length;
+    }
+    return CommonConstants.INVALID_VALUE;
+  }
+
+  /**
+   * Get dragItem location by coordinates.
+   *
+   * @param x - x position
+   * @param y - y position
+   */
+  getDragItemIndexByCoordinates(x: number, y: number): number {
+    if (super.isDragEffectArea(x, y)) {
+      for (let index = 0; index < this.mDockCoordinateData.length; index++) {
+        if (this.mDockCoordinateData[index] + this.mSmartDockStyleConfig.mListItemWidth / 2 >= x) {
           return index;
         }
       }
@@ -97,72 +139,27 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     return null;
   }
 
-  protected onDragStart(event: any, itemIndex: number): void {
-    super.onDragStart(event, itemIndex);
-    const moveAppX = event.touches[0].screenX;
-    const moveAppY = event.touches[0].screenY;
-    Log.showDebug(TAG, `onDragStart itemIndex: ${itemIndex}, dragItemInfo: ${this.getDragItemInfo()}`);
-    AppStorage.SetOrCreate('overlayPositionX', moveAppX);
-    AppStorage.SetOrCreate('overlayPositionY', moveAppY);
-    AppStorage.SetOrCreate('overlayData', {
-      iconSize: this.mSmartDockStyleConfig.mIconSize,
-      appInfo: this.getDragItemInfo(),
-    });
-    AppStorage.SetOrCreate('withBlur', false);
-    AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_APP_ICON);
-  }
-
-  protected onDragMove(event: any, insertIndex: number, itemIndex: number): void {
-    super.onDragMove(event, insertIndex, itemIndex);
-    Log.showDebug(TAG, `onDragMove insertIndex: ${insertIndex}`);
-    const moveAppX = event.touches[0].screenX;
-    const moveAppY = event.touches[0].screenY;
-    AppStorage.SetOrCreate('overlayPositionX', moveAppX - (this.mSmartDockStyleConfig.mIconSize / 2));
-    AppStorage.SetOrCreate('overlayPositionY', moveAppY - (this.mSmartDockStyleConfig.mIconSize / 2));
-  }
-
-  protected onDragDrop(event: any, insertIndex: number, itemIndex: number): boolean {
-    this.mDevice = AppStorage.Get('device');
-    super.onDragDrop(event, insertIndex, itemIndex);
-    Log.showDebug(TAG, `onDragDrop insertIndex: ${insertIndex}, IsInEffectArea: ${this.mIsInEffectArea}`);
-    AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
-    let isDragSuccess = true;
-    if (this.mIsInEffectArea) {
-      if (this.isSelfDrag()) {
-        this.layoutAdjustment(insertIndex, itemIndex);
-        isDragSuccess = true;
-      } else if (this.mDevice == CommonConstants.DEFAULT_DEVICE_TYPE) {
-        const dragItemInfo = this.getDragItemInfo();
-        Log.showDebug(TAG, `onDragDrop addItem: ${JSON.stringify(dragItemInfo)}`);
-        isDragSuccess = this.addItemToSmartDock(dragItemInfo, insertIndex);
-      }
-    } else if (this.mDevice == CommonConstants.DEFAULT_DEVICE_TYPE) {
-      Log.showDebug(TAG, 'onDragDrop remove item');
-      const dragItemInfo = this.getDragItemInfo();
-      let deleteDockRes = this.mSmartDockModel.deleteDockItem({
-        bundleName: undefined,
-        keyName: dragItemInfo.keyName
-      }, SmartDockConstants.RESIDENT_DOCK_TYPE);
-      if (deleteDockRes) {
-        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, dragItemInfo);
-      }
-    }
-    return isDragSuccess;
-  }
-
-  protected onDragEnd(isSuccess: boolean): void {
-    this.mDevice = AppStorage.Get('device');
-    super.onDragEnd(isSuccess);
-    if (this.isDropOutSide() && isSuccess) {
-      Log.showDebug(TAG, 'onDragEnd dropOutSide');
+  layoutAdjustment(insertIndex: number, itemIndex: number): void {
+    if (insertIndex != CommonConstants.INVALID_VALUE || itemIndex != CommonConstants.INVALID_VALUE) {
+      this.mSmartDockModel.insertItemToIndex(insertIndex, itemIndex);
     }
   }
 
-  private layoutAdjustment(insertIndex: number, itemIndex: number): void {
-    this.mSmartDockModel.inserItemToIndex(insertIndex, itemIndex);
+  protected onDragDrop(x: number, y: number) {
+    const dragItemInfo = AppStorage.Get('dragItemInfo');
+    const insertIndex = this.getItemIndex(x, y);
+    if (dragItemInfo && AppStorage.Get('dragItemType') === CommonConstants.DRAG_FROM_DOCK) {
+      const selectAppIndex = AppStorage.Get('selectAppIndex');
+      globalThis.SmartDockDragHandler.layoutAdjustment(insertIndex, selectAppIndex);
+    }
+    if (dragItemInfo && AppStorage.Get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP
+    && AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+      Log.showInfo(TAG, `onDrop insertIndex: ${insertIndex}`);
+      this.addItemToSmartDock(dragItemInfo, insertIndex);
+    }
   }
 
-  private addItemToSmartDock(dragItemInfo: any, insertIndex: number): boolean {
+  addItemToSmartDock(dragItemInfo: any, insertIndex: number): boolean {
     let addToDockRes = this.mSmartDockModel.addToSmartdock(dragItemInfo, insertIndex);
     if (addToDockRes) {
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE, {

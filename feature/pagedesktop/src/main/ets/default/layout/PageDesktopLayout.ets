@@ -20,7 +20,6 @@ import { MenuInfo } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import GridSwiper from '../common/components/GridSwiper';
-import PagedesktopConstants from '../common/constants/PagedesktopConstants';
 import { PageDesktopDragHandler } from '../common/PageDesktopDragHandler';
 import PageDesktopViewModel from '../viewmodel/PageDesktopViewModel';
 
@@ -32,16 +31,15 @@ export struct PageDesktopLayout {
   @StorageLink('appListInfo') AppListInfo: {
     appGridInfo: [[]]
   } = { appGridInfo: [[]] };
-  @StorageLink('dragLocation') @Watch('onTouchEventUpdate') dragLocation: string = '';
   @StorageLink('workSpaceWidth') @Watch('updateDeskTopParams') workSpaceWidth: number = 0;
   @StorageLink('workSpaceHeight') @Watch('updateDeskTopParams') workSpaceHeight: number = 0;
-  @State device: string = 'phone';
   @State @Watch('updateDeskTopParams') mMargin: number = 0;
   @State mTop: number = 0;
   @State @Watch('changeGridConfig') gridConfig: string = '';
   @StorageLink('menuId') menuId: number = 0;
   private mPageDesktopDragHandler: PageDesktopDragHandler = null;
   private isPad: boolean = false;
+  private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
   dialogController: CustomDialogController = new CustomDialogController({
     builder: settingDialog({ cancel: this.onCancel, confirm: this.confirm, onAccept: this.onAccept }),
     cancel: this.onCancel,
@@ -51,7 +49,6 @@ export struct PageDesktopLayout {
   })
 
   onCancel() {
-
   }
 
   onAccept() {
@@ -64,17 +61,18 @@ export struct PageDesktopLayout {
   }
 
   aboutToAppear(): void  {
+    this.deviceType = AppStorage.Get('deviceType');
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     mPageDesktopViewModel = PageDesktopViewModel.getInstance();
     this.gridConfig = mPageDesktopViewModel.getGridConfig().layout;
     this.updateStyle();
-    if (this.device != CommonConstants.PAD_DEVICE_TYPE) {
+    if (this.deviceType != CommonConstants.PAD_DEVICE_TYPE) {
       mPageDesktopViewModel.registerAppListChangeCallback();
     }
   }
 
   private updateStyle() {
-    mPageDesktopViewModel.setDevice(this.device);
+    mPageDesktopViewModel.setDevice(this.deviceType);
     this.isPad = mPageDesktopViewModel.getDevice();
     Log.showInfo(TAG, `updateStyle isPad: ${this.isPad}`);
   }
@@ -88,14 +86,8 @@ export struct PageDesktopLayout {
         left: this.mMargin,
         top: this.mTop,
         right: this.workSpaceWidth - this.mMargin,
-        bottom: this.workSpaceHeight
+        bottom: mPageDesktopViewModel.getPageDesktopStyleConfig().mGridHeight + this.mTop
       });
-    }
-  }
-
-  private onTouchEventUpdate() {
-    if (AppStorage.Get('device') === 'phone' || AppStorage.Get('dragFocus') == PagedesktopConstants.FEATURE_NAME) {
-      this.mPageDesktopDragHandler.onTouchEventUpdate(AppStorage.Get('dragEvent'));
     }
   }
 
@@ -150,7 +142,7 @@ export struct PageDesktopLayout {
   }
 
   build() {
-    if (this.device == 'phone') {
+    if (this.deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
         if (this.buildLog()) {
         }

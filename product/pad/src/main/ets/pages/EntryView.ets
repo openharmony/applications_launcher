@@ -20,7 +20,6 @@ import { CommonConstants } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
 import { windowManager } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
-import { CustomOverlay } from '@ohos/common';
 import { SettingsModel } from '@ohos/common';
 import { LayoutViewModel } from '@ohos/common';
 import { SmartDock } from '@ohos/smartdock';
@@ -38,17 +37,16 @@ const TAG = 'EntryView';
 struct EntryView {
   @StorageLink('screenWidth') screenWidth: number = 0;
   @StorageLink('screenHeight') @Watch('updateScreenInfo') screenHeight: number = 0;
+  @StorageLink('deviceType') deviceType: string = CommonConstants.PAD_DEVICE_TYPE;
   @State workSpaceWidth: number = 0;
   @State workSpaceHeight: number = 0;
   @State dockHeight: number = 0;
-  @State device: string = CommonConstants.PAD_DEVICE_TYPE;
   private mStage: PadStage = new PadStage();
   private mLayoutViewModel: LayoutViewModel;
   private navigationBarStatus: string | undefined;
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
-    AppStorage.SetOrCreate('device', this.device);
     this.mStage.onCreate();
 
     // init layout config
@@ -117,7 +115,7 @@ struct EntryView {
     AppStorage.SetOrCreate('workSpaceWidth', this.workSpaceWidth);
     AppStorage.SetOrCreate('workSpaceHeight', this.workSpaceHeight);
     AppStorage.SetOrCreate('dockHeight', this.dockHeight);
-    Log.showInfo(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}, workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
+    Log.showInfo(TAG, `updateScreenSize product: ${this.deviceType}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}, workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
   }
 
   aboutToDisappear(): void {
@@ -131,7 +129,6 @@ struct EntryView {
     AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
     AppStorage.SetOrCreate('selectDesktopAppItem', '');
-    PageDesktopDragHandler.getInstance().reset();
     this.closeRecentDockPopup();
     return true;
   }
@@ -153,16 +150,13 @@ struct EntryView {
       Column() {
         Column() {
           Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-            PageDesktopLayout({
-              device: this.device,
-            });
+            PageDesktopLayout();
           }
         }
         .height(this.workSpaceHeight)
 
         Column() {
           SmartDock({
-            device: this.device,
             showAppCenter: () => {
               Trace.start(Trace.CORE_METHOD_START_APP_CENTER);
               globalThis.createWindowWithName(windowManager.APP_CENTER_WINDOW_NAME, windowManager.DESKTOP_RANK);
@@ -182,8 +176,7 @@ struct EntryView {
       .width('100%')
       .height('100%')
 
-      FolderOpenComponent()
-      CustomOverlay()
+      FolderOpenComponent();
     }
     .backgroundImage('/common/pics/img_wallpaper_default.jpg')
     .backgroundImageSize(ImageSize.Cover)

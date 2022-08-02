@@ -23,10 +23,8 @@ import { BigFolderViewModel } from '@ohos/bigfolder';
 import { BigFolderStyleConfig } from '@ohos/bigfolder';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
 import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel'
-import PagedesktopConstants from '../constants/PagedesktopConstants';
 import { BigFolderConstants } from '@ohos/bigfolder';
 
-const FOLDER_INFO_REFRESH_DELAY = 500;
 const TAG = 'FolderItem';
 
 /**
@@ -34,9 +32,10 @@ const TAG = 'FolderItem';
  */
 @Component
 export default struct FolderItem {
-  @StorageLink('openFolderStatus') openFolderStatus: number = 0;
+  @StorageLink('dragItemInfo') pageDesktopDragItemInfo: any = {};
+  @StorageLink('dragItemType') dragItemType: number = CommonConstants.DRAG_FROM_DESKTOP;
+  @StorageLink('openFolderStatus') openFolderStatus: number = BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
-  @State isDragging: boolean = false;
   @State mAppNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   @State mAppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
   private folderItem: any;
@@ -52,6 +51,27 @@ export default struct FolderItem {
   private mFolderStyleConfig: BigFolderStyleConfig;
   mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
 
+  @Builder dragLayerBuilder() {
+    Column() {
+      FolderComponent({
+        showFolderName: false,
+        nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
+        folderNameHeight: 0,
+        folderNameSize: 0,
+        mFolderItem: this.folderItem,
+        folderGridSize: this.mFolderStyleConfig.mGridSize * 1.05,
+        appIconSize: this.mFolderStyleConfig.mFolderAppSize * 1.05,
+        gridMargin: this.mFolderStyleConfig.mGridMargin * 1.05,
+        gridGap: this.mFolderStyleConfig.mFolderGridGap * 1.05,
+        buildMenu: (folderItem) => {
+          return [];
+        }
+      })
+    }
+    .height(this.mFolderStyleConfig.mGridSize * 1.05)
+    .width(this.mFolderStyleConfig.mGridSize * 1.05)
+  }
+
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mBigFolderViewModel = BigFolderViewModel.getInstance();
@@ -66,7 +86,7 @@ export default struct FolderItem {
     this.mMargin = styleConfig.mMargin;
     this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
-    this.openFolderStatus = AppStorage.Get('openFolderStatus') != 'undefined' ? AppStorage.Get('openFolderStatus') : 0;
+    this.openFolderStatus = AppStorage.Get('openFolderStatus') != 'undefined' ? AppStorage.Get('openFolderStatus') : BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
     this.formatFolderInfo();
   }
 
@@ -93,38 +113,6 @@ export default struct FolderItem {
   }
 
   /**
-   * The folder item on desktop workspace: drag state listener.
-   */
-  private mDragStateListener = {
-    onItemDragStart: (event: any, itemIndex: number) => {
-      this.isDragging = true;
-    },
-    onItemDragMove: (event: any, insertIndex: number, itemIndex: number) => {
-      if (this.isSwappingPage) {
-        return;
-      }
-      let moveX = event.touches[0].screenX;
-      let moveY = event.touches[0].screenY;
-      if ((moveX - this.mAppItemWidth / 2) < this.mMargin
-      && this.mPageDesktopViewModel.getIndex() > 0 && moveY < this.mGridSpaceHeight) {
-        this.mPageDesktopViewModel.showPrevious();
-        this.movingFolderSwapPageDelay();
-      } else if ((moveX + this.mAppItemWidth / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
-        if (this.mPageDesktopViewModel.getIndex() == this.mPageDesktopViewModel.getGridPageCount() - 1
-        && !this.mPageDesktopViewModel.isBlankPage()) {
-          this.mPageDesktopViewModel.addBlankPage(true);
-        } else if (this.mPageDesktopViewModel.getIndex() < this.mPageDesktopViewModel.getGridPageCount() - 1) {
-          this.mPageDesktopViewModel.showNext();
-        }
-        this.movingFolderSwapPageDelay();
-      }
-    },
-    onItemDragEnd: () => {
-      this.isDragging = false;
-    }
-  };
-
-  /**
    * When rename is clicked, call this function to change folder state.
    */
   private renameClick() {
@@ -133,23 +121,30 @@ export default struct FolderItem {
     this.mBigFolderViewModel.openFolder(true, this.folderItem);
   }
 
-  /**
-   * Increase delay when dragging folder to other page.
-   */
-  movingFolderSwapPageDelay() {
-    this.isSwappingPage = true;
-    setTimeout(() => {
-      this.isSwappingPage = false;
-    }, FOLDER_INFO_REFRESH_DELAY);
-  }
-
-  private getOpenFolder(): String {
+  private getOpenFolder(): string {
     let openFolderData: {
       folderId: string,
       layoutInfo: any
     } = AppStorage.Get('openFolderData');
 
     return openFolderData.folderId;
+  }
+
+  dragStart(event: DragEvent): CustomBuilder {
+    AppStorage.SetOrCreate('isDrag', true);
+    ContextMenu.close();
+    this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
+    this.pageDesktopDragItemInfo = this.folderItem;
+    const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getX(), event.getY());
+    const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getX(), event.getY())
+    globalThis.PageDesktopDragHandler.mStartPosition = startPosition;
+    AppStorage.SetOrCreate('selectAppIndex', selectAppIndex);
+    Log.showInfo(TAG, `onDragStart event: [${event.getX()}, ${event.getY()}], selectAppIndex: ${selectAppIndex}`);
+    const rowOffset = startPosition.row - this.pageDesktopDragItemInfo.row;
+    const columnOffset = startPosition.column - this.pageDesktopDragItemInfo.column;
+    const positionOffset = [columnOffset, rowOffset];
+    AppStorage.SetOrCreate('positionOffset', positionOffset);
+    return this.dragLayerBuilder();
   }
 
   build() {
@@ -184,10 +179,15 @@ export default struct FolderItem {
             this.mBigFolderViewModel.openFolder(false, folderItem);
           },
           onFolderTouch: (event, folderItem) => {
-            Log.showInfo(TAG, "onFolderTouch");
-            AppStorage.SetOrCreate('dragFocus', PagedesktopConstants.FEATURE_NAME);
-            this.mPageDesktopDragHandler.setDragStateListener(this.mDragStateListener);
-            this.mPageDesktopDragHandler.notifyTouchEventUpdate(event);
+            if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {
+              let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
+              Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
+              if (!mIsDragEffectArea) {
+                AppStorage.SetOrCreate('dragItemInfo', {});
+                AppStorage.SetOrCreate('selectAppIndex', null);
+                AppStorage.SetOrCreate('isDrag', false);
+              }
+            }
           },
           onGetPosition: (getPosition: Function) => {
             Log.showInfo(TAG, "onGetPosition");
@@ -203,10 +203,11 @@ export default struct FolderItem {
             getPosition(x, y);
           },
           buildMenu: (folderItem) =>
-          this.mPageDesktopViewModel.buildRenameMenuInfoList(folderItem, this.renameClick.bind(this))
+          this.mPageDesktopViewModel.buildRenameMenuInfoList(folderItem, this.renameClick.bind(this)),
+          dragStart: this.dragStart.bind(this)
         })
       }
-      .visibility((this.isDragging || (this.openFolderStatus != 0 && this.getOpenFolder() == this.folderItem.folderId)) ? Visibility.Hidden : Visibility.Visible)
+      .visibility((this.pageDesktopDragItemInfo.folderId === this.folderItem.folderId || (this.openFolderStatus != 0 && this.getOpenFolder() == this.folderItem.folderId)) ? Visibility.Hidden : Visibility.Visible)
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
           event.stopPropagation();

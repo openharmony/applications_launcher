@@ -18,7 +18,6 @@ import { CommonConstants } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
 import { windowManager } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
-import { CustomOverlay } from '@ohos/common';
 import { SettingsModel } from '@ohos/common';
 import { LayoutViewModel } from '@ohos/common';
 import { SmartDock } from '@ohos/smartdock';
@@ -35,10 +34,10 @@ const TAG = "EntryView";
 struct EntryView {
   @StorageLink('screenWidth') screenWidth: number = 0;
   @StorageLink('screenHeight') @Watch('updateScreenInfo') screenHeight: number = 0;
+  @StorageLink('deviceType') deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
   @State workSpaceWidth: number = 0;
   @State workSpaceHeight: number = 0;
   @State dockHeight: number = 0;
-  @State device: string = 'phone';
   private mStage: PhoneStage = new PhoneStage();
   private mLayoutViewModel: LayoutViewModel;
   private navigationBarStatus: string | undefined;
@@ -53,7 +52,6 @@ struct EntryView {
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
-    AppStorage.SetOrCreate('device', this.device);
     this.mStage.onCreate();
 
     // init layout config
@@ -123,20 +121,18 @@ struct EntryView {
     AppStorage.SetOrCreate('workSpaceWidth', this.workSpaceWidth);
     AppStorage.SetOrCreate('workSpaceHeight', this.workSpaceHeight);
     AppStorage.SetOrCreate('dockHeight', this.dockHeight);
-    Log.showDebug(TAG, `updateScreenSize product: ${this.device}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}, workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
+    Log.showDebug(TAG, `updateScreenSize product: ${this.deviceType}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}, workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
   }
 
   build() {
     Stack() {
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
         Column() {
-          PageDesktopLayout({
-            device: this.device
-          });
+          PageDesktopLayout();
         }
         .height(this.workSpaceHeight)
         Column() {
-          SmartDock()
+          SmartDock();
         }
         .onAreaChange((event) => {
           Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
@@ -148,8 +144,7 @@ struct EntryView {
         })
         .height(this.dockHeight)
       }
-      FolderOpenComponent()
-      CustomOverlay()
+      FolderOpenComponent();
     }
     .backgroundImage(StyleConstants.DEFAULT_BACKGROUND_IMAGE)
     .backgroundImageSize(ImageSize.Cover)
