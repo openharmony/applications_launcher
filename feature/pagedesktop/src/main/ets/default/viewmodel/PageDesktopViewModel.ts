@@ -25,16 +25,16 @@ import { windowManager } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
 import { BaseViewModel } from '@ohos/common';
 import { SettingsModelObserver } from '@ohos/common';
-import { FormListInfoCacheManager, localEventManager } from '@ohos/common';
+import { FormListInfoCacheManager } from '@ohos/common';
 import { FormModel } from '@ohos/common';
 import { SettingsModel } from '@ohos/common';
+import { PageDesktopModel } from '@ohos/common';
 import { MenuInfo } from '@ohos/common';
 import { CardItemInfo } from '@ohos/common';
 import { BigFolderModel } from '@ohos/bigfolder';
 import { FormDetailLayoutConfig } from '@ohos/form';
 import { localEventManager } from '@ohos/common';
-import PageDesktopModel from '../model/PageDesktopModel';
-import PagedesktopConstants from '../common/constants/PagedesktopConstants';
+import PageDesktopConstants from '../common/constants/PageDesktopConstants';
 import { PageDesktopGridStyleConfig } from '../common/PageDesktopGridStyleConfig';
 
 const TAG = 'PageDesktopViewModel';
@@ -50,11 +50,9 @@ export default class PageDesktopViewModel extends BaseViewModel {
   private readonly mPageDesktopModel: PageDesktopModel;
   private readonly mBadgeManager: BadgeManager;
   private readonly mFormListInfoCacheManager: FormListInfoCacheManager;
-  private readonly mAppInfoList;
   private mBundleInfoList;
   private mHideBundleInfoList = new Array<any>();
   private mGridConfig;
-  private mPageIndex = 0;
   private mGridAppsInfos;
   private readonly mPageCoordinateData = {
     gridXAxis: [],
@@ -105,6 +103,9 @@ export default class PageDesktopViewModel extends BaseViewModel {
         case EventConstants.EVENT_SMARTDOCK_INIT_FINISHED:
           this.getGridList();
           break;
+        case EventConstants.EVENT_REQUEST_PAGEDESK_REFRESH:
+          this.pagingFiltering();
+          break;
         default:
           if (!this.isPad) {
             Log.showInfo(TAG, 'localEventListener hideBundleInfoList!')
@@ -135,9 +136,8 @@ export default class PageDesktopViewModel extends BaseViewModel {
     this.mSettingsModel.addObserver(this.mSettingsChangeObserver);
     this.onPageDesktopCreate();
     this.mGridConfig = this.getGridConfig();
-    this.pageDesktopStyleConfig = layoutConfigManager.getStyleConfig(PageDesktopGridStyleConfig.APP_GRID_STYLE_CONFIG, PagedesktopConstants.FEATURE_NAME);
-    this.formDetailLayoutConfig = layoutConfigManager.getStyleConfig(FormDetailLayoutConfig.FORM_LAYOUT_INFO, PagedesktopConstants.FEATURE_NAME);
-    AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
+    this.pageDesktopStyleConfig = layoutConfigManager.getStyleConfig(PageDesktopGridStyleConfig.APP_GRID_STYLE_CONFIG, PageDesktopConstants.FEATURE_NAME);
+    this.formDetailLayoutConfig = layoutConfigManager.getStyleConfig(FormDetailLayoutConfig.FORM_LAYOUT_INFO, PageDesktopConstants.FEATURE_NAME);
   }
 
   /**
@@ -256,7 +256,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
       (layoutInfo[i].bundleName == appItem.bundleName || layoutInfo[i].keyName == appItem.keyName)) {
         const page = layoutInfo[i].page;
         gridLayoutInfo.layoutInfo.splice(i, 1);
-        this.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
+        this.mPageDesktopModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
         this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
         break;
       }
@@ -694,178 +694,10 @@ export default class PageDesktopViewModel extends BaseViewModel {
     // calculate the layout of new apps
     for (let i = 0; i < newApp.length; i++) {
       if (newApp[i].typeId == CommonConstants.TYPE_APP) {
-        this.updateAppItemLayoutInfo(info, newApp[i]);
+        this.mPageDesktopModel.updateAppItemLayoutInfo(info, newApp[i]);
       }
     }
     return info;
-  }
-
-  private updateCardItemLayoutInfo(info, item) {
-    const pageCount = info.layoutDescription.pageCount;
-    const row = info.layoutDescription.row;
-    const column = info.layoutDescription.column;
-    // current page has space
-    let isNeedNewPage = true;
-    const max = pageCount - 1 > this.mPageIndex ? this.mPageIndex + 1 : pageCount - 1;
-    pageCycle: for (let i = this.mPageIndex; i <= max; i++) {
-      for (let y = 0; y < row; y++) {
-        for (let x = 0; x < column; x++) {
-          if (this.isPositionValid(info, item, i, x, y)) {
-            Log.showInfo(TAG, 'updateCardItemLayoutInfo isPositionValid: x:' + x + ' y: '+ y + ' page: '+ i);
-            isNeedNewPage = false;
-            item.page = i;
-            item.column = x;
-            item.row = y;
-            break pageCycle;
-          }
-        }
-      }
-    }
-    if (isNeedNewPage) {
-      item.page = this.mPageIndex + 1;
-      item.column = 0;
-      item.row = 0;
-    }
-    return isNeedNewPage;
-  }
-
-  private updateAppItemLayoutInfo(info, item): void {
-    const pageCount = info.layoutDescription.pageCount;
-    const row = info.layoutDescription.row;
-    const column = info.layoutDescription.column;
-    const layoutInfo = info.layoutInfo;
-    // current page has space
-    let isNeedNewPage = true;
-    pageCycle: for (let i = 0; i < pageCount; i++) {
-      for (let y = 0; y < row; y++) {
-        for (let x = 0; x < column; x++) {
-          if (this.isPositionValid(info, item, i, x, y)) {
-            Log.showInfo(TAG, `updateAppItemLayoutInfo isPositionValid: x:${x} y:${y} page:${i}`);
-            isNeedNewPage = false;
-            layoutInfo.push({
-              bundleName: item.bundleName,
-              typeId: item.typeId,
-              abilityName: item.abilityName,
-              moduleName: item.moduleName,
-              keyName: item.keyName,
-              badgeNumber:item.badgeNumber,
-              area: item.area,
-              page: i,
-              column: x,
-              row: y
-            });
-            break pageCycle;
-          }
-        }
-      }
-    }
-    if (isNeedNewPage) {
-      layoutInfo.push({
-        bundleName: item.bundleName,
-        typeId: item.typeId,
-        abilityName: item.abilityName,
-        moduleName: item.moduleName,
-        keyName: item.keyName,
-        badgeNumber:item.badgeNumber,
-        area: item.area,
-        page: pageCount,
-        column: 0,
-        row: 0
-      });
-      ++info.layoutDescription.pageCount;
-    }
-  }
-
-  updateFolderItemLayoutInfo(info, item): boolean {
-    const pageCount = info.layoutDescription.pageCount;
-    const row = info.layoutDescription.row;
-    const column = info.layoutDescription.column;
-    // current page has space
-    let isNeedNewPage = true;
-    const max = pageCount - 1 > this.mPageIndex ? this.mPageIndex + 1 : pageCount - 1;
-    pageCycle: for (let i = this.mPageIndex; i <= max; i++) {
-      for (let y = 0; y < row; y++) {
-        for (let x = 0; x < column; x++) {
-          if (this.isPositionValid(info, item, i, x, y)) {
-            Log.showInfo(TAG, `updateFolderItemLayoutInfo isPositionValid: x:${x} y:${y} page:${i}`);
-            isNeedNewPage = false;
-            item.page = i;
-            item.column = x;
-            item.row = y;
-            break pageCycle;
-          }
-        }
-      }
-    }
-    if (isNeedNewPage) {
-      item.page = this.mPageIndex + 1;
-      item.column = 0;
-      item.row = 0;
-    }
-    return isNeedNewPage;
-  }
-
-  updateAppItemFromFolder(info, item): boolean {
-    const pageCount = info.layoutDescription.pageCount;
-    const row = info.layoutDescription.row;
-    const column = info.layoutDescription.column;
-    // current page has space
-    let isNeedNewPage = true;
-    const max = pageCount - 1 > this.mPageIndex ? this.mPageIndex + 1 : pageCount - 1;
-    pageCycle: for (let i = this.mPageIndex; i <= max; i++) {
-      for (let y = 0; y < row; y++) {
-        for (let x = 0; x < column; x++) {
-          if (this.isPositionValid(info, item, i, x, y)) {
-            Log.showInfo(TAG, `updateAppItemFromFolder isPositionValid: x:${x} y:${y} page:${i}`);
-            isNeedNewPage = false;
-            item.page = i;
-            item.column = x;
-            item.row = y;
-            break pageCycle;
-          }
-        }
-      }
-    }
-    if (isNeedNewPage) {
-      item.page = this.mPageIndex + 1;
-      item.column = 0;
-      item.row = 0;
-    }
-    return isNeedNewPage;
-  }
-
-  private isPositionValid(info, item, page, startColumn, startRow) {
-    const row = info.layoutDescription.row;
-    const column = info.layoutDescription.column;
-    if ((startColumn + item.area[0]) > column || (startRow + item.area[1]) > row) {
-      return false;
-    }
-    let isValid = true;
-    for (let x = startColumn; x < startColumn + item.area[0]; x++) {
-      for (let y = startRow; y < startRow + item.area[1]; y++) {
-        if (this.isPositionOccupied(info, page, x, y)) {
-          isValid = false;
-          break;
-        }
-      }
-    }
-    return isValid;
-  }
-
-  private isPositionOccupied(info, page, column, row) {
-    const pageCount = info.layoutDescription.pageCount;
-    const layoutInfo = info.layoutInfo;
-    // current page has space
-    for (const layout of layoutInfo) {
-      if (layout.page == page) {
-        const xMatch = (column >= layout.column) && (column < layout.column + layout.area[0]);
-        const yMatch = (row >= layout.row) && (row < layout.row + layout.area[1]);
-        if (xMatch && yMatch) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 
   private createNewInfo() {
@@ -926,7 +758,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
   /**
    * Open Settings.
    */
-  intoSetting() {
+  intoSetting(): void {
     Log.showInfo(TAG, 'intoSetting');
     this.jumpToSetting();
   }
@@ -949,51 +781,18 @@ export default class PageDesktopViewModel extends BaseViewModel {
     return this.isBlankPage() ? '/common/pics/ic_public_delete.svg' : '/common/pics/ic_public_add_black.svg';
   }
 
-  /**
-   * Changing the Desktop Page Number.
-   *
-   * @param newPageIndex: Page number
-   */
-  changeIndexOnly(newPageIndex: number) {
-    this.mPageIndex = newPageIndex;
-  }
-
-  /**
-   * set pageIndex to appStorage.
-   */
-  setPageIndex(): void {
-    AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
-  }
-
   isBlankPage(): boolean {
-    Log.showInfo(TAG, `isBlankPage ${this.mPageIndex}`);
-    if (CheckEmptyUtils.isEmpty(this.mGridAppsInfos) || CheckEmptyUtils.isEmpty(this.mGridAppsInfos[this.mPageIndex])
-    || CheckEmptyUtils.isEmpty(this.mGridAppsInfos[this.mPageIndex].length)) {
+    const curPageIndex = this.mPageDesktopModel.getPageIndex();
+    Log.showInfo(TAG, `isBlankPage ${curPageIndex}`);
+    if (CheckEmptyUtils.isEmpty(this.mGridAppsInfos) || CheckEmptyUtils.isEmpty(this.mGridAppsInfos[curPageIndex])
+    || CheckEmptyUtils.isEmpty(this.mGridAppsInfos[curPageIndex].length)) {
       return true;
     }
-    Log.showInfo(TAG, `isBlankPage ${this.mGridAppsInfos[this.mPageIndex].length}`);
-    if (this.mGridAppsInfos[this.mPageIndex].length === 0) {
+    Log.showInfo(TAG, `isBlankPage ${this.mGridAppsInfos[curPageIndex].length}`);
+    if (this.mGridAppsInfos[curPageIndex].length === 0) {
       return true;
     }
     return false;
-  }
-
-  /**
-   * Changing the Desktop Page Number.
-   *
-   * @param idx: Page number
-   */
-  changeIndex(idx) {
-    this.mPageIndex = idx;
-    Log.showInfo(TAG, 'changeIndex ' + idx);
-    AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
-  }
-
-  /**
-   * Get the Desktop Page Number.
-   */
-  getIndex(): number {
-    return this.mPageIndex;
   }
 
   /**
@@ -1013,28 +812,12 @@ export default class PageDesktopViewModel extends BaseViewModel {
    * @param {boolean} isAddByDrag
    */
   addBlankPage(isAddByDrag: boolean): void {
-    Log.showInfo(TAG, 'addBlankPage' + this.mPageIndex);
-    this.isAddByDraggingFlag = isAddByDrag;
+    Log.showInfo(TAG, 'addBlankPage' + this.mPageDesktopModel.getPageIndex());
+    this.mPageDesktopModel.setAddByDragging(isAddByDrag);
     const allPageCount = this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount + 1;
     this.setGridPageCount(allPageCount);
     this.pagingFiltering();
-    this.mPageIndex = allPageCount - 1;
-    AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
-  }
-
-  /**
-   * get the addByDragging flag
-   */
-  isAddByDragging(): boolean {
-    return this.isAddByDraggingFlag;
-  }
-
-  /**
-   * set the addByDragging flag
-   * @param {boolean} isAddByDragging
-   */
-  setAddByDragging(isAddByDragging: boolean): void {
-    this.isAddByDraggingFlag = isAddByDragging
+    this.mPageDesktopModel.setPageIndex(allPageCount - 1);
   }
 
   /**
@@ -1066,10 +849,10 @@ export default class PageDesktopViewModel extends BaseViewModel {
    * Delete the chosen blank page.
    */
   private deleteBlankPage(): void {
-    Log.showInfo(TAG, 'deleteBlankPage ' + this.mPageIndex);
-    this.deleteGridPage(this.mPageIndex);
-    this.mPageIndex = this.mPageIndex - 1;
-    AppStorage.SetOrCreate('pageIndex', this.mPageIndex);
+    const curPageIndex = this.mPageDesktopModel.getPageIndex();
+    Log.showInfo(TAG, 'deleteBlankPage ' + curPageIndex);
+    this.deleteGridPage(curPageIndex);
+    this.mPageDesktopModel.setPageIndex(curPageIndex - 1);
     this.setGridPageCount(this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount - 1);
     this.pagingFiltering();
   }
@@ -1108,7 +891,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
     return this.isPad;
   }
 
-  buildMenuInfoList(appInfo, dialog, formDialog?, folderCallback?) {
+  buildMenuInfoList(appInfo, dialog, formDialog?, folderCallback?): MenuInfo[] {
     let menuInfoList = new Array<MenuInfo>();
     const shortcutInfo = this.mAppModel.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
@@ -1211,7 +994,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
     return menuInfoList;
   }
 
-  buildCardMenuInfoList(formInfo, dialog, formDialog) {
+  buildCardMenuInfoList(formInfo, dialog, formDialog): MenuInfo[] {
     const menuInfoList = new Array<MenuInfo>();
     if (!this.ifStringIsNull(formInfo.formConfigAbility)
     && formInfo.formConfigAbility.startsWith(CommonConstants.FORM_CONFIG_ABILITY_PREFIX, 0)) {
@@ -1262,7 +1045,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
     return menuInfoList;
   }
 
-  buildRenameMenuInfoList(folderItemInfo, menuCallback) {
+  buildRenameMenuInfoList(folderItemInfo, menuCallback): MenuInfo[] {
     const menuInfoList = new Array<MenuInfo>();
     const renameMenu = new MenuInfo();
     renameMenu.menuType = CommonConstants.MENU_TYPE_DYNAMIC;
@@ -1295,24 +1078,6 @@ export default class PageDesktopViewModel extends BaseViewModel {
    */
   getWorkSpaceHeight() {
     return AppStorage.Get('workSpaceHeight');
-  }
-
-  /**
-   * Set workSpaceWidth.
-   *
-   * @param workSpaceWidth
-   */
-  setWorkSpaceWidth(workSpaceWidth: number): void {
-    AppStorage.SetOrCreate('workSpaceWidth', workSpaceWidth);
-  }
-
-  /**
-   * Set workSpaceHeight.
-   *
-   * @param workSpaceHeight
-   */
-  setWorkSpaceHeight(workSpaceHeight: string): void {
-    AppStorage.SetOrCreate('workSpaceHeight', workSpaceHeight);
   }
 
   /**
@@ -1388,11 +1153,12 @@ export default class PageDesktopViewModel extends BaseViewModel {
         column: 0
       };
 
-      const needNewPage: boolean =this.updateCardItemLayoutInfo(gridLayoutInfo, cardItemLayoutInfo);
+      const needNewPage: boolean =this.mPageDesktopModel.updatePageDesktopLayoutInfo(gridLayoutInfo, cardItemLayoutInfo);
+      const curPageIndex = this.mPageDesktopModel.getPageIndex();
       if (needNewPage) {
         gridLayoutInfo.layoutDescription.pageCount = gridLayoutInfo.layoutDescription.pageCount + 1;
         for (let index = 0; index < gridLayoutInfo.layoutInfo.length; index++) {
-          if (gridLayoutInfo.layoutInfo[index].page > this.getIndex()) {
+          if (gridLayoutInfo.layoutInfo[index].page > curPageIndex) {
             gridLayoutInfo.layoutInfo[index].page++;
           }
         }
@@ -1402,7 +1168,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
       gridLayoutInfo.layoutInfo.push(cardItemLayoutInfo);
       this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
       if (needNewPage) {
-        this.changeIndex(this.getIndex() + 1);
+        this.mPageDesktopModel.setPageIndex(curPageIndex + 1);
       }
     }
     this.getGridList();
@@ -1434,28 +1200,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
     return false;
   }
 
-  /**
-   * delete blank page from layoutInfo
-   *
-   * @param layoutInfo
-   * @param page
-   */
-  deleteBlankPageFromLayoutInfo(layoutInfo, page): boolean {
-    for (let i = 0; i < layoutInfo.layoutInfo.length; i++) {
-      if (layoutInfo.layoutInfo[i].page == page) {
-        return false;
-      }
-    }
-    layoutInfo.layoutDescription.pageCount--;
-    for (let m = 0; m < layoutInfo.layoutInfo.length; m++) {
-      if (layoutInfo.layoutInfo[m].page > page) {
-        layoutInfo.layoutInfo[m].page--;
-      }
-    }
-    return true;
-  }
-
-  private addNewInstalledInfo(totalAppInfoList, pageDesktopInfo) {
+  private addNewInstalledInfo(totalAppInfoList, pageDesktopInfo): void {
     for (const i in totalAppInfoList) {
       let hasInstalled = false;
       for (const j in pageDesktopInfo) {
@@ -1491,7 +1236,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
     }
   }
 
-  private removeFolderInfo(pageDesktopInfo) {
+  private removeFolderInfo(pageDesktopInfo): void {
     const gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
     const layoutInfo = gridLayoutInfo.layoutInfo;
     for (let i = 0; i < layoutInfo.length; i++) {
@@ -1513,5 +1258,4 @@ export default class PageDesktopViewModel extends BaseViewModel {
       }
     }
   }
-
 }

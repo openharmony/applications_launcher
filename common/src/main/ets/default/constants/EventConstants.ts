@@ -29,6 +29,7 @@ export const EventConstants = {
   EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD: 'launcher.event.EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD',
   EVENT_SMARTDOCK_INIT_FINISHED: 'launcher.event.EVENT_SMARTDOCK_INIT_FINISHED',
   EVENT_BADGE_UPDATE: 'launcher.event.EVENT_BADGE_UPDATE',
+  EVENT_REQUEST_PAGEDESK_REFRESH: 'EVENT_REQUEST_PAGEDESK_REFRESH',  // pageDesktop refresh
 
   // smartdock events
   EVENT_REQUEST_DOCK_ITEM_ADD: 'launcher.event.REQUEST_DOCK_ITEM_ADD',  //request add app to smartDock

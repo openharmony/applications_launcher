@@ -16,7 +16,7 @@
 import { CommonConstants } from '@ohos/common';
 import { PresetStyleConstants } from '@ohos/common';
 import { AppGridStyleConfig } from '@ohos/common';
-import PagedesktopConstants from './constants/PagedesktopConstants';
+import PageDesktopConstants from './constants/PageDesktopConstants';
 
 /**
  * Work control grid style configuration class
@@ -54,6 +54,6 @@ export class PageDesktopGridStyleConfig extends AppGridStyleConfig {
   }
 
   getFeatureName(): string {
-    return PagedesktopConstants.FEATURE_NAME;
+    return PageDesktopConstants.FEATURE_NAME;
   }
 }

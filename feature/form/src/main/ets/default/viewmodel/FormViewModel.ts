@@ -15,6 +15,7 @@
 import { Log } from '@ohos/common';
 import { FormModel } from '@ohos/common';
 import { SettingsModel } from '@ohos/common';
+import { PageDesktopModel } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
 import { FormListInfoCacheManager } from '@ohos/common';
@@ -30,6 +31,7 @@ const KEY_FORM_LIST = 'formListInfo';
 export class FormViewModel {
   private readonly mFormModel: FormModel;
   private readonly mSettingsModel: SettingsModel;
+  private readonly mPageDesktopModel: PageDesktopModel;
   private readonly mFormStyleConfig: FormStyleConfig;
   private readonly mFormListInfoCacheManager: FormListInfoCacheManager;
   private mAllFormsInfo;
@@ -38,6 +40,7 @@ export class FormViewModel {
     Log.showInfo(TAG, 'constructor start');
     this.mFormModel = FormModel.getInstance();
     this.mSettingsModel = SettingsModel.getInstance();
+    this.mPageDesktopModel = PageDesktopModel.getInstance();
     this.mFormStyleConfig = layoutConfigManager.getStyleConfig(FormStyleConfig.APP_LIST_STYLE_CONFIG,
       FormConstants.FEATURE_NAME);
     this.mFormListInfoCacheManager = FormListInfoCacheManager.getInstance();
@@ -110,7 +113,7 @@ export class FormViewModel {
       this.mFormModel.deleteFormById(cardId);
       const page = gridLayoutInfo.layoutInfo[cardIndex].page;
       gridLayoutInfo.layoutInfo.splice(cardIndex, 1);
-      globalThis.PageDesktopViewModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
+      this.mPageDesktopModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
       this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
     }
     const formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);

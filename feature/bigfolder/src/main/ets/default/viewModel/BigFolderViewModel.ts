@@ -20,6 +20,7 @@ import { EventConstants } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { BaseViewModel } from '@ohos/common';
 import { SettingsModel } from '@ohos/common';
+import { PageDesktopModel } from '@ohos/common';
 import { ResourceManager } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
@@ -34,7 +35,8 @@ const HEXADECIMAL_VALUE = 36;
 
 export class BigFolderViewModel extends BaseViewModel {
   private readonly mSettingsModel: SettingsModel;
-  private readonly mFolderModel: BigFolderModel;
+  private readonly mBigFolderModel: BigFolderModel;
+  private readonly mPageDesktopModel: PageDesktopModel;
   private readonly mPinyinSort: PinyinSort;
   private readonly mGridConfig;
   private mPageIndex = 0;
@@ -42,7 +44,7 @@ export class BigFolderViewModel extends BaseViewModel {
   private readonly mFolderLayoutConfig: FolderLayoutConfig;
   private readonly mLocalEventListener = {
     onReceiveEvent: (event, params) => {
-      Log.showDebug(TAG, `FolderViewModel receive event: ${event}, params: ${JSON.stringify(params)}`);
+      Log.showDebug(TAG, `onReceiveEvent receive event: ${event}, params: ${JSON.stringify(params)}`);
       const openStatus = AppStorage.Get('openFolderStatus');
       if (event === EventConstants.EVENT_BADGE_UPDATE && (openStatus == BigFolderConstants.OPEN_FOLDER_STATUS_OPEN || openStatus == BigFolderConstants.OPEN_FOLDER_STATUS_STATIC)) {
         const openFolderData: {
@@ -74,11 +76,12 @@ export class BigFolderViewModel extends BaseViewModel {
 
   private constructor() {
     super();
-    this.mFolderModel = BigFolderModel.getInstance();
+    this.mBigFolderModel = BigFolderModel.getInstance();
     this.mSettingsModel = SettingsModel.getInstance();
+    this.mPageDesktopModel = PageDesktopModel.getInstance();
     this.mGridConfig = this.mSettingsModel.getGridConfig();
     this.mPinyinSort = new PinyinSort();
-    this.mFolderModel.registerFolderUpdateEvent(this.mLocalEventListener);
+    this.mBigFolderModel.registerFolderUpdateEvent(this.mLocalEventListener);
     this.mFolderStyleConfig = layoutConfigManager.getStyleConfig(BigFolderStyleConfig.APP_LIST_STYLE_CONFIG,
       BigFolderConstants.FEATURE_NAME);
     this.mFolderLayoutConfig = layoutConfigManager.getFunctionConfig(FolderLayoutConfig.FOLDER_GRID_LAYOUT_INFO);
@@ -144,11 +147,11 @@ export class BigFolderViewModel extends BaseViewModel {
     folderInfo.layoutInfo.push(folderAppInfo);
     folderInfo.badgeNumber = badgeNumber;
 
-    const needNewPage: boolean = globalThis.PageDesktopViewModel.updateFolderItemLayoutInfo(gridLayoutInfo, folderInfo);
+    const needNewPage: boolean = this.mPageDesktopModel.updatePageDesktopLayoutInfo(gridLayoutInfo, folderInfo);
     if (needNewPage) {
       gridLayoutInfo.layoutDescription.pageCount = gridLayoutInfo.layoutDescription.pageCount + 1;
       for (let index = 0; index < gridLayoutInfo.layoutInfo.length; index++) {
-        if (gridLayoutInfo.layoutInfo[index].page > globalThis.PageDesktopViewModel.getIndex()) {
+        if (gridLayoutInfo.layoutInfo[index].page > this.mPageDesktopModel.getPageIndex()) {
           gridLayoutInfo.layoutInfo[index].page++;
         }
       }
@@ -158,7 +161,7 @@ export class BigFolderViewModel extends BaseViewModel {
     gridLayoutInfo.layoutInfo.push(folderInfo);
     this.deleteAppLayoutItems(gridLayoutInfo, appLayoutInfo);
     if (needNewPage) {
-      globalThis.PageDesktopViewModel.changeIndex(globalThis.PageDesktopViewModel.getIndex() + 1);
+      this.mPageDesktopModel.setPageIndex(this.mPageDesktopModel.getPageIndex() + 1);
     }
   }
 
@@ -188,7 +191,7 @@ export class BigFolderViewModel extends BaseViewModel {
         if (lastPageItems[lastPageItems.length - 1].typeId == CommonConstants.TYPE_ADD) {
           lastPageItems[lastPageItems.length - 1] = appInfo;
         } else {
-          const openFolderConfig = this.mFolderModel.getFolderOpenLayout();
+          const openFolderConfig = this.mBigFolderModel.getFolderOpenLayout();
           if (lastPageItems.length == openFolderConfig.column * openFolderConfig.row) {
             info.push([appInfo]);
           } else {
@@ -253,7 +256,7 @@ export class BigFolderViewModel extends BaseViewModel {
     }
     const dragAppInfo = folderAppList[index];
     if (folderAppList.length > 2) {
-      const needNewPage: boolean = globalThis.PageDesktopViewModel.updateAppItemFromFolder(gridLayoutInfo, dragAppInfo);
+      const needNewPage: boolean = this.mPageDesktopModel.updatePageDesktopLayoutInfo(gridLayoutInfo, dragAppInfo);
       Log.showDebug(TAG, `deleteAppByDraging needNewPage: ${needNewPage}`);
       if (needNewPage) {
         return false;
@@ -285,7 +288,7 @@ export class BigFolderViewModel extends BaseViewModel {
 
     const appListInfo = this.mSettingsModel.getAppListInfo();
     for (let i = 0; i < removeAppInfos.length; i++) {
-      globalThis.PageDesktopViewModel.updateAppItemFromFolder(gridLayoutInfo, removeAppInfos[i]);
+      this.mPageDesktopModel.updatePageDesktopLayoutInfo(gridLayoutInfo, removeAppInfos[i]);
       const gridLayout = this.createAppLayoutInfo(removeAppInfos[i]);
       gridLayoutInfo.layoutInfo.push(gridLayout);
       appListInfo.push(removeAppInfos[i]);
@@ -501,7 +504,7 @@ export class BigFolderViewModel extends BaseViewModel {
       folderItem.layoutInfo = [[]];
       for (let i = 0; i < removeFolderApp.length; i++) {
         localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, removeFolderApp[i]);
-        globalThis.PageDesktopViewModel.updateAppItemFromFolder(gridLayoutInfoTemp, removeFolderApp[i]);
+        this.mPageDesktopModel.updatePageDesktopLayoutInfo(gridLayoutInfoTemp, removeFolderApp[i]);
         const gridLayout = this.createAppLayoutInfo(removeFolderApp[i]);
         gridLayoutInfoTemp.layoutInfo.push(gridLayout);
       }
@@ -695,11 +698,11 @@ export class BigFolderViewModel extends BaseViewModel {
 
     if (appFolderToDesktop.length > 0) {
       for (let i = 0; i < appFolderToDesktop.length; i++) {
-        const needNewPage: boolean = globalThis.PageDesktopViewModel.updateAppItemFromFolder(gridLayoutInfoTemp, appFolderToDesktop[i]);
+        const needNewPage: boolean = this.mPageDesktopModel.updatePageDesktopLayoutInfo(gridLayoutInfoTemp, appFolderToDesktop[i]);
         if (needNewPage) {
           gridLayoutInfoTemp.layoutDescription.pageCount = gridLayoutInfoTemp.layoutDescription.pageCount + 1;
           for (let index = 0; index < gridLayoutInfoTemp.layoutInfo.length; index++) {
-            if (gridLayoutInfoTemp.layoutInfo[index].page > globalThis.PageDesktopViewModel.getIndex()) {
+            if (gridLayoutInfoTemp.layoutInfo[index].page > this.mPageDesktopModel.getPageIndex()) {
               gridLayoutInfoTemp.layoutInfo[index].page++;
             }
           }
@@ -879,7 +882,7 @@ export class BigFolderViewModel extends BaseViewModel {
       return folderItem;
     }
 
-    const openFolderConfig = this.mFolderModel.getFolderOpenLayout();
+    const openFolderConfig = this.mBigFolderModel.getFolderOpenLayout();
     const column = openFolderConfig.column;
     const row = openFolderConfig.row;
     const addInfo = {
@@ -1006,7 +1009,7 @@ export class BigFolderViewModel extends BaseViewModel {
   filterFolderPage(appInfos): any[] {
     const folderLayoutInfo = [];
     const appListInfo = JSON.parse(JSON.stringify(appInfos));
-    const openFolderConfig = this.mFolderModel.getFolderOpenLayout();
+    const openFolderConfig = this.mBigFolderModel.getFolderOpenLayout();
 
     const itemCountByPage = openFolderConfig.column * openFolderConfig.row;
     let pageCount = Math.floor(appListInfo.length / itemCountByPage);
@@ -1049,7 +1052,7 @@ export class BigFolderViewModel extends BaseViewModel {
    * @return {any} folderInfo.
    */
   private async createNewFolderInfo() {
-    const folderConfig = this.mFolderModel.getFolderLayout();
+    const folderConfig = this.mBigFolderModel.getFolderLayout();
     const folderName = await this.generateFolderName();
     // Create new folder info
     const folderInfo = {
@@ -1134,7 +1137,7 @@ export class BigFolderViewModel extends BaseViewModel {
    * get addlist dialog's column
    */
   getAddListColumn(): number {
-    return this.mFolderModel.getFolderAddAppLayout().column;
+    return this.mBigFolderModel.getFolderAddAppLayout().column;
   }
 
   /**
@@ -1145,8 +1148,8 @@ export class BigFolderViewModel extends BaseViewModel {
   getDialogHeight(appList: []): number {
     let height = 0;
     const styleConfig = this.mFolderStyleConfig;
-    const column = this.mFolderModel.getFolderAddAppLayout().column;
-    const row = this.mFolderModel.getFolderAddAppLayout().row;
+    const column = this.mBigFolderModel.getFolderAddAppLayout().column;
+    const row = this.mBigFolderModel.getFolderAddAppLayout().row;
     const num = Math.ceil(appList.length / column);
     if (num <= row) {
       height = styleConfig.mAddFolderDialogHeight;
@@ -1251,11 +1254,11 @@ export class BigFolderViewModel extends BaseViewModel {
     const appListInfo = this.mSettingsModel.getAppListInfo();
     // Add app to desktop app list
     for (let i = 0; i < removeAppInfos.length; i++) {
-      const needNewPage: boolean = globalThis.PageDesktopViewModel.updateAppItemFromFolder(gridLayoutInfo, removeAppInfos[i]);
+      const needNewPage: boolean = this.mPageDesktopModel.updatePageDesktopLayoutInfo(gridLayoutInfo, removeAppInfos[i]);
       if (needNewPage) {
         gridLayoutInfo.layoutDescription.pageCount = gridLayoutInfo.layoutDescription.pageCount + 1;
         for (let index = 0; index < gridLayoutInfo.layoutInfo.length; index++) {
-          if (gridLayoutInfo.layoutInfo[index].page > globalThis.PageDesktopViewModel.getIndex()) {
+          if (gridLayoutInfo.layoutInfo[index].page > this.mPageDesktopModel.getPageIndex()) {
             gridLayoutInfo.layoutInfo[index].page++;
           }
         }

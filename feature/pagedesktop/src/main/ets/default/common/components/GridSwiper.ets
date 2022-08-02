@@ -21,8 +21,9 @@ const TAG = "GridSwiper";
 
 @Component
 export default struct GridSwiper {
+  @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
   @Prop gridConfig: string;
-  @StorageLink('pageIndex') PageIndex: number = 0;
+  @StorageLink('pageIndex') pageIndex: number = 0;
   private mPageDesktopViewModel;
   @State mAppGridInfo: [[]] = [[]];
   private swiperController: SwiperController = new SwiperController();
@@ -33,12 +34,11 @@ export default struct GridSwiper {
 
   aboutToDisappear(): void  {
     Log.showInfo(TAG, 'aboutToDisappear');
-    this.mPageDesktopViewModel.setPageIndex();
   }
 
   private buildLog(): boolean {
     let isDesktopLoadFinished = AppStorage.Get('isDesktopLoadFinished');
-    Log.showInfo(TAG, `build start ${isDesktopLoadFinished} page ${this.PageIndex}`);
+    Log.showInfo(TAG, `build start ${isDesktopLoadFinished} page ${this.pageIndex}`);
     return isDesktopLoadFinished == true;
   }
 
@@ -54,17 +54,19 @@ export default struct GridSwiper {
             })
           })
         }
+        .padding({
+          top: this.navigationBarStatusValue ? this.mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop : this.mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop + 0
+        })
         .height(StyleConstants.PERCENTAGE_100)
         .width(StyleConstants.PERCENTAGE_100)
         .indicatorStyle({
           selectedColor: StyleConstants.DEFAULT_FONT_COLOR
         })
         .loop(false)
-        .index(this.PageIndex)
+        .index(this.pageIndex)
         .onChange((index) => {
-          this.PageIndex = index;
+          this.pageIndex = index;
           Log.showInfo(TAG, `swiper change to page ${index}`);
-          this.mPageDesktopViewModel.changeIndexOnly(index);
         })
       }
     }

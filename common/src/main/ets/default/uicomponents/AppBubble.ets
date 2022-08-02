@@ -43,11 +43,13 @@ export struct AppBubble {
   appName: string = '';
   useCache: boolean = true;
   shortCutEnabled: boolean = false;
+  dragStart: Function;
 
   @Builder MenuBuilder() {
     Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
       AppMenu({
-        menuInfoList: this.menuInfo
+        menuInfoList: this.menuInfo,
+        isContextMenu: true
       })
     }
     .width(StyleConstants.CONTEXT_MENU_WIDTH)
@@ -79,6 +81,9 @@ export struct AppBubble {
           marginTop: this.mIconNameMargin
         })
       }
+      .onDragStart((event: DragEvent, extraParams: string) => {
+        return this.dragStart(event);
+      })
       .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
       .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
       .width(this.isSelect ? this.iconSize + StyleConstants.DEFAULT_40 : StyleConstants.PERCENTAGE_100)
@@ -87,12 +92,6 @@ export struct AppBubble {
       .borderRadius(this.isSelect ? StyleConstants.DEFAULT_15 : StyleConstants.DEFAULT_0)
       .padding(this.isSelect ? { left: StyleConstants.DEFAULT_20,
                                  right: StyleConstants.DEFAULT_20, top: this.mPaddingTop } : { top: this.mPaddingTop })
-      .gesture(
-        LongPressGesture({ repeat: false })
-          .onAction((event: GestureEvent) => {
-            AppStorage.SetOrCreate('isLongPress', true);
-          })
-      )
     }
     .parallelGesture(
       LongPressGesture({ repeat: false })

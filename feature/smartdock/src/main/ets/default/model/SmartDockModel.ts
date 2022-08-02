@@ -56,7 +56,7 @@ export default class SmartDockModel {
     this.mAppModel = AppModel.getInstance();
     this.mResourceManager = ResourceManager.getInstance();
     this.registerDockListener();
-    this.mDevice = AppStorage.Get('device');
+    this.mDevice = AppStorage.Get('deviceType');
     Log.showDebug(TAG, `dockDevice: ${this.mDevice}`);
     this.getResidentList().then(() => {}, () => {});
     if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE) {
@@ -293,7 +293,8 @@ export default class SmartDockModel {
    * @param insertIndex
    * @param itemIndex
    */
-  inserItemToIndex(insertIndex: number, itemIndex: number): void {
+  insertItemToIndex(insertIndex: number, itemIndex: number): void {
+    Log.showInfo(TAG, `insertItemToIndex insertIndex: ${insertIndex}, itemIndex: ${itemIndex}`);
     if ((insertIndex == 0 || insertIndex == 1 || itemIndex == 0 || itemIndex == 1) && this.mDevice === CommonConstants.PAD_DEVICE_TYPE) {
       Prompt.showToast({
         message: $r('app.string.disable_to_move')
@@ -301,22 +302,16 @@ export default class SmartDockModel {
       return;
     }
     this.mResidentList = AppStorage.Get('residentList');
-
     if (itemIndex < insertIndex) {
       const selectItem = this.mResidentList[itemIndex];
-      for (let i = itemIndex; i < insertIndex; i++) {
-        this.mResidentList[i] = this.mResidentList[i+1];
-      }
-      this.mResidentList[insertIndex] = selectItem;
+      this.mResidentList.splice(insertIndex, 0, selectItem);
+      this.mResidentList.splice(itemIndex, 1);
     }
     if (itemIndex > insertIndex) {
       const selectItem = this.mResidentList[itemIndex];
-      for (let i = itemIndex; i > insertIndex; i--) {
-        this.mResidentList[i] = this.mResidentList[i-1];
-      }
-      this.mResidentList[insertIndex] = selectItem;
+      this.mResidentList.splice(itemIndex, 1);
+      this.mResidentList.splice(insertIndex, 0, selectItem);
     }
-
     AppStorage.SetOrCreate('residentList', this.mResidentList);
     globalThis.RdbStoreManagerInstance.insertIntoSmartdock(this.mResidentList);
   }

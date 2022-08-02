@@ -17,7 +17,7 @@ import { StyleConstants } from '../constants/StyleConstants';
 import { amsMissionManager }from '../manager/AmsMissionManager'
 
 @Component
-export default struct ScrollerComponent {
+export struct ScrollerComponent {
   @StorageLink('snapshotList') dataList: {
     name: any,
     image: any,

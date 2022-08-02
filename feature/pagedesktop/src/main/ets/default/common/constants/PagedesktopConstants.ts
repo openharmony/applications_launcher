@@ -13,6 +13,6 @@
  * limitations under the License.
  */
 
-export default class PagedesktopConstants {
+export default class PageDesktopConstants {
   static readonly FEATURE_NAME = 'featurePageDesktop';
 }

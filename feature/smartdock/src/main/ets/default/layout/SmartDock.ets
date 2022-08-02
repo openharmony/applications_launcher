@@ -19,15 +19,15 @@ import { CommonConstants } from '@ohos/common';
 import { windowManager } from '@ohos/common';
 import { ResourceManager } from '@ohos/common';
 import { UninstallDialog } from '@ohos/common';
-import { SmartDockContent } from '../layout/SmartDockContent';
 import SmartDockViewModel from '../viewmodel/SmartDockViewModel';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
+import ResidentLayout from './ResidentLayout.ets';
+import RecentLayout from './RecentLayout.ets';
 
 const TAG = 'SmartDock';
 
 @Component
 export struct SmartDock {
-  @State device: string = 'phone';
   @State popup: {
     show: boolean,
     showItem: string,
@@ -41,6 +41,7 @@ export struct SmartDock {
   @StorageLink('residentList') residentList: any = [];
   @StorageLink('recentList') recentList: any = [];
   @StorageLink('missionInfoList') missionInfoList: any = [];
+  private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
   private mSmartDockViewModel: SmartDockViewModel;
   private mSelectedItem = null;
   private mSelectedDockType = 0;
@@ -48,15 +49,13 @@ export struct SmartDock {
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear start!');
-    AppStorage.SetOrCreate('device', this.device);
+    this.deviceType = AppStorage.Get('deviceType');
     try {
       this.mSmartDockViewModel = SmartDockViewModel.getInstance();
     } catch (error) {
       Log.showError(TAG, `catch error ${JSON.stringify(error)}`);
     }
-
-    Log.showInfo(TAG, 'aboutToAppear end!');
-    ResourceManager.getInstance().getStringByResource(this.device === CommonConstants.PAD_DEVICE_TYPE
+    ResourceManager.getInstance().getStringByResource(this.deviceType === CommonConstants.PAD_DEVICE_TYPE
       ? $r('app.string.is_delete_form') : $r('app.string.isUninstall')).then((resName) => {
       this.dialogName = resName;
     });
@@ -88,7 +87,7 @@ export struct SmartDock {
       Log.showDebug(TAG, 'onConfirm click menu item null!');
       return;
     }
-    if (this.device === CommonConstants.PAD_DEVICE_TYPE) {
+    if (this.deviceType === CommonConstants.PAD_DEVICE_TYPE) {
       this.mSmartDockViewModel.deleteDockItem({
         bundleName: undefined,
         keyName: this.mSelectedItem.keyName
@@ -137,36 +136,28 @@ export struct SmartDock {
 
   build() {
     List({
-      space: this.device == CommonConstants.DEFAULT_DEVICE_TYPE ? CommonConstants.DOCK_SPACE :
+      space: this.deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || this.recentList.length == 0 ? CommonConstants.DOCK_SPACE :
         this.mSmartDockViewModel.getStyleConfig().mDockGap
     }) {
       if (this.buildLog()) {
       }
       ListItem() {
-        SmartDockContent({
-          dockItemList: $residentList,
-          mMaxNum: this.mSmartDockViewModel.getStyleConfig().mMaxDockNum,
+        ResidentLayout({
+          appList: $residentList,
           mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
           onItemClick: (event, item) => this.mSmartDockViewModel.residentOnClick(event, item, this.showAppCenter),
           buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
-          onItemTouch: (event) => this.mSmartDockViewModel.residentOnTouch(event),
           onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
-          onTouchEventUpdateFunc: () => this.mSmartDockViewModel.onTouchEventUpdate()
         })
       }
 
       ListItem() {
-        SmartDockContent({
-          dockItemList: $recentList,
-          mMaxNum: this.mSmartDockViewModel.getStyleConfig().mMaxRecentNum,
+        RecentLayout({
+          appList: $recentList,
           mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
           onItemClick: (event, item) => this.mSmartDockViewModel.recentOnClick(event, item, () => this.recentOnClickWithPopup(item)),
           buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
-          onItemTouch: (event) => {
-          },
           onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
-          onTouchEventUpdateFunc: () => {
-          },
           popup: this.popup,
           onHoverEvent: (onHover, bundleName) => this.onHoverEvent(onHover, bundleName)
         })
