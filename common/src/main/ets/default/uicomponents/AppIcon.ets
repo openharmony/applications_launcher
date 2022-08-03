@@ -76,9 +76,9 @@ export struct AppIcon {
         }
       }) {
         Image(this.icon)
+        .width(this.iconSize)
+        .height(this.iconSize)
       }
-      .width(this.iconSize)
-      .height(this.iconSize)
     }
     .onHover((isHover: boolean) => {
       Log.showInfo(TAG, `onHover isHover ${isHover}`);

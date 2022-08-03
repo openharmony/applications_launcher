@@ -251,7 +251,7 @@ export class CommonConstants {
   /**
    * hide badge
    */
-  static BADGE_DISPLAY_HIDE = -1;
+  static BADGE_DISPLAY_HIDE = 0;
 
   /**
    * show badge
