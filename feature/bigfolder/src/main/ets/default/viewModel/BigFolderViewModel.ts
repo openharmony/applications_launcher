@@ -213,34 +213,11 @@ export class BigFolderViewModel extends BaseViewModel {
  */
   private deleteAppLayoutItems(gridLayoutInfo, appLayoutInfo) {
     for (let i = 0; i < appLayoutInfo.length; i++) {
-      gridLayoutInfo.layoutInfo = gridLayoutInfo.layoutInfo .filter(item => item.keyName != appLayoutInfo[i].keyName)
+      gridLayoutInfo.layoutInfo = gridLayoutInfo.layoutInfo.filter(item => item.keyName != appLayoutInfo[i].keyName);
     }
     Log.showDebug(TAG, `deleteAppItems gridLayoutInfo.layoutInfo: ${gridLayoutInfo.layoutInfo.length}`);
     this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
-  }
-
-  /**
-   * set appInfo by appListInfo
-   *
-   * @param appInfo
-   * @param appListInfo
-   */
-  private setAppInfo(appInfo, appListInfo): void {
-    for (let i = 0; i < appListInfo.length; i++) {
-      if (appInfo.keyName === appListInfo[i].keyName) {
-        appInfo.appId = appListInfo[i].appId;
-        appInfo.appName = appListInfo[i].appName;
-        appInfo.isSystemApp = appListInfo[i].isSystemApp;
-        appInfo.isUninstallAble = appListInfo[i].isUninstallAble;
-        appInfo.appIconId = appListInfo[i].appIconId;
-        appInfo.appLabelId = appListInfo[i].appLabelId;
-        appInfo.x = appListInfo[i].x;
-        appInfo.badgeNumber = appListInfo[i].badgeNumber;
-        appListInfo.splice(i, 1);
-        break;
-      }
-    }
   }
 
   /**
@@ -380,101 +357,6 @@ export class BigFolderViewModel extends BaseViewModel {
     this.mSettingsModel.setAppListInfo(appListInfo);
     this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
     return openFolderData;
-  }
-
-  /**
-   * Delete folder
-   *
-   * @param {number} folderId.
-   */
-  async deleteFolder(folderId) {
-    Log.showDebug(TAG, 'deleteFolder start');
-    let gridLayoutInfo = {
-      layoutInfo: []
-    };
-    gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
-
-    const tempGridLayoutInfo = gridLayoutInfo;
-    for (let i = 0; i < gridLayoutInfo.layoutInfo.length; i++) {
-      if (gridLayoutInfo.layoutInfo[i].typeId === CommonConstants.TYPE_FOLDER
-      && gridLayoutInfo.layoutInfo[i].folderId === folderId) {
-        // Push the folder app list into desktop
-        tempGridLayoutInfo.layoutInfo.push(gridLayoutInfo.layoutInfo[i].layoutInfo);
-
-        // Delete the folder
-        tempGridLayoutInfo.layoutInfo.splice(i, 1);
-      }
-    }
-    this.mSettingsModel.setLayoutInfo(tempGridLayoutInfo);
-  }
-
-  /**
-   * add app to folder
-   *
-   * @param {any} appInfos.
-   * @param {number} folderId.
-   */
-  async addAppToFolder(appInfos, folderId) {
-    Log.showInfo(TAG, 'addAppToFolder start');
-    let gridLayoutInfo = {
-      layoutInfo: []
-    };
-    gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
-
-    // Add app to the folder
-    for (let i = 0; i < gridLayoutInfo.layoutInfo.length; i++) {
-      if (gridLayoutInfo.layoutInfo[i].typeId === CommonConstants.TYPE_FOLDER &&
-      gridLayoutInfo.layoutInfo[i].folderId === folderId) {
-        gridLayoutInfo.layoutInfo[i].layoutInfo.push(appInfos);
-      }
-    }
-
-    // Check whether the app exists in other data
-    for (let i = 0; i < gridLayoutInfo.layoutInfo.length; i++) {
-      const layoutInfo = gridLayoutInfo.layoutInfo[i];
-      for (let j = 0; j < appInfos.length; j++) {
-        if (layoutInfo.typeId === CommonConstants.TYPE_FOLDER && layoutInfo.folderId !== folderId) {
-          const indexA = layoutInfo.layoutInfo.indexOf(appInfos[j]);
-          if (indexA != CommonConstants.INVALID_VALUE) {
-            layoutInfo.layoutInfo.splice(indexA, 1);
-          }
-        } else {
-          const indexB = layoutInfo.indexOf(appInfos[j]);
-          if (indexB != CommonConstants.INVALID_VALUE) {
-            layoutInfo.splice(indexB, 1);
-          }
-        }
-      }
-    }
-    this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
-  }
-
-  /**
-   * delete app from folder
-   *
-   * @param {any} appInfo.
-   * @param {number} folderId.
-   */
-  async deleteAppFromFolder(appInfo, folderId) {
-    Log.showDebug(TAG, 'deleteAppFromFolder start');
-    let gridLayoutInfo = {
-      layoutInfo: []
-    };
-    gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
-
-    // Add app to desktop app list
-    gridLayoutInfo.layoutInfo.push(appInfo);
-
-    // Delete app from the folder
-    for (let i = 0; i < gridLayoutInfo.layoutInfo.length; i++) {
-      if (gridLayoutInfo.layoutInfo[i].typeId === CommonConstants.TYPE_FOLDER
-      && gridLayoutInfo.layoutInfo[i].folderId === folderId) {
-        const index = gridLayoutInfo.layoutInfo[i].layoutInfo.indexOf(appInfo);
-        Log.showDebug(TAG, `deleteAppFromFolder app index: ${index}`);
-        gridLayoutInfo.layoutInfo[i].layoutInfo.splice(index, 1);
-      }
-    }
-    this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
   }
 
   /**
@@ -716,35 +598,6 @@ export class BigFolderViewModel extends BaseViewModel {
   }
 
   /**
-   * get folder list form layout info
-   *
-   * @param {array} folderIds.
-   * @return {array} folderList.
-   */
-  async getFolderList(folderIds) {
-    Log.showDebug(TAG, 'getFolderList start');
-    const folderList = [];
-    let gridLayoutInfo = {
-      layoutInfo: []
-    };
-    gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
-
-    // Get folder list form the layout info
-    for (let i = 0; i < gridLayoutInfo.layoutInfo.length; i++) {
-      if (gridLayoutInfo.layoutInfo[i].typeId === CommonConstants.TYPE_FOLDER) {
-        for (let j = 0; j < folderIds.length; j++) {
-          if (gridLayoutInfo.layoutInfo[i].folderId === folderIds[j]) {
-            folderList.push(gridLayoutInfo.layoutInfo[i]);
-            break;
-          }
-        }
-      }
-    }
-    AppStorage.SetOrCreate('folderList', folderList);
-    return folderList;
-  }
-
-  /**
    * get folder app list
    *
    * @param {array} folderId.
@@ -963,12 +816,7 @@ export class BigFolderViewModel extends BaseViewModel {
   async refreshFolder(folderItem: any) {
     Log.showDebug(TAG, 'refreshFolder start');
     folderItem.enterEditing = false;
-    AppStorage.SetOrCreate('openFolderData', folderItem);
-    if (folderItem.folderId == '') {
-      AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
-    } else {
-      AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_REFRESH);
-    }
+    this.updateOpenFolderStatus(folderItem);
     Log.showDebug(TAG, 'refreshFolder end');
   }
 
@@ -1105,15 +953,6 @@ export class BigFolderViewModel extends BaseViewModel {
     let id = Date.now().toString(HEXADECIMAL_VALUE);
     id += Math.random().toString(HEXADECIMAL_VALUE).substr(2);
     return id;
-  }
-
-  /**
-   * change the open folder page number.
-   *
-   * @param idx: Page number
-   */
-  changeIndexOnly(idx): void {
-    this.mPageIndex = idx;
   }
 
   /**
@@ -1302,7 +1141,9 @@ export class BigFolderViewModel extends BaseViewModel {
     const appIndex = folderAppList.findIndex(item => {
       return item.keyName === appInfo.keyName;
     });
-    folderAppList.splice(appIndex, 1);
+    if (appIndex !== CommonConstants.INVALID_VALUE) {
+      folderAppList.splice(appIndex, 1);
+    }
   }
 
   /**
@@ -1332,8 +1173,9 @@ export class BigFolderViewModel extends BaseViewModel {
     const index = folderAppList.findIndex(item => {
       return item.keyName === appInfo.keyName;
     });
-    folderAppList.splice(index, 1);
+    if (index !== CommonConstants.INVALID_VALUE) {
+      folderAppList.splice(index, 1);
+    }
     return this.filterFolderPage(folderAppList);
   }
-
 }

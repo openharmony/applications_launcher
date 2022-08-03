@@ -228,7 +228,7 @@ export struct FolderOpenComponent {
                 newFolderName: this.newFolderName,
                 mFolderInfo: this.mFolderInfo
               })
-            }, (item) => JSON.stringify(item))
+            })
           }
           .indicatorStyle({
             selectedColor: StyleConstants.DEFAULT_FONT_COLOR,
@@ -244,6 +244,7 @@ export struct FolderOpenComponent {
           .loop(false)
           .onChange((index) => {
             Log.showDebug(TAG, `mBigFolderViewModel.changeIndex(index):${index}`);
+            this.mFolderInfo = mBigFolderViewModel.addAddIcon(this.mFolderInfo);
             mBigFolderViewModel.changeIndex(index);
           })
         }
