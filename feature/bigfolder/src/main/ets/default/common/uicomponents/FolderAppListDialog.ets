@@ -14,7 +14,8 @@
  */
 
 import { Log } from '@ohos/common';
-import { AppBubble } from '@ohos/common';
+import { AppIcon } from '@ohos/common';
+import { AppName } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
 import { ResourceManager } from '@ohos/common';
@@ -88,24 +89,32 @@ export default struct FolderAppListDialog {
               GridItem() {
                 Stack() {
                   Column() {
-                    AppBubble({
-                      iconSize: this.mFolderStyleConfig.mAddFolderIconSize,
-                      nameSize: this.mFolderStyleConfig.mAddFolderTextSize,
-                      nameFontColor: this.mNameFontColor,
-                      nameHeight: this.mFolderStyleConfig.mAddFolderTextLines,
-                      appName: item.appName,
-                      bundleName: item.bundleName,
-                      moduleName: item.moduleName,
-                      abilityName: item.abilityName,
-                      appIconId: item.appIconId,
-                      appLabelId: item.appLabelId,
-                      isSelect:false,
-                      badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE,
-                      nameLines: this.mFolderStyleConfig.mAddFolderTextLines,
-                      mPaddingTop: BigFolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
-                      mIconNameMargin: this.mFolderStyleConfig.mIconNameMargin,
-                      dragStart: () => {}
-                    })
+                    Column() {
+                      AppIcon({
+                        iconSize: this.mFolderStyleConfig.mAddFolderIconSize,
+                        iconId: item.appIconId,
+                        bundleName: item.bundleName,
+                        moduleName: item.moduleName,
+                        icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
+                        badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE,
+                      })
+                      AppName({
+                        nameHeight: this.mFolderStyleConfig.mAddFolderTextLines,
+                        nameSize: this.mFolderStyleConfig.mAddFolderTextSize,
+                        nameFontColor: this.mNameFontColor,
+                        bundleName: item.bundleName,
+                        moduleName: item.moduleName,
+                        appName: item.appName,
+                        labelId: item.appLabelId,
+                        nameLines: this.mFolderStyleConfig.mAddFolderTextLines,
+                        marginTop: BigFolderStyleConstants.DEFAULT_APP_TITLE_MARGIN
+                      })
+                    }
+                    .width(StyleConstants.PERCENTAGE_100)
+                    .height(StyleConstants.PERCENTAGE_100)
+                    .backgroundColor(StyleConstants.DEFAULT_TRANSPARENT_COLOR)
+                    .borderRadius(StyleConstants.DEFAULT_0)
+                    .padding({ top: BigFolderStyleConstants.DEFAULT_APP_TITLE_MARGIN })
                   }
                   Toggle({ type: ToggleType.Checkbox, isOn: item.checked })
                     .width(this.mFolderStyleConfig.mFolderToggleSize)
