@@ -278,8 +278,7 @@ export struct FolderOpenComponent {
         mBigFolderViewModel.modifyFolderName(this.mFolderInfo)
       }
     } else {
-      const contextMenuState: boolean = AppStorage.Get('contextMenuState');
-      if (!isOpenFolderDialog && !contextMenuState) {
+      if (!isOpenFolderDialog) {
         mBigFolderViewModel.closeFolder();
       }
     }
@@ -539,7 +538,8 @@ struct FolderAppItem {
           menuInfo: globalThis.PageDesktopViewModel.buildMenuInfoList(this.item, this.uninstallDialogController,
             this.formManagerDialogController, this.removeAppOutOfFolder.bind(this)),
           nameLines: mNameLines,
-          mIconNameMargin: mIconNameMargin
+          mIconNameMargin: mIconNameMargin,
+          dragStart: () => {}
         })
       }
       .width(mAppItemWidth)

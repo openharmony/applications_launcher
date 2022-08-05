@@ -66,12 +66,14 @@ export struct AppGrid {
               appName: item.appName,
               bundleName: item.bundleName,
               moduleName: item.moduleName,
+              abilityName: item.abilityName,
               appIconId: item.appIconId,
               appLabelId: item.appLabelId,
               badgeNumber: item.badgeNumber,
               menuInfo: this.buildMenu(item),
               nameLines: mAppGridStyleConfig.mNameLines,
-              mPaddingTop: mAppGridStyleConfig.mIconMarginVertical
+              mPaddingTop: mAppGridStyleConfig.mIconMarginVertical,
+              dragStart: () => {}
             })
           }
           .onClick((event: ClickEvent) => {

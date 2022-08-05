@@ -103,7 +103,8 @@ export default struct FolderAppListDialog {
                       badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE,
                       nameLines: this.mFolderStyleConfig.mAddFolderTextLines,
                       mPaddingTop: BigFolderStyleConstants.DEFAULT_APP_TITLE_MARGIN,
-                      mIconNameMargin: this.mFolderStyleConfig.mIconNameMargin
+                      mIconNameMargin: this.mFolderStyleConfig.mIconNameMargin,
+                      dragStart: () => {}
                     })
                   }
                   Toggle({ type: ToggleType.Checkbox, isOn: item.checked })

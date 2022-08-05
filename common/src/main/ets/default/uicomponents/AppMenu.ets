@@ -29,7 +29,7 @@ export struct AppMenu {
   fixedMenuList: Array<MenuInfo> = null;
   dynamicMenuList: Array<MenuInfo> = null;
   isBothTypeMenuExist: boolean = true;
-  closeMenu: Function;
+  closeMenu: Function = () => {};
 
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear start');
@@ -107,7 +107,7 @@ struct HorizontalMenuItem {
   private mResourceManager;
   menuInfo: MenuInfo;
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
-  closeMenu: Function = null;
+  closeMenu: Function = () => {};
 
   aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
@@ -178,9 +178,7 @@ struct HorizontalMenuItem {
     .width(235)
     .onClick(() => {
       this.menuInfo.onMenuClick();
-      if (this.closeMenu) {
-        this.closeMenu();
-      }
+      this.closeMenu();
     })
   }
 }
