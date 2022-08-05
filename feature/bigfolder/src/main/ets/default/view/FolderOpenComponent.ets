@@ -243,9 +243,11 @@ export struct FolderOpenComponent {
           .index(this.PageIndex)
           .loop(false)
           .onChange((index) => {
-            Log.showDebug(TAG, `mBigFolderViewModel.changeIndex(index):${index}`);
-            this.mFolderInfo = mBigFolderViewModel.addAddIcon(this.mFolderInfo);
-            mBigFolderViewModel.changeIndex(index);
+            Log.showDebug(TAG, `onChange :${index}`);
+            if (this.PageIndex != index) {
+              this.mFolderInfo = mBigFolderViewModel.addAddIcon(this.mFolderInfo);
+              this.PageIndex = index;
+            }
           })
         }
       }
@@ -276,7 +278,8 @@ export struct FolderOpenComponent {
         mBigFolderViewModel.modifyFolderName(this.mFolderInfo)
       }
     } else {
-      if (!isOpenFolderDialog) {
+      const contextMenuState: boolean = AppStorage.Get('contextMenuState');
+      if (!isOpenFolderDialog && !contextMenuState) {
         mBigFolderViewModel.closeFolder();
       }
     }

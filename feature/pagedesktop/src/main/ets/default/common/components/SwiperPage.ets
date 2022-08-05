@@ -80,6 +80,7 @@ export default struct SwiperPage {
       this.movingIconSwapPageDelay();
     }
   }
+
   /**
    * Increase delay when dragging app to other page.
    */

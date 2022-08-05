@@ -111,7 +111,10 @@ export struct FolderComponent {
   @Builder MenuBuilder() {
     Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
       AppMenu({
-        menuInfoList: this.buildMenu(this.mFolderItem)
+        menuInfoList: this.buildMenu(this.mFolderItem),
+        closeMenu: () => {
+          ContextMenu.close();
+        }
       })
     }
     .width(StyleConstants.CONTEXT_MENU_WIDTH)
