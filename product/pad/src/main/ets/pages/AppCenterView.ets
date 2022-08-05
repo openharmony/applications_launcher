@@ -36,7 +36,7 @@ struct AppCenterView {
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
-    AppStorage.SetOrCreate('device', this.device);
+    AppStorage.SetOrCreate('deviceType', this.device);
     this.mLayoutViewModel = LayoutViewModel.getInstance();
   }
 

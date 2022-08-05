@@ -133,7 +133,10 @@ export struct PageDesktopLayout {
     if (this.logId()) {
       Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
         AppMenu({
-          getMenuInfoList: this.getMenu
+          getMenuInfoList: this.getMenu,
+          closeMenu: () => {
+            ContextMenu.close();
+          }
         })
       }
       .width(StyleConstants.CONTEXT_MENU_WIDTH)

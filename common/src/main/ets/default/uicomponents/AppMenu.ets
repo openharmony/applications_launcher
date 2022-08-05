@@ -23,13 +23,13 @@ const TAG = 'AppMenu';
 
 @Component
 export struct AppMenu {
-  isContextMenu: boolean = false;
   menuInfoList: Array<MenuInfo> = new Array<MenuInfo>();
   getMenuInfoList: Function;
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
   fixedMenuList: Array<MenuInfo> = null;
   dynamicMenuList: Array<MenuInfo> = null;
   isBothTypeMenuExist: boolean = true;
+  closeMenu: Function;
 
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear start');
@@ -63,7 +63,7 @@ export struct AppMenu {
             HorizontalMenuItem({
               menuInfo: item,
               menuMode: this.menuMode,
-              isContextMenu: this.isContextMenu
+              closeMenu: this.closeMenu
             })
           }
         }, item => JSON.stringify(item))
@@ -83,7 +83,7 @@ export struct AppMenu {
             HorizontalMenuItem({
               menuInfo: item,
               menuMode: this.menuMode,
-              isContextMenu: this.isContextMenu
+              closeMenu: this.closeMenu
             })
           }
         }, item => JSON.stringify(item))
@@ -104,10 +104,10 @@ export struct AppMenu {
 struct HorizontalMenuItem {
   @State shortcutIcon: string = StyleConstants.DEFAULT_ICON;
   @State shortcutName: string = "";
-  isContextMenu: boolean;
   private mResourceManager;
   menuInfo: MenuInfo;
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
+  closeMenu: Function = null;
 
   aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
@@ -178,8 +178,8 @@ struct HorizontalMenuItem {
     .width(235)
     .onClick(() => {
       this.menuInfo.onMenuClick();
-      if (this.isContextMenu) {
-        ContextMenu.close();
+      if (this.closeMenu) {
+        this.closeMenu();
       }
     })
   }

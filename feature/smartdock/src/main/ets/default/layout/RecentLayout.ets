@@ -215,7 +215,9 @@ struct AppItem {
     Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
       AppMenu({
         menuInfoList: this.menuInfo,
-        isContextMenu: false
+        closeMenu: () => {
+          this.isShow = false;
+        }
       })
     }
     .width(StyleConstants.CONTEXT_MENU_WIDTH)

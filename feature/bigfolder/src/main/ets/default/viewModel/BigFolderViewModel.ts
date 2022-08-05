@@ -826,7 +826,7 @@ export class BigFolderViewModel extends BaseViewModel {
    * @return {boolean} isPad.
    */
   getIsPad(): boolean {
-    return CommonConstants.PAD_DEVICE_TYPE == AppStorage.Get('device');
+    return CommonConstants.PAD_DEVICE_TYPE == AppStorage.Get('deviceType');
   }
 
   /**
