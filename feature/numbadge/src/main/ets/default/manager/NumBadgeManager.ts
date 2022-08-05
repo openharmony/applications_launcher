@@ -78,12 +78,6 @@ export class NumBadgeManager {
         BadgeManager.getInstance().updateBadgeNumber(creatorBundleName, badgeNumber)
             .then((result) => {
                 Log.showInfo(TAG, `updateBadgeByBundle result is ${result}`);
-                let badgeNotification = {
-                    creatorBundleName: creatorBundleName,
-                    badgeNumber: badgeNumber
-                };
-                AppStorage.SetOrCreate('badgenotification', badgeNotification);
-                Log.showInfo(TAG, `updateBadgeByBundle badgeNotification is ${JSON.stringify(badgeNotification)}`);
             })
             .catch(error => {
                 Log.showError(TAG, `updateBadgeByBundle error is ${error.message}`);
