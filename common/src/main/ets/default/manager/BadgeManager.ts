@@ -34,8 +34,8 @@ export class BadgeManager {
 
   private constructor() {
     this.mDbStoreManager = RdbStoreManager.getInstance();
-    this.registerAppListEvent();
     this.listener = this.appRemovedCallBack.bind(this);
+    this.registerAppListEvent();
   }
   /**
    * badge manager instance
@@ -106,7 +106,7 @@ export class BadgeManager {
   private async appRemovedCallBack(event, bundleName: string, userId): Promise<void> {
     Log.showInfo(TAG, 'Launcher AppModel installationSubscriberCallBack event = ' + event);
     if (event == EventConstants.EVENT_PACKAGE_REMOVED) {
-      void this.mDbStoreManager.deleteBadgeByBundle(bundleName);
+      this.mDbStoreManager.deleteBadgeByBundle(bundleName);
     }
   }
 

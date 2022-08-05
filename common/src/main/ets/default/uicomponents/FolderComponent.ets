@@ -206,7 +206,7 @@ export struct FolderComponent {
                     icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
                     bundleName: item.bundleName,
                     moduleName: item.moduleName,
-                    badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
+                    badgeNumber: item.badgeNumber
                   })
                 }
                 .height(StyleConstants.PERCENTAGE_100)
@@ -244,7 +244,7 @@ export struct FolderComponent {
                               icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
                               bundleName: item.bundleName,
                               moduleName: item.moduleName,
-                              badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
+                              badgeNumber: item.badgeNumber
                             })
                           }
                           .width(StyleConstants.PERCENTAGE_80)

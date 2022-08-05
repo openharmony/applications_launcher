@@ -372,19 +372,11 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
             if (!this.ifInfoIsNull(appInfo)) {
               hasFound = true;
-              let oldBadge = 0;
-              if (layoutInfo[i].badgeNumber && layoutInfo[i].badgeNumber > 0) {
-                if (appInfo.badgeNumber && appInfo.badgeNumber > 0) {
-                  oldBadge = layoutInfo[i].badgeNumber - appInfo.badgeNumber;
-                } else {
-                  oldBadge = layoutInfo[i].badgeNumber;
-                }
-              }
-              layoutInfo[i].badgeNumber = oldBadge + badgeInfo.badgeNumber;
               appInfo.badgeNumber = badgeInfo.badgeNumber;
               break;
             }
           }
+          layoutInfo[i].badgeNumber = this.getFolderBadgeNumber(layoutInfo[i]);
         }
       }
       if (hasFound) {
@@ -392,6 +384,19 @@ export default class PageDesktopViewModel extends BaseViewModel {
         this.getGridList();
       }
     }
+  }
+
+  private getFolderBadgeNumber(folderInfo) {
+    let bidfolderBadgeNumber: number = 0;
+    let layoutInfo: [[]] = folderInfo.layoutInfo;
+    for (var i = 0; i < layoutInfo.length; i++) {
+      layoutInfo[i].forEach((item: any) => {
+        if (item.badgeNumber && item.badgeNumber > 0) {
+          bidfolderBadgeNumber = bidfolderBadgeNumber + item.badgeNumber;
+        }
+      });
+    }
+    return bidfolderBadgeNumber;
   }
 
   /**
