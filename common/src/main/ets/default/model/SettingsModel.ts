@@ -85,10 +85,16 @@ export class SettingsModel {
    * force reload all config from disk.
    */
   forceReloadConfig(): void {
-    this.mPageDesktopModeConfig.forceReloadConfig();
-    this.mPageDesktopLayoutConfig.forceReloadConfig();
-    this.mPageDesktopAppModeConfig.forceReloadConfig();
-    if (this.mRecentsModeConfig != null) {
+    if (this.mPageDesktopModeConfig) {
+      this.mPageDesktopModeConfig.forceReloadConfig();
+    }
+    if (this.mPageDesktopLayoutConfig) {
+      this.mPageDesktopLayoutConfig.forceReloadConfig();
+    }
+    if (this.mPageDesktopAppModeConfig) {
+      this.mPageDesktopAppModeConfig.forceReloadConfig();
+    }
+    if (this.mRecentsModeConfig) {
       this.mRecentsModeConfig.forceReloadConfig();
     }
     this.notifyObservers(1);
