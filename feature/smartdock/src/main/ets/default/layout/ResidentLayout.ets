@@ -16,7 +16,6 @@
 import { AppMenu } from '@ohos/common';
 import { AppIcon } from '@ohos/common';
 import { DockItemInfo } from '@ohos/common';
-import { ScrollerComponent } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
 import { ResourceManager } from '@ohos/common';
@@ -79,7 +78,7 @@ export default struct ResidentLayout {
         })
       }, (item) => JSON.stringify(item))
     }
-    .padding(this.dockPadding)
+    .padding(this.appList.length == 0 ? this.mSmartDockStyleConfig.mDockPadding : this.dockPadding)
     .width(this.getListWidth())
     .height(this.mSmartDockStyleConfig.mDockHeight)
     .backgroundColor(this.mSmartDockStyleConfig.mBackgroundColor)
