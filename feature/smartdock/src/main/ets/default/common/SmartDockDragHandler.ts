@@ -19,6 +19,7 @@ import { localEventManager } from '@ohos/common';
 import { BaseDragHandler } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
+import { CheckEmptyUtils } from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 import SmartDockModel from '../model/SmartDockModel';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
@@ -145,18 +146,25 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     }
   }
 
-  protected onDragDrop(x: number, y: number) {
-    const dragItemInfo = AppStorage.Get('dragItemInfo');
-    const insertIndex = this.getItemIndex(x, y);
-    if (dragItemInfo && AppStorage.Get('dragItemType') === CommonConstants.DRAG_FROM_DOCK) {
-      const selectAppIndex = AppStorage.Get('selectAppIndex');
-      globalThis.SmartDockDragHandler.layoutAdjustment(insertIndex, selectAppIndex);
+  protected onDragDrop(x: number, y: number): boolean {
+    const dragItemInfo: any = AppStorage.Get('dragItemInfo');
+    if (JSON.stringify(dragItemInfo) == '{}') {
+      return false;
     }
-    if (dragItemInfo && AppStorage.Get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP
+    const dragItemType: number = AppStorage.Get('dragItemType');
+    const insertIndex = this.getItemIndex(x, y);
+    if (dragItemType === CommonConstants.DRAG_FROM_DOCK) {
+      const selectAppIndex: number = AppStorage.Get('selectAppIndex');
+      globalThis.SmartDockDragHandler.layoutAdjustment(insertIndex, selectAppIndex);
+      return true;
+    }
+    if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP
     && AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
       Log.showInfo(TAG, `onDrop insertIndex: ${insertIndex}`);
       this.addItemToSmartDock(dragItemInfo, insertIndex);
+      return true;
     }
+    return false;
   }
 
   addItemToSmartDock(dragItemInfo: any, insertIndex: number): boolean {
