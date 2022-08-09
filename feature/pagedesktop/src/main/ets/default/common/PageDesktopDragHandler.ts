@@ -221,15 +221,21 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     this.mStartPosition = this.getTouchPosition(x, y);
   }
 
-  onDragDrop(x: number, y: number) {
+  onDragDrop(x: number, y: number): boolean {
     const dragItemInfo: any = AppStorage.Get('dragItemInfo');
-    if (CheckEmptyUtils.isEmpty(dragItemInfo)) {
-      return;
+    if (JSON.stringify(dragItemInfo) == '{}') {
+      return false;
     }
-    Log.showInfo(TAG, `onDragEnd dragItemInfo: ${JSON.stringify(dragItemInfo)}`);
-    const selectAppIndex: number = AppStorage.Get('selectAppIndex');
+    const dragItemType: number = AppStorage.Get('dragItemType');
+    const deviceType: string = AppStorage.Get('deviceType')
+    // dock appInfo has no location information.
+    if (dragItemType === CommonConstants.DRAG_FROM_DOCK && deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
+      dragItemInfo.typeId = CommonConstants.TYPE_APP;
+      dragItemInfo.area = [1, 1];
+      dragItemInfo.page = AppStorage.Get('pageIndex');
+    }
+    Log.showDebug(TAG, `onDragEnd dragItemInfo: ${JSON.stringify(dragItemInfo)}`);
     const endIndex = this.getItemIndex(x, y);
-    Log.showInfo(TAG, `onDragDrop selectAppIndex: ${selectAppIndex}`);
     const startPosition: DragItemPosition = this.copyPosition(this.mStartPosition);
     let endPosition: DragItemPosition = null;
     this.mEndPosition = this.getTouchPosition(x, y);
@@ -243,25 +249,23 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     } else {
       if (this.isMoveToSamePosition(dragItemInfo)) {
         this.deleteBlankPageAfterDragging(startPosition, endPosition);
-        return;
+        return false;
       }
       const endLayoutInfo = this.getEndLayoutInfo(layoutInfo);
       if (endLayoutInfo != undefined) {
         // add app to folder
         if (endLayoutInfo.typeId === CommonConstants.TYPE_FOLDER) {
           this.mBigFolderViewModel.addOneAppToFolder(dragItemInfo, endLayoutInfo.folderId);
-          if (AppStorage.Get('dragItemType') === CommonConstants.DRAG_FROM_DOCK
-          && AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+          if (dragItemType === CommonConstants.DRAG_FROM_DOCK && deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
             localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE, dragItemInfo);
           }
           this.deleteBlankPageAfterDragging(startPosition, endPosition);
-          return;
+          return true;
         } else if (endLayoutInfo.typeId === CommonConstants.TYPE_APP) {
           // create a new folder
           const layoutInfoList = [endLayoutInfo];
           let startLayoutInfo = null;
-          if (AppStorage.Get('dragItemType') === CommonConstants.DRAG_FROM_DOCK
-          && AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+          if (dragItemType === CommonConstants.DRAG_FROM_DOCK && deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
             let appInfoList = this.mSettingsModel.getAppListInfo();
             const appIndex = appInfoList.findIndex(item => {
               return item.keyName === dragItemInfo.keyName;
@@ -296,13 +300,12 @@ export class PageDesktopDragHandler extends BaseDragHandler {
           this.mBigFolderViewModel.addNewFolder(layoutInfoList).then(()=> {
             this.deleteBlankPageAfterDragging(startPosition, endPosition);
           });
-          return;
+          return true;
         }
       }
     }
 
-    if (AppStorage.Get('dragItemType') === CommonConstants.DRAG_FROM_DOCK
-    && AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (dragItemType === CommonConstants.DRAG_FROM_DOCK && deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
       let appInfoTemp = {
         "bundleName": dragItemInfo.bundleName,
         "typeId": dragItemInfo.typeId,
@@ -324,6 +327,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     this.mSettingsModel.setLayoutInfo(info);
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_SMARTDOCK_INIT_FINISHED, null);
     this.deleteBlankPageAfterDragging(startPosition, endPosition);
+    return true;
   }
 
 

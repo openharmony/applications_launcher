@@ -22,7 +22,7 @@ import FolderItem from './FolderItem';
 import { PageDesktopGridStyleConfig } from '../PageDesktopGridStyleConfig';
 
 const TAG = "SwiperPage";
-const APP_INFO_REFRESH_DELAY = 500;
+const APP_INFO_REFRESH_DELAY = 1000;
 
 @Component
 export default struct SwiperPage {
@@ -63,7 +63,8 @@ export default struct SwiperPage {
   }
 
   itemMove(moveX: number, moveY: number){
-    if (this.isSwappingPage) {
+    const isSwappingPage: boolean = AppStorage.Get('isSwappingPage');
+    if (isSwappingPage) {
       return;
     }
     let curPageIndex: number = AppStorage.Get('pageIndex');
@@ -85,9 +86,9 @@ export default struct SwiperPage {
    * Increase delay when dragging app to other page.
    */
   movingIconSwapPageDelay() {
-    this.isSwappingPage = true;
+    AppStorage.SetOrCreate('isSwappingPage', true);
     setTimeout(() => {
-      this.isSwappingPage = false;
+      AppStorage.SetOrCreate('isSwappingPage', false);
     }, APP_INFO_REFRESH_DELAY);
   }
 
@@ -173,7 +174,8 @@ export default struct SwiperPage {
     .onDragMove((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
       if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE
-      || (AppStorage.Get('deviceType') != CommonConstants.DEFAULT_DEVICE_TYPE && AppStorage.Get('dragItemType') !== 1)) {
+      || (AppStorage.Get('deviceType') != CommonConstants.DEFAULT_DEVICE_TYPE
+      && AppStorage.Get('dragItemType') !== CommonConstants.DRAG_FROM_DOCK)) {
         this.itemMove(event.getX(), event.getY());
       }
     })
@@ -182,22 +184,18 @@ export default struct SwiperPage {
     })
     .onDrop((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
-      let dragItemInfo: any = AppStorage.Get('dragItemInfo');
-      // Drag within its own component
-      if (dragItemInfo && AppStorage.Get('dragItemType') === 2) {
-        globalThis.PageDesktopDragHandler.onDragDrop(event.getX(), event.getY());
-      }
-      // Drag from other components
-      if (dragItemInfo && AppStorage.Get('dragItemType') === 1 && AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
-        dragItemInfo.typeId = 0;
-        dragItemInfo.area = [1, 1];
-        dragItemInfo.page = AppStorage.Get('pageIndex');
-        AppStorage.SetOrCreate('dragItemInfo', dragItemInfo);
-        globalThis.PageDesktopDragHandler.onDragDrop(event.getX(), event.getY());
-      }
-      AppStorage.SetOrCreate('dragItemInfo', {});
+      const dragResult = globalThis.PageDesktopDragHandler.onDragDrop(event.getX(), event.getY());
+      Log.showInfo(TAG, `onDrop dragResult: ${dragResult}`);
       AppStorage.SetOrCreate('selectAppIndex', null);
       AppStorage.SetOrCreate('isDrag', false);
+      if (!dragResult) {
+        AppStorage.SetOrCreate('dragItemInfo', {});
+      } else {
+        // Wait for the UI rendering to end.
+        setTimeout(() => {
+          AppStorage.SetOrCreate('dragItemInfo', {});
+        }, 50);
+      }
     })
   }
 }

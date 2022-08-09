@@ -88,20 +88,27 @@ export default struct ResidentLayout {
     .listDirection(this.mSmartDockStyleConfig.mListDirection)
     .editMode(false)
     .onDragEnter((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getX()}, ${event.getY()}]`);
+      Log.showDebug(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getX()}, ${event.getY()}]`);
     })
     .onDragMove((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
+      Log.showDebug(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
     })
     .onDragLeave((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragLeave event: [${event.getX()}, ${event.getY()}]`);
+      Log.showDebug(TAG, `onDragLeave event: [${event.getX()}, ${event.getY()}]`);
     })
     .onDrop((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
-      globalThis.SmartDockDragHandler.onDragDrop(event.getX(), event.getY());
-      AppStorage.SetOrCreate('dragItemInfo', {});
+      const dragResult = globalThis.SmartDockDragHandler.onDragDrop(event.getX(), event.getY());
       AppStorage.SetOrCreate('selectAppIndex', null);
       AppStorage.SetOrCreate('isDrag', false);
+      if (!dragResult) {
+        AppStorage.SetOrCreate('dragItemInfo', {});
+      } else {
+        // Wait for the UI rendering to end.
+        setTimeout(() => {
+          AppStorage.SetOrCreate('dragItemInfo', {});
+        }, 50);
+      }
     })
   }
 }
