@@ -44,7 +44,6 @@ export default struct SwiperPage {
   private mIconSize: number;
   private mGridSpaceWidth : number;
   private mGridSpaceHeight: number;
-  private isSwappingPage = false;
 
   aboutToAppear(): void  {
     this.mPageDesktopStyleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
@@ -183,18 +182,22 @@ export default struct SwiperPage {
       Log.showInfo(TAG, `onDragLeave event: [${event.getX()}, ${event.getY()}]`);
     })
     .onDrop((event: DragEvent, extraParams: string) => {
+      const dragItemType: number = AppStorage.Get('dragItemType');
       Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
-      const dragResult = globalThis.PageDesktopDragHandler.onDragDrop(event.getX(), event.getY());
-      Log.showInfo(TAG, `onDrop dragResult: ${dragResult}`);
-      AppStorage.SetOrCreate('selectAppIndex', null);
-      AppStorage.SetOrCreate('isDrag', false);
-      if (!dragResult) {
-        AppStorage.SetOrCreate('dragItemInfo', {});
-      } else {
-        // Wait for the UI rendering to end.
-        setTimeout(() => {
+      if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP
+      || (dragItemType === CommonConstants.DRAG_FROM_DOCK && AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE)) {
+        const dragResult = globalThis.PageDesktopDragHandler.onDragDrop(event.getX(), event.getY());
+        Log.showInfo(TAG, `onDrop dragResult: ${dragResult}`);
+        AppStorage.SetOrCreate('selectAppIndex', null);
+        AppStorage.SetOrCreate('isDrag', false);
+        if (!dragResult) {
           AppStorage.SetOrCreate('dragItemInfo', {});
-        }, 50);
+        } else {
+          // Wait for the UI rendering to end.
+          setTimeout(() => {
+            AppStorage.SetOrCreate('dragItemInfo', {});
+          }, 50);
+        }
       }
     })
   }
