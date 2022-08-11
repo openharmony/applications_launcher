@@ -138,7 +138,7 @@
     },
     {
       "name": "is_delete_form",
-      "value": "Whether to remove"
+      "value": "Whether to remove "
     },
     {
       "name": "form",
@@ -163,6 +163,10 @@
     {
       "name": "remove_app_from_folder",
       "value": "remove app from folder"
+    },
+    {
+      "name": "isUninstall",
+      "value": "Uninstall "
     }
   ]
 }
