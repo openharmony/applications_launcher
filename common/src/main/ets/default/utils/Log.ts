@@ -12,41 +12,94 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import hilog from '@ohos.hilog';
 
-const TAG = 'Launcher_Default';
+const DOMAIN: number = 0x001b;
+const TAG = "Launcher_Default";
+const SYMBOL = " --> ";
 
 /**
  * Basic log class
  */
 export class Log {
-
-  /**
-     * print info level log
+    /**
+     * Outputs info-level logs.
      *
-     * @param {string} tag - Page or class tag
-     * @param {string} log - Log needs to be printed
+     * @param tag Identifies the log tag.
+     * @param format Indicates the log format string.
+     * @param args Indicates the log parameters.
+     * @since 7
      */
-  static showInfo(tag: string, log: string) {
-    console.info(`${TAG} tag: ${tag} --> ${log}`);
-  }
+    static showInfo(tag: string, format: string, ...args: any[]) {
+        if (Log.isLoggable(tag, hilog.LogLevel.INFO)) {
+            hilog.info(DOMAIN, TAG, tag + SYMBOL + format, args);
+        }
+    }
 
-  /**
-     * print debug level log
-     *
-     * @param {string} tag - Page or class tag
-     * @param {string} log - Log needs to be printed
-     */
-  static showDebug(tag: string, log: string) {
-    console.debug(`${TAG} tag: ${tag} --> ${log}`);
-  }
+    /**
+    * Outputs debug-level logs.
+    *
+    * @param tag Identifies the log tag.
+    * @param format Indicates the log format string.
+    * @param args Indicates the log parameters.
+    * @since 7
+    */
+    static showDebug(tag: string, format: string, ...args: any[]) {
+        if (Log.isLoggable(tag, hilog.LogLevel.DEBUG)) {
+            hilog.debug(DOMAIN, TAG, tag + SYMBOL + format, args);
+        }
+    }
 
-  /**
-     * print error level log
+    /**
+     * Outputs warning-level logs.
      *
-     * @param {string} tag - Page or class tag
-     * @param {string} log - Log needs to be printed
+     * @param tag Identifies the log tag.
+     * @param format Indicates the log format string.
+     * @param args Indicates the log parameters.
+     * @since 7
      */
-  static showError(tag: string, log: string) {
-    console.error(`${TAG} tag: ${tag} --> ${log}`);
-  }
+    static showWarn(tag: string, format: string, ...args: any[]) {
+        if (Log.isLoggable(tag, hilog.LogLevel.WARN)) {
+            hilog.warn(DOMAIN, TAG, tag + SYMBOL + format, args);
+        }
+    }
+
+    /**
+     * Outputs error-level logs.
+     *
+     * @param tag Identifies the log tag.
+     * @param format Indicates the log format string.
+     * @param args Indicates the log parameters.
+     * @since 7
+     */
+    static showError(tag: string, format: string, ...args: any[]) {
+        if (Log.isLoggable(tag, hilog.LogLevel.ERROR)) {
+            hilog.error(DOMAIN, TAG, tag + SYMBOL + format, args);
+        }
+    }
+
+    /**
+     * Outputs fatal-level logs.
+     *
+     * @param tag Identifies the log tag.
+     * @param format Indicates the log format string.
+     * @param args Indicates the log parameters.
+     * @since 7
+     */
+    static showFatal(tag: string, format: string, ...args: any[]) {
+        if (Log.isLoggable(tag, hilog.LogLevel.FATAL)) {
+            hilog.fatal(DOMAIN, TAG, tag + SYMBOL + format, args);
+        }
+    }
+
+    /**
+     * Checks whether logs of the specified tag, and level can be printed.
+     *
+     * @param tag Identifies the log tag.
+     * @param level log level
+     * @since 7
+     */
+    private static isLoggable(tag:string, level: hilog.LogLevel): boolean {
+        return hilog.isLoggable(DOMAIN, tag, level);
+    }
 }
