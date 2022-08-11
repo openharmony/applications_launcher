@@ -24,10 +24,10 @@ import { SettingsModel } from '@ohos/common';
 import { LayoutViewModel } from '@ohos/common';
 import { SmartDock } from '@ohos/smartdock';
 import { PageDesktopLayout } from '@ohos/pagedesktop';
-import { PageDesktopDragHandler } from '@ohos/pagedesktop';
 import { BigFolderConstants } from '@ohos/bigfolder';
 import { FolderOpenComponent } from '@ohos/bigfolder';
 import PadStage from '../common/PadStage';
+import StyleConstants from '../common/constants/StyleConstants';
 
 const RAW_IMAGE_CACHE_SIZE = 20000000;
 const TAG = 'EntryView';
@@ -56,6 +56,9 @@ struct EntryView {
 
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
     this.navigationBarStatus = SettingsModel.getInstance().getValue();
+
+    // set window background color transparent
+    setAppBgColor(StyleConstants.DEFAULT_BG_COLOR);
   }
 
   registerPageDesktopNavigatorStatusChangeEvent(listener): void {
@@ -178,9 +181,6 @@ struct EntryView {
 
       FolderOpenComponent();
     }
-    .backgroundImage('/common/pics/img_wallpaper_default.jpg')
-    .backgroundImageSize(ImageSize.Cover)
-    .backgroundImagePosition(Alignment.Center)
     .width('100%')
     .height('100%')
   }
