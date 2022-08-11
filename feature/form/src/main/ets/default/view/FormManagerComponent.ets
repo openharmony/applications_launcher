@@ -153,6 +153,8 @@ export struct FormManagerComponent {
                         module: formItem.moduleName,
                         dimension: dimensionItem,
                       })
+                        .enabled(false)
+                        .focusable(false)
                         .clip(new Rect({
                           width: this.mFormComponentWidth[dimensionItem - 1],
                           height: this.mFormComponentHeight[dimensionItem - 1],
