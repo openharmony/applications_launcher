@@ -9,6 +9,7 @@
     "distributedNotificationEnabled": true,
     "keepAlive": true,
     "minAPIVersion": 8,
-    "targetAPIVersion": 9
+    "targetAPIVersion": 9,
+    "userDataClearable": false
   }
 }
