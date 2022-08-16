@@ -34,7 +34,7 @@ struct RecentView {
   private mRecentMissionsViewModel: RecentMissionsViewModel;
 
   onPageShow(): void {
-    Log.showInfo(TAG, `onPageShow recentMissionsList.length: ${this.recentMissionsList.length}`);
+    Log.showInfo(TAG, 'onPageShow');
     this.isClickSubComponent = false;
     this.mRecentMissionsStage.onCreate();
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
@@ -56,13 +56,16 @@ struct RecentView {
 
   private closeRecentDockPopup() {
     let num: number = AppStorage.Get('sysUiRecentOnClickEvent');
+    if (!num) {
+      num = 0;
+    }
     AppStorage.SetOrCreate('sysUiRecentOnClickEvent', ++num);
     Log.showInfo(TAG, `aboutToAppear sysUiRecentOnClickEvent closeRecentDockPopup num: ${num}`);
   }
 
   build() {
     Column() {
-      if (this.recentMissionsList.length === 0) {
+      if (!Array.isArray(this.recentMissionsList) || this.recentMissionsList.length == 0) {
         Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
           Text($r('app.string.No_running_apps_recently'))
             .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)

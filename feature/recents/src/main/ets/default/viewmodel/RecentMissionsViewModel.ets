@@ -106,7 +106,7 @@ export class RecentMissionsViewModel {
       this.mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
     } else {
       this.mRecentMissionsList = [];
-      AppStorage.SetOrCreate('recentMissionsList', this.mRecentMissionsList);
+      AppStorage.SetOrCreate('recentMissionsList', []);
       await this.deleteRecentMissions();
       return;
     }
