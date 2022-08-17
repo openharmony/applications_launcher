@@ -55,11 +55,13 @@ class AmsMissionManager {
     let missionInfos = new Array<OriginMissionInfo>();
     await missionManager.getMissionInfos('', AmsMissionManager.RECENT_MISSIONS_LIMIT_NUM)
       .then((res) => {
-        Log.showInfo(TAG, `getRecentMissionsList res.length: ${res.length}`);
-        missionInfos = res;
+        if (!CheckEmptyUtils.isEmptyArr(res)) {
+          Log.showInfo(TAG, `getOriginRecentMissionsList res.length: ${res.length}`);
+          missionInfos = res;
+        }
       })
       .catch((err) => {
-        Log.showError(TAG, `getRecentMissionsList error: ${JSON.stringify(err)}`);
+        Log.showError(TAG, `getOriginRecentMissionsList error: ${JSON.stringify(err)}`);
       });
     return missionInfos;
   }
