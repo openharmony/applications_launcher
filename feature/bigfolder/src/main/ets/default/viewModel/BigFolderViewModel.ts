@@ -993,7 +993,7 @@ export class BigFolderViewModel extends BaseViewModel {
     if (num <= row) {
       height = styleConfig.mAddFolderDialogHeight;
     } else {
-      const gridHeight = num * styleConfig.mAddFolderItemSize + num * styleConfig.mAddFolderGridGap +
+      const gridHeight = num * (this.mFolderStyleConfig.mAddFolderIconSize + this.mFolderStyleConfig.mAddFolderTextLines) + num * styleConfig.mAddFolderGridGap +
       styleConfig.mAddFolderGridMargin * 2;
       height = gridHeight + BigFolderStyleConstants.DEFAULT_APP_ADD_TITLE_SIZE +
       BigFolderStyleConstants.DEFAULT_BUTTON_HEIGHT + BigFolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN;

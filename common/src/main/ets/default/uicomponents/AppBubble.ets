@@ -50,7 +50,7 @@ export struct AppBubble {
       AppMenu({
         menuInfoList: this.menuInfo,
         closeMenu: () => {
-          ContextMenu.close();
+          AppStorage.SetOrCreate('contextMenuState', false);
         }
       })
     }

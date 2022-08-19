@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -74,7 +75,11 @@ export default struct ResidentLayout {
           })
         }
         .onClick((event: ClickEvent) => {
-          this.onItemClick(event, item);
+          const popupIsShow: boolean = AppStorage.Get('popupIsShow');
+          if (!popupIsShow) {
+            this.onItemClick(event, item);
+          }
+          AppStorage.SetOrCreate('popupIsShow', false);
         })
       }, (item) => JSON.stringify(item))
     }
@@ -181,12 +186,15 @@ struct AppItem {
           Log.showInfo(TAG, 'onAction start');
           this.isShow = true;
           AppStorage.SetOrCreate('isLongPress', true);
+          // Control whether the onClick method is executed or not.
+          AppStorage.SetOrCreate('popupIsShow', true);
         })
     )
     .bindPopup(this.isShow, {
       builder: this.MenuBuilder,
       placement: Placement.Top,
       popupColor: Color.White,
+      arrowOffset: 3 * (mSmartDockStyleConfig.mIconSize / 2) + mSmartDockStyleConfig.mListItemGap,
       onStateChange: (e) => {
         if (!e.isVisible) {
           this.isShow = false;

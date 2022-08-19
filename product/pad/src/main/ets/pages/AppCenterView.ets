@@ -50,11 +50,11 @@ struct AppCenterView {
 
   onPageHide(): void {
     Log.showInfo(TAG, 'onPageHide');
-    this.mAppGridViewModel.unregisterAppListChange();
   }
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, 'aboutToDisappear');
+    this.mAppGridViewModel.unregisterAppListChange();
   }
 
   private async updateScreenSize() {
@@ -103,7 +103,8 @@ struct AppCenterView {
     .height('100%')
     .onClick(() => {
       Log.showInfo(TAG, 'click appcenter area');
-      let contextFlag = AppStorage.Get('contextMenuState');
+      const contextFlag: boolean = AppStorage.Get('contextMenuState');
+      Log.showInfo(TAG, 'onClick contextFlag: ' + contextFlag);
       if (contextFlag) {
         AppStorage.SetOrCreate('contextMenuState', false);
       }else {

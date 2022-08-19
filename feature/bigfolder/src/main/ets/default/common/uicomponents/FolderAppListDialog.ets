@@ -141,7 +141,7 @@ export default struct FolderAppListDialog {
                 }
               }
               .width(this.mFolderStyleConfig.mAddFolderItemSize)
-              .height(this.mFolderStyleConfig.mAddFolderItemSize)
+              .height(this.mFolderStyleConfig.mAddFolderIconSize + this.mFolderStyleConfig.mAddFolderTextLines + this.mFolderStyleConfig.mFolderToggleSize)
             }, (item) => JSON.stringify(item))
           }
           .columnsTemplate(this.getColumnsTemplate())
@@ -212,6 +212,9 @@ export default struct FolderAppListDialog {
       if (!this.navigationBarStatusValue){
         Stack().width(this.mFolderStyleConfig.mAddFolderDialogWidth).height(BigFolderStyleConstants.DEFAULT_APP_GRID_TOGGLE_SIZE)
       }
-    }.width('100%').height('100%').justifyContent(this.isPad ? FlexAlign.Center : FlexAlign.End)
+    }
+    .width('100%')
+    .height('100%')
+    .justifyContent(this.isPad ? FlexAlign.Center : FlexAlign.End)
   }
 }
