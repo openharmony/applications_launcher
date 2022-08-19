@@ -142,7 +142,7 @@ export default struct RecentLayout {
               this.updateData = () => {
               }
             }
-          }
+          },
         })
         .onHover((isHover) => {
           this.autoCancel = false;
@@ -253,6 +253,7 @@ struct AppItem {
       builder: this.MenuBuilder,
       placement: Placement.Top,
       popupColor: Color.White,
+      arrowOffset: 3 * (mSmartDockStyleConfig.mIconSize / 2) + mSmartDockStyleConfig.mListItemGap,
       onStateChange: (e) => {
         if (!e.isVisible) {
           this.isShow = false;

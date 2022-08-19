@@ -23,7 +23,6 @@ import { AppName } from '@ohos/common';
 import { AppBubble } from '@ohos/common';
 import { UninstallDialog } from '@ohos/common';
 import { FormManagerDialog } from '@ohos/common';
-import { windowManager } from '@ohos/common';
 import { ResourceManager } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
 import { InputMethodManager } from '@ohos/common';
@@ -41,7 +40,6 @@ const FOLDER_CLOSE_DELAY = 500;
 let mBigFolderViewModel: BigFolderViewModel;
 let mBigFolderStyleConfig: BigFolderStyleConfig;
 let mFolderModel: BigFolderModel;
-let isOpenFolderDialog: boolean = false;
 let mAppNameHeight = BigFolderStyleConstants.DEFAULT_APP_NAME_HEIGHT;
 let mAppItemWidth = BigFolderStyleConstants.DEFAULT_APP_ITEM_WIDTH;
 let mAppNameSize = BigFolderStyleConstants.DEFAULT_APP_NAME_SIZE;
@@ -278,7 +276,11 @@ export struct FolderOpenComponent {
         mBigFolderViewModel.modifyFolderName(this.mFolderInfo)
       }
     } else {
-      if (!isOpenFolderDialog) {
+      const contextFlag: boolean = AppStorage.Get('contextMenuState');
+      Log.showInfo(TAG, 'saveText contextFlag: ' + contextFlag);
+      if (contextFlag) {
+        AppStorage.SetOrCreate('contextMenuState', false);
+      } else {
         mBigFolderViewModel.closeFolder();
       }
     }
@@ -419,7 +421,11 @@ struct FolderSwiperPage {
         mBigFolderViewModel.modifyFolderName(this.mFolderInfo);
       }
     } else {
-      if (!isOpenFolderDialog) {
+      const contextFlag: boolean = AppStorage.Get('contextMenuState');
+      Log.showInfo(TAG, 'saveText contextFlag: ' + contextFlag);
+      if (contextFlag) {
+        AppStorage.SetOrCreate('contextMenuState', false);
+      } else {
         mBigFolderViewModel.closeFolder();
       }
     }

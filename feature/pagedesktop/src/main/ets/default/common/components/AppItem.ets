@@ -187,30 +187,25 @@ export default struct AppItem {
           AppStorage.SetOrCreate('selectDesktopAppItem', this.item.keyName);
         }
       })
-      .gesture(
-      GestureGroup(GestureMode.Exclusive,
-        TapGesture()
-          .onAction((event: GestureEvent) => {
-            Log.showInfo(TAG, `tap action ${JSON.stringify(event)}`);
-            if (event.source == SourceType.Mouse) {
-              this.mouseClick++;
-              if (this.mouseClick == DOUBLE_CLICK_COUNT) {
-                Log.showInfo(TAG, 'mouse double click');
-                this.mouseClick = 0;
-                this.launchApp();
-              } else {
-                this.mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
-                setTimeout(() => {
-                  this.mouseClick = 0;
-                }, 300)
-              }
-            } else {
-              Log.showInfo(TAG, 'tap click');
-              this.launchApp();
-            }
-          })
-        )
-      )
+      .onClick((event) => {
+        Log.showInfo(TAG, `tap action ${JSON.stringify(event)}`);
+        if (event.source == SourceType.Mouse) {
+          this.mouseClick++;
+          if (this.mouseClick == DOUBLE_CLICK_COUNT) {
+            Log.showInfo(TAG, 'mouse double click');
+            this.mouseClick = 0;
+            this.launchApp();
+          } else {
+            this.mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+            setTimeout(() => {
+              this.mouseClick = 0;
+            }, 300)
+          }
+        } else {
+          Log.showInfo(TAG, 'tap click');
+          this.launchApp();
+        }
+      })
       .onTouch((event: TouchEvent) => {
         Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].screenX}, y: ${event.touches[0].screenY}`);
         if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {

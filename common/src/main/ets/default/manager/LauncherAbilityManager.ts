@@ -15,6 +15,7 @@
 
 import bundleMgr from '@ohos.bundle';
 import osaccount from '@ohos.account.osAccount';
+import hiAppEvent from '@ohos.hiAppEvent';
 import launcherBundleMgr from '@ohos.bundle.innerBundleManager';
 import { LauncherAbilityInfo } from 'bundle/launcherAbilityInfo';
 import { Log } from '../utils/Log';
@@ -55,9 +56,9 @@ class LauncherAbilityManager {
   private readonly mLauncherAbilityChangeListeners: any[] = [];
 
   /**
-   * 获取桌面应用信息管理对象
+   * Get desktop application information management object
    *
-   * @return 桌面应用信息管理对象单一实例
+   * @return Desktop application information management object instance
    */
   static getInstance(): LauncherAbilityManager {
     if (globalThis.LauncherAbilityManagerInstance == null) {
@@ -73,6 +74,10 @@ class LauncherAbilityManager {
       Log.showDebug(TAG, `getOsAccountLocalIdFromProcess localId ${localId}`);
       this.mUserId = localId;
     });
+    hiAppEvent.configure({
+      disable: true,
+      maxStorage: "15M"
+    })
   }
 
   getUserId(): number {
@@ -80,9 +85,9 @@ class LauncherAbilityManager {
   }
 
   /**
-   * 开始监听系统应用状态.
+   * Monitor system application status.
    *
-   * @params listener 监听对象
+   * @params listener: listening object
    */
   registerLauncherAbilityChangeListener(listener: any): void {
     if (listener != null) {
@@ -101,9 +106,9 @@ class LauncherAbilityManager {
   }
 
   /**
-   * 取消监听系统应用状态.
+   * Cancel monitoring system application status.
    *
-   * @params listener 监听对象
+   * @params listener: listening object
    */
   unregisterLauncherAbilityChangeListener(listener: any): void {
     if (listener != null) {
@@ -155,8 +160,8 @@ class LauncherAbilityManager {
   /**
    * get AbilityInfos by bundleName from BMS
    *
-   * @params bundleName 应用包名
-   * @return 目标应用的入口Ability信息列表
+   * @params bundleName Application package name
+   * @return List of entry capabilities information of the target application
    */
   async getLauncherAbilityInfo(bundleName: string): Promise<AppItemInfo[]> {
     let abilityInfos: LauncherAbilityInfo[];
@@ -265,10 +270,10 @@ class LauncherAbilityManager {
   }
 
   /**
-   * 启动应用
+   * start the app
    *
-   * @params paramAbilityName Ability名
-   * @params paramBundleName 应用包名
+   * @params paramAbilityName: Ability name
+   * @params paramBundleName: Application package name
    */
   startLauncherAbility(paramAbilityName: string, paramBundleName: string, paramModuleName: string) {
     Log.showInfo(TAG, `startApplication abilityName: ${paramAbilityName}, bundleName: ${paramBundleName}, moduleName ${paramModuleName}`);
@@ -282,6 +287,14 @@ class LauncherAbilityManager {
       Log.showError(TAG, `startApplication promise error: ${JSON.stringify(err)}`);
     });
     Log.showDebug(TAG, `startApplication  AceApplication : startAbility : ${result}`);
+    hiAppEvent.write('APPLICATION_LAUNCHER', hiAppEvent.EventType.BEHAVIOR, {"name": [paramBundleName, paramAbilityName, paramModuleName].join(",")},
+      (err, value) => {
+        if (err) {
+          Log.showError(TAG, `startApplication hiAppEvent write error: ${err.code}`);
+        } else {
+          Log.showInfo(TAG, 'startApplication hiAppEvent write success');
+        }
+    })
     Trace.end(Trace.CORE_METHOD_LAUNCH_APP);
   }
 
