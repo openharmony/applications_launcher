@@ -142,7 +142,7 @@ export default struct SwiperPage {
         .rowEnd(item.row + item.area[1] - 1)
         .columnEnd(item.column + item.area[0] - 1)
       }, (item) => {
-        if (item.typeId == CommonConstants.TYPE_FOLDER) {
+        if (item.typeId == CommonConstants.TYPE_FOLDER || item.typeId == CommonConstants.TYPE_CARD) {
           return JSON.stringify(item);
         } else {
           return `${item.typeId}${item.row}${item.column}`;
