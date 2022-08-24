@@ -212,6 +212,7 @@ export default struct AppItem {
           let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
           Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
           if (!mIsDragEffectArea) {
+            globalThis.PageDesktopDragHandler.deleteBlankPageOutsideEffect();
             this.pageDesktopDragItemInfo = {};
             AppStorage.SetOrCreate('selectAppIndex', null);
             AppStorage.SetOrCreate('isDrag', false);
