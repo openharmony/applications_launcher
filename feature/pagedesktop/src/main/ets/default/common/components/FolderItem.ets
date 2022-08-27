@@ -23,6 +23,7 @@ import { BigFolderViewModel } from '@ohos/bigfolder';
 import { BigFolderStyleConfig } from '@ohos/bigfolder';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
 import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel'
+import { PageDesktopStartAppHandler } from '../PageDesktopStartAppHandler';
 import { BigFolderConstants } from '@ohos/bigfolder';
 
 const TAG = 'FolderItem';
@@ -48,6 +49,7 @@ export default struct FolderItem {
   private mGridSpaceHeight: number = 0;
   private mIconMarginVertical: number = StyleConstants.DEFAULT_10;
   private mPageDesktopDragHandler: PageDesktopDragHandler;
+  private mPageDesktopStartAppHandler: PageDesktopStartAppHandler;
   private mFolderStyleConfig: BigFolderStyleConfig;
   mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
 
@@ -74,6 +76,7 @@ export default struct FolderItem {
 
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
+    this.mPageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
     this.mBigFolderViewModel = BigFolderViewModel.getInstance();
     this.mFolderStyleConfig = this.mBigFolderViewModel.getFolderStyleConfig();
     this.mPageDesktopViewModel = PageDesktopViewModel.getInstance();
@@ -171,6 +174,7 @@ export default struct FolderItem {
           nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
           onAppIconClick: (event, appItem) => {
             Log.showInfo(TAG, "onAppIconClick");
+            this.setStartAppInfo(appItem);
             this.mPageDesktopViewModel.openApplication(appItem.abilityName, appItem.bundleName, appItem.moduleName);
           },
           onOpenFolderClick: (event, folderItem) => {
@@ -228,5 +232,16 @@ export default struct FolderItem {
     }
     .width(StyleConstants.PERCENTAGE_100)
     .height(StyleConstants.PERCENTAGE_100)
+  }
+
+  /**
+  * set start app info
+  */
+  private setStartAppInfo(appItem) {
+    AppStorage.SetOrCreate('startAppItemInfo', appItem);
+    AppStorage.SetOrCreate('startAppFromFolderItemInfo', this.folderItem);
+    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_FOLDER);
+    this.mPageDesktopStartAppHandler.setAppIconSize(this.mFolderStyleConfig.mFolderAppSize);
+    this.mPageDesktopStartAppHandler.setAppIconInfo();
   }
 }

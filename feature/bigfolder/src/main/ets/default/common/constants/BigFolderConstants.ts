@@ -36,4 +36,8 @@ export class BigFolderConstants {
    * folder refresh status
    */
   static readonly OPEN_FOLDER_STATUS_REFRESH = 2;
+
+  static readonly BORDER_PADDING_TOP = 2;
+  static readonly BORDER_PADDING_BOTTOM = 2;
+
 }

@@ -25,6 +25,7 @@ import { amsMissionManager }from '@ohos/common';
 import { launcherAbilityManager } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { BaseViewModel } from '@ohos/common';
+import SmartDockStartAppHandler from '../common/SmartDockStartAppHandler';
 import SmartDockModel from '../model/SmartDockModel';
 import SmartDockDragHandler from '../common/SmartDockDragHandler';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
@@ -40,6 +41,7 @@ export default class SmartDockViewModel extends BaseViewModel {
   private readonly mSmartDockLayoutConfig: SmartDockLayoutConfig;
   private readonly mSmartDockStyleConfig: SmartDockStyleConfig;
   private readonly mSmartDockDragHandler: SmartDockDragHandler;
+  private readonly mSmartDockStartAppHandler: SmartDockStartAppHandler;
   private readonly mSmartDockModel: SmartDockModel;
   private mSelectedItem: DockItemInfo;
   private mSelectedDockType = 0;
@@ -50,6 +52,7 @@ export default class SmartDockViewModel extends BaseViewModel {
     this.mSmartDockLayoutConfig = layoutConfigManager.getFunctionConfig(SmartDockLayoutConfig.SMART_DOCK_LAYOUT_INFO);
     this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
     this.mSmartDockDragHandler = SmartDockDragHandler.getInstance();
+    this.mSmartDockStartAppHandler = SmartDockStartAppHandler.getInstance();
     this.mSmartDockModel = SmartDockModel.getInstance();
     Log.showInfo(TAG, 'constructor!');
   }
@@ -77,6 +80,7 @@ export default class SmartDockViewModel extends BaseViewModel {
    */
   residentOnClick(event, item, callback?) {
     // AppCenter entry
+    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_RESIDENTIAL);
     if (item.abilityName == CommonConstants.APPCENTER_ABILITY && callback != null) {
       callback();
       return;
@@ -87,6 +91,7 @@ export default class SmartDockViewModel extends BaseViewModel {
       return;
     }
     // app entry
+    this.setStartAppInfo(item);
     launcherAbilityManager.startLauncherAbility(item.abilityName, item.bundleName, item.moduleName);
   }
 
@@ -96,6 +101,7 @@ export default class SmartDockViewModel extends BaseViewModel {
    * @param item
    */
   public recentOnClick(event, item, callback?) {
+    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_RECENT);
     let missionInfoList = [];
     missionInfoList = AppStorage.Get('missionInfoList');
     Log.showDebug(TAG, `recentOnClick missionInfoList.length: ${missionInfoList.length}`);
@@ -110,6 +116,8 @@ export default class SmartDockViewModel extends BaseViewModel {
           } else if (!CheckEmptyUtils.isEmptyArr(missionList) && missionList.length === 1) {
             let missionId = missionInfoList[i]?.missionInfoList[0]?.missionId;
             amsMissionManager.moveMissionToFront(missionId).then(() => {}, () => {});
+            // set start app info
+            this.setStartAppInfo(item);
           }
           break;
         }
@@ -287,5 +295,18 @@ export default class SmartDockViewModel extends BaseViewModel {
       right?: number,
     }[] = await this.mSmartDockModel.getSnapshot(missionIds, name);
     return snapshotList;
+  }
+
+  /**
+   * set start app info
+   */
+  private setStartAppInfo(item) {
+    if (CheckEmptyUtils.isEmpty(item)) {
+      Log.showError(TAG, `setStartAppInfo with item`)
+      return;
+    }
+    AppStorage.SetOrCreate('startAppItemInfo', item);
+    this.mSmartDockStartAppHandler.setAppIconSize(this.mSmartDockStyleConfig.mIconSize);
+    this.mSmartDockStartAppHandler.setAppIconInfo();
   }
 }

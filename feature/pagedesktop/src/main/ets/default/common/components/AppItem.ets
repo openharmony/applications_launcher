@@ -25,6 +25,7 @@ import { ResourceManager } from '@ohos/common';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
 import { CommonConstants } from '@ohos/common';
 import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel';
+import { PageDesktopStartAppHandler } from '../PageDesktopStartAppHandler';
 
 const DOUBLE_CLICK_COUNT = 2
 
@@ -52,6 +53,7 @@ export default struct AppItem {
   private mPageDesktopViewModel: PageDesktopViewModel;
   private isPad: boolean = false;
   private mPageDesktopDragHandler: PageDesktopDragHandler;
+  private mPageDesktopStartAppHandler: PageDesktopStartAppHandler;
   private mouseClick: number = 0;
   private dialogName: string = "";
   private clearForm: Function = null;
@@ -126,6 +128,7 @@ export default struct AppItem {
 
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
+    this.mPageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
     this.isPad = this.mPageDesktopViewModel.getDevice();
     let styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
     this.mAppNameHeight = styleConfig.mNameHeight;
@@ -171,7 +174,7 @@ export default struct AppItem {
           badgeNumber: this.item.badgeNumber,
           isSelect: this.selectDesktopAppItem == this.item.keyName,
           menuInfo:this.mPageDesktopViewModel.buildMenuInfoList(this.item,
-            this.dialogController, this.formManagerDialogController),
+            this.dialogController, this.formManagerDialogController, null, () => this.setStartAppInfo()),
           mPaddingTop: this.mMarginVertical,
           nameLines: this.mNameLines,
           mIconNameMargin: this.mIconNameMargin,
@@ -196,6 +199,7 @@ export default struct AppItem {
             this.mouseClick = 0;
             this.launchApp();
           } else {
+            this.setStartAppInfo();
             this.mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
             setTimeout(() => {
               this.mouseClick = 0;
@@ -229,6 +233,7 @@ export default struct AppItem {
    */
   private launchApp() {
     Trace.start(Trace.CORE_METHOD_LAUNCH_APP);
+    this.setStartAppInfo();
     this.mPageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
   }
 
@@ -240,5 +245,16 @@ export default struct AppItem {
     Log.showInfo(TAG, `pageDesktopDragItemInfo: ${JSON.stringify(this.pageDesktopDragItemInfo)}`);
     globalThis.PageDesktopDragHandler.onDragStart(event.getX(), event.getY());
     return this.dragLayerBuilder();
+  }
+
+  /**
+   * set start app info
+   */
+  private setStartAppInfo() {
+    Log.showInfo(TAG, `app setStartAppInfo ${this.mIconSize}`);
+    AppStorage.SetOrCreate('startAppItemInfo', this.item);
+    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
+    this.mPageDesktopStartAppHandler.setAppIconSize(this.mIconSize);
+    this.mPageDesktopStartAppHandler.setAppIconInfo();
   }
 }

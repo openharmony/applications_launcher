@@ -896,7 +896,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
     return this.isPad;
   }
 
-  buildMenuInfoList(appInfo, dialog, formDialog?, folderCallback?): MenuInfo[] {
+  buildMenuInfoList(appInfo, dialog, formDialog?, folderCallback?, openClickCallback?): MenuInfo[] {
     let menuInfoList = new Array<MenuInfo>();
     const shortcutInfo = this.mAppModel.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
@@ -911,6 +911,10 @@ export default class PageDesktopViewModel extends BaseViewModel {
         menu.bundleName = value.bundleName;
         menu.moduleName = value.moduleName;
         menu.onMenuClick = () => {
+          if (openClickCallback) {
+            openClickCallback();
+          }
+          AppStorage.SetOrCreate('openFolderStatus', 0);
           this.jumpTo(value.wants[0].targetClass, value.wants[0].targetBundle, value.wants[0].targetModule);
         };
         value.bundleName == appInfo.bundleName && value.moduleName == appInfo.moduleName && menuInfoList.push(menu);
@@ -922,6 +926,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
     open.menuImgSrc = '/common/pics/ic_public_add_norm.svg';
     open.menuText = $r('app.string.app_menu_open');
     open.onMenuClick = () => {
+      this.setStartAppInfo()
       this.jumpTo(appInfo.abilityName, appInfo.bundleName, appInfo.moduleName);
     };
     menuInfoList.push(open);
@@ -1262,5 +1267,17 @@ export default class PageDesktopViewModel extends BaseViewModel {
         }
       }
     }
+  }
+
+  /**
+   * set start app info
+   */
+  private setStartAppInfo() {
+    AppStorage.SetOrCreate('startAppIconInfo', {
+      appIconSize: 0,
+      appIconHeight: 0,
+      appIconPositionX: 0,
+      appIconPositionY: 0
+    });
   }
 }

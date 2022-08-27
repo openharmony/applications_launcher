@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import { CheckEmptyUtils } from '@ohos/common';
 import { Log } from '@ohos/common'
 import { Trace } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
@@ -25,6 +26,8 @@ import { ResourceManager } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
 import { AppGridViewModel } from '../viewmodel/AppGridViewModel';
 import AppCenterGridStyleConfig from '../common/AppCenterGridStyleConfig';
+import AppCenterStartAppHandler from '../common/AppCenterStartAppHandler';
+import { windowManager } from '@ohos/common';
 
 const TAG = 'AppGridLayout'
 
@@ -36,6 +39,7 @@ export struct AppGridLayout {
   mAppGridViewModel: AppGridViewModel = null;
   mAppCenterGridStyleConfig: AppCenterGridStyleConfig = null;
   mSelectItem = null;
+  private mAppCenterStartAppHandler: AppCenterStartAppHandler;
   private dialogName: string = "";
   mDialogController: CustomDialogController = new CustomDialogController({
     builder: UninstallDialog({
@@ -70,6 +74,7 @@ export struct AppGridLayout {
     this.mAppGridViewModel = AppGridViewModel.getInstance();
     this.mAppGridViewModel.getAppList();
     this.mAppCenterGridStyleConfig = this.mAppGridViewModel.getAppGridStyleConfig();
+    this.mAppCenterStartAppHandler = AppCenterStartAppHandler.getInstance();
     ResourceManager.getInstance().getStringByResource($r('app.string.isUninstall')).then((resName) => {
       this.dialogName = resName;
     });
@@ -101,7 +106,10 @@ export struct AppGridLayout {
     open.menuImgSrc = "/common/pics/ic_public_add_norm.svg";
     open.menuText = $r('app.string.app_menu_open');
     open.onMenuClick = () => {
+      Log.showInfo(TAG,`open.OnMenuClick--:${JSON.stringify(appInfo)}`);
+      this.setStartAppInfo(appInfo);
       this.mAppGridViewModel.jumpTo(appInfo.abilityName, appInfo.bundleName, appInfo.moduleName);
+      windowManager.hideWindow(windowManager.APP_CENTER_WINDOW_NAME);
     };
     menuInfoList.push(open);
 
@@ -154,7 +162,10 @@ export struct AppGridLayout {
           isScroll: true,
           appGridStyleConfig: this.mAppCenterGridStyleConfig,
           onItemClick: (event, item) => {
+            Log.showDebug(TAG,`open.onAppGridClick--:${JSON.stringify(item)}`);
+            this.setStartAppInfo(item);
             this.mAppGridViewModel.jumpTo(item.abilityName, item.bundleName, item.moduleName);
+            windowManager.hideWindow(windowManager.APP_CENTER_WINDOW_NAME);
           },
           buildMenu: (item) => this.buildMenuInfoList(item)
         })
@@ -177,5 +188,20 @@ export struct AppGridLayout {
   private traceBuildEnd() {
     Trace.end(Trace.CORE_METHOD_START_APP_CENTER);
     return true;
+  }
+
+  /**
+   * set start app info
+   */
+  private setStartAppInfo(item) {
+    Log.showInfo(TAG, `appcenter StartAppInfo:${JSON.stringify(item)}`);
+    if (CheckEmptyUtils.isEmpty(item)) {
+      Log.showError(TAG, `setStartAppInfo with item`)
+      return;
+    }
+    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
+    AppStorage.SetOrCreate('startAppItemInfo', item);
+    this.mAppCenterStartAppHandler.setAppIconSize(this.mAppCenterGridStyleConfig.mIconSize);
+    this.mAppCenterStartAppHandler.setAppIconInfo();
   }
 }

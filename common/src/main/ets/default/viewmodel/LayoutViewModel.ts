@@ -324,6 +324,8 @@ export class LayoutViewModel {
       mOpenFolderAppSize: this.mDesktopItemSize,
       mOpenFolderAppNameSize: this.mDesktopNameSize,
       mOpenFolderAppNameHeight: this.mDesktopNameHeight,
+      mOpenFolderGridRow: row,
+      mOpenFolderGridColumn: column,
       mOpenFolderGridGap: gutter,
       mOpenFolderGridPadding: padding,
       mFolderOpenMargin: margin,
@@ -428,10 +430,11 @@ export class LayoutViewModel {
    * calculate app center
    */
   calculateAppCenter(): any {
+    let appCenterMarginLeft: number = this.mLauncherLayoutStyleConfig.mAppCenterMarginLeft;
     let saveMargin: number = this.mLauncherLayoutStyleConfig.mAppCenterMargin;
     let gutter: number = this.mLauncherLayoutStyleConfig.mAppCenterGutter;
     let appItemSize = this.mLauncherLayoutStyleConfig.mAppCenterSize;
-    let width = this.mScreenWidth - 2 * saveMargin;
+    let width = this.mScreenWidth - 2 * appCenterMarginLeft;
     let height = this.mWorkSpaceHeight;
     let column = ~~((width + gutter) / (appItemSize + gutter));
     let row = ~~((height + gutter) / (appItemSize + gutter));
@@ -455,7 +458,8 @@ export class LayoutViewModel {
       mIconSize: iconHeight,
       mNameLines: lines,
       mIconMarginVertical: iconMarginVertical,
-      mAppItemSize: appItemSize
+      mAppItemSize: appItemSize,
+      mAppCenterMarginLeft:appCenterMarginLeft
     };
     return result;
   }

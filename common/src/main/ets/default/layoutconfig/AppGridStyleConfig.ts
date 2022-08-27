@@ -98,6 +98,11 @@ export class AppGridStyleConfig extends ILayoutConfig {
   mNameLines = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
 
   /**
+ * left margin of app center
+ */
+  mAppCenterMarginLeft: number = PresetStyleConstants.DEFAULT_APP_CENTER_MARGIN;
+
+  /**
    * app icon margin top
    */
   mIconMarginVertical: number = PresetStyleConstants.DEFAULT_ICON_PADDING_TOP;

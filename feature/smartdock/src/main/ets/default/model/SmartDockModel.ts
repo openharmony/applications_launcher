@@ -15,6 +15,7 @@
 
 import Prompt from '@ohos.prompt';
 import missionManager from '@ohos.application.missionManager';
+import { CloseAppManager } from '@ohos/common';
 import { MissionListener } from 'application/MissionListener';
 import { Log } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
@@ -31,6 +32,7 @@ import { amsMissionManager } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
 import { launcherAbilityManager } from '@ohos/common';
+import SmartDockCloseAppHandler from '../common/SmartDockCloseAppHandler';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 import { SmartDockLayoutConfig } from '../config/SmartDockLayoutConfig';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
@@ -43,9 +45,11 @@ const KEY_NAME = 'name';
  */
 export default class SmartDockModel {
   private readonly mSmartDockLayoutConfig: SmartDockLayoutConfig;
+  private readonly mSmartDockCloseAppHandler: SmartDockCloseAppHandler;
   private readonly mSmartDockStyleConfig: SmartDockStyleConfig;
   private mResidentList: DockItemInfo[] = new Array<DockItemInfo>();
   private mRecentDataList: RecentBundleMissionInfo[] = new Array<RecentBundleMissionInfo>();
+  private readonly mCloseAppManager: CloseAppManager;
   private readonly mDevice = CommonConstants.DEFAULT_DEVICE_TYPE;
   private readonly mResourceManager: ResourceManager;
   protected mAppModel: AppModel;
@@ -53,6 +57,9 @@ export default class SmartDockModel {
   private constructor() {
     this.mSmartDockLayoutConfig = layoutConfigManager.getFunctionConfig(SmartDockLayoutConfig.SMART_DOCK_LAYOUT_INFO);
     this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
+    this.mCloseAppManager = CloseAppManager.getInstance();
+    this.mSmartDockCloseAppHandler = new SmartDockCloseAppHandler();
+    this.mCloseAppManager.registerCloseAppHandler(this.mSmartDockCloseAppHandler);
     this.mAppModel = AppModel.getInstance();
     this.mResourceManager = ResourceManager.getInstance();
     this.registerDockListener();

@@ -194,6 +194,16 @@ export class CommonConstants {
   static OVERLAY_TYPE_CARD = 3;
 
   /**
+   * Overlay type for residential.
+   */
+  static OVERLAY_TYPE_APP_RESIDENTIAL = 4;
+
+  /**
+ * Overlay type for recentdock.
+ */
+  static OVERLAY_TYPE_APP_RECENT = 5;
+
+  /**
    * Menu type for fixed items.
    */
   static MENU_TYPE_FIXED = 0;

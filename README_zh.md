@@ -55,5 +55,5 @@ Launcher 采用 扩展的TS语言（eTS）开发，主要的结构如下：
 ## 相关仓
 - [applications_hap](https://gitee.com/openharmony/applications_hap)
 - [applications_systemui](https://gitee.com/openharmony/applications_systemui)
-- [aafwk_standard](https://gitee.com/openharmony/aafwk_standard)
+- [aafwk_standard](https://gitee.com/openharmony/applications_systemui)
 - [interface_sdk-js](https://gitee.com/openharmony/interface_sdk-js)
