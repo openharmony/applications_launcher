@@ -46,7 +46,7 @@ export default struct ResidentLayout {
     if (AppStorage.Get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
       Log.showInfo(TAG, `getListWidth mDockPadding: ${this.mSmartDockStyleConfig.mDockPadding}, mMaxNum: ${this.mResidentMaxNum}`);
       width = this.mSmartDockStyleConfig.mDockPadding * 2 + this.mResidentMaxNum * (this.mSmartDockStyleConfig.mListItemWidth) + (this.mResidentMaxNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
-      Log.showInfo(TAG, `getListWidth width 1: ${width}`);
+      Log.showInfo(TAG, `getListWidth width: ${width}`);
       return width;
     }
     if (typeof this.appList === 'undefined' || this.appList == null || this.appList.length === 0) {
@@ -194,7 +194,7 @@ struct AppItem {
       builder: this.MenuBuilder,
       placement: Placement.Top,
       popupColor: Color.White,
-      arrowOffset: 3 * (mSmartDockStyleConfig.mIconSize / 2) + mSmartDockStyleConfig.mListItemGap,
+      arrowOffset: AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE ? null : 3 * (mSmartDockStyleConfig.mIconSize / 2) + mSmartDockStyleConfig.mListItemGap, // Avoid the popup offset problem in phone form
       onStateChange: (e) => {
         if (!e.isVisible) {
           this.isShow = false;
