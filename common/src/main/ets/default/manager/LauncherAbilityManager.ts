@@ -15,7 +15,8 @@
 
 import bundleMgr from '@ohos.bundle';
 import osaccount from '@ohos.account.osAccount';
-import hiAppEvent from '@ohos.hiAppEvent';
+import hiSysEvent from '@ohos.hiSysEvent';
+import SysEventInfo from '@ohos.hiSysEvent';
 import launcherBundleMgr from '@ohos.bundle.innerBundleManager';
 import { LauncherAbilityInfo } from 'bundle/launcherAbilityInfo';
 import { Log } from '../utils/Log';
@@ -74,10 +75,6 @@ class LauncherAbilityManager {
       Log.showDebug(TAG, `getOsAccountLocalIdFromProcess localId ${localId}`);
       this.mUserId = localId;
     });
-    hiAppEvent.configure({
-      disable: true,
-      maxStorage: "15M"
-    })
   }
 
   getUserId(): number {
@@ -277,7 +274,7 @@ class LauncherAbilityManager {
    */
   startLauncherAbility(paramAbilityName: string, paramBundleName: string, paramModuleName: string) {
     Log.showInfo(TAG, `startApplication abilityName: ${paramAbilityName}, bundleName: ${paramBundleName}, moduleName ${paramModuleName}`);
-    const result = globalThis.desktopContext.startAbility({
+    globalThis.desktopContext.startAbility({
       bundleName: paramBundleName,
       abilityName: paramAbilityName,
       moduleName: paramModuleName
@@ -286,13 +283,23 @@ class LauncherAbilityManager {
     }, (err) => {
       Log.showError(TAG, `startApplication promise error: ${JSON.stringify(err)}`);
     });
-    Log.showDebug(TAG, `startApplication  AceApplication : startAbility : ${result}`);
-    hiAppEvent.write('APPLICATION_LAUNCHER', hiAppEvent.EventType.BEHAVIOR, {"name": [paramBundleName, paramAbilityName, paramModuleName].join(",")},
+
+    const sysEventInfo = {
+      domain: 'LAUNCHER',
+      name: 'START_ABILITY',
+      eventType: hiSysEvent.EventType.BEHAVIOR,
+      params: {
+        'BUNDLE_NAME': paramBundleName,
+        'ABILITY_NAME': paramAbilityName,
+        'MODULE_NAME': paramModuleName
+      }
+    };
+    hiSysEvent.write(sysEventInfo,
       (err, value) => {
         if (err) {
-          Log.showError(TAG, `startApplication hiAppEvent write error: ${err.code}`);
+          Log.showError(TAG, `startApplication hiSysEvent write error: ${err.code}`);
         } else {
-          Log.showInfo(TAG, 'startApplication hiAppEvent write success');
+          Log.showInfo(TAG, 'startApplication hiSysEvent write success');
         }
     })
     Trace.end(Trace.CORE_METHOD_LAUNCH_APP);
@@ -306,7 +313,7 @@ class LauncherAbilityManager {
    */
   startAbilityFormEdit(paramAbilityName: string, paramBundleName: string, paramModuleName: string, paramCardId: number) {
     Log.showInfo(TAG, `startAbility abilityName: ${paramAbilityName},bundleName: ${paramBundleName}, moduleName: ${paramModuleName} ,paramCardId: ${paramCardId}`);
-    const result = globalThis.desktopContext.startAbility({
+    globalThis.desktopContext.startAbility({
       bundleName: paramBundleName,
       abilityName: paramAbilityName,
       moduleName: paramModuleName,
@@ -319,7 +326,6 @@ class LauncherAbilityManager {
     }, (err) => {
       Log.showError(TAG, `startAbility catch error: ${JSON.stringify(err)}`);
     });
-    Log.showDebug(TAG, `startAbility result: ${JSON.stringify(result)}`);
   }
 
   async getShortcutInfo(paramBundleName, callback) {
