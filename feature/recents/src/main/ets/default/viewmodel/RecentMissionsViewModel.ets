@@ -104,6 +104,10 @@ export class RecentMissionsViewModel {
     if (!isClickDelBtn && missionId != -1) {
       await amsMissionManager.clearMission(missionId);
       this.mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
+      this.mRecentMissionsList = AppStorage.Get('recentMissionsList');
+      this.mRecentMissionsList = this.mRecentMissionsList.filter((item) => {
+        return item.missionId != missionId;
+      });
     } else {
       this.mRecentMissionsList = [];
       AppStorage.SetOrCreate('recentMissionsList', []);
