@@ -91,6 +91,7 @@ export default class SmartDockViewModel extends BaseViewModel {
       return;
     }
     // app entry
+    Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     this.setStartAppInfo(item);
     launcherAbilityManager.startLauncherAbility(item.abilityName, item.bundleName, item.moduleName);
   }
@@ -117,6 +118,7 @@ export default class SmartDockViewModel extends BaseViewModel {
             let missionId = missionInfoList[i]?.missionInfoList[0]?.missionId;
             amsMissionManager.moveMissionToFront(missionId).then(() => {}, () => {});
             // set start app info
+            Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
             this.setStartAppInfo(item);
           }
           break;

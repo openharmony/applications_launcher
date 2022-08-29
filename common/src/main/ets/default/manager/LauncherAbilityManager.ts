@@ -302,7 +302,6 @@ class LauncherAbilityManager {
           Log.showInfo(TAG, 'startApplication hiSysEvent write success');
         }
     })
-    Trace.end(Trace.CORE_METHOD_LAUNCH_APP);
   }
 
   /**

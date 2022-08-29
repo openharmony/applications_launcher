@@ -72,7 +72,7 @@ struct RecentView {
             .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE);
         }
       } else {
-        if (this.traceLoadData() && this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single') {
+        if (this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single') {
           RecentMissionsSingleLayout({
             recentMissionsSingleList: $recentMissionsList,
             isClickSubComponent: $isClickSubComponent
@@ -84,6 +84,7 @@ struct RecentView {
           });
         }
       }
+      if (this.traceBuildEnd()) {}
     }
     .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
     .height(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
@@ -96,7 +97,7 @@ struct RecentView {
     })
   }
 
-  private traceLoadData(): boolean {
+  private traceBuildEnd(): boolean {
     Trace.end(Trace.CORE_METHOD_START_RECENTS);
     return true;
   }

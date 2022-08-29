@@ -18,3 +18,7 @@ START_ABILITY:
   BUNDLE_NAME: {type: STRING, desc: "bundle name"}
   ABILITY_NAME: {type: STRING, desc: "ability name"}
   MODULE_NAME: {type: STRING, desc: "module name"}
+WRITE_RDB:
+  __BASE: {type: FAULT, level: CRITICAL, desc: ""}
+  FAULT_ID: {type: STRING, desc: "fault name"}
+  MSG: {type: STRING, desc: "fault reaseon"}
