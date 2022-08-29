@@ -44,6 +44,8 @@ export class StyleConstants {
   static readonly DEFAULT_FOLDER_APP_SIZE= 44;
   static readonly DEFAULT_FOLDER_GRID_MARGIN= 10;
   static readonly DEFAULT_FOLDER_GRID_GAP= 2;
+  static readonly DEFAULT_OPEN_FOLDER_GRID_ROW= 4;
+  static readonly DEFAULT_OPEN_FOLDER_GRID_COLUMN= 4;
   static readonly DEFAULT_OPEN_FOLDER_APP_SIZE= 60;
   static readonly DEFAULT_ADD_APP_SIZE= 54;
   static readonly DEFAULT_OPEN_FOLDER_APP_NAME_SIZE= 14;

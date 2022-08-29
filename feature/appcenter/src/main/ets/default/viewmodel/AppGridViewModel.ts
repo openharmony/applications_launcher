@@ -50,6 +50,14 @@ export class AppGridViewModel extends AppListViewModel {
     this.unregisterAppListChangeCallback();
   }
 
+  registerEventListener() {
+    this.onAppListViewCreate();
+  }
+
+  unregisterEventListener() {
+    this.onAppListViewDestroy();
+  }
+
   /**
    * Get shortcut information by bundleName
    */

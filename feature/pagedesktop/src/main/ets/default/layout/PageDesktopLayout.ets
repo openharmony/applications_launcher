@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
+import { Log , CloseAppManager } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { AppMenu } from '@ohos/common';
 import { MenuInfo } from '@ohos/common';
@@ -22,6 +22,7 @@ import { CommonConstants } from '@ohos/common';
 import GridSwiper from '../common/components/GridSwiper';
 import { PageDesktopDragHandler } from '../common/PageDesktopDragHandler';
 import PageDesktopViewModel from '../viewmodel/PageDesktopViewModel';
+import { PageDesktopCloseAppHandler } from '../common/PageDesktopCloseAppHandler';
 
 let mPageDesktopViewModel: PageDesktopViewModel = null;
 const TAG = "PageDesktopLayout";
@@ -69,6 +70,7 @@ export struct PageDesktopLayout {
     if (this.deviceType != CommonConstants.PAD_DEVICE_TYPE) {
       mPageDesktopViewModel.registerAppListChangeCallback();
     }
+    CloseAppManager.getInstance().registerCloseAppHandler(new PageDesktopCloseAppHandler());
   }
 
   private updateStyle() {

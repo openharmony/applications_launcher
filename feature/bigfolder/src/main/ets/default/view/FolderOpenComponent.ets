@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
+import { Log , CheckEmptyUtils } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
@@ -32,6 +32,7 @@ import { BigFolderStyleConfig } from '../common/BigFolderStyleConfig';
 import { BigFolderConstants } from '../common/constants/BigFolderConstants';
 import { BigFolderStyleConstants } from '../common/constants/BigFolderStyleConstants';
 import FolderAppListDialog from '../common/uicomponents/FolderAppListDialog';
+import BigFolderStartAppHandler from '../common/BigFolderStartAppHandler';
 
 const TAG = 'FolderOpenComponent';
 const DOUBLE_CLICK_COUNT = 2;
@@ -55,6 +56,7 @@ let mGridMarginTop;
 let mFolderOpenTitle;
 let mGridIconTopPadding;
 let isPad = false;
+let mBigFolderStartAppHandler: BigFolderStartAppHandler;
 
 @Component
 export struct FolderOpenComponent {
@@ -74,6 +76,7 @@ export struct FolderOpenComponent {
   aboutToAppear(): void {
     Log.showInfo(TAG, `aboutToAppear start`);
     mBigFolderViewModel = BigFolderViewModel.getInstance();
+    mBigFolderStartAppHandler = BigFolderStartAppHandler.getInstance();
     this.updateStyle();
     // Folder dialog data preloading
     mBigFolderViewModel.getFolderAddAppList(this.mFolderInfo.folderId);
@@ -521,6 +524,7 @@ struct FolderAppItem {
 
   private launchApp() {
     Trace.start(Trace.CORE_METHOD_LAUNCH_APP);
+    this.setStartAppInfo();
     globalThis.PageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
   }
 
@@ -542,7 +546,7 @@ struct FolderAppItem {
           isSelect: this.selectDesktopAppItem == this.item.keyName,
           mPaddingTop: mGridIconTopPadding,
           menuInfo: globalThis.PageDesktopViewModel.buildMenuInfoList(this.item, this.uninstallDialogController,
-            this.formManagerDialogController, this.removeAppOutOfFolder.bind(this)),
+            this.formManagerDialogController, this.removeAppOutOfFolder.bind(this), () => this.setStartAppInfo()),
           nameLines: mNameLines,
           mIconNameMargin: mIconNameMargin,
           dragStart: () => {}
@@ -552,6 +556,7 @@ struct FolderAppItem {
       .height(mAppItemWidth)
       .onClick(() => {
         Log.showDebug(TAG, 'App click');
+        this.setStartAppInfo();
         globalThis.PageDesktopViewModel.openApplication(this.item.abilityName, this.item.bundleName, this.item.moduleName);
       })
       .onMouse((event: MouseEvent) => {
@@ -573,6 +578,7 @@ struct FolderAppItem {
               this.mouseClick = 0;
               this.launchApp();
             } else {
+              this.setStartAppInfo();
               globalThis.PageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
               setTimeout(() => {
                 this.mouseClick = 0;
@@ -588,5 +594,20 @@ struct FolderAppItem {
     }
     .width(mAppItemWidth)
     .height(mAppItemWidth)
+  }
+
+  /**
+   * set start app info
+   */
+  setStartAppInfo() {
+    if (CheckEmptyUtils.isEmpty(this.item)) {
+      Log.showError(TAG, `setStartAppInfo with item`)
+      return;
+    }
+    Log.showInfo(TAG, `app setStartAppInfo`);
+    AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
+    AppStorage.SetOrCreate('startAppItemInfo', this.item);
+    mBigFolderStartAppHandler.setAppIconSize(mBigFolderStyleConfig.mOpenFolderIconSize);
+    mBigFolderStartAppHandler.setAppIconInfo();
   }
 }

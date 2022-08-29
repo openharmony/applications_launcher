@@ -58,6 +58,7 @@ export default class AppCenterGridStyleConfig extends AppGridStyleConfig {
     this.mNameLines = result.mNameLines;
     this.mIconMarginVertical = result.mIconMarginVertical;
     this.mAppItemSize = result.mAppItemSize;
+    this.mAppCenterMarginLeft=result.mAppCenterMarginLeft
   }
 
   getConfigLevel(): string {

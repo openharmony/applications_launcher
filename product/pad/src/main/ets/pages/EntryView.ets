@@ -21,7 +21,7 @@ import { EventConstants } from '@ohos/common';
 import { windowManager } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
 import { SettingsModel } from '@ohos/common';
-import { LayoutViewModel } from '@ohos/common';
+import { LayoutViewModel , RemoteWindowWrapper } from '@ohos/common';
 import { SmartDock } from '@ohos/smartdock';
 import { PageDesktopLayout } from '@ohos/pagedesktop';
 import { BigFolderConstants } from '@ohos/bigfolder';
@@ -44,6 +44,9 @@ struct EntryView {
   private mStage: PadStage = new PadStage();
   private mLayoutViewModel: LayoutViewModel;
   private navigationBarStatus: string | undefined;
+  @State mAppScaleX :number = 1.0;
+  @State mAppScaleY :number = 1.0;
+  @State mAppAlpha :number = 1.0;
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
@@ -62,7 +65,11 @@ struct EntryView {
   }
 
   registerPageDesktopNavigatorStatusChangeEvent(listener): void {
-    localEventManager.registerEventListener(listener, [EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE]);
+    localEventManager.registerEventListener(listener, [
+       EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE,
+       EventConstants.EVENT_ANIMATION_START_APPLICATION,
+       EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION
+       ]);
   }
 
   private readonly mLocalEventListener = {
@@ -71,9 +78,46 @@ struct EntryView {
       if (event === EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE) {
         this.navigationBarStatus = params;
         this.updateScreenInfo();
+      } else if (event === EventConstants.EVENT_ANIMATION_START_APPLICATION) {
+        this.startAppAnimation();
+      } else if (event === EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION) {
+        this.closeAppAnimation();
       }
     }
   };
+
+  private startAppAnimation() {
+    animateTo({
+      duration: 500,
+      curve: Curve.Friction,
+      onFinish: () => {}
+    }, () => {
+      this.mAppScaleX = 0.97;
+      this.mAppScaleY = 0.97;
+    })
+  }
+
+  private closeAppAnimation() {
+    this.mAppAlpha = 0.0;
+    animateTo({
+      duration: 140,
+      delay: 210,
+      curve: Curve.Linear,
+    }, () => {
+      this.mAppAlpha = 1.0;
+    })
+
+    this.mAppScaleX = 0.9;
+    this.mAppScaleY = 0.9;
+    animateTo({
+      duration: 490,
+      delay: 210,
+      curve: Curve.Friction,
+    }, () => {
+      this.mAppScaleX = 1.0;
+      this.mAppScaleY = 1.0;
+    })
+  }
 
   private updateScreenInfo(): void {
     Log.showInfo(TAG, 'updateScreenInfo');
@@ -179,8 +223,11 @@ struct EntryView {
       }
       .width('100%')
       .height('100%')
+      .scale({ x: this.mAppScaleX, y: this.mAppScaleY })
+      .opacity(this.mAppAlpha)
 
       FolderOpenComponent();
+      RemoteWindowWrapper();
     }
     .width('100%')
     .height('100%')

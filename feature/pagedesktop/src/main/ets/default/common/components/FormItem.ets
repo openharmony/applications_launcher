@@ -25,6 +25,7 @@ import { FormStyleConfig } from '@ohos/form';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
 import { CommonConstants } from '@ohos/common';
 import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel';
+import { PageDesktopStartAppHandler } from '../PageDesktopStartAppHandler';
 
 const TAG = 'FormItem';
 
@@ -52,6 +53,7 @@ export default struct FormItem {
   @State mFormNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   @State mAppItemWidth: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
   @State mFormNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
+  private mPageDesktopStartAppHandler: PageDesktopStartAppHandler;
   private mIconMarginVertical: number = StyleConstants.DEFAULT_10;
   private isSwappingPage = false;
   private mMargin: number = 0;
@@ -81,6 +83,7 @@ export default struct FormItem {
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mFormViewModel = FormViewModel.getInstance();
+    this.mPageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
     this.mFormStyleConfig = this.mFormViewModel.getFormStyleConfig();
     let styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
     this.mFormNameHeight = styleConfig.mNameHeight;
@@ -237,7 +240,8 @@ export default struct FormItem {
           menuInfo: this.mPageDesktopViewModel.buildCardMenuInfoList(this.formItem,
             this.dialogController, this.formManagerDialogController),
           clickForm: (event, formItem) => {
-            this.mPageDesktopViewModel.openApplication(this.formItem.abilityName, this.formItem.bundleName, this.formItem.moduleName);
+            Log.showInfo(TAG, 'click form');
+            this.setStartAppInfo();
           },
           dragStart: this.dragStart.bind(this)
         })
@@ -256,6 +260,7 @@ export default struct FormItem {
       TapGesture({ count: 2 })
         .onAction((event: GestureEvent) => {
           Log.showInfo(TAG, 'mouse double click');
+          this.setStartAppInfo();
           this.mPageDesktopViewModel.onAppDoubleClick(this.formItem.abilityName, this.formItem.bundleName, this.formItem.moduleName);
         })
       )
@@ -277,5 +282,16 @@ export default struct FormItem {
     }
     .width(StyleConstants.PERCENTAGE_100)
     .height(StyleConstants.PERCENTAGE_100)
+  }
+
+  /**
+   * set start app info
+   */
+  private setStartAppInfo() {
+    Log.showInfo(TAG, `app setStartAppInfo`);
+    AppStorage.SetOrCreate('startAppItemInfo', this.formItem);
+    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_CARD);
+    this.mPageDesktopStartAppHandler.setAppIconSize(this.mFormItemWidth, this.mFormItemHeight);
+    this.mPageDesktopStartAppHandler.setAppIconInfo();
   }
 }

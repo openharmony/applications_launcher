@@ -19,6 +19,7 @@ import { AppMenu } from './AppMenu';
 import { FormModel } from '../model/FormModel';
 import { StyleConstants } from '../constants/StyleConstants';
 import { PresetStyleConstants } from '../constants/PresetStyleConstants';
+import { CommonConstants } from '../constants/CommonConstants';
 
 const TAG = 'FormItemComponent';
 
@@ -80,12 +81,14 @@ export struct FormItemComponent {
         })
         .onClick((event: ClickEvent) => {
           Log.showInfo(TAG, `FormComponent onClick`);
-          if (this.clickForm) {
-            this.clickForm(event, this.formItem);
-          }
         })
         .onError((error) => {
           Log.showInfo(TAG, `FormComponent error msg: ${error.msg}`);
+        })
+        .onTouch(event => {
+          if (event.type === CommonConstants.TOUCH_TYPE_UP) {
+            this.clickForm(event, this.formItem);
+          }
         })
 
       Column() {

@@ -33,7 +33,6 @@ export class AppListViewModel extends BaseViewModel {
     super();
     this.mPinyinSort = new PinyinSort();
     this.mAppGridStyleConfig = layoutConfigManager.getStyleConfig(AppCenterGridStyleConfig.APP_GRID_STYLE_CONFIG, AppcenterConstants.FEATURE_NAME);
-    this.onAppListViewCreate();
   }
 
   public static getInstance(): AppListViewModel {
@@ -46,23 +45,74 @@ export class AppListViewModel extends BaseViewModel {
   private readonly mLocalEventListener = {
     onReceiveEvent: (event, params) => {
       Log.showInfo(TAG, `localEventListener receive event: ${event}, params: ${JSON.stringify(params)}`);
-      this.updateBadgeNum(params);
+      if (event === EventConstants.EVENT_BADGE_UPDATE) {
+        this.updateBadgeNum(params);
+      } else if (event === EventConstants.EVENT_ANIMATION_START_APPLICATION) {
+        this.startAppAnimation();
+      } else if (event === EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION) {
+        this.closeAppAnimation();
+      }
     }
+  }
+
+  private startAppAnimation() {
+    animateTo({
+      duration: 500,
+      curve: Curve.Friction,
+      onFinish: () => {
+      }
+    }, () => {
+      let animationInfo:any = {
+        appScaleX: 0.97,
+        appScaleY: 0.97
+      }
+      AppStorage.SetOrCreate('animationInfo_scale', animationInfo);
+    })
+  }
+
+  private closeAppAnimation() {
+    AppStorage.SetOrCreate('animationInfo_alpha', 0.0);
+    animateTo({
+      duration: 140,
+      delay: 210,
+      curve: Curve.Linear,
+    }, () => {
+    AppStorage.SetOrCreate('animationInfo_alpha', 1.0);
+    })
+
+    let scale = {
+      appScaleX: 0.9,
+      appScaleY: 0.9
+    }
+    AppStorage.SetOrCreate('animationInfo_scale', scale);
+    animateTo({
+      duration: 490,
+      delay: 210,
+      curve: Curve.Friction,
+    }, () => {
+      let scale_finish = {
+        appScaleX: 1.0,
+        appScaleY: 1.0
+      }
+      AppStorage.SetOrCreate('animationInfo_scale', scale_finish);
+    })
   }
 
   /**
    * Registering Listening Events.
    */
-  private onAppListViewCreate(): void {
+  onAppListViewCreate(): void {
     localEventManager.registerEventListener(this.mLocalEventListener, [
-      EventConstants.EVENT_BADGE_UPDATE
+      EventConstants.EVENT_BADGE_UPDATE,
+      EventConstants.EVENT_ANIMATION_START_APPLICATION,
+      EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION
     ]);
   }
 
   /**
    * Unregistering Listening Events.
    */
-  private onAppListViewDestroy(): void {
+  onAppListViewDestroy(): void {
     localEventManager.unregisterEventListener(this.mLocalEventListener);
   }
 

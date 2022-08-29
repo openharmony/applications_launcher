@@ -17,10 +17,12 @@ import { Log } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
 import { windowManager } from '@ohos/common';
 import { SnapShotInfo } from '@ohos/common';
+import { CommonConstants } from '@ohos/common';
 import RecentMissionAppIcon from './RecentMissionAppIcon';
 import RecentMissionAppName from './RecentMissionAppName';
 import { RecentMissionsViewModel } from '../../viewmodel/RecentMissionsViewModel';
 import { RecentsStyleConstants } from '../../common/constants/RecentsStyleConstants';
+import { RecentMissionStartAppHandler } from './../RecentMissionStartAppHandler';
 
 const TAG = 'Recent-RecentMissionCard';
 
@@ -45,6 +47,7 @@ export default struct RecentMissionCard {
   private mIsSingleLayout: boolean = true;
   private snapShotTime: string = '';
   private mRecentMissionsViewModel: RecentMissionsViewModel;
+  private mRecentMissionStartAppHandler: RecentMissionStartAppHandler;
 
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear start');
@@ -57,6 +60,7 @@ export default struct RecentMissionCard {
     this.cardLayoutWeight = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
       RecentsStyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT : RecentsStyleConstants.DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT;
     this.mRecentMissionsViewModel.getMissionSnapShot(this.missionId, this.recentMissionsSnapshotCallback.bind(this));
+    this.mRecentMissionStartAppHandler = RecentMissionStartAppHandler.getInstance();
   }
 
   aboutToDisappear(): void {
@@ -117,6 +121,9 @@ export default struct RecentMissionCard {
         .layoutWeight(this.cardLayoutWeight)
         .margin({ left: RecentsStyleConstants.SINGLE_LIST_APP_INFO_LEFT_MARGIN })
 
+        .onClick((event) => {
+          this.setStartAppInfo(event?.target?.area?.globalPosition);
+        })
         Column() {
           Image(RecentsStyleConstants.DEFAULT_LOCKED_IMAGE)
             .visibility(this.lockedState ? Visibility.Visible : Visibility.Hidden)
@@ -129,10 +136,11 @@ export default struct RecentMissionCard {
             .margin({
               right: this.mIsSingleLayout ? (RecentsStyleConstants.SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN) : (RecentsStyleConstants.DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN)
             })
-            .onClick(() => {
+            .onClick((event) => {
               this.isClickSubComponent = true;
               Log.showDebug(TAG, `click set recent mission: ${this.missionId} Locked status: ${!this.lockedState}`);
               this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId,!this.lockedState);
+              this.setStartAppInfo(event?.target?.area?.globalPosition);
               this.isClickSubComponent = false;
             })
         }
@@ -152,12 +160,13 @@ export default struct RecentMissionCard {
         .height(this.mIsSingleLayout ?
           RecentsStyleConstants.SINGLE_LIST_APP_IMAGE_HEIGHT :
           RecentsStyleConstants.DOUBLE_LIST_APP_IMAGE_HEIGHT)
-        .onClick(() => {
+        .onClick((event) => {
           this.isClickSubComponent = true;
           Log.showDebug(TAG, 'onClick start launcher ability');
           if (!globalThis.recentMode || !windowManager.isSplitWindowMode(globalThis.recentMode)) {
             windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
           }
+          this.setStartAppInfo(event?.target?.area?.globalPosition);
           this.mRecentMissionsViewModel.moveMissionToFront(this.missionId);
         })
     }
@@ -181,5 +190,25 @@ export default struct RecentMissionCard {
           this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId,!this.lockedState);
         }
       }))
+  }
+
+  /**
+   * set start app info
+   */
+  private setStartAppInfo(position) {
+    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
+    let appParams = {
+      bundleName: this.bundleName,
+      moduleName: this.moduleName,
+      appIconId: this.appIconId,
+      borderRadius: RecentsStyleConstants.RECENT_IMAGE_RADIUS,
+      isSingleLayout: this.mIsSingleLayout,
+      appIconSize:this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH : RecentsStyleConstants.DOUBLE_LIST_APP_IMAGE_WIDTH,
+      appIconHeight: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_MISSION_HEIGHT : RecentsStyleConstants.DOUBLE_LIST_MISSION_HEIGHT,
+      position:position
+    }
+    AppStorage.SetOrCreate('startAppItemInfo', appParams);
+    this.mRecentMissionStartAppHandler.setAppIconSize(appParams.appIconSize, appParams.appIconHeight);
+    this.mRecentMissionStartAppHandler.setAppIconInfo();
   }
 }

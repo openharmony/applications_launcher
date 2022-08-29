@@ -42,4 +42,10 @@ export const EventConstants = {
 
   // gesturenavigation events
   EVENT_NAVIGATOR_BAR_STATUS_CHANGE: 'usual.event.NAVIGATOR_BAR_STATUS_CHANGE',
+
+  // animation event
+  EVENT_ANIMATION_START_APPLICATION: 'launcher.event.EVENT_ANIMATION_START_APPLICATION',
+  EVENT_ANIMATION_CLOSE_APPLICATION: 'launcher.event.EVENT_ANIMATION_CLOSE_APPLICATION',
+
+
 };

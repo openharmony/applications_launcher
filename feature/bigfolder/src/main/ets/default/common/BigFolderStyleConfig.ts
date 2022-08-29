@@ -53,6 +53,16 @@ export class BigFolderStyleConfig extends AppListStyleConfig {
   mFolderOpenTitle = StyleConstants.DEFAULT_OPEN_FOLDER_TITLE_TOP;
 
   /**
+   * open folder grid row
+   */
+  mOpenFolderGridRow = StyleConstants.DEFAULT_OPEN_FOLDER_GRID_ROW;
+
+  /**
+   * open folder grid column
+   */
+  mOpenFolderGridColumn = StyleConstants.DEFAULT_OPEN_FOLDER_GRID_COLUMN;
+
+  /**
    * open folder app size
    */
   mOpenFolderAppSize = StyleConstants.DEFAULT_OPEN_FOLDER_APP_SIZE;
@@ -221,7 +231,8 @@ export class BigFolderStyleConfig extends AppListStyleConfig {
     this.mNameHeight = folderResult.mNameHeight;
     this.mNameLines = folderResult.mNameLines;
     this.mIconNameMargin = folderResult.mIconNameMargin;
-
+    this.mOpenFolderGridRow = openResult.mOpenFolderGridRow;
+    this.mOpenFolderGridColumn = openResult.mOpenFolderGridColumn;
     this.mOpenFolderGridWidth = openResult.mOpenFolderGridWidth;
     this.mOpenFolderGridHeight = openResult.mOpenFolderGridHeight;
     this.mOpenFolderSwiperHeight = openResult.mOpenFolderSwiperHeight;

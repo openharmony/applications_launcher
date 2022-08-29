@@ -159,7 +159,11 @@ export class LauncherLayoutStyleConfig extends ILayoutConfig {
    * button size of add app
    */
   mFolderAddButtonSize: number = PresetStyleConstants.DEFAULT_FOLDER_ADD_BUTTON_SIZE;
-
+  //App Center
+  /**
+   * left margin of app center
+   */
+  mAppCenterMarginLeft: number = PresetStyleConstants.DEFAULT_APP_CENTER_MARGIN;
   //App Center
   /**
    * margin of app center

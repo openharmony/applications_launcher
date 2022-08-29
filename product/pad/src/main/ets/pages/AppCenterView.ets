@@ -33,6 +33,14 @@ struct AppCenterView {
   @State device: string = CommonConstants.PAD_DEVICE_TYPE;
   private mLayoutViewModel: LayoutViewModel;
   mAppGridViewModel: AppGridViewModel = null;
+  @StorageLink('animationInfo_alpha') mAppAlpha: number = 1.0;
+  @StorageLink('animationInfo_scale') mAnimationInfo: {
+    appScaleX: number,
+    appScaleY: number
+  } = {
+    appScaleX: 1.0,
+    appScaleY: 1.0
+  }
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
@@ -46,6 +54,7 @@ struct AppCenterView {
     this.updateScreenSize();
     this.mAppGridViewModel = AppGridViewModel.getInstance();
     this.mAppGridViewModel.registerAppListChange();
+    this.mAppGridViewModel.registerEventListener();
   }
 
   onPageHide(): void {
@@ -55,6 +64,7 @@ struct AppCenterView {
   aboutToDisappear(): void {
     Log.showInfo(TAG, 'aboutToDisappear');
     this.mAppGridViewModel.unregisterAppListChange();
+    this.mAppGridViewModel.unregisterEventListener();
   }
 
   private async updateScreenSize() {
@@ -96,6 +106,8 @@ struct AppCenterView {
       }
       .width('100%')
       .height('100%')
+      .scale({ x: this.mAnimationInfo.appScaleX, y: this.mAnimationInfo.appScaleY })
+      .opacity(this.mAppAlpha)
     }
     .backgroundImage('/common/pics/ic_wallpaper_recent.jpg')
     .backgroundImageSize(ImageSize.Cover)
