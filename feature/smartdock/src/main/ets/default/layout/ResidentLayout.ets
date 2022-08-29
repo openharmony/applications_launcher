@@ -39,6 +39,9 @@ export default struct ResidentLayout {
   aboutToAppear(): void {
     this.mResidentMaxNum = this.mSmartDockStyleConfig.mMaxDockNum;
     mSmartDockStyleConfig = this.mSmartDockStyleConfig;
+    if (this.appList.length > 0) {
+      this.onDockListChange();
+    }
   }
 
   getListWidth(): number {
