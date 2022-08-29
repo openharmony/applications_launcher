@@ -60,7 +60,7 @@ struct RecentView {
       num = 0;
     }
     AppStorage.SetOrCreate('sysUiRecentOnClickEvent', ++num);
-    Log.showInfo(TAG, `aboutToAppear sysUiRecentOnClickEvent closeRecentDockPopup num: ${num}`);
+    Log.showDebug(TAG, `closeRecentDockPopup sysUiRecentOnClickEvent closeRecentDockPopup num: ${num}`);
   }
 
   build() {

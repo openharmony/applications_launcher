@@ -271,7 +271,7 @@ struct settingDialog {
         }
       }
       .backgroundColor(Color.White)
-      .opacity(1)
+      .opacity(0.85)
       .width('100%')
       .padding({
         bottom: StyleConstants.DEFAULT_24

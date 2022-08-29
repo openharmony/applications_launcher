@@ -14,7 +14,7 @@
  */
 
 export default class StyleConstants {
-  static readonly DEFAULT_BACKGROUND_IMAGE = '';
+  static readonly DEFAULT_BACKGROUND_IMAGE = '/common/pics/img_wallpaper_default.jpg';
   static readonly DEFAULT_APP_ICON_SIZE_WIDTH = 54;
   static readonly DEFAULT_APP_NAME_SIZE = 14;
   static readonly DEFAULT_APP_NAME_HEIGHT  = 36;

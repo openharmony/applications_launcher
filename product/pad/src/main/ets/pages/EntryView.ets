@@ -59,9 +59,6 @@ struct EntryView {
 
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
     this.navigationBarStatus = SettingsModel.getInstance().getValue();
-
-    // set window background color transparent
-    setAppBgColor(StyleConstants.DEFAULT_BG_COLOR);
   }
 
   registerPageDesktopNavigatorStatusChangeEvent(listener): void {
@@ -229,6 +226,9 @@ struct EntryView {
       FolderOpenComponent();
       RemoteWindowWrapper();
     }
+    .backgroundImage(StyleConstants.DEFAULT_BACKGROUND_IMAGE)
+    .backgroundImageSize(ImageSize.Cover)
+    .backgroundImagePosition(Alignment.Center)
     .width('100%')
     .height('100%')
   }
