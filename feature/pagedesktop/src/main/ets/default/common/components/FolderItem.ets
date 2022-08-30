@@ -174,6 +174,7 @@ export default struct FolderItem {
           nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
           onAppIconClick: (event, appItem) => {
             Log.showInfo(TAG, "onAppIconClick");
+            Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
             this.setStartAppInfo(appItem);
             this.mPageDesktopViewModel.openApplication(appItem.abilityName, appItem.bundleName, appItem.moduleName);
           },
@@ -238,7 +239,6 @@ export default struct FolderItem {
   * set start app info
   */
   private setStartAppInfo(appItem) {
-    Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     AppStorage.SetOrCreate('startAppItemInfo', appItem);
     AppStorage.SetOrCreate('startAppFromFolderItemInfo', this.folderItem);
     AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_FOLDER);

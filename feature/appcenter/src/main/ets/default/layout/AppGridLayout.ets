@@ -107,6 +107,7 @@ export struct AppGridLayout {
     open.menuText = $r('app.string.app_menu_open');
     open.onMenuClick = () => {
       Log.showInfo(TAG,`open.OnMenuClick--:${JSON.stringify(appInfo)}`);
+      Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
       this.setStartAppInfo(appInfo);
       this.mAppGridViewModel.jumpTo(appInfo.abilityName, appInfo.bundleName, appInfo.moduleName);
       windowManager.hideWindow(windowManager.APP_CENTER_WINDOW_NAME);
@@ -163,6 +164,7 @@ export struct AppGridLayout {
           appGridStyleConfig: this.mAppCenterGridStyleConfig,
           onItemClick: (event, item) => {
             Log.showDebug(TAG,`open.onAppGridClick--:${JSON.stringify(item)}`);
+            Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
             this.setStartAppInfo(item);
             this.mAppGridViewModel.jumpTo(item.abilityName, item.bundleName, item.moduleName);
             windowManager.hideWindow(windowManager.APP_CENTER_WINDOW_NAME);
@@ -195,7 +197,6 @@ export struct AppGridLayout {
    */
   private setStartAppInfo(item) {
     Log.showInfo(TAG, `appcenter StartAppInfo:${JSON.stringify(item)}`);
-    Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     if (CheckEmptyUtils.isEmpty(item)) {
       Log.showError(TAG, `setStartAppInfo with item`)
       return;

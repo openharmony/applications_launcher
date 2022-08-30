@@ -123,6 +123,7 @@ export default struct RecentMissionCard {
         .margin({ left: RecentsStyleConstants.SINGLE_LIST_APP_INFO_LEFT_MARGIN })
 
         .onClick((event) => {
+          Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
           this.setStartAppInfo(event?.target?.area?.globalPosition);
         })
         Column() {
@@ -167,6 +168,7 @@ export default struct RecentMissionCard {
           if (!globalThis.recentMode || !windowManager.isSplitWindowMode(globalThis.recentMode)) {
             windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
           }
+          Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
           this.setStartAppInfo(event?.target?.area?.globalPosition);
           this.mRecentMissionsViewModel.moveMissionToFront(this.missionId);
         })
@@ -198,7 +200,6 @@ export default struct RecentMissionCard {
    */
   private setStartAppInfo(position) {
     AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
-    Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     let appParams = {
       bundleName: this.bundleName,
       moduleName: this.moduleName,

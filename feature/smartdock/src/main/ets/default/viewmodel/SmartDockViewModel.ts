@@ -198,6 +198,7 @@ export default class SmartDockViewModel extends BaseViewModel {
         menu.bundleName = value.bundleName;
         menu.moduleName = value.moduleName;
         menu.onMenuClick = () => {
+          Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
           launcherAbilityManager.startLauncherAbility(value.wants[0].targetClass, value.wants[0].targetBundle, value.wants[0].targetModule);
         };
         Log.showInfo(TAG, `shortcutInfo ${JSON.stringify(shortcutInfo)}`);

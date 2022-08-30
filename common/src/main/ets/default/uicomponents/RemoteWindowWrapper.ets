@@ -278,7 +278,6 @@ export struct RemoteWindowWrapper {
   }
 
   private closeWindow(callback): void {
-    Trace.start(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
     this.remoteWindowScaleX = 1.0;
     this.remoteWindowScaleY = 1.0;
     this.remoteWindowTranslateX = 0.0;
@@ -288,7 +287,6 @@ export struct RemoteWindowWrapper {
       curve: Curve.LinearOutSlowIn,
       onFinish: () => {
         callback.onAnimationFinish();
-        Trace.end(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
       }
     }, () => {
       this.remoteWindowScaleX = 0.9;
