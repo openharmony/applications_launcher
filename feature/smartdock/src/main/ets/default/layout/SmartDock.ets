@@ -13,30 +13,26 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
-import { Trace } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
-import { windowManager } from '@ohos/common';
-import { ResourceManager } from '@ohos/common';
-import { UninstallDialog } from '@ohos/common';
+import {
+  Log,
+  CommonConstants,
+  ResourceManager,
+  UninstallDialog } from '@ohos/common';
+import RecentLayout from './RecentLayout';
+import ResidentLayout from './ResidentLayout';
 import SmartDockViewModel from '../viewmodel/SmartDockViewModel';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
-import ResidentLayout from './ResidentLayout.ets';
-import RecentLayout from './RecentLayout.ets';
 
 const TAG = 'SmartDock';
 
 @Component
 export struct SmartDock {
-  @State popup: {
+  popup: {
     show: boolean,
     showItem: string,
     popup
   } = { show: false, showItem: '', popup: null };
-  showAppCenter = () => {
-    Trace.start(Trace.CORE_METHOD_START_APP_CENTER);
-    globalThis.createWindowWithName(windowManager.APP_CENTER_WINDOW_NAME, windowManager.DESKTOP_RANK);
-  }
+  showAppCenter: Function = () => {};
   @StorageLink('showDock') showDock: boolean = false;
   @StorageLink('residentList') residentList: any = [];
   @StorageLink('recentList') recentList: any = [];
@@ -126,7 +122,7 @@ export struct SmartDock {
         enableArrow: true
       }
     }
-    let dataList = await this.mSmartDockViewModel.getSnapshot(list[0].missionInfoList, list[0].appName);
+    await this.mSmartDockViewModel.getSnapshot(list[0].missionInfoList, list[0].appName);
   }
 
   private buildLog(): boolean {

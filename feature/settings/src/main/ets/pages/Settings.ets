@@ -30,9 +30,7 @@ struct Index {
   private mSettingsStage = new SettingsStage();
   private mDevice = SettingsStyleConstants.DEFAULT_DEVICE_TYPE_PHONE;
 
-  onPageShow(): void {
-    Trace.end(Trace.CORE_METHOD_START_SETTINGS)
-  }
+  onPageShow(): void { }
 
   aboutToAppear(): void  {
     this.getDeviceType();
@@ -86,10 +84,17 @@ struct Index {
       }
       .width(this.mDevice === SettingsStyleConstants.DEFAULT_DEVICE_TYPE_PHONE ? SettingsStyleConstants.PERCENTAGE_100 : 976)
       .height(SettingsStyleConstants.PERCENTAGE_100)
+
+      if (this.traceBuildEnd()) { }
     }
     .backgroundColor(SettingsStyleConstants.DEFAULT_BACKGROUND_COLOR)
     .width(SettingsStyleConstants.PERCENTAGE_100)
     .height(SettingsStyleConstants.PERCENTAGE_100)
+  }
+
+  private traceBuildEnd(): boolean {
+    Trace.end(Trace.CORE_METHOD_START_SETTINGS)
+    return true;
   }
 }
 

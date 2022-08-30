@@ -15,6 +15,7 @@
 
 import Prompt from '@ohos.prompt';
 import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
@@ -911,6 +912,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
         menu.bundleName = value.bundleName;
         menu.moduleName = value.moduleName;
         menu.onMenuClick = () => {
+          Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
           if (openClickCallback) {
             openClickCallback();
           }

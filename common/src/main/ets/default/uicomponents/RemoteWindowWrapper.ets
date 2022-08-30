@@ -15,17 +15,20 @@
 
 import windowAnimationManager from '@ohos.animation.windowAnimationManager';
 import curves from '@ohos.curves';
-import { CheckEmptyUtils } from '@ohos/common';
+import {
+  Log,
+  Trace,
+  CheckEmptyUtils,
+  StyleConstants,
+  CommonConstants,
+  ResourceManager
+} from '@ohos/common';
+import OverlayAppIcon from './OverlayAppIcon';
 import RemoteConstants from '../constants/RemoteConstants';
-import { CommonConstants } from '@ohos/common';
-import OverlayAppIcon from './OverlayAppIcon.ets';
-import { ResourceManager } from '@ohos/common';
-import { StyleConstants } from '@ohos/common';
-import { Log } from '@ohos/common';
-import WindowAnimationControllerImpl from '../animation/remoteanimation/WindowAnimationControllerImpl';
 import { localEventManager } from '../manager/LocalEventManager';
 import { EventConstants } from '../constants/EventConstants';
 import { CloseAppManager } from '../manager/CloseAppManager';
+import WindowAnimationControllerImpl from '../animation/remoteanimation/WindowAnimationControllerImpl';
 
 const TAG = 'RemoteWindowWrapper';
 
@@ -211,6 +214,7 @@ export struct RemoteWindowWrapper {
 
   private minimizeWindow(callback): void {
     Log.showInfo(TAG, `minimizeWindow --- target ${JSON.stringify(this.target)}`);
+    Trace.start(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
     this.startAppTypeFromPageDesktop = AppStorage.Get('startAppTypeFromPageDesktop');
     if (this.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
       this.closeAppIconInfo = AppStorage.Get('startAppIconInfo');
@@ -237,6 +241,7 @@ export struct RemoteWindowWrapper {
       onFinish: () => {
         callback.onAnimationFinish();
         this.closeAppIconWindowAlpha = 0;
+        Trace.end(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
       }
     }, () => {
       this.remoteWindowScaleX = 1 / this.closeAppCalculateScaleX;
@@ -354,6 +359,7 @@ export struct RemoteWindowWrapper {
       curve: curves.springMotion(0.42, 0.99, 0),
       onFinish: () => {
         callback.onAnimationFinish();
+        Trace.end(Trace.CORE_METHOD_START_APP_ANIMATION);
       }
     }, () => {
       this.remoteWindowScaleX = 1.0;
@@ -385,16 +391,6 @@ export struct RemoteWindowWrapper {
     }, () => {
       this.remoteWindowWindowAlpha = 1.0;
     })
-//    this.startAppIconWindowAlpha = 1.0;
-//    animateTo({
-//      duration: 50,
-//      delay: 150,
-//      curve: Curve.Friction,
-//      onFinish: () => {
-//      }
-//    }, () => {
-//      this.startAppIconWindowAlpha = 0.0;
-//    })
   }
 
   build() {

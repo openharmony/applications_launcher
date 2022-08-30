@@ -232,7 +232,7 @@ export default struct AppItem {
    * When app is double clicked, call this method.
    */
   private launchApp() {
-    Trace.start(Trace.CORE_METHOD_LAUNCH_APP);
+    Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     this.setStartAppInfo();
     this.mPageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
   }

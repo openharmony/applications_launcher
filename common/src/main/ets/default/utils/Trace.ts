@@ -20,13 +20,14 @@ import { Log } from './Log';
  * Add method trace. Modify RECORD_TRACE before using.
  */
 export class Trace {
-  static readonly CORE_METHOD_LAUNCH_APP = 'launchApp';
   static readonly CORE_METHOD_START_APP_CENTER = 'startAppCenter';
   static readonly CORE_METHOD_START_RECENTS = 'startRecents';
   static readonly CORE_METHOD_START_SETTINGS = 'startSettings';
   static readonly CORE_METHOD_OPEN_FOLDER = 'openFolder';
   static readonly CORE_METHOD_OPEN_FOLDER_DIALOG = 'openFolderDialog';
   static readonly CORE_METHOD_CLEAR_ALL_MISSIONS = 'clearAllMissions';
+  static readonly CORE_METHOD_START_APP_ANIMATION = 'startAppAnimation';
+  static readonly CORE_METHOD_CLOSE_APP_ANIMATION = 'closeAppAnimation';
 
   private static readonly TRACE_TAG = 'L:Trace';
   private static readonly RECORD_TRACE = true;

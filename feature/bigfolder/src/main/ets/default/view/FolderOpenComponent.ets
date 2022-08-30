@@ -523,7 +523,7 @@ struct FolderAppItem {
   }
 
   private launchApp() {
-    Trace.start(Trace.CORE_METHOD_LAUNCH_APP);
+    Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     this.setStartAppInfo();
     globalThis.PageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
   }

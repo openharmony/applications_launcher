@@ -14,6 +14,7 @@
  */
 
 import dataRdb from '@ohos.data.rdb';
+import hiSysEvent from '@ohos.hiSysEvent';
 import { Log } from '../utils/Log';
 import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
 import { CommonConstants } from '../constants/CommonConstants';
@@ -515,8 +516,28 @@ export class RdbStoreManager {
     } catch (e) {
       Log.showError(TAG, 'insertDesktopApplication error:' + e);
       this.mRdbStore.rollBack();
+      this.sendFaultEvent();
     }
     return result;
+  }
+  sendFaultEvent(){
+    const sysEventInfo = {
+      domain: 'LAUNCHER',
+      name: 'WRITE_RDB',
+      eventType: hiSysEvent.EventType.FAULT,
+      params: {
+        'FAULT_ID': 'ICON_LOST',
+        'MSG': 'read or write rdb fault',
+      }
+    };
+    hiSysEvent.write(sysEventInfo,
+      (err, value) => {
+        if (err) {
+          Log.showError(TAG, `startApplication hiSysEvent write error: ${err.code}`);
+        } else {
+          Log.showInfo(TAG, 'startApplication hiSysEvent write success');
+        }
+      })
   }
 
   async queryDesktopApplication(): Promise<AppItemInfo[]> {

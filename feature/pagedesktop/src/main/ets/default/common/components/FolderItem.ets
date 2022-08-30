@@ -174,6 +174,7 @@ export default struct FolderItem {
           nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
           onAppIconClick: (event, appItem) => {
             Log.showInfo(TAG, "onAppIconClick");
+            Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
             this.setStartAppInfo(appItem);
             this.mPageDesktopViewModel.openApplication(appItem.abilityName, appItem.bundleName, appItem.moduleName);
           },

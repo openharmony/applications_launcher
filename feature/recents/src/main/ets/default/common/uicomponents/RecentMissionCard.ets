@@ -14,6 +14,7 @@
  */
 import image from '@ohos.multimedia.image';
 import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
 import { windowManager } from '@ohos/common';
 import { SnapShotInfo } from '@ohos/common';
@@ -166,6 +167,7 @@ export default struct RecentMissionCard {
           if (!globalThis.recentMode || !windowManager.isSplitWindowMode(globalThis.recentMode)) {
             windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
           }
+          Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
           this.setStartAppInfo(event?.target?.area?.globalPosition);
           this.mRecentMissionsViewModel.moveMissionToFront(this.missionId);
         })
