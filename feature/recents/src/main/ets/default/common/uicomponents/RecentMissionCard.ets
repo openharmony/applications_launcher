@@ -123,7 +123,6 @@ export default struct RecentMissionCard {
         .margin({ left: RecentsStyleConstants.SINGLE_LIST_APP_INFO_LEFT_MARGIN })
 
         .onClick((event) => {
-          Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
           this.setStartAppInfo(event?.target?.area?.globalPosition);
         })
         Column() {
