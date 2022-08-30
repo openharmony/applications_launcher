@@ -195,6 +195,7 @@ export struct AppGridLayout {
    */
   private setStartAppInfo(item) {
     Log.showInfo(TAG, `appcenter StartAppInfo:${JSON.stringify(item)}`);
+    Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     if (CheckEmptyUtils.isEmpty(item)) {
       Log.showError(TAG, `setStartAppInfo with item`)
       return;

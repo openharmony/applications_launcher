@@ -14,6 +14,7 @@
  */
 import image from '@ohos.multimedia.image';
 import { Log } from '@ohos/common';
+import { Trace } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
 import { windowManager } from '@ohos/common';
 import { SnapShotInfo } from '@ohos/common';
@@ -197,6 +198,7 @@ export default struct RecentMissionCard {
    */
   private setStartAppInfo(position) {
     AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
+    Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     let appParams = {
       bundleName: this.bundleName,
       moduleName: this.moduleName,

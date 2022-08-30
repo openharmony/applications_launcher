@@ -278,6 +278,7 @@ export struct RemoteWindowWrapper {
   }
 
   private closeWindow(callback): void {
+    Trace.start(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
     this.remoteWindowScaleX = 1.0;
     this.remoteWindowScaleY = 1.0;
     this.remoteWindowTranslateX = 0.0;
@@ -287,6 +288,7 @@ export struct RemoteWindowWrapper {
       curve: Curve.LinearOutSlowIn,
       onFinish: () => {
         callback.onAnimationFinish();
+        Trace.end(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
       }
     }, () => {
       this.remoteWindowScaleX = 0.9;
@@ -315,6 +317,7 @@ export struct RemoteWindowWrapper {
       curve: Curve.LinearOutSlowIn,
       onFinish: () => {
         callback.onAnimationFinish();
+        Trace.end(Trace.CORE_METHOD_START_APP_ANIMATION);
       }
     }, () => {
       this.remoteWindowScaleX = 1.0;
@@ -391,16 +394,6 @@ export struct RemoteWindowWrapper {
     }, () => {
       this.remoteWindowWindowAlpha = 1.0;
     })
-//    this.startAppIconWindowAlpha = 1.0;
-//    animateTo({
-//      duration: 50,
-//      delay: 150,
-//      curve: Curve.Friction,
-//      onFinish: () => {
-//      }
-//    }, () => {
-//      this.startAppIconWindowAlpha = 0.0;
-//    })
   }
 
   build() {
