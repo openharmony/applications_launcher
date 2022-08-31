@@ -7,7 +7,6 @@
     "icon": "$media:app_icon",
     "label": "$string:app_name",
     "distributedNotificationEnabled": true,
-    "keepAlive": true,
     "minAPIVersion": 8,
     "targetAPIVersion": 9,
     "userDataClearable": false

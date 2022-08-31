@@ -161,6 +161,11 @@ export default class PadLauncherLayoutStyleConfig extends LauncherLayoutStyleCon
    * button size of add app
    */
   mFolderAddButtonSize: number = PadPresetStyleConstants.DEFAULT_FOLDER_ADD_BUTTON_SIZE;
+  //App Center
+  /**
+   * left margin of app center
+   */
+  mAppCenterMarginLeft: number = PadPresetStyleConstants.DEFAULT_APP_CENTER_MARGIN;
 
   //App Center
   /**
