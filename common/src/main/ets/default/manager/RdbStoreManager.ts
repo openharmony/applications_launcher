@@ -401,6 +401,7 @@ export class RdbStoreManager {
       }
     } catch (e) {
       Log.showError(TAG, 'insertIntoSmartdock error:' + e);
+      this.sendFaultEvent();
     }
     return result;
   }
@@ -520,10 +521,11 @@ export class RdbStoreManager {
     }
     return result;
   }
+
   sendFaultEvent(){
     const sysEventInfo = {
-      domain: 'LAUNCHER',
-      name: 'WRITE_RDB',
+      domain: 'LAUNCHER_APP',
+      name: 'LAUNCHER_FAULT',
       eventType: hiSysEvent.EventType.FAULT,
       params: {
         'FAULT_ID': 'ICON_LOST',
@@ -533,9 +535,9 @@ export class RdbStoreManager {
     hiSysEvent.write(sysEventInfo,
       (err, value) => {
         if (err) {
-          Log.showError(TAG, `startApplication hiSysEvent write error: ${err.code}`);
+          Log.showError(TAG, `launcher fault hiSysEvent write error: ${err.code}`);
         } else {
-          Log.showInfo(TAG, 'startApplication hiSysEvent write success');
+          Log.showInfo(TAG, `launcher fault hiSysEvent write success: ${value}`);
         }
       })
   }
@@ -655,6 +657,7 @@ export class RdbStoreManager {
     } catch (e) {
       Log.showError(TAG, 'insertGridLayoutInfo error:' + e);
       this.mRdbStore.rollBack();
+      this.sendFaultEvent();
     }
   }
 
