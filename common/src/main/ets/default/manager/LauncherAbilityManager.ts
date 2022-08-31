@@ -16,7 +16,6 @@
 import bundleMgr from '@ohos.bundle';
 import osaccount from '@ohos.account.osAccount';
 import hiSysEvent from '@ohos.hiSysEvent';
-import SysEventInfo from '@ohos.hiSysEvent';
 import launcherBundleMgr from '@ohos.bundle.innerBundleManager';
 import { LauncherAbilityInfo } from 'bundle/launcherAbilityInfo';
 import { Log } from '../utils/Log';
@@ -285,7 +284,7 @@ class LauncherAbilityManager {
     });
 
     const sysEventInfo = {
-      domain: 'LAUNCHER',
+      domain: 'LAUNCHER_APP',
       name: 'START_ABILITY',
       eventType: hiSysEvent.EventType.BEHAVIOR,
       params: {
@@ -299,7 +298,7 @@ class LauncherAbilityManager {
         if (err) {
           Log.showError(TAG, `startApplication hiSysEvent write error: ${err.code}`);
         } else {
-          Log.showInfo(TAG, 'startApplication hiSysEvent write success');
+          Log.showInfo(TAG, `startApplication hiSysEvent write success: ${value}`);
         }
     })
   }
