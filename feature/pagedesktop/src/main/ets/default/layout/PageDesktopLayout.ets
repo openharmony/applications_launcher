@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-import { Log , CloseAppManager } from '@ohos/common';
-import { Trace } from '@ohos/common';
-import { AppMenu } from '@ohos/common';
-import { MenuInfo } from '@ohos/common';
-import { StyleConstants } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
+import {
+  Log,
+  Trace,
+  StyleConstants,
+  CommonConstants,
+  CloseAppManager } from '@ohos/common';
 import GridSwiper from '../common/components/GridSwiper';
 import { PageDesktopDragHandler } from '../common/PageDesktopDragHandler';
 import PageDesktopViewModel from '../viewmodel/PageDesktopViewModel';
@@ -103,89 +103,15 @@ export struct PageDesktopLayout {
     return true;
   }
 
-  private getMenu(): MenuInfo[] {
-    let menuInfoList = new Array<MenuInfo>();
-    let setting = new MenuInfo();
-    setting.menuType = CommonConstants.MENU_TYPE_FIXED
-    setting.menuImgSrc = "/common/pics/ic_public_settings.svg"
-    setting.menuText = $r('app.string.into_settings')
-    setting.onMenuClick = () => {
-      Trace.start(Trace.CORE_METHOD_START_SETTINGS);
-      mPageDesktopViewModel.intoSetting();
-    }
-    menuInfoList.push(setting);
-
-    let addOrDeleteBlankPage = new MenuInfo();
-    addOrDeleteBlankPage.menuType = CommonConstants.MENU_TYPE_FIXED
-    addOrDeleteBlankPage.menuImgSrc = mPageDesktopViewModel.getBlankPageBtnIcon()
-    addOrDeleteBlankPage.menuText = mPageDesktopViewModel.getBlankPageBtnStr()
-    addOrDeleteBlankPage.onMenuClick = () => {
-      mPageDesktopViewModel.addOrDeleteBlankPage();
-    }
-    menuInfoList.push(addOrDeleteBlankPage);
-    return menuInfoList;
-  }
-
-  private logId() {
-    Log.showInfo(TAG, `MenuBuilder build start ${this.menuId}`);
-    return true;
-  }
-
-  @Builder MenuBuilder() {
-    if (this.logId()) {
-      Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
-        AppMenu({
-          getMenuInfoList: this.getMenu,
-        })
-      }
-      .width(StyleConstants.CONTEXT_MENU_WIDTH)
-      .borderRadius(StyleConstants.DEFAULT_12)
-    }
-  }
-
   build() {
-    if (this.deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-        if (this.buildLog()) {
-        }
-        Column() {
-          GridSwiper({
-            mAppGridInfo: this.AppListInfo.appGridInfo,
-            gridConfig: this.gridConfig,
-            mPageDesktopViewModel: mPageDesktopViewModel
-          })
-        }
-        .width(StyleConstants.PERCENTAGE_100)
-        .height(StyleConstants.PERCENTAGE_100)
-      }
-      .gesture(
-      LongPressGesture({ repeat: true })
-        .onAction((event: GestureEvent) => {
-          this.dialogController.open()
-        })
-      )
-      .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+    GridSwiper({
+      mAppGridInfo: this.AppListInfo.appGridInfo,
+      gridConfig: this.gridConfig,
+      mPageDesktopViewModel: mPageDesktopViewModel,
+      dialogController: this.deviceType == CommonConstants.PAD_DEVICE_TYPE ? null : this.dialogController
+    })
       .width(StyleConstants.PERCENTAGE_100)
       .height(StyleConstants.PERCENTAGE_100)
-    } else {
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-        if (this.buildLog()) {
-        }
-        Column() {
-          GridSwiper({
-            mAppGridInfo: this.AppListInfo.appGridInfo,
-            gridConfig: this.gridConfig,
-            mPageDesktopViewModel: mPageDesktopViewModel
-          })
-        }
-        .width(StyleConstants.PERCENTAGE_100)
-        .height(StyleConstants.PERCENTAGE_100)
-      }
-      .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-      .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
-      .width(StyleConstants.PERCENTAGE_100)
-      .height(StyleConstants.PERCENTAGE_100)
-    }
   }
 }
 

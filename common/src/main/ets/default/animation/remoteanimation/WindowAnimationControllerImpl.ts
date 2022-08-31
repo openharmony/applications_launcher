@@ -78,6 +78,8 @@ class WindowAnimationControllerImpl implements windowAnimationManager.WindowAnim
     finishCallback.onAnimationFinish();
   }
 
+  onWindowAnimationTargetsUpdate(fullScreenWindowTarget: windowAnimationManager.WindowAnimationTarget, floatingWindowTargets: Array<windowAnimationManager.WindowAnimationTarget>): void {}
+
   printfTarget(target: windowAnimationManager.WindowAnimationTarget): void {
     if (CheckEmptyUtils.isEmpty(target) || CheckEmptyUtils.isEmpty(target.windowBounds)) {
       Log.showInfo(TAG, `remote window animaion with invalid target`);
