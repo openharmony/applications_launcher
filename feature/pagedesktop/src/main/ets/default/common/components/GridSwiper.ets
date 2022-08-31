@@ -13,8 +13,13 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
-import { StyleConstants } from '@ohos/common';
+import {
+  Log,
+  Trace,
+  StyleConstants,
+  CommonConstants,
+  AppMenu,
+  MenuInfo} from '@ohos/common';
 import SwiperPage from './SwiperPage';
 
 const TAG = "GridSwiper";
@@ -27,6 +32,7 @@ export default struct GridSwiper {
   private mPageDesktopViewModel;
   @State mAppGridInfo: [[]] = [[]];
   private swiperController: SwiperController = new SwiperController();
+  private dialogController: CustomDialogController;
 
   aboutToAppear(): void  {
     this.mPageDesktopViewModel.setSwiperController(this.swiperController);
@@ -42,16 +48,68 @@ export default struct GridSwiper {
     return isDesktopLoadFinished == true;
   }
 
+  @Builder MenuBuilder() {
+    Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
+      AppMenu({
+        getMenuInfoList: this.getMenu.bind(this),
+      })
+    }
+    .width(StyleConstants.CONTEXT_MENU_WIDTH)
+    .borderRadius(StyleConstants.DEFAULT_12)
+  }
+
+  private getMenu(): MenuInfo[] {
+    let menuInfoList = new Array<MenuInfo>();
+    let setting = new MenuInfo();
+    setting.menuType = CommonConstants.MENU_TYPE_FIXED
+    setting.menuImgSrc = "/common/pics/ic_public_settings.svg"
+    setting.menuText = $r('app.string.into_settings')
+    setting.onMenuClick = () => {
+      Trace.start(Trace.CORE_METHOD_START_SETTINGS);
+      this.mPageDesktopViewModel.intoSetting();
+    }
+    menuInfoList.push(setting);
+
+    let addOrDeleteBlankPage = new MenuInfo();
+    addOrDeleteBlankPage.menuType = CommonConstants.MENU_TYPE_FIXED
+    addOrDeleteBlankPage.menuImgSrc = this.mPageDesktopViewModel.getBlankPageBtnIcon()
+    addOrDeleteBlankPage.menuText = this.mPageDesktopViewModel.getBlankPageBtnStr()
+    addOrDeleteBlankPage.onMenuClick = () => {
+      this.mPageDesktopViewModel.addOrDeleteBlankPage();
+    }
+    menuInfoList.push(addOrDeleteBlankPage);
+    return menuInfoList;
+  }
+
   build() {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
       if (this.buildLog()) {
         Swiper(this.swiperController) {
           ForEach(this.mAppGridInfo, (item) => {
-            SwiperPage({
-              mAppListInfo: item,
-              gridConfig: this.gridConfig,
-              mPageDesktopViewModel: this.mPageDesktopViewModel
-            })
+            if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+              Column() {
+                SwiperPage({
+                  mAppListInfo: item,
+                  gridConfig: this.gridConfig,
+                  mPageDesktopViewModel: this.mPageDesktopViewModel
+                })
+              }
+              .gesture(
+              LongPressGesture({ repeat: true })
+                .onAction((event: GestureEvent) => {
+                  this.dialogController.open()
+                })
+              )
+              .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+            } else {
+              SwiperPage({
+                mAppListInfo: item,
+                gridConfig: this.gridConfig,
+                mPageDesktopViewModel: this.mPageDesktopViewModel
+              })
+                .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
+                .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+            }
           })
         }
         .padding({
