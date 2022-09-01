@@ -21,6 +21,7 @@ const TAG = 'NumBadgeManager';
 export class NumBadgeManager {
     private readonly mRegisterNumBadgeCallback;
     private readonly mUnRegisterNumBadgeCallback;
+    private readonly mBadgeManager;
     private mSubscriber: NotificationSubscriber = {
         onConsume: this.onConsumeCallback.bind(this),
         onCancel: this.onCancelCallback.bind(this),
@@ -33,17 +34,17 @@ export class NumBadgeManager {
     private constructor() {
         this.mRegisterNumBadgeCallback = this.registerNumBadgeCallback.bind(this);
         this.mUnRegisterNumBadgeCallback = this.unRegisterNumBadgeCallback.bind(this);
+        this.mBadgeManager = BadgeManager.getInstance();
     }
 
     private onConsumeCallback(data) {
         Log.showInfo(TAG, 'onConsumeCallback called !!');
-        this.handleSubscribeCallbackData(data);
+        this.handleSubscribeCallbackData(data, true);
     }
 
     private onCancelCallback(data) {
         Log.showInfo(TAG, "onCancelCallback called !!");
-        Log.showInfo(TAG, `onCancelCallback request ${JSON.stringify(data?.request)}`);
-        this.handleSubscribeCallbackData(data);
+        this.handleSubscribeCallbackData(data, false);
     }
 
     private onUpdateCallback() {
@@ -62,7 +63,7 @@ export class NumBadgeManager {
         Log.showInfo(TAG, 'onDestroyCallback called !!');
     }
 
-    private async handleSubscribeCallbackData(data) {
+    private async handleSubscribeCallbackData(data, needAdd: boolean) {
         Log.showInfo(TAG, 'handleSubscribeCallbackData start !!');
 
         let creatorUserId: number = data?.request?.creatorUserId;
@@ -75,7 +76,18 @@ export class NumBadgeManager {
             Log.showError(TAG, `handleSubscribeCallbackData userid is diff  ${userId}`);
             return;
         }
-        BadgeManager.getInstance().updateBadgeNumber(creatorBundleName, badgeNumber)
+
+        let lastBadgeNumber = await this.mBadgeManager.getBadgeByBundleSync(creatorBundleName);
+        let newBadgeNumber: number = 0;
+        if (needAdd) {
+            newBadgeNumber = badgeNumber + lastBadgeNumber;
+        } else {
+            newBadgeNumber = lastBadgeNumber - badgeNumber;
+            if (newBadgeNumber < 0) {
+                newBadgeNumber = 0;
+            }
+        }
+        this.mBadgeManager.updateBadgeNumber(creatorBundleName, newBadgeNumber)
             .then((result) => {
                 Log.showInfo(TAG, `updateBadgeByBundle result is ${result}`);
             })
