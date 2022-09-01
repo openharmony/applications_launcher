@@ -916,7 +916,9 @@ export default class PageDesktopViewModel extends BaseViewModel {
           if (openClickCallback) {
             openClickCallback();
           }
-          AppStorage.SetOrCreate('openFolderStatus', 0);
+          if (AppStorage.Get('openFolderStatus') != 0) {
+            AppStorage.SetOrCreate('openFolderStatus', 0);
+          }
           this.jumpTo(value.wants[0].targetClass, value.wants[0].targetBundle, value.wants[0].targetModule);
         };
         value.bundleName == appInfo.bundleName && value.moduleName == appInfo.moduleName && menuInfoList.push(menu);
@@ -928,6 +930,9 @@ export default class PageDesktopViewModel extends BaseViewModel {
     open.menuImgSrc = '/common/pics/ic_public_add_norm.svg';
     open.menuText = $r('app.string.app_menu_open');
     open.onMenuClick = () => {
+      if (AppStorage.Get('openFolderStatus') != 0) {
+        AppStorage.SetOrCreate('openFolderStatus', 0);
+      }
       this.setStartAppInfo()
       this.jumpTo(appInfo.abilityName, appInfo.bundleName, appInfo.moduleName);
     };
