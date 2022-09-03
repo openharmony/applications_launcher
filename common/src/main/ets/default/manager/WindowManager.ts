@@ -132,7 +132,8 @@ class WindowManager {
     void abilityWindow.moveTo(x, y);
   }
 
-  createWindow(context: ServiceExtensionContext, name: string, windowType: number, loadContent: string, isShow: boolean = true, callback?: Function) {
+  createWindow(context: ServiceExtensionContext, name: string, windowType: number, loadContent: string,
+               isShow: boolean, callback?: Function) {
     Window.create(context, name, windowType).then((win) => {
       void win.loadContent(loadContent).then(() => {
         void win.setSystemBarProperties({
@@ -169,7 +170,7 @@ class WindowManager {
       });
     }).catch(error => {
       Log.showError(TAG, `${name} ability is not created, because ${error}`);
-      this.createWindow(context, name, windowType, loadContent);
+      this.createWindow(context, name, windowType, loadContent, true);
     });
   }
 

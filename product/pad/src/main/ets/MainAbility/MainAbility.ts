@@ -52,7 +52,7 @@ export default class MainAbility extends ServiceExtension {
     navigationBarCommonEventManager.registerNavigationBarEvent();
     // create Launcher entry view
     windowManager.createWindow(globalThis.desktopContext, windowManager.DESKTOP_WINDOW_NAME,
-      windowManager.DESKTOP_RANK, 'pages/' + windowManager.DESKTOP_WINDOW_NAME);
+      windowManager.DESKTOP_RANK, 'pages/' + windowManager.DESKTOP_WINDOW_NAME, true);
 
     // load recent
     windowManager.createRecentWindow();
