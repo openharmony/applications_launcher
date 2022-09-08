@@ -47,9 +47,9 @@ export default struct ResidentLayout {
   getListWidth(): number {
     let width = 0;
     if (AppStorage.Get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
-      Log.showInfo(TAG, `getListWidth mDockPadding: ${this.mSmartDockStyleConfig.mDockPadding}, mMaxNum: ${this.mResidentMaxNum}`);
+      Log.showDebug(TAG, `getListWidth mDockPadding: ${this.mSmartDockStyleConfig.mDockPadding}, mMaxNum: ${this.mResidentMaxNum}`);
       width = this.mSmartDockStyleConfig.mDockPadding * 2 + this.mResidentMaxNum * (this.mSmartDockStyleConfig.mListItemWidth) + (this.mResidentMaxNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
-      Log.showInfo(TAG, `getListWidth width: ${width}`);
+      Log.showDebug(TAG, `getListWidth width: ${width}`);
       return width;
     }
     if (typeof this.appList === 'undefined' || this.appList == null || this.appList.length === 0) {
@@ -153,7 +153,7 @@ struct AppItem {
   }
 
   @Builder MenuBuilder() {
-    Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
+    Column() {
       AppMenu({
         menuInfoList: this.menuInfo,
         closeMenu: () => {
@@ -161,6 +161,8 @@ struct AppItem {
         }
       })
     }
+    .alignItems(HorizontalAlign.Center)
+    .justifyContent(FlexAlign.Center)
     .width(StyleConstants.CONTEXT_MENU_WIDTH)
     .height(StyleConstants.DEFAULT_40 * this.menuInfo.length + StyleConstants.DEFAULT_8)
   }

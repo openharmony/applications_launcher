@@ -36,7 +36,6 @@ class LocalEventManager {
    */
   static getInstance(): LocalEventManager {
     if (globalThis.localEventManager == null) {
-      Log.showInfo(TAG, 'getInstance');
       globalThis.localEventManager = new LocalEventManager();
     }
     return globalThis.localEventManager;
@@ -89,7 +88,7 @@ class LocalEventManager {
     Log.showInfo(TAG, `sendLocalEvent event: ${JSON.stringify(event)}`);
     let listenerList = this.mEventListenerMap[event];
     if (listenerList != undefined) {
-      Log.showInfo(TAG, `sendLocalEvent listenerList length: ${listenerList.length}`);
+      Log.showDebug(TAG, `sendLocalEvent listenerList length: ${listenerList.length}`);
       for (let listener of listenerList) {
         listener.onReceiveEvent(event, params);
       }
@@ -105,7 +104,6 @@ class LocalEventManager {
    * @param params
    */
   async sendLocalEventAsync(event, params?): Promise<void> {
-    Log.showInfo(TAG, 'sendLocalEventAsync, send local event async');
     this.sendLocalEvent(event, params);
   }
 
@@ -116,7 +114,7 @@ class LocalEventManager {
    * @param params
    */
   async sendLocalEventSticky(event, params): Promise<void> {
-    Log.showInfo(TAG, `sendLocalEventSticky, send local event sticky, params: ${JSON.stringify(params)}`);
+    Log.showDebug(TAG, `sendLocalEventSticky, send local event sticky, params: ${JSON.stringify(params)}`);
     this.sendLocalEvent(event, params);
     this.mEventMsgCache[event] = params;
   }

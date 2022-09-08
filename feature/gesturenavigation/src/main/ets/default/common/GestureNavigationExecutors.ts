@@ -156,7 +156,7 @@ export default class GestureNavigationExecutors {
   }
 
   private backEventCall() {
-    Log.showDebug(TAG, 'backEventCall backEvent start');
+    Log.showInfo(TAG, 'backEventCall backEvent start');
     let keyEvent = {
       isPressed: true,
       keyCode: 2,
@@ -178,7 +178,7 @@ export default class GestureNavigationExecutors {
   }
 
   private homeEventCall() {
-    Log.showDebug(TAG, 'homeEventCall homeEvent start');
+    Log.showInfo(TAG, 'homeEventCall homeEvent start');
     globalThis.desktopContext.startAbility({
       bundleName: CommonConstants.LAUNCHER_BUNDLE,
       abilityName: CommonConstants.LAUNCHER_ABILITY
@@ -192,7 +192,7 @@ export default class GestureNavigationExecutors {
   }
 
   private recentEventCall() {
-    Log.showDebug(TAG, 'recentEventCall recentEvent start');
+    Log.showInfo(TAG, 'recentEventCall recentEvent start');
     globalThis.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
   }
 

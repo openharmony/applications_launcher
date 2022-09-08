@@ -49,9 +49,7 @@ export class CloseAppManager {
     }
 
     static getInstance(): CloseAppManager {
-        Log.showInfo(TAG, `CloseAppManager getInstance called!`)
         if (globalThis.CloseAppManager == null) {
-            Log.showInfo(TAG, `CloseAppManager getInstance constructor`)
             globalThis.CloseAppManager = new CloseAppManager();
         }
         return globalThis.CloseAppManager;
@@ -112,33 +110,33 @@ export class CloseAppManager {
     }
 
     public addPagedesktopClosePosition(pagedesktopCloasIconInfo: any, pagedesktopCloasItemInfo?: any) {
-        Log.showInfo(TAG, `addPagedesktopClosePosition pagedesktopCloasIconInfo is ${JSON.stringify(pagedesktopCloasIconInfo)}`)
+        Log.showDebug(TAG, `addPagedesktopClosePosition pagedesktopCloasIconInfo is ${JSON.stringify(pagedesktopCloasIconInfo)}`)
         this.mPagedesktopClosePosition = pagedesktopCloasIconInfo;
         this.mPagedesktopCloasItemInfo = pagedesktopCloasItemInfo;
     }
 
     public addSmartDockClosePosition(smartdockCloasIconInfo: any, smartdockCloasItemInfo: any) {
-        Log.showInfo(TAG, `addSmartDockClosePosition smartdockCloasIconInfo is ${JSON.stringify(smartdockCloasIconInfo)}`)
+        Log.showDebug(TAG, `addSmartDockClosePosition smartdockCloasIconInfo is ${JSON.stringify(smartdockCloasIconInfo)}`)
         this.mSmartdockClosePosition = smartdockCloasIconInfo;
         this.mSmartdockCloasItemInfo = smartdockCloasItemInfo;
     }
 
     public getAppCloseIconInfo(): any{
         if (CheckEmptyUtils.isEmpty(this.mPagedesktopClosePosition)) {
-            Log.showInfo(TAG, `getAppCloseIconInfo return mSmartdockClosePosition is ${JSON.stringify(this.mSmartdockClosePosition)}`)
+            Log.showDebug(TAG, `getAppCloseIconInfo return mSmartdockClosePosition is ${JSON.stringify(this.mSmartdockClosePosition)}`)
             return this.mSmartdockClosePosition;
         } else {
-            Log.showInfo(TAG, `getAppCloseIconInfo return mPagedesktopClosePosition is ${JSON.stringify(this.mPagedesktopClosePosition)}`)
+            Log.showDebug(TAG, `getAppCloseIconInfo return mPagedesktopClosePosition is ${JSON.stringify(this.mPagedesktopClosePosition)}`)
             return this.mPagedesktopClosePosition;
         }
     }
 
     public getAppCloseItemInfo(): any{
         if (CheckEmptyUtils.isEmpty(this.mPagedesktopClosePosition)) {
-            Log.showInfo(TAG, `getAppCloseIconInfo return mSmartdockClosePosition is ${JSON.stringify(this.mSmartdockClosePosition)}`)
+            Log.showDebug(TAG, `getAppCloseIconInfo return mSmartdockClosePosition is ${JSON.stringify(this.mSmartdockClosePosition)}`)
             return this.mSmartdockCloasItemInfo;
         } else {
-            Log.showInfo(TAG, `getAppCloseIconInfo return mPagedesktopClosePosition is ${JSON.stringify(this.mPagedesktopClosePosition)}`)
+            Log.showDebug(TAG, `getAppCloseIconInfo return mPagedesktopClosePosition is ${JSON.stringify(this.mPagedesktopClosePosition)}`)
             return this.mPagedesktopCloasItemInfo;
         }
     }

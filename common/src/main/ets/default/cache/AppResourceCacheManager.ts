@@ -60,7 +60,7 @@ export default class AppResourceCacheManager {
    * @param {object} value - value of the cache map
    */
   setCache(cacheKey: string, cacheType: string, value: object | string) {
-    Log.showInfo(TAG, `setCache cacheKey: ${cacheKey}, cacheType: ${cacheType}`);
+    Log.showDebug(TAG, `setCache cacheKey: ${cacheKey}, cacheType: ${cacheType}`);
     this.setCacheToMemory(cacheKey, cacheType, value);
     if (cacheType === KEY_ICON) {
       this.setCacheToDisk(cacheKey, cacheType, value);
@@ -71,7 +71,7 @@ export default class AppResourceCacheManager {
    * Clear cache of both disk and memory.
    */
   clearCache(): void {
-    Log.showInfo(TAG, 'clearCache');
+    Log.showDebug(TAG, 'clearCache');
     this.memoryCache.clear();
   }
 

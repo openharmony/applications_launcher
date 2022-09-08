@@ -43,7 +43,7 @@ export abstract class BaseRemoteAnimationHandler {
     public setAppIconSize(appIconSize: number, appIconHeight?: number): void {
         this.mAppIconHeight = appIconHeight;
         this.mAppIconSize = appIconSize;
-        Log.showInfo(TAG, `setAppIconSize appIconSize is ${appIconSize} , appIconHeight is ${appIconHeight}`);
+        Log.showDebug(TAG, `setAppIconSize appIconSize is ${appIconSize} , appIconHeight is ${appIconHeight}`);
     }
 
     /**
@@ -56,7 +56,7 @@ export abstract class BaseRemoteAnimationHandler {
      */
     public setAppIconInfo(): void {
         this.calculateAppIconPosition();
-        Log.showInfo(TAG, `setAppIconInfo appIconSize is ${this.mAppIconSize} , appIconHeight is ${this.mAppIconHeight} ,
+        Log.showDebug(TAG, `setAppIconInfo appIconSize is ${this.mAppIconSize} , appIconHeight is ${this.mAppIconHeight} ,
       appIconPositionX ${this.mAppIconPositionX} , appIconPositionY ${this.mAppIconPositionY}`);
     }
 }

@@ -239,7 +239,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     const startPosition: DragItemPosition = this.copyPosition(this.mStartPosition);
     let endPosition: DragItemPosition = null;
     this.mEndPosition = this.getTouchPosition(x, y);
-    Log.showInfo(TAG, `onDragEnd mEndPosition: ${JSON.stringify(this.mEndPosition)}`);
+    Log.showDebug(TAG, `onDragEnd mEndPosition: ${JSON.stringify(this.mEndPosition)}`);
     endPosition = this.copyPosition(this.mEndPosition);
     const info = this.mSettingsModel.getLayoutInfo();
     const layoutInfo = info.layoutInfo;
@@ -445,7 +445,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param dragItemInfo
    */
   private checkAndMove(source, destination, layoutInfo, dragItemInfo): boolean {
-    Log.showInfo(TAG, 'checkAndMove start');
+    Log.showDebug(TAG, 'checkAndMove start');
 
     const allPositions = this.getAllPositions(destination, layoutInfo);
     const objectPositionCount = this.getObjectPositionCount(destination, layoutInfo);
@@ -465,19 +465,19 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     }
     this.setDestinationPosition(destination, allPositions, dragItemInfo);
 
-    Log.showInfo(TAG, `checkAndMove pressedPositions.foldersAndForms: ${pressedPositions.foldersAndForms.length}`);
+    Log.showDebug(TAG, `checkAndMove pressedPositions.foldersAndForms: ${pressedPositions.foldersAndForms.length}`);
     if (pressedPositions.foldersAndForms.length != 0) {
       if (!this.moveFoldersAndForms(pressedPositions.foldersAndForms, destination, allPositions, dragItemInfo)) {
         return false;
       }
     }
-    Log.showInfo(TAG, `checkAndMove pressedPositions.apps.length: ${pressedPositions.apps.length}`);
+    Log.showDebug(TAG, `checkAndMove pressedPositions.apps.length: ${pressedPositions.apps.length}`);
     if (pressedPositions.apps.length != 0) {
       this.moveApps(pressedPositions.apps, allPositions);
     }
-    Log.showInfo(TAG, 'checkAndMove update destination ');
+    Log.showDebug(TAG, 'checkAndMove update destination ');
     this.updateDestinationByDragItem(dragItemInfo, destination, allPositions);
-    Log.showInfo(TAG, 'checkAndMove update layoutInfo ');
+    Log.showDebug(TAG, 'checkAndMove update layoutInfo ');
     for (let index = 0; index < layoutInfo.length; index++) {
       for (let row = allPositions.length - 1; row >= 0 ; row--) {
         for (let column = allPositions[row].length - 1; column >= 0 ; column--) {
@@ -491,7 +491,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
         }
       }
     }
-    Log.showInfo(TAG, 'checkAndMove end');
+    Log.showDebug(TAG, 'checkAndMove end');
     return true;
   }
 
@@ -501,7 +501,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param layoutInfo
    */
   private getAllPositions(destination, layoutInfo): any[] {
-    Log.showInfo(TAG, 'getAllPositions start');
+    Log.showDebug(TAG, 'getAllPositions start');
     const allPositions = [];
     this.setAllpositionsToNull(allPositions);
 
@@ -536,7 +536,6 @@ export class PageDesktopDragHandler extends BaseDragHandler {
         }
       }
     }
-    Log.showInfo(TAG, 'getAllPositions end');
     return allPositions;
   }
 
@@ -566,7 +565,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param layoutInfo
    */
   private getObjectPositionCount(destination, layoutInfo): Map<string, number> {
-    Log.showInfo(TAG, 'getObjectPositionCount start');
+    Log.showDebug(TAG, 'getObjectPositionCount start');
 
     const objectPositionCount = new Map<string, number>();
     // set position in layoutInfo to all positions
@@ -584,7 +583,6 @@ export class PageDesktopDragHandler extends BaseDragHandler {
         objectPositionCount.set(keyName, count);
       }
     }
-    Log.showInfo(TAG, 'getObjectPositionCount end');
     return objectPositionCount;
   }
 
@@ -595,13 +593,13 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param dragItemInfo
    */
   private getPressedObjects(destination, allPositions, dragItemInfo) {
-    Log.showInfo(TAG, 'getPressedObjects start');
+    Log.showDebug(TAG, 'getPressedObjects start');
     const row = destination.row;
     const column = destination.column;
     const apps = [];
     const foldersAndForms = [];
 
-    Log.showInfo(TAG, `getPressedObjects destination.row: ${row},destination.column:${column}`);
+    Log.showDebug(TAG, `getPressedObjects destination.row: ${row},destination.column:${column}`);
 
     for (let j = 0; j < dragItemInfo.area[1]; j++) {
       for (let i = 0; i < dragItemInfo.area[0]; i++) {
@@ -617,13 +615,12 @@ export class PageDesktopDragHandler extends BaseDragHandler {
       }
     }
 
-    Log.showInfo(TAG, `getPressedObjects foldersAndForms.length: ${foldersAndForms.length}`);
-    Log.showInfo(TAG, `getPressedObjects apps.length: ${apps.length}`);
+    Log.showDebug(TAG, `getPressedObjects foldersAndForms.length: ${foldersAndForms.length}`);
+    Log.showDebug(TAG, `getPressedObjects apps.length: ${apps.length}`);
     const pressedObjects = {
       apps,
       foldersAndForms
     };
-    Log.showInfo(TAG, 'getPressedObjects end');
     return pressedObjects;
   }
 
@@ -634,10 +631,9 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param dragItemInfo
    */
   private checkCanMoveInSamePage(pressedPositions, objectPositionCount, dragItemInfo): boolean {
-    Log.showInfo(TAG, 'checkCanMoveInSamePage start');
+    Log.showDebug(TAG, 'checkCanMoveInSamePage start');
     const foldersAndForms = pressedPositions.foldersAndForms;
     if (foldersAndForms.length == 0) {
-      Log.showInfo(TAG, 'checkCanMoveInSamePage return true');
       return true;
     }
 
@@ -648,7 +644,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     }
 
     const coverPositionCount = new Map<string, number>();
-    Log.showInfo(TAG, `checkCanMoveInSamePage foldersAndForms.length: ${foldersAndForms.length}`);
+    Log.showDebug(TAG, `checkCanMoveInSamePage foldersAndForms.length: ${foldersAndForms.length}`);
     for (let i = 0; i < foldersAndForms.length; i++) {
       const keyName = foldersAndForms[i].keyName;
       if (coverPositionCount.has(keyName)) {
@@ -660,11 +656,10 @@ export class PageDesktopDragHandler extends BaseDragHandler {
 
     for (const keyName of coverPositionCount.keys()) {
       if (coverPositionCount.get(keyName) < objectPositionCount.get(keyName) / 2) {
-        Log.showInfo(TAG, 'checkCanMoveInSamePage end false');
+        Log.showDebug(TAG, 'checkCanMoveInSamePage end false');
         return false;
       }
     }
-    Log.showInfo(TAG, 'checkCanMoveInSamePage end true');
     return true;
   }
 
@@ -673,7 +668,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param allPositions
    */
   private checkCanMoveInDiffPage(allPositions, dragItemInfo): boolean {
-    Log.showInfo(TAG, 'checkCanMoveInDiffPage start');
+    Log.showDebug(TAG, 'checkCanMoveInDiffPage start');
     let count = 0;
     for (let i = 0; i < allPositions.length; i++) {
       for (let j = 0; j < allPositions[i].length; j++) {
@@ -685,10 +680,9 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     const minCount = dragItemInfo.area[0] * dragItemInfo.area[1];
     // target page empty position min is dragItemInfo's need position
     if (count < minCount) {
-      Log.showInfo(TAG, 'checkCanMoveInDiffPage end false');
+      Log.showDebug(TAG, 'checkCanMoveInDiffPage end false');
       return false;
     }
-    Log.showInfo(TAG, 'checkCanMoveInDiffPage end true');
     return true;
   }
 
@@ -698,7 +692,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param allPositions
    */
   private setSourcePositionToNull(dragItemInfo, allPositions): void {
-    Log.showInfo(TAG, 'setSourcePositionToNull start');
+    Log.showDebug(TAG, 'setSourcePositionToNull start');
     for (let j = 0; j < dragItemInfo.area[1]; j++) {
       for (let i = 0; i < dragItemInfo.area[0]; i++) {
         const nullPosition = {
@@ -709,8 +703,6 @@ export class PageDesktopDragHandler extends BaseDragHandler {
         allPositions[dragItemInfo.row + j][dragItemInfo.column + i] = nullPosition;
       }
     }
-
-    Log.showInfo(TAG, 'setSourcePositionToNull end');
   }
 
   /**
@@ -720,7 +712,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param dragItemInfo
    */
   private setDestinationPosition(destination, allPositions, dragItemInfo): void {
-    Log.showInfo(TAG, 'setDestinationPosition start');
+    Log.showDebug(TAG, 'setDestinationPosition start');
     let keyName = '';
     if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER) {
       keyName = dragItemInfo.folderId;
@@ -742,7 +734,6 @@ export class PageDesktopDragHandler extends BaseDragHandler {
         }
       }
     }
-    Log.showInfo(TAG, 'setDestinationPosition end');
   }
 
   /**
@@ -753,7 +744,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param dragItemInfo
    */
   private moveFoldersAndForms(foldersAndForms, destination, allPositions, dragItemInfo): boolean {
-    Log.showInfo(TAG, 'moveFoldersAndForms start');
+    Log.showDebug(TAG, 'moveFoldersAndForms start');
     const movedFoldersAndForms = [];
     for (let i = 0; i < foldersAndForms.length; i++) {
       const moveFolderOrForm = foldersAndForms[i];
@@ -785,13 +776,11 @@ export class PageDesktopDragHandler extends BaseDragHandler {
         }
       }
       if (!isUsablePosition) {
-        Log.showInfo(TAG, 'moveFoldersAndForms return false');
+        Log.showDebug(TAG, 'moveFoldersAndForms return false');
         return false;
       }
     }
     this.updateDestinationByDragItem(dragItemInfo, destination, allPositions);
-
-    Log.showInfo(TAG, 'moveFoldersAndForms end');
     return true;
   }
 
@@ -902,7 +891,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param allPositions
    */
   private moveApps(apps, allPositions): void {
-    Log.showInfo(TAG, 'moveApps start');
+    Log.showDebug(TAG, 'moveApps start');
     for (let i = 0; i < apps.length; i++) {
       const app = apps[i];
       let isUsable = false;
@@ -924,6 +913,5 @@ export class PageDesktopDragHandler extends BaseDragHandler {
         }
       }
     }
-    Log.showInfo(TAG, 'moveApps end');
   }
 }

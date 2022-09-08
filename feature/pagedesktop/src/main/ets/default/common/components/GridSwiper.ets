@@ -44,7 +44,7 @@ export default struct GridSwiper {
 
   private buildLog(): boolean {
     let isDesktopLoadFinished = AppStorage.Get('isDesktopLoadFinished');
-    Log.showInfo(TAG, `build start ${isDesktopLoadFinished} page ${this.pageIndex}`);
+    Log.showDebug(TAG, `build start ${isDesktopLoadFinished} page ${this.pageIndex}`);
     return isDesktopLoadFinished == true;
   }
 
@@ -82,7 +82,7 @@ export default struct GridSwiper {
   }
 
   build() {
-    Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
+    Column() {
       if (this.buildLog()) {
         Swiper(this.swiperController) {
           ForEach(this.mAppGridInfo, (item) => {
@@ -128,6 +128,8 @@ export default struct GridSwiper {
         })
       }
     }
+    .alignItems(HorizontalAlign.Center)
+    .justifyContent(FlexAlign.Center)
     .height(StyleConstants.PERCENTAGE_100)
     .width(StyleConstants.PERCENTAGE_100)
   }

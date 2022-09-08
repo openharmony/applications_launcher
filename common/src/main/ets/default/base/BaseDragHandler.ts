@@ -77,7 +77,7 @@ export abstract class BaseDragHandler {
    * @param dragItemInfo
    */
   protected setDragItemInfo(dragItemInfo): void {
-    Log.showInfo(TAG, `setDragItemInfo dragItemInfo: ${JSON.stringify(dragItemInfo)}`);
+    Log.showDebug(TAG, `setDragItemInfo dragItemInfo: ${JSON.stringify(dragItemInfo)}`);
     AppStorage.SetOrCreate('dragItemInfo', dragItemInfo);
   }
 
@@ -106,7 +106,7 @@ export abstract class BaseDragHandler {
    * Set the IsLongPress parameter.
    */
   protected setIsLongPress(isLongPress): void {
-    Log.showInfo(TAG, `setIsLongPress isLongPress: ${isLongPress}`);
+    Log.showDebug(TAG, `setIsLongPress isLongPress: ${isLongPress}`);
     AppStorage.SetOrCreate('isLongPress', isLongPress);
   }
 

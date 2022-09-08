@@ -86,17 +86,16 @@ struct AppCenterView {
 
   build() {
     Stack() {
-      if (this.buildLog()) {
-      }
+      if (this.buildLog()) {}
       Column() {
         Column() {
-          Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-            AppGridLayout();
-          }
-          .margin({
-            top: StyleConstants.DEFAULT_28
-          })
+          AppGridLayout();
         }
+        .padding({
+          top: StyleConstants.DEFAULT_28
+        })
+        .alignItems(HorizontalAlign.Center)
+        .justifyContent(FlexAlign.Center)
         .height(this.workSpaceHeight)
 
         Column() {

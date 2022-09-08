@@ -54,14 +54,12 @@ export default class SmartDockViewModel extends BaseViewModel {
     this.mSmartDockDragHandler = SmartDockDragHandler.getInstance();
     this.mSmartDockStartAppHandler = SmartDockStartAppHandler.getInstance();
     this.mSmartDockModel = SmartDockModel.getInstance();
-    Log.showInfo(TAG, 'constructor!');
   }
 
   static getInstance(): SmartDockViewModel{
     if (globalThis.SmartDockViewModel == null) {
       globalThis.SmartDockViewModel = new SmartDockViewModel();
     }
-    Log.showInfo(TAG, 'getInstance!');
     return globalThis.SmartDockViewModel;
   }
 
@@ -150,7 +148,7 @@ export default class SmartDockViewModel extends BaseViewModel {
     AppStorage.SetOrCreate('residentWidth', mResidentWidth);
     AppStorage.SetOrCreate("dockPadding", this.getDockPadding(mResidentWidth));
     const mRecentWidth: number = this.getListWidth(AppStorage.Get('recentList'));
-    Log.showInfo(TAG, `updateDockParams screenWidth:${screenWidth}, screenHeight:${screenHeight}, sysUIBottomHeight:${sysUIBottomHeight}, dockHeight:${dockHeight}, mResidentWidth:${mResidentWidth}, mRecentWidth:${mRecentWidth}`);
+    Log.showDebug(TAG, `updateDockParams screenWidth:${screenWidth}, screenHeight:${screenHeight}, sysUIBottomHeight:${sysUIBottomHeight}, dockHeight:${dockHeight}, mResidentWidth:${mResidentWidth}, mRecentWidth:${mRecentWidth}`);
     if (typeof (this.mSmartDockDragHandler) != 'undefined') {
       let left = mResidentWidth === 0 ? 0 : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2;
       let right = mResidentWidth === 0 ? screenWidth : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2 + mResidentWidth;
@@ -173,7 +171,7 @@ export default class SmartDockViewModel extends BaseViewModel {
     if (AppStorage.Get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE) {
       paddingNum = (residentWidth - (residentList.length * this.mSmartDockStyleConfig.mListItemWidth + (residentList.length - 1) * (this.mSmartDockStyleConfig.mListItemGap))) / 2;
     }
-    Log.showInfo(TAG, `getDockPadding paddingNum: ${paddingNum}`);
+    Log.showDebug(TAG, `getDockPadding paddingNum: ${paddingNum}`);
     return {right: paddingNum, left: paddingNum, top: this.mSmartDockStyleConfig.mDockPadding, bottom: this.mSmartDockStyleConfig.mDockPadding};
   }
 
@@ -201,7 +199,6 @@ export default class SmartDockViewModel extends BaseViewModel {
           Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
           launcherAbilityManager.startLauncherAbility(value.wants[0].targetClass, value.wants[0].targetBundle, value.wants[0].targetModule);
         };
-        Log.showInfo(TAG, `shortcutInfo ${JSON.stringify(shortcutInfo)}`);
         value.bundleName == appInfo.bundleName && value.moduleName == appInfo.moduleName && menuInfoList.push(menu);
       });
     }

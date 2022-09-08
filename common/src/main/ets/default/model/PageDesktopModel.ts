@@ -128,7 +128,7 @@ export class PageDesktopModel {
       for (let y = 0; y < row; y++) {
         for (let x = 0; x < column; x++) {
           if (this.isPositionValid(info, item, i, x, y)) {
-            Log.showInfo(TAG, `updateAppItemLayoutInfo isPositionValid: x:${x} y:${y} page:${i}`);
+            Log.showDebug(TAG, `updateAppItemLayoutInfo isPositionValid: x:${x} y:${y} page:${i}`);
             isNeedNewPage = false;
             layoutInfo.push({
               bundleName: item.bundleName,
@@ -176,7 +176,7 @@ export class PageDesktopModel {
       for (let y = 0; y < row; y++) {
         for (let x = 0; x < column; x++) {
           if (this.isPositionValid(info, item, i, x, y)) {
-            Log.showInfo(TAG, `updatePageDesktopLayoutInfo isPositionValid: x:${x} y:${y} page:${i}`);
+            Log.showDebug(TAG, `updatePageDesktopLayoutInfo isPositionValid: x:${x} y:${y} page:${i}`);
             isNeedNewPage = false;
             item.page = i;
             item.column = x;

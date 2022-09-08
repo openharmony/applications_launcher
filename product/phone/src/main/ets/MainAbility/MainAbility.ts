@@ -75,7 +75,6 @@ export default class MainAbility extends ServiceExtension {
     const gestureNavigationManage = GestureNavigationManager.getInstance();
     display.getDefaultDisplay()
       .then((dis: { id: number, width: number, height: number, refreshRate: number }) => {
-        Log.showInfo(TAG, `startGestureNavigation display: ${JSON.stringify(dis)}`);
         gestureNavigationManage.initWindowSize(dis);
       });
   }

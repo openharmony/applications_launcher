@@ -52,14 +52,12 @@ export struct AppIcon {
   }
 
   public badgeInitCallback(badgeNumber) {
-    Log.showInfo(TAG, `badgeInitCallback badgeNumber is ${badgeNumber}`);
     if (this.badgeNumber != badgeNumber) {
       this.badgeNumber = badgeNumber;
     }
   }
 
   public initBadge() {
-    Log.showInfo(TAG, `initBadge called !`);
     this.mBadgeManager.getBadgeByBundle(this.bundleName, this.badgeInitCallback.bind(this));
   }
 

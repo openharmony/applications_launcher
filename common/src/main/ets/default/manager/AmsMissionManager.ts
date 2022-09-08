@@ -36,7 +36,6 @@ class AmsMissionManager {
   private mLockState: boolean;
 
   static getInstance(): AmsMissionManager {
-    Log.showDebug(TAG, 'getInstance');
     if (globalThis.AmsMissionManagerInstance == null) {
       globalThis.AmsMissionManagerInstance = new AmsMissionManager();
       // remove this if toolchain fix requireNApi bug
@@ -56,7 +55,7 @@ class AmsMissionManager {
     await missionManager.getMissionInfos('', AmsMissionManager.RECENT_MISSIONS_LIMIT_NUM)
       .then((res) => {
         if (!CheckEmptyUtils.isEmptyArr(res)) {
-          Log.showInfo(TAG, `getOriginRecentMissionsList res.length: ${res.length}`);
+          Log.showDebug(TAG, `getOriginRecentMissionsList res.length: ${res.length}`);
           missionInfos = res;
         }
       })
@@ -75,7 +74,7 @@ class AmsMissionManager {
     const recentMissionsList = new Array<RecentMissionInfo>();
     let missionInfos: Array<OriginMissionInfo> = await this.getOriginRecentMissionsList();
     if (CheckEmptyUtils.isEmptyArr(missionInfos)) {
-      Log.showInfo(TAG, 'getRecentMissionsList Empty');
+      Log.showDebug(TAG, 'getRecentMissionsList Empty');
       return recentMissionsList;
     }
     for (const recentItem of missionInfos) {
@@ -107,7 +106,7 @@ class AmsMissionManager {
     const recentMissionsList = new Array<RecentBundleMissionInfo>();
     let missionInfos: Array<OriginMissionInfo> = await this.getOriginRecentMissionsList();
     if (CheckEmptyUtils.isEmptyArr(missionInfos)) {
-      Log.showInfo(TAG, 'getRecentBundleMissionsList Empty');
+      Log.showDebug(TAG, 'getRecentBundleMissionsList Empty');
       return recentMissionsList;
     }
     for (let i = 0; i < missionInfos.length; i++) {
@@ -152,7 +151,7 @@ class AmsMissionManager {
     Log.showInfo(TAG, `clearMission Id:${missionId}`);
     await missionManager.clearMission(missionId)
       .then((data) => {
-        Log.showInfo(TAG, `clearMission data:${JSON.stringify(data)}`);
+        Log.showDebug(TAG, `clearMission data:${JSON.stringify(data)}`);
       })
       .catch((err) => {
         Log.showError(TAG, `clearMission err:${JSON.stringify(err)}`);
@@ -168,7 +167,7 @@ class AmsMissionManager {
   async clearAllMissions(): Promise<void> {
     await missionManager.clearAllMissions()
       .then((data) => {
-        Log.showInfo(TAG, `clearAllMissions data: ${JSON.stringify(data)}`);
+        Log.showDebug(TAG, `clearAllMissions data: ${JSON.stringify(data)}`);
       })
       .catch((err) => {
         Log.showError(TAG, `clearAllMissions err: ${JSON.stringify(err)}`);
@@ -200,7 +199,7 @@ class AmsMissionManager {
   }
 
   private async lockCallback(): Promise<void> {
-    Log.showInfo(TAG, `lockCallback start`);
+    Log.showDebug(TAG, `lockCallback start`);
     // update mission recent card
     let mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
     mRecentMissionsList.find(item => {
@@ -222,14 +221,14 @@ class AmsMissionManager {
       let missionSnapshot: MissionSnapshot = null;
       await missionManager.getLowResolutionMissionSnapShot('', missionId)
         .then((res) => {
-          Log.showInfo(TAG, `getLowResolutionMissionSnapShot ${missionId} success ${JSON.stringify(res)}`);
+          Log.showDebug(TAG, `getLowResolutionMissionSnapShot ${missionId} success ${JSON.stringify(res)}`);
           missionSnapshot = res;
         })
         .catch((err) => {
           Log.showError(TAG, `getLowResolutionMissionSnapShot error: ${JSON.stringify(err)}`);
         });
       const imageInfo = await missionSnapshot.snapshot.getImageInfo();
-      Log.showInfo(TAG, `getMissionSnapShot success ${JSON.stringify(imageInfo)}`);
+      Log.showDebug(TAG, `getMissionSnapShot success ${JSON.stringify(imageInfo)}`);
       snapShotInfo.missionId = missionId;
       snapShotInfo.snapShotImage = missionSnapshot.snapshot;
       snapShotInfo.snapShotImageWidth = imageInfo.size.width;
@@ -237,7 +236,6 @@ class AmsMissionManager {
     } catch (err) {
       Log.showError(TAG, `missionManager.getMissionSnapShot err: ${err}`);
     }
-    Log.showInfo(TAG, `getMissionSnapShot return ${JSON.stringify(snapShotInfo)}`);
     return snapShotInfo;
   }
 
@@ -253,7 +251,7 @@ class AmsMissionManager {
     const res = await promise.catch(err => {
       Log.showError(TAG, `moveMissionToFront err: ${JSON.stringify(err)}`);
     });
-    Log.showInfo(TAG, `moveMissionToFront missionId end: ${JSON.stringify(res)}`);
+    Log.showDebug(TAG, `moveMissionToFront missionId end: ${JSON.stringify(res)}`);
     return res;
   }
 }

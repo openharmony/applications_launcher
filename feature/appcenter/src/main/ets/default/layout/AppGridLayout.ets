@@ -171,7 +171,8 @@ export struct AppGridLayout {
           },
           buildMenu: (item) => this.buildMenuInfoList(item)
         })
-      }.width(this.mAppCenterGridStyleConfig.mGridWidth)
+      }
+      .width(this.mAppCenterGridStyleConfig.mGridWidth)
       .height(this.mAppCenterGridStyleConfig.mGridHeight)
 
       Row() {
