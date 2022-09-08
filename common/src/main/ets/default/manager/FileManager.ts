@@ -37,7 +37,7 @@ export default class FileManager {
     const context = featureAbility.getContext();
     await context.getFilesDir()
       .then((data) => {
-        Log.showInfo(TAG, `getFilesDir File directory obtained. Data: ${JSON.stringify(data)}`);
+        Log.showDebug(TAG, `getFilesDir File directory obtained. Data: ${JSON.stringify(data)}`);
         this.baseDir = data + '/';
       }).catch((error) => {
         Log.showError(TAG, `getFilesDir Failed to obtain the file directory. Cause: ${JSON.stringify(error)}`);
@@ -48,11 +48,10 @@ export default class FileManager {
     if (this.baseDir == undefined) {
       await this.getBaseDir();
     }
-    Log.showInfo(TAG, `getFileContent fpath: ${fpath}`);
+    Log.showDebug(TAG, `getFileContent fpath: ${fpath}`);
     const fd = fileIo.openSync(fpath, 0o2);
     const content = this.getContent(fd);
     fileIo.closeSync(fd);
-    Log.showInfo(TAG, `getFileContent content: ${content}`);
     return content;
   }
 

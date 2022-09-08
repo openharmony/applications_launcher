@@ -46,7 +46,7 @@ export struct AppBubble {
   dragStart: Function;
 
   @Builder MenuBuilder() {
-    Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
+    Column() {
       AppMenu({
         menuInfoList: this.menuInfo,
         closeMenu: () => {
@@ -54,6 +54,8 @@ export struct AppBubble {
         }
       })
     }
+    .alignItems(HorizontalAlign.Center)
+    .justifyContent(FlexAlign.Center)
     .width(StyleConstants.CONTEXT_MENU_WIDTH)
     .borderRadius(StyleConstants.DEFAULT_12)
   }

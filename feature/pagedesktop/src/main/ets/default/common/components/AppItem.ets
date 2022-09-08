@@ -154,76 +154,68 @@ export default struct AppItem {
   }
 
   build() {
-    Flex({
-      direction: FlexDirection.Column,
-      alignItems: ItemAlign.Center,
-      justifyContent: FlexAlign.SpaceAround
-    }) {
-      Column() {
-        AppBubble({
-          iconSize: this.mIconSize,
-          nameSize: this.mAppNameSize,
-          nameHeight: this.mAppNameHeight,
-          nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
-          appName: this.item.appName,
-          bundleName: this.item.bundleName,
-          abilityName: this.item.abilityName,
-          moduleName: this.item.moduleName,
-          appIconId: this.item.appIconId,
-          appLabelId: this.item.appLabelId,
-          badgeNumber: this.item.badgeNumber,
-          isSelect: this.selectDesktopAppItem == this.item.keyName,
-          menuInfo:this.mPageDesktopViewModel.buildMenuInfoList(this.item,
-            this.dialogController, this.formManagerDialogController, null, () => this.setStartAppInfo()),
-          mPaddingTop: this.mMarginVertical,
-          nameLines: this.mNameLines,
-          mIconNameMargin: this.mIconNameMargin,
-          dragStart: this.dragStart.bind(this)
-        })
-      }
-      .visibility(this.dragItemType === CommonConstants.DRAG_FROM_DESKTOP && this.pageDesktopDragItemInfo.keyName === this.item.keyName ?
-        Visibility.None : Visibility.Visible)
-      .onMouse((event: MouseEvent) => {
-        if (event.button == MouseButton.Right) {
-          event.stopPropagation();
-          Log.showInfo(TAG, 'onMouse mouse button right');
-          AppStorage.SetOrCreate('selectDesktopAppItem', this.item.keyName);
-        }
-      })
-      .onClick((event) => {
-        Log.showInfo(TAG, `tap action ${JSON.stringify(event)}`);
-        if (event.source == SourceType.Mouse) {
-          this.mouseClick++;
-          if (this.mouseClick == DOUBLE_CLICK_COUNT) {
-            Log.showInfo(TAG, 'mouse double click');
-            this.mouseClick = 0;
-            this.launchApp();
-          } else {
-            this.setStartAppInfo();
-            this.mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
-            setTimeout(() => {
-              this.mouseClick = 0;
-            }, 300)
-          }
-        } else {
-          Log.showInfo(TAG, 'tap click');
-          this.launchApp();
-        }
-      })
-      .onTouch((event: TouchEvent) => {
-        Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].screenX}, y: ${event.touches[0].screenY}`);
-        if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {
-          let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
-          Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
-          if (!mIsDragEffectArea) {
-            globalThis.PageDesktopDragHandler.deleteBlankPageOutsideEffect();
-            this.pageDesktopDragItemInfo = {};
-            AppStorage.SetOrCreate('selectAppIndex', null);
-            AppStorage.SetOrCreate('isDrag', false);
-          }
-        }
+    Column() {
+      AppBubble({
+        iconSize: this.mIconSize,
+        nameSize: this.mAppNameSize,
+        nameHeight: this.mAppNameHeight,
+        nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
+        appName: this.item.appName,
+        bundleName: this.item.bundleName,
+        abilityName: this.item.abilityName,
+        moduleName: this.item.moduleName,
+        appIconId: this.item.appIconId,
+        appLabelId: this.item.appLabelId,
+        badgeNumber: this.item.badgeNumber,
+        isSelect: this.selectDesktopAppItem == this.item.keyName,
+        menuInfo:this.mPageDesktopViewModel.buildMenuInfoList(this.item,
+          this.dialogController, this.formManagerDialogController),
+        mPaddingTop: this.mMarginVertical,
+        nameLines: this.mNameLines,
+        mIconNameMargin: this.mIconNameMargin,
+        dragStart: this.dragStart.bind(this)
       })
     }
+    .visibility(this.dragItemType === CommonConstants.DRAG_FROM_DESKTOP && this.pageDesktopDragItemInfo.keyName === this.item.keyName ?
+      Visibility.None : Visibility.Visible)
+    .onMouse((event: MouseEvent) => {
+      if (event.button == MouseButton.Right) {
+        event.stopPropagation();
+        Log.showInfo(TAG, 'onMouse mouse button right');
+        AppStorage.SetOrCreate('selectDesktopAppItem', this.item.keyName);
+      }
+    })
+    .onClick((event) => {
+      Log.showInfo(TAG, `tap action ${JSON.stringify(event)}`);
+      if (event.source == SourceType.Mouse) {
+        this.mouseClick++;
+        if (this.mouseClick == DOUBLE_CLICK_COUNT) {
+          Log.showInfo(TAG, 'mouse double click');
+          this.mouseClick = 0;
+          this.launchApp();
+        } else {
+          this.mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+          setTimeout(() => {
+            this.mouseClick = 0;
+          }, 300)
+        }
+      } else {
+        Log.showInfo(TAG, 'tap click');
+        this.launchApp();
+      }
+    })
+    .onTouch((event: TouchEvent) => {
+      Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].screenX}, y: ${event.touches[0].screenY}`);
+      if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {
+        let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
+        Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
+        if (!mIsDragEffectArea) {
+          this.pageDesktopDragItemInfo = {};
+          AppStorage.SetOrCreate('selectAppIndex', null);
+          AppStorage.SetOrCreate('isDrag', false);
+        }
+      }
+    })
     .width(this.mAppItemWidth)
     .height(this.mAppItemWidth)
   }

@@ -76,7 +76,7 @@ export class PageDesktopAppModeConfig extends ILayoutConfig {
     this.mAppListInfo = appListInfo;
     super.persistConfig();
     globalThis.RdbStoreManagerInstance.insertDesktopApplication(appListInfo).then((result) => {
-      Log.showInfo(TAG, 'updateAppListInfo success.');
+      Log.showDebug(TAG, 'updateAppListInfo success.');
     }).catch((err) => {
       Log.showError(TAG, `updateAppListInfo error: ${err.toString()}`);
     });
@@ -98,7 +98,7 @@ export class PageDesktopAppModeConfig extends ILayoutConfig {
     let defaultConfig = super.loadPersistConfig();
     globalThis.RdbStoreManagerInstance.queryDesktopApplication()
       .then((config) => {
-        Log.showInfo(TAG, 'loadPersistConfig configFromRdb success.');
+        Log.showDebug(TAG, 'loadPersistConfig configFromRdb success.');
         this.mAppListInfo = config;
     }).catch((err) => {
       Log.showError(TAG, `loadPersistConfig configFromRdb err: ${err.toString()}`);

@@ -212,7 +212,7 @@ struct AppItem {
   }
 
   @Builder MenuBuilder() {
-    Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
+    Column() {
       AppMenu({
         menuInfoList: this.menuInfo,
         closeMenu: () => {
@@ -220,6 +220,8 @@ struct AppItem {
         }
       })
     }
+    .alignItems(HorizontalAlign.Center)
+    .justifyContent(FlexAlign.Center)
     .width(StyleConstants.CONTEXT_MENU_WIDTH)
     .height(StyleConstants.DEFAULT_40 * this.menuInfo.length + StyleConstants.DEFAULT_8)
   }

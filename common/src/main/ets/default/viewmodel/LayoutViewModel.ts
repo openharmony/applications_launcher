@@ -51,7 +51,6 @@ export class LayoutViewModel {
   private mCommonDialogWidth = '';
 
   private constructor() {
-    Log.showInfo(TAG, 'constructor');
     this.mLauncherLayoutStyleConfig = layoutConfigManager.getStyleConfig(
       LauncherLayoutStyleConfig.LAUNCHER_COMMON_STYLE_CONFIG, LauncherLayoutStyleConfig.LAUNCHER_PRODUCT_STYLE_CONFIG);
   }
@@ -62,7 +61,6 @@ export class LayoutViewModel {
     * @return LayoutViewModel
    */
   static getInstance(): LayoutViewModel {
-    Log.showInfo(TAG, 'getInstance');
     if (globalThis.LayoutViewModelInstance == null) {
       globalThis.LayoutViewModelInstance = new LayoutViewModel();
       globalThis.LayoutViewModelInstance.initScreen();
@@ -78,10 +76,9 @@ export class LayoutViewModel {
   initScreen(navigationBarStatus?: string): void {
     this.mScreenWidth = AppStorage.Get('screenWidth');
     this.mScreenHeight = AppStorage.Get('screenHeight');
-    Log.showInfo(TAG, `initScreen screenWidth: ${this.mScreenWidth}, screenHeight: ${this.mScreenHeight}`);
+    Log.showDebug(TAG, `initScreen screenWidth: ${this.mScreenWidth}, screenHeight: ${this.mScreenHeight}`);
     this.mSysUITopHeight = this.mLauncherLayoutStyleConfig.mSysTopHeight;
     this.mNavigationBarStatus = navigationBarStatus === '0' ? true : false;
-    Log.showInfo(TAG, `initScreen navigationBarStatus: ${this.mNavigationBarStatus}`);
 
     if (!this.mNavigationBarStatus) {
       if (this.mScreenWidth > this.mScreenHeight) {
@@ -94,7 +91,7 @@ export class LayoutViewModel {
     }
     AppStorage.SetOrCreate('sysUIBottomHeight', this.mSysUIBottomHeight);
     this.mIndicatorHeight = this.mLauncherLayoutStyleConfig.mIndicatorHeight;
-    Log.showInfo(TAG, `initScreen SysUIBottomHeight: ${this.mSysUIBottomHeight},
+    Log.showDebug(TAG, `initScreen SysUIBottomHeight: ${this.mSysUIBottomHeight},
       IndicatorHeight: ${this.mIndicatorHeight}, SysUITopHeight: ${this.mSysUITopHeight},
       SysUIBottomHeight: ${this.mSysUIBottomHeight}`);
     this.mCommonDialogWidth = this.mLauncherLayoutStyleConfig.mCommonDialogWidth;
@@ -114,7 +111,6 @@ export class LayoutViewModel {
    * get workSpaceHeight
    */
   getWorkSpaceHeight(): number {
-    Log.showInfo(TAG, `getWorkSpaceHeight WorkSpaceHeight: ${this.mWorkSpaceHeight}`);
     return this.mWorkSpaceHeight;
   }
 
@@ -122,7 +118,6 @@ export class LayoutViewModel {
    * get dockHeight
    */
   getDockHeight(): number {
-    Log.showInfo(TAG, `getDockHeight DockHeight: ${this.mDockHeight}`);
     return this.mDockHeight;
   }
 
@@ -137,7 +132,6 @@ export class LayoutViewModel {
    * get indicatorHeight
    */
   getIndicator(): number {
-    Log.showInfo(TAG, `getIndicator IndicatorHeight: ${this.mIndicatorHeight}`);
     return this.mIndicatorHeight;
   }
 
@@ -145,17 +139,16 @@ export class LayoutViewModel {
    * calculate dock
    */
   calculateDock(): any {
+    Log.showInfo(TAG, 'calculateDock start');
     let margin = this.mLauncherLayoutStyleConfig.mDockSaveMargin;
     let dockGap = this.mLauncherLayoutStyleConfig.mDockGutter;
     let iconSize = this.mLauncherLayoutStyleConfig.mDockIconSize;
     let listItemGap = this.mLauncherLayoutStyleConfig.mDockItemGap;
     let dockPadding = this.mLauncherLayoutStyleConfig.mDockPadding;
-    Log.showInfo(TAG, `calculateDock navigationBarStatus: ${this.mNavigationBarStatus}`);
     let marginBottom = this.mLauncherLayoutStyleConfig.mDockMarginBottomHideBar;
     if (!this.mNavigationBarStatus) {
       marginBottom = this.mLauncherLayoutStyleConfig.mDockMarginBottom;
     }
-    Log.showInfo(TAG, `calculateDock iconSize ${iconSize}`);
     let maxDockNum = 0;
     let dockSpaceWidth = this.mScreenWidth - 2 * margin;
     let maxRecentNum = 3;
@@ -168,7 +161,6 @@ export class LayoutViewModel {
     }
     this.mDockHeight = iconSize + 2 * dockPadding + marginBottom;
     this.mWorkSpaceHeight = this.mScreenHeight - this.mSysUIBottomHeight - this.mDockHeight;
-    Log.showInfo(TAG, `calculateDock DockHeight: ${this.mDockHeight}`);
     let result = {
       mDockGap: dockGap,
       mIconSize: iconSize,
@@ -188,14 +180,13 @@ export class LayoutViewModel {
    * calculate desktop
    */
   calculateDesktop(): any {
-    Log.showDebug(TAG, 'calculateDesktop');
+    Log.showInfo(TAG, 'calculateDesktop start');
     let margin = this.mLauncherLayoutStyleConfig.mMargin;
     let realWidth = this.mScreenWidth - 2 * margin;
     let realHeight = this.mWorkSpaceHeight - this.mIndicatorHeight - this.mSysUITopHeight;
     if (this.mNavigationBarStatus) {
       realHeight = realHeight - this.mLauncherLayoutStyleConfig.mSysBottomHeight;
     }
-    Log.showInfo(TAG, `calculateDesktop realHeight: ${realHeight}`);
     let itemSize = this.mLauncherLayoutStyleConfig.mAppItemSize;
     let minGutter = this.mLauncherLayoutStyleConfig.mGridGutter;
     let column = ~~((realWidth + minGutter) / (itemSize + minGutter));
@@ -203,7 +194,6 @@ export class LayoutViewModel {
     let gutter = (userWidth / (column - 1)) + minGutter;
     let row = ~~((realHeight + gutter) / (itemSize + gutter));
     let marginTop = ((realHeight + gutter - (itemSize + gutter) * row) / 2);
-    Log.showInfo(TAG, `calculateDesktop gutter: ${gutter}, marginTop: ${marginTop}`);
     if (!this.mIsPad) {
         if (row > 6) {
             row = 6;
@@ -215,9 +205,7 @@ export class LayoutViewModel {
         let remainHeight = (realHeight + gutter - (itemSize + gutter) * row)
         realHeight -= remainHeight
         marginTop = remainHeight / 2 + this.mSysUITopHeight
-        Log.showInfo(TAG, `realHeight = ${realHeight} marginTop = ${marginTop}`)
     }
-    Log.showInfo(TAG, `desktop marginTop ${marginTop}`);
     //set desktop icon
     let ratio = this.mLauncherLayoutStyleConfig.mIconRatio;
     let lines = this.mLauncherLayoutStyleConfig.mNameLines;
@@ -227,8 +215,6 @@ export class LayoutViewModel {
     let iconMarginVertical = ratio * itemSize;
     let iconHeight = itemSize - 2 * iconMarginVertical - nameHeight - iconNameMargin;
     let iconMarginHorizontal = (itemSize - iconHeight) / 2;
-    Log.showInfo(TAG, `calculateDesktop iconMarginVertical: ${iconMarginVertical},
-      iconHeight: ${iconHeight}, iconMarginHorizontal: ${iconMarginHorizontal}`);
     this.updateGrid(row, column);
 
     this.mDesktopGap = gutter;
@@ -269,19 +255,17 @@ export class LayoutViewModel {
    * @param layoutInfo folder layoutInfo
    */
   calculateFolder(layoutInfo: any): any {
+    Log.showInfo(TAG, 'calculateFolder start');
     let itemSize = this.mLauncherLayoutStyleConfig.mAppItemSize;
     let gap = this.mDesktopGap;
     let iconMargin = this.mDesktopIconMarginLeft;
     let gridColumn = SettingsModel.getInstance().getGridConfig().row;
-    Log.showInfo(TAG, `calculateFolder itemSize ${itemSize} gridColumn ${gridColumn}`);
     let folderSize = this.mGridRealHeight / gridColumn + itemSize - iconMargin * 2;
     let folderGutter = this.mLauncherLayoutStyleConfig.mFolderGutterRatio * folderSize;
     let folderMargin = this.mLauncherLayoutStyleConfig.mFolderMarginRatio * folderSize;
 
     let column = layoutInfo.column;
     let iconSize = (folderSize - folderGutter * 2 - folderMargin * 2) / column;
-    Log.showInfo(TAG, `calculateFolder folderSize: ${folderSize}, folderGutter: ${folderGutter},
-      folderMargin: ${folderMargin}, iconSize: ${iconSize}`);
     let nameHeight = this.mDesktopNameHeight;
     let nameLines = this.mDesktopNameLines;
     let iconNameMargin = this.mDesktopIconNameMargin;
@@ -305,6 +289,7 @@ export class LayoutViewModel {
    * @param openFolderConfig layoutInfo
    */
   calculateOpenFolder(openFolderConfig: any): any {
+    Log.showInfo(TAG, 'calculateOpenFolder start');
     let row = openFolderConfig.row;
     let column = openFolderConfig.column;
     let gutter = this.mLauncherLayoutStyleConfig.mFolderOpenGutter;
@@ -341,6 +326,7 @@ export class LayoutViewModel {
    * @param addFolderConfig
    */
   calculateFolderAddList(addFolderConfig: any): any {
+    Log.showInfo(TAG, 'calculateFolderAddList start');
     let column: number = addFolderConfig.column;
     let margin: number = this.mLauncherLayoutStyleConfig.mFolderAddGridMargin;
     let saveMargin: number = PresetStyleConstants.DEFAULT_SCREEN_GRID_GAP_AND_MARGIN;
@@ -368,8 +354,6 @@ export class LayoutViewModel {
     StyleConstants.DEFAULT_BUTTON_HEIGHT_NUMBER +
     StyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN_NUMBER;
     let iconSize = (1 - 2 * ratio) * itemSize - linesHeight - this.mDesktopIconNameMargin;
-    Log.showInfo(TAG, `calculateFolderAddList layoutWidth: ${layoutWidth}, itemSize: ${itemSize},
-      layoutHeight: ${layoutHeight}, iconSize: ${iconSize}, maxHeight: ${maxHeight}`);
 
     let result = {
       mAddFolderGridWidth: gridSize,
@@ -396,6 +380,7 @@ export class LayoutViewModel {
    * calculate card form
    */
   calculateForm(): any {
+    Log.showInfo(TAG, 'calculateForm start');
     let iconSize = this.mDesktopIconSize;
     let folderSize = this.mDesktopFolderSize;
     let itemSize = this.mDesktopItemSize;
@@ -430,6 +415,7 @@ export class LayoutViewModel {
    * calculate app center
    */
   calculateAppCenter(): any {
+    Log.showInfo(TAG, 'calculateAppCenter start');
     let appCenterMarginLeft: number = this.mLauncherLayoutStyleConfig.mAppCenterMarginLeft;
     let saveMargin: number = this.mLauncherLayoutStyleConfig.mAppCenterMargin;
     let gutter: number = this.mLauncherLayoutStyleConfig.mAppCenterGutter;
@@ -471,7 +457,7 @@ export class LayoutViewModel {
    * @param {number} column column of grid
    */
   private updateGrid(row: number, column: number): void {
-    Log.showDebug(TAG, `updateGrid row ${row} column ${column}`);
+    Log.showInfo(TAG, `updateGrid row ${row} column ${column}`);
     let settingsModel = SettingsModel.getInstance();
     let gridConfig = settingsModel.getGridConfig();
     gridConfig.row = row;

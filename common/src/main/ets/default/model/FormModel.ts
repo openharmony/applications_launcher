@@ -35,7 +35,6 @@ export class FormModel {
   private readonly mAppItemFormInfoMap = new Map<string, CardItemInfo[]>();
 
   private constructor() {
-    Log.showInfo(TAG, 'constructor start');
     this.mRdbStoreManager = RdbStoreManager.getInstance();
     this.mFormManager = FormManager.getInstance();
     this.mFormListInfoCacheManager = FormListInfoCacheManager.getInstance();
@@ -59,7 +58,7 @@ export class FormModel {
    * @return {array} allFormList
    */
   async getAllFormsInfo() {
-    Log.showInfo(TAG, 'getAllFormsInfo start');
+    Log.showDebug(TAG, 'getAllFormsInfo start');
     const allFormList = await this.mFormManager.getAllFormsInfo();
     return allFormList;
   }
@@ -73,11 +72,10 @@ export class FormModel {
    * @return {array} currentBundleFormsInfo
    */
   async getFormsInfoByBundleName(bundleName: string, callback?) {
-    Log.showInfo(TAG, `getFormsInfoByBundleName bundleName: ${bundleName}`);
+    Log.showDebug(TAG, `getFormsInfoByBundleName bundleName: ${bundleName}`);
     let currentBundleFormsInfo: any;
     await this.mFormManager.getFormsInfoByApp(bundleName)
       .then(bundleFormsInfo => {
-        Log.showInfo(TAG, `getFormsInfoByBundleName bundleFormsInfo: ${JSON.stringify(bundleFormsInfo)}`);
         currentBundleFormsInfo = bundleFormsInfo;
         if (callback != undefined) {
           callback(bundleName, bundleFormsInfo);
@@ -99,7 +97,7 @@ export class FormModel {
    * @return {array} currentModuleFormsInfo
    */
   async getFormsInfoByModuleName(bundleName: string, moduleName: string) {
-    Log.showInfo(TAG, `getFormsInfoByModuleName bundleName: ${bundleName}, moduleName: ${moduleName}`);
+    Log.showDebug(TAG, `getFormsInfoByModuleName bundleName: ${bundleName}, moduleName: ${moduleName}`);
     const currentModuleFormsInfo = await this.mFormManager.getFormsInfoByModule(bundleName, moduleName);
     return currentModuleFormsInfo;
   }
@@ -110,7 +108,7 @@ export class FormModel {
    * @return {array} allFormList
    */
   async getAllFormsInfoFromRdb() {
-    Log.showInfo(TAG, 'getAllFormsInfoFromRdb start');
+    Log.showDebug(TAG, 'getAllFormsInfoFromRdb start');
     const allFormList = await this.mRdbStoreManager.getAllFormInfos();
     return allFormList;
   }
@@ -170,7 +168,7 @@ export class FormModel {
    * @return {array | undefined} mAppItemFormInfoMap
    */
   getAppItemFormInfo(bundleName: string): CardItemInfo[] | undefined {
-    Log.showInfo(TAG, `getAppItemFormInfo bundleName: ${bundleName},
+    Log.showDebug(TAG, `getAppItemFormInfo bundleName: ${bundleName},
       appItemFormInfo: ${JSON.stringify(this.mAppItemFormInfoMap.get(bundleName))}`);
     return this.mAppItemFormInfoMap.get(bundleName);
   }

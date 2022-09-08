@@ -80,7 +80,7 @@ export default class FileUtils {
     try {
       writeStreamSync = Fileio.createStreamSync(filePath, 'w+');
       let number = writeStreamSync.writeSync(str);
-      Log.showInfo(TAG, 'writeStringToFile number: ' + number);
+      Log.showDebug(TAG, 'writeStringToFile number: ' + number);
     } catch (e) {
       Log.showError(TAG, `writeStringToFile error: ${e.toString()}`);
     } finally {

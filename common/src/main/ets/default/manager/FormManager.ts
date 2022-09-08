@@ -87,7 +87,7 @@ export class FormManager {
    * @param bundle
    */
   async getFormsInfoByApp(bundle: string): Promise<CardItemInfo[]> {
-    Log.showInfo(TAG, `getFormsInfoByApp bundle: ${bundle}`);
+    Log.showDebug(TAG, `getFormsInfoByApp bundle: ${bundle}`);
     const formList = await formManagerAbility.getFormsInfo(bundle);
     const cardItemInfoList = new Array<CardItemInfo>();
     for (const formItem of formList) {
@@ -113,7 +113,7 @@ export class FormManager {
    * @return formCardItem
    */
   async getFormCardItemByWant(params) {
-    Log.showInfo(TAG, 'getFormCardItemByWant');
+    Log.showDebug(TAG, 'getFormCardItemByWant');
     let formCardItem: any = {};
     formCardItem.id = params[FormConstants.ID_PARAM];
     formCardItem.name = params[FormConstants.NAME_PARAM];

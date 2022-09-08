@@ -110,7 +110,6 @@ export default struct SwiperPage {
   }
 
   private buildLog(item): boolean {
-    Log.showInfo(TAG, `build item bundleName: ${item.bundleName}`);
     return true;
   }
 

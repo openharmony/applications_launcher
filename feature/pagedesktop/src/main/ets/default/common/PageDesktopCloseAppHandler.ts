@@ -46,10 +46,8 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
     }
 
     static getInstance(): PageDesktopCloseAppHandler {
-        Log.showInfo(TAG, `PageDesktopCloseAppHandler getInstance called!`);
         if (globalThis.PageDesktopCloseAppHandler == null) {
             globalThis.PageDesktopCloseAppHandler = new PageDesktopCloseAppHandler();
-            Log.showInfo(TAG, `PageDesktopCloseAppHandler getInstance constructor`);
         }
         return globalThis.PageDesktopCloseAppHandler;
     }
@@ -60,12 +58,11 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
      * @param windowTarget close window target
      */
     public getAppIconInfo(windowTarget): void {
-        Log.showInfo(TAG, `getAppIconInfo called and windowTarget is ${JSON.stringify(windowTarget)}`);
+        Log.showDebug(TAG, `getAppIconInfo called and windowTarget is ${JSON.stringify(windowTarget)}`);
         this.mAppItemBundleName = windowTarget.bundleName;
         //        this.setAppIconInfo();
         this.calculateAppIconPosition();
         if (this.mFindPagedesktopPosition) {
-            Log.showInfo(TAG, `getAppIconInfo appIconSize is ${this.mAppIconSize} appIconHeight is ${this.mAppIconHeight}`);
             let appCloseIconInfo = {
                 appIconSize: this.mCloseAppType ? StyleConstants.DEFAULT_ADD_APP_SIZE : StyleConstants.DEFAULT_FOLDER_APP_SIZE,
                 appIconHeight: this.mCloseAppType ? StyleConstants.DEFAULT_ADD_APP_SIZE : StyleConstants.DEFAULT_FOLDER_APP_SIZE,
@@ -74,10 +71,8 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
             };
             let appItem: any = this.getCloseAppItemInfo();
             CloseAppManager.getInstance().addPagedesktopClosePosition(appCloseIconInfo, appItem);
-            Log.showInfo(TAG, `getAppIconInfo addPagedesktopClosePosition ${JSON.stringify(appCloseIconInfo)}`);
         } else {
             CloseAppManager.getInstance().addPagedesktopClosePosition(null);
-            Log.showError(TAG, `getAppIconInfo addPagedesktopClosePosition null`);
         }
     }
 
@@ -134,7 +129,7 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
             } else {
                 column = folderColumn;
             }
-            Log.showInfo(TAG, `calculateAppIconPosition index ${index} row ${row} column ${column}`);
+            Log.showDebug(TAG, `calculateAppIconPosition index ${index} row ${row} column ${column}`);
             this.mAppIconPositionY = this.mPageDesktopStyleConfig.mDesktopMarginTop + folderItem.row * (gridItemHeight) + this.mPageDesktopStyleConfig.mPaddingTop
             + this.mPageDesktopStyleConfig.mIconMarginVertical + folderTopPadding + (row - 1) * (folderGridGap + folderAppSize);
 
@@ -166,12 +161,11 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
     }
 
     private getCloseAppItemInfo(): any {
-        Log.showInfo(TAG, `getCloseAppItemInfo called!`);
+        Log.showDebug(TAG, `getCloseAppItemInfo called!`);
         let appListInfo: {
             appGridInfo: [[]]
         } = AppStorage.Get('appListInfo')
         let appGridInfo = appListInfo.appGridInfo;
-        Log.showInfo(TAG, `getCloseAppItemInfo--appGridInfo=${JSON.stringify(appGridInfo)}`)
         if (CheckEmptyUtils.isEmptyArr(appGridInfo)) {
             Log.showError(TAG, `getCloseAppItemInfo appGridInfo is null`);
             return null;
@@ -190,7 +184,7 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
                                 }
                                 break;
                             case CommonConstants.TYPE_FOLDER:
-                                Log.showInfo(TAG, `getCloseAppItemInfo foldItem case ${item.layoutInfo}`);
+                                Log.showDebug(TAG, `getCloseAppItemInfo foldItem case ${item.layoutInfo}`);
                                 let foldItem = this.getFolderItem(item.layoutInfo);
                                 if (CheckEmptyUtils.isEmpty(foldItem)) {
                                     Log.showError(TAG, `getCloseAppItemInfo foldItem is null`);

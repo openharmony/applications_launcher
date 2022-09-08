@@ -159,7 +159,7 @@ struct EntryView {
     AppStorage.SetOrCreate('workSpaceWidth', this.workSpaceWidth);
     AppStorage.SetOrCreate('workSpaceHeight', this.workSpaceHeight);
     AppStorage.SetOrCreate('dockHeight', this.dockHeight);
-    Log.showInfo(TAG, `updateScreenSize product: ${this.deviceType}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}, workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
+    Log.showDebug(TAG, `updateScreenSize product: ${this.deviceType}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}, workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
   }
 
   aboutToDisappear(): void {
@@ -193,10 +193,10 @@ struct EntryView {
       }
       Column() {
         Column() {
-          Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-            PageDesktopLayout();
-          }
+          PageDesktopLayout();
         }
+        .alignItems(HorizontalAlign.Center)
+        .justifyContent(FlexAlign.Center)
         .height(this.workSpaceHeight)
 
         Column() {

@@ -69,8 +69,6 @@ export class AppModel {
       return this.mBundleInfoList;
     }
     const bundleInfoList: AppItemInfo[] = await this.getAppListAsync();
-
-    Log.showInfo(TAG, `getAppList bundleInfoList length: ${this.mBundleInfoList.length}`);
     return bundleInfoList;
   }
 
@@ -81,7 +79,7 @@ export class AppModel {
    */
   async getAppListAsync(): Promise<AppItemInfo[]> {
     let allAbilityList: AppItemInfo[] = await launcherAbilityManager.getLauncherAbilityList();
-    Log.showInfo(TAG, `getAppListAsync allAbilityList length: ${allAbilityList.length}`);
+    Log.showInfo(TAG, `getAppListAsync--->allAbilityList length: ${allAbilityList.length}`);
     let launcherAbilityList: AppItemInfo[] = [];
     for (let i in allAbilityList) {
       if (this.mSystemApplicationName.indexOf(allAbilityList[i].bundleName) === CommonConstants.INVALID_VALUE) {
@@ -91,7 +89,7 @@ export class AppModel {
       }
     }
     this.mBundleInfoList = launcherAbilityList;
-    Log.showInfo(TAG, `getAppListAsync launcherAbiltyList length: ${launcherAbilityList.length}`);
+    Log.showInfo(TAG, `getAppListAsync--->allAbilityList length after filtration: ${launcherAbilityList.length}`);
     return launcherAbilityList;
   }
 
@@ -145,6 +143,7 @@ export class AppModel {
    */
   private async installationSubscriberCallBack(event, bundleName, userId) {
     Log.showInfo(TAG, `installationSubscriberCallBack event: ${event}`);
+    this.closePopup();
     this.updateShortcutInfo(bundleName, event);
     this.mFormModel.updateAppItemFormInfo(bundleName, event);
     if (event === EventConstants.EVENT_PACKAGE_REMOVED) {
@@ -171,7 +170,7 @@ export class AppModel {
       });
     } else {
       const abilityInfos = await launcherAbilityManager.getLauncherAbilityInfo(bundleName);
-      Log.showInfo(TAG, `installationSubscriberCallBack abilityInfos: ${JSON.stringify(abilityInfos)}`);
+      Log.showDebug(TAG, `installationSubscriberCallBack abilityInfos: ${JSON.stringify(abilityInfos)}`);
       if (!CheckEmptyUtils.isEmptyArr(abilityInfos)){
         this.replaceItem(bundleName, abilityInfos);
       }
@@ -226,7 +225,7 @@ export class AppModel {
    * @param {string} bundleName
    */
   private removeItem(bundleName: string): void {
-    Log.showInfo(TAG, `removeItem bundleName: ${bundleName}`);
+    Log.showDebug(TAG, `removeItem bundleName: ${bundleName}`);
     let originItemIndex = this.getItemIndex(bundleName);
     while (originItemIndex != CommonConstants.INVALID_VALUE) {
       this.removeItemCache(this.mBundleInfoList[originItemIndex]);
@@ -241,7 +240,7 @@ export class AppModel {
  * @param {string} bundleName
  */
   private removeItemCache(appItemInfo: AppItemInfo): void {
-    Log.showInfo(TAG, `removeItemCache bundleName: ${(appItemInfo.bundleName)}`);
+    Log.showDebug(TAG, `removeItemCache bundleName: ${(appItemInfo.bundleName)}`);
     let cacheKey = appItemInfo.appLabelId + appItemInfo.bundleName + appItemInfo.moduleName;
     globalThis.ResourceManager.deleteAppResourceCache(cacheKey, 'name');
     cacheKey = appItemInfo.appIconId + appItemInfo.bundleName + appItemInfo.moduleName;
@@ -277,8 +276,6 @@ export class AppModel {
    * @return {array | undefined} shortcutInfo
    */
   getShortcutInfo(bundleName: string): ShortcutInfo[] | undefined {
-    Log.showInfo(TAG, `getShortcutInfo bundleName: ${bundleName},
-      shortcutInfo: ${JSON.stringify(this.mShortcutInfoMap.get(bundleName))}`);
     return this.mShortcutInfoMap.get(bundleName);
   }
 

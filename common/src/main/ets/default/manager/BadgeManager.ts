@@ -73,7 +73,7 @@ export class BadgeManager {
   }
 
   async updateBadgeNumber(bundleName: string, badgeNum: number): Promise<boolean> {
-    Log.showInfo(TAG, `updateBadgeNumber, bundleName:${bundleName}, badgeNum:${badgeNum}`);
+    Log.showDebug(TAG, `updateBadgeNumber, bundleName:${bundleName}, badgeNum:${badgeNum}`);
     let result = false;
     if (badgeNum < 0 || this.ifStringIsNull(bundleName)) {
       return result;
@@ -104,7 +104,7 @@ export class BadgeManager {
   }
 
   private async appRemovedCallBack(event, bundleName: string, userId): Promise<void> {
-    Log.showInfo(TAG, 'Launcher AppModel installationSubscriberCallBack event = ' + event);
+    Log.showDebug(TAG, 'Launcher AppModel installationSubscriberCallBack event = ' + event);
     if (event == EventConstants.EVENT_PACKAGE_REMOVED) {
       this.mDbStoreManager.deleteBadgeByBundle(bundleName);
     }

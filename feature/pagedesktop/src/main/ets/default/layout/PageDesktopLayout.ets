@@ -76,13 +76,13 @@ export struct PageDesktopLayout {
   private updateStyle() {
     mPageDesktopViewModel.setDevice(this.deviceType);
     this.isPad = mPageDesktopViewModel.getDevice();
-    Log.showInfo(TAG, `updateStyle isPad: ${this.isPad}`);
+    Log.showDebug(TAG, `updateStyle isPad: ${this.isPad}`);
   }
 
   private updateDeskTopParams() {
     this.mMargin = mPageDesktopViewModel.getPageDesktopStyleConfig().mMargin;
     this.mTop = mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop;
-    Log.showInfo(TAG, `updateDeskTopParams mMargin: ${this.mMargin}, this.mTop: ${this.mTop}`);
+    Log.showDebug(TAG, `updateDeskTopParams mMargin: ${this.mMargin}, this.mTop: ${this.mTop}`);
     if (this.mPageDesktopDragHandler != null) {
       this.mPageDesktopDragHandler.setDragEffectArea({
         left: this.mMargin,
@@ -94,12 +94,12 @@ export struct PageDesktopLayout {
   }
 
   private changeGridConfig(): void {
-    Log.showInfo(TAG, `changeGridConfig GridConfig: ${this.gridConfig}`);
+    Log.showDebug(TAG, `changeGridConfig GridConfig: ${this.gridConfig}`);
     this.updateDeskTopParams();
   }
 
   private buildLog(): boolean {
-    Log.showInfo(TAG, 'build start');
+    Log.showDebug(TAG, 'build start');
     return true;
   }
 

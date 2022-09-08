@@ -32,9 +32,7 @@ export class GestureNavigationManager {
 
   private constructor() {
     this.uri = settingsDataManager.getUri(CommonConstants.NAVIGATION_BAR_STATUS_KEY);
-    Log.showDebug(TAG, `constructor uri:${this.uri}`);
     this.helper = settingsDataManager.getHelper(globalThis.desktopContext, this.uri);
-    Log.showInfo(TAG, `constructor helper:${this.helper}`);
   }
 
   private setValue(value: string) {
@@ -83,7 +81,6 @@ export class GestureNavigationManager {
       const getRetValue = this.getValue();
       this.handleEventSwitches(getRetValue);
       AppStorage.SetOrCreate('NavigationBarStatusValue', getRetValue == '0' ? true : false);
-      Log.showDebug(TAG, `dataChangesCallback getRetValue ${getRetValue}`);
     }
   }
 

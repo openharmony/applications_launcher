@@ -57,11 +57,9 @@ struct RecentView {
   build() {
     Column() {
       if (!Array.isArray(this.recentMissionsList) || this.recentMissionsList.length == 0) {
-        Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-          Text($r('app.string.No_running_apps_recently'))
-            .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)
-            .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE);
-        }
+        Text($r('app.string.No_running_apps_recently'))
+          .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)
+          .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE);
       } else {
         if (this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single') {
           RecentMissionsSingleLayout({ recentMissionsSingleList: $recentMissionsList,
@@ -73,6 +71,8 @@ struct RecentView {
       }
       if (this.traceBuildEnd()) { }
     }
+    .alignItems(HorizontalAlign.Center)
+    .justifyContent(FlexAlign.Center)
     .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
     .height(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
     .backgroundImage(RecentsStyleConstants.DEFAULT_RECENT_BACKGROUND_IMAGE)

@@ -95,7 +95,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
     temp.layoutDescription = gridLayoutInfo.layoutDescription;
     FileUtils.writeStringToFile(JSON.stringify(temp), this.getConfigFileAbsPath());
     globalThis.RdbStoreManagerInstance.insertGridLayoutInfo(gridLayoutInfo).then(() => {
-      Log.showInfo(TAG, 'updateGridLayoutInfo success.');
+      Log.showDebug(TAG, 'updateGridLayoutInfo success.');
     }).catch((err) => {
       Log.showError(TAG, `updateGridLayoutInfo error: ${err.toString()}`);
     });
@@ -114,7 +114,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
    * load configuration
    */
   async loadPersistConfig(): Promise<void> {
-    Log.showError(TAG, `loadPersistConfig start`);
+    Log.showDebug(TAG, `loadPersistConfig start`);
     let defaultConfig = super.loadPersistConfig();
     const configFromFile = FileUtils.readStringFromFile(this.getConfigFileAbsPath());
     if (configFromFile) {

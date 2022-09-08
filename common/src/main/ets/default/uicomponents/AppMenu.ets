@@ -142,10 +142,7 @@ struct HorizontalMenuItem {
   }
 
   build() {
-    Flex({
-      direction: FlexDirection.Row,
-      alignItems: ItemAlign.Center
-    }) {
+    Row() {
       if (this.shortcutIcon != null && this.shortcutIcon != "") {
         Image(this.shortcutIcon)
           .objectFit(ImageFit.Contain)
@@ -173,6 +170,7 @@ struct HorizontalMenuItem {
         })
         .textOverflow({overflow: TextOverflow.Ellipsis})
     }
+    .alignItems(VerticalAlign.Center)
     .borderRadius(StyleConstants.DEFAULT_ITEM_RADIUS)
     .height(StyleConstants.DEFAULT_40)
     .width(235)

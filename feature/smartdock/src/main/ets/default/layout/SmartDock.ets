@@ -126,7 +126,7 @@ export struct SmartDock {
   }
 
   private buildLog(): boolean {
-    Log.showInfo(TAG, 'SmartDock buildLog');
+    Log.showDebug(TAG, 'SmartDock buildLog');
     return true;
   }
 

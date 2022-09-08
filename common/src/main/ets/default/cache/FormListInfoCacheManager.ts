@@ -43,7 +43,7 @@ export class FormListInfoCacheManager {
    * @return {object} - cache get from the memory or disk
    */
   getCache(key: string): any {
-    Log.showInfo(TAG, `getCache key: ${key}`);
+    Log.showDebug(TAG, `getCache key: ${key}`);
     const cache = this.lruCache.getCache(key);
     if (cache == undefined || cache == null || cache == '' || cache == -1) {
       return CommonConstants.INVALID_VALUE;
@@ -59,7 +59,7 @@ export class FormListInfoCacheManager {
    * @param {object} value - value of the cache map
    */
   setCache(key: string, value): void {
-    Log.showInfo(TAG, `setCache key:${key}, value: ${value}`);
+    Log.showDebug(TAG, `setCache key:${key}, value: ${value}`);
     this.lruCache.putCache(key, value);
   }
 
@@ -67,7 +67,7 @@ export class FormListInfoCacheManager {
    * Clear cache of both disk and memory.
    */
   clearCache(): void {
-    Log.showInfo(TAG, 'clearCache');
+    Log.showDebug(TAG, 'clearCache');
     this.lruCache.clear();
   }
 }

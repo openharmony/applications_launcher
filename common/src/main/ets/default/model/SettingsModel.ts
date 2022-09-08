@@ -203,7 +203,7 @@ export class SettingsModel {
    * @param {string} deviceType - device type.
    */
   setDevice(deviceType): void {
-    Log.showInfo(TAG, `setDevice ${deviceType}`);
+    Log.showDebug(TAG, `setDevice ${deviceType}`);
     if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
       this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
     } else if (deviceType == CommonConstants.PAD_DEVICE_TYPE) {

@@ -50,11 +50,13 @@ export struct FormItemComponent {
   }
 
   @Builder MenuBuilder() {
-    Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
+    Column() {
       AppMenu({
         menuInfoList: this.menuInfo,
       })
     }
+    .alignItems(HorizontalAlign.Center)
+    .justifyContent(FlexAlign.Center)
     .width(StyleConstants.CONTEXT_MENU_WIDTH)
   }
 

@@ -141,10 +141,10 @@ class WindowManager {
           statusBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR
         }).then(() => {
           win.setBackgroundColor(StyleConstants.DEFAULT_SYSTEM_UI_COLOR, () => {
-            Log.showInfo(TAG, `then begin ${name} window loadContent in then!`);
+            Log.showDebug(TAG, `then begin ${name} window loadContent in then!`);
             if (name !== this.RECENT_WINDOW_NAME) {
               void win.setLayoutFullScreen(true).then(() => {
-                Log.showInfo(TAG, `${name} setLayoutFullScreen`);
+                Log.showDebug(TAG, `${name} setLayoutFullScreen`);
               });
             }
             if (callback) {
@@ -163,7 +163,7 @@ class WindowManager {
   }
 
   createWindowIfAbsent(context: ServiceExtensionContext, name: string, windowType: number, loadContent: string): void {
-    Log.showInfo(TAG, `create, name ${name}`);
+    Log.showDebug(TAG, `create, name ${name}`);
     Window.find(name).then(win => {
       void win.show().then(() => {
         Log.showDebug(TAG, `show launcher ${name}`);
@@ -178,11 +178,11 @@ class WindowManager {
     width: number,
     height: number
   }, callback?: Function): void {
-    Log.showInfo(TAG, `resetSizeWindow, name ${name} rect: ${JSON.stringify(rect)}`);
+    Log.showDebug(TAG, `resetSizeWindow, name ${name} rect: ${JSON.stringify(rect)}`);
     this.findWindow(name, (win) => {
-      Log.showInfo(TAG, `resetSizeWindow, findWindow callback name: ${name}`);
+      Log.showDebug(TAG, `resetSizeWindow, findWindow callback name: ${name}`);
       win.resetSize(rect.width, rect.height).then(() => {
-        Log.showInfo(TAG, `resetSizeWindow, resetSize then name: ${name}`);
+        Log.showDebug(TAG, `resetSizeWindow, resetSize then name: ${name}`);
         if (callback) {
           callback(win);
         }
@@ -191,11 +191,11 @@ class WindowManager {
   }
 
   showWindow(name: string, callback?: Function): void {
-    Log.showInfo(TAG, `showWindow, name ${name}`);
+    Log.showDebug(TAG, `showWindow, name ${name}`);
     this.findWindow(name, (win) => {
-      Log.showInfo(TAG, `showWindow, findWindow callback name: ${name}`);
+      Log.showDebug(TAG, `showWindow, findWindow callback name: ${name}`);
       win.show().then(() => {
-        Log.showInfo(TAG, `showWindow, show then name: ${name}`);
+        Log.showDebug(TAG, `showWindow, show then name: ${name}`);
         if (callback) {
           callback(win);
         }
@@ -204,11 +204,11 @@ class WindowManager {
   }
 
   hideWindow(name: string, callback?: Function): void {
-    Log.showInfo(TAG, `hideWindow, name ${name}`);
+    Log.showDebug(TAG, `hideWindow, name ${name}`);
     this.findWindow(name, (win) => {
-      Log.showInfo(TAG, `hideWindow, findWindow callback name: ${name}`);
+      Log.showDebug(TAG, `hideWindow, findWindow callback name: ${name}`);
       win.hide().then(() => {
-        Log.showInfo(TAG, `hideWindow, hide then name: ${name}`);
+        Log.showDebug(TAG, `hideWindow, hide then name: ${name}`);
         if (callback) {
           callback(win);
         }
@@ -219,18 +219,18 @@ class WindowManager {
   minimizeAllApps(): void {
     display.getDefaultDisplay().then(dis => {
       Window.minimizeAll(dis.id).then(() => {
-        Log.showInfo(TAG, 'Launcher minimizeAll');
+        Log.showDebug(TAG, 'Launcher minimizeAll');
       });
     });
     this.destroyWindow(this.FORM_MANAGER_WINDOW_NAME);
   }
 
   destroyWindow(name: string, callback?: Function): void {
-    Log.showInfo(TAG, `destroyWindow, name ${name}`);
+    Log.showDebug(TAG, `destroyWindow, name ${name}`);
     this.findWindow(name, (win) => {
-      Log.showInfo(TAG, `hideWindow, findWindow callback name: ${name}`);
+      Log.showDebug(TAG, `hideWindow, findWindow callback name: ${name}`);
       win.destroy().then(() => {
-        Log.showInfo(TAG, `destroyWindow, destroy then name: ${name}`);
+        Log.showDebug(TAG, `destroyWindow, destroy then name: ${name}`);
         if (callback) {
           callback(win);
         }
@@ -239,10 +239,10 @@ class WindowManager {
   }
 
   findWindow(name: string, callback?: Function): void {
-    Log.showInfo(TAG, `findWindow, name ${name}`);
+    Log.showDebug(TAG, `findWindow, name ${name}`);
     void Window.find(name)
       .then((win) => {
-        Log.showInfo(TAG, `findWindow, find then name: ${name}`);
+        Log.showDebug(TAG, `findWindow, find then name: ${name}`);
         if (callback) {
           callback(win);
         }
@@ -250,18 +250,18 @@ class WindowManager {
   }
 
   createRecentWindow(mode?: number) {
-    Log.showInfo(TAG, 'createRecentWindow Begin, mode=' + mode);
+    Log.showDebug(TAG, 'createRecentWindow Begin, mode=' + mode);
     let setWinMode = (mode && this.isSplitWindowMode(mode)) ? (win) => {
       globalThis.recentMode = mode;
       win.setWindowMode(mode).then();
     } : (win) => {
       globalThis.recentMode = featureAbility.AbilityWindowConfiguration.WINDOW_MODE_FULLSCREEN;
       win.setFullScreen(true).then(() => {
-        Log.showInfo(TAG, `${this.RECENT_WINDOW_NAME} setFullScreen`);
+        Log.showDebug(TAG, `${this.RECENT_WINDOW_NAME} setFullScreen`);
       });
     };
     let registerWinEvent = (win) => {
-      Log.showInfo(TAG, 'registerWinEvent Begin');
+      Log.showDebug(TAG, 'registerWinEvent Begin');
       win.on('lifeCycleEvent', (stageEventType) => {
         Log.showDebug(TAG,`Recent lifeCycleEvent callback stageEventType=${stageEventType}`);
         if (stageEventType == Window.WindowStageEventType.INACTIVE) {
@@ -276,12 +276,12 @@ class WindowManager {
     Window.find(windowManager.RECENT_WINDOW_NAME).then(win => {
       setWinMode(win);
       void win.show().then(() => {
-        Log.showInfo(TAG, 'show launcher recent ability');
+        Log.showDebug(TAG, 'show launcher recent ability');
       });
     }).catch(error => {
-      Log.showInfo(TAG, `recent window is not created, because ${error}`);
+      Log.showDebug(TAG, `recent window is not created, because ${error}`);
       let callback = (win) => {
-        Log.showInfo(TAG, 'Post recent window created');
+        Log.showDebug(TAG, 'Post recent window created');
         registerWinEvent(win);
         setWinMode(win);
       }
@@ -294,7 +294,7 @@ class WindowManager {
     this.findWindow(windowManager.RECENT_WINDOW_NAME, win => {
       win.off('lifeCycleEvent', (win) => {
         win.destroy().then(() => {
-          Log.showInfo(TAG, 'destroyRecentWindow');
+          Log.showDebug(TAG, 'destroyRecentWindow');
         });
       })
     });
