@@ -292,4 +292,11 @@ export class AppModel {
     }
     launcherAbilityManager.getShortcutInfo(bundleName, this.setShortcutInfo.bind(this));
   }
+
+  /**
+   * Close popup.
+   */
+  private closePopup(): void {
+    ContextMenu.close();
+  }
 }
