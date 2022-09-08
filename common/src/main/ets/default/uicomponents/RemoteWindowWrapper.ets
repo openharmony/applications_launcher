@@ -35,11 +35,17 @@ const TAG = 'RemoteWindowWrapper';
 @Component
 export struct RemoteWindowWrapper {
   @State @Watch('doAnimation') target: windowAnimationManager.WindowAnimationTarget = undefined;
+  @State mFromWindowTarget: windowAnimationManager.WindowAnimationTarget = undefined;
   @State remoteWindowScaleX: number = 1.0;
   @State remoteWindowScaleY: number = 1.0;
   @State remoteWindowTranslateX: number = 0;
   @State remoteWindowTranslateY: number = 0;
   @State remoteWindowWindowAlpha: number = 0.0;
+  @State fromRemoteWindowScaleX: number = 1.0;
+  @State fromRemoteWindowScaleY: number = 1.0;
+  @State fromRemoteWindowTranslateX: number = 0;
+  @State fromRemoteWindowTranslateY: number = 0;
+  @State fromRemoteWindowWindowAlpha: number = 0.0;
   @State startAppIconScaleX: number = 1.0;
   @State startAppIconScaleY: number = 1.0;
   @State startAppIconTranslateX: number = 0;
@@ -119,6 +125,7 @@ export struct RemoteWindowWrapper {
       this.remoteAnimationType = RemoteConstants.TYPE_APP_TRANSITION;
       this.mFinishCallback = finishCallback;
       this.target = toWindowTarget;
+      this.mFromWindowTarget = fromWindowTarget;
     }
 
     control.onMinimizeWindow = (minimizingWindowTarget, finishCallback) => {
@@ -337,11 +344,11 @@ export struct RemoteWindowWrapper {
     Log.showInfo(TAG, `startAppAnimation called!! --- target ${JSON.stringify(this.target)}`);
     this.mStartAppItemInfo = null;
     this.mStartAppItemInfo = AppStorage.Get('startAppItemInfo');
-    this.mScreenWidth = AppStorage.Get('screenWidth');
-    this.mScreenHeight = AppStorage.Get('screenHeight');
+    this.mScreenWidth = px2vp(this.target.windowBounds.width);
+    this.mScreenHeight = px2vp(this.target.windowBounds.height);
     this.startAppTypeFromPageDesktop = AppStorage.Get('startAppTypeFromPageDesktop');
     this.startAppIconInfo = AppStorage.Get('startAppIconInfo');
-    Log.showInfo(TAG, `startAppIconInfo is ${JSON.stringify(this.startAppIconInfo)} , mStartAppItemInfo is ${this.mStartAppItemInfo}`);
+    Log.showInfo(TAG, `startAppIconInfo is ${JSON.stringify(this.startAppIconInfo)} , mStartAppItemInfo is ${JSON.stringify(this.mStartAppItemInfo)}`);
 
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_ANIMATION_START_APPLICATION, null);
     this.calculateStartAppProperty();
@@ -368,14 +375,12 @@ export struct RemoteWindowWrapper {
       this.remoteWindowTranslateY = 0.0;
       this.startAppIconScaleX = this.mScreenWidth / this.startAppIconInfo.appIconSize;
       this.startAppIconTranslateX = this.mScreenWidth / 2 - this.startAppIconInfo.appIconPositionX - this.startAppIconInfo.appIconSize / 2;
-      this.startAppIconScaleY = this.mScreenHeight / this.startAppIconInfo.appIconSize;
-      this.startAppIconTranslateY = this.mScreenHeight / 2 - this.startAppIconInfo.appIconPositionY - this.startAppIconInfo.appIconSize / 2;
       if (this.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
         this.startAppIconScaleY = this.mScreenHeight / this.startAppIconInfo.appIconHeight;
-        this.startAppIconTranslateY = this.mScreenHeight / 2 - this.startAppIconInfo.appIconPositionY - this.startAppIconInfo.appIconHeight / 2;
+        this.startAppIconTranslateY = this.mScreenHeight / 2 + px2vp(this.target.windowBounds.top) - this.startAppIconInfo.appIconPositionY - this.startAppIconInfo.appIconHeight / 2;
       } else {
         this.startAppIconScaleY = this.mScreenHeight / this.startAppIconInfo.appIconSize;
-        this.startAppIconTranslateY = this.mScreenHeight / 2 - this.startAppIconInfo.appIconPositionY - this.startAppIconInfo.appIconSize / 2;
+        this.startAppIconTranslateY = this.mScreenHeight / 2 + px2vp(this.target.windowBounds.top) - this.startAppIconInfo.appIconPositionY - this.startAppIconInfo.appIconSize / 2;
       }
     })
 
