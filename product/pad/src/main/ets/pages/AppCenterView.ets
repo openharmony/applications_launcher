@@ -36,13 +36,13 @@ struct AppCenterView {
   @StorageLink('animationInfo_alpha') mAppAlpha: number = 1.0;
   @StorageLink('animationInfo_scale') mAnimationInfo: {
     appScaleX: number,
-    appScaleY: number
+    appScaleY: number,
   } = {
     appScaleX: 1.0,
-    appScaleY: 1.0
+    appScaleY: 1.0,
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear');
     AppStorage.SetOrCreate('deviceType', this.device);
     this.mLayoutViewModel = LayoutViewModel.getInstance();
@@ -67,7 +67,7 @@ struct AppCenterView {
     this.mAppGridViewModel.unregisterEventListener();
   }
 
-  private async updateScreenSize() {
+  private async updateScreenSize(): Promise<void> {
     this.workSpaceHeight = this.mLayoutViewModel.getWorkSpaceHeight();
     this.dockHeight = this.mLayoutViewModel.getDockHeight();
   }

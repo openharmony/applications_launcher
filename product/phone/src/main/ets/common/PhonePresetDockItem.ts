@@ -21,29 +21,29 @@ const phonePresetDockItem = [
     bundleName: 'com.ohos.contacts',
     abilityName: 'com.ohos.contacts.MainAbility',
     moduleName: 'entry',
-    editable: true
+    editable: true,
   },
   {
     itemType: CommonConstants.TYPE_APP,
     bundleName: 'com.ohos.photos',
     abilityName: 'com.ohos.photos.MainAbility',
     moduleName: 'entry',
-    editable: true
+    editable: true,
   },
   {
     itemType: CommonConstants.TYPE_APP,
     bundleName: 'com.ohos.settings',
     abilityName: 'com.ohos.settings.MainAbility',
     moduleName: 'phone',
-    editable: true
+    editable: true,
   },
   {
     itemType: CommonConstants.TYPE_APP,
     bundleName: 'com.ohos.mms',
     abilityName: 'com.ohos.mms.MainAbility',
     moduleName: 'entry',
-    editable: true
-  }
+    editable: true,
+  },
 ];
 
 export default phonePresetDockItem;

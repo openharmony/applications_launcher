@@ -14,43 +14,39 @@
  */
 
 const padFormLayoutInfo = {
-  formLayoutDimension1X2:
-  {
+  formLayoutDimension1X2: {
     id: 0,
     layout: '1X2',
     name: '1X2',
     row: 1,
     column: 2,
     area: [1, 2],
-    checked: false
+    checked: false,
   },
-  formLayoutDimension2X2:
-  {
+  formLayoutDimension2X2: {
     id: 1,
     layout: '2X2',
     name: '2X2',
     row: 2,
     column: 2,
-    checked: false
+    checked: false,
   },
-  formLayoutDimension2X4:
-  {
+  formLayoutDimension2X4: {
     id: 2,
     layout: '2X4',
     name: '2X4',
     row: 2,
     column: 4,
-    checked: false
+    checked: false,
   },
-  formLayoutDimension4X4:
-  {
+  formLayoutDimension4X4: {
     id: 3,
     layout: '4X4',
     name: '4X4',
     row: 4,
     column: 4,
-    checked: false
-  }
+    checked: false,
+  },
 };
 
 export default padFormLayoutInfo;

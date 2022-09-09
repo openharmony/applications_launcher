@@ -24,6 +24,5 @@ struct EmptyPage {
     Log.showInfo(TAG, 'aboutToAppear');
   }
 
-  build() {
-  }
+  build() {}
 }

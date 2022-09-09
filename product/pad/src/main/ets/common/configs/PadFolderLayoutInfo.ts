@@ -14,34 +14,31 @@
  */
 
 const padFolderLayoutInfo = {
-  folderLayoutTable:
-  {
+  folderLayoutTable: {
     id: 0,
     layout: '3X3',
     name: '3X3',
     row: 3,
     column: 3,
     area: [2, 2],
-    checked: false
+    checked: false,
   },
-  folderOpenLayoutTable:
-  {
+  folderOpenLayoutTable: {
     id: 1,
     layout: '4X4',
     name: '4X4',
     row: 4,
     column: 4,
-    checked: false
+    checked: false,
   },
-  folderAddAppLayoutTable:
-  {
+  folderAddAppLayoutTable: {
     id: 2,
     layout: '6X4',
     name: '6X4',
     row: 6,
     column: 4,
-    checked: false
-  }
+    checked: false,
+  },
 };
 
 export default padFolderLayoutInfo;
