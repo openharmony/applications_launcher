@@ -54,7 +54,7 @@ struct RecentView {
     return true;
   }
 
-  private closeRecentDockPopup() {
+  private closeRecentDockPopup(): void {
     let num: number = AppStorage.Get('sysUiRecentOnClickEvent');
     if (!num) {
       num = 0;
@@ -65,25 +65,26 @@ struct RecentView {
 
   build() {
     Column() {
-      if (!Array.isArray(this.recentMissionsList) || this.recentMissionsList.length == 0) {
+      if (!Array.isArray(this.recentMissionsList) || this.recentMissionsList.length === 0) {
         Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
           Text($r('app.string.No_running_apps_recently'))
             .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)
-            .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE);
+            .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE)
         }
       } else {
         if (this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single') {
           RecentMissionsSingleLayout({
             recentMissionsSingleList: $recentMissionsList,
-            isClickSubComponent: $isClickSubComponent
+            isClickSubComponent: $isClickSubComponent,
           });
         } else {
           RecentMissionsDoubleLayout({
             recentMissionsDoubleList: $recentMissionsList,
-            isClickSubComponent: $isClickSubComponent
+            isClickSubComponent: $isClickSubComponent,
           });
         }
       }
+
       if (this.traceBuildEnd()) {}
     }
     .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)

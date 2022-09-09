@@ -50,7 +50,7 @@ export default class PhonePageDesktopGridStyleConfig extends PageDesktopGridStyl
    * get PhonePageDesktopGridStyleConfig instance
    */
   static getInstance(): PhonePageDesktopGridStyleConfig {
-    if (globalThis.PhonePageDesktopGridStyleConfig == undefined) {
+    if (globalThis.PhonePageDesktopGridStyleConfig === undefined) {
       globalThis.PhonePageDesktopGridStyleConfig  = new PhonePageDesktopGridStyleConfig();
     }
     globalThis.PhonePageDesktopGridStyleConfig.initConfig();

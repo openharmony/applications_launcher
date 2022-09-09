@@ -50,7 +50,7 @@ struct EntryView {
     Log.showInfo(TAG, 'onPageHide');
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear');
     this.mStage.onCreate();
 
@@ -121,7 +121,8 @@ struct EntryView {
     AppStorage.SetOrCreate('workSpaceWidth', this.workSpaceWidth);
     AppStorage.SetOrCreate('workSpaceHeight', this.workSpaceHeight);
     AppStorage.SetOrCreate('dockHeight', this.dockHeight);
-    Log.showDebug(TAG, `updateScreenSize product: ${this.deviceType}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight}, workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
+    Log.showDebug(TAG, `updateScreenSize product: ${this.deviceType}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight},
+      workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
   }
 
   build() {
@@ -131,10 +132,11 @@ struct EntryView {
           PageDesktopLayout();
         }
         .height(this.workSpaceHeight)
+
         Column() {
           SmartDock();
         }
-        .onAreaChange((oldValue: Area, newValue: Area) => {
+        .onAreaChange((oldValue: Area, newValue: Area): void => {
           Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
           if (JSON.stringify(oldValue) == JSON.stringify(newValue)) return;
           if (this.navigationBarStatus == "1") {
@@ -145,6 +147,7 @@ struct EntryView {
         })
         .height(this.dockHeight)
       }
+
       FolderOpenComponent();
     }
     .backgroundImage(StyleConstants.DEFAULT_BACKGROUND_IMAGE)

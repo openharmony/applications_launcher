@@ -61,9 +61,9 @@ export default class MainAbility extends ServiceExtension {
 
   private initGlobalConst(): void {
     // init create window global function
-    globalThis.createWindowWithName = ((windowName: string, windowRank: number) => {
+    globalThis.createWindowWithName = ((windowName: string, windowRank: number): void => {
       Log.showInfo(TAG, `createWindowWithName begin windowName: ${windowName}`);
-      if (windowName == windowManager.RECENT_WINDOW_NAME) {
+      if (windowName === windowManager.RECENT_WINDOW_NAME) {
         windowManager.createRecentWindow();
       } else {
         windowManager.createWindowIfAbsent(globalThis.desktopContext, windowName, windowRank, 'pages/' + windowName);
@@ -74,7 +74,7 @@ export default class MainAbility extends ServiceExtension {
   private startGestureNavigation(): void {
     const gestureNavigationManage = GestureNavigationManager.getInstance();
     display.getDefaultDisplay()
-      .then((dis: { id: number, width: number, height: number, refreshRate: number }) => {
+      .then((dis: { id: number, width: number, height: number, refreshRate: number }): void => {
         gestureNavigationManage.initWindowSize(dis);
       });
   }
@@ -90,7 +90,7 @@ export default class MainAbility extends ServiceExtension {
   onRequest(want: Want, startId: number): void {
     Log.showInfo(TAG,`onRequest, want:${want.abilityName}`);
     // if app publish card to launcher
-    if(want.action == FormConstants.ACTION_PUBLISH_FORM) {
+    if(want.action === FormConstants.ACTION_PUBLISH_FORM) {
       PageDesktopViewModel.getInstance().publishCardToDesktop(want.parameters);
     }
     windowManager.minimizeAllApps();

@@ -44,9 +44,9 @@ struct EntryView {
   private mStage: PadStage = new PadStage();
   private mLayoutViewModel: LayoutViewModel;
   private navigationBarStatus: string | undefined;
-  @State mAppScaleX :number = 1.0;
-  @State mAppScaleY :number = 1.0;
-  @State mAppAlpha :number = 1.0;
+  @State mAppScaleX: number = 1.0;
+  @State mAppScaleY: number = 1.0;
+  @State mAppAlpha: number = 1.0;
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
@@ -63,10 +63,10 @@ struct EntryView {
 
   registerPageDesktopNavigatorStatusChangeEvent(listener): void {
     localEventManager.registerEventListener(listener, [
-       EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE,
-       EventConstants.EVENT_ANIMATION_START_APPLICATION,
-       EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION
-       ]);
+      EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE,
+      EventConstants.EVENT_ANIMATION_START_APPLICATION,
+      EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION
+    ]);
   }
 
   private readonly mLocalEventListener = {
@@ -83,18 +83,18 @@ struct EntryView {
     }
   };
 
-  private startAppAnimation() {
+  private startAppAnimation(): void {
     animateTo({
       duration: 500,
       curve: Curve.Friction,
-      onFinish: () => {}
+      onFinish: () => {},
     }, () => {
       this.mAppScaleX = 0.97;
       this.mAppScaleY = 0.97;
     })
   }
 
-  private closeAppAnimation() {
+  private closeAppAnimation(): void {
     this.mAppAlpha = 0.0;
     animateTo({
       duration: 140,
@@ -118,7 +118,7 @@ struct EntryView {
 
   private updateScreenInfo(): void {
     Log.showInfo(TAG, 'updateScreenInfo');
-    if (this.screenWidth != 0 && this.screenHeight != 0) {
+    if (this.screenWidth !== 0 && this.screenHeight !== 0) {
       this.mLayoutViewModel.initScreen(this.navigationBarStatus);
       globalThis.SmartDockStyleConfig.initConfig();
       globalThis.PadPageDesktopGridStyleConfig.initConfig();
@@ -177,7 +177,7 @@ struct EntryView {
     return true;
   }
 
-  private closeRecentDockPopup() {
+  private closeRecentDockPopup(): void {
     let num: number = AppStorage.Get('sysUiRecentOnClickEvent');
     AppStorage.SetOrCreate('sysUiRecentOnClickEvent', ++num);
   }
@@ -189,8 +189,7 @@ struct EntryView {
 
   build() {
     Stack() {
-      if (this.buildLog()) {
-      }
+      if (this.buildLog()) {}
       Column() {
         Column() {
           PageDesktopLayout();
@@ -205,7 +204,7 @@ struct EntryView {
               Trace.start(Trace.CORE_METHOD_START_APP_CENTER);
               globalThis.createWindowWithName(windowManager.APP_CENTER_WINDOW_NAME, windowManager.DESKTOP_RANK);
             }
-          })
+          });
         }
         .onAreaChange((oldValue: Area, newValue: Area) => {
           Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
@@ -213,7 +212,7 @@ struct EntryView {
           if (this.navigationBarStatus == "1") {
             setTimeout(() => {
               SettingsModel.getInstance().setValue(this.navigationBarStatus);
-            }, 30)
+            }, 30);
           }
         })
         .height(this.dockHeight)
