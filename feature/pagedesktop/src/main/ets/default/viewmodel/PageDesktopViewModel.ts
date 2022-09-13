@@ -911,7 +911,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
     open.menuImgSrc = '/common/pics/ic_public_add_norm.svg';
     open.menuText = $r('app.string.app_menu_open');
     open.onMenuClick = () => {
-      if (AppStorage.Get('openFolderStatus') != 0) {
+      if (AppStorage.Get('openFolderStatus') != 0 && AppStorage.Get('deviceType') === CommonConstants.PAD_DEVICE_TYPE) {
         AppStorage.SetOrCreate('openFolderStatus', 0);
       }
       this.setStartAppInfo()

@@ -605,7 +605,9 @@ struct FolderAppItem {
       return;
     }
     Log.showInfo(TAG, `app setStartAppInfo`);
-    AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
+    if (AppStorage.Get('deviceType') === CommonConstants.PAD_DEVICE_TYPE) {
+      AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
+    }
     AppStorage.SetOrCreate('startAppItemInfo', this.item);
     mBigFolderStartAppHandler.setAppIconSize(mBigFolderStyleConfig.mOpenFolderIconSize);
     mBigFolderStartAppHandler.setAppIconInfo();
