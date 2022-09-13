@@ -119,9 +119,10 @@ export default struct FolderAppListDialog {
                   Toggle({ type: ToggleType.Checkbox, isOn: item.checked })
                     .width(this.mFolderStyleConfig.mFolderToggleSize)
                     .height(this.mFolderStyleConfig.mFolderToggleSize)
+                    .padding(0)
                     .selectedColor(0x007DFF)
-                    .position({x:-this.mFolderStyleConfig.mFolderToggleSize + this.mFolderStyleConfig.mAddFolderIconMarginHorizontal,
-                      y:-this.mFolderStyleConfig.mFolderToggleSize/2})
+                    .position({x: 0,
+                      y: 0})
                     .onChange((isOn: boolean) => {
                       Log.showDebug(TAG, `Toggle onChange this.isOn: ${isOn}`);
                       if (isOn) {
@@ -141,7 +142,7 @@ export default struct FolderAppListDialog {
                 }
               }
               .width(this.mFolderStyleConfig.mAddFolderItemSize)
-              .height(this.mFolderStyleConfig.mAddFolderIconSize + this.mFolderStyleConfig.mAddFolderTextLines + this.mFolderStyleConfig.mFolderToggleSize)
+              .height(this.mFolderStyleConfig.mAddFolderIconSize + this.mFolderStyleConfig.mAddFolderTextLines + this.mFolderStyleConfig.mFolderToggleSize + this.mFolderStyleConfig.mAddFolderGridMargin)
             }, (item) => JSON.stringify(item))
           }
           .columnsTemplate(this.getColumnsTemplate())
