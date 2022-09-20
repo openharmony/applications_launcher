@@ -141,8 +141,9 @@ export default class AppModel {
    */
   private async installationSubscriberCallBack(event, bundleName, userId) {
     Log.showInfo(TAG, `installationSubscriberCallBack event: ${event}`);
+    this.closePopup();
     this.updateShortcutInfo(bundleName, event);
-    this.mFormModel.updateAppItemFormInfo(bundleName);
+    this.mFormModel.updateAppItemFormInfo(bundleName, event);
     if (event === EventConstants.EVENT_PACKAGE_REMOVED) {
       this.removeItem(bundleName);
       this.mFormModel.deleteFormByBundleName(bundleName);
@@ -281,5 +282,12 @@ export default class AppModel {
       return;
     }
     launcherAbilityManager.getShortcutInfo(bundleName, this.setShortcutInfo.bind(this));
+  }
+
+  /**
+   * Close popup.
+   */
+  private closePopup(): void {
+    ContextMenu.close();
   }
 }
