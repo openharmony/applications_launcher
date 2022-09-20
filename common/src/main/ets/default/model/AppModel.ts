@@ -142,7 +142,7 @@ export default class AppModel {
   private async installationSubscriberCallBack(event, bundleName, userId) {
     Log.showInfo(TAG, `installationSubscriberCallBack event: ${event}`);
     this.updateShortcutInfo(bundleName, event);
-    this.mFormModel.updateAppItemFormInfo(bundleName);
+    this.mFormModel.updateAppItemFormInfo(bundleName, event);
     if (event === EventConstants.EVENT_PACKAGE_REMOVED) {
       this.removeItem(bundleName);
       this.mFormModel.deleteFormByBundleName(bundleName);
