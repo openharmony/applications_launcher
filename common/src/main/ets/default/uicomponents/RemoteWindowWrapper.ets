@@ -122,6 +122,7 @@ export struct RemoteWindowWrapper {
 
     control.onMinimizeWindow = (minimizingWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onMinimizeWindow`);
+      this.remoteAnimationType = RemoteConstants.TYPE_MINIMIZE_WINDOW;
       this.mCloseAppManager.getAppIconInfo(minimizingWindowTarget);
       this.mFinishCallback = finishCallback;
       this.target = minimizingWindowTarget;
@@ -129,6 +130,7 @@ export struct RemoteWindowWrapper {
 
     control.onCloseWindow = (closingWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onCloseWindow`);
+      this.remoteAnimationType = RemoteConstants.TYPE_CLOSE_WINDOW;
       this.mCloseAppManager.getAppIconInfo(closingWindowTarget);
       this.mFinishCallback = finishCallback;
       this.target = closingWindowTarget;
