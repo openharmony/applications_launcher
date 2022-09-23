@@ -46,6 +46,12 @@
       },
       {
         "name": "ohos.permission.NOTIFICATION_CONTROLLER"
+      },
+      {
+        "name": "ohos.permission.MANAGE_SECURE_SETTINGS"
+      },
+      {
+        "name": "ohos.permission.START_ABILITIES_FROM_BACKGROUND"
       }
     ]
   }

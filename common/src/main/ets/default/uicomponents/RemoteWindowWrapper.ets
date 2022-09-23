@@ -20,8 +20,7 @@ import {
   Trace,
   CheckEmptyUtils,
   StyleConstants,
-  CommonConstants,
-  ResourceManager
+  CommonConstants
 } from '@ohos/common';
 import OverlayAppIcon from './OverlayAppIcon';
 import RemoteConstants from '../constants/RemoteConstants';
@@ -36,6 +35,7 @@ const TAG = 'RemoteWindowWrapper';
 export struct RemoteWindowWrapper {
   @State @Watch('doAnimation') target: windowAnimationManager.WindowAnimationTarget = undefined;
   @State mFromWindowTarget: windowAnimationManager.WindowAnimationTarget = undefined;
+  @State remoteWindowRadius: number = 0;
   @State remoteWindowScaleX: number = 1.0;
   @State remoteWindowScaleY: number = 1.0;
   @State remoteWindowTranslateX: number = 0;
@@ -81,14 +81,6 @@ export struct RemoteWindowWrapper {
       appIconHeight: 0,
       appIconPositionX: 0,
       appIconPositionY: 0 };
-  startAppCalculateScaleX: number = 1.0;
-  startAppCalculateScaleY: number = 1.0;
-  startAppCalculateTranslateX: number = 0;
-  startAppCalculateTranslateY: number = 0;
-  closeAppCalculateScaleX: number = 1.0;
-  closeAppCalculateScaleY: number = 1.0;
-  closeAppCalculateTranslateX: number = 0;
-  closeAppCalculateTranslateY: number = 0;
   private mStartAppItemInfo: any;
   private mCloseAppItemInfo: any;
   private mFinishCallback: windowAnimationManager.WindowAnimationFinishedCallback;
@@ -129,7 +121,6 @@ export struct RemoteWindowWrapper {
     }
 
     control.onMinimizeWindow = (minimizingWindowTarget, finishCallback) => {
-      this.remoteAnimationType = RemoteConstants.TYPE_MINIMIZE_WINDOW;
       Log.showInfo(TAG, `remote window animaion onMinimizeWindow`);
       this.mCloseAppManager.getAppIconInfo(minimizingWindowTarget);
       this.mFinishCallback = finishCallback;
@@ -138,7 +129,6 @@ export struct RemoteWindowWrapper {
 
     control.onCloseWindow = (closingWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onCloseWindow`);
-      this.remoteAnimationType = RemoteConstants.TYPE_CLOSE_WINDOW;
       this.mCloseAppManager.getAppIconInfo(closingWindowTarget);
       this.mFinishCallback = finishCallback;
       this.target = closingWindowTarget;
@@ -146,43 +136,64 @@ export struct RemoteWindowWrapper {
   }
 
   calculateStartAppProperty() {
-    this.startAppCalculateScaleX = this.startAppIconInfo?.appIconSize / px2vp(this.target?.windowBounds.width);
-    this.startAppCalculateTranslateX = this.startAppIconInfo?.appIconPositionX + this.startAppIconInfo?.appIconSize / 2
+    let startAppCalculateScaleX: number;
+    let startAppCalculateScaleY: number;
+    let startAppCalculateTranslateX: number;
+    let startAppCalculateTranslateY: number;
+    startAppCalculateScaleX = this.startAppIconInfo?.appIconSize / px2vp(this.target?.windowBounds.width);
+    startAppCalculateTranslateX = this.startAppIconInfo?.appIconPositionX + this.startAppIconInfo?.appIconSize / 2
     - (px2vp(this.target?.windowBounds.left) + px2vp(this.target?.windowBounds.width) / 2);
 
     if (this.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
-      this.startAppCalculateScaleY = this.startAppIconInfo?.appIconHeight / px2vp(this.target?.windowBounds.height);
-      this.startAppCalculateTranslateY = this.startAppIconInfo?.appIconPositionY + this.startAppIconInfo?.appIconHeight / 2
+      startAppCalculateScaleY = this.startAppIconInfo?.appIconHeight / px2vp(this.target?.windowBounds.height);
+      startAppCalculateTranslateY = this.startAppIconInfo?.appIconPositionY + this.startAppIconInfo?.appIconHeight / 2
       - (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
     } else {
-      this.startAppCalculateScaleY = this.startAppIconInfo?.appIconSize / px2vp(this.target?.windowBounds.height);
-      this.startAppCalculateTranslateY = this.startAppIconInfo?.appIconPositionY + this.startAppIconInfo?.appIconSize / 2
+      startAppCalculateScaleY = this.startAppIconInfo?.appIconSize / px2vp(this.target?.windowBounds.height);
+      startAppCalculateTranslateY = this.startAppIconInfo?.appIconPositionY + this.startAppIconInfo?.appIconSize / 2
       - (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
     }
-    Log.showInfo(TAG, `calculateStartAppProperty ---> startAppCalculateScaleX is ${this.startAppCalculateScaleX} ,
-    startAppCalculateScaleY is ${this.startAppCalculateScaleY} ,
-    startAppCalculateTranslateX is ${this.startAppCalculateTranslateX} ,
-    startAppCalculateTranslateY is ${this.startAppCalculateTranslateY}`);
+    Log.showInfo(TAG, `calculateStartAppProperty ---> startAppCalculateScaleX is ${startAppCalculateScaleX} ,
+    startAppCalculateScaleY is ${startAppCalculateScaleY} ,
+    startAppCalculateTranslateX is ${startAppCalculateTranslateX} ,
+    startAppCalculateTranslateY is ${startAppCalculateTranslateY}`);
+    return {
+      startAppCalculateScaleX: startAppCalculateScaleX,
+      startAppCalculateScaleY: startAppCalculateScaleY,
+      startAppCalculateTranslateX: startAppCalculateTranslateX,
+      startAppCalculateTranslateY: startAppCalculateTranslateY
+    }
   }
 
   calculateCloseAppProperty() {
-    this.closeAppCalculateScaleX = px2vp(this.target?.windowBounds.width) / this.closeAppIconInfo?.appIconSize;
-    this.closeAppCalculateTranslateX = this.closeAppIconInfo?.appIconPositionX + this.closeAppIconInfo?.appIconSize / 2
+    let closeAppCalculateScaleX: number;
+    let closeAppCalculateScaleY: number;
+    let closeAppCalculateTranslateX: number;
+    let closeAppCalculateTranslateY: number;
+    closeAppCalculateScaleX = px2vp(this.target?.windowBounds.width) / this.closeAppIconInfo?.appIconSize;
+    closeAppCalculateTranslateX = this.closeAppIconInfo?.appIconPositionX + this.closeAppIconInfo?.appIconSize / 2
     - (px2vp(this.target?.windowBounds.left) + px2vp(this.target?.windowBounds.width) / 2);
     if (this.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
-      this.closeAppCalculateScaleY = px2vp(this.target?.windowBounds.height) / this.closeAppIconInfo?.appIconHeight;
-      this.closeAppCalculateTranslateY = this.closeAppIconInfo?.appIconPositionY + this.closeAppIconInfo?.appIconHeight / 2
+      closeAppCalculateScaleY = px2vp(this.target?.windowBounds.height) / this.closeAppIconInfo?.appIconHeight;
+      closeAppCalculateTranslateY = this.closeAppIconInfo?.appIconPositionY + this.closeAppIconInfo?.appIconHeight / 2
       - (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
     } else {
-      this.closeAppCalculateScaleY = px2vp(this.target?.windowBounds.height) / this.closeAppIconInfo?.appIconSize;
-      this.closeAppCalculateTranslateY = this.closeAppIconInfo?.appIconPositionY + this.closeAppIconInfo?.appIconSize / 2
+      closeAppCalculateScaleY = px2vp(this.target?.windowBounds.height) / this.closeAppIconInfo?.appIconSize;
+      closeAppCalculateTranslateY = this.closeAppIconInfo?.appIconPositionY + this.closeAppIconInfo?.appIconSize / 2
       - (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
     }
 
-    Log.showInfo(TAG, `calculateCloseAppProperty ---> closeAppCalculateScaleX is ${this.closeAppCalculateScaleX} ,
-    closeAppCalculateScaleY is ${this.closeAppCalculateScaleY} ,
-    closeAppCalculateTranslateX is ${this.closeAppCalculateTranslateX} ,
-    closeAppCalculateTranslateY is ${this.closeAppCalculateTranslateY}`);
+    Log.showInfo(TAG, `calculateCloseAppProperty ---> closeAppCalculateScaleX is ${closeAppCalculateScaleX} ,
+    closeAppCalculateScaleY is ${closeAppCalculateScaleY} ,
+    closeAppCalculateTranslateX is ${closeAppCalculateTranslateX} ,
+    closeAppCalculateTranslateY is ${closeAppCalculateTranslateY}`);
+
+    return {
+      closeAppCalculateScaleX: closeAppCalculateScaleX,
+      closeAppCalculateScaleY: closeAppCalculateScaleY,
+      closeAppCalculateTranslateX: closeAppCalculateTranslateX,
+      closeAppCalculateTranslateY: closeAppCalculateTranslateY
+    }
   }
 
   doAnimation() {
@@ -200,6 +211,7 @@ export struct RemoteWindowWrapper {
       case RemoteConstants.TYPE_START_APP_FROM_OTHER:
       case RemoteConstants.TYPE_APP_TRANSITION:
         Log.showInfo(TAG, `doAnimation bundleName-------- ${this.target.bundleName}`);
+//        this.startAppTransition(callback);
         if (this.target.bundleName === "com.ohos.photos" || this.target.bundleName === "com.ohos.camera") {
           this.startAppAnimation(callback);
         } else {
@@ -219,6 +231,32 @@ export struct RemoteWindowWrapper {
     }
   }
 
+  private startAppTransition(callback): void {
+    this.remoteWindowScaleX = 1.0;
+    this.remoteWindowScaleY = 1.0;
+    this.remoteWindowTranslateX = px2vp(this.target?.windowBounds.width - this.target?.windowBounds.left);
+    this.remoteWindowTranslateY = 0.0;
+    this.remoteWindowWindowAlpha = 1.0;
+    Log.showInfo(TAG, `startAppTransition called target: ${JSON.stringify(this.target)}, target: ${JSON.stringify(this.mFromWindowTarget)}`);
+    this.fromRemoteWindowScaleX = 1.0;
+    this.fromRemoteWindowScaleY = 1.0;
+    this.fromRemoteWindowTranslateX = 0;
+    this.fromRemoteWindowTranslateY = 0;
+    this.fromRemoteWindowWindowAlpha = 1.0;
+
+    animateTo({
+      duration: 500,
+      curve: Curve.Friction,
+      onFinish: () => {
+        callback.onAnimationFinish();
+        this.remoteWindowTranslateX = 0;
+      }
+    }, () => {
+      this.remoteWindowTranslateX = 0;
+      this.fromRemoteWindowTranslateX = px2vp(this.mFromWindowTarget?.windowBounds.left - this.mFromWindowTarget?.windowBounds.width);
+    })
+  }
+
   private minimizeWindow(callback): void {
     Log.showInfo(TAG, `minimizeWindow --- target ${JSON.stringify(this.target)}`);
     Trace.start(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
@@ -232,15 +270,16 @@ export struct RemoteWindowWrapper {
     }
     Log.showDebug(TAG, `minimizeWindow --- mCloseAppItemInfo is ${JSON.stringify(this.mCloseAppItemInfo)} , closeAppIconInfo is ${JSON.stringify(this.closeAppIconInfo)}`);
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION, null);
-    this.calculateCloseAppProperty();
+    const res = this.calculateCloseAppProperty();
     this.remoteWindowScaleX = 1.0;
     this.remoteWindowScaleY = 1.0;
     this.remoteWindowTranslateX = 0;
     this.remoteWindowTranslateY = 0;
-    this.closeAppIconScaleX = this.closeAppCalculateScaleX;
-    this.closeAppIconScaleY = this.closeAppCalculateScaleY;
-    this.closeAppIconTranslateX = -this.closeAppCalculateTranslateX;
-    this.closeAppIconTranslateY = -this.closeAppCalculateTranslateY;
+    this.closeAppIconScaleX = res.closeAppCalculateScaleX;
+    this.closeAppIconScaleY = res.closeAppCalculateScaleY;
+    this.closeAppIconTranslateX = -res.closeAppCalculateTranslateX;
+    this.closeAppIconTranslateY = -res.closeAppCalculateTranslateY;
+    this.remoteWindowRadius = 50;
 
     animateTo({
       duration: 700,
@@ -248,17 +287,19 @@ export struct RemoteWindowWrapper {
       onFinish: () => {
         callback.onAnimationFinish();
         this.closeAppIconWindowAlpha = 0;
+        this.remoteWindowRadius = 0;
         Trace.end(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
       }
     }, () => {
-      this.remoteWindowScaleX = 1 / this.closeAppCalculateScaleX;
-      this.remoteWindowScaleY = 1 / this.closeAppCalculateScaleY;
-      this.remoteWindowTranslateX = this.closeAppCalculateTranslateX;
-      this.remoteWindowTranslateY = this.closeAppCalculateTranslateY;
+      this.remoteWindowScaleX = 1 / res.closeAppCalculateScaleX;
+      this.remoteWindowScaleY = 1 / res.closeAppCalculateScaleY;
+      this.remoteWindowTranslateX = res.closeAppCalculateTranslateX;
+      this.remoteWindowTranslateY = res.closeAppCalculateTranslateY;
       this.closeAppIconScaleX = 1.0;
       this.closeAppIconScaleY = 1.0;
       this.closeAppIconTranslateX = 0.0;
       this.closeAppIconTranslateY = 0.0;
+      this.remoteWindowRadius = 24;
     })
 
     this.closeAppIconWindowAlpha = 0;
@@ -289,15 +330,18 @@ export struct RemoteWindowWrapper {
     this.remoteWindowScaleY = 1.0;
     this.remoteWindowTranslateX = 0.0;
     this.remoteWindowTranslateY = 0.0;
+    this.remoteWindowRadius = 50;
     animateTo({
       duration: 400,
       curve: Curve.LinearOutSlowIn,
       onFinish: () => {
         callback.onAnimationFinish();
+        this.remoteWindowRadius = 0;
       }
     }, () => {
       this.remoteWindowScaleX = 0.9;
       this.remoteWindowScaleY = 0.9;
+      this.remoteWindowRadius = 24;
     })
 
     this.remoteWindowWindowAlpha = 1.0;
@@ -317,6 +361,7 @@ export struct RemoteWindowWrapper {
     this.remoteWindowScaleY = 0.8;
     this.remoteWindowTranslateX = 0.0;
     this.remoteWindowTranslateY = 0.0;
+    this.remoteWindowRadius = 50;
     animateTo({
       duration: 400,
       curve: Curve.LinearOutSlowIn,
@@ -326,6 +371,7 @@ export struct RemoteWindowWrapper {
     }, () => {
       this.remoteWindowScaleX = 1.0;
       this.remoteWindowScaleY = 1.0;
+      this.remoteWindowRadius = 0;
     })
 
     this.remoteWindowWindowAlpha = 0.0;
@@ -349,13 +395,13 @@ export struct RemoteWindowWrapper {
     this.startAppTypeFromPageDesktop = AppStorage.Get('startAppTypeFromPageDesktop');
     this.startAppIconInfo = AppStorage.Get('startAppIconInfo');
     Log.showInfo(TAG, `startAppIconInfo is ${JSON.stringify(this.startAppIconInfo)} , mStartAppItemInfo is ${JSON.stringify(this.mStartAppItemInfo)}`);
-
+    this.remoteWindowRadius = 50;
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_ANIMATION_START_APPLICATION, null);
-    this.calculateStartAppProperty();
-    this.remoteWindowScaleX = this.startAppCalculateScaleX;
-    this.remoteWindowScaleY = this.startAppCalculateScaleY;
-    this.remoteWindowTranslateX = this.startAppCalculateTranslateX;
-    this.remoteWindowTranslateY = this.startAppCalculateTranslateY;
+    const res = this.calculateStartAppProperty();
+    this.remoteWindowScaleX = res.startAppCalculateScaleX;
+    this.remoteWindowScaleY = res.startAppCalculateScaleY;
+    this.remoteWindowTranslateX = res.startAppCalculateTranslateX;
+    this.remoteWindowTranslateY = res.startAppCalculateTranslateY;
     this.startAppIconScaleX = 1.0;
     this.startAppIconScaleY = 1.0;
     this.startAppIconTranslateX = 0.0;
@@ -373,14 +419,15 @@ export struct RemoteWindowWrapper {
       this.remoteWindowScaleY = 1.0;
       this.remoteWindowTranslateX = 0.0;
       this.remoteWindowTranslateY = 0.0;
-      this.startAppIconScaleX = this.mScreenWidth / this.startAppIconInfo.appIconSize;
-      this.startAppIconTranslateX = this.mScreenWidth / 2 - this.startAppIconInfo.appIconPositionX - this.startAppIconInfo.appIconSize / 2;
+      this.startAppIconScaleX = this.mScreenWidth / this.startAppIconInfo?.appIconSize;
+      this.startAppIconTranslateX = this.mScreenWidth / 2 - this.startAppIconInfo?.appIconPositionX - this.startAppIconInfo?.appIconSize / 2;
+      this.remoteWindowRadius = 0;
       if (this.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
-        this.startAppIconScaleY = this.mScreenHeight / this.startAppIconInfo.appIconHeight;
-        this.startAppIconTranslateY = this.mScreenHeight / 2 + px2vp(this.target.windowBounds.top) - this.startAppIconInfo.appIconPositionY - this.startAppIconInfo.appIconHeight / 2;
+        this.startAppIconScaleY = this.mScreenHeight / this.startAppIconInfo?.appIconHeight;
+        this.startAppIconTranslateY = this.mScreenHeight / 2 + px2vp(this.target.windowBounds.top) - this.startAppIconInfo?.appIconPositionY - this.startAppIconInfo?.appIconHeight / 2;
       } else {
-        this.startAppIconScaleY = this.mScreenHeight / this.startAppIconInfo.appIconSize;
-        this.startAppIconTranslateY = this.mScreenHeight / 2 + px2vp(this.target.windowBounds.top) - this.startAppIconInfo.appIconPositionY - this.startAppIconInfo.appIconSize / 2;
+        this.startAppIconScaleY = this.mScreenHeight / this.startAppIconInfo?.appIconSize;
+        this.startAppIconTranslateY = this.mScreenHeight / 2 + px2vp(this.target.windowBounds.top) - this.startAppIconInfo?.appIconPositionY - this.startAppIconInfo?.appIconSize / 2;
       }
     })
 
@@ -400,28 +447,28 @@ export struct RemoteWindowWrapper {
 
   build() {
     Stack() {
-      if (!CheckEmptyUtils.isEmpty(this.mStartAppItemInfo)) {
+      if (!CheckEmptyUtils.isEmpty(this.mStartAppItemInfo) &&
+      this.remoteAnimationType != RemoteConstants.TYPE_MINIMIZE_WINDOW && this.remoteAnimationType != RemoteConstants.TYPE_CLOSE_WINDOW) {
         Column() {
           if (this.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
             FormComponent({
-              id: this.mStartAppItemInfo.cardId,
-              name: this.mStartAppItemInfo.cardName,
-              bundle: this.mStartAppItemInfo.bundleName,
-              ability: this.mStartAppItemInfo.abilityName,
-              module: this.mStartAppItemInfo.moduleName,
-              dimension: this.mStartAppItemInfo.cardDimension
+              id: this.mStartAppItemInfo?.cardId,
+              name: this.mStartAppItemInfo?.cardName,
+              bundle: this.mStartAppItemInfo?.bundleName,
+              ability: this.mStartAppItemInfo?.abilityName,
+              module: this.mStartAppItemInfo?.moduleName,
+              dimension: this.mStartAppItemInfo?.cardDimension
             })
               .clip(new Rect({
-                width: this.startAppIconInfo.appIconSize,
-                height: this.startAppIconInfo.appIconHeight,
+                width: this.startAppIconInfo?.appIconSize,
+                height: this.startAppIconInfo?.appIconHeight,
                 radius: 24
               }))
-              .size({ width: this.startAppIconInfo.appIconSize, height: this.startAppIconInfo.appIconHeight })
+              .size({ width: this.startAppIconInfo?.appIconSize, height: this.startAppIconInfo?.appIconHeight })
           } else {
             OverlayAppIcon({
-              iconSize: this.startAppIconInfo?.appIconSize,
-              icon: ResourceManager.getInstance()
-                .getCachedAppIcon(this.mStartAppItemInfo.appIconId, this.mStartAppItemInfo.bundleName, this.mStartAppItemInfo.moduleName)
+              iconSize: this.mStartAppItemInfo?.appIconSize,
+              icon: this.mStartAppItemInfo?.icon
             })
           }
         }
@@ -434,28 +481,28 @@ export struct RemoteWindowWrapper {
         })
       }
 
-      if (!CheckEmptyUtils.isEmpty(this.mCloseAppItemInfo)) {
+      if (!CheckEmptyUtils.isEmpty(this.mCloseAppItemInfo) &&
+      this.remoteAnimationType == RemoteConstants.TYPE_MINIMIZE_WINDOW || this.remoteAnimationType == RemoteConstants.TYPE_CLOSE_WINDOW) {
         Column() {
           if (this.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
             FormComponent({
-              id: this.mCloseAppItemInfo.cardId,
-              name: this.mCloseAppItemInfo.cardName,
-              bundle: this.mCloseAppItemInfo.bundleName,
-              ability: this.mCloseAppItemInfo.abilityName,
-              module: this.mCloseAppItemInfo.moduleName,
-              dimension: this.mCloseAppItemInfo.cardDimension
+              id: this.mCloseAppItemInfo?.cardId,
+              name: this.mCloseAppItemInfo?.cardName,
+              bundle: this.mCloseAppItemInfo?.bundleName,
+              ability: this.mCloseAppItemInfo?.abilityName,
+              module: this.mCloseAppItemInfo?.moduleName,
+              dimension: this.mCloseAppItemInfo?.cardDimension
             })
               .clip(new Rect({
-                width: this.closeAppIconInfo.appIconSize,
-                height: this.closeAppIconInfo.appIconHeight,
+                width: this.closeAppIconInfo?.appIconSize,
+                height: this.closeAppIconInfo?.appIconHeight,
                 radius: 24
               }))
-              .size({ width: this.closeAppIconInfo.appIconSize, height: this.closeAppIconInfo.appIconHeight })
+              .size({ width: this.closeAppIconInfo?.appIconSize, height: this.closeAppIconInfo?.appIconHeight })
           } else {
             OverlayAppIcon({
-              iconSize: this.closeAppIconInfo?.appIconSize,
-              icon: ResourceManager.getInstance()
-                .getCachedAppIcon(this.mCloseAppItemInfo.appIconId, this.mCloseAppItemInfo.bundleName, this.mCloseAppItemInfo.moduleName)
+              iconSize: this.mCloseAppItemInfo?.appIconSize,
+              icon: this.mCloseAppItemInfo?.icon
             })
           }
         }
@@ -477,6 +524,16 @@ export struct RemoteWindowWrapper {
           .width(px2vp(this.target?.windowBounds.width))
           .height(px2vp(this.target?.windowBounds.height))
       }
+
+//      if (!CheckEmptyUtils.isEmpty(this.mFromWindowTarget)) {
+//        RemoteWindow(this.mFromWindowTarget)
+//          .translate({ x: this.fromRemoteWindowTranslateX, y: this.fromRemoteWindowTranslateY })
+//          .scale({ x: this.fromRemoteWindowScaleX, y: this.fromRemoteWindowScaleY })
+//          .opacity(this.fromRemoteWindowWindowAlpha)
+//          .position({ x: px2vp(this.mFromWindowTarget?.windowBounds.left), y: px2vp(this.mFromWindowTarget?.windowBounds.top) })
+//          .width(px2vp(this.mFromWindowTarget?.windowBounds.width))
+//          .height(px2vp(this.mFromWindowTarget?.windowBounds.height))
+//      }
     }
     .width(StyleConstants.PERCENTAGE_100)
     .height(StyleConstants.PERCENTAGE_100)
