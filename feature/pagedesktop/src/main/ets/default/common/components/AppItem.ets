@@ -244,7 +244,18 @@ export default struct AppItem {
    */
   private setStartAppInfo() {
     Log.showInfo(TAG, `app setStartAppInfo ${this.mIconSize}`);
-    AppStorage.SetOrCreate('startAppItemInfo', this.item);
+    const appInfo = {
+      bundleName: this.item.bundleName,
+      abilityName: this.item.abilityName,
+      moduleName: this.item.moduleName,
+      appIconSize: this.mIconSize,
+      appIconId: this.item.appIconId,
+      icon: ResourceManager.getInstance()
+        .getCachedAppIcon(this.item.appIconId, this.item.bundleName, this.item.moduleName),
+      row: this.item.row,
+      column: this.item.column
+    }
+    AppStorage.SetOrCreate('startAppItemInfo', appInfo);
     AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
     this.mPageDesktopStartAppHandler.setAppIconSize(this.mIconSize);
     this.mPageDesktopStartAppHandler.setAppIconInfo();

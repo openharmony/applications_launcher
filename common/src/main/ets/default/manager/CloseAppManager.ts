@@ -24,7 +24,7 @@ const TAG = 'CloseAppManager';
  */
 export class CloseAppManager {
     private mBaseCloseAppHandlerList: Array<BaseCloseAppHandler> = new Array<BaseCloseAppHandler>();
-    private mPagedesktopCloasItemInfo: any;
+    private mPagedesktopCloseItemInfo: any;
     private mPagedesktopClosePosition: {
         appIconSize: number,
         appIconHeight: number,
@@ -34,7 +34,7 @@ export class CloseAppManager {
         appIconHeight: 0,
         appIconPositionX: 0,
         appIconPositionY: 0 };
-    private mSmartdockCloasItemInfo: any;
+    private mSmartdockCloseItemInfo: any;
     private mSmartdockClosePosition: {
         appIconSize: number,
         appIconHeight: number,
@@ -109,16 +109,16 @@ export class CloseAppManager {
         }
     }
 
-    public addPagedesktopClosePosition(pagedesktopCloasIconInfo: any, pagedesktopCloasItemInfo?: any) {
-        Log.showDebug(TAG, `addPagedesktopClosePosition pagedesktopCloasIconInfo is ${JSON.stringify(pagedesktopCloasIconInfo)}`)
-        this.mPagedesktopClosePosition = pagedesktopCloasIconInfo;
-        this.mPagedesktopCloasItemInfo = pagedesktopCloasItemInfo;
+    public addPagedesktopClosePosition(pagedesktopCloseIconInfo: any, pagedesktopCloseItemInfo?: any) {
+        Log.showDebug(TAG, `addPagedesktopClosePosition pagedesktopCloasIconInfo is ${JSON.stringify(pagedesktopCloseIconInfo)}`)
+        this.mPagedesktopClosePosition = pagedesktopCloseIconInfo;
+        this.mPagedesktopCloseItemInfo = pagedesktopCloseItemInfo;
     }
 
-    public addSmartDockClosePosition(smartdockCloasIconInfo: any, smartdockCloasItemInfo: any) {
-        Log.showDebug(TAG, `addSmartDockClosePosition smartdockCloasIconInfo is ${JSON.stringify(smartdockCloasIconInfo)}`)
-        this.mSmartdockClosePosition = smartdockCloasIconInfo;
-        this.mSmartdockCloasItemInfo = smartdockCloasItemInfo;
+    public addSmartDockClosePosition(smartdockCloseIconInfo: any, smartdockCloseItemInfo: any) {
+        Log.showDebug(TAG, `addSmartDockClosePosition smartdockCloasIconInfo is ${JSON.stringify(smartdockCloseIconInfo)}`)
+        this.mSmartdockClosePosition = smartdockCloseIconInfo;
+        this.mSmartdockCloseItemInfo = smartdockCloseItemInfo;
     }
 
     public getAppCloseIconInfo(): any{
@@ -134,10 +134,10 @@ export class CloseAppManager {
     public getAppCloseItemInfo(): any{
         if (CheckEmptyUtils.isEmpty(this.mPagedesktopClosePosition)) {
             Log.showDebug(TAG, `getAppCloseIconInfo return mSmartdockClosePosition is ${JSON.stringify(this.mSmartdockClosePosition)}`)
-            return this.mSmartdockCloasItemInfo;
+            return this.mSmartdockCloseItemInfo;
         } else {
             Log.showDebug(TAG, `getAppCloseIconInfo return mPagedesktopClosePosition is ${JSON.stringify(this.mPagedesktopClosePosition)}`)
-            return this.mPagedesktopCloasItemInfo;
+            return this.mPagedesktopCloseItemInfo;
         }
     }
 }

@@ -180,7 +180,18 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
                             case CommonConstants.TYPE_APP:
                                 if (this.mAppItemBundleName === item.bundleName) {
                                     this.mCloseAppType = true;
-                                    return item;
+                                    const appInfo = {
+                                        bundleName: item.bundleName,
+                                        abilityName: item.abilityName,
+                                        moduleName: item.moduleName,
+                                        appIconSize: this.mCloseAppType ? StyleConstants.DEFAULT_ADD_APP_SIZE : StyleConstants.DEFAULT_FOLDER_APP_SIZE,
+                                        appIconId: item.appIconId,
+                                        icon: globalThis.ResourceManager
+                                            .getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
+                                        row: item.row,
+                                        column: item.column
+                                    }
+                                    return appInfo;
                                 }
                                 break;
                             case CommonConstants.TYPE_FOLDER:
