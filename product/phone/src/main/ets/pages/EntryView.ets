@@ -132,10 +132,6 @@ struct EntryView {
           PageDesktopLayout();
         }
         .height(this.workSpaceHeight)
-
-        Column() {
-          SmartDock();
-        }
         .onAreaChange((oldValue: Area, newValue: Area): void => {
           Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
           if (JSON.stringify(oldValue) == JSON.stringify(newValue)) return;
@@ -145,6 +141,10 @@ struct EntryView {
             }, 50)
           }
         })
+
+        Column() {
+          SmartDock();
+        }
         .height(this.dockHeight)
       }
 

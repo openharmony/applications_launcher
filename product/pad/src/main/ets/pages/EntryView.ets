@@ -197,15 +197,6 @@ struct EntryView {
         .alignItems(HorizontalAlign.Center)
         .justifyContent(FlexAlign.Center)
         .height(this.workSpaceHeight)
-
-        Column() {
-          SmartDock({
-            showAppCenter: () => {
-              Trace.start(Trace.CORE_METHOD_START_APP_CENTER);
-              globalThis.createWindowWithName(windowManager.APP_CENTER_WINDOW_NAME, windowManager.DESKTOP_RANK);
-            }
-          });
-        }
         .onAreaChange((oldValue: Area, newValue: Area) => {
           Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
           if (JSON.stringify(oldValue) == JSON.stringify(newValue)) return;
@@ -215,6 +206,15 @@ struct EntryView {
             }, 30);
           }
         })
+
+        Column() {
+          SmartDock({
+            showAppCenter: () => {
+              Trace.start(Trace.CORE_METHOD_START_APP_CENTER);
+              globalThis.createWindowWithName(windowManager.APP_CENTER_WINDOW_NAME, windowManager.DESKTOP_RANK);
+            }
+          });
+        }
         .height(this.dockHeight)
       }
       .width('100%')
