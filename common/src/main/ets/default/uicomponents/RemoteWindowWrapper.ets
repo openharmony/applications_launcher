@@ -35,7 +35,7 @@ const TAG = 'RemoteWindowWrapper';
 export struct RemoteWindowWrapper {
   @State @Watch('doAnimation') target: windowAnimationManager.WindowAnimationTarget = undefined;
   @State mFromWindowTarget: windowAnimationManager.WindowAnimationTarget = undefined;
-  @State remoteWindowRadius: number = 0;
+  @State remoteWindowRadius: number = 12;
   @State remoteWindowScaleX: number = 1.0;
   @State remoteWindowScaleY: number = 1.0;
   @State remoteWindowTranslateX: number = 0;
@@ -281,7 +281,7 @@ export struct RemoteWindowWrapper {
     this.closeAppIconScaleY = res.closeAppCalculateScaleY;
     this.closeAppIconTranslateX = -res.closeAppCalculateTranslateX;
     this.closeAppIconTranslateY = -res.closeAppCalculateTranslateY;
-    this.remoteWindowRadius = 50;
+    this.remoteWindowRadius = 12;
 
     animateTo({
       duration: 700,
@@ -289,7 +289,6 @@ export struct RemoteWindowWrapper {
       onFinish: () => {
         callback.onAnimationFinish();
         this.closeAppIconWindowAlpha = 0;
-        this.remoteWindowRadius = 0;
         Trace.end(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
       }
     }, () => {
@@ -301,7 +300,7 @@ export struct RemoteWindowWrapper {
       this.closeAppIconScaleY = 1.0;
       this.closeAppIconTranslateX = 0.0;
       this.closeAppIconTranslateY = 0.0;
-      this.remoteWindowRadius = 24;
+      this.remoteWindowRadius = 0;
     })
 
     this.closeAppIconWindowAlpha = 0;
@@ -332,18 +331,16 @@ export struct RemoteWindowWrapper {
     this.remoteWindowScaleY = 1.0;
     this.remoteWindowTranslateX = 0.0;
     this.remoteWindowTranslateY = 0.0;
-    this.remoteWindowRadius = 50;
+    this.remoteWindowRadius = 12;
     animateTo({
       duration: 400,
       curve: Curve.LinearOutSlowIn,
       onFinish: () => {
         callback.onAnimationFinish();
-        this.remoteWindowRadius = 0;
       }
     }, () => {
       this.remoteWindowScaleX = 0.9;
       this.remoteWindowScaleY = 0.9;
-      this.remoteWindowRadius = 24;
     })
 
     this.remoteWindowWindowAlpha = 1.0;
@@ -363,7 +360,7 @@ export struct RemoteWindowWrapper {
     this.remoteWindowScaleY = 0.8;
     this.remoteWindowTranslateX = 0.0;
     this.remoteWindowTranslateY = 0.0;
-    this.remoteWindowRadius = 50;
+    this.remoteWindowRadius = 12;
     animateTo({
       duration: 400,
       curve: Curve.LinearOutSlowIn,
@@ -397,7 +394,7 @@ export struct RemoteWindowWrapper {
     this.startAppTypeFromPageDesktop = AppStorage.Get('startAppTypeFromPageDesktop');
     this.startAppIconInfo = AppStorage.Get('startAppIconInfo');
     Log.showInfo(TAG, `startAppIconInfo is ${JSON.stringify(this.startAppIconInfo)} , mStartAppItemInfo is ${JSON.stringify(this.mStartAppItemInfo)}`);
-    this.remoteWindowRadius = 50;
+    this.remoteWindowRadius = 12;
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_ANIMATION_START_APPLICATION, null);
     const res = this.calculateStartAppProperty();
     this.remoteWindowScaleX = res.startAppCalculateScaleX;
@@ -525,6 +522,7 @@ export struct RemoteWindowWrapper {
           .position({ x: px2vp(this.target?.windowBounds.left), y: px2vp(this.target?.windowBounds.top) })
           .width(px2vp(this.target?.windowBounds.width))
           .height(px2vp(this.target?.windowBounds.height))
+          .borderRadius(this.remoteWindowRadius)
       }
 
 //      if (!CheckEmptyUtils.isEmpty(this.mFromWindowTarget)) {
