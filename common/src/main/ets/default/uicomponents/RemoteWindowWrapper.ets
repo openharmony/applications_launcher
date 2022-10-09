@@ -85,7 +85,7 @@ export struct RemoteWindowWrapper {
   private mCloseAppItemInfo: any;
   private mFinishCallback: windowAnimationManager.WindowAnimationFinishedCallback;
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     Log.showInfo(TAG, `aboutToAppear called!!`);
     let control = new WindowAnimationControllerImpl();
     windowAnimationManager.setController(control);
@@ -285,6 +285,7 @@ export struct RemoteWindowWrapper {
 
     animateTo({
       duration: 700,
+      // @ts-ignore
       curve: curves.springMotion(0.40, 0.99, 0),
       onFinish: () => {
         callback.onAnimationFinish();
@@ -300,7 +301,7 @@ export struct RemoteWindowWrapper {
       this.closeAppIconScaleY = 1.0;
       this.closeAppIconTranslateX = 0.0;
       this.closeAppIconTranslateY = 0.0;
-      this.remoteWindowRadius = 0;
+      this.remoteWindowRadius = 96;
     })
 
     this.closeAppIconWindowAlpha = 0;
@@ -394,7 +395,7 @@ export struct RemoteWindowWrapper {
     this.startAppTypeFromPageDesktop = AppStorage.Get('startAppTypeFromPageDesktop');
     this.startAppIconInfo = AppStorage.Get('startAppIconInfo');
     Log.showInfo(TAG, `startAppIconInfo is ${JSON.stringify(this.startAppIconInfo)} , mStartAppItemInfo is ${JSON.stringify(this.mStartAppItemInfo)}`);
-    this.remoteWindowRadius = 12;
+    this.remoteWindowRadius = 96;
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_ANIMATION_START_APPLICATION, null);
     const res = this.calculateStartAppProperty();
     this.remoteWindowScaleX = res.startAppCalculateScaleX;
@@ -408,6 +409,7 @@ export struct RemoteWindowWrapper {
 
     animateTo({
       duration: 500,
+      // @ts-ignore
       curve: curves.springMotion(0.42, 0.99, 0),
       onFinish: () => {
         callback.onAnimationFinish();
@@ -433,7 +435,7 @@ export struct RemoteWindowWrapper {
     this.startAppIconWindowAlpha = 1.0;
     this.remoteWindowWindowAlpha = 0.0;
     animateTo({
-      duration: 50,
+      duration: 120,
       delay: 50,
       curve: Curve.Friction,
       onFinish: () => {
