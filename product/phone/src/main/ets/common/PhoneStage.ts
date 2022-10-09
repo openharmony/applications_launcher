@@ -25,6 +25,7 @@ import PhonePageDesktopGridStyleConfig from './PhonePageDesktopGridStyleConfig';
 import PhoneFolderLayoutConfig from './PhoneFolderLayoutConfig';
 import launcherLayoutPreLoader from './LauncherLayoutPreLoader';
 import PhoneFormLayoutConfig from './PhoneFormLayoutConfig';
+import PhoneSmartDockStyleConfig from './PhoneSmartDockStyleConfig';
 
 /**
  * phone product stage
@@ -38,6 +39,7 @@ export default class PhoneStage extends BaseStage {
     this.initPhoneConfig();
     launcherLayoutPreLoader.load();
     smartDockPreLoader.load();
+    layoutConfigManager.addConfigToManager(PhoneSmartDockStyleConfig.getInstance());
     pageDesktopPreLoader.load();
     layoutConfigManager.addConfigToManager(PhonePageDesktopGridStyleConfig.getInstance());
     bigFolderPreLoader.load();

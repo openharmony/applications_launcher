@@ -37,11 +37,18 @@ export struct SmartDock {
   @StorageLink('residentList') residentList: any = [];
   @StorageLink('recentList') recentList: any = [];
   @StorageLink('missionInfoList') missionInfoList: any = [];
+  @Link @Watch('updateStyleInfo') inputDeviceType: string;
   private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
   private mSmartDockViewModel: SmartDockViewModel;
   private mSelectedItem = null;
   private mSelectedDockType = 0;
   private dialogName = "";
+
+  private updateStyleInfo():void{
+    if (this.mSmartDockViewModel) {
+      this.mSmartDockViewModel.getStyleConfig();
+    }
+  }
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear start!');
@@ -140,6 +147,7 @@ export struct SmartDock {
       ListItem() {
         ResidentLayout({
           appList: $residentList,
+          inputDeviceType: $inputDeviceType,
           mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
           onItemClick: (event, item) => this.mSmartDockViewModel.residentOnClick(event, item, this.showAppCenter),
           buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
@@ -147,18 +155,21 @@ export struct SmartDock {
         })
       }
 
-      ListItem() {
-        RecentLayout({
-          appList: $recentList,
-          mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
-          onItemClick: (event, item) => this.mSmartDockViewModel.recentOnClick(event, item, () => this.recentOnClickWithPopup(item)),
-          buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
-          onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
-          popup: this.popup,
-          onHoverEvent: (onHover, bundleName) => this.onHoverEvent(onHover, bundleName)
-        })
+      if (this.recentList && this.recentList.length) {
+        ListItem() {
+          RecentLayout({
+            appList: $recentList,
+            mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
+            onItemClick: (event, item) => this.mSmartDockViewModel.recentOnClick(event, item, () => this.recentOnClickWithPopup(item)),
+            buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
+            onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
+            popup: this.popup,
+            onHoverEvent: (onHover, bundleName) => this.onHoverEvent(onHover, bundleName)
+          })
+        }
       }
     }
+    .alignListItem(ListItemAlign.Center)
     .height(SmartDockConstants.PERCENTAGE_100)
     .listDirection(SmartDockConstants.LIST_DIRECTION)
   }

@@ -49,7 +49,7 @@ export default struct RecentMissionAppName {
    * Update the app name of recent missions.
    */
   updateName(): void {
-    if (this.bundleName && this.bundleName.length > 0) {
+    if (this.bundleName && this.bundleName.length > 0 && this.mResourceManager) {
       this.mResourceManager.getAppNameWithCache(this.labelId,
         this.bundleName, this.moduleName, this.appName, this.appNameLoadCallback.bind(this));
     }

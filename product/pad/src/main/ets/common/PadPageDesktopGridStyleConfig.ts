@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-import { CommonConstants } from '@ohos/common';
-import { LayoutViewModel } from '@ohos/common';
+import { CommonConstants, LayoutViewModel } from '@ohos/common';
 import { PageDesktopGridStyleConfig } from '@ohos/pagedesktop';
 import StyleConstants from './constants/StyleConstants';
+import PadSmartCanvas from './PadSmartCanvas'
 
 /**
  * Pad grid style config class
@@ -47,8 +47,12 @@ export default class PadPageDesktopGridStyleConfig extends PageDesktopGridStyleC
    */
   mPaddingTop = StyleConstants.DEFAULT_APP_TOP_RATIO;
 
+  private pullMouseSize: number = 54;
+  private insertMouseSize: number = 48;
+
   protected constructor() {
     super();
+    this.calculateSizeRatio();
   }
 
   /**
@@ -76,13 +80,28 @@ export default class PadPageDesktopGridStyleConfig extends PageDesktopGridStyleC
     this.mNameSize = result.mNameSize;
     this.mNameHeight = result.mNameHeight;
     this.mIconNameMargin = result.mIconNameMargin;
-    this.mIconSize = result.mIconSize;
     this.mNameLines = result.mNameLines;
     this.mIconMarginHorizontal = result.mIconMarginHorizontal;
     this.mIconMarginVertical = result.mIconMarginVertical;
+    let mInputDeviceType: string = AppStorage.Get('inputDeviceType');
+    if (mInputDeviceType == 'add') {
+      this.mIconSize = this.insertMouseSize;
+    } else {
+      this.mIconSize = this.pullMouseSize;
+    }
   }
 
   getConfigLevel(): string {
     return CommonConstants.LAYOUT_CONFIG_LEVEL_PRODUCT;
+  }
+
+  private calculateSizeRatio(): void {
+    let res: PadSmartCanvas = PadSmartCanvas.getInstance({
+      width: 2560,
+      height: 1600,
+      screenSize: 12.6
+    });
+    this.pullMouseSize = px2vp(res.normalIconSize);
+    this.insertMouseSize = px2vp(res.accessIconSize);
   }
 }

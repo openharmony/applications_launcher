@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-import { CommonConstants } from '@ohos/common';
-import { LayoutViewModel } from '@ohos/common';
+import { CommonConstants, LayoutViewModel } from '@ohos/common';
 import { PageDesktopGridStyleConfig } from '@ohos/pagedesktop';
 import StyleConstants from './constants/StyleConstants';
+import PhoneSmartCanvas from './PhoneSmartCanvas';
 
 /**
  * Phone grid style config class
@@ -42,8 +42,11 @@ export default class PhonePageDesktopGridStyleConfig extends PageDesktopGridStyl
    */
   mPaddingTop = StyleConstants.DEFAULT_APP_TOP_RATIO;
 
+  private pullMouseSize: number = 54;
+
   protected constructor() {
     super();
+    this.calculateSizeRatio();
   }
 
   /**
@@ -59,6 +62,7 @@ export default class PhonePageDesktopGridStyleConfig extends PageDesktopGridStyl
 
   initConfig(): void {
     const result = LayoutViewModel.getInstance().calculateDesktop();
+    let remainingSize = this.pullMouseSize - result.mIconSize;
     this.mMargin = result.mMargin;
     this.mColumnsGap = result.mColumnsGap;
     this.mRowsGap = result.mRowsGap;
@@ -66,18 +70,27 @@ export default class PhonePageDesktopGridStyleConfig extends PageDesktopGridStyl
     this.mRows = result.mRows;
     this.mDesktopMarginTop = result.mDesktopMarginTop;
     this.mGridWidth = result.mGridWidth;
-    this.mGridHeight = result.mGridHeight;
-    this.mAppItemSize = result.mAppItemSize;
+    this.mGridHeight = result.mGridHeight + this.mRows * remainingSize;
+    this.mAppItemSize = result.mAppItemSize + remainingSize;
     this.mNameSize = result.mNameSize;
     this.mNameHeight = result.mNameHeight;
     this.mIconNameMargin = result.mIconNameMargin;
-    this.mIconSize = result.mIconSize;
     this.mNameLines = result.mNameLines;
     this.mIconMarginHorizontal = result.mIconMarginHorizontal;
     this.mIconMarginVertical = result.mIconMarginVertical;
+    this.mIconSize = this.pullMouseSize;
   }
 
   getConfigLevel(): string {
     return CommonConstants.LAYOUT_CONFIG_LEVEL_PRODUCT;
+  }
+
+  private calculateSizeRatio(): void {
+    let res: PhoneSmartCanvas = PhoneSmartCanvas.getInstance({
+      width: 1280,
+      height: 720,
+      screenSize: 5.7
+    });
+    this.pullMouseSize = px2vp(res.normalIconSize);
   }
 }

@@ -40,9 +40,11 @@ export struct AppName {
     this.appName = name;
   }
 
-  public updateName() {
-    this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.moduleName,
-      this.appName, this.appNameLoadCallback.bind(this));
+  private updateName() {
+    if (this.mResourceManager) {
+      this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.moduleName,
+        this.appName, this.appNameLoadCallback.bind(this));
+    }
   }
 
   build() {
