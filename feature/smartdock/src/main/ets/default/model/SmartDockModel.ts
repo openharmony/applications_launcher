@@ -431,7 +431,9 @@ export default class SmartDockModel {
       onMissionDestroyed: this.onMissionDestroyedCallback.bind(this),
       onMissionSnapshotChanged: this.onMissionSnapshotChangedCallback.bind(this),
       onMissionMovedToFront: this.onMissionMovedToFrontCallback.bind(this),
-      onMissionIconUpdated: () => {}
+      onMissionIconUpdated: () => {},
+      // @ts-ignore
+      onMissionClosed: () => {}
     };
     missionManager.registerMissionListener(listener);
   }
@@ -501,7 +503,15 @@ export default class SmartDockModel {
     }[] = [];
     let snapShotWidth = 0;
     for (const item of missionIds) {
-      let pixelMap = {
+      let pixelMap: {
+        name: string,
+        image: any,
+        missionId: number,
+        boxSize: number,
+        bundleName: string,
+        left?: number,
+        right?: number,
+      } = {
         name: '',
         left: StyleConstants.DEFAULT_12,
         missionId: -1,

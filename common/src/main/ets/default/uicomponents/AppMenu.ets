@@ -133,7 +133,7 @@ struct HorizontalMenuItem {
   }
 
   public updateName() {
-    if (this.menuInfo.shortcutLabelId != -1 && this.menuInfo.menuText != "" && this.menuInfo.menuText != null) {
+    if (this.menuInfo.shortcutLabelId != -1 && this.menuInfo.menuText != "" && this.menuInfo.menuText != null && this.mResourceManager) {
       this.mResourceManager.getAppNameWithCache(this.menuInfo.shortcutLabelId, this.menuInfo.bundleName,
         this.menuInfo.moduleName, this.shortcutName, this.shortcutNameLoadCallback.bind(this));
     } else {

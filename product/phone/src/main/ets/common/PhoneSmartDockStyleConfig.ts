@@ -13,8 +13,9 @@
  * limitations under the License.
  */
 
-import { CommonConstants } from '@ohos/common';
+import { CommonConstants, LayoutViewModel } from '@ohos/common';
 import { SmartDockStyleConfig } from '@ohos/smartdock';
+import PhoneSmartCanvas from './PhoneSmartCanvas'
 
 /**
  * Dock style configuration class
@@ -64,7 +65,7 @@ export default class PhoneSmartDockStyleConfig extends SmartDockStyleConfig {
   /**
    * list item gap
    */
-  mListItemGap = 33;
+  mListItemGap = 20;
 
   /**
    * list icon size
@@ -76,19 +77,42 @@ export default class PhoneSmartDockStyleConfig extends SmartDockStyleConfig {
    */
   mMaxDockNum = 4;
 
+  private pullMouseSize: number = 54;
+
   protected constructor() {
     super();
+    this.calculateSizeRatio();
   }
 
   static getInstance(): PhoneSmartDockStyleConfig {
     if (globalThis.PhoneSmartDockStyleConfig == null) {
       globalThis.PhoneSmartDockStyleConfig = new PhoneSmartDockStyleConfig();
-      globalThis.PhoneSmartDockStyleConfig.initConfig();
     }
+    globalThis.PhoneSmartDockStyleConfig.initConfig();
     return globalThis.PhoneSmartDockStyleConfig;
+  }
+
+  initConfig(): void {
+    const result = LayoutViewModel.getInstance().calculateDock();
+    this.mDockPadding = result.mDockPadding;
+    this.mMaxDockNum = result.mMaxDockNum;
+    this.mListItemGap = result.mListItemGap;
+    this.mIconSize = this.pullMouseSize;
+    this.mListItemWidth = this.pullMouseSize;
+    this.mListItemHeight = this.pullMouseSize;
+    this.mDockHeight = this.pullMouseSize + 2 * this.mDockPadding;
   }
 
   getConfigLevel(): string {
     return CommonConstants.LAYOUT_CONFIG_LEVEL_PRODUCT;
+  }
+
+  private calculateSizeRatio(): void {
+    let res: PhoneSmartCanvas = PhoneSmartCanvas.getInstance({
+      width: 1280,
+      height: 720,
+      screenSize: 5.7
+    });
+    this.pullMouseSize = px2vp(res.normalIconSize);
   }
 }

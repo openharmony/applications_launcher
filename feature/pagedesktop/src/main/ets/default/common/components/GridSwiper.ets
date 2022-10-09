@@ -29,6 +29,7 @@ export default struct GridSwiper {
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
   @Prop gridConfig: string;
   @StorageLink('pageIndex') pageIndex: number = 0;
+  @Link inputDeviceType: string;
   private mPageDesktopViewModel;
   @State mAppGridInfo: [[]] = [[]];
   private swiperController: SwiperController = new SwiperController();
@@ -89,6 +90,7 @@ export default struct GridSwiper {
             if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
               Column() {
                 SwiperPage({
+                  inputDeviceType: $inputDeviceType,
                   mAppListInfo: item,
                   gridConfig: this.gridConfig,
                   mPageDesktopViewModel: this.mPageDesktopViewModel
@@ -103,6 +105,7 @@ export default struct GridSwiper {
               .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
             } else {
               SwiperPage({
+                inputDeviceType: $inputDeviceType,
                 mAppListInfo: item,
                 gridConfig: this.gridConfig,
                 mPageDesktopViewModel: this.mPageDesktopViewModel

@@ -34,6 +34,7 @@ const TAG = "EntryView";
 struct EntryView {
   @StorageLink('screenWidth') screenWidth: number = 0;
   @StorageLink('screenHeight') @Watch('updateScreenInfo') screenHeight: number = 0;
+  @StorageLink('inputDeviceType') @Watch('updateScreenInfo') inputDeviceType: string = 'remove';
   @StorageLink('deviceType') deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
   @State workSpaceWidth: number = 0;
   @State workSpaceHeight: number = 0;
@@ -95,7 +96,7 @@ struct EntryView {
     Log.showDebug(TAG, 'updateScreenInfo');
     if (this.screenWidth != 0 && this.screenHeight != 0) {
       this.mLayoutViewModel.initScreen(this.navigationBarStatus);
-      globalThis.SmartDockStyleConfig.initConfig();
+      globalThis.PhoneSmartDockStyleConfig.initConfig();
       globalThis.PhonePageDesktopGridStyleConfig.initConfig();
       globalThis.BigFolderStyleConfigInstance.initConfig();
       globalThis.FormStyleConfigInstance.initConfig();
@@ -117,7 +118,7 @@ struct EntryView {
   private updateScreenSize(): void {
     this.workSpaceWidth = this.screenWidth;
     this.workSpaceHeight = this.mLayoutViewModel.getWorkSpaceHeight();
-    this.dockHeight = this.mLayoutViewModel.getDockHeight();
+    this.dockHeight = globalThis.PhoneSmartDockStyleConfig ? globalThis.PhoneSmartDockStyleConfig.mDockHeight : this.mLayoutViewModel.getDockHeight();
     AppStorage.SetOrCreate('workSpaceWidth', this.workSpaceWidth);
     AppStorage.SetOrCreate('workSpaceHeight', this.workSpaceHeight);
     AppStorage.SetOrCreate('dockHeight', this.dockHeight);
@@ -129,7 +130,9 @@ struct EntryView {
     Stack() {
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
         Column() {
-          PageDesktopLayout();
+          PageDesktopLayout({
+            inputDeviceType: $inputDeviceType
+          });
         }
         .height(this.workSpaceHeight)
         .onAreaChange((oldValue: Area, newValue: Area): void => {
@@ -143,7 +146,9 @@ struct EntryView {
         })
 
         Column() {
-          SmartDock();
+          SmartDock({
+            inputDeviceType: $inputDeviceType
+          });
         }
         .height(this.dockHeight)
       }

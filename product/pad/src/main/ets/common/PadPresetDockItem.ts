@@ -47,7 +47,7 @@ const presetDockItem = [
     abilityName: 'com.ohos.settings.MainAbility',
     moduleName: 'phone',
     editable: false
-  },
+  }
 ];
 
 export default presetDockItem;
