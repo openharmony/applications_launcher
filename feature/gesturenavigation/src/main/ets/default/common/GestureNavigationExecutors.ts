@@ -163,7 +163,7 @@ export default class GestureNavigationExecutors {
       keyDownDuration: 1,
       isIntercepted: false
     };
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     let res = Input.injectEvent({KeyEvent: keyEvent});
     Log.showDebug(TAG, `backEventCall result: ${res}`);
     keyEvent = {
@@ -172,9 +172,11 @@ export default class GestureNavigationExecutors {
       keyDownDuration: 1,
       isIntercepted: false
     };
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    res = Input.injectEvent({KeyEvent: keyEvent});
-    Log.showDebug(TAG, `backEventCall result: ${res}`);
+
+    setTimeout(() => {
+      res = Input.injectEvent({KeyEvent: keyEvent});
+      Log.showDebug(TAG, `backEventCall result: ${res}`);
+    }, 20)
   }
 
   private homeEventCall() {
