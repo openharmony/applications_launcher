@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 import { Log } from '@ohos/common';
+import { localEventManager } from '@ohos/common';
+import { EventConstants } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import RecentMissionCard from '../common/uicomponents/RecentMissionCard';
 import { RecentMissionsViewModel } from '../viewmodel/RecentMissionsViewModel';
@@ -91,6 +93,7 @@ export struct RecentMissionsDoubleLayout {
         .onClick(() => {
           this.isClickSubComponent = true;
           Log.showDebug(TAG, 'onClick click delete button');
+          localEventManager.sendLocalEventSticky(EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION, null);
           this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
           this.mRecentMissionsViewModel.backView();
         })

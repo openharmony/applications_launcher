@@ -350,6 +350,9 @@ class WindowManager {
           'Primary': featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_PRIMARY,
           'Secondary': featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_SECONDARY
         };
+        if (data.parameters.windowMode != 'Primary' && data.parameters.windowMode != 'Secondary') {
+          break;
+        }
         windowManager.createRecentWindow(windowModeMap[data.parameters.windowMode]);
         globalThis.splitMissionId = data.parameters.missionId;
         await WindowManager.subscriber.setCode(0)

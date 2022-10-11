@@ -111,7 +111,9 @@ export default class MainAbility extends ServiceExtension {
     if(want.action === FormConstants.ACTION_PUBLISH_FORM) {
       PageDesktopViewModel.getInstance().publishCardToDesktop(want.parameters);
     }
-    windowManager.minimizeAllApps();
+    if (startId !== 1) {
+      windowManager.minimizeAllApps();
+    }
     windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
     windowManager.destroyWindow(windowManager.APP_CENTER_WINDOW_NAME);
     this.closeFolder();
