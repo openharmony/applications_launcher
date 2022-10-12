@@ -305,6 +305,7 @@ export default class SmartDockViewModel extends BaseViewModel {
       Log.showError(TAG, `setStartAppInfo with item`)
       return;
     }
+    item.icon = globalThis.ResourceManager.getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName)
     AppStorage.SetOrCreate('startAppItemInfo', item);
     this.mSmartDockStartAppHandler.setAppIconSize(this.mSmartDockStyleConfig.mIconSize);
     this.mSmartDockStartAppHandler.setAppIconInfo();

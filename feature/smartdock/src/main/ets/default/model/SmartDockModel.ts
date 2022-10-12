@@ -433,7 +433,8 @@ export default class SmartDockModel {
       onMissionMovedToFront: this.onMissionMovedToFrontCallback.bind(this),
       onMissionIconUpdated: () => {},
       // @ts-ignore
-      onMissionClosed: () => {}
+      onMissionClosed: () => {},
+      onMissionLabelUpdated: () => {}
     };
     missionManager.registerMissionListener(listener);
   }
