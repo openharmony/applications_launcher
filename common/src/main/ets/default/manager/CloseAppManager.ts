@@ -23,121 +23,139 @@ const TAG = 'CloseAppManager';
  * close app manager
  */
 export class CloseAppManager {
-    private mBaseCloseAppHandlerList: Array<BaseCloseAppHandler> = new Array<BaseCloseAppHandler>();
-    private mPagedesktopCloseItemInfo: any;
-    private mPagedesktopClosePosition: {
-        appIconSize: number,
-        appIconHeight: number,
-        appIconPositionX: number,
-        appIconPositionY: number
-    } = { appIconSize: 0,
-        appIconHeight: 0,
-        appIconPositionX: 0,
-        appIconPositionY: 0 };
-    private mSmartdockCloseItemInfo: any;
-    private mSmartdockClosePosition: {
-        appIconSize: number,
-        appIconHeight: number,
-        appIconPositionX: number,
-        appIconPositionY: number
-    } = { appIconSize: 0,
-        appIconHeight: 0,
-        appIconPositionX: 0,
-        appIconPositionY: 0 }
+  private mBaseCloseAppHandlerList: Array<BaseCloseAppHandler> = new Array<BaseCloseAppHandler>();
+  private mPagedesktopCloseItemInfo: any;
+  private mPagedesktopClosePosition: {
+    appIconSize: number,
+    appIconHeight: number,
+    appIconPositionX: number,
+    appIconPositionY: number
+  } = { appIconSize: 0,
+    appIconHeight: 0,
+    appIconPositionX: 0,
+    appIconPositionY: 0 };
+  private mSmartdockCloseItemInfo: any;
+  private mSmartdockClosePosition: {
+    appIconSize: number,
+    appIconHeight: number,
+    appIconPositionX: number,
+    appIconPositionY: number
+  } = { appIconSize: 0,
+    appIconHeight: 0,
+    appIconPositionX: 0,
+    appIconPositionY: 0 }
 
-    constructor() {
+  constructor() {
+  }
+
+  static getInstance(): CloseAppManager {
+    if (globalThis.CloseAppManager == null) {
+      globalThis.CloseAppManager = new CloseAppManager();
+    }
+    return globalThis.CloseAppManager;
+  }
+
+  /**
+   * register baseCloseAppHandler to manager
+   *
+   * @param baseCloseAppHandler the instance of close app handler
+   */
+  public registerCloseAppHandler(baseCloseAppHandler: BaseCloseAppHandler): void {
+    if (CheckEmptyUtils.isEmpty(baseCloseAppHandler)) {
+      Log.showError(TAG, `registerCloseAppHandler with invalid baseCloseAppHandler`)
+      return;
     }
 
-    static getInstance(): CloseAppManager {
-        if (globalThis.CloseAppManager == null) {
-            globalThis.CloseAppManager = new CloseAppManager();
-        }
-        return globalThis.CloseAppManager;
+    this.mBaseCloseAppHandlerList.push(baseCloseAppHandler);
+    Log.showInfo(TAG, `registerCloseAppHandler mBaseCloseAppHandlerList is ${this.mBaseCloseAppHandlerList.length}} `)
+  }
+
+  /**
+   * unregister baseCloseAppHandler to manager
+   *
+   * @param baseCloseAppHandler the instance of close app handler
+   */
+  public unregisterCloseAppHandler(baseCloseAppHandler: BaseCloseAppHandler): void {
+    if (CheckEmptyUtils.isEmpty(baseCloseAppHandler)) {
+      Log.showError(TAG, `unregisterCloseAppHandler with invalid baseCloseAppHandler`)
+      return;
     }
 
-    /**
-     * register baseCloseAppHandler to manager
-     *
-     * @param baseCloseAppHandler the instance of close app handler
-     */
-    public registerCloseAppHandler(baseCloseAppHandler: BaseCloseAppHandler): void {
-        if (CheckEmptyUtils.isEmpty(baseCloseAppHandler)) {
-            Log.showError(TAG, `registerCloseAppHandler with invalid baseCloseAppHandler`)
-            return;
-        }
-
-        this.mBaseCloseAppHandlerList.push(baseCloseAppHandler);
-        Log.showInfo(TAG, `registerCloseAppHandler mBaseCloseAppHandlerList is ${this.mBaseCloseAppHandlerList.length}} `)
+    let index: number = 0;
+    for (var i = 0; i < this.mBaseCloseAppHandlerList.length; i++) {
+      if (this.mBaseCloseAppHandlerList[i] === baseCloseAppHandler) {
+        index = i;
+        break;
+      }
     }
 
-    /**
-     * unregister baseCloseAppHandler to manager
-     *
-     * @param baseCloseAppHandler the instance of close app handler
-     */
-    public unregisterCloseAppHandler(baseCloseAppHandler: BaseCloseAppHandler): void {
-        if (CheckEmptyUtils.isEmpty(baseCloseAppHandler)) {
-            Log.showError(TAG, `unregisterCloseAppHandler with invalid baseCloseAppHandler`)
-            return;
-        }
+    this.mBaseCloseAppHandlerList.splice(index, 1);
+    Log.showInfo(TAG, `unregisterCloseAppHandler mBaseCloseAppHandlerList is ${this.mBaseCloseAppHandlerList.length}`)
+  }
 
-        let index: number = 0;
-        for (var i = 0; i < this.mBaseCloseAppHandlerList.length; i++) {
-            if (this.mBaseCloseAppHandlerList[i] === baseCloseAppHandler) {
-                index = i;
-                break;
-            }
-        }
-
-        this.mBaseCloseAppHandlerList.splice(index, 1);
-        Log.showInfo(TAG, `unregisterCloseAppHandler mBaseCloseAppHandlerList is ${this.mBaseCloseAppHandlerList.length}`)
+  /**
+   * get app icon info
+   *
+   * @param windowTarget windowTarget close window target
+   */
+  public getAppIconInfo(windowTarget): void {
+    if (CheckEmptyUtils.isEmptyArr(this.mBaseCloseAppHandlerList)) {
+      Log.showError(TAG, `getAppIconInfo with invalid mBaseCloseAppHandlerList`);
+      return;
     }
 
-    /**
-     * get app icon info
-     *
-     * @param windowTarget windowTarget close window target
-     */
-    public getAppIconInfo(windowTarget): void {
-        if (CheckEmptyUtils.isEmptyArr(this.mBaseCloseAppHandlerList)) {
-            Log.showError(TAG, `getAppIconInfo with invalid mBaseCloseAppHandlerList`);
-            return;
-        }
+    for (var i = 0; i < this.mBaseCloseAppHandlerList.length; i++) {
+      this.mBaseCloseAppHandlerList[i].getAppIconInfo(windowTarget);
+    }
+  }
 
-        for (var i = 0; i < this.mBaseCloseAppHandlerList.length; i++) {
-            this.mBaseCloseAppHandlerList[i].getAppIconInfo(windowTarget);
-        }
+  /**
+   * get app icon info
+   *
+   * @param windowTarget windowTarget close window target
+   */
+  public getAppInfo(windowTarget): any {
+    if (CheckEmptyUtils.isEmptyArr(this.mBaseCloseAppHandlerList)) {
+      Log.showError(TAG, `getAppIconInfo with invalid mBaseCloseAppHandlerList`);
+      return {};
     }
 
-    public addPagedesktopClosePosition(pagedesktopCloseIconInfo: any, pagedesktopCloseItemInfo?: any) {
-        Log.showDebug(TAG, `addPagedesktopClosePosition pagedesktopCloasIconInfo is ${JSON.stringify(pagedesktopCloseIconInfo)}`)
-        this.mPagedesktopClosePosition = pagedesktopCloseIconInfo;
-        this.mPagedesktopCloseItemInfo = pagedesktopCloseItemInfo;
+    for (var i = 0; i < this.mBaseCloseAppHandlerList.length; i++) {
+      this.mBaseCloseAppHandlerList[i].getAppIconInfo(windowTarget);
     }
 
-    public addSmartDockClosePosition(smartdockCloseIconInfo: any, smartdockCloseItemInfo: any) {
-        Log.showDebug(TAG, `addSmartDockClosePosition smartdockCloasIconInfo is ${JSON.stringify(smartdockCloseIconInfo)}`)
-        this.mSmartdockClosePosition = smartdockCloseIconInfo;
-        this.mSmartdockCloseItemInfo = smartdockCloseItemInfo;
-    }
+    return {iconInfo: this.getAppCloseIconInfo(), appItemInfo: this.getAppCloseItemInfo()}
+  }
 
-    public getAppCloseIconInfo(): any{
-        if (CheckEmptyUtils.isEmpty(this.mPagedesktopClosePosition)) {
-            Log.showDebug(TAG, `getAppCloseIconInfo return mSmartdockClosePosition is ${JSON.stringify(this.mSmartdockClosePosition)}`)
-            return this.mSmartdockClosePosition;
-        } else {
-            Log.showDebug(TAG, `getAppCloseIconInfo return mPagedesktopClosePosition is ${JSON.stringify(this.mPagedesktopClosePosition)}`)
-            return this.mPagedesktopClosePosition;
-        }
-    }
+  public addPagedesktopClosePosition(pagedesktopCloseIconInfo: any, pagedesktopCloseItemInfo?: any) {
+    Log.showDebug(TAG, `addPagedesktopClosePosition pagedesktopCloasIconInfo is ${JSON.stringify(pagedesktopCloseIconInfo)}`)
+    this.mPagedesktopClosePosition = pagedesktopCloseIconInfo;
+    this.mPagedesktopCloseItemInfo = pagedesktopCloseItemInfo;
+  }
 
-    public getAppCloseItemInfo(): any{
-        if (CheckEmptyUtils.isEmpty(this.mPagedesktopClosePosition)) {
-            Log.showDebug(TAG, `getAppCloseIconInfo return mSmartdockClosePosition is ${JSON.stringify(this.mSmartdockClosePosition)}`)
-            return this.mSmartdockCloseItemInfo;
-        } else {
-            Log.showDebug(TAG, `getAppCloseIconInfo return mPagedesktopClosePosition is ${JSON.stringify(this.mPagedesktopClosePosition)}`)
-            return this.mPagedesktopCloseItemInfo;
-        }
+  public addSmartDockClosePosition(smartdockCloseIconInfo: any, smartdockCloseItemInfo: any) {
+    Log.showDebug(TAG, `addSmartDockClosePosition smartdockCloasIconInfo is ${JSON.stringify(smartdockCloseIconInfo)}`)
+    this.mSmartdockClosePosition = smartdockCloseIconInfo;
+    this.mSmartdockCloseItemInfo = smartdockCloseItemInfo;
+  }
+
+  public getAppCloseIconInfo(): any{
+    if (CheckEmptyUtils.isEmpty(this.mPagedesktopClosePosition)) {
+      Log.showDebug(TAG, `getAppCloseIconInfo return mSmartdockClosePosition is ${JSON.stringify(this.mSmartdockClosePosition)}`)
+      return this.mSmartdockClosePosition;
+    } else {
+      Log.showDebug(TAG, `getAppCloseIconInfo return mPagedesktopClosePosition is ${JSON.stringify(this.mPagedesktopClosePosition)}`)
+      return this.mPagedesktopClosePosition;
     }
+  }
+
+  public getAppCloseItemInfo(): any{
+    if (CheckEmptyUtils.isEmpty(this.mPagedesktopClosePosition)) {
+      Log.showDebug(TAG, `getAppCloseIconInfo return mSmartdockClosePosition is ${JSON.stringify(this.mSmartdockClosePosition)}`)
+      return this.mSmartdockCloseItemInfo;
+    } else {
+      Log.showDebug(TAG, `getAppCloseIconInfo return mPagedesktopClosePosition is ${JSON.stringify(this.mPagedesktopClosePosition)}`)
+      return this.mPagedesktopCloseItemInfo;
+    }
+  }
 }
