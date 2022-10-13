@@ -89,6 +89,7 @@ export default class PadPageDesktopGridStyleConfig extends PageDesktopGridStyleC
     } else {
       this.mIconSize = this.pullMouseSize;
     }
+    AppStorage.SetOrCreate('DesktopAppIconSize', this.mIconSize);
   }
 
   getConfigLevel(): string {

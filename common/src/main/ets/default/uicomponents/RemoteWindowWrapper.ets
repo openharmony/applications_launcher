@@ -435,7 +435,7 @@ export struct RemoteWindowWrapper {
     this.startAppIconWindowAlpha = 1.0;
     this.remoteWindowWindowAlpha = 0.0;
     animateTo({
-      duration: 120,
+      duration: 150,
       delay: 50,
       curve: Curve.Friction,
       onFinish: () => {
@@ -468,7 +468,7 @@ export struct RemoteWindowWrapper {
               .size({ width: this.startAppIconInfo?.appIconSize, height: this.startAppIconInfo?.appIconHeight })
           } else {
             OverlayAppIcon({
-              iconSize: this.mStartAppItemInfo?.appIconSize,
+              iconSize: this.startAppIconInfo?.appIconSize,
               icon: this.mStartAppItemInfo?.icon
             })
           }
@@ -502,7 +502,7 @@ export struct RemoteWindowWrapper {
               .size({ width: this.closeAppIconInfo?.appIconSize, height: this.closeAppIconInfo?.appIconHeight })
           } else {
             OverlayAppIcon({
-              iconSize: this.mCloseAppItemInfo?.appIconSize,
+              iconSize: this.closeAppIconInfo?.appIconSize,
               icon: this.mCloseAppItemInfo?.icon
             })
           }
