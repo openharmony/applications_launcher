@@ -234,7 +234,7 @@ export class LayoutViewModel {
       mRowsGap: gutter,
       mColumns: column,
       mRows: row,
-      mDesktopMarginTop: (this.mIsPad ? marginTop : (this.mSysUITopHeight + 10)),
+      mDesktopMarginTop: marginTop,
       mGridWidth: realWidth,
       mGridHeight: realHeight,
       mAppItemSize: itemSize,

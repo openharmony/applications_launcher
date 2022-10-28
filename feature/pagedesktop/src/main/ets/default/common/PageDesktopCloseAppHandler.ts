@@ -62,10 +62,9 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
     //        this.setAppIconInfo();
     this.calculateAppIconPosition();
     if (this.mFindPagedesktopPosition) {
-      const desktopAppIconSize: number = AppStorage.Get('DesktopAppIconSize');
       let appCloseIconInfo = {
-        appIconSize: this.mCloseAppType ? desktopAppIconSize : StyleConstants.DEFAULT_FOLDER_APP_SIZE,
-        appIconHeight: this.mCloseAppType ? desktopAppIconSize : StyleConstants.DEFAULT_FOLDER_APP_SIZE,
+        appIconSize: this.mCloseAppType ? StyleConstants.DEFAULT_ADD_APP_SIZE : StyleConstants.DEFAULT_FOLDER_APP_SIZE,
+        appIconHeight: this.mCloseAppType ? StyleConstants.DEFAULT_ADD_APP_SIZE : StyleConstants.DEFAULT_FOLDER_APP_SIZE,
         appIconPositionX: this.mAppIconPositionX,
         appIconPositionY: this.mAppIconPositionY
       };

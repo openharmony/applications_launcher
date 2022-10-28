@@ -38,7 +38,6 @@ export struct PageDesktopLayout {
   @State mTop: number = 0;
   @State @Watch('changeGridConfig') gridConfig: string = '';
   @StorageLink('menuId') menuId: number = 0;
-  @Link inputDeviceType: string;
   private mPageDesktopDragHandler: PageDesktopDragHandler = null;
   private isPad: boolean = false;
   private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
@@ -106,7 +105,6 @@ export struct PageDesktopLayout {
 
   build() {
     GridSwiper({
-      inputDeviceType: $inputDeviceType,
       mAppGridInfo: this.AppListInfo.appGridInfo,
       gridConfig: this.gridConfig,
       mPageDesktopViewModel: mPageDesktopViewModel,
