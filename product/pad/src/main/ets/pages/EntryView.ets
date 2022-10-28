@@ -90,23 +90,12 @@ struct EntryView {
       curve: Curve.Friction,
       onFinish: () => {},
     }, () => {
-      this.mAppScaleX = 0.97;
-      this.mAppScaleY = 0.97;
+      this.mAppScaleX = 0.95;
+      this.mAppScaleY = 0.95;
     })
   }
 
   private closeAppAnimation(): void {
-    this.mAppAlpha = 0.0;
-    animateTo({
-      duration: 140,
-      delay: 210,
-      curve: Curve.Linear,
-    }, () => {
-      this.mAppAlpha = 1.0;
-    })
-
-    this.mAppScaleX = 0.9;
-    this.mAppScaleY = 0.9;
     animateTo({
       duration: 490,
       delay: 210,
