@@ -30,7 +30,6 @@ export default struct SwiperPage {
   @State ColumnsTemplate: string = '';
   @State RowsTemplate: string = ''
   @Prop @Watch('changeColumnAndRow') gridConfig: string;
-  @Link inputDeviceType: string;
   @State mMargin: number = 0;
   @State mColumnsGap: number = 0;
   @State mRowsGap: number = 0;
@@ -121,7 +120,6 @@ export default struct SwiperPage {
           if(this.buildLog(item)){}
           if (item.typeId == CommonConstants.TYPE_APP) {
             AppItem({
-              inputDeviceType: $inputDeviceType,
               item: item,
               mPageDesktopViewModel: this.mPageDesktopViewModel,
               mNameLines: this.mNameLines

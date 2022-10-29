@@ -37,7 +37,6 @@ const TAG = 'EntryView';
 struct EntryView {
   @StorageLink('screenWidth') screenWidth: number = 0;
   @StorageLink('screenHeight') @Watch('updateScreenInfo') screenHeight: number = 0;
-  @StorageLink('inputDeviceType') @Watch('updateScreenInfo') inputDeviceType: string = 'remove';
   @StorageLink('deviceType') deviceType: string = CommonConstants.PAD_DEVICE_TYPE;
   @State workSpaceWidth: number = 0;
   @State workSpaceHeight: number = 0;
@@ -110,7 +109,7 @@ struct EntryView {
     Log.showInfo(TAG, 'updateScreenInfo');
     if (this.screenWidth !== 0 && this.screenHeight !== 0) {
       this.mLayoutViewModel.initScreen(this.navigationBarStatus);
-      globalThis.PadSmartDockStyleConfig.initConfig();
+      globalThis.SmartDockStyleConfig.initConfig();
       globalThis.PadPageDesktopGridStyleConfig.initConfig();
       globalThis.AppCenterGridStyleConfigInstance.initConfig();
       globalThis.BigFolderStyleConfigInstance.initConfig();
@@ -182,9 +181,7 @@ struct EntryView {
       if (this.buildLog()) {}
       Column() {
         Column() {
-          PageDesktopLayout({
-            inputDeviceType: $inputDeviceType
-          });
+          PageDesktopLayout();
         }
         .alignItems(HorizontalAlign.Center)
         .justifyContent(FlexAlign.Center)
@@ -201,7 +198,6 @@ struct EntryView {
 
         Column() {
           SmartDock({
-            inputDeviceType: $inputDeviceType,
             showAppCenter: () => {
               Trace.start(Trace.CORE_METHOD_START_APP_CENTER);
               globalThis.createWindowWithName(windowManager.APP_CENTER_WINDOW_NAME, windowManager.DESKTOP_RANK);
