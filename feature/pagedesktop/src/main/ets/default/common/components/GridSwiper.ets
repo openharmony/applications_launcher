@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,13 +13,7 @@
  * limitations under the License.
  */
 
-import {
-  Log,
-  Trace,
-  StyleConstants,
-  CommonConstants,
-  AppMenu,
-  MenuInfo} from '@ohos/common';
+import { Log, Trace, StyleConstants, CommonConstants, AppMenu, MenuInfo } from '@ohos/common';
 import SwiperPage from './SwiperPage';
 
 const TAG = "GridSwiper";
@@ -27,18 +21,21 @@ const TAG = "GridSwiper";
 @Component
 export default struct GridSwiper {
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
+  @StorageLink('isDesktopLoadFinished') desktopLoadFinished: boolean = false;
   @Prop gridConfig: string;
   @StorageLink('pageIndex') pageIndex: number = 0;
   private mPageDesktopViewModel;
-  @State mAppGridInfo: [[]] = [[]];
+  @StorageLink('appListInfo') appListInfo: {
+    appGridInfo: [[]]
+  } = { appGridInfo: [[]] };
   private swiperController: SwiperController = new SwiperController();
   private dialogController: CustomDialogController;
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mPageDesktopViewModel.setSwiperController(this.swiperController);
   }
 
-  aboutToDisappear(): void  {
+  aboutToDisappear(): void {
     Log.showInfo(TAG, 'aboutToDisappear');
   }
 
@@ -83,50 +80,53 @@ export default struct GridSwiper {
 
   build() {
     Column() {
-      if (this.buildLog()) {
-        Swiper(this.swiperController) {
-          ForEach(this.mAppGridInfo, (item) => {
-            if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
-              Column() {
+      if (this.buildLog()) {}
+        if (this.desktopLoadFinished) {
+          Swiper(this.swiperController) {
+            ForEach(this.appListInfo.appGridInfo, (item) => {
+              if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+                Column() {
+                  SwiperPage({
+                    mAppListInfo: item,
+                    gridConfig: this.gridConfig,
+                    mPageDesktopViewModel: this.mPageDesktopViewModel
+                  })
+                }
+                .gesture(
+                LongPressGesture({ repeat: true })
+                  .onAction((event: GestureEvent) => {
+                    this.dialogController.open()
+                  })
+                )
+                .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+              } else {
                 SwiperPage({
                   mAppListInfo: item,
                   gridConfig: this.gridConfig,
                   mPageDesktopViewModel: this.mPageDesktopViewModel
                 })
+                  .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
+                  .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
               }
-              .gesture(
-              LongPressGesture({ repeat: true })
-                .onAction((event: GestureEvent) => {
-                  this.dialogController.open()
-                })
-              )
-              .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
-            } else {
-              SwiperPage({
-                mAppListInfo: item,
-                gridConfig: this.gridConfig,
-                mPageDesktopViewModel: this.mPageDesktopViewModel
-              })
-                .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-                .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
-            }
+            })
+          }
+          .padding({
+            top: this.navigationBarStatusValue ?
+              this.mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop :
+              this.mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop + 0
+          })
+          .height(StyleConstants.PERCENTAGE_100)
+          .width(StyleConstants.PERCENTAGE_100)
+          .indicatorStyle({
+            selectedColor: StyleConstants.DEFAULT_FONT_COLOR
+          })
+          .loop(false)
+          .index(this.pageIndex)
+          .onChange((index) => {
+            this.pageIndex = index;
+            Log.showInfo(TAG, `swiper change to page ${index}`);
           })
         }
-        .padding({
-          top: this.navigationBarStatusValue ? this.mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop : this.mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop + 0
-        })
-        .height(StyleConstants.PERCENTAGE_100)
-        .width(StyleConstants.PERCENTAGE_100)
-        .indicatorStyle({
-          selectedColor: StyleConstants.DEFAULT_FONT_COLOR
-        })
-        .loop(false)
-        .index(this.pageIndex)
-        .onChange((index) => {
-          this.pageIndex = index;
-          Log.showInfo(TAG, `swiper change to page ${index}`);
-        })
-      }
     }
     .alignItems(HorizontalAlign.Center)
     .justifyContent(FlexAlign.Center)

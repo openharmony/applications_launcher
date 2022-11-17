@@ -20,18 +20,18 @@ import phonePresetDockItem from './PhonePresetDockItem';
 /**
  * Desktop Dock function layout configuration.
  */
-export default class PadSmartDockLayoutConfig extends SmartDockLayoutConfig {
+export default class PhoneSmartDockLayoutConfig extends SmartDockLayoutConfig {
   protected constructor() {
     super();
     this.mDockLayoutInfo = phonePresetDockItem;
   }
 
-  static getInstance(): PadSmartDockLayoutConfig {
-    if (globalThis.PadSmartDockLayoutConfig == null) {
-      globalThis.PadSmartDockLayoutConfig = new PadSmartDockLayoutConfig();
-      globalThis.PadSmartDockLayoutConfig.initConfig();
+  static getInstance(): PhoneSmartDockLayoutConfig {
+    if (globalThis.PhoneSmartDockLayoutConfig == null) {
+      globalThis.PhoneSmartDockLayoutConfig = new PhoneSmartDockLayoutConfig();
+      globalThis.PhoneSmartDockLayoutConfig.initConfig();
     }
-    return globalThis.PadSmartDockLayoutConfig;
+    return globalThis.PhoneSmartDockLayoutConfig;
   }
 
   getConfigLevel(): string {

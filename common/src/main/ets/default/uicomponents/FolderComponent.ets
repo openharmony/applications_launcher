@@ -41,10 +41,10 @@ export struct FolderComponent {
   @State animateOpacity: number = 1.0;
   @State animateScale: number = 1.0;
   @State showFolderName: boolean = true;
-  @Prop folderNameHeight: number;
-  @Prop folderNameSize: number;
-  @Prop nameFontColor: string;
-  @Prop appIconSize: number;
+  @State folderNameHeight: number = 0;
+  @State folderNameSize: number = 0;
+  @State nameFontColor: string = '';
+  @State appIconSize: number = 0;
   @State superposeIconVisible: boolean = false;
   @State isHover: boolean = false;
   mPaddingTop: number = StyleConstants.DEFAULT_10;

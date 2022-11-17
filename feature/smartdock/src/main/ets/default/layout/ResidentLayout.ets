@@ -28,16 +28,19 @@ const TAG = 'ResidentLayout';
 
 @Component
 export default struct ResidentLayout {
-  @StorageLink('dockPadding') dockPadding: {right: number, left: number, top: number, bottom: number} = {right: 0, left: 0, top: 0, bottom: 0};
-  @Link @Watch('onDockListChange') appList: Array<DockItemInfo>;
-  mResidentMaxNum: number;
+  @StorageLink('dockPadding') dockPadding: {
+    right: number,
+    left: number,
+    top: number,
+    bottom: number
+  } = { right: 0, left: 0, top: 0, bottom: 0 };
+  @StorageLink('residentList') @Watch('onDockListChange') appList: Array<DockItemInfo> = [];
   mSmartDockStyleConfig: SmartDockStyleConfig;
   onItemClick: Function = null;
   buildMenu: Function = null;
   onDockListChangeFunc: Function = null;
 
   aboutToAppear(): void {
-    this.mResidentMaxNum = this.mSmartDockStyleConfig.mMaxDockNum;
     mSmartDockStyleConfig = this.mSmartDockStyleConfig;
     if (this.appList.length > 0) {
       this.onDockListChange();
@@ -45,21 +48,21 @@ export default struct ResidentLayout {
   }
 
   getListWidth(): number {
-    let width = 0;
+    let residentMaxNum = this.mSmartDockStyleConfig.mMaxDockNum;
+    let width = 0.0;
     if (AppStorage.Get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
-      Log.showDebug(TAG, `getListWidth mDockPadding: ${this.mSmartDockStyleConfig.mDockPadding}, mMaxNum: ${this.mResidentMaxNum}`);
-      width = this.mSmartDockStyleConfig.mDockPadding * 2 + this.mResidentMaxNum * (this.mSmartDockStyleConfig.mListItemWidth) + (this.mResidentMaxNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
+      Log.showDebug(TAG, `getListWidth mDockPadding: ${this.mSmartDockStyleConfig.mDockPadding}, mMaxNum: ${residentMaxNum}`);
+      width = this.mSmartDockStyleConfig.mDockPadding * 2 + residentMaxNum * (this.mSmartDockStyleConfig.mListItemWidth) + (residentMaxNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
       Log.showDebug(TAG, `getListWidth width: ${width}`);
-      return width;
-    }
-    if (typeof this.appList === 'undefined' || this.appList == null || this.appList.length === 0) {
-      return width;
     } else {
-      let num = this.appList.length;
-      if (num > this.mResidentMaxNum) {
-        num = this.mResidentMaxNum;
+      if (this.appList == null || this.appList.length === 0) {
+      } else {
+        let num = this.appList.length;
+        if (num > residentMaxNum) {
+          num = residentMaxNum;
+        }
+        width = this.mSmartDockStyleConfig.mDockPadding * 2 + num * (this.mSmartDockStyleConfig.mListItemWidth) + (num - 1) * (this.mSmartDockStyleConfig.mListItemGap);
       }
-      width = this.mSmartDockStyleConfig.mDockPadding * 2 + num * (this.mSmartDockStyleConfig.mListItemWidth) + (num - 1) * (this.mSmartDockStyleConfig.mListItemGap);
     }
     return width;
   }
@@ -69,55 +72,63 @@ export default struct ResidentLayout {
   }
 
   build() {
-    List({ space: this.appList.length == 0 ? 0 : this.mSmartDockStyleConfig.mListItemGap }) {
-      ForEach(this.appList, (item) => {
-        ListItem() {
-          AppItem({
-            appInfo: item,
-            buildMenu: this.buildMenu
-          })
+    if (this.getListWidth && this.getListWidth() !== 0) {
+      Row() {
+        List({ space: this.appList.length == 0 ? 0 : this.mSmartDockStyleConfig.mListItemGap }) {
+          ForEach(this.appList, (item) => {
+            ListItem() {
+              AppItem({
+                appInfo: item,
+                buildMenu: this.buildMenu
+              })
+            }
+            .onClick((event: ClickEvent) => {
+              const popupIsShow: boolean = AppStorage.Get('popupIsShow');
+              if (!popupIsShow) {
+                this.onItemClick(event, item);
+              }
+              AppStorage.SetOrCreate('popupIsShow', false);
+            })
+          }, (item) => JSON.stringify(item))
         }
-        .onClick((event: ClickEvent) => {
-          const popupIsShow: boolean = AppStorage.Get('popupIsShow');
-          if (!popupIsShow) {
-            this.onItemClick(event, item);
-          }
-          AppStorage.SetOrCreate('popupIsShow', false);
+        .height('100%')
+        .animation({
+          curve: Curve.Friction
         })
-      }, (item) => JSON.stringify(item))
-    }
-    .padding(this.appList.length == 0 ? this.mSmartDockStyleConfig.mDockPadding : this.dockPadding)
-    .width(this.getListWidth())
-    .height(this.mSmartDockStyleConfig.mDockHeight)
-    .backgroundColor(this.mSmartDockStyleConfig.mBackgroundColor)
-    .borderRadius(this.mSmartDockStyleConfig.mDockRadius)
-    .backdropBlur(this.mSmartDockStyleConfig.mBackdropBlur)
-    .visibility(this.getListWidth() === 0 ? Visibility.None : Visibility.Visible)
-    .listDirection(this.mSmartDockStyleConfig.mListDirection)
-    .editMode(false)
-    .onDragEnter((event: DragEvent, extraParams: string) => {
-      Log.showDebug(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getX()}, ${event.getY()}]`);
-    })
-    .onDragMove((event: DragEvent, extraParams: string) => {
-      Log.showDebug(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
-    })
-    .onDragLeave((event: DragEvent, extraParams: string) => {
-      Log.showDebug(TAG, `onDragLeave event: [${event.getX()}, ${event.getY()}]`);
-    })
-    .onDrop((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
-      const dragResult = globalThis.SmartDockDragHandler.onDragDrop(event.getX(), event.getY());
-      AppStorage.SetOrCreate('selectAppIndex', null);
-      AppStorage.SetOrCreate('isDrag', false);
-      if (!dragResult) {
-        AppStorage.SetOrCreate('dragItemInfo', {});
-      } else {
-        // Wait for the UI rendering to end.
-        setTimeout(() => {
-          AppStorage.SetOrCreate('dragItemInfo', {});
-        }, 50);
+        .listDirection(this.mSmartDockStyleConfig.mListDirection)
+        .editMode(false)
       }
-    })
+      .backgroundColor(this.mSmartDockStyleConfig.mBackgroundColor)
+      .borderRadius(this.mSmartDockStyleConfig.mDockRadius)
+      .backdropBlur(this.mSmartDockStyleConfig.mBackdropBlur)
+      .padding(this.appList.length == 0 ? this.mSmartDockStyleConfig.mDockPadding : this.dockPadding)
+      .width(this.getListWidth())
+      .height(this.mSmartDockStyleConfig.mDockHeight)
+      .justifyContent(FlexAlign.Center)
+      .onDragEnter((event: DragEvent, extraParams: string) => {
+        Log.showDebug(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getX()}, ${event.getY()}]`);
+      })
+      .onDragMove((event: DragEvent, extraParams: string) => {
+        Log.showDebug(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
+      })
+      .onDragLeave((event: DragEvent, extraParams: string) => {
+        Log.showDebug(TAG, `onDragLeave event: [${event.getX()}, ${event.getY()}]`);
+      })
+      .onDrop((event: DragEvent, extraParams: string) => {
+        Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
+        const dragResult = globalThis.SmartDockDragHandler.onDragDrop(event.getX(), event.getY());
+        AppStorage.SetOrCreate('selectAppIndex', null);
+        AppStorage.SetOrCreate('isDrag', false);
+        if (!dragResult) {
+          AppStorage.SetOrCreate('dragItemInfo', {});
+        } else {
+          // Wait for the UI rendering to end.
+          setTimeout(() => {
+            AppStorage.SetOrCreate('dragItemInfo', {});
+          }, 50);
+        }
+      })
+    }
   }
 }
 
@@ -186,14 +197,14 @@ struct AppItem {
     .backgroundColor(mSmartDockStyleConfig.mItemBackgroundColor)
     .borderRadius(mSmartDockStyleConfig.mItemBorderRadius)
     .parallelGesture(
-      LongPressGesture({ repeat: false })
-        .onAction((event: GestureEvent) => {
-          Log.showInfo(TAG, 'onAction start');
-          this.isShow = true;
-          AppStorage.SetOrCreate('isLongPress', true);
-          // Control whether the onClick method is executed or not.
-          AppStorage.SetOrCreate('popupIsShow', true);
-        })
+    LongPressGesture({ repeat: false })
+      .onAction((event: GestureEvent) => {
+        Log.showInfo(TAG, 'onAction start');
+        this.isShow = true;
+        AppStorage.SetOrCreate('isLongPress', true);
+        // Control whether the onClick method is executed or not.
+        AppStorage.SetOrCreate('popupIsShow', true);
+      })
     )
     .bindPopup(this.isShow, {
       builder: this.MenuBuilder,

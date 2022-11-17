@@ -34,7 +34,6 @@ export struct SmartDock {
   } = { show: false, showItem: '', popup: null };
   showAppCenter: Function = () => {};
   @StorageLink('showDock') showDock: boolean = false;
-  @StorageLink('residentList') residentList: any = [];
   @StorageLink('recentList') recentList: any = [];
   @StorageLink('missionInfoList') missionInfoList: any = [];
   private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
@@ -139,7 +138,6 @@ export struct SmartDock {
       }
       ListItem() {
         ResidentLayout({
-          appList: $residentList,
           mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
           onItemClick: (event, item) => this.mSmartDockViewModel.residentOnClick(event, item, this.showAppCenter),
           buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),

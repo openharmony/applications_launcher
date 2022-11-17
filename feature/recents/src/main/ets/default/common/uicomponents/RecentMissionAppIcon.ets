@@ -24,24 +24,22 @@ const TAG = 'Recent-RecentMissionAppIcon';
  */
 @Component
 export default struct RecentMissionAppIcon {
-  @Prop iconSize: number;
-  @Prop @Watch("updateIcon") appIcon: string;
-  @Prop bundleName: string;
-  @Prop moduleName: string;
-  @Prop labelId: string;
+  @State iconSize: number = 0;
+  @State @Watch("updateIcon") appIcon: string = '';
+  @State bundleName: string = '';
+  @State moduleName: string = '';
+  @State labelId: string = '';
   @State icon: string = ' ';
   @State useCache: boolean = true;
   private mIsSingleLayout: boolean = true;
-  private mResourceManager;
+  private mResourceManager = ResourceManager.getInstance();
   private mDefaultAppIcon;
-  private mRecentMissionsViewModel: RecentMissionsViewModel;
+  private mRecentMissionsViewModel: RecentMissionsViewModel = RecentMissionsViewModel.getInstance();
 
   aboutToAppear(): void  {
     this.mDefaultAppIcon = RecentsStyleConstants.DEFAULT_APP_ICON_IMAGE;
     this.icon = this.mDefaultAppIcon;
-    this.mResourceManager = ResourceManager.getInstance();
     this.updateIcon();
-    this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
     this.mIsSingleLayout = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ? true : false;
   }
 

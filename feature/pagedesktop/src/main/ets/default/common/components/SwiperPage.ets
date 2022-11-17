@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,8 @@
 import { Log } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { PresetStyleConstants } from '@ohos/common';
+import { localEventManager } from '@ohos/common';
+import { EventConstants } from '@ohos/common';
 import AppItem from './AppItem';
 import FormItem from './FormItem';
 import FolderItem from './FolderItem';
@@ -26,7 +28,7 @@ const APP_INFO_REFRESH_DELAY = 1000;
 
 @Component
 export default struct SwiperPage {
-  @StorageLink('workSpaceWidth') workSpaceWidth: number = 0;
+  @StorageLink('workSpaceWidth') @Watch('updateDeskTopScreen') workSpaceWidth: number = 0;
   @State ColumnsTemplate: string = '';
   @State RowsTemplate: string = ''
   @Prop @Watch('changeColumnAndRow') gridConfig: string;
@@ -45,7 +47,13 @@ export default struct SwiperPage {
   private mGridSpaceWidth : number;
   private mGridSpaceHeight: number;
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
+    Log.showInfo(TAG, 'aboutToAppear');
+    this.updateDeskTopScreen();
+  }
+
+  updateDeskTopScreen(): void {
+    Log.showInfo(TAG, 'updateDeskTopScreen');
     this.mPageDesktopStyleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
     this.mMargin = this.mPageDesktopStyleConfig.mMargin;
     this.mColumnsGap = this.mPageDesktopStyleConfig.mColumnsGap;
@@ -59,6 +67,7 @@ export default struct SwiperPage {
     this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
     this.changeConfig();
+    localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
   }
 
   itemMove(moveX: number, moveY: number){

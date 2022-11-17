@@ -25,15 +25,15 @@ const TAG = 'AppBubble';
 
 @Component
 export struct AppBubble {
-  @Prop bundleName: string;
-  @Prop abilityName: string;
-  @Prop moduleName: string;
-  @Prop appIconId: string;
-  @Prop appLabelId: string;
-  @Prop iconSize: number;
-  @Prop nameHeight: number;
-  @Prop nameSize: number;
-  @Prop nameFontColor: string;
+  @State bundleName: string = '';
+  @State abilityName: string = '';
+  @State moduleName: string = '';
+  @State appIconId: string = '';
+  @State appLabelId: string = '';
+  iconSize: number = 0;
+  nameHeight: number = 0;
+  nameSize: number = 0;
+  nameFontColor: string = '';
   badgeNumber: number = 0;
   mPaddingTop: number = StyleConstants.DEFAULT_10;
   nameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;

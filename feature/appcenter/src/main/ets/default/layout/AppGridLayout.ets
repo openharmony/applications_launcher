@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,6 +33,7 @@ const TAG = 'AppGridLayout'
 
 @Component
 export struct AppGridLayout {
+  @StorageLink('workSpaceHeight')@Watch('updateAppCenterScreen') workSpaceHeight: number = 0;
   @State mColumns: number = StyleConstants.DEFAULT_APP_GRID_COLUMN;
   @State mRows: number = StyleConstants.DEFAULT_APP_GRID_ROW;
   @StorageLink('listInfo') appGridList: [] = [];
@@ -70,6 +71,9 @@ export struct AppGridLayout {
   }
 
   aboutToAppear(): void {
+    this.updateAppCenterScreen();
+  }
+  updateAppCenterScreen(): void {
     Log.showInfo(TAG, "aboutToAppear")
     this.mAppGridViewModel = AppGridViewModel.getInstance();
     this.mAppGridViewModel.getAppList();
@@ -79,7 +83,6 @@ export struct AppGridLayout {
       this.dialogName = resName;
     });
   }
-
   public buildMenuInfoList(appInfo) {
     let menuInfoList = new Array<MenuInfo>();
     let shortcutInfo = this.mAppGridViewModel.getShortcutInfo(appInfo.bundleName);
@@ -185,7 +188,7 @@ export struct AppGridLayout {
     })
     .backgroundImageSize(ImageSize.Cover)
     .width(StyleConstants.PERCENTAGE_100)
-    .height(StyleConstants.PERCENTAGE_100)
+    .height(this.workSpaceHeight)
   }
 
   private traceBuildEnd() {
@@ -203,6 +206,7 @@ export struct AppGridLayout {
       return;
     }
     AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
+    item.icon = ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName);
     AppStorage.SetOrCreate('startAppItemInfo', item);
     this.mAppCenterStartAppHandler.setAppIconSize(this.mAppCenterGridStyleConfig.mIconSize);
     this.mAppCenterStartAppHandler.setAppIconInfo();

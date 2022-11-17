@@ -222,19 +222,8 @@ export default class SettingsPresenter {
       const navigationBarStatusValue = initValue == '0' ? true : false;
       Log.showDebug(TAG, `initNavigationBarStatusValue initValue:${initValue}, navigationBarStatusValue:${navigationBarStatusValue}`);
       AppStorage.SetOrCreate('NavigationBarStatusValue', navigationBarStatusValue);
-      this.mSettingsModel.registerListenForDataChanges(this.dataChangesCallback.bind(this));
     } catch (e) {
       Log.showError(TAG, `initNavigationBarStatusValue error:  ${e.toString()}`);
-    }
-  }
-
-  private dataChangesCallback(data: any) {
-    if (data.code !== 0) {
-      Log.showDebug(TAG, `dataChangesCallback failed, because ${data.message}`);
-    } else {
-      const getRetValue = this.mSettingsModel.getValue();
-      Log.showDebug(TAG, `dataChangesCallback getRetValue ${getRetValue}`);
-      AppStorage.SetOrCreate('NavigationBarStatusValue', getRetValue == '0' ? true : false);
     }
   }
 }

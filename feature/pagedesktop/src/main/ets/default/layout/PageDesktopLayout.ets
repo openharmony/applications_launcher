@@ -29,9 +29,6 @@ const TAG = "PageDesktopLayout";
 
 @Component
 export struct PageDesktopLayout {
-  @StorageLink('appListInfo') AppListInfo: {
-    appGridInfo: [[]]
-  } = { appGridInfo: [[]] };
   @StorageLink('workSpaceWidth') @Watch('updateDeskTopParams') workSpaceWidth: number = 0;
   @StorageLink('workSpaceHeight') @Watch('updateDeskTopParams') workSpaceHeight: number = 0;
   @State @Watch('updateDeskTopParams') mMargin: number = 0;
@@ -80,15 +77,15 @@ export struct PageDesktopLayout {
   }
 
   private updateDeskTopParams() {
-    this.mMargin = mPageDesktopViewModel.getPageDesktopStyleConfig().mMargin;
-    this.mTop = mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop;
+    this.mMargin = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig().mMargin;
+    this.mTop = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig().mDesktopMarginTop;
     Log.showDebug(TAG, `updateDeskTopParams mMargin: ${this.mMargin}, this.mTop: ${this.mTop}`);
     if (this.mPageDesktopDragHandler != null) {
       this.mPageDesktopDragHandler.setDragEffectArea({
         left: this.mMargin,
         top: this.mTop,
         right: this.workSpaceWidth - this.mMargin,
-        bottom: mPageDesktopViewModel.getPageDesktopStyleConfig().mGridHeight + this.mTop
+        bottom: PageDesktopViewModel.getInstance().getPageDesktopStyleConfig().mGridHeight + this.mTop
       });
     }
   }
@@ -105,7 +102,6 @@ export struct PageDesktopLayout {
 
   build() {
     GridSwiper({
-      mAppGridInfo: this.AppListInfo.appGridInfo,
       gridConfig: this.gridConfig,
       mPageDesktopViewModel: mPageDesktopViewModel,
       dialogController: this.deviceType == CommonConstants.PAD_DEVICE_TYPE ? null : this.dialogController

@@ -31,7 +31,7 @@ struct RecentView {
   @StorageLink('recentMissionsList') recentMissionsList: RecentMissionInfo[] = [];
   @State isClickSubComponent: boolean = false;
   private mRecentMissionsStage: RecentMissionsStage = new RecentMissionsStage();
-  private mRecentMissionsViewModel: RecentMissionsViewModel;
+  @State mRecentMissionsViewModel: RecentMissionsViewModel = undefined;
 
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
@@ -65,7 +65,8 @@ struct RecentView {
 
   build() {
     Column() {
-      if (!Array.isArray(this.recentMissionsList) || this.recentMissionsList.length === 0) {
+      if (!Array.isArray(this.recentMissionsList) || this.recentMissionsList.length === 0
+      || (this.mRecentMissionsViewModel == undefined)) {
         Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
           Text($r('app.string.No_running_apps_recently'))
             .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)
