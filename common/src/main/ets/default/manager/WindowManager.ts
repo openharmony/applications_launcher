@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -80,10 +80,10 @@ class WindowManager {
   }
 
   /**
-    * get window height
-    *
-    * @return windowHeight
-    */
+   * get window height
+   *
+   * @return windowHeight
+   */
   async getWindowHeight() {
     if (this.mDisplayData == null) {
       this.mDisplayData = await this.getWindowDisplayData();
@@ -135,6 +135,7 @@ class WindowManager {
   createWindow(context: ServiceExtensionContext, name: string, windowType: number, loadContent: string,
                isShow: boolean, callback?: Function) {
     Window.create(context, name, windowType).then((win) => {
+      void win.setPreferredOrientation(Window.Orientation.AUTO_ROTATION_RESTRICTED);
       void win.loadContent(loadContent).then(() => {
         void win.setSystemBarProperties({
           navigationBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR,
@@ -362,6 +363,30 @@ class WindowManager {
         break;
     }
   }
+
+  /**
+   * Screen rotation callback.
+   */
+  public async onPortrait(mediaQueryResult) {
+    if (mediaQueryResult.matches) {
+      Log.showInfo(TAG, 'screen change to landscape');
+    } else {
+      Log.showInfo(TAG, 'screen change to portrait');
+    }
+    display.getDefaultDisplay()
+      .then((dis: {
+        id: number,
+        width: number,
+        height: number,
+        refreshRate: number
+      }) => {
+        Log.showInfo(TAG, `change to display: ${JSON.stringify(dis)}`);
+        AppStorage.SetOrCreate('screenWidth', px2vp(dis.width));
+        AppStorage.SetOrCreate('screenHeight', px2vp(dis.height));
+        Log.showDebug(TAG, `screenWidth and screenHeight: ${AppStorage.Get('screenWidth')},${AppStorage.Get('screenHeight')}`);
+      });
+  }
+
 }
 
 export const windowManager = WindowManager.getInstance();

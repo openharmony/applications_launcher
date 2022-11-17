@@ -14,6 +14,7 @@
  */
 
 import app from '@system.app';
+import mediaquery from '@ohos.mediaquery'
 import { Log } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
@@ -44,6 +45,7 @@ struct EntryView {
   private mStage: PadStage = new PadStage();
   private mLayoutViewModel: LayoutViewModel;
   private navigationBarStatus: string | undefined;
+  private mOrientationListener = mediaquery.matchMediaSync('(orientation: landscape)');
   @State mAppScaleX: number = 1.0;
   @State mAppScaleY: number = 1.0;
   @State mAppAlpha: number = 1.0;
@@ -56,7 +58,7 @@ struct EntryView {
     this.mLayoutViewModel = LayoutViewModel.getInstance();
     this.getWindowSize();
     this.updateScreenSize();
-
+    this.mOrientationListener.on('change', windowManager.onPortrait);
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
     this.navigationBarStatus = SettingsModel.getInstance().getValue();
   }
@@ -152,6 +154,7 @@ struct EntryView {
   }
 
   aboutToDisappear(): void {
+    this.mOrientationListener.off('change', windowManager.onPortrait);
     this.mStage.onDestroy();
   }
 

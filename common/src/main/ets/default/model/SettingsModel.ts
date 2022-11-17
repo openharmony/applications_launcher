@@ -42,7 +42,7 @@ export class SettingsModel {
   private mGridConfig = 1;
   private mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
   private readonly uri: string = null;
-  private readonly helper: DataAbilityHelper = null;
+  private helper: any = null;
   private readonly mObserverList: SettingsModelObserver[] = [];
 
   private constructor() {
@@ -286,6 +286,7 @@ export class SettingsModel {
    * @param callback
    */
   registerListenForDataChanges(callback): void {
+    this.helper = settingsDataManager.getHelper(globalThis.desktopContext, this.uri);
     this.helper.on('dataChange', this.uri, callback);
   }
 

@@ -26,7 +26,7 @@ const TAG = 'GestureNavigationManage';
 
 export class GestureNavigationManager {
   private readonly uri: string | null = null;
-  private readonly helper: DataAbilityHelper = null;
+  private helper: any = null;
   private readonly sGestureNavigationExecutors: GestureNavigationExecutors = GestureNavigationExecutors.getInstance();
   private touchEventCallback: inputMonitor.TouchEventReceiver | null = null;
 
@@ -48,6 +48,8 @@ export class GestureNavigationManager {
    * @param callback
    */
   private registerListenForDataChanges(callback: AsyncCallback<void>) {
+    this.helper = settingsDataManager.getHelper(globalThis.desktopContext, this.uri);
+    Log.showInfo(TAG, "helper:" + this.helper +  "  registerListenForDataChanges uri:" + this.uri);
     this.helper.on('dataChange', this.uri, callback);
   }
 
@@ -57,7 +59,7 @@ export class GestureNavigationManager {
       globalThis.sGestureNavigationExecutors.setScreenHeight(display.height);
       this.touchEventCallback = globalThis.sGestureNavigationExecutors.touchEventCallback
         .bind(globalThis.sGestureNavigationExecutors);
-      this.getGestureNavigationStatus();
+      settingsDataManager.createDataShareHelper();
     }
   }
 
@@ -75,13 +77,10 @@ export class GestureNavigationManager {
   }
 
   private dataChangesCallback(data: any) {
-    if (data.code !== 0) {
-      Log.showDebug(TAG, `dataChangesCallback failed, because ${data.message}`);
-    } else {
-      const getRetValue = this.getValue();
-      this.handleEventSwitches(getRetValue);
-      AppStorage.SetOrCreate('NavigationBarStatusValue', getRetValue == '0' ? true : false);
-    }
+    Log.showInfo(TAG, "dataChangesCallback data:" + data);
+    const getRetValue = this.getValue();
+    this.handleEventSwitches(getRetValue);
+    AppStorage.SetOrCreate('NavigationBarStatusValue', getRetValue == '0' ? true : false);
   }
 
   private turnOnTouchEventCallback() {

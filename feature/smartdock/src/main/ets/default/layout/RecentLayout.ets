@@ -51,7 +51,7 @@ export default struct RecentLayout {
   private updateData: Function = null;
 
   aboutToAppear(): void {
-    this.mRecentMaxNum = this.mSmartDockStyleConfig.mMaxRecentNum;
+
     mSmartDockStyleConfig = this.mSmartDockStyleConfig;
   }
 
@@ -176,6 +176,7 @@ export default struct RecentLayout {
   }
 
   getListWidth(): number {
+    let mRecentMaxNum = this.mSmartDockStyleConfig.mMaxRecentNum;
     let width = 0;
     if (AppStorage.Get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
       return width;
@@ -184,8 +185,8 @@ export default struct RecentLayout {
       return width;
     }
     let num = this.appList.length;
-    if (num > this.mRecentMaxNum) {
-      num = this.mRecentMaxNum;
+    if (num > mRecentMaxNum) {
+      num = mRecentMaxNum;
     }
     width = this.mSmartDockStyleConfig.mDockPadding * 2 + num * (this.mSmartDockStyleConfig.mListItemWidth) + (num - 1) * (this.mSmartDockStyleConfig.mListItemGap);
     return width;

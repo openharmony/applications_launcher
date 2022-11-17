@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -89,6 +89,7 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
     const rowGap: number = this.mPageDesktopStyleConfig.mRowsGap;
     const gridItemHeight: number = row > 0 ? (gridHeight + rowGap) / row : 0;
     const gridItemWidth: number = column > 0 ? (gridWidth + columnsGap) / column : 0;
+    const paddingTop: number = this.mPageDesktopStyleConfig.mPaddingTop;
     let appItem: any = this.getCloseAppItemInfo();
     if (CheckEmptyUtils.isEmpty(appItem)) {
       Log.showError(TAG, `calculateAppIconPosition pagedesktop not has close app`);
@@ -96,9 +97,7 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
       return;
     }
     if (this.mCloseAppType) {
-      let paddingTop = Math.floor(gridHeight / row) - this.mPageDesktopStyleConfig.mAppItemSize;
-      this.mAppIconPositionY = this.mPageDesktopStyleConfig.mDesktopMarginTop + paddingTop + appItem.row * gridItemHeight;
-
+      this.mAppIconPositionY = this.mPageDesktopStyleConfig.mDesktopMarginTop + paddingTop + appItem.row * gridItemHeight + 0.96;
       let columnSize: number = (this.mPageDesktopStyleConfig.mGridWidth - (column - 1) * columnsGap) / column;
       let iconLeftMargin: number = (columnSize - this.mPageDesktopStyleConfig.mIconSize) / 2;
       this.mAppIconPositionX = this.mPageDesktopStyleConfig.mMargin + iconLeftMargin + appItem.column * (gridItemWidth);
@@ -129,7 +128,7 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
         column = folderColumn;
       }
       Log.showDebug(TAG, `calculateAppIconPosition index ${index} row ${row} column ${column}`);
-      this.mAppIconPositionY = this.mPageDesktopStyleConfig.mDesktopMarginTop + folderItem.row * (gridItemHeight) + this.mPageDesktopStyleConfig.mPaddingTop
+      this.mAppIconPositionY = this.mPageDesktopStyleConfig.mDesktopMarginTop + folderItem.row * (gridItemHeight) + paddingTop
       + this.mPageDesktopStyleConfig.mIconMarginVertical + folderTopPadding + (row - 1) * (folderGridGap + folderAppSize);
 
       this.mAppIconPositionX = this.mPageDesktopStyleConfig.mMargin + folderItem.column * (gridItemWidth) + folderLeftMargin

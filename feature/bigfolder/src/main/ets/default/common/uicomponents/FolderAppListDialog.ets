@@ -81,7 +81,6 @@ export default struct FolderAppListDialog {
     Column(){
       Flex({direction: FlexDirection.Column, justifyContent: FlexAlign.Center}) {
         TitleDescriptionComponent({
-          mTitleDescription: $titleDescription,
           mTextSize: this.mFolderStyleConfig.mAddFolderTitleSize})
         Column() {
           Grid() {

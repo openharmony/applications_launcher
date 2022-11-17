@@ -29,8 +29,8 @@ export struct FormItemComponent {
   @State isAllowUpdate: boolean = true;
   @State isShow: boolean = true;
   @State isHover: boolean = false;
-  @Prop formNameHeight: number;
-  @Prop formNameSize: number;
+  formNameHeight: number;
+  formNameSize: number;
   nameFontColor: string;
   iconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
   private formItemWidth;

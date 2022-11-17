@@ -96,7 +96,6 @@ struct AppCenterView {
         })
         .alignItems(HorizontalAlign.Center)
         .justifyContent(FlexAlign.Center)
-        .height(this.workSpaceHeight)
 
         Column() {
           SmartDock();
