@@ -73,7 +73,7 @@ export struct SmartDock {
     }),
     cancel: () => {
     },
-    autoCancel: true,
+    autoCancel: false,
     customStyle: true
   });
 

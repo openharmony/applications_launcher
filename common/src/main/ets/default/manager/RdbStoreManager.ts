@@ -596,7 +596,7 @@ export class RdbStoreManager {
           }
           Log.showDebug(TAG, `element prev: ${JSON.stringify(element)}`);
           let ret: number = await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
-          if (ret != -1) {
+          if (ret > 0) {
             await this.insertLayoutInfo(element.layoutInfo, ret);
           }
         }

@@ -54,7 +54,7 @@ export struct AppGridLayout {
     }),
     cancel: () => {
     },
-    autoCancel: true,
+    autoCancel: false,
     customStyle: true
   });
 
@@ -188,7 +188,7 @@ export struct AppGridLayout {
     })
     .backgroundImageSize(ImageSize.Cover)
     .width(StyleConstants.PERCENTAGE_100)
-    .height(this.workSpaceHeight)
+    .height(this.workSpaceHeight - StyleConstants.DEFAULT_28)
   }
 
   private traceBuildEnd() {

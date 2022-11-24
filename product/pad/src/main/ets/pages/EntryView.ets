@@ -128,6 +128,7 @@ struct EntryView {
       // If cannot compile this, comment next line or add following code into Class App in "@system.app.d.ts":
       // static setImageRawDataCacheSize(value: number): void;
       app.setImageRawDataCacheSize(RAW_IMAGE_CACHE_SIZE);
+      app.setImageCacheCount(100);
       globalThis.IsSetImageRawDataCacheSize = true;
     }
   }
