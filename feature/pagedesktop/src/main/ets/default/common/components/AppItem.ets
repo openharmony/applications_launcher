@@ -75,7 +75,7 @@ export default struct AppItem {
       dialogContent: this.appInfo.appName + ' ?',
     }),
     cancel: this.cancelDialog,
-    autoCancel: true,
+    autoCancel: false,
     customStyle: true
   });
 
@@ -101,7 +101,7 @@ export default struct AppItem {
       appLabelId: this.formAppInfo.appLabelId
     }),
     cancel: this.cancelFormDialog,
-    autoCancel: true,
+    autoCancel: false,
     customStyle: true
   });
 

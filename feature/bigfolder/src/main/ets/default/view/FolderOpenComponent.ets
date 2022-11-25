@@ -480,7 +480,7 @@ struct FolderAppItem {
     }),
     cancel: () => {
     },
-    autoCancel: true,
+    autoCancel: false,
     customStyle: true
   });
 
@@ -502,7 +502,7 @@ struct FolderAppItem {
       appLabelId: this.item.appLabelId
     }),
     cancel: this.cancelFormDialog,
-    autoCancel: true,
+    autoCancel: false,
     customStyle: true
   });
 

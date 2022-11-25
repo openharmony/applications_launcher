@@ -76,7 +76,7 @@ export default struct FormItem {
         formNameSize: 0
       })
     }
-    .height(this.mFormNameHeight * 1.05)
+    .height(this.mFormItemWidth * 1.05 + StyleConstants.DEFAULT_10)
     .width(this.mFormItemWidth * 1.05)
   }
 
@@ -162,7 +162,7 @@ export default struct FormItem {
       dialogName: this.getDialogName(),
     }),
     cancel: this.cancelDialog,
-    autoCancel: true,
+    autoCancel: false,
     customStyle: true
   });
 
@@ -195,7 +195,7 @@ export default struct FormItem {
       appLabelId: this.formItem.appLabelId
     }),
     cancel: this.cancelFormDialog,
-    autoCancel: true,
+    autoCancel: false,
     customStyle: true
   });
 

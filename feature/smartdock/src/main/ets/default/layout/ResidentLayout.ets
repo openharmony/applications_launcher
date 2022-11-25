@@ -230,7 +230,7 @@ struct AppItem {
         }
         AppStorage.SetOrCreate('isLongPress', false);
       }
-      if (event.type === CommonConstants.TOUCH_TYPE_MOVE && this.getLongPress()) {
+      if (AppStorage.Get('isDrag')) {
         this.isShow = false;
       }
     })
