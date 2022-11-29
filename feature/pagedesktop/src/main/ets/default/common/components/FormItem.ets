@@ -239,7 +239,11 @@ export default struct FormItem {
           iconNameMargin: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mIconNameMargin,
           menuInfo: this.mPageDesktopViewModel.buildCardMenuInfoList(this.formItem,
             this.dialogController, this.formManagerDialogController),
-          dragStart: this.dragStart.bind(this)
+          dragStart: this.dragStart.bind(this),
+          clickForm: (event, formItem) => {
+            Log.showInfo(TAG, 'click form');
+            this.setStartAppInfo();
+          },
         })
       }
       .visibility(this.pageDesktopDragItemInfo.cardId === this.formItem.cardId ? Visibility.None : Visibility.Visible)
