@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,6 +45,8 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
   };
 
   private mGridLayoutInfo: any = PageDesktopLayoutConfig.DEFAULT_LAYOUT_INFO;
+
+  locked: boolean = false;
 
   protected constructor() {
     super();
@@ -87,18 +89,25 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
    * @params gridLayoutInfo
    */
   updateGridLayoutInfo(gridLayoutInfo: any): void {
-    this.mGridLayoutInfo = gridLayoutInfo;
-    const temp = {
-      layoutDescription: {},
-      layoutInfo: []
-    };
-    temp.layoutDescription = gridLayoutInfo.layoutDescription;
+    const temp = gridLayoutInfo;
     FileUtils.writeStringToFile(JSON.stringify(temp), this.getConfigFileAbsPath());
-    globalThis.RdbStoreManagerInstance.insertGridLayoutInfo(gridLayoutInfo).then(() => {
-      Log.showDebug(TAG, 'updateGridLayoutInfo success.');
-    }).catch((err) => {
-      Log.showError(TAG, `updateGridLayoutInfo error: ${err.toString()}`);
-    });
+    this.mGridLayoutInfo = gridLayoutInfo;
+    Log.showInfo(TAG, " srj updateGridLayoutInfo...");
+
+    const timer = setInterval(() => {
+      if (!this.locked) {
+        this.locked = true;
+        globalThis.RdbStoreManagerInstance.insertGridLayoutInfo(gridLayoutInfo).then((result) => {
+          this.locked = false;
+          clearInterval(timer);
+          Log.showInfo(TAG, 'srj updateGridLayoutInfo success.');
+        }).catch((err) => {
+          this.locked = false;
+          clearInterval(timer);
+          Log.showError(TAG, `srj updateGridLayoutInfo error: ${err.toString()}`);
+        });
+      }
+    }, 200);
   }
 
   /**

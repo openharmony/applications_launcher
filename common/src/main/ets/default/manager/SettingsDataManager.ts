@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-import featureAbility from '@ohos.ability.featureAbility';
+import { Log } from '../utils/Log';
 import { DataAbilityHelper } from 'ability/dataAbilityHelper';
-
 import settings from '@ohos.settings';
-import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
+import dataShare from '@ohos.data.dataShare';
+
+const TAG = 'SettingsDataManager'
 /**
  * Wrapper class for settings interfaces.
  */
 class SettingsDataManager {
-  private readonly uri = 'dataability:///com.ohos.settingsdata.DataAbility';
-
+  private readonly uriShare: string = 'datashare:///com.ohos.settingsdata/entry/settingsdata/SETTINGSDATA?Proxy=true&key=';
+  private dataShareHelper;
   private constructor() {
   }
 
@@ -40,14 +41,22 @@ class SettingsDataManager {
     return globalThis.SettingsDataManagerInstance;
   }
 
+  public createDataShareHelper() {
+    Log.showInfo(TAG, "createDataShareHelper context:" + globalThis.desktopContext);
+    dataShare.createDataShareHelper(globalThis.desktopContext, this.uriShare)
+      .then((dataHelper) => {
+        Log.showInfo(TAG, "then dataHelper:" + dataHelper);
+        this.dataShareHelper = dataHelper;
+        globalThis.sGestureNavigationManager.getGestureNavigationStatus();
+      })
+  }
+
   /**
    * Update settingData by settingDataKey.
    */
-  setValue(helper: DataAbilityHelper, settingDataKey: string, value: string): void {
-    if (CheckEmptyUtils.isEmpty(helper)) {
-      return;
-    }
-    settings.setValueSync(helper, settingDataKey, value);
+  setValue(helper: any, settingDataKey: string, value: string): void {
+    Log.showInfo(TAG, "setValue:" + value)
+    settings.setValueSync(globalThis.desktopContext, settingDataKey, value);
   }
 
   /**
@@ -55,11 +64,10 @@ class SettingsDataManager {
    *
    * @return settingsDataValue by settingDataKey.
    */
-  getValue(helper: DataAbilityHelper, settingDataKey: string, defaultValue: string): string {
-    if (CheckEmptyUtils.isEmpty(helper)) {
-      return '';
-    }
-    return settings.getValueSync(helper, settingDataKey, defaultValue);
+  getValue(helper: any, settingDataKey: string, defaultValue: string): string {
+    let value: string = settings.getValueSync(globalThis.desktopContext, settingDataKey, defaultValue);
+    Log.showInfo(TAG, "getValue:" + value);
+    return value;
   }
 
   /**
@@ -68,7 +76,7 @@ class SettingsDataManager {
    * @return settingDataUri by settingDataKey.
    */
   getUri(settingDataKey: string): string {
-    return settings.getUriSync(settingDataKey);
+    return this.uriShare + settingDataKey;
   }
 
   /**
@@ -76,9 +84,9 @@ class SettingsDataManager {
    *
    * @return settingDataHelper by settingDataUri.
    */
-  getHelper(context: any, uri: string): DataAbilityHelper{
+  getHelper(context: any, uri: string): any{
     // @ts-ignore api8 d.ts
-    return featureAbility.acquireDataAbilityHelper(context, this.uri);
+    return this.dataShareHelper;
   }
 }
 

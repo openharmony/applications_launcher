@@ -33,14 +33,14 @@ const TAG = 'Recent-RecentMissionCard';
 @Component
 export default struct RecentMissionCard {
   @Link isClickSubComponent: boolean;
-  @Prop missionId: number;
-  @Prop appIconId: string;
-  @Prop appLabelId: string;
-  @Prop appName: string;
-  @Prop bundleName: string;
-  @Prop moduleName: string;
-  @Prop abilityName: string;
-  @Prop lockedState: boolean;
+  @State missionId: number = 0;
+  @State appIconId: string = '';
+  @State appLabelId: string = '';
+  @State appName: string = '';
+  @State bundleName: string = '';
+  @State moduleName: string = '';
+  @State abilityName: string = '';
+  @State lockedState: boolean = false;
   @State cardMargin: number = RecentsStyleConstants.SINGLE_LIST_LAYOUT_MARGIN;
   @State cardLayoutWeight: number = RecentsStyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT;
   // recentImage default is Resource type, to avoid toolchain typeCheck

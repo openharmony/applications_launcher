@@ -38,7 +38,7 @@ class LauncherAbilityManager {
   private readonly mAppMap = new Map<string, AppItemInfo>();
   private mUserId: number = 100;
 
-  private readonly mBundleStatusCallback: BundleStatusCallback = {
+  private readonly mBundleStatusCallback: any = {
     add: (bundleName, userId) => {
       Log.showDebug(TAG, `mBundleStatusCallback add bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
       this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_ADDED, bundleName, userId);

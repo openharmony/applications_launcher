@@ -167,7 +167,7 @@ export default class SmartDockModel {
       return;
     }
     let recents: RecentBundleMissionInfo[] = [];
-    const missionInfos: {
+    let missionInfos: {
       appName: string,
       bundleName: string,
       missionInfoList: MissionInfo[]
@@ -185,6 +185,9 @@ export default class SmartDockModel {
       recents = recents.slice(0, this.mSmartDockStyleConfig.mMaxRecentNum);
     }
     AppStorage.SetOrCreate('recentList', recents);
+
+    missionInfos = missionInfos.slice(0,20);
+
     AppStorage.SetOrCreate('missionInfoList', missionInfos);
     Log.showDebug(TAG, `getRecentDataList end, recentList.length: ${recents.length}`);
   }
@@ -434,6 +437,7 @@ export default class SmartDockModel {
       onMissionIconUpdated: () => {},
       // @ts-ignore
       onMissionClosed: () => {},
+      // @ts-ignore
       onMissionLabelUpdated: () => {}
     };
     missionManager.registerMissionListener(listener);

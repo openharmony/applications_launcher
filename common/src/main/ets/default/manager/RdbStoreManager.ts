@@ -66,11 +66,11 @@ export class RdbStoreManager {
   async createTable(): Promise<void> {
     Log.showDebug(TAG, 'create table start');
     try {
-      await this.mRdbStore.executeSql(RdbStoreConfig.Badge.CREATE_TABLE, []);
-      await this.mRdbStore.executeSql(RdbStoreConfig.Form.CREATE_TABLE, []);
-      await this.mRdbStore.executeSql(RdbStoreConfig.SmartDock.CREATE_TABLE, []);
-      await this.mRdbStore.executeSql(RdbStoreConfig.DesktopApplicationInfo.CREATE_TABLE, []);
-      await this.mRdbStore.executeSql(RdbStoreConfig.GridLayoutInfo.CREATE_TABLE, []);
+      await this.mRdbStore.executeSql(RdbStoreConfig.Badge.CREATE_TABLE);
+      await this.mRdbStore.executeSql(RdbStoreConfig.Form.CREATE_TABLE);
+      await this.mRdbStore.executeSql(RdbStoreConfig.SmartDock.CREATE_TABLE);
+      await this.mRdbStore.executeSql(RdbStoreConfig.DesktopApplicationInfo.CREATE_TABLE);
+      await this.mRdbStore.executeSql(RdbStoreConfig.GridLayoutInfo.CREATE_TABLE);
 
       // set default settings data
       await this.updateSettings();
@@ -332,7 +332,7 @@ export class RdbStoreManager {
       } else {
         // update settings by key and value
         let sql = `UPDATE ${RdbStoreConfig.Settings.TABLE_NAME} SET ${key} = '${value}' WHERE id = 1`;
-        await this.mRdbStore.executeSql(sql, function () {})
+        await this.mRdbStore.executeSql(sql)
       }
     } catch (e) {
       Log.showError(TAG, 'updateSettings error:' + e);
@@ -399,9 +399,9 @@ export class RdbStoreManager {
   async dropTable(tableName: string): Promise<void> {
     Log.showDebug(TAG, 'dropTable start');
     try {
-      let dropSql = `DROP TABLE ${tableName};`
-      await this.mRdbStore.executeSql(dropSql, function () {});
-      await this.mRdbStore.executeSql(RdbStoreConfig.GridLayoutInfo.CREATE_TABLE, []);
+      let dropSql = `DROP TABLE IF EXISTS ${tableName}`;
+      await this.mRdbStore.executeSql(dropSql);
+      await this.mRdbStore.executeSql(RdbStoreConfig.GridLayoutInfo.CREATE_TABLE);
     } catch (e) {
       Log.showError(TAG, `dropTable err: ${e}`);
     }
@@ -538,7 +538,6 @@ export class RdbStoreManager {
     }
 
     try {
-      this.mRdbStore.beginTransaction();
       // delete gridlayoutinfo table
       await this.dropTable(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
       // insert into gridlayoutinfo
@@ -560,8 +559,9 @@ export class RdbStoreManager {
             'container': -100,
             'badge_number': element.badgeNumber
           }
-          this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item)
-            .then((ret) => {});
+
+          let ret = await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
+
         } else if (element.typeId === CommonConstants.TYPE_CARD) {
           item = {
             'bundle_name':element.bundleName,
@@ -577,8 +577,7 @@ export class RdbStoreManager {
             'container': -100,
             'badge_number': element.badgeNumber
           }
-          this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item)
-            .then((ret) => {});
+          await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
         } else {
           item = {
             'bundle_name':element.bundleName,
@@ -594,17 +593,15 @@ export class RdbStoreManager {
             'container': -100,
             'badge_number': element.badgeNumber
           }
-          this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item).then(ret => {
-            if (ret != -1) {
-              this.insertLayoutInfo(element.layoutInfo, ret);
-            }
-          });
+          Log.showDebug(TAG, `element prev: ${JSON.stringify(element)}`);
+          let ret: number = await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
+          if (ret > 0) {
+            await this.insertLayoutInfo(element.layoutInfo, ret);
+          }
         }
       }
-      this.mRdbStore.commit();
     } catch (e) {
       Log.showError(TAG, 'insertGridLayoutInfo error:' + e);
-      this.mRdbStore.rollBack();
       this.sendFaultEvent();
     }
   }
@@ -640,11 +637,10 @@ export class RdbStoreManager {
           'row': bigFolderApp.row,
           'badge_number': bigFolderApp.badgeNumber
         }
-        this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item).then(ret => {
-          if (ret === -1) {
-            result = false;
-          }
-        });
+        let ret: number = await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
+        if (ret === -1) {
+          result = false;
+        }
       }
     }
     return result;

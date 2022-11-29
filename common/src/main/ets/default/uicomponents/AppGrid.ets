@@ -28,7 +28,7 @@ export struct AppGrid {
   appGridStyleConfig: AppGridStyleConfig;
   onItemClick: Function = null;
   buildMenu: Function = null;
-  @Prop isScroll: boolean;
+  @State isScroll: boolean = false;
 
   private getColumnsTemplate() {
     let columnsTemplate = '';

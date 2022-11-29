@@ -51,7 +51,7 @@ export default struct RecentLayout {
   private updateData: Function = null;
 
   aboutToAppear(): void {
-    this.mRecentMaxNum = this.mSmartDockStyleConfig.mMaxRecentNum;
+
     mSmartDockStyleConfig = this.mSmartDockStyleConfig;
   }
 
@@ -112,74 +112,71 @@ export default struct RecentLayout {
   }
 
   build() {
-    if (this.getListWidth && this.getListWidth() !== 0) {
-      List({ space: mSmartDockStyleConfig.mListItemGap }) {
-        ForEach(this.appList, (item) => {
-          ListItem() {
-            AppItem({
-              appInfo: item,
-              buildMenu: this.buildMenu
-            })
+    List({ space: mSmartDockStyleConfig.mListItemGap }) {
+      ForEach(this.appList, (item) => {
+        ListItem() {
+          AppItem({
+            appInfo: item,
+            buildMenu: this.buildMenu
+          })
+        }
+        .bindPopup(this.showPopup && item.bundleName == this.onHoverItem && !AppStorage.Get('smartDockShowMenu') as boolean, {
+          builder: this.popupBuilder,
+          placement: Placement.Top,
+          enableArrow: true,
+          autoCancel: this.autoCancel,
+          maskColor: ('rgba(250,250,250,0)'),
+          popupColor: ('rgba(250,250,250,0.6)'),
+          onStateChange: (e) => {
+            if (!e.isVisible && this.autoCancel) {
+              this.popup = { show: false, showItem: '', popup: null };
+              this.onHoverItem = '';
+              this.onClickWithPopup = false;
+              this.autoCancel = false;
+              this.showPopup = false;
+              AppStorage.SetOrCreate('snapshotList', []);
+              AppStorage.SetOrCreate('recentShowPopup', false);
+            }
+            if (this.updateData) {
+              this.updateData();
+              this.updateData = () => {
+              }
+            }
+          },
+        })
+        .onHover((isHover) => {
+          this.autoCancel = false;
+          if (this.onHoverEvent) {
+            this.onHoverEvent(isHover, item.bundleName);
+            this.onHoverItem = item.bundleName;
+            this.getShowPopup();
           }
-          .bindPopup(this.showPopup && item.bundleName == this.onHoverItem && !AppStorage.Get('smartDockShowMenu') as boolean, {
-            builder: this.popupBuilder,
-            placement: Placement.Top,
-            enableArrow: true,
-            autoCancel: this.autoCancel,
-            maskColor: ('rgba(250,250,250,0)'),
-            popupColor: ('rgba(250,250,250,0.6)'),
-            onStateChange: (e) => {
-              if (!e.isVisible && this.autoCancel) {
-                this.popup = { show: false, showItem: '', popup: null };
-                this.onHoverItem = '';
-                this.onClickWithPopup = false;
-                this.autoCancel = false;
-                this.showPopup = false;
-                AppStorage.SetOrCreate('snapshotList', []);
-                AppStorage.SetOrCreate('recentShowPopup', false);
-              }
-              if (this.updateData) {
-                this.updateData();
-                this.updateData = () => {
-                }
-              }
-            },
-          })
-          .onHover((isHover) => {
-            this.autoCancel = false;
-            if (this.onHoverEvent) {
-              this.onHoverEvent(isHover, item.bundleName);
-              this.onHoverItem = item.bundleName;
-              this.getShowPopup();
-            }
-          })
-          .onClick((event: ClickEvent) => {
-            this.onItemClick(event, item);
-            this.onClickWithPopup = AppStorage.Get('recentShowPopup');
-            Log.showInfo(TAG, `onClick this.onClickWithPopup: ${this.onClickWithPopup}`);
-            if (this.onClickWithPopup) {
-              this.autoCancel = true;
-              this.showPopup = true
-              this.onHoverItem = item.bundleName;
-            }
-            AppStorage.SetOrCreate('recentShowPopup', false);
-          })
-        }, (item) => JSON.stringify(item))
-      }
-      .padding(this.dockPadding)
-      .width(this.getListWidth())
-      .height(this.mSmartDockStyleConfig.mDockHeight)
-      .animation({
-        curve: Curve.Friction
-      })
-      .backgroundColor(this.mSmartDockStyleConfig.mBackgroundColor)
-      .borderRadius(this.mSmartDockStyleConfig.mDockRadius)
-      .backdropBlur(this.mSmartDockStyleConfig.mBackdropBlur)
-      .listDirection(this.mSmartDockStyleConfig.mListDirection)
+        })
+        .onClick((event: ClickEvent) => {
+          this.onItemClick(event, item);
+          this.onClickWithPopup = AppStorage.Get('recentShowPopup');
+          Log.showInfo(TAG, `onClick this.onClickWithPopup: ${this.onClickWithPopup}`);
+          if (this.onClickWithPopup) {
+            this.autoCancel = true;
+            this.showPopup = true
+            this.onHoverItem = item.bundleName;
+          }
+          AppStorage.SetOrCreate('recentShowPopup', false);
+        })
+      }, (item) => JSON.stringify(item))
     }
+    .padding(this.dockPadding)
+    .width(this.getListWidth())
+    .height(this.mSmartDockStyleConfig.mDockHeight)
+    .backgroundColor(this.mSmartDockStyleConfig.mBackgroundColor)
+    .borderRadius(this.mSmartDockStyleConfig.mDockRadius)
+    .backdropBlur(this.mSmartDockStyleConfig.mBackdropBlur)
+    .visibility(this.getListWidth() === 0 ? Visibility.None : Visibility.Visible)
+    .listDirection(this.mSmartDockStyleConfig.mListDirection)
   }
 
   getListWidth(): number {
+    let mRecentMaxNum = this.mSmartDockStyleConfig.mMaxRecentNum;
     let width = 0;
     if (AppStorage.Get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
       return width;
@@ -188,8 +185,8 @@ export default struct RecentLayout {
       return width;
     }
     let num = this.appList.length;
-    if (num > this.mRecentMaxNum) {
-      num = this.mRecentMaxNum;
+    if (num > mRecentMaxNum) {
+      num = mRecentMaxNum;
     }
     width = this.mSmartDockStyleConfig.mDockPadding * 2 + num * (this.mSmartDockStyleConfig.mListItemWidth) + (num - 1) * (this.mSmartDockStyleConfig.mListItemGap);
     return width;
@@ -273,7 +270,7 @@ struct AppItem {
       if (event.type == CommonConstants.TOUCH_TYPE_UP) {
         AppStorage.SetOrCreate('isLongPress', false);
       }
-      if (event.type == CommonConstants.TOUCH_TYPE_MOVE && this.getLongPress()) {
+      if (AppStorage.Get('isDrag')) {
         this.isShow = false;
       }
     })
