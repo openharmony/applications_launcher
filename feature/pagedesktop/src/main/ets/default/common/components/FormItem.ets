@@ -76,7 +76,7 @@ export default struct FormItem {
         formNameSize: 0
       })
     }
-    .height(this.mFormItemWidth * 1.05 + StyleConstants.DEFAULT_10)
+    .height(this.mFormItemWidth * 1.05 + StyleConstants.DEFAULT_10  )
     .width(this.mFormItemWidth * 1.05)
   }
 
@@ -239,10 +239,6 @@ export default struct FormItem {
           iconNameMargin: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mIconNameMargin,
           menuInfo: this.mPageDesktopViewModel.buildCardMenuInfoList(this.formItem,
             this.dialogController, this.formManagerDialogController),
-          clickForm: (event, formItem) => {
-            Log.showInfo(TAG, 'click form');
-            this.setStartAppInfo();
-          },
           dragStart: this.dragStart.bind(this)
         })
       }
