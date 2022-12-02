@@ -33,7 +33,6 @@ struct AppCenterView {
   @State device: string = CommonConstants.PAD_DEVICE_TYPE;
   private mLayoutViewModel: LayoutViewModel;
   mAppGridViewModel: AppGridViewModel = null;
-  @StorageLink('inputDeviceType') @Watch('updateScreenSize') inputDeviceType: string = 'remove';
   @StorageLink('animationInfo_alpha') mAppAlpha: number = 1.0;
   @StorageLink('animationInfo_scale') mAnimationInfo: {
     appScaleX: number,
@@ -97,12 +96,9 @@ struct AppCenterView {
         })
         .alignItems(HorizontalAlign.Center)
         .justifyContent(FlexAlign.Center)
-        .height(this.workSpaceHeight)
 
         Column() {
-          SmartDock({
-            inputDeviceType: $inputDeviceType
-          });
+          SmartDock();
         }
         .height(this.dockHeight)
       }

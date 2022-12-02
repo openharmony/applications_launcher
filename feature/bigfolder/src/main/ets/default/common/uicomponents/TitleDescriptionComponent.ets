@@ -17,11 +17,11 @@ import { BigFolderStyleConstants } from '../constants/BigFolderStyleConstants';
 
 @Component
 export default struct TitleDescriptionComponent {
-  @Link mTitleDescription: any;
+  @StorageLink('titleDescription') titleDescription: any = '';
   @State mTextSize: number = BigFolderStyleConstants.DEFAULT_APP_GRID_TEXT_FONT_SIZE;
 
   build() {
-    Text(this.mTitleDescription)
+    Text(this.titleDescription)
       .fontSize(this.mTextSize)
       .fontWeight(BigFolderStyleConstants.DEFAULT_APP_GRID_TEXT_FONT_WEIGHT)
       .margin({

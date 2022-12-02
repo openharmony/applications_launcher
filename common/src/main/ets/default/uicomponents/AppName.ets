@@ -18,8 +18,8 @@ import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 
 @Component
 export struct AppName {
-  @Prop nameSize: number;
-  @Prop nameHeight: number;
+  nameSize: number;
+  nameHeight: number;
   bundleName: string;
   moduleName: string;
   labelId: string;

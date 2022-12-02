@@ -38,7 +38,6 @@ export default struct AppItem {
   @StorageLink('uninstallAppInfo') appInfo: any = {};
   @StorageLink('formAppInfo') formAppInfo: any = {};
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
-  @Link @Watch('updateAppItemStyleInfo') inputDeviceType: string;
   @State mAppNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   @State mAppItemWidth: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
   @State mAppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
@@ -59,20 +58,6 @@ export default struct AppItem {
   private dialogName: string = "";
   private clearForm: Function = null;
 
-  private updateAppItemStyleInfo(): void {
-    Log.showDebug(TAG, 'updateAppItemStyleInfo');
-    let styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
-    this.mAppNameHeight = styleConfig.mNameHeight;
-    this.mAppItemWidth = styleConfig.mAppItemSize;
-    this.mAppNameSize = styleConfig.mNameSize;
-    this.mMargin = styleConfig.mMargin;
-    this.mIconSize = styleConfig.mIconSize;
-    this.mMarginVertical = styleConfig.mIconMarginVertical;
-    this.mIconNameMargin = styleConfig.mIconNameMargin;
-    this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
-    this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
-  }
-
   dialogController: CustomDialogController = new CustomDialogController({
     builder:  UninstallDialog({
       cancel: () => {},
@@ -90,7 +75,7 @@ export default struct AppItem {
       dialogContent: this.appInfo.appName + ' ?',
     }),
     cancel: this.cancelDialog,
-    autoCancel: true,
+    autoCancel: false,
     customStyle: true
   });
 
@@ -116,7 +101,7 @@ export default struct AppItem {
       appLabelId: this.formAppInfo.appLabelId
     }),
     cancel: this.cancelFormDialog,
-    autoCancel: true,
+    autoCancel: false,
     customStyle: true
   });
 
@@ -145,7 +130,16 @@ export default struct AppItem {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mPageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
     this.isPad = this.mPageDesktopViewModel.getDevice();
-    this.updateAppItemStyleInfo();
+    let styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
+    this.mAppNameHeight = styleConfig.mNameHeight;
+    this.mAppItemWidth = styleConfig.mAppItemSize;
+    this.mAppNameSize = styleConfig.mNameSize;
+    this.mMargin = styleConfig.mMargin;
+    this.mIconSize = styleConfig.mIconSize;
+    this.mMarginVertical = styleConfig.mIconMarginVertical;
+    this.mIconNameMargin = styleConfig.mIconNameMargin;
+    this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
+    this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
     ResourceManager.getInstance().getStringByResource(this.isPad
       ? $r('app.string.is_delete_form') : $r('app.string.isUninstall')).then((resName) => {
       this.dialogName = resName;
@@ -160,73 +154,70 @@ export default struct AppItem {
   }
 
   build() {
-    if (this.dragItemType !== CommonConstants.DRAG_FROM_DESKTOP || this.pageDesktopDragItemInfo.keyName !== this.item.keyName) {
-      Column() {
-        AppBubble({
-          iconSize: this.mIconSize,
-          nameSize: this.mAppNameSize,
-          nameHeight: this.mAppNameHeight,
-          nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
-          appName: this.item.appName,
-          bundleName: this.item.bundleName,
-          abilityName: this.item.abilityName,
-          moduleName: this.item.moduleName,
-          appIconId: this.item.appIconId,
-          appLabelId: this.item.appLabelId,
-          badgeNumber: this.item.badgeNumber,
-          isSelect: this.selectDesktopAppItem == this.item.keyName,
-          menuInfo: this.mPageDesktopViewModel.buildMenuInfoList(this.item,
-            this.dialogController, this.formManagerDialogController),
-          mPaddingTop: this.mMarginVertical,
-          nameLines: this.mNameLines,
-          mIconNameMargin: this.mIconNameMargin,
-          dragStart: this.dragStart.bind(this)
-        })
-      }
-      .onMouse((event: MouseEvent) => {
-        if (event.button == MouseButton.Right) {
-          event.stopPropagation();
-          Log.showInfo(TAG, 'onMouse mouse button right');
-          AppStorage.SetOrCreate('selectDesktopAppItem', this.item.keyName);
-        }
-      })
-      .onClick((event) => {
-        Log.showInfo(TAG, `tap action ${JSON.stringify(event)}`);
-        if (event.source == SourceType.Mouse) {
-          this.mouseClick++;
-          if (this.mouseClick == DOUBLE_CLICK_COUNT) {
-            Log.showInfo(TAG, 'mouse double click');
-            this.mouseClick = 0;
-            this.launchApp();
-          } else {
-            this.mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
-            setTimeout(() => {
-              this.mouseClick = 0;
-            }, 300)
-          }
-        } else {
-          Log.showInfo(TAG, 'tap click');
-          this.launchApp();
-        }
-      })
-      .onTouch((event: TouchEvent) => {
-        Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].screenX}, y: ${event.touches[0].screenY}`);
-        if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {
-          let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
-          Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
-          if (!mIsDragEffectArea) {
-            this.pageDesktopDragItemInfo = {};
-            AppStorage.SetOrCreate('selectAppIndex', null);
-            AppStorage.SetOrCreate('isDrag', false);
-          }
-        }
-      })
-      .width(this.mAppItemWidth)
-      .height(this.mAppItemWidth)
-      .animation({
-        curve: Curve.Friction
+    Column() {
+      AppBubble({
+        iconSize: this.mIconSize,
+        nameSize: this.mAppNameSize,
+        nameHeight: this.mAppNameHeight,
+        nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
+        appName: this.item.appName,
+        bundleName: this.item.bundleName,
+        abilityName: this.item.abilityName,
+        moduleName: this.item.moduleName,
+        appIconId: this.item.appIconId,
+        appLabelId: this.item.appLabelId,
+        badgeNumber: this.item.badgeNumber,
+        isSelect: this.selectDesktopAppItem == this.item.keyName,
+        menuInfo:this.mPageDesktopViewModel.buildMenuInfoList(this.item,
+          this.dialogController, this.formManagerDialogController),
+        mPaddingTop: this.mMarginVertical,
+        nameLines: this.mNameLines,
+        mIconNameMargin: this.mIconNameMargin,
+        dragStart: this.dragStart.bind(this)
       })
     }
+    .visibility(this.dragItemType === CommonConstants.DRAG_FROM_DESKTOP && this.pageDesktopDragItemInfo.keyName === this.item.keyName ?
+      Visibility.None : Visibility.Visible)
+    .onMouse((event: MouseEvent) => {
+      if (event.button == MouseButton.Right) {
+        event.stopPropagation();
+        Log.showInfo(TAG, 'onMouse mouse button right');
+        AppStorage.SetOrCreate('selectDesktopAppItem', this.item.keyName);
+      }
+    })
+    .onClick((event) => {
+      Log.showInfo(TAG, `tap action ${JSON.stringify(event)}`);
+      if (event.source == SourceType.Mouse) {
+        this.mouseClick++;
+        if (this.mouseClick == DOUBLE_CLICK_COUNT) {
+          Log.showInfo(TAG, 'mouse double click');
+          this.mouseClick = 0;
+          this.launchApp();
+        } else {
+          this.mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+          setTimeout(() => {
+            this.mouseClick = 0;
+          }, 300)
+        }
+      } else {
+        Log.showInfo(TAG, 'tap click');
+        this.launchApp();
+      }
+    })
+    .onTouch((event: TouchEvent) => {
+      Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].screenX}, y: ${event.touches[0].screenY}`);
+      if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {
+        let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
+        Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
+        if (!mIsDragEffectArea) {
+          this.pageDesktopDragItemInfo = {};
+          AppStorage.SetOrCreate('selectAppIndex', null);
+          AppStorage.SetOrCreate('isDrag', false);
+        }
+      }
+    })
+    .width(this.mAppItemWidth)
+    .height(this.mAppItemWidth)
   }
 
   /**

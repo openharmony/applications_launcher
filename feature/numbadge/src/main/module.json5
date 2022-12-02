@@ -3,7 +3,8 @@
     "name": "launcher_numbadge",
     "type": "har",
     "deviceTypes": [
-      "default"
+      "default",
+      "tablet"
     ],
     "uiSyntax": "ets"
   }

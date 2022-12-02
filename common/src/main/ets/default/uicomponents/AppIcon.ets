@@ -22,12 +22,12 @@ const TAG = 'AppIcon';
 
 @Component
 export struct AppIcon {
-  @Prop iconSize: number;
-  @Prop iconId: string;
-  @Prop bundleName: string;
-  @Prop moduleName: string;
-  @Prop icon: string;
-  @State badgeNumber: number = 0;
+  iconSize: number;
+  iconId: string;
+  bundleName: string;
+  moduleName: string;
+  @State icon: string = '';
+  badgeNumber: number = 0;
   @State iconScale: number = 1;
   useCache: boolean = true;
   badgeFontSize: number = StyleConstants.DEFAULT_BADGE_FONT_SIZE;

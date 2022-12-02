@@ -26,7 +26,6 @@ import PadFormLayoutConfig from './PadFormLayoutConfig';
 import PadFolderLayoutConfig from './PadFolderLayoutConfig';
 import PadSmartDockLayoutConfig from './PadSmartDockLayoutConfig';
 import PadPageDesktopGridStyleConfig from './PadPageDesktopGridStyleConfig';
-import PadSmartDockStyleConfig from './PadSmartDockStyleConfig';
 
 /**
  * pad product stage
@@ -40,7 +39,6 @@ export default class PadStage extends BaseStage {
     this.initPadConfig();
     launcherLayoutPreLoader.load();
     smartDockPreLoader.load();
-    layoutConfigManager.addConfigToManager(PadSmartDockStyleConfig.getInstance());
     pageDesktopPreLoader.load();
     layoutConfigManager.addConfigToManager(PadPageDesktopGridStyleConfig.getInstance());
     appCenterPreLoader.load();

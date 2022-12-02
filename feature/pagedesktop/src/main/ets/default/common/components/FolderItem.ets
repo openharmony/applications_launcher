@@ -37,8 +37,8 @@ export default struct FolderItem {
   @StorageLink('dragItemType') dragItemType: number = CommonConstants.DRAG_FROM_DESKTOP;
   @StorageLink('openFolderStatus') openFolderStatus: number = BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
-  @State mAppNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
-  @State mAppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
+  private mAppNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
+  private mAppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
   private folderItem: any;
   private isSwappingPage = false;
   private mAppItemWidth: number = 0;
@@ -70,7 +70,7 @@ export default struct FolderItem {
         }
       })
     }
-    .height(this.mFolderStyleConfig.mGridSize * 1.05)
+    .height(this.mFolderStyleConfig.mGridSize * 1.05 + StyleConstants.DEFAULT_10)
     .width(this.mFolderStyleConfig.mGridSize * 1.05)
   }
 

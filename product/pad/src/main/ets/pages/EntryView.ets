@@ -14,6 +14,7 @@
  */
 
 import app from '@system.app';
+import mediaquery from '@ohos.mediaquery'
 import { Log } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
@@ -37,7 +38,6 @@ const TAG = 'EntryView';
 struct EntryView {
   @StorageLink('screenWidth') screenWidth: number = 0;
   @StorageLink('screenHeight') @Watch('updateScreenInfo') screenHeight: number = 0;
-  @StorageLink('inputDeviceType') @Watch('updateScreenInfo') inputDeviceType: string = 'remove';
   @StorageLink('deviceType') deviceType: string = CommonConstants.PAD_DEVICE_TYPE;
   @State workSpaceWidth: number = 0;
   @State workSpaceHeight: number = 0;
@@ -45,6 +45,7 @@ struct EntryView {
   private mStage: PadStage = new PadStage();
   private mLayoutViewModel: LayoutViewModel;
   private navigationBarStatus: string | undefined;
+  private mOrientationListener = mediaquery.matchMediaSync('(orientation: landscape)');
   @State mAppScaleX: number = 1.0;
   @State mAppScaleY: number = 1.0;
   @State mAppAlpha: number = 1.0;
@@ -57,7 +58,7 @@ struct EntryView {
     this.mLayoutViewModel = LayoutViewModel.getInstance();
     this.getWindowSize();
     this.updateScreenSize();
-
+    this.mOrientationListener.on('change', windowManager.onPortrait);
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
     this.navigationBarStatus = SettingsModel.getInstance().getValue();
   }
@@ -90,23 +91,12 @@ struct EntryView {
       curve: Curve.Friction,
       onFinish: () => {},
     }, () => {
-      this.mAppScaleX = 0.97;
-      this.mAppScaleY = 0.97;
+      this.mAppScaleX = 0.95;
+      this.mAppScaleY = 0.95;
     })
   }
 
   private closeAppAnimation(): void {
-    this.mAppAlpha = 0.0;
-    animateTo({
-      duration: 140,
-      delay: 210,
-      curve: Curve.Linear,
-    }, () => {
-      this.mAppAlpha = 1.0;
-    })
-
-    this.mAppScaleX = 0.9;
-    this.mAppScaleY = 0.9;
     animateTo({
       duration: 490,
       delay: 210,
@@ -121,7 +111,7 @@ struct EntryView {
     Log.showInfo(TAG, 'updateScreenInfo');
     if (this.screenWidth !== 0 && this.screenHeight !== 0) {
       this.mLayoutViewModel.initScreen(this.navigationBarStatus);
-      globalThis.PadSmartDockStyleConfig.initConfig();
+      globalThis.SmartDockStyleConfig.initConfig();
       globalThis.PadPageDesktopGridStyleConfig.initConfig();
       globalThis.AppCenterGridStyleConfigInstance.initConfig();
       globalThis.BigFolderStyleConfigInstance.initConfig();
@@ -138,6 +128,7 @@ struct EntryView {
       // If cannot compile this, comment next line or add following code into Class App in "@system.app.d.ts":
       // static setImageRawDataCacheSize(value: number): void;
       app.setImageRawDataCacheSize(RAW_IMAGE_CACHE_SIZE);
+      app.setImageCacheCount(100);
       globalThis.IsSetImageRawDataCacheSize = true;
     }
   }
@@ -164,6 +155,7 @@ struct EntryView {
   }
 
   aboutToDisappear(): void {
+    this.mOrientationListener.off('change', windowManager.onPortrait);
     this.mStage.onDestroy();
   }
 
@@ -193,9 +185,7 @@ struct EntryView {
       if (this.buildLog()) {}
       Column() {
         Column() {
-          PageDesktopLayout({
-            inputDeviceType: $inputDeviceType
-          });
+          PageDesktopLayout();
         }
         .alignItems(HorizontalAlign.Center)
         .justifyContent(FlexAlign.Center)
@@ -212,7 +202,6 @@ struct EntryView {
 
         Column() {
           SmartDock({
-            inputDeviceType: $inputDeviceType,
             showAppCenter: () => {
               Trace.start(Trace.CORE_METHOD_START_APP_CENTER);
               globalThis.createWindowWithName(windowManager.APP_CENTER_WINDOW_NAME, windowManager.DESKTOP_RANK);
