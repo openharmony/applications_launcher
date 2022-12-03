@@ -1,16 +1,17 @@
 {
-  "name": "@ohos/pagedesktop",
-  "version": "1.0.0",
-  "description": "a npm package which contains pagedesktop feature",
-  "ohos": {
-    "org": "huawei",
-    "buildTool": "hvigor",
-    "directoryLevel": "module"
-  },
-  "main": "index.ets",
-  "dependencies": {
-    "@ohos/common": "../../common",
-    "@ohos/bigfolder": "../bigfolder",
-    "@ohos/form": "../form"
-  }
+	"devDependencies": {},
+	"name": "@ohos/pagedesktop",
+	"description": "a npm package which contains pagedesktop feature",
+	"ohos": {
+		"org": "huawei",
+		"directoryLevel": "module",
+		"buildTool": "hvigor"
+	},
+	"main": "index.ets",
+	"version": "1.0.0",
+	"dependencies": {
+		"@ohos/bigfolder": "../bigfolder",
+		"@ohos/form": "../form",
+		"@ohos/common": "../../common"
+	}
 }
