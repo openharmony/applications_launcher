@@ -146,6 +146,11 @@ export default struct AppItem {
     });
   }
 
+  getMenuInfoList() {
+    const menuInfo = this.mPageDesktopViewModel.buildMenuInfoList(this.item, this.dialogController, this.formManagerDialogController)
+    return menuInfo;
+  }
+
   /**
    * When click cancel dialog, this function will be called.
    */
@@ -168,8 +173,7 @@ export default struct AppItem {
         appLabelId: this.item.appLabelId,
         badgeNumber: this.item.badgeNumber,
         isSelect: this.selectDesktopAppItem == this.item.keyName,
-        menuInfo:this.mPageDesktopViewModel.buildMenuInfoList(this.item,
-          this.dialogController, this.formManagerDialogController),
+        getMenuInfoList: this.getMenuInfoList.bind(this),
         mPaddingTop: this.mMarginVertical,
         nameLines: this.mNameLines,
         mIconNameMargin: this.mIconNameMargin,
@@ -244,6 +248,7 @@ export default struct AppItem {
    */
   private setStartAppInfo() {
     Log.showInfo(TAG, `app setStartAppInfo ${this.mIconSize}`);
+    Trace.start("setStartAppInfo");
     const appInfo = {
       bundleName: this.item.bundleName,
       abilityName: this.item.abilityName,
@@ -259,5 +264,6 @@ export default struct AppItem {
     AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
     this.mPageDesktopStartAppHandler.setAppIconSize(this.mIconSize);
     this.mPageDesktopStartAppHandler.setAppIconInfo();
+    Trace.start("setStartAppInfo");
   }
 }

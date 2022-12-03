@@ -36,6 +36,7 @@ import SmartDockCloseAppHandler from '../common/SmartDockCloseAppHandler';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 import { SmartDockLayoutConfig } from '../config/SmartDockLayoutConfig';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
+import { RecentMissionInfo } from '@ohos/common'
 
 const TAG = 'SmartDockModel';
 const KEY_NAME = 'name';
@@ -430,7 +431,7 @@ export default class SmartDockModel {
   private registerMissionListener(): void {
     Log.showDebug(TAG, 'registerMissionListener');
     const listener: MissionListener = {
-      onMissionCreated: this.onMissionCreatedCallback.bind(this),
+      onMissionCreated: () => {},
       onMissionDestroyed: this.onMissionDestroyedCallback.bind(this),
       onMissionSnapshotChanged: this.onMissionSnapshotChangedCallback.bind(this),
       onMissionMovedToFront: this.onMissionMovedToFrontCallback.bind(this),
@@ -443,12 +444,6 @@ export default class SmartDockModel {
     missionManager.registerMissionListener(listener);
   }
 
-  onMissionCreatedCallback(missionId: number): void {
-    Log.showInfo(TAG, 'onMissionCreatedCallback, missionId=' + missionId);
-    this.getRecentDataList().then(() => {}, () => {});
-    this.getRecentViewDataList(missionId).then(() => {}, () => {});
-  }
-
   /**
    * get recent view list
    */
@@ -456,9 +451,24 @@ export default class SmartDockModel {
     let mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
     Log.showDebug(TAG, `getRecentMissionsList length: ${mRecentMissionsList.length}`);
     const snapShotTime = new Date().toString();
-    mRecentMissionsList.find(item => {
-      return item.missionId === missionId;
-    }).snapShotTime = snapShotTime;
+
+    let recentMissionInfoIndex = mRecentMissionsList.findIndex(item => {
+      return item.missionId = missionId;
+    })
+    if (recentMissionInfoIndex != -1) {
+      let recentMissionInfo: RecentMissionInfo = {
+        missionId: mRecentMissionsList[recentMissionInfoIndex].missionId,
+        appIconId: mRecentMissionsList[recentMissionInfoIndex].appIconId,
+        appLabelId: mRecentMissionsList[recentMissionInfoIndex].appLabelId,
+        appName: mRecentMissionsList[recentMissionInfoIndex].appName,
+        bundleName: mRecentMissionsList[recentMissionInfoIndex].bundleName,
+        moduleName: mRecentMissionsList[recentMissionInfoIndex].moduleName,
+        abilityName: mRecentMissionsList[recentMissionInfoIndex].abilityName,
+        lockedState: mRecentMissionsList[recentMissionInfoIndex].lockedState,
+        snapShotTime: snapShotTime
+      }
+      mRecentMissionsList[recentMissionInfoIndex] = recentMissionInfo;
+    }
     AppStorage.SetOrCreate('recentMissionsList', mRecentMissionsList);
   }
 
