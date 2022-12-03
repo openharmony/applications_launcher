@@ -83,9 +83,10 @@ export struct AppGridLayout {
       this.dialogName = resName;
     });
   }
+
   public buildMenuInfoList(appInfo) {
     let menuInfoList = new Array<MenuInfo>();
-    let shortcutInfo = this.mAppGridViewModel.getShortcutInfo(appInfo.bundleName);
+    let shortcutInfo: any = this.mAppGridViewModel.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
       let menu = null;
       shortcutInfo.forEach((value) => {

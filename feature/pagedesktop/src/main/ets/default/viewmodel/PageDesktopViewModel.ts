@@ -880,7 +880,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
   buildMenuInfoList(appInfo, dialog, formDialog?, folderCallback?, openClickCallback?): MenuInfo[] {
     let menuInfoList = new Array<MenuInfo>();
-    const shortcutInfo = this.mAppModel.getShortcutInfo(appInfo.bundleName);
+    const shortcutInfo: any = this.mAppModel.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
       let menu = null;
       shortcutInfo.forEach((value) => {

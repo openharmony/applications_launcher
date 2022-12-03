@@ -8,13 +8,13 @@
 	},
 	"version": "1.0.0",
 	"dependencies": {
-		"@ohos/common": "../../common",
-		"@ohos/bigfolder": "../../feature/bigfolder",
-		"@ohos/form": "../../feature/form",
-		"@ohos/gesturenavigation": "../../feature/gesturenavigation",
 		"@ohos/pagedesktop": "../../feature/pagedesktop",
 		"@ohos/recents": "../../feature/recents",
+		"@ohos/bigfolder": "../../feature/bigfolder",
 		"@ohos/smartdock": "../../feature/smartdock",
+		"@ohos/form": "../../feature/form",
+		"@ohos/gesturenavigation": "../../feature/gesturenavigation",
+		"@ohos/common": "../../common",
 		"@ohos/numbadge": "../../feature/numbadge"
 	}
 }

@@ -39,6 +39,7 @@ export struct AppBubble {
   nameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   mIconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
   private menuInfo;
+  private getMenuInfoList: Function;
   isSelect?: boolean;
   appName: string = '';
   useCache: boolean = true;
@@ -49,6 +50,7 @@ export struct AppBubble {
     Column() {
       AppMenu({
         menuInfoList: this.menuInfo,
+        getMenuInfoList: this.getMenuInfoList,
         closeMenu: () => {
           AppStorage.SetOrCreate('contextMenuState', false);
         }
