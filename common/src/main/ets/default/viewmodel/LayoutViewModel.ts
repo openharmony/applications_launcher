@@ -56,9 +56,9 @@ export class LayoutViewModel {
   }
 
   /**
-    * get the LayoutViewModel instance
-    *
-    * @return LayoutViewModel
+   * get the LayoutViewModel instance
+   *
+   * @return LayoutViewModel
    */
   static getInstance(): LayoutViewModel {
     if (globalThis.LayoutViewModelInstance == null) {
@@ -122,8 +122,8 @@ export class LayoutViewModel {
   }
 
   /**
-  * get UninstallDialogWidth
-  */
+   * get UninstallDialogWidth
+   */
   getCommonDialogWidth(): string {
     return this.mCommonDialogWidth;
   }
@@ -215,6 +215,10 @@ export class LayoutViewModel {
     let iconMarginVertical = ratio * itemSize;
     let iconHeight = itemSize - 2 * iconMarginVertical - nameHeight - iconNameMargin;
     let iconMarginHorizontal = (itemSize - iconHeight) / 2;
+    if (AppStorage.Get('isPortrait') ) {
+      row = 11;
+      column = 5;
+    }
     this.updateGrid(row, column);
 
     this.mDesktopGap = gutter;

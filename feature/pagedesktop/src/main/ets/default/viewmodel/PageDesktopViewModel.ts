@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -137,9 +137,9 @@ export default class PageDesktopViewModel extends BaseViewModel {
   }
 
   /**
-    * Obtains the PageDesktopViewModel instance.
-    *
-    * @return PageDesktopViewModel
+   * Obtains the PageDesktopViewModel instance.
+   *
+   * @return PageDesktopViewModel
    */
   static getInstance(): PageDesktopViewModel {
     if (globalThis.PageDesktopViewModel == null) {
@@ -229,6 +229,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
   /**
    * delete app in pageDesktop
+   *
    * @param abilityName
    * @param bundleName
    */
@@ -249,8 +250,13 @@ export default class PageDesktopViewModel extends BaseViewModel {
       (layoutInfo[i].bundleName == appItem.bundleName || layoutInfo[i].keyName == appItem.keyName)) {
         const page = layoutInfo[i].page;
         gridLayoutInfo.layoutInfo.splice(i, 1);
-        this.mPageDesktopModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
+        let ret: boolean = this.mPageDesktopModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
         this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
+        if(ret){
+          const curPageIndex = this.mPageDesktopModel.getPageIndex();
+          Log.showInfo(TAG, 'deleteAppItem' + curPageIndex);
+          this.mPageDesktopModel.setPageIndex(curPageIndex - 1);
+        }
         break;
       }
     }
@@ -259,6 +265,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
   /**
    * add app to pageDesktop
+   *
    * @param appInfo
    */
   addToDesktop(appInfo) {
@@ -297,6 +304,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
   /**
    * add form to pageDesktop
+   *
    * @param appInfo
    */
   addFormToDesktop(formInfo) {
@@ -333,6 +341,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
   /**
    * update badge in desktop
+   *
    * @param badgeInfo
    */
   updateBadgeNumber(badgeInfo) {
@@ -392,6 +401,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
   /**
    * add app to pageDesktop by dragging
+   *
    * @param appInfo
    */
   addToDesktopByDraging(appInfo) {
@@ -412,6 +422,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
   /**
    * add app to dock
+   *
    * @param appInfo
    */
   addToDock(appInfo) {
@@ -514,12 +525,12 @@ export default class PageDesktopViewModel extends BaseViewModel {
   }
 
   private integrateSwiper(list) {
-    const gridAppsInfos = [];
+    let gridAppsInfos = [];
     const allPageCount = this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount;
     let max = allPageCount;
     for (let i = 0;i < list.length; i++) {
-      if (max < list[i].page) {
-        max = list[i].page;
+      if (max <= list[i].page + 1) {
+        max = list[i].page + 1;
       }
     }
 
@@ -724,11 +735,72 @@ export default class PageDesktopViewModel extends BaseViewModel {
       layoutInfo: []
     };
     newLayoutInfo.layoutDescription = {
-      'pageCount': pageNum,
+      'pageCount': info.layoutDescription.pageCount,
       'row': row,
       'column': column
     };
-    newLayoutInfo.layoutInfo = [];
+    if (AppStorage.Get('isPortrait')) {
+      let cardInfoHorizontal: any[] = [];
+      for (let i = 0; i < info.layoutInfo.length; i++) {
+        if (info.layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
+          let tt = info.layoutInfo[i].column
+          info.layoutInfo[i].column = info.layoutInfo[i].row;
+          info.layoutInfo[i].row = tt;
+          newLayoutInfo.layoutInfo.push(info.layoutInfo[i]);
+        }
+      }
+
+      for (let i = 0; i < info.layoutInfo.length; i++) {
+        if (info.layoutInfo[i].typeId == CommonConstants.TYPE_CARD) {
+          if (info.layoutInfo[i].area[0] == info.layoutInfo[i].area[1]) {
+            let tt = info.layoutInfo[i].column
+            info.layoutInfo[i].column = info.layoutInfo[i].row;
+            info.layoutInfo[i].row = tt;
+            newLayoutInfo.layoutInfo.push(info.layoutInfo[i]);
+          } else {
+            cardInfoHorizontal.push(JSON.stringify(info.layoutInfo[i]));
+            this.mPageDesktopModel.updatePageDesktopLayoutInfo(newLayoutInfo, info.layoutInfo[i]);
+            newLayoutInfo.layoutInfo.push(info.layoutInfo[i]);
+          }
+        }
+      }
+      AppStorage.SetOrCreate('isPortraitCard', cardInfoHorizontal);
+    }
+
+    if (!AppStorage.Get('isPortrait')) {
+      for (let i = 0; i < info.layoutInfo.length; i++) {
+        if (info.layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
+          let tt = info.layoutInfo[i].column
+          info.layoutInfo[i].column = info.layoutInfo[i].row;
+          info.layoutInfo[i].row = tt;
+          newLayoutInfo.layoutInfo.push(info.layoutInfo[i]);
+        }
+      }
+
+      for (let i = 0; i < info.layoutInfo.length; i++) {
+        if (info.layoutInfo[i].typeId == CommonConstants.TYPE_CARD) {
+          if (info.layoutInfo[i].area[0] == info.layoutInfo[i].area[1]) {
+            let tt = info.layoutInfo[i].column
+            info.layoutInfo[i].column = info.layoutInfo[i].row;
+            info.layoutInfo[i].row = tt;
+            newLayoutInfo.layoutInfo.push(info.layoutInfo[i]);
+          } else {
+            let cardInfoOld: [] = AppStorage.Get('isPortraitCard');
+            Log.showInfo(TAG, 'cardInfoOld:' + JSON.stringify(cardInfoOld));
+            if (!cardInfoOld.find(item => JSON.parse(item).cardId === info.layoutInfo[i].cardId)) {
+              this.mPageDesktopModel.updatePageDesktopLayoutInfo(newLayoutInfo, info.layoutInfo[i]);
+              newLayoutInfo.layoutInfo.push(info.layoutInfo[i]);
+            }
+            for (let index = 0; index < cardInfoOld.length; index++) {
+              if (!newLayoutInfo.layoutInfo.find(item => item.cardId == JSON.parse(cardInfoOld[index]).cardId)) {
+                newLayoutInfo.layoutInfo.push(JSON.parse(cardInfoOld[index]));
+              }
+            }
+          }
+        }
+      }
+    }
+
     return newLayoutInfo;
   }
 
@@ -837,6 +909,9 @@ export default class PageDesktopViewModel extends BaseViewModel {
    * Delete the chosen blank page.
    */
   private deleteBlankPage(): void {
+
+
+
     const curPageIndex = this.mPageDesktopModel.getPageIndex();
     this.deleteGridPage(curPageIndex);
     this.mPageDesktopModel.setPageIndex(curPageIndex - 1);
@@ -1119,6 +1194,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
   /**
    * add card to pageDesktop
+   *
    * @param appInfo
    */
   async createCardToDeskTop(formCardItem) {
