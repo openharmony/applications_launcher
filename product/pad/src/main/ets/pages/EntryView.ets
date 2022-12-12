@@ -98,8 +98,8 @@ struct EntryView {
 
   private closeAppAnimation(): void {
     animateTo({
-      duration: 490,
-      delay: 210,
+      duration: 370,
+      delay: 0,
       curve: Curve.Friction,
     }, () => {
       this.mAppScaleX = 1.0;

@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@ import { CommonConstants } from '@ohos/common';
 import RecentMissionCard from '../common/uicomponents/RecentMissionCard';
 import { RecentMissionsViewModel } from '../viewmodel/RecentMissionsViewModel';
 import { RecentsStyleConstants } from '../common/constants/RecentsStyleConstants';
+import { windowManager } from '@ohos/common';
 
 const TAG = 'RecentMissionsDoubleLayout';
 
@@ -38,6 +39,11 @@ export struct RecentMissionsDoubleLayout {
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, `aboutToDisappear start`);
+  }
+
+  itemChance(item: any): any {
+    item.snapShotTime = '';
+    return item;
   }
 
   build() {
@@ -60,7 +66,7 @@ export struct RecentMissionsDoubleLayout {
                 })
               }
               .align(Alignment.Center)
-          },(item) => JSON.stringify(item))
+          },(item) => JSON.stringify(this.itemChance(item)))
         }
         .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
         .rowsTemplate('1fr 1fr')
@@ -70,7 +76,6 @@ export struct RecentMissionsDoubleLayout {
       }
       .margin({
         top: RecentsStyleConstants.DOUBLE_LIST_TOP_MARGIN,
-        left: RecentsStyleConstants.DOUBLE_LIST_LEFT_MARGIN
       })
       .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
       .height(RecentsStyleConstants.DOUBLE_LIST_GRID_HEIGHT_PERCENTAGE)
@@ -91,6 +96,7 @@ export struct RecentMissionsDoubleLayout {
             .height(RecentsStyleConstants.RECENT_DELETE_IMAGE_SIZE)
         }
         .onClick(() => {
+          windowManager.minimizeAllApps();
           this.isClickSubComponent = true;
           Log.showDebug(TAG, 'onClick click delete button');
           localEventManager.sendLocalEventSticky(EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION, null);
@@ -100,6 +106,8 @@ export struct RecentMissionsDoubleLayout {
       }
       .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
     }
+    .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
+    .padding({ left: RecentsStyleConstants.DOUBLE_LIST_LEFT_MARGIN })
     .height(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
   }
 }

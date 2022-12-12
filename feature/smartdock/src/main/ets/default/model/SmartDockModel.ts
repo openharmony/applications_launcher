@@ -36,7 +36,7 @@ import SmartDockCloseAppHandler from '../common/SmartDockCloseAppHandler';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 import { SmartDockLayoutConfig } from '../config/SmartDockLayoutConfig';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
-import { RecentMissionInfo } from '@ohos/common'
+import { RecentMissionInfo } from '@ohos/common';
 
 const TAG = 'SmartDockModel';
 const KEY_NAME = 'name';
@@ -453,7 +453,7 @@ export default class SmartDockModel {
     const snapShotTime = new Date().toString();
 
     let recentMissionInfoIndex = mRecentMissionsList.findIndex(item => {
-      return item.missionId = missionId;
+      return item.missionId === missionId;
     })
     if (recentMissionInfoIndex != -1) {
       let recentMissionInfo: RecentMissionInfo = {
