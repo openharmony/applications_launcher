@@ -29,7 +29,7 @@ const TAG = 'LauncherMainAbility';
 
 export default class MainAbility extends ServiceExtension {
   onCreate(want: Want): void {
-    Log.showInfo(TAG, 'onCreate start');
+    Log.showInfo(TAG,'onCreate start');
     this.context.area = 0;
     this.initLauncher();
   }

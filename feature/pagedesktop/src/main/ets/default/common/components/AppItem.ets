@@ -147,7 +147,8 @@ export default struct AppItem {
   }
 
   getMenuInfoList() {
-    const menuInfo = this.mPageDesktopViewModel.buildMenuInfoList(this.item, this.dialogController, this.formManagerDialogController)
+    const menuInfo = this.mPageDesktopViewModel.buildMenuInfoList(this.item,
+      this.dialogController, this.formManagerDialogController)
     return menuInfo;
   }
 
@@ -264,6 +265,6 @@ export default struct AppItem {
     AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
     this.mPageDesktopStartAppHandler.setAppIconSize(this.mIconSize);
     this.mPageDesktopStartAppHandler.setAppIconInfo();
-    Trace.start("setStartAppInfo");
+    Trace.end("setStartAppInfo");
   }
 }
