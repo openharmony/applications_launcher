@@ -84,6 +84,7 @@ export default struct ResidentLayout {
             }
             .onClick((event: ClickEvent) => {
               const popupIsShow: boolean = AppStorage.Get('popupIsShow');
+              Log.showInfo(TAG, `popupIsShow: ` + popupIsShow);
               if (!popupIsShow) {
                 this.onItemClick(event, item);
               }
@@ -243,7 +244,9 @@ struct AppItem {
       }
     })
     .onDragStart((event: DragEvent, extraParams: string) => {
+      Log.showInfo(TAG, `DragStart`);
       AppStorage.SetOrCreate('isDrag', true);
+      AppStorage.SetOrCreate('popupIsShow', false);
       this.dragItemType = CommonConstants.DRAG_FROM_DOCK;
       this.smartDragItemInfo = this.appInfo;
       Log.showInfo(TAG, `smartDragItemInfo: ${JSON.stringify(this.smartDragItemInfo)}`);

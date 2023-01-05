@@ -370,8 +370,10 @@ class WindowManager {
   public async onPortrait(mediaQueryResult) {
     if (mediaQueryResult.matches) {
       Log.showInfo(TAG, 'screen change to landscape');
+      AppStorage.SetOrCreate('isPortrait', false);
     } else {
       Log.showInfo(TAG, 'screen change to portrait');
+      AppStorage.SetOrCreate('isPortrait', true);
     }
     display.getDefaultDisplay()
       .then((dis: {

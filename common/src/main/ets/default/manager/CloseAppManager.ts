@@ -109,6 +109,24 @@ export class CloseAppManager {
     }
   }
 
+  /**
+   * get app icon info
+   *
+   * @param windowTarget windowTarget close window target
+   */
+  public getAppInfo(windowTarget): any {
+    if (CheckEmptyUtils.isEmptyArr(this.mBaseCloseAppHandlerList)) {
+      Log.showError(TAG, `getAppIconInfo with invalid mBaseCloseAppHandlerList`);
+      return {};
+    }
+
+    for (var i = 0; i < this.mBaseCloseAppHandlerList.length; i++) {
+      this.mBaseCloseAppHandlerList[i].getAppIconInfo(windowTarget);
+    }
+
+    return {iconInfo: this.getAppCloseIconInfo(), appItemInfo: this.getAppCloseItemInfo()}
+  }
+
   public addPagedesktopClosePosition(pagedesktopCloseIconInfo: any, pagedesktopCloseItemInfo?: any) {
     Log.showDebug(TAG, `addPagedesktopClosePosition pagedesktopCloasIconInfo is ${JSON.stringify(pagedesktopCloseIconInfo)}`)
     this.mPagedesktopClosePosition = pagedesktopCloseIconInfo;
