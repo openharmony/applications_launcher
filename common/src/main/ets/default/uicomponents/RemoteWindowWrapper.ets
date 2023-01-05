@@ -496,7 +496,6 @@ export struct RemoteWindowWrapper {
         duration: 300,
         curve: Curve.Friction,
         onFinish: () => {
-          callback.onAnimationFinish();
           this.removeRemoteWindowFromList(remoteVo.remoteWindowKey);
         }
       }, () => {
@@ -509,7 +508,6 @@ export struct RemoteWindowWrapper {
         duration: 150,
         curve: Curve.Friction,
         onFinish: () => {
-          callback.onAnimationFinish();
           this.removeRemoteWindowFromList(remoteVo.remoteWindowKey);
         }
       }, () => {

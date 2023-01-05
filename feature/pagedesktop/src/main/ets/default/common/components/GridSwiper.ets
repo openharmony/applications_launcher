@@ -93,7 +93,7 @@ export default struct GridSwiper {
                   })
                 }
                 .gesture(
-                LongPressGesture({ repeat: true })
+                LongPressGesture({ repeat: false })
                   .onAction((event: GestureEvent) => {
                     this.dialogController.open()
                   })
