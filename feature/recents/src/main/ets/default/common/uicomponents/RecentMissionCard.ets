@@ -49,11 +49,12 @@ export default struct RecentMissionCard {
   private snapShotTime: string = '';
   private mRecentMissionsViewModel: RecentMissionsViewModel;
   private mRecentMissionStartAppHandler: RecentMissionStartAppHandler;
+  private mReleaseFlag = true;
 
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear start');
     // remove this if toolchain fix requireNApi bug
-    image.toString();
+    this.mReleaseFlag = false;
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
     this.mIsSingleLayout = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ? true : false;
     this.cardMargin = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
@@ -67,6 +68,7 @@ export default struct RecentMissionCard {
   aboutToDisappear(): void {
     Log.showInfo(TAG, `aboutToDisappear start ${this.missionId}`);
     Log.showDebug(TAG, `typeof this.recentImage ${typeof this.recentImage}`);
+    this.mReleaseFlag = true;
     // typeof Resource or pixelMap is Object
     if (!CheckEmptyUtils.isEmpty(this.recentImage)
     && JSON.stringify(this.recentImage) != JSON.stringify(RecentsStyleConstants.DEFAULT_APP_IMAGE)) {
@@ -85,12 +87,16 @@ export default struct RecentMissionCard {
  */
   recentMissionsSnapshotCallback(missionId: number, snapShotInfo: SnapShotInfo): void {
     Log.showDebug(TAG, `recentMissionsSnapshotCallback missionId: ${this.missionId}`);
-    if (missionId === this.missionId) {
+    if (!this.mReleaseFlag && missionId === this.missionId) {
       this.recentImage = snapShotInfo.snapShotImage;
       let width = snapShotInfo.snapShotImageWidth;
       let height = snapShotInfo.snapShotImageHeight;
       Log.showDebug(TAG, `recentMissionsSnapshotCallback recentImage: ${JSON.stringify(this.recentImage)},
         width: ${JSON.stringify(width)}, height: ${JSON.stringify(height)}`);
+    } else {
+      snapShotInfo.snapShotImage.release().catch((err) => {
+        Log.showError(TAG, `image.PixelMap release err :${err}`)
+      })
     }
   }
 
