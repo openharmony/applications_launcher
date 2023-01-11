@@ -16,6 +16,7 @@ import CheckEmptyUtils from '../../../../../../../../common/src/main/ets/default
 import Log from '../../../../../../../../common/src/main/ets/default/utils/Log';
 import CommonStyleConstants from '../../../../../../../../common/src/main/ets/default/constants/StyleConstants';
 import StyleConstants from '../../common/constants/StyleConstants';
+import SnapShotInfo  from '../../../../../../../../common/src/main/ets/default/bean/SnapShotInfo';
 import RecentMissionAppIcon from './RecentMissionAppIcon.ets';
 import RecentMissionAppName from './RecentMissionAppName.ets';
 import RecentMissionsViewModel from '../../viewmodel/RecentMissionsViewModel.ets';
@@ -43,15 +44,18 @@ export default struct RecentMissionCard {
   private mIsSingleLayout: boolean = true;
   private mSnapshotList: any = [];
   private mRecentMissionsViewModel: RecentMissionsViewModel;
+  private mReleaseFlag = true;
 
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear start');
+    this.mReleaseFlag = false;
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
     this.mIsSingleLayout = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ? true : false;
     this.margin = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
       StyleConstants.SINGLE_LIST_LAYOUT_MARGIN * StyleConstants.DPI_RATIO : StyleConstants.DOUBLE_LIST_LAYOUT_MARGIN;
     this.layoutWeight = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
       StyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT : StyleConstants.DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT;
+    this.mRecentMissionsViewModel.getMissionSnapShot(this.missionId, this.recentMissionsSnapshotCallback.bind(this));
     if (CheckEmptyUtils.isEmpty(this.recentImage)) {
       this.recentImage = this.mDefaultSnapShot;
     }
@@ -59,8 +63,32 @@ export default struct RecentMissionCard {
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, `aboutToDisappear start ${this.missionId}`);
+    this.mReleaseFlag = true;
     if (this.recentImage != this.mDefaultSnapShot) {
       void this.recentImage.release();
+    }
+  }
+
+  /**
+    * The callback of Recent missions snapshot.
+    *
+    * @param {number} missionId
+    * @param {any} snapShotInfo
+    */
+  recentMissionsSnapshotCallback(missionId: number, snapShotInfo: SnapShotInfo): void {
+    Log.showDebug(TAG, `recentMissionsSnapshotCallback missionId: ${this.missionId}`);
+    if (missionId === this.missionId) {
+      if (!this.mReleaseFlag && missionId === this.missionId) {
+        this.recentImage = snapShotInfo.snapShotImage;
+        let width = snapShotInfo.snapShotImageWidth;
+        let height = snapShotInfo.snapShotImageHeight;
+        Log.showDebug(TAG, `recentMissionsSnapshotCallback recentImage: ${JSON.stringify(this.recentImage)},
+        width: ${JSON.stringify(width)}, height: ${JSON.stringify(height)}`);
+      } else {
+        snapShotInfo.snapShotImage.release().catch((err) => {
+          Log.showError(TAG, `image.PixelMap release err :${err}`)
+        })
+      }
     }
   }
 
