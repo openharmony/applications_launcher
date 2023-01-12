@@ -397,29 +397,31 @@ export default class SmartDockModel {
       left?: number,
       right?: number,
     }[] = [];
-    let snapShotWidth = 0;
-    for (const item of missionIds) {
-      let pixelMap = {
-        name: '',
-        left: StyleConstants.DEFAULT_12,
-        missionId: -1,
-        image: $r('app.media.icon'),
-        boxSize: StyleConstants.DEFAULT_SMART_DOCK_MISSION_IMAGE_HEIGHT,
-        bundleName: ''
-      };
-      const snapshotMap = await missionManager.getMissionSnapShot('', item.missionId);
-      pixelMap.image = snapshotMap.snapshot;
-      pixelMap.missionId = item.missionId;
-      pixelMap.bundleName = snapshotMap.ability.bundleName;
-      const imageInfo = await snapshotMap.snapshot.getImageInfo();
-      pixelMap.boxSize = Math.ceil(StyleConstants.DEFAULT_SMART_DOCK_MISSION_IMAGE_HEIGHT / imageInfo.size.height * imageInfo.size.width);
-      pixelMap.name = name;
-      pixelMap.left = StyleConstants.DEFAULT_12;
-      snapshotList.push(pixelMap);
-      snapShotWidth += pixelMap.boxSize + pixelMap.left;
+    if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE) {
+      let snapShotWidth = 0;
+      for (const item of missionIds) {
+        let pixelMap = {
+          name: '',
+          left: StyleConstants.DEFAULT_12,
+          missionId: -1,
+          image: $r('app.media.icon'),
+          boxSize: StyleConstants.DEFAULT_SMART_DOCK_MISSION_IMAGE_HEIGHT,
+          bundleName: ''
+        };
+        const snapshotMap = await missionManager.getMissionSnapShot('', item.missionId);
+        pixelMap.image = snapshotMap.snapshot;
+        pixelMap.missionId = item.missionId;
+        pixelMap.bundleName = snapshotMap.ability.bundleName;
+        const imageInfo = await snapshotMap.snapshot.getImageInfo();
+        pixelMap.boxSize = Math.ceil(StyleConstants.DEFAULT_SMART_DOCK_MISSION_IMAGE_HEIGHT / imageInfo.size.height * imageInfo.size.width);
+        pixelMap.name = name;
+        pixelMap.left = StyleConstants.DEFAULT_12;
+        snapshotList.push(pixelMap);
+        snapShotWidth += pixelMap.boxSize + pixelMap.left;
+      }
+      AppStorage.SetOrCreate('snapshotList', snapshotList);
+      AppStorage.SetOrCreate('snapShotWidth', snapShotWidth);
     }
-    AppStorage.SetOrCreate('snapshotList', snapshotList);
-    AppStorage.SetOrCreate('snapShotWidth', snapShotWidth);
     Log.showInfo(TAG, 'getSnapshot update snapshotList');
     return snapshotList;
   }
