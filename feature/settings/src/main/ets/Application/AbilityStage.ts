@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import AbilityStage from '@ohos.application.AbilityStage';
+import AbilityStage from '@ohos.app.ability.AbilityStage';
 import { Log } from '@ohos/common';
 
 const TAG = 'Launcher Settings MyAbilityStage';
