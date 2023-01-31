@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import ServiceExtension from '@ohos.application.ServiceExtensionAbility';
+import ServiceExtension from '@ohos.app.ability.ServiceExtensionAbility';
 import display from '@ohos.display';
 import Want from '@ohos.application.Want';
 import { Log } from '@ohos/common';

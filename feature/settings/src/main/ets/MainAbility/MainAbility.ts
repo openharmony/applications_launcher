@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import Ability from '@ohos.application.Ability';
+import Ability from '@ohos.app.ability.UIAbility';
 import { Log } from '@ohos/common';
 
 const TAG = 'Launcher Settings MainAbility';
