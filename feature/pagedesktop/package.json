@@ -13,5 +13,6 @@
 		"@ohos/bigfolder": "../bigfolder",
 		"@ohos/form": "../form",
 		"@ohos/common": "../../common"
-	}
+	},
+	"type": "module"
 }
