@@ -6,5 +6,6 @@
     {
       "name": "default",
     }
-  ]
+  ],
+  "entryModules": ["pad-launcher","phone-launcher"]
 }

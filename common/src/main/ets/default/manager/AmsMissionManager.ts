@@ -219,7 +219,7 @@ class AmsMissionManager {
     Log.showInfo(TAG, `getMissionSnapShot start! missionId: ${missionId}`);
     try {
       let missionSnapshot: MissionSnapshot = null;
-      await missionManager.getLowResolutionMissionSnapShot('', missionId)
+      await missionManager.getMissionSnapShot('', missionId)
         .then((res) => {
           Log.showDebug(TAG, `getLowResolutionMissionSnapShot ${missionId} success ${JSON.stringify(res)}`);
           missionSnapshot = res;
