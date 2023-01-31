@@ -12,22 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+// Script for compiling build behavior. It is built in the build plug-in and cannot be modified currently.
+module.exports = require('@ohos/hvigor-ohos-plugin').harTasks
 
-import inputMethod from '@ohos.inputMethod';
-
-/**
- * Wrapper class for inputMethod interfaces.
- */
-export class InputMethodManager {
-
-  static getInstance(): InputMethodManager {
-    if (globalThis.InputMethodManagerInstance == null) {
-      globalThis.InputMethodManagerInstance = new InputMethodManager();
-    }
-    return globalThis.InputMethodManagerInstance;
-  }
-
-  stopInput(): void {
-    inputMethod.getInputMethodController()?.stopInput();
-  }
-}
