@@ -728,6 +728,16 @@ export default class PageDesktopViewModel extends BaseViewModel {
         this.mPageDesktopModel.updateAppItemLayoutInfo(info, newApp[i]);
       }
     }
+    let infoOld = this.mSettingsModel.getLayoutInfo();
+    for (const item of infoOld.layoutInfo) {
+      if (item.typeId == CommonConstants.TYPE_APP) {
+        for (const infoNew of info.layoutInfo) {
+          if (item.keyName == infoNew.keyName) {
+            infoNew.page = item.page;
+          }
+        }
+      }
+    }
     return info;
   }
 
