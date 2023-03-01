@@ -83,7 +83,7 @@ class RemoteVo {
     this.appItemInfo = appItemInfo;
     this.startAppTypeFromPageDesktop = startAppTypeFromPageDesktop;
     this.finishCallback = finishCallback;
-    this.remoteWindowKey = this.target.bundleName + this.target.abilityName;
+    this.remoteWindowKey = this.target.bundleName + this.target.abilityName + this.target.missionId;
     this.initRemoteWindowProperty();
   }
 
@@ -206,6 +206,7 @@ class RemoteVo {
 @Component
 export struct RemoteWindowWrapper {
   private mCloseAppManager: CloseAppManager;
+  private mLastRemoteVo: RemoteVo;
   @StorageLink('remoteWindowList') remoteWindowList: RemoteVo[] = [];
 
   getRemoteWindowVo(remoteWindowKey: string): RemoteVo {
@@ -214,8 +215,19 @@ export struct RemoteWindowWrapper {
     })
     if (remoteVoIndex != -1) {
       return this.remoteWindowList[remoteVoIndex];
+    } else if (this.mLastRemoteVo && this.mLastRemoteVo.remoteWindowKey === remoteWindowKey) {
+      return this.mLastRemoteVo;
     } else {
       return null;
+    }
+  }
+
+  private pushRemoteVoIntoList(remoteVo: RemoteVo): void {
+    const remoteVoIndex = this.remoteWindowList.findIndex(item => {
+      return (item.remoteWindowKey) == remoteVo.remoteWindowKey;
+    })
+    if (remoteVoIndex == -1) {
+      this.remoteWindowList.push(remoteVo);
     }
   }
 
@@ -225,7 +237,7 @@ export struct RemoteWindowWrapper {
     windowAnimationManager.setController(control);
     control.onStartAppFromLauncher = (startingWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onStartAppFromLauncher`);
-      const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName;
+      const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
       const startAppTypeFromPageDesktop: number = AppStorage.Get('startAppTypeFromPageDesktop');
       const appItemInfo: any = AppStorage.Get('startAppItemInfo');
       const startAppIconInfo: any = AppStorage.Get('startAppIconInfo');
@@ -247,15 +259,16 @@ export struct RemoteWindowWrapper {
           undefined,
           finishCallback
         );
-        this.remoteWindowList.push(remoteVo);
+        this.mLastRemoteVo = remoteVo;
       }
+      this.pushRemoteVoIntoList(remoteVo);
       AppStorage.SetOrCreate(remoteWindowKey, remoteVo.count);
       this.calculateAppProperty(remoteVo, finishCallback);
     }
 
     control.onStartAppFromRecent = (startingWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onStartAppFromRecent`);
-      const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName;
+      const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
       const startAppTypeFromPageDesktop: number = AppStorage.Get('startAppTypeFromPageDesktop');
       const appItemInfo: any = AppStorage.Get('startAppItemInfo');
       const startAppIconInfo: any = AppStorage.Get('startAppIconInfo');
@@ -277,15 +290,16 @@ export struct RemoteWindowWrapper {
           undefined,
           finishCallback
         );
-        this.remoteWindowList.push(remoteVo);
+        this.mLastRemoteVo = remoteVo;
       }
+      this.pushRemoteVoIntoList(remoteVo);
       AppStorage.SetOrCreate(remoteWindowKey, remoteVo.count);
       this.calculateAppProperty(remoteVo, finishCallback);
     }
 
     control.onStartAppFromOther = (startingWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onStartAppFromOther`);
-      const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName;
+      const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
       const startAppTypeFromPageDesktop: number = AppStorage.Get('startAppTypeFromPageDesktop');
       const appItemInfo: any = AppStorage.SetOrCreate('startAppItemInfo', {});
       const startAppIconInfo: any = AppStorage.SetOrCreate('startAppIconInfo', {});
@@ -307,15 +321,16 @@ export struct RemoteWindowWrapper {
           undefined,
           finishCallback
         );
-        this.remoteWindowList.push(remoteVo);
+        this.mLastRemoteVo = remoteVo;
       }
+      this.pushRemoteVoIntoList(remoteVo);
       AppStorage.SetOrCreate(remoteWindowKey, remoteVo.count);
       this.calculateAppProperty(remoteVo, finishCallback);
     }
 
     control.onAppTransition = (fromWindowTarget, toWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onAppTransition`);
-      const remoteWindowKey = toWindowTarget.bundleName + toWindowTarget.abilityName;
+      const remoteWindowKey = toWindowTarget.bundleName + toWindowTarget.abilityName + toWindowTarget.missionId;
       const startAppTypeFromPageDesktop: number = AppStorage.Get('startAppTypeFromPageDesktop');
       const remoteVo = new RemoteVo(
         RemoteConstants.TYPE_APP_TRANSITION,
@@ -326,7 +341,8 @@ export struct RemoteWindowWrapper {
         fromWindowTarget,
         finishCallback
       );
-      this.remoteWindowList.push(remoteVo);
+      this.mLastRemoteVo = remoteVo;
+      this.pushRemoteVoIntoList(remoteVo);
       this.calculateAppProperty(remoteVo, finishCallback);
     }
 
@@ -334,10 +350,10 @@ export struct RemoteWindowWrapper {
       Log.showInfo(TAG, `remote window animaion onMinimizeWindow`);
       const startAppTypeFromPageDesktop: number = AppStorage.Get('startAppTypeFromPageDesktop');
       const appInfo: {iconInfo: any, appItemInfo: any} = this.mCloseAppManager.getAppInfo(minimizingWindowTarget);
-      const remoteWindowKey = minimizingWindowTarget.bundleName + minimizingWindowTarget.abilityName;
+      const remoteWindowKey = minimizingWindowTarget.bundleName + minimizingWindowTarget.abilityName + minimizingWindowTarget.missionId;
       let remoteVo: RemoteVo | null = this.getRemoteWindowVo(remoteWindowKey);
       if (appInfo.appItemInfo?.page) {
-        AppStorage.SetOrCreate('pageIndex', appInfo.appItemInfo.page)
+        AppStorage.SetOrCreate('pageIndex', appInfo.appItemInfo?.page);
       }
       if (remoteVo) {
         remoteVo.remoteAnimationType = RemoteConstants.TYPE_MINIMIZE_WINDOW;
@@ -356,8 +372,9 @@ export struct RemoteWindowWrapper {
           undefined,
           finishCallback
         );
-        this.remoteWindowList.push(remoteVo);
+        this.mLastRemoteVo = remoteVo;
       }
+      this.pushRemoteVoIntoList(remoteVo);
       AppStorage.SetOrCreate(remoteWindowKey, remoteVo.count);
       this.calculateAppProperty(remoteVo, finishCallback);
     }
@@ -366,7 +383,7 @@ export struct RemoteWindowWrapper {
       Log.showInfo(TAG, `remote window animaion onCloseWindow`);
       const startAppTypeFromPageDesktop: number = AppStorage.Get('startAppTypeFromPageDesktop');
       const appInfo: {iconInfo: any, appItemInfo: any} = this.mCloseAppManager.getAppInfo(closingWindowTarget);
-      const remoteWindowKey = closingWindowTarget.bundleName + closingWindowTarget.abilityName;
+      const remoteWindowKey = closingWindowTarget.bundleName + closingWindowTarget.abilityName + closingWindowTarget.missionId;
       let remoteVo: RemoteVo | null = this.getRemoteWindowVo(remoteWindowKey);
       if (remoteVo) {
         remoteVo.remoteAnimationType = RemoteConstants.TYPE_MINIMIZE_WINDOW;
@@ -384,8 +401,9 @@ export struct RemoteWindowWrapper {
           undefined,
           finishCallback
         );
-        this.remoteWindowList.push(remoteVo);
+        this.mLastRemoteVo = remoteVo;
       }
+      this.pushRemoteVoIntoList(remoteVo);
       AppStorage.SetOrCreate(remoteWindowKey, remoteVo.count);
       this.calculateAppProperty(remoteVo, finishCallback);
     }
@@ -428,7 +446,7 @@ export struct RemoteWindowWrapper {
           Trace.end(Trace.CORE_METHOD_START_APP_ANIMATION);
           const startCount: number = AppStorage.Get(remoteVo.remoteWindowKey);
           Log.showDebug(TAG, `calculateAppProperty ${remoteVo.remoteAnimationType}, count: ${count}, startCount: ${startCount}`);
-          if (startCount === count || count == 0) {
+          if (startCount === count) {
             this.removeRemoteWindowFromList(remoteVo.remoteWindowKey);
             AppStorage.SetOrCreate(remoteVo.remoteWindowKey, 0);
           }
@@ -464,7 +482,7 @@ export struct RemoteWindowWrapper {
           Trace.end(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
           const startCount: number = AppStorage.Get(remoteVo.remoteWindowKey);
           Log.showDebug(TAG, `calculateAppProperty ${remoteVo.remoteAnimationType}, count: ${count}, startCount: ${startCount}`);
-          if (startCount === count || count == 0) {
+          if (startCount === count) {
             this.removeRemoteWindowFromList(remoteVo.remoteWindowKey);
             AppStorage.SetOrCreate(remoteVo.remoteWindowKey, 0);
           }
