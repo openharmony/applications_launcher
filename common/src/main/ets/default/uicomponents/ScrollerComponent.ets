@@ -34,155 +34,115 @@ export struct ScrollerComponent {
   updateData: Function= null;
 
   build() {
-    Column() {
-      Stack({ alignContent: Alignment.Center }) {
-        Scroll(this.scroller) {
-          Row() {
-            ForEach(this.dataList, (item) => {
-              Column() {
-                Flex({
-                  direction: FlexDirection.Row,
-                  alignItems: ItemAlign.Center,
-                  justifyContent: FlexAlign.SpaceBetween
-                }) {
-                  Text(item.name.toString())
-                    .height(StyleConstants.DEFAULT_24)
-                    .textOverflow({ overflow: TextOverflow.Ellipsis })
-                    .fontSize(StyleConstants.DEFAULT_14)
-                    .textAlign(TextAlign.Start)
-                    .maxLines(StyleConstants.DEFAULT_1)
-                    .width(item.boxSize - StyleConstants.DEFAULT_30)
-                    .hoverEffect(HoverEffect.None)
-                    .fontWeight(FontWeight.Medium)
+    Row() {
+      Column() {
+        Button({ type: ButtonType.Circle, stateEffect: true }) {
+          Image($r('app.media.ic_public_arrow_left'))
+            .width(20)
+            .height(20)
+            .objectFit(ImageFit.Contain)
+        }
+        .width(24)
+        .height(24)
+        .backgroundColor('#00000005')
+        .onClick((event: ClickEvent) => {
+          this.scroller.scrollPage({ next: false })
+        })
+      }
+      .alignItems(HorizontalAlign.Center)
+      .justifyContent(FlexAlign.Center)
+      .width(StyleConstants.DEFAULT_56)
+      .height(StyleConstants.DEFAULT_SMART_DOCK_MISSION_HEIGHT)
+      .visibility(this.listWidth > this.screenWidth ? Visibility.Visible : Visibility.None)
 
-                  Image($r('app.media.ic_public_cancel'))
-                    .width(StyleConstants.DEFAULT_16)
-                    .height(StyleConstants.DEFAULT_16)
-                    .objectFit(ImageFit.Contain)
-                    .margin({ right: StyleConstants.DEFAULT_4 })
-                    .onClick((event: ClickEvent) => {
-                      if (this.dataList.length <= 1) {
-                        this.updateData(false, "", () => amsMissionManager.clearMission(item.missionId));
-                        return
-                      }
-                      this.updateData(true, item.bundleName, () => amsMissionManager.clearMission(item.missionId));
-                    })
-                }
-                .width(item.boxSize)
-
-                Image(item.image)
-                  .height(StyleConstants.DEFAULT_SMART_DOCK_MISSION_IMAGE_HEIGHT)
-                  .objectFit(ImageFit.Contain)
-                  .borderRadius(StyleConstants.DEFAULT_8)
+      Scroll(this.scroller) {
+        Row({ space: StyleConstants.DEFAULT_14 }) {
+          ForEach(this.dataList, (item) => {
+            Column() {
+              Row() {
+                Text(item.name.toString())
+                  .height(StyleConstants.DEFAULT_24)
+                  .textOverflow({ overflow: TextOverflow.Ellipsis })
+                  .fontSize(StyleConstants.DEFAULT_14)
+                  .textAlign(TextAlign.Start)
+                  .maxLines(StyleConstants.DEFAULT_1)
+                  .width(item.boxSize - StyleConstants.DEFAULT_30)
                   .hoverEffect(HoverEffect.None)
+                  .fontWeight(FontWeight.Medium)
+
+                Image($r('app.media.ic_public_cancel'))
+                  .width(StyleConstants.DEFAULT_16)
+                  .height(StyleConstants.DEFAULT_16)
+                  .objectFit(ImageFit.Contain)
+                  .margin({ right: StyleConstants.DEFAULT_4 })
+                  .onClick((event: ClickEvent) => {
+                    if (this.dataList.length <= 1) {
+                      this.updateData(false, "", () => amsMissionManager.clearMission(item.missionId));
+                      return
+                    }
+                    this.updateData(true, item.bundleName, () => amsMissionManager.clearMission(item.missionId));
+                  })
               }
-              .onClick((event: ClickEvent) => {
-                this.popupHide()
-                amsMissionManager.moveMissionToFront(item.missionId);
-              })
+              .alignItems(VerticalAlign.Center)
+              .justifyContent(FlexAlign.SpaceBetween)
               .width(item.boxSize)
-              .margin({ right: StyleConstants.DEFAULT_14 })
-              .borderRadius(StyleConstants.DEFAULT_5)
-            }, item => JSON.stringify(item))
-          }
+
+              Image(item.image)
+                .height(StyleConstants.DEFAULT_SMART_DOCK_MISSION_IMAGE_HEIGHT)
+                .objectFit(ImageFit.Contain)
+                .borderRadius(StyleConstants.DEFAULT_8)
+                .hoverEffect(HoverEffect.None)
+            }
+            .onClick((event: ClickEvent) => {
+              this.popupHide();
+              amsMissionManager.moveMissionToFront(item.missionId);
+            })
+            .width(item.boxSize)
+            .borderRadius(StyleConstants.DEFAULT_5)
+            .justifyContent(FlexAlign.Center)
+          }, item => JSON.stringify(item))
         }
+        .alignItems(VerticalAlign.Center)
         .margin({
-          left: this.listWidth > this.screenWidth ? StyleConstants.DEFAULT_56 : StyleConstants.DEFAULT_14,
-          right: this.listWidth > this.screenWidth ? StyleConstants.DEFAULT_56 : StyleConstants.DEFAULT_0
+          left: this.listWidth > this.screenWidth ? StyleConstants.DEFAULT_0 : StyleConstants.DEFAULT_14,
+          right: this.listWidth > this.screenWidth ? StyleConstants.DEFAULT_0 : StyleConstants.DEFAULT_14
         })
-        .constraintSize({
-          maxWidth: this.screenWidth,
-          maxHeight: StyleConstants.DEFAULT_SMART_DOCK_MISSION_HEIGHT
-        })
-        .scrollable(ScrollDirection.Horizontal)
-        .scrollBar(BarState.Off)
-        .height(StyleConstants.DEFAULT_SMART_DOCK_MISSION_HEIGHT)
+      }
+      .constraintSize({
+        maxWidth: this.screenWidth,
+        maxHeight: StyleConstants.DEFAULT_SMART_DOCK_MISSION_HEIGHT
+      })
+      .scrollable(ScrollDirection.Horizontal)
+      .scrollBar(BarState.Off)
+      .height(StyleConstants.DEFAULT_SMART_DOCK_MISSION_HEIGHT)
 
-        Flex({
-          direction: FlexDirection.Row,
-          alignItems: ItemAlign.Center,
-          justifyContent: FlexAlign.SpaceBetween
-        }) {
-          Flex({
-            direction: FlexDirection.Row,
-            alignItems: ItemAlign.Center,
-            justifyContent: FlexAlign.Center
-          }) {
-            Button({ type: ButtonType.Circle, stateEffect: true }) {
-              Image($r('app.media.ic_public_arrow_left'))
-                .width(20)
-                .height(20)
-                .objectFit(ImageFit.Contain)
-            }
-            .width(24)
-            .height(24)
-            .backgroundColor('#00000005')
-            .onClick((event: ClickEvent) => {
-              this.onClickLeft();
-            })
-          }
-          .width(StyleConstants.DEFAULT_56)
-          .height(StyleConstants.DEFAULT_SMART_DOCK_MISSION_HEIGHT)
-
-          Flex({
-            direction: FlexDirection.Row,
-            alignItems: ItemAlign.Center,
-            justifyContent: FlexAlign.Center
-          }) {
-            Button({ type: ButtonType.Circle, stateEffect: true }) {
-              Image($r('app.media.ic_public_arrow_right'))
-                .width(20)
-                .height(20)
-                .objectFit(ImageFit.Contain)
-            }
-            .width(24)
-            .height(24)
-            .backgroundColor('#00000005')
-            .onClick((event: ClickEvent) => {
-              this.onClickLeft();
-            })
-          }
-          .width(StyleConstants.DEFAULT_56)
-          .height(StyleConstants.DEFAULT_SMART_DOCK_MISSION_HEIGHT)
+      Column() {
+        Button({ type: ButtonType.Circle, stateEffect: true }) {
+          Image($r('app.media.ic_public_arrow_right'))
+            .width(20)
+            .height(20)
+            .objectFit(ImageFit.Contain)
         }
-        .width(this.screenWidth + 2 * StyleConstants.DEFAULT_56)
-        .height(StyleConstants.DEFAULT_SMART_DOCK_MISSION_HEIGHT)
-        .visibility(this.listWidth > this.screenWidth ? Visibility.Visible : Visibility.None)
+        .width(24)
+        .height(24)
+        .backgroundColor('#00000005')
+        .onClick((event: ClickEvent) => {
+          this.scroller.scrollPage({ next: true })
+        })
       }
+      .alignItems(HorizontalAlign.Center)
+      .justifyContent(FlexAlign.Center)
+      .width(StyleConstants.DEFAULT_56)
+      .height(StyleConstants.DEFAULT_SMART_DOCK_MISSION_HEIGHT)
+      .visibility(this.listWidth > this.screenWidth ? Visibility.Visible : Visibility.None)
     }
+    .alignItems(VerticalAlign.Center)
+    .justifyContent(FlexAlign.SpaceBetween)
+    .constraintSize({
+      maxWidth: this.screenWidth + 2 * StyleConstants.DEFAULT_56,
+      maxHeight: StyleConstants.DEFAULT_SMART_DOCK_MISSION_HEIGHT
+    })
+    .height(StyleConstants.DEFAULT_SMART_DOCK_MISSION_HEIGHT)
     .visibility(this.dataList.length < 1 ? Visibility.None : Visibility.Visible)
-  }
-
-  private onClickLeft() {
-    let currentOffset = this.scroller.currentOffset().xOffset;
-    let tmp = 0;
-    for (let i = 0;i < this.dataList.length; i++) {
-      if ((tmp = tmp + this.dataList[i].boxSize + this.dataList[i].left) >= currentOffset) {
-        currentOffset = tmp - this.dataList[i].boxSize - this.dataList[i].left;
-        break;
-      }
-    }
-
-    this.scroller.scrollTo({
-      yOffset: this.scroller.currentOffset().yOffset,
-      xOffset: currentOffset
-    })
-  }
-
-  private onClickRight() {
-    let currentOffset = this.scroller.currentOffset().xOffset;
-    let tmp = 0;
-
-    for (let i = 0;i < this.dataList.length; i++) {
-      if ((tmp = tmp + this.dataList[i].boxSize + this.dataList[i].left) > currentOffset + this.screenWidth) {
-        currentOffset = tmp - (this.screenWidth) + this.dataList[i].left;
-        break
-      }
-    }
-
-    this.scroller.scrollTo({
-      yOffset: this.scroller.currentOffset().yOffset,
-      xOffset: currentOffset
-    })
   }
 }

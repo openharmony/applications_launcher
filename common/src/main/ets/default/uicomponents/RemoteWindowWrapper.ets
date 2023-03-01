@@ -287,8 +287,8 @@ export struct RemoteWindowWrapper {
       Log.showInfo(TAG, `remote window animaion onStartAppFromOther`);
       const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName;
       const startAppTypeFromPageDesktop: number = AppStorage.Get('startAppTypeFromPageDesktop');
-      const appItemInfo: any = AppStorage.Get('startAppItemInfo');
-      const startAppIconInfo: any = AppStorage.Get('startAppIconInfo');
+      const appItemInfo: any = AppStorage.SetOrCreate('startAppItemInfo', {});
+      const startAppIconInfo: any = AppStorage.SetOrCreate('startAppIconInfo', {});
       let remoteVo: RemoteVo | null = this.getRemoteWindowVo(remoteWindowKey);
       if (remoteVo) {
         remoteVo.remoteAnimationType = RemoteConstants.TYPE_START_APP_FROM_LAUNCHER;
@@ -336,6 +336,9 @@ export struct RemoteWindowWrapper {
       const appInfo: {iconInfo: any, appItemInfo: any} = this.mCloseAppManager.getAppInfo(minimizingWindowTarget);
       const remoteWindowKey = minimizingWindowTarget.bundleName + minimizingWindowTarget.abilityName;
       let remoteVo: RemoteVo | null = this.getRemoteWindowVo(remoteWindowKey);
+      if (appInfo.appItemInfo?.page) {
+        AppStorage.SetOrCreate('pageIndex', appInfo.appItemInfo.page)
+      }
       if (remoteVo) {
         remoteVo.remoteAnimationType = RemoteConstants.TYPE_MINIMIZE_WINDOW;
         remoteVo.target = minimizingWindowTarget;

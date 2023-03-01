@@ -215,6 +215,7 @@ struct AppItem {
       onStateChange: (e) => {
         if (!e.isVisible) {
           this.isShow = false;
+          AppStorage.SetOrCreate('popupIsShow', false);
         }
         AppStorage.SetOrCreate('smartDockShowMenu', e.isVisible)
       },

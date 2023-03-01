@@ -21,7 +21,8 @@ import { CommonConstants } from '@ohos/common';
 const TAG = 'GestureNavigationExecutors';
 
 export default class GestureNavigationExecutors {
-  private static readonly DISTANCE_LIMIT_MIN = 0.1;
+  private static readonly HOME_DISTANCE_LIMIT_MIN = 0.1;
+  private static readonly RECENT_DISTANCE_LIMIT_MIN = 0.15;
   private static readonly NS_PER_MS = 1000000;
   private timeOfFirstLeavingTheBackEventHotArea: number | null = null;
   private screenWidth = 0;
@@ -199,15 +200,15 @@ export default class GestureNavigationExecutors {
   }
 
   private isRecentsViewShowOfDistanceLimit(eventY: number) {
-    return (this.screenHeight - eventY) / this.screenHeight >= GestureNavigationExecutors.DISTANCE_LIMIT_MIN;
+    return (this.screenHeight - eventY) / this.screenHeight >= GestureNavigationExecutors.RECENT_DISTANCE_LIMIT_MIN;
   }
 
   private isHomeViewShowOfDistanceLimit(eventY: number) {
-    return (this.screenHeight - eventY) / this.screenHeight >= GestureNavigationExecutors.DISTANCE_LIMIT_MIN;
+    return (this.screenHeight - eventY) / this.screenHeight >= GestureNavigationExecutors.HOME_DISTANCE_LIMIT_MIN;
   }
 
   private isRecentsViewShowOfSpeedLimit(curTime: number, acceleration: number, curSpeed: number) {
-    return (acceleration > 0.05 && curSpeed > -5.0) || ((curSpeed > -1.0) && (curTime - this.preEventTime) / 1000 > 80.0);
+    return (acceleration > 0.05 && curSpeed > -2.0) || ((curSpeed > -1.0) && (curTime - this.preEventTime) / 1000 > 80.0);
   }
 
   private isSpecifiesRegion(startXPosition: number, startYPosition: number) {

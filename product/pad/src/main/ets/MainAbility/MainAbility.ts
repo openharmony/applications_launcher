@@ -24,6 +24,9 @@ import { GestureNavigationManager } from '@ohos/gesturenavigation';
 import StyleConstants from '../common/constants/StyleConstants';
 import { navigationBarCommonEventManager }  from '@ohos/common';
 import PageDesktopViewModel from '../../../../../../feature/pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
+import { localEventManager } from '@ohos/common';
+import { EventConstants } from '@ohos/common';
+import Window from '@ohos.window';
 
 const TAG = 'LauncherMainAbility';
 
@@ -49,11 +52,22 @@ export default class MainAbility extends ServiceExtension {
     await dbStore.initRdbConfig();
     await dbStore.createTable();
 
+    let registerWinEvent = (win) => {
+      win.on('lifeCycleEvent', (stageEventType) => {
+        // 桌面获焦或失焦时，通知桌面的卡片变为可见状态
+        if (stageEventType === Window.WindowStageEventType.INACTIVE
+        || stageEventType === Window.WindowStageEventType.ACTIVE) {
+          localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
+          Log.showInfo(TAG, `lifeCycleEvent change: ${stageEventType}`);
+        }
+      })
+    };
+
     windowManager.registerWindowEvent();
     navigationBarCommonEventManager.registerNavigationBarEvent();
     // create Launcher entry view
     windowManager.createWindow(globalThis.desktopContext, windowManager.DESKTOP_WINDOW_NAME,
-      windowManager.DESKTOP_RANK, 'pages/' + windowManager.DESKTOP_WINDOW_NAME, true);
+      windowManager.DESKTOP_RANK, 'pages/' + windowManager.DESKTOP_WINDOW_NAME, true, registerWinEvent);
 
     // load recent
     windowManager.createRecentWindow();

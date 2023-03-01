@@ -63,10 +63,9 @@ export class RecentsStyleConstants {
   static readonly SINGLE_LIST_LAYOUT_MARGIN = 10;
   static readonly DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT: number = 2;
   static readonly DOUBLE_LIST_LAYOUT_MARGIN = 20;
-  static readonly DOUBLE_LIST_LAYOUT_COLUMNSGAP = 40;
+  static readonly DOUBLE_LIST_LAYOUT_COLUMNSGAP = 38;
   static readonly DOUBLE_LIST_LAYOUT_ROWSGAP = 40;
   static readonly DOUBLE_LIST_RIGHT_MARGIN = 72;
-  static readonly DOUBLE_LIST_LEFT_MARGIN = 80;
   static readonly DOUBLE_LIST_TOP_MARGIN = 54;
   static readonly SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN = 24;
   static readonly DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN = 12;

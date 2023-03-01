@@ -115,7 +115,7 @@ struct AppCenterView {
       Log.showInfo(TAG, 'click appcenter area');
       const contextFlag: boolean = AppStorage.Get('contextMenuState');
       Log.showInfo(TAG, 'onClick contextFlag: ' + contextFlag);
-      if (contextFlag) {
+      if (contextFlag && !ContextMenu.close()) {
         AppStorage.SetOrCreate('contextMenuState', false);
       }else {
         this.onBackPress();

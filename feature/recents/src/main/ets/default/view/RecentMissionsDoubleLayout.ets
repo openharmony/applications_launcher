@@ -102,12 +102,12 @@ export struct RecentMissionsDoubleLayout {
           localEventManager.sendLocalEventSticky(EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION, null);
           this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
           this.mRecentMissionsViewModel.backView();
+          this.mRecentMissionsViewModel.getRecentMissionsList();
         })
       }
       .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
     }
     .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
-    .padding({ left: RecentsStyleConstants.DOUBLE_LIST_LEFT_MARGIN })
     .height(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
   }
 }
