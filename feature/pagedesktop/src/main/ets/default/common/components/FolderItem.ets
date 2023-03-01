@@ -70,7 +70,7 @@ export default struct FolderItem {
         }
       })
     }
-    .height(this.mFolderStyleConfig.mGridSize * 1.05 + StyleConstants.DEFAULT_10)
+    .height(this.mFolderStyleConfig.mGridSize * 1.05 + StyleConstants.DEFAULT_40)
     .width(this.mFolderStyleConfig.mGridSize * 1.05)
   }
 

@@ -13,10 +13,11 @@
  * limitations under the License.
  */
 
-import { Log, Trace, StyleConstants, CommonConstants, AppMenu, MenuInfo } from '@ohos/common';
+import { Log, Trace, StyleConstants, CommonConstants, AppMenu, MenuInfo, localEventManager, EventConstants } from '@ohos/common';
 import SwiperPage from './SwiperPage';
 
 const TAG = "GridSwiper";
+const APP_INFO_REFRESH_DELAY = 1000;
 
 @Component
 export default struct GridSwiper {
@@ -78,6 +79,40 @@ export default struct GridSwiper {
     return menuInfoList;
   }
 
+  itemMove(moveX: number, moveY: number){
+    const hotArea: number = 12;
+    let screenWidth: number = AppStorage.Get('screenWidth') ?? 0;
+    let screenHeight: number = AppStorage.Get('screenHeight') ?? 0;
+    const isSwappingPage: boolean = AppStorage.Get('isSwappingPage');
+    if (isSwappingPage || !screenWidth || !screenHeight) {
+      return;
+    }
+    let curPageIndex: number = AppStorage.Get('pageIndex');
+    if (moveX < hotArea && curPageIndex > 0 && moveY < screenHeight) {
+      this.mPageDesktopViewModel.showPrevious();
+      this.movingIconSwapPageDelay();
+    }
+    if (moveX > (screenWidth - hotArea) && moveY < screenHeight) {
+      let cachePageIndex = this.mPageDesktopViewModel.getGridPageCount();
+      if (curPageIndex == cachePageIndex - 1 && !this.mPageDesktopViewModel.isBlankPage()) {
+        this.mPageDesktopViewModel.addBlankPage(true);
+      } else if(curPageIndex < cachePageIndex - 1) {
+        this.mPageDesktopViewModel.showNext();
+      }
+      this.movingIconSwapPageDelay();
+    }
+  }
+
+  /**
+   * Increase delay when dragging app to other page.
+   */
+  movingIconSwapPageDelay() {
+    AppStorage.SetOrCreate('isSwappingPage', true);
+    setTimeout(() => {
+      AppStorage.SetOrCreate('isSwappingPage', false);
+    }, APP_INFO_REFRESH_DELAY);
+  }
+
   build() {
     Column() {
       if (this.buildLog()) {}
@@ -125,6 +160,7 @@ export default struct GridSwiper {
           .onChange((index) => {
             this.pageIndex = index;
             Log.showInfo(TAG, `swiper change to page ${index}`);
+            localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
           })
         }
     }
@@ -132,5 +168,13 @@ export default struct GridSwiper {
     .justifyContent(FlexAlign.Center)
     .height(StyleConstants.PERCENTAGE_100)
     .width(StyleConstants.PERCENTAGE_100)
+    .onDragMove((event: DragEvent, extraParams: string) => {
+      Log.showInfo(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
+      if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE
+      || (AppStorage.Get('deviceType') != CommonConstants.DEFAULT_DEVICE_TYPE
+      && AppStorage.Get('dragItemType') !== CommonConstants.DRAG_FROM_DOCK)) {
+        this.itemMove(event.getX(), event.getY());
+      }
+    })
   }
 }
