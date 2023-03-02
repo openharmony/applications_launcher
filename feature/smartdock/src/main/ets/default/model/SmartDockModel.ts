@@ -15,7 +15,7 @@
 
 import Prompt from '@ohos.prompt';
 import missionManager from '@ohos.application.missionManager';
-import { CloseAppManager } from '@ohos/common';
+import { CloseAppManager, windowManager } from '@ohos/common';
 import { MissionListener } from 'application/MissionListener';
 import { Log } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
@@ -159,7 +159,7 @@ export default class SmartDockModel {
   async getRecentDataList(): Promise<void> {
     Log.showDebug(TAG, 'getRecentDataList start!');
     if (this.mDevice === CommonConstants.DEFAULT_DEVICE_TYPE) {
-       return;
+      return;
     }
     const recentList = await amsMissionManager.getRecentBundleMissionsList();
     if (CheckEmptyUtils.isEmptyArr(recentList)) {
@@ -468,6 +468,14 @@ export default class SmartDockModel {
         snapShotTime: snapShotTime
       }
       mRecentMissionsList[recentMissionInfoIndex] = recentMissionInfo;
+    }
+    if (globalThis.recentMode && windowManager.isSplitWindowMode(globalThis.recentMode)) {
+      mRecentMissionsList.forEach((item, index) => {
+        if (item.missionId == globalThis.splitMissionId) {
+          mRecentMissionsList.splice(index, 1);
+          return;
+        }
+      });
     }
     AppStorage.SetOrCreate('recentMissionsList', mRecentMissionsList);
   }

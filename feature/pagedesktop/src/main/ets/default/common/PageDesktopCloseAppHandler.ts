@@ -186,7 +186,8 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
                     icon: globalThis.ResourceManager
                       .getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
                     row: item.row,
-                    column: item.column
+                    column: item.column,
+                    page: item.page
                   }
                   return appInfo;
                 }
