@@ -113,8 +113,13 @@ export class FormViewModel {
       this.mFormModel.deleteFormById(cardId);
       const page = gridLayoutInfo.layoutInfo[cardIndex].page;
       gridLayoutInfo.layoutInfo.splice(cardIndex, 1);
-      this.mPageDesktopModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
+      let ret: boolean = this.mPageDesktopModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
       this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
+      if(ret){
+        const curPageIndex = this.mPageDesktopModel.getPageIndex();
+        Log.showInfo(TAG, 'deleteForm' + curPageIndex);
+        this.mPageDesktopModel.setPageIndex(curPageIndex - 1);
+      }
     }
     const formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
     if (formInfoList === CommonConstants.INVALID_VALUE) {

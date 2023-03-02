@@ -24,7 +24,6 @@ import FolderItem from './FolderItem';
 import { PageDesktopGridStyleConfig } from '../PageDesktopGridStyleConfig';
 
 const TAG = "SwiperPage";
-const APP_INFO_REFRESH_DELAY = 1000;
 
 @Component
 export default struct SwiperPage {
@@ -68,36 +67,6 @@ export default struct SwiperPage {
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
     this.changeConfig();
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
-  }
-
-  itemMove(moveX: number, moveY: number){
-    const isSwappingPage: boolean = AppStorage.Get('isSwappingPage');
-    if (isSwappingPage) {
-      return;
-    }
-    let curPageIndex: number = AppStorage.Get('pageIndex');
-    if ((moveX - this.mIconSize / 2) < this.mMargin && curPageIndex > 0 && moveY < this.mGridSpaceHeight) {
-      this.mPageDesktopViewModel.showPrevious();
-      this.movingIconSwapPageDelay();
-    } else if ((moveX + this.mIconSize / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
-      let cachePageIndex = this.mPageDesktopViewModel.getGridPageCount();
-      if (curPageIndex == cachePageIndex - 1 && !this.mPageDesktopViewModel.isBlankPage()) {
-        this.mPageDesktopViewModel.addBlankPage(true);
-      } else if(curPageIndex < cachePageIndex - 1) {
-        this.mPageDesktopViewModel.showNext();
-      }
-      this.movingIconSwapPageDelay();
-    }
-  }
-
-  /**
-   * Increase delay when dragging app to other page.
-   */
-  movingIconSwapPageDelay() {
-    AppStorage.SetOrCreate('isSwappingPage', true);
-    setTimeout(() => {
-      AppStorage.SetOrCreate('isSwappingPage', false);
-    }, APP_INFO_REFRESH_DELAY);
   }
 
   private changeColumnAndRow(): void {
@@ -177,14 +146,6 @@ export default struct SwiperPage {
     })
     .onDragEnter((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getX()}, ${event.getY()}]`);
-    })
-    .onDragMove((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
-      if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE
-      || (AppStorage.Get('deviceType') != CommonConstants.DEFAULT_DEVICE_TYPE
-      && AppStorage.Get('dragItemType') !== CommonConstants.DRAG_FROM_DOCK)) {
-        this.itemMove(event.getX(), event.getY());
-      }
     })
     .onDragLeave((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragLeave event: [${event.getX()}, ${event.getY()}]`);

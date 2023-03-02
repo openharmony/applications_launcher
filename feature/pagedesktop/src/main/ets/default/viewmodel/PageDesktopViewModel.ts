@@ -37,6 +37,7 @@ import { FormDetailLayoutConfig } from '@ohos/form';
 import { localEventManager } from '@ohos/common';
 import PageDesktopConstants from '../common/constants/PageDesktopConstants';
 import { PageDesktopGridStyleConfig } from '../common/PageDesktopGridStyleConfig';
+import formHost from '@ohos.app.form.formHost';
 
 const TAG = 'PageDesktopViewModel';
 const KEY_APP_LIST = 'appListInfo';
@@ -104,6 +105,9 @@ export default class PageDesktopViewModel extends BaseViewModel {
         case EventConstants.EVENT_REQUEST_PAGEDESK_REFRESH:
           this.pagingFiltering();
           break;
+        case EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE:
+          this.notifyVisibleForms();
+          break;
         default:
           if (!this.isPad) {
             Log.showDebug(TAG, 'localEventListener hideBundleInfoList!')
@@ -114,6 +118,31 @@ export default class PageDesktopViewModel extends BaseViewModel {
       }
     }
   };
+
+  /**
+   * Notify forms on current page become visible.
+   */
+  notifyVisibleForms(): void {
+    let pageIndex = this.mPageDesktopModel.getPageIndex();
+    let formList = [];
+    let items = this.mGridAppsInfos[pageIndex];
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].typeId == CommonConstants.TYPE_CARD) {
+        formList.push(String(items[i].cardId));
+      }
+    }
+    if (formList.length > 0) {
+      try {
+        formHost.notifyVisibleForms(formList).then(() => {
+          Log.showInfo(TAG, 'formHost notifyVisibleForms success');
+        }).catch((error) => {
+          Log.showInfo(TAG, 'formHost notifyVisibleForms, error:' + JSON.stringify(error));
+        });
+      } catch(error) {
+        Log.showInfo(TAG, `catch err->${JSON.stringify(error)}`);
+      }
+    }
+  }
 
   private readonly mSettingsChangeObserver: SettingsModelObserver = (event: number)=> {
     this.mGridConfig = this.getGridConfig();
@@ -697,6 +726,16 @@ export default class PageDesktopViewModel extends BaseViewModel {
     for (let i = 0; i < newApp.length; i++) {
       if (newApp[i].typeId == CommonConstants.TYPE_APP) {
         this.mPageDesktopModel.updateAppItemLayoutInfo(info, newApp[i]);
+      }
+    }
+    let infoOld = this.mSettingsModel.getLayoutInfo();
+    for (const item of infoOld.layoutInfo) {
+      if (item.typeId == CommonConstants.TYPE_APP) {
+        for (const infoNew of info.layoutInfo) {
+          if (item.keyName == infoNew.keyName) {
+            infoNew.page = item.page;
+          }
+        }
       }
     }
     return info;

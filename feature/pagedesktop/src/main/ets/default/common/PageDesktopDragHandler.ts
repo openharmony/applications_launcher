@@ -376,7 +376,8 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     if (!CheckEmptyUtils.isEmpty(startPosition)) {
       deleteStartFlag = this.mPageDesktopModel.deleteBlankPageFromLayoutInfo(layoutInfo, startPosition.page);
     }
-    if (CheckEmptyUtils.isEmpty(endPosition)) {
+    if (CheckEmptyUtils.isEmpty(endPosition) || JSON.stringify(startPosition) === JSON.stringify(endPosition)) {
+      Log.showDebug(TAG, `pageIndex: ${JSON.stringify(startPosition) === JSON.stringify(endPosition)}`);
       AppStorage.SetOrCreate('pageIndex', startPosition.page);
     } else if (deleteStartFlag) {
       if (startPosition.page > endPosition.page) {

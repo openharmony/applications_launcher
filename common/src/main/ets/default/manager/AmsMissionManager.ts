@@ -14,7 +14,7 @@
  */
 
 import image from '@ohos.multimedia.image';
-import missionManager from '@ohos.application.missionManager';
+import missionManager from '@ohos.app.ability.missionManager';
 import { MissionSnapshot } from 'application/MissionSnapshot';
 import { MissionInfo as OriginMissionInfo } from 'application/MissionInfo';
 import { Log } from '../utils/Log';
@@ -24,6 +24,7 @@ import { SnapShotInfo } from '../bean/SnapShotInfo';
 import { MissionInfo } from '../bean/MissionInfo';
 import { RecentMissionInfo } from '../bean/RecentMissionInfo';
 import { RecentBundleMissionInfo } from '../bean/RecentBundleMissionInfo';
+import { windowManager } from './WindowManager';
 
 const TAG = 'AmsMissionManager';
 
@@ -46,10 +47,10 @@ class AmsMissionManager {
 
 
   /**
-  * Get origin recent missions
-  *
-  * @return {Array} missions
-  */
+   * Get origin recent missions
+   *
+   * @return {Array} missions
+   */
   async getOriginRecentMissionsList(): Promise<Array<OriginMissionInfo>> {
     let missionInfos = new Array<OriginMissionInfo>();
     await missionManager.getMissionInfos('', AmsMissionManager.RECENT_MISSIONS_LIMIT_NUM)
@@ -205,6 +206,14 @@ class AmsMissionManager {
     mRecentMissionsList.find(item => {
       return item.missionId === this.mMissionId;
     }).lockedState = this.mLockState;
+    if (globalThis.recentMode && windowManager.isSplitWindowMode(globalThis.recentMode)) {
+      mRecentMissionsList.forEach((item, index) => {
+        if (item.missionId == globalThis.splitMissionId) {
+          mRecentMissionsList.splice(index, 1);
+          return;
+        }
+      });
+    }
     AppStorage.SetOrCreate('recentMissionsList', mRecentMissionsList);
   };
 
@@ -219,7 +228,7 @@ class AmsMissionManager {
     Log.showInfo(TAG, `getMissionSnapShot start! missionId: ${missionId}`);
     try {
       let missionSnapshot: MissionSnapshot = null;
-      await missionManager.getMissionSnapShot('', missionId)
+      await missionManager.getLowResolutionMissionSnapShot('', missionId)
         .then((res) => {
           Log.showDebug(TAG, `getLowResolutionMissionSnapShot ${missionId} success ${JSON.stringify(res)}`);
           missionSnapshot = res;

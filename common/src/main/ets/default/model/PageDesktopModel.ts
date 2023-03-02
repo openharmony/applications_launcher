@@ -53,7 +53,8 @@ export class PageDesktopModel {
       EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE,
       EventConstants.EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD,
       EventConstants.EVENT_SMARTDOCK_INIT_FINISHED,
-      EventConstants.EVENT_REQUEST_PAGEDESK_REFRESH
+      EventConstants.EVENT_REQUEST_PAGEDESK_REFRESH,
+      EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE
     ]);
   }
 
