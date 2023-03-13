@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import Prompt from '@ohos.prompt';
+import Prompt from '@ohos.promptAction';
 import missionManager from '@ohos.application.missionManager';
 import { CloseAppManager, windowManager } from '@ohos/common';
 import { MissionListener } from 'application/MissionListener';

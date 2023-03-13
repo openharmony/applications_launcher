@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Prompt from '@ohos.prompt';
+import Prompt from '@ohos.promptAction';
 import windowAnimationManager from '@ohos.animation.windowAnimationManager';
 import { CheckEmptyUtils } from '@ohos/common';
 import { Log } from '@ohos/common';

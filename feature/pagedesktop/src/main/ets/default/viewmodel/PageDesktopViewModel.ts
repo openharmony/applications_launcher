@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import Prompt from '@ohos.prompt';
+import Prompt from '@ohos.promptAction';
 import { Log } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
