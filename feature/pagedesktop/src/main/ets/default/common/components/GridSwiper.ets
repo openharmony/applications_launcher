@@ -170,9 +170,10 @@ export default struct GridSwiper {
     .width(StyleConstants.PERCENTAGE_100)
     .onDragMove((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
-      if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE
-      || (AppStorage.Get('deviceType') != CommonConstants.DEFAULT_DEVICE_TYPE
-      && AppStorage.Get('dragItemType') !== CommonConstants.DRAG_FROM_DOCK)) {
+      if (!AppStorage.Get('isDrag')) return;
+      if (AppStorage.Get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE
+      || (AppStorage.Get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE
+      && AppStorage.Get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP)) {
         this.itemMove(event.getX(), event.getY());
       }
     })
