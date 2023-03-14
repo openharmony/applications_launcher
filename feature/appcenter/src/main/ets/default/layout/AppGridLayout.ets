@@ -38,7 +38,7 @@ export struct AppGridLayout {
   @State mRows: number = StyleConstants.DEFAULT_APP_GRID_ROW;
   @StorageLink('listInfo') appGridList: [] = [];
   mAppGridViewModel: AppGridViewModel = null;
-  mAppCenterGridStyleConfig: AppCenterGridStyleConfig = null;
+  @StorageLink('appGridStyleConfig') mAppCenterGridStyleConfig: AppCenterGridStyleConfig = null;
   mSelectItem = null;
   private mAppCenterStartAppHandler: AppCenterStartAppHandler;
   private dialogName: string = "";
@@ -165,7 +165,7 @@ export struct AppGridLayout {
         AppGrid({
           appGridList: $appGridList,
           isScroll: true,
-          appGridStyleConfig: this.mAppCenterGridStyleConfig,
+          appGridStyleConfig: $mAppCenterGridStyleConfig,
           onItemClick: (event, item) => {
             Log.showDebug(TAG,`open.onAppGridClick--:${JSON.stringify(item)}`);
             Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
