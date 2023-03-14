@@ -96,7 +96,6 @@ export struct RecentMissionsDoubleLayout {
             .height(RecentsStyleConstants.RECENT_DELETE_IMAGE_SIZE)
         }
         .onClick(() => {
-          windowManager.minimizeAllApps();
           this.isClickSubComponent = true;
           Log.showDebug(TAG, 'onClick click delete button');
           localEventManager.sendLocalEventSticky(EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION, null);
