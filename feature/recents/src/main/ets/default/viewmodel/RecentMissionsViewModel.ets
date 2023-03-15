@@ -108,9 +108,14 @@ export class RecentMissionsViewModel {
         return item.missionId != missionId;
       });
     } else {
-      this.mRecentMissionsList = [];
-      AppStorage.SetOrCreate('recentMissionsList', []);
       await this.deleteRecentMissions();
+      this.mRecentMissionsList = AppStorage.Get('recentMissionsList');
+      this.mRecentMissionsList = this.mRecentMissionsList == null ? this.mRecentMissionsList : this.mRecentMissionsList.filter((item) => {
+        return item.lockedState === true;
+      });
+      if (this.mRecentMissionsList && this.mRecentMissionsList.length) {
+        windowManager.minimizeAllApps();
+      }
       return;
     }
     animateTo({

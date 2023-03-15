@@ -885,6 +885,10 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
   isBlankPage(): boolean {
     const curPageIndex = this.mPageDesktopModel.getPageIndex();
+    // 当且仅当只有一个页面时，菜单项只允许添加
+    if (curPageIndex === 0 || this.getGridPageCount() <= 1) {
+      return false;
+    }
     if (CheckEmptyUtils.isEmpty(this.mGridAppsInfos) || CheckEmptyUtils.isEmpty(this.mGridAppsInfos[curPageIndex])
     || CheckEmptyUtils.isEmpty(this.mGridAppsInfos[curPageIndex].length)) {
       return true;
