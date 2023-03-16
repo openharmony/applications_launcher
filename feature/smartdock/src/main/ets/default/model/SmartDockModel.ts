@@ -13,10 +13,9 @@
  * limitations under the License.
  */
 
-import Prompt from '@ohos.prompt';
-import missionManager from '@ohos.application.missionManager';
+import Prompt from '@ohos.promptAction';
+import missionManager from '@ohos.app.ability.missionManager';
 import { CloseAppManager, windowManager } from '@ohos/common';
-import { MissionListener } from 'application/MissionListener';
 import { Log } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
@@ -430,18 +429,16 @@ export default class SmartDockModel {
 
   private registerMissionListener(): void {
     Log.showDebug(TAG, 'registerMissionListener');
-    const listener: MissionListener = {
-      onMissionCreated: () => {},
+    const listener: missionManager.MissionListener = {
+      onMissionCreated: this.onMissionCreatedCallback.bind(this),
       onMissionDestroyed: this.onMissionDestroyedCallback.bind(this),
       onMissionSnapshotChanged: this.onMissionSnapshotChangedCallback.bind(this),
       onMissionMovedToFront: this.onMissionMovedToFrontCallback.bind(this),
-      onMissionIconUpdated: () => {},
-      // @ts-ignore
-      onMissionClosed: () => {},
-      // @ts-ignore
-      onMissionLabelUpdated: () => {}
+      onMissionIconUpdated: this.onMissionIconUpdatedCallback.bind(this),
+      onMissionClosed: this.onMissionClosedCallback.bind(this),
+      onMissionLabelUpdated: this.onMissionLabelUpdatedCallback.bind(this)
     };
-    missionManager.registerMissionListener(listener);
+    missionManager.on('mission', listener);
   }
 
   /**
@@ -480,6 +477,10 @@ export default class SmartDockModel {
     AppStorage.SetOrCreate('recentMissionsList', mRecentMissionsList);
   }
 
+  onMissionCreatedCallback(missionId: number): void {
+    Log.showInfo(TAG, 'onMissionCreatedCallback, missionId=' + missionId);
+  }
+
   onMissionDestroyedCallback(missionId: number): void {
     Log.showInfo(TAG, 'onMissionDestroyedCallback, missionId=' + missionId);
     this.getRecentDataList().then(() => {}, ( )=> {});
@@ -494,6 +495,24 @@ export default class SmartDockModel {
   onMissionMovedToFrontCallback(missionId: number): void {
     Log.showInfo(TAG, 'onMissionMovedToFrontCallback, missionId=' + missionId);
     this.getRecentDataList().then(() => {}, () => { });
+    this.getRecentViewDataList(missionId).then(() => {}, () => {});
+  }
+
+  onMissionIconUpdatedCallback(missionId: number): void {
+    Log.showInfo(TAG, 'onMissionIconUpdatedCallback, missionId=' + missionId);
+    this.getRecentDataList().then(() => {}, () => {});
+    this.getRecentViewDataList(missionId).then(() => {}, () => {});
+  }
+
+  onMissionClosedCallback(missionId: number): void {
+    Log.showInfo(TAG, 'onMissionClosedCallback, missionId=' + missionId);
+    this.getRecentDataList().then(() => {}, () => { });
+    this.getRecentViewDataList(missionId).then(() => {}, () => {});
+  }
+
+  onMissionLabelUpdatedCallback(missionId: number): void {
+    Log.showInfo(TAG, 'onMissionLabelUpdatedCallback, missionId=' + missionId);
+    this.getRecentDataList().then(() => {}, () => {});
     this.getRecentViewDataList(missionId).then(() => {}, () => {});
   }
 
