@@ -19,20 +19,19 @@ import { AppItemInfo } from '../bean/AppItemInfo';
 import { CommonConstants } from '../constants/CommonConstants';
 import { AppGridStyleConfig } from '../layoutconfig/AppGridStyleConfig';
 
-let mAppGridStyleConfig: AppGridStyleConfig = null;
 const TAG = 'AppGrid';
 
 @Component
 export struct AppGrid {
   @Link appGridList: Array<AppItemInfo>;
-  appGridStyleConfig: AppGridStyleConfig;
+  @Link appGridStyleConfig: AppGridStyleConfig;
   onItemClick: Function = null;
   buildMenu: Function = null;
   @State isScroll: boolean = false;
 
   private getColumnsTemplate() {
     let columnsTemplate = '';
-    for (let i = 0; i < mAppGridStyleConfig.mColumns; i++) {
+    for (let i = 0; i < this.appGridStyleConfig.mColumns; i++) {
       columnsTemplate += ' 1fr';
     }
     return columnsTemplate;
@@ -43,14 +42,10 @@ export struct AppGrid {
     if (this.isScroll) {
       return rowsTemplate;
     }
-    for (let i = 0; i < mAppGridStyleConfig.mRows; i++) {
+    for (let i = 0; i < this.appGridStyleConfig.mRows; i++) {
       rowsTemplate += ' 1fr';
     }
     return rowsTemplate;
-  }
-
-  aboutToAppear(): void {
-    mAppGridStyleConfig = this.appGridStyleConfig;
   }
 
   build() {
@@ -59,10 +54,10 @@ export struct AppGrid {
         GridItem() {
           Column() {
             AppBubble({
-              iconSize: mAppGridStyleConfig.mIconSize,
-              nameSize: mAppGridStyleConfig.mNameSize,
-              nameFontColor: mAppGridStyleConfig.mNameFontColor,
-              nameHeight: mAppGridStyleConfig.mNameHeight,
+              iconSize: this.appGridStyleConfig.mIconSize,
+              nameSize: this.appGridStyleConfig.mNameSize,
+              nameFontColor: this.appGridStyleConfig.mNameFontColor,
+              nameHeight: this.appGridStyleConfig.mNameHeight,
               appName: item.appName,
               bundleName: item.bundleName,
               moduleName: item.moduleName,
@@ -71,8 +66,8 @@ export struct AppGrid {
               appLabelId: item.appLabelId,
               badgeNumber: item.badgeNumber,
               menuInfo: this.buildMenu(item),
-              nameLines: mAppGridStyleConfig.mNameLines,
-              mPaddingTop: mAppGridStyleConfig.mIconMarginVertical,
+              nameLines: this.appGridStyleConfig.mNameLines,
+              mPaddingTop: this.appGridStyleConfig.mIconMarginVertical,
               dragStart: () => {}
             })
           }
@@ -86,14 +81,14 @@ export struct AppGrid {
             }
           })
         }
-        .width(mAppGridStyleConfig.mAppItemSize)
-        .height(mAppGridStyleConfig.mAppItemSize)
+        .width(this.appGridStyleConfig.mAppItemSize)
+        .height(this.appGridStyleConfig.mAppItemSize)
         .transition({ scale: { x: 0.5, y: 0.5 } })
       }, (item) => JSON.stringify(item))
     }
     .columnsTemplate(this.getColumnsTemplate())
     .rowsTemplate(this.getRowsTemplate())
-    .columnsGap(mAppGridStyleConfig.mColumnsGap)
-    .rowsGap(mAppGridStyleConfig.mRowsGap)
+    .columnsGap(this.appGridStyleConfig.mColumnsGap)
+    .rowsGap(this.appGridStyleConfig.mRowsGap)
   }
 }
