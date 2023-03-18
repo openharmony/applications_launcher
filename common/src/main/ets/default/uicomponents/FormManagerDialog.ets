@@ -15,6 +15,7 @@
 import { Log } from '../utils/Log';
 import { FormModel } from '../model/FormModel';
 import { StyleConstants } from '../constants/StyleConstants';
+import { CardItemInfo } from '../bean/CardItemInfo';
 
 const TAG = 'FormManagerDialog';
 
