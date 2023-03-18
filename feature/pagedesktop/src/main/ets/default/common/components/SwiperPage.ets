@@ -28,6 +28,7 @@ const TAG = "SwiperPage";
 @Component
 export default struct SwiperPage {
   @StorageLink('workSpaceWidth') @Watch('updateDeskTopScreen') workSpaceWidth: number = 0;
+  @StorageLink('formRefresh') formRefresh: string = '';
   @State ColumnsTemplate: string = '';
   @State RowsTemplate: string = ''
   @Prop @Watch('changeColumnAndRow') gridConfig: string;
@@ -120,7 +121,7 @@ export default struct SwiperPage {
         .columnEnd(item.column + item.area[0] - 1)
       }, (item) => {
         if (item.typeId == CommonConstants.TYPE_FOLDER || item.typeId == CommonConstants.TYPE_CARD) {
-          return JSON.stringify(item);
+          return JSON.stringify(item) + this.formRefresh;
         } else {
           return `${item.typeId}${item.row}${item.column}`;
         }
