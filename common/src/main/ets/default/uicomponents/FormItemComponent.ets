@@ -19,6 +19,7 @@ import AppMenu from './AppMenu.ets';
 import AppName from './AppName.ets';
 import Log from '../utils/Log';
 import FormModel from '../model/FormModel';
+import CommonConstants from '../constants/CommonConstants';
 
 const TAG = 'FormItemComponent';
 
@@ -79,12 +80,14 @@ export default struct FormItemComponent {
         })
         .onClick((event: ClickEvent) => {
           Log.showInfo(TAG, `FormComponent onClick`);
-          if (this.clickForm) {
-            this.clickForm(event, this.formItem);
-          }
         })
         .onError((error) => {
           Log.showInfo(TAG, `FormComponent error msg: ${error.msg}`);
+        })
+        .onTouch(event => {
+          if (event.type === CommonConstants.TOUCH_TYPE_UP) {
+            this.clickForm(event, this.formItem);
+          }
         })
 
       Column() {
