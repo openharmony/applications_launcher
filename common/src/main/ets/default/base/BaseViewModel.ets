@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import Prompt from '@ohos.prompt';
+import Prompt from '@ohos.promptAction';
 import { Log } from '../utils/Log';
 import { AppModel } from '../model/AppModel';
 import { ResourceManager } from '../manager/ResourceManager';

@@ -21,7 +21,7 @@ import { SettingsModel } from './SettingsModel';
 import { FormManager } from '../manager/FormManager';
 import { RdbStoreManager } from '../manager/RdbStoreManager';
 import { FormListInfoCacheManager } from '../cache/FormListInfoCacheManager';
-import { localEventManager } from '../manager/LocalEventManager';
+import { PageDesktopModel } from './PageDesktopModel';
 
 const TAG = 'FormModel';
 const KEY_FORM_LIST = 'formListInfo';
