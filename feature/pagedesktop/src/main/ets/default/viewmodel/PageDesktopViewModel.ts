@@ -551,6 +551,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
     Log.showInfo(TAG, 'pagingFiltering appListInfo length:' + appListInfo.length);
     AppStorage.SetOrCreate('selectDesktopAppItem', '');
     AppStorage.SetOrCreate(KEY_APP_LIST, appInfo);
+    AppStorage.SetOrCreate('formRefresh',String(new Date()));
   }
 
   private integrateSwiper(list) {
