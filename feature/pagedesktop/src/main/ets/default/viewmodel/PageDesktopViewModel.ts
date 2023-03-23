@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import Prompt from '@ohos.prompt';
+import Prompt from '@ohos.promptAction';
 import { Log } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
@@ -551,6 +551,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
     Log.showInfo(TAG, 'pagingFiltering appListInfo length:' + appListInfo.length);
     AppStorage.SetOrCreate('selectDesktopAppItem', '');
     AppStorage.SetOrCreate(KEY_APP_LIST, appInfo);
+    AppStorage.SetOrCreate('formRefresh',String(new Date()));
   }
 
   private integrateSwiper(list) {

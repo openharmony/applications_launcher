@@ -20,6 +20,8 @@ import { FormModel } from '../model/FormModel';
 import { StyleConstants } from '../constants/StyleConstants';
 import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 import { CommonConstants } from '../constants/CommonConstants';
+import { localEventManager } from '../manager/LocalEventManager';
+import { EventConstants } from '../constants/EventConstants';
 
 const TAG = 'FormItemComponent';
 
@@ -86,6 +88,8 @@ export struct FormItemComponent {
         })
         .onError((error) => {
           Log.showInfo(TAG, `FormComponent error msg: ${error.msg}`);
+          this.mFormModel.deleteForm(this.formItem.cardId);
+          localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
         })
         .onTouch(event => {
           if (event.type === CommonConstants.TOUCH_TYPE_UP) {

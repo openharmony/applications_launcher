@@ -21,6 +21,7 @@ import { SettingsModel } from './SettingsModel';
 import { FormManager } from '../manager/FormManager';
 import { RdbStoreManager } from '../manager/RdbStoreManager';
 import { FormListInfoCacheManager } from '../cache/FormListInfoCacheManager';
+import { PageDesktopModel } from './PageDesktopModel';
 
 const TAG = 'FormModel';
 const KEY_FORM_LIST = 'formListInfo';
@@ -33,11 +34,13 @@ export class FormModel {
   private readonly mFormManager: FormManager;
   private readonly mFormListInfoCacheManager: FormListInfoCacheManager;
   private readonly mAppItemFormInfoMap = new Map<string, CardItemInfo[]>();
+  private readonly mPageDesktopModel: PageDesktopModel;
 
   private constructor() {
     this.mRdbStoreManager = RdbStoreManager.getInstance();
     this.mFormManager = FormManager.getInstance();
     this.mFormListInfoCacheManager = FormListInfoCacheManager.getInstance();
+    this.mPageDesktopModel = PageDesktopModel.getInstance();
   }
 
   /**
@@ -232,6 +235,49 @@ export class FormModel {
 
     this.updateBlankPage(pageItemMap, layoutInfo);
     settingsModel.setLayoutInfo(layoutInfo);
+  }
+
+  /**
+   * Delete form by cardId.
+   *
+   * @param {number} cardId.
+   */
+  async deleteForm(cardId) {
+    Log.showDebug(TAG, 'deleteForm start');
+    let gridLayoutInfo = {
+      layoutInfo: []
+    };
+    gridLayoutInfo = SettingsModel.getInstance().getLayoutInfo();
+    const cardIndex = gridLayoutInfo.layoutInfo.findIndex(item => {
+      return item.typeId === CommonConstants.TYPE_CARD && item.cardId === cardId;
+    });
+    if (cardIndex != CommonConstants.INVALID_VALUE) {
+      this.deleteFormById(cardId);
+      const page = gridLayoutInfo.layoutInfo[cardIndex].page;
+      gridLayoutInfo.layoutInfo.splice(cardIndex, 1);
+      let ret: boolean = this.mPageDesktopModel.deleteBlankPageFromLayoutInfo(gridLayoutInfo, page);
+      SettingsModel.getInstance().setLayoutInfo(gridLayoutInfo);
+      if(ret){
+        const curPageIndex = this.mPageDesktopModel.getPageIndex();
+        Log.showInfo(TAG, 'deleteForm' + curPageIndex);
+        this.mPageDesktopModel.setPageIndex(curPageIndex - 1);
+      }
+    }
+    const formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
+    if (formInfoList === CommonConstants.INVALID_VALUE) {
+      return;
+    }
+    for(let i = 0; i < formInfoList.length; i++) {
+      if (formInfoList[i].cardId === cardId){
+        formInfoList.splice(i, 1);
+        break;
+      }
+    }
+    if (formInfoList.length === 0) {
+      this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, null);
+    } else {
+      this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, formInfoList);
+    }
   }
 
   /**

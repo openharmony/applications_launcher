@@ -42,9 +42,7 @@ export default struct ResidentLayout {
 
   aboutToAppear(): void {
     mSmartDockStyleConfig = this.mSmartDockStyleConfig;
-    if (this.appList.length > 0) {
-      this.onDockListChange();
-    }
+    this.onDockListChange();
   }
 
   getListWidth(): number {
@@ -79,17 +77,10 @@ export default struct ResidentLayout {
             ListItem() {
               AppItem({
                 appInfo: item,
-                buildMenu: this.buildMenu
+                buildMenu: this.buildMenu,
+                onItemClick: this.onItemClick
               })
             }
-            .onClick((event: ClickEvent) => {
-              const popupIsShow: boolean = AppStorage.Get('popupIsShow');
-              Log.showInfo(TAG, `popupIsShow: ` + popupIsShow);
-              if (!popupIsShow) {
-                this.onItemClick(event, item);
-              }
-              AppStorage.SetOrCreate('popupIsShow', false);
-            })
           }, (item) => JSON.stringify(item))
         }
         .height('100%')
@@ -138,6 +129,7 @@ struct AppItem {
   @StorageLink('dragItemInfo') smartDragItemInfo: any = {};
   @StorageLink('dragItemType') dragItemType: number = CommonConstants.DRAG_FROM_DOCK;
   @State isShow: boolean = false;
+  onItemClick: Function = null;
   appInfo: DockItemInfo = null;
   buildMenu: Function = null;
   private menuInfo;
@@ -203,8 +195,6 @@ struct AppItem {
         Log.showInfo(TAG, 'onAction start');
         this.isShow = true;
         AppStorage.SetOrCreate('isLongPress', true);
-        // Control whether the onClick method is executed or not.
-        AppStorage.SetOrCreate('popupIsShow', true);
       })
     )
     .bindPopup(this.isShow, {
@@ -215,7 +205,6 @@ struct AppItem {
       onStateChange: (e) => {
         if (!e.isVisible) {
           this.isShow = false;
-          AppStorage.SetOrCreate('popupIsShow', false);
         }
         AppStorage.SetOrCreate('smartDockShowMenu', e.isVisible)
       },
@@ -235,6 +224,9 @@ struct AppItem {
       if (AppStorage.Get('isDrag')) {
         this.isShow = false;
       }
+      if (event.type === CommonConstants.TOUCH_TYPE_UP && !AppStorage.Get('isDrag') && !this.isShow) {
+        this.onItemClick(event, this.appInfo);
+      }
     })
     .onMouse((event: MouseEvent) => {
       Log.showInfo(TAG, `onMouse MouseType: ${event.button}`);
@@ -247,7 +239,6 @@ struct AppItem {
     .onDragStart((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `DragStart`);
       AppStorage.SetOrCreate('isDrag', true);
-      AppStorage.SetOrCreate('popupIsShow', false);
       this.dragItemType = CommonConstants.DRAG_FROM_DOCK;
       this.smartDragItemInfo = this.appInfo;
       Log.showInfo(TAG, `smartDragItemInfo: ${JSON.stringify(this.smartDragItemInfo)}`);
