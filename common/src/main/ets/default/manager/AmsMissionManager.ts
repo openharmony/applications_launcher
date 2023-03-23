@@ -15,8 +15,6 @@
 
 import image from '@ohos.multimedia.image';
 import missionManager from '@ohos.app.ability.missionManager';
-import { MissionSnapshot } from 'application/MissionSnapshot';
-import { MissionInfo as OriginMissionInfo } from 'application/MissionInfo';
 import { Log } from '../utils/Log';
 import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
 import { launcherAbilityManager } from './LauncherAbilityManager';
@@ -51,8 +49,8 @@ class AmsMissionManager {
    *
    * @return {Array} missions
    */
-  async getOriginRecentMissionsList(): Promise<Array<OriginMissionInfo>> {
-    let missionInfos = new Array<OriginMissionInfo>();
+  async getOriginRecentMissionsList(): Promise<Array<missionManager.MissionInfo>> {
+    let missionInfos = new Array<missionManager.MissionInfo>();
     await missionManager.getMissionInfos('', AmsMissionManager.RECENT_MISSIONS_LIMIT_NUM)
       .then((res) => {
         if (!CheckEmptyUtils.isEmptyArr(res)) {
@@ -73,7 +71,7 @@ class AmsMissionManager {
    */
   async getRecentMissionsList(): Promise<Array<RecentMissionInfo>> {
     const recentMissionsList = new Array<RecentMissionInfo>();
-    let missionInfos: Array<OriginMissionInfo> = await this.getOriginRecentMissionsList();
+    let missionInfos: Array<missionManager.MissionInfo> = await this.getOriginRecentMissionsList();
     if (CheckEmptyUtils.isEmptyArr(missionInfos)) {
       Log.showDebug(TAG, 'getRecentMissionsList Empty');
       return recentMissionsList;
@@ -83,7 +81,7 @@ class AmsMissionManager {
       recentMissionInfo.missionId = recentItem.missionId;
       recentMissionInfo.bundleName = recentItem.want.bundleName;
       recentMissionInfo.abilityName = recentItem.want.abilityName;
-      recentMissionInfo.moduleName = String(recentItem.want.parameters.moduleName);
+      recentMissionInfo.moduleName = recentItem.want.parameters?.moduleName ? String(recentItem.want.parameters?.moduleName) : '';
       recentMissionInfo.lockedState = recentItem.lockedState;
       const appInfo = await launcherAbilityManager.getAppInfoByBundleName(recentMissionInfo.bundleName, recentMissionInfo.abilityName);
       if (appInfo == undefined) {
@@ -105,7 +103,7 @@ class AmsMissionManager {
    */
   async getRecentBundleMissionsList(): Promise<Array<RecentBundleMissionInfo>> {
     const recentMissionsList = new Array<RecentBundleMissionInfo>();
-    let missionInfos: Array<OriginMissionInfo> = await this.getOriginRecentMissionsList();
+    let missionInfos: Array<missionManager.MissionInfo> = await this.getOriginRecentMissionsList();
     if (CheckEmptyUtils.isEmptyArr(missionInfos)) {
       Log.showDebug(TAG, 'getRecentBundleMissionsList Empty');
       return recentMissionsList;
@@ -227,7 +225,7 @@ class AmsMissionManager {
     let snapShotInfo: SnapShotInfo = new SnapShotInfo();
     Log.showInfo(TAG, `getMissionSnapShot start! missionId: ${missionId}`);
     try {
-      let missionSnapshot: MissionSnapshot = null;
+      let missionSnapshot: missionManager.MissionSnapshot = null;
       await missionManager.getLowResolutionMissionSnapShot('', missionId)
         .then((res) => {
           Log.showDebug(TAG, `getLowResolutionMissionSnapShot ${missionId} success ${JSON.stringify(res)}`);
