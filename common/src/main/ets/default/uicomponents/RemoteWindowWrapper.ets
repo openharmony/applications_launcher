@@ -15,12 +15,10 @@
 
 import windowAnimationManager from '@ohos.animation.windowAnimationManager';
 import curves from '@ohos.curves';
-import {
-  Log,
-  Trace,
-  StyleConstants,
-  CommonConstants
-} from '@ohos/common';
+import { Log } from '../utils/Log';
+import { Trace } from '../utils/Trace';
+import { StyleConstants } from '../constants/StyleConstants';
+import { CommonConstants } from '../constants/CommonConstants';
 import OverlayAppIcon from './OverlayAppIcon';
 import RemoteConstants from '../constants/RemoteConstants';
 import { localEventManager } from '../manager/LocalEventManager';

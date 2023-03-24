@@ -14,8 +14,8 @@
  */
 import Prompt from '@ohos.promptAction';
 import windowAnimationManager from '@ohos.animation.windowAnimationManager';
-import { CheckEmptyUtils } from '@ohos/common';
-import { Log } from '@ohos/common';
+import { CheckEmptyUtils } from '../../utils/CheckEmptyUtils';
+import { Log } from '../../utils/Log';
 import RemoteConstants from '../../constants/RemoteConstants';
 
 const TAG = 'WindowAnimationControllerImpl';
