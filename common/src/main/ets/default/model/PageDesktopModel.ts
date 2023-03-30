@@ -94,6 +94,9 @@ export class PageDesktopModel {
         return false;
       }
     }
+    if (layoutInfo.layoutDescription.pageCount <= 1) {
+      return false;
+    }
     layoutInfo.layoutDescription.pageCount--;
     for (let m = 0; m < layoutInfo.layoutInfo.length; m++) {
       if (layoutInfo.layoutInfo[m].page > page) {
