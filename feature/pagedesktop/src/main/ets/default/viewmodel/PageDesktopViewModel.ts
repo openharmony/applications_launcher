@@ -962,12 +962,13 @@ export default class PageDesktopViewModel extends BaseViewModel {
    * Delete the chosen blank page.
    */
   private deleteBlankPage(): void {
-
-
-
     const curPageIndex = this.mPageDesktopModel.getPageIndex();
     this.deleteGridPage(curPageIndex);
-    this.mPageDesktopModel.setPageIndex(curPageIndex - 1);
+    if (curPageIndex === 0) {
+      this.mPageDesktopModel.setPageIndex(curPageIndex);
+    } else {
+      this.mPageDesktopModel.setPageIndex(curPageIndex - 1);
+    }
     this.setGridPageCount(this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount - 1);
     this.pagingFiltering();
   }
