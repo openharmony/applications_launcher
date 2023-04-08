@@ -24,7 +24,7 @@ const TAG = 'FormManagerDialog';
 @CustomDialog
 export struct FormManagerDialog {
   @StorageLink('formMgrItem') formItem: any = [];
-  @State mAllowUpdate: boolean = false;
+  @State mAllowUpdate: boolean = true;
   private mSwiperController: SwiperController = new SwiperController()
   private mFormModel: FormModel;
   private mSwiperIndex: number = 0;
