@@ -29,7 +29,7 @@ const TAG = 'FormManagerComponent';
 export struct FormManagerComponent {
   @StorageLink('formAppInfo') formAppInfo: any = {};
   @StorageLink('formMgrItem') formItem: any = [];
-  @State allowUpdate: boolean = false;
+  @State allowUpdate: boolean = true;
   private mSwiperController: SwiperController = new SwiperController();
   private mFormModel: FormModel;
   private mSwiperIndex: number = 0;
