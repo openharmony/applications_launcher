@@ -14,7 +14,7 @@
  */
 
 import CommonEvent from '@ohos.commonEvent';
-import { AsyncCallback, BusinessError} from 'basic';
+import { AsyncCallback, BusinessError} from '@ohos.base';
 import { CommonEventData } from 'commonEvent/commonEventData';
 import { CommonEventSubscriber } from 'commonEvent/commonEventSubscriber';
 import { CommonEventSubscribeInfo } from 'commonEvent/commonEventSubscribeInfo';
