@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { AsyncCallback} from 'basic';
+import { AsyncCallback} from '@ohos.base';
 import { DataAbilityHelper } from 'ability/dataAbilityHelper';
 import inputMonitor from '@ohos.multimodalInput.inputMonitor';
 

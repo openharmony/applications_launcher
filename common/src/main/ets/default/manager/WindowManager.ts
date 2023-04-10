@@ -18,7 +18,7 @@ import display from '@ohos.display';
 import CommonEvent from '@ohos.commonEvent';
 import featureAbility from '@ohos.ability.featureAbility';
 import ServiceExtensionContext from 'application/ServiceExtensionContext';
-import { AsyncCallback, BusinessError} from 'basic';
+import { AsyncCallback, BusinessError} from '@ohos.base';
 import { CommonEventData } from 'commonEvent/commonEventData';
 import { CommonEventSubscriber } from 'commonEvent/commonEventSubscriber';
 import { CommonEventSubscribeInfo } from 'commonEvent/commonEventSubscribeInfo';
