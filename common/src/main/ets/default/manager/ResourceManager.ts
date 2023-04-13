@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import resourceManager from '@ohos.resourceManager';
 import { Log } from '../utils/Log';
 import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
 import AppResourceCacheManager from '../cache/AppResourceCacheManager';
@@ -228,7 +229,7 @@ export class ResourceManager {
     || CheckEmptyUtils.isEmpty(globalThis.desktopContext.resourceManager);
   }
 
-  async getStringByResource(res: Resource): Promise<string>{
+  async getStringByResource(res: resourceManager.Resource): Promise<string>{
     const json = JSON.parse(JSON.stringify(res));
     const id = json.id;
     return await this.getStringByIdSync(id);
@@ -255,5 +256,9 @@ export class ResourceManager {
       }
       return resMgrName;
     }
+  }
+
+  clearAppResourceCache(): void {
+    this.getAppResourceCacheManager().clearCache();
   }
 }
