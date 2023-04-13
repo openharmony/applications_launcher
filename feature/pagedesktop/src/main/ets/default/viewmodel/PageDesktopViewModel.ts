@@ -216,6 +216,11 @@ export default class PageDesktopViewModel extends BaseViewModel {
     this.pagingFiltering();
   }
 
+  async updateDesktopInfo(): Promise<void> {
+    await this.mAppModel.getAppListAsync();
+    this.getGridList();
+  }
+
   private async getAppList() {
     Log.showInfo(TAG, 'getAppList start');
 
