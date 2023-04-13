@@ -15,11 +15,11 @@
 
 import ServiceExtension from '@ohos.app.ability.ServiceExtensionAbility';
 import display from '@ohos.display';
-import Want from '@ohos.application.Want';
+import Want from '@ohos.app.ability.Want';
 import { Log } from '@ohos/common';
 import { windowManager } from '@ohos/common';
 import { RdbStoreManager } from '@ohos/common';
-import { FormConstants } from '@ohos/common';
+import { FormConstants, FormListInfoCacheManager, ResourceManager, launcherAbilityManager } from '@ohos/common';
 import { GestureNavigationManager } from '@ohos/gesturenavigation';
 import StyleConstants from '../common/constants/StyleConstants';
 import { navigationBarCommonEventManager }  from '@ohos/common';
@@ -87,10 +87,8 @@ export default class MainAbility extends ServiceExtension {
 
   private startGestureNavigation(): void {
     const gestureNavigationManage = GestureNavigationManager.getInstance();
-    display.getDefaultDisplay()
-      .then((dis: { id: number, width: number, height: number, refreshRate: number }): void => {
-        gestureNavigationManage.initWindowSize(dis);
-      });
+    let dis: display.Display = display.getDefaultDisplaySync();
+    dis && gestureNavigationManage.initWindowSize(dis);
   }
 
   onDestroy(): void {
@@ -125,5 +123,21 @@ export default class MainAbility extends ServiceExtension {
   private closeRecentDockPopup(): void {
     let num: number = AppStorage.Get('sysUiRecentOnClickEvent');
     AppStorage.SetOrCreate('sysUiRecentOnClickEvent', ++num);
+  }
+
+  async onConfigurationUpdated(config) {
+    Log.showInfo(TAG, 'onConfigurationUpdated, config:' + JSON.stringify(config));
+    const systemLanguage = AppStorage.Get('systemLanguage');
+    if(systemLanguage !== config.language) {
+      this.clearCacheWhenLanguageChange();
+    }
+    AppStorage.SetOrCreate("systemLanguage", config.language);
+  }
+
+  private clearCacheWhenLanguageChange() {
+    FormListInfoCacheManager.getInstance().clearCache();
+    ResourceManager.getInstance().clearAppResourceCache();
+    launcherAbilityManager.cleanAppMapCache();
+    PageDesktopViewModel.getInstance().updateDesktopInfo();
   }
 }

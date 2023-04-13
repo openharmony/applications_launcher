@@ -146,6 +146,10 @@ export class AppModel {
     this.closePopup();
     this.updateShortcutInfo(bundleName, event);
     this.mFormModel.updateAppItemFormInfo(bundleName, event);
+    // initial mBundleInfoList
+    if (CheckEmptyUtils.isEmptyArr(this.mBundleInfoList)) {
+      await this.getAppListAsync();
+    }
     if (event === EventConstants.EVENT_PACKAGE_REMOVED) {
       this.removeItem(bundleName);
       this.mFormModel.deleteFormByBundleName(bundleName);

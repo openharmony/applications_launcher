@@ -216,6 +216,11 @@ export default class PageDesktopViewModel extends BaseViewModel {
     this.pagingFiltering();
   }
 
+  async updateDesktopInfo(): Promise<void> {
+    await this.mAppModel.getAppListAsync();
+    this.getGridList();
+  }
+
   private async getAppList() {
     Log.showInfo(TAG, 'getAppList start');
 
@@ -779,7 +784,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
       'row': row,
       'column': column
     };
-    if (AppStorage.Get('isPortrait')) {
+    if (AppStorage.Has('isPortrait') && AppStorage.Get('isPortrait')) {
       let cardInfoHorizontal: any[] = [];
       for (let i = 0; i < info.layoutInfo.length; i++) {
         if (info.layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
@@ -807,7 +812,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
       AppStorage.SetOrCreate('isPortraitCard', cardInfoHorizontal);
     }
 
-    if (!AppStorage.Get('isPortrait')) {
+    if (AppStorage.Has('isPortrait') && !AppStorage.Get('isPortrait')) {
       for (let i = 0; i < info.layoutInfo.length; i++) {
         if (info.layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
           let tt = info.layoutInfo[i].column
@@ -839,6 +844,15 @@ export default class PageDesktopViewModel extends BaseViewModel {
           }
         }
       }
+    }
+
+    if (!AppStorage.Has('isPortrait')) {
+      newLayoutInfo.layoutDescription = {
+        'pageCount': pageNum,
+        'row': row,
+        'column': column
+      };
+      newLayoutInfo.layoutInfo = [];
     }
 
     return newLayoutInfo;
@@ -887,7 +901,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
   isBlankPage(): boolean {
     const curPageIndex = this.mPageDesktopModel.getPageIndex();
     // 当且仅当只有一个页面时，菜单项只允许添加
-    if (curPageIndex === 0 || this.getGridPageCount() <= 1) {
+    if (this.getGridPageCount() <= 1) {
       return false;
     }
     if (CheckEmptyUtils.isEmpty(this.mGridAppsInfos) || CheckEmptyUtils.isEmpty(this.mGridAppsInfos[curPageIndex])
@@ -953,12 +967,13 @@ export default class PageDesktopViewModel extends BaseViewModel {
    * Delete the chosen blank page.
    */
   private deleteBlankPage(): void {
-
-
-
     const curPageIndex = this.mPageDesktopModel.getPageIndex();
     this.deleteGridPage(curPageIndex);
-    this.mPageDesktopModel.setPageIndex(curPageIndex - 1);
+    if (curPageIndex === 0) {
+      this.mPageDesktopModel.setPageIndex(curPageIndex);
+    } else {
+      this.mPageDesktopModel.setPageIndex(curPageIndex - 1);
+    }
     this.setGridPageCount(this.mSettingsModel.getLayoutInfo().layoutDescription.pageCount - 1);
     this.pagingFiltering();
   }

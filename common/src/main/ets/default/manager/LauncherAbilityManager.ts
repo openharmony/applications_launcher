@@ -14,7 +14,7 @@
  */
 
 import bundleMgr from '@ohos.bundle';
-import osaccount from '@ohos.account.osAccount';
+import osAccount from '@ohos.account.osAccount';
 import hiSysEvent from '@ohos.hiSysEvent';
 import launcherBundleMgr from '@ohos.bundle.innerBundleManager';
 import { LauncherAbilityInfo } from 'bundle/launcherAbilityInfo';
@@ -68,9 +68,9 @@ class LauncherAbilityManager {
   }
 
   private constructor() {
-    const osAccountManager = osaccount.getAccountManager();
-    osAccountManager.getOsAccountLocalIdFromProcess((err, localId) => {
-      Log.showDebug(TAG, `getOsAccountLocalIdFromProcess localId ${localId}`);
+    const osAccountManager = osAccount.getAccountManager();
+    osAccountManager.getOsAccountLocalId((err, localId) => {
+      Log.showDebug(TAG, `getOsAccountLocalId localId ${localId}`);
       this.mUserId = localId;
     });
   }
@@ -346,6 +346,10 @@ class LauncherAbilityManager {
       Log.showError(TAG, `startLauncherAbilityByUri promise error: ${JSON.stringify(err)}`);
     });
     Log.showDebug(TAG, `startLauncherAbilityByUri AceApplication : startAbility : ${result}`);
+  }
+
+  cleanAppMapCache() {
+    this.mAppMap.clear();
   }
 }
 
