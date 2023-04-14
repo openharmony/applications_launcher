@@ -44,7 +44,7 @@ export default struct RecentMissionCard {
   @State cardMargin: number = RecentsStyleConstants.SINGLE_LIST_LAYOUT_MARGIN;
   @State cardLayoutWeight: number = RecentsStyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT;
   // recentImage default is Resource type, to avoid toolchain typeCheck
-  @State recentImage: any = RecentsStyleConstants.DEFAULT_APP_IMAGE;
+  @State recentImage: any = '';
   private mIsSingleLayout: boolean = true;
   private snapShotTime: string = '';
   private mRecentMissionsViewModel: RecentMissionsViewModel;
@@ -70,8 +70,7 @@ export default struct RecentMissionCard {
     Log.showDebug(TAG, `typeof this.recentImage ${typeof this.recentImage}`);
     this.mReleaseFlag = true;
     // typeof Resource or pixelMap is Object
-    if (!CheckEmptyUtils.isEmpty(this.recentImage)
-    && JSON.stringify(this.recentImage) != JSON.stringify(RecentsStyleConstants.DEFAULT_APP_IMAGE)) {
+    if (!CheckEmptyUtils.isEmpty(this.recentImage)) {
       this.recentImage.release().catch((err) => {
         Log.showError(TAG, `image.PixelMap release err: ${err}`);
       })
@@ -158,7 +157,6 @@ export default struct RecentMissionCard {
       })
 
       Image(this.recentImage)
-        .alt(RecentsStyleConstants.DEFAULT_APP_IMAGE)
         .objectFit(ImageFit.Fill)
         .borderRadius(RecentsStyleConstants.RECENT_IMAGE_RADIUS)
         .width(this.mIsSingleLayout ?
