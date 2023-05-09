@@ -165,6 +165,7 @@ IDE上是Public SDK，故full sdk需要重新下载，下载地址：
 
 ### 部件更新
 
+示例：
 **使用以下命令来更新编译出来的Launcher部件hap包**
 
 ```
