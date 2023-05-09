@@ -70,7 +70,7 @@ Launcher 采用 扩展的TS语言（ArkTS）开发，主要的结构如下：
 
 ### IDE下载
 
-下附Windows环境下的链接，其他平台可依据版本号在[harmonyos开发者官网](https://developer.harmonyos.com/cn/develop/deveco-studio/)下载
+下附Windows环境下的链接，其他平台可依据版本号在[开发者官网](https://developer.harmonyos.com/cn/develop/deveco-studio/)下载
 
 [DevEco Studio 3.1 Beta2](https://contentcenter-vali-drcn.dbankcdn.cn/pvt_2/DeveloperAlliance_package_901_9/f3/v3/uJyuq3syQ2ak4hE1QZmAug/devecostudio-windows-3.1.0.400.zip?HW-CC-KV=V1&HW-CC-Date=20230408T013335Z&HW-CC-Expire=315360000&HW-CC-Sign=96262721EDC9B34E6F62E66884AB7AE2A94C2A7B8C28D6F7FC891F46EB211A70)，即3.1.0.400版本的IDE（推荐）
 
@@ -88,7 +88,7 @@ IDE上是Public SDK，故full sdk需要重新下载，下载地址：
 
 老版本界面：http://ci.openharmony.cn/dailys/dailybuilds
 
-示例：master分支下载此版本即可
+示例：
 
 ![](./figures/launcherl3-zh.png)
 
@@ -111,7 +111,7 @@ IDE上是Public SDK，故full sdk需要重新下载，下载地址：
 
 ### 签名配置
 
-其中OpenHarmony.p12和OpenHarmonyApplication.cer文件可在[签名工具仓](https://gitee.com/openharmony/developtools_hapsigner/tree/master/dist)获取，OpenHarmonyApplication.cer文件是由OpenHarmonyApplication.pem修改后缀获得。launcher.p7b：推荐使用本工程下的launcher.p7b文件，路径：signature/launcher.p7b
+OpenHarmony.p12和OpenHarmonyApplication.cer文件可在[签名工具仓](https://gitee.com/openharmony/developtools_hapsigner/tree/master/dist)获取，OpenHarmonyApplication.cer文件是由OpenHarmonyApplication.pem修改后获得。launcher.p7b：推荐使用本工程下的launcher.p7b文件，路径：signature/launcher.p7b
 
 如需通过IDE来进行**手工配置签名**，则需先使用3.0.0.900版本的IDE来进行配置（如下图），配置完成后可以使用新版本的IDE进行打开做其他操作。
 
