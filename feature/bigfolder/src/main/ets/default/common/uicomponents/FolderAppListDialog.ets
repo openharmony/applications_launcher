@@ -98,7 +98,7 @@ export default struct FolderAppListDialog {
                         badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE,
                       })
                       AppName({
-                        nameHeight: this.mFolderStyleConfig.mAddFolderTextLines,
+                        nameHeight: this.mFolderStyleConfig.mAddFolderTextSize * this.mFolderStyleConfig.mAddFolderTextLines,
                         nameSize: this.mFolderStyleConfig.mAddFolderTextSize,
                         nameFontColor: this.mNameFontColor,
                         bundleName: item.bundleName,
