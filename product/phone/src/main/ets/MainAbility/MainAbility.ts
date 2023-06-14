@@ -16,17 +16,25 @@
 import ServiceExtension from '@ohos.app.ability.ServiceExtensionAbility';
 import display from '@ohos.display';
 import Want from '@ohos.app.ability.Want';
-import { Log } from '@ohos/common';
-import { windowManager } from '@ohos/common';
-import { RdbStoreManager } from '@ohos/common';
-import { FormConstants, FormListInfoCacheManager, ResourceManager, launcherAbilityManager } from '@ohos/common';
+import {
+  Log,
+  CommonConstants,
+  windowManager,
+  RdbStoreManager,
+  FormConstants,
+  FormListInfoCacheManager,
+  ResourceManager,
+  launcherAbilityManager,
+  navigationBarCommonEventManager,
+  localEventManager,
+  EventConstants
+} from '@ohos/common';
 import { GestureNavigationManager } from '@ohos/gesturenavigation';
 import StyleConstants from '../common/constants/StyleConstants';
-import { navigationBarCommonEventManager }  from '@ohos/common';
 import PageDesktopViewModel from '../../../../../../feature/pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
-import { localEventManager } from '@ohos/common';
-import { EventConstants } from '@ohos/common';
 import Window from '@ohos.window';
+import inputConsumer from '@ohos.multimodalInput.inputConsumer';
+import { KeyCode } from '@ohos.multimodalInput.keyCode';
 
 const TAG = 'LauncherMainAbility';
 
@@ -72,6 +80,56 @@ export default class MainAbility extends ServiceExtension {
 
     // load recent
     windowManager.createRecentWindow();
+    this.registerInputConsumer();
+  }
+
+  private registerInputConsumer(): void {
+    // register/unregister HOME inputConsumer
+    inputConsumer.on('key', {
+      preKeys: [],
+      finalKey: KeyCode.KEYCODE_HOME,
+      finalKeyDownDuration: 0,
+      isFinalKeyDown: true
+    }, () => {
+      Log.showInfo(TAG, 'HOME inputConsumer homeEvent start');
+      globalThis.desktopContext.startAbility({
+        bundleName: CommonConstants.LAUNCHER_BUNDLE,
+        abilityName: CommonConstants.LAUNCHER_ABILITY
+      })
+        .then(() => {
+          Log.showDebug(TAG, 'HOME inputConsumer startAbility Promise in service successful.');
+        })
+        .catch(() => {
+          Log.showDebug(TAG, 'HOME inputConsumer startAbility Promise in service failed.');
+        });
+    });
+    // register/unregister RECENT inputConsumer
+    inputConsumer.on('key', {
+      preKeys: [],
+      finalKey: KeyCode.KEYCODE_FN,
+      finalKeyDownDuration: 0,
+      isFinalKeyDown: true
+    }, () => {
+      Log.showInfo(TAG, 'RECENT inputConsumer recentEvent start');
+      globalThis.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
+    });
+  }
+
+  private unregisterInputConsumer(): void {
+    // unregister HOME inputConsumer
+    inputConsumer.off('key', {
+      preKeys: [],
+      finalKey: KeyCode.KEYCODE_HOME,
+      finalKeyDownDuration: 0,
+      isFinalKeyDown: true
+    });
+    // unregister RECENT inputConsumer
+    inputConsumer.off('key', {
+      preKeys: [],
+      finalKey: KeyCode.KEYCODE_FN,
+      finalKeyDownDuration: 0,
+      isFinalKeyDown: true
+    });
   }
 
   private initGlobalConst(): void {
@@ -94,6 +152,7 @@ export default class MainAbility extends ServiceExtension {
 
   onDestroy(): void {
     windowManager.unregisterWindowEvent();
+    this.unregisterInputConsumer();
     navigationBarCommonEventManager.unregisterNavigationBarEvent();
     windowManager.destroyWindow(windowManager.DESKTOP_WINDOW_NAME);
     windowManager.destroyRecentWindow();
