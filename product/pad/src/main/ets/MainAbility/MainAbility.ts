@@ -105,7 +105,7 @@ export default class MainAbility extends ServiceExtension {
     // register/unregister RECENT inputConsumer
     inputConsumer.on('key', {
       preKeys: [],
-      finalKey: KeyCode.KEYCODE_FN,
+      finalKey: KeyCode.KEYCODE_FUNCTION,
       finalKeyDownDuration: 0,
       isFinalKeyDown: true
     }, () => {
@@ -125,7 +125,7 @@ export default class MainAbility extends ServiceExtension {
     // unregister RECENT inputConsumer
     inputConsumer.off('key', {
       preKeys: [],
-      finalKey: KeyCode.KEYCODE_FN,
+      finalKey: KeyCode.KEYCODE_FUNCTION,
       finalKeyDownDuration: 0,
       isFinalKeyDown: true
     });
