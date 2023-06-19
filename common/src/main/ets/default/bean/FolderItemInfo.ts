@@ -32,6 +32,4 @@ export class FolderItemInfo {
    * Application list of this folder.
    */
   appList: string[] | undefined;
-
-  [key: string]: any;
 }
