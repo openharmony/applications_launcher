@@ -231,5 +231,9 @@ struct AppItem {
       const selectAppIndex = globalThis.SmartDockDragHandler.getDragItemIndexByCoordinates(event.getX(), event.getY());
       AppStorage.SetOrCreate('selectAppIndex', selectAppIndex);
     })
+    .onDragEnd((event: DragEvent, extraParams: string) => {
+      Log.showInfo(TAG, `onDragEnd event: [${event.getX()}, ${event.getY()}]` + event.getResult());
+      AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+    })
   }
 }
