@@ -248,7 +248,9 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     endPosition = this.copyPosition(this.mEndPosition);
     const info = this.mSettingsModel.getLayoutInfo();
     const layoutInfo = info.layoutInfo;
-    if (dragItemInfo.typeId === CommonConstants.TYPE_APP) {
+    if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER || dragItemInfo.typeId == CommonConstants.TYPE_CARD) {
+      this.updateEndPosition(dragItemInfo);
+    } else  {
       if (this.isMoveToSamePosition(dragItemInfo)) {
         this.deleteBlankPageAfterDragging(startPosition, endPosition);
         return false;
@@ -330,6 +332,20 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_SMARTDOCK_INIT_FINISHED, null);
     this.deleteBlankPageAfterDragging(startPosition, endPosition);
     return true;
+  }
+
+  private updateEndPosition(dragItemInfo: LauncherDragItemInfo): void {
+    this.mGridConfig = this.mSettingsModel.getGridConfig();
+    if (this.mEndPosition.row < 0) {
+      this.mEndPosition.row = 0;
+    } else if (this.mEndPosition.row + dragItemInfo.area[1] > this.mGridConfig.row) {
+      this.mEndPosition.row = this.mGridConfig.row - dragItemInfo.area[1];
+    }
+    if (this.mEndPosition.column < 0) {
+      this.mEndPosition.column = 0;
+    } else if (this.mEndPosition.column + dragItemInfo.area[0] > this.mGridConfig.column ) {
+      this.mEndPosition.column = this.mGridConfig.column - dragItemInfo.area[0];
+    }
   }
 
   deleteBlankPageOutsideEffect() {
