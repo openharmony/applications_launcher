@@ -20,6 +20,7 @@ import { AppMenu } from './AppMenu';
 import { StyleConstants } from '../constants/StyleConstants';
 import { ResourceManager } from '../manager/ResourceManager';
 import { PresetStyleConstants } from '../constants/PresetStyleConstants';
+import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 
 const TAG = 'AppBubble';
 
@@ -65,20 +66,26 @@ export struct AppBubble {
   build() {
     Column() {
       Column() {
-        AppIcon({
-          iconSize: this.iconSize,
-          iconId: this.appIconId,
-          bundleName: this.bundleName,
-          moduleName: this.moduleName,
-          icon: ResourceManager.getInstance().getCachedAppIcon(this.appIconId, this.bundleName, this.moduleName),
-          badgeNumber: this.badgeNumber,
-          useCache: this.useCache
-        })
-          .onDragStart((event: DragEvent, extraParams: string) => {
-            return this.dragStart(event);
+        Column() {
+          AppIcon({
+            iconSize: this.iconSize,
+            iconId: this.appIconId,
+            bundleName: this.bundleName,
+            moduleName: this.moduleName,
+            icon: ResourceManager.getInstance().getCachedAppIcon(this.appIconId, this.bundleName, this.moduleName),
+            badgeNumber: this.badgeNumber,
+            useCache: this.useCache
           })
-          .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-          .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+        }
+        .onDragStart((event: DragEvent, extraParams: string) => {
+          return this.dragStart(event);
+        })
+        .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
+        .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+        .onDragEnd((event: DragEvent, extraParams: string) => {
+          AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+        })
+
         AppName({
           nameHeight: this.nameHeight,
           nameSize: this.nameSize,
