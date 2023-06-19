@@ -211,9 +211,9 @@ struct AppItem {
       if (this.smartDragItemInfo.isDragging) {
         this.isShow = false;
       }
-      if (event.type === CommonConstants.TOUCH_TYPE_UP && !this.smartDragItemInfo.isDragging && !this.isShow) {
-        this.onItemClick(event, this.appInfo);
-      }
+    })
+    .onClick((event) => {
+      this.onItemClick(event, this.appInfo);
     })
     .onMouse((event: MouseEvent) => {
       Log.showInfo(TAG, `onMouse MouseType: ${event.button}`);
