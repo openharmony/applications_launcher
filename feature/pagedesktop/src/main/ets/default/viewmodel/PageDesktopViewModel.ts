@@ -1257,7 +1257,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
    * @param appInfo
    */
   async createCardToDeskTop(formCardItem) {
-    Log.showDebug(TAG, `createCardToDeskTop formCardItem id: ${formCardItem.id}`);
+    Log.showDebug(TAG, `createCardToDeskTop formCardItem id: ${formCardItem.cardId}`);
     const cardItemInfo = this.createNewCardItemInfo(formCardItem);
 
     let formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
@@ -1307,14 +1307,14 @@ export default class PageDesktopViewModel extends BaseViewModel {
    */
   private createNewCardItemInfo(formCardItem): CardItemInfo {
     const cardItemInfo = new CardItemInfo();
-    cardItemInfo.cardId = formCardItem.id;
-    cardItemInfo.cardName = formCardItem.name;
+    cardItemInfo.cardId = formCardItem.cardId;
+    cardItemInfo.cardName = formCardItem.cardName;
     cardItemInfo.bundleName = formCardItem.bundleName;
     cardItemInfo.abilityName = formCardItem.abilityName;
     cardItemInfo.moduleName = formCardItem.moduleName;
     cardItemInfo.formConfigAbility = formCardItem.formConfigAbility;
     cardItemInfo.appLabelId = formCardItem.appLabelId;
-    cardItemInfo.cardDimension = formCardItem.dimension;
+    cardItemInfo.cardDimension = formCardItem.cardDimension;
     return cardItemInfo;
   }
 

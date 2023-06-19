@@ -277,11 +277,6 @@ export struct FolderComponent {
                 })
               }
             }
-            .onDragStart((event: DragEvent) => {
-              return this.dragStart(event);
-            })
-            .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-            .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
             .padding(this.gridMargin)
             .columnsTemplate('1fr 1fr 1fr')
             .rowsTemplate('1fr 1fr 1fr')
@@ -311,6 +306,11 @@ export struct FolderComponent {
             Log.showInfo(TAG, `onHover isHover:${isHover}`);
             this.isHover = isHover;
           })
+          .onDragStart((event: DragEvent) => {
+            return this.dragStart(event);
+          })
+          .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
+          .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
         }
         .height(this.folderGridSize)
         .width(this.folderGridSize)

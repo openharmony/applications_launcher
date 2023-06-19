@@ -24,7 +24,7 @@ const TAG = 'FormManagerDialog';
  */
 @CustomDialog
 export struct FormManagerDialog {
-  @StorageLink('formMgrItem') formItem: any = [];
+  @StorageLink('formMgrItem') formItem: Array<CardItemInfo> = [];
   @State mAllowUpdate: boolean = false;
   private mSwiperController: SwiperController = new SwiperController()
   private mFormModel: FormModel;
@@ -46,12 +46,18 @@ export struct FormManagerDialog {
   confirm: (formCardItem) => void;
   bundleName: string;
   appName: string;
-  appLabelId: string;
+  appLabelId: number;
 
   aboutToAppear(): void {
     this.mFormModel = FormModel.getInstance();
     this.cancel(this.clearAllFormById.bind(this));
     this.getCurrentFormInfo();
+  }
+
+  aboutToDisappear(): void {
+    this.cancel = null;
+    this.confirm = null;
+    this.mFormDialogController = null;
   }
 
   /**
@@ -67,19 +73,19 @@ export struct FormManagerDialog {
    * @return <any> formCardItem
    */
   private getChooseCard() {
-    let formCardItem: any = {};
-    formCardItem.id = this.mFormIdList[this.mSwiperIndex];
+    let formCardItem: CardItemInfo = new CardItemInfo();
+    formCardItem.cardId = this.mFormIdList[this.mSwiperIndex];
     let count = 0;
     let isStop = false;
     for (let i = 0; i < this.formItem.length; i++) {
       if (isStop) break;
       for (let j = 0; j < this.formItem[i].supportDimensions.length; j++) {
         if (count === this.mSwiperIndex) {
-          formCardItem.name = this.formItem[i].cardName;
+          formCardItem.cardName = this.formItem[i].cardName;
           formCardItem.bundleName = this.formItem[i].bundleName;
           formCardItem.abilityName = this.formItem[i].abilityName;
           formCardItem.moduleName = this.formItem[i].moduleName;
-          formCardItem.dimension = this.formItem[i].supportDimensions[j];
+          formCardItem.cardDimension = this.formItem[i].supportDimensions[j];
           formCardItem.formConfigAbility = this.formItem[i].formConfigAbility;
           formCardItem.appLabelId = this.appLabelId;
           isStop = true;

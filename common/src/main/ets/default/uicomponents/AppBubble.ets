@@ -29,7 +29,7 @@ export struct AppBubble {
   @State abilityName: string = '';
   @State moduleName: string = '';
   @State appIconId: string = '';
-  @State appLabelId: string = '';
+  @State appLabelId: number = undefined;
   iconSize: number = 0;
   nameHeight: number = 0;
   nameSize: number = 0;
@@ -74,6 +74,11 @@ export struct AppBubble {
           badgeNumber: this.badgeNumber,
           useCache: this.useCache
         })
+          .onDragStart((event: DragEvent, extraParams: string) => {
+            return this.dragStart(event);
+          })
+          .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
+          .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
         AppName({
           nameHeight: this.nameHeight,
           nameSize: this.nameSize,
@@ -87,11 +92,6 @@ export struct AppBubble {
           marginTop: this.mIconNameMargin
         })
       }
-      .onDragStart((event: DragEvent, extraParams: string) => {
-        return this.dragStart(event);
-      })
-      .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-      .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
       .width(this.isSelect ? this.iconSize + StyleConstants.DEFAULT_40 : StyleConstants.PERCENTAGE_100)
       .height(StyleConstants.PERCENTAGE_100)
       .backgroundColor(this.isSelect ? StyleConstants.DEFAULT_BROAD_COLOR : StyleConstants.DEFAULT_TRANSPARENT_COLOR)

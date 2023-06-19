@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
+import { AppItemInfo, CardItemInfo, LauncherDragItemInfo, Log } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
 import { PresetStyleConstants } from '@ohos/common';
@@ -33,10 +33,10 @@ const TAG = "AppItem";
 
 @Component
 export default struct AppItem {
-  @StorageLink('dragItemInfo') pageDesktopDragItemInfo: any = {};
+  @StorageLink('dragItemInfo') pageDesktopDragItemInfo: LauncherDragItemInfo = new LauncherDragItemInfo();
   @StorageLink('dragItemType') dragItemType: number = CommonConstants.DRAG_FROM_DESKTOP;
-  @StorageLink('uninstallAppInfo') appInfo: any = {};
-  @StorageLink('formAppInfo') formAppInfo: any = {};
+  @StorageLink('uninstallAppInfo') appInfo: AppItemInfo = new AppItemInfo();
+  @StorageLink('formAppInfo') formAppInfo: CardItemInfo = new CardItemInfo();
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
   @State mAppNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   @State mAppItemWidth: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
@@ -104,19 +104,6 @@ export default struct AppItem {
     autoCancel: false,
     customStyle: true
   });
-
-  @Builder dragLayerBuilder() {
-    Column() {
-      AppIcon({
-        iconSize: this.mIconSize * 1.05,
-        iconId: this.item.appIconId,
-        bundleName: this.item.bundleName,
-        moduleName: this.item.moduleName,
-        icon: ResourceManager.getInstance().getCachedAppIcon(this.item.appIconId, this.item.bundleName, this.item.moduleName),
-        badgeNumber: this.item.badgeNumber
-      })
-    }
-  }
 
   /**
    * When click cancel dialog, this function will be called.
@@ -211,13 +198,12 @@ export default struct AppItem {
     })
     .onTouch((event: TouchEvent) => {
       Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].screenX}, y: ${event.touches[0].screenY}`);
-      if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {
+      if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
         let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
         Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
         if (!mIsDragEffectArea) {
-          this.pageDesktopDragItemInfo = {};
+          this.pageDesktopDragItemInfo = new LauncherDragItemInfo();
           AppStorage.SetOrCreate('selectAppIndex', null);
-          AppStorage.SetOrCreate('isDrag', false);
         }
       }
     })
@@ -235,13 +221,11 @@ export default struct AppItem {
   }
 
   dragStart(event: DragEvent): CustomBuilder {
-    AppStorage.SetOrCreate('isDrag', true);
     ContextMenu.close();
     this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
-    this.pageDesktopDragItemInfo = this.item;
+    this.pageDesktopDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.item);
     Log.showInfo(TAG, `pageDesktopDragItemInfo: ${JSON.stringify(this.pageDesktopDragItemInfo)}`);
     globalThis.PageDesktopDragHandler.onDragStart(event.getX(), event.getY());
-    return this.dragLayerBuilder();
   }
 
   /**

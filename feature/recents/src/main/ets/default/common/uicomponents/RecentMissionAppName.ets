@@ -28,7 +28,7 @@ export default struct RecentMissionAppName {
   @State name: string = ''
   @Prop bundleName: string;
   @Prop moduleName: string;
-  @Prop labelId: string;
+  @Prop labelId: number;
   private mResourceManager;
 
   aboutToAppear(): void  {

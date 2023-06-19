@@ -35,7 +35,7 @@ export default struct RecentMissionCard {
   @Link isClickSubComponent: boolean;
   @State missionId: number = 0;
   @State appIconId: string = '';
-  @State appLabelId: string = '';
+  @State appLabelId: number = undefined;
   @State appName: string = '';
   @State bundleName: string = '';
   @State moduleName: string = '';
@@ -44,7 +44,7 @@ export default struct RecentMissionCard {
   @State cardMargin: number = RecentsStyleConstants.SINGLE_LIST_LAYOUT_MARGIN;
   @State cardLayoutWeight: number = RecentsStyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT;
   // recentImage default is Resource type, to avoid toolchain typeCheck
-  @State recentImage: any = RecentsStyleConstants.DEFAULT_APP_IMAGE;
+  @State recentImage: image.PixelMap = undefined;
   private mIsSingleLayout: boolean = true;
   private snapShotTime: string = '';
   private mRecentMissionsViewModel: RecentMissionsViewModel;

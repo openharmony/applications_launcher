@@ -208,7 +208,7 @@ export default class GestureNavigationExecutors {
   }
 
   private isRecentsViewShowOfSpeedLimit(curTime: number, acceleration: number, curSpeed: number) {
-    return (acceleration > 0.05 && curSpeed > -2.0) || ((curSpeed > -1.0) && (curTime - this.preEventTime) / 1000 > 80.0);
+    return (acceleration > 0.05 && curSpeed > -5.0) || ((curSpeed > -1.0) && (curTime - this.preEventTime) / 1000 > 10.0);
   }
 
   private isSpecifiesRegion(startXPosition: number, startYPosition: number) {

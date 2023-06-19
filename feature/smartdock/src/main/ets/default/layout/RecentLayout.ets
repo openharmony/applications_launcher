@@ -13,14 +13,17 @@
  * limitations under the License.
  */
 
-import { AppMenu } from '@ohos/common';
-import { AppIcon } from '@ohos/common';
-import { DockItemInfo } from '@ohos/common';
-import { ScrollerComponent } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
-import { StyleConstants } from '@ohos/common';
-import { ResourceManager } from '@ohos/common';
-import { Log } from '@ohos/common';
+import { 
+  AppMenu,
+  LauncherDragItemInfo,
+  AppIcon,
+  DockItemInfo,
+  ScrollerComponent,
+  CommonConstants,
+  StyleConstants,
+  ResourceManager,
+  Log
+} from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 
 let mSmartDockStyleConfig: SmartDockStyleConfig = null;
@@ -270,7 +273,8 @@ struct AppItem {
       if (event.type == CommonConstants.TOUCH_TYPE_UP) {
         AppStorage.SetOrCreate('isLongPress', false);
       }
-      if (AppStorage.Get('isDrag')) {
+      const dragItemInfo: LauncherDragItemInfo = AppStorage.Get<LauncherDragItemInfo>('dragItemInfo');
+      if (dragItemInfo.isDragging) {
         this.isShow = false;
       }
     })

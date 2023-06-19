@@ -35,7 +35,7 @@ export class AppItemInfo {
   /**
    * Indicates appLabelId.
    */
-  appLabelId: string | undefined;
+  appLabelId: number | undefined;
 
   /**
    * Indicates bundleName.

@@ -12,26 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { AppItemInfo } from './AppItemInfo';
 
 /**
- * Item info of folders.
+ * drag item info
  */
-export class FolderItemInfo {
+export class LauncherDragItemInfo extends AppItemInfo {
+  isDragging: boolean = false;
 
-  /**
-   * folder id.
-   */
-  folderId: string | undefined;
-
-  /**
-   * folder name to display
-   */
-  folderName: string | undefined;
-
-  /**
-   * Application list of this folder.
-   */
-  appList: string[] | undefined;
+  constructor(isDragging?: boolean) {
+    super();
+    this.isDragging = isDragging ? isDragging : false;
+  }
 
   [key: string]: any;
 }

@@ -7,3 +7,6 @@ local.properties
 tsconfig.json
 node_modules
 .hvigor
+package-lock.json
+oh_modules
+oh-package-lock.json5

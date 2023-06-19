@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
+import { LauncherDragItemInfo, Log } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { PresetStyleConstants } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
@@ -159,13 +159,12 @@ export default struct SwiperPage {
         const dragResult = globalThis.PageDesktopDragHandler.onDragDrop(event.getX(), event.getY());
         Log.showInfo(TAG, `onDrop dragResult: ${dragResult}`);
         AppStorage.SetOrCreate('selectAppIndex', null);
-        AppStorage.SetOrCreate('isDrag', false);
         if (!dragResult) {
-          AppStorage.SetOrCreate('dragItemInfo', {});
+          AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
         } else {
           // Wait for the UI rendering to end.
           setTimeout(() => {
-            AppStorage.SetOrCreate('dragItemInfo', {});
+            AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           }, 50);
         }
       }

@@ -13,7 +13,8 @@
  * limitations under the License.
  */
 
-import { Log, Trace, StyleConstants, CommonConstants, AppMenu, MenuInfo, localEventManager, EventConstants } from '@ohos/common';
+import { Log, Trace, StyleConstants, CommonConstants, AppMenu, MenuInfo, localEventManager, EventConstants,
+  LauncherDragItemInfo } from '@ohos/common';
 import SwiperPage from './SwiperPage';
 
 const TAG = "GridSwiper";
@@ -152,9 +153,7 @@ export default struct GridSwiper {
           })
           .height(StyleConstants.PERCENTAGE_100)
           .width(StyleConstants.PERCENTAGE_100)
-          .indicatorStyle({
-            selectedColor: StyleConstants.DEFAULT_FONT_COLOR
-          })
+          .indicator(new DotIndicator().selectedColor(StyleConstants.DEFAULT_FONT_COLOR))
           .loop(false)
           .index(this.pageIndex)
           .onChange((index) => {
@@ -170,7 +169,8 @@ export default struct GridSwiper {
     .width(StyleConstants.PERCENTAGE_100)
     .onDragMove((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
-      if (!AppStorage.Get('isDrag')) return;
+      const dragItemInfo: LauncherDragItemInfo = AppStorage.Get<LauncherDragItemInfo>('dragItemInfo');
+      if (!dragItemInfo.isDragging) return;
       if (AppStorage.Get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE
       || (AppStorage.Get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE
       && AppStorage.Get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP)) {

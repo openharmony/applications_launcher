@@ -96,6 +96,11 @@ export struct FormItemComponent {
             this.clickForm(event, this.formItem);
           }
         })
+        .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
+        .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+        .onDragStart((event: DragEvent, extraParams: string) => {
+          return this.dragStart(event);
+        })
 
       Column() {
         AppName({
@@ -122,10 +127,5 @@ export struct FormItemComponent {
     .padding({top : this.mPaddingTop})
     .height(StyleConstants.PERCENTAGE_100)
     .width(StyleConstants.PERCENTAGE_100)
-    .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-    .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
-    .onDragStart((event: DragEvent, extraParams: string) => {
-      return this.dragStart(event);
-    })
   }
 }

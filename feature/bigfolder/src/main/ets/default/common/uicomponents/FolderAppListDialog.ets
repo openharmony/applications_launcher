@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
+import { AppItemInfo, Log } from '@ohos/common';
 import { AppIcon } from '@ohos/common';
 import { AppName } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
@@ -32,8 +32,8 @@ export default struct FolderAppListDialog {
   @StorageLink('isPad') isPad: boolean = false;
   @StorageLink('allAppListForFolder') allAppInfoList: [] = [];
   @StorageLink('folderAppList') folderAppList: [] = [];
-  @StorageLink('appListChecked') @Watch('onAppListChecked') appListChecked: any = [];
-  @StorageLink('titleDescription') titleDescription: any = '';
+  @StorageLink('appListChecked') @Watch('onAppListChecked') appListChecked: Array<AppItemInfo> = [];
+  @StorageLink('titleDescription') titleDescription: string = '';
   @State mNameFontColor: string = BigFolderStyleConstants.FOLDER_ADD_APP_FONT_COLOR;
   private mBigFolderViewModel: BigFolderViewModel;
   private mFolderStyleConfig: BigFolderStyleConfig;

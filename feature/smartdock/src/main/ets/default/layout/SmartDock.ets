@@ -17,7 +17,8 @@ import {
   Log,
   CommonConstants,
   ResourceManager,
-  UninstallDialog } from '@ohos/common';
+  UninstallDialog, RecentBundleMissionInfo
+} from '@ohos/common';
 import RecentLayout from './RecentLayout';
 import ResidentLayout from './ResidentLayout';
 import SmartDockViewModel from '../viewmodel/SmartDockViewModel';
@@ -34,8 +35,8 @@ export struct SmartDock {
   } = { show: false, showItem: '', popup: null };
   showAppCenter: Function = () => {};
   @StorageLink('showDock') showDock: boolean = false;
-  @StorageLink('recentList') recentList: any = [];
-  @StorageLink('missionInfoList') missionInfoList: any = [];
+  @StorageLink('recentList') recentList: Array<RecentBundleMissionInfo> = [];
+  @StorageLink('missionInfoList') missionInfoList: Array<RecentBundleMissionInfo> = [];
   private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
   private mSmartDockViewModel: SmartDockViewModel;
   private mSelectedItem = null;

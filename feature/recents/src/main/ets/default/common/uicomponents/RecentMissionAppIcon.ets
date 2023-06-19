@@ -28,7 +28,7 @@ export default struct RecentMissionAppIcon {
   @State @Watch("updateIcon") appIcon: string = '';
   @State bundleName: string = '';
   @State moduleName: string = '';
-  @State labelId: string = '';
+  @State labelId: number = undefined;
   @State icon: string = ' ';
   @State useCache: boolean = true;
   private mIsSingleLayout: boolean = true;

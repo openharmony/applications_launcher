@@ -22,7 +22,7 @@ export struct AppName {
   nameHeight: number;
   bundleName: string;
   moduleName: string;
-  labelId: string;
+  labelId: number;
   nameFontColor: string;
   @State @Watch("updateName") appName: string = '';
   useCache: boolean = true;
