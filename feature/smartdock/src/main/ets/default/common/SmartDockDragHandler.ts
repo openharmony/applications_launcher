@@ -23,7 +23,7 @@ import { CheckEmptyUtils } from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 import SmartDockModel from '../model/SmartDockModel';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
-import { LauncherDragItemInfo } from '@ohos/common/src/main/ets/default/bean/LauncherDragItemInfo';
+import type { LauncherDragItemInfo } from '@ohos/common';
 
 const TAG = 'SmartDockDragHandler';
 
