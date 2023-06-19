@@ -15,8 +15,6 @@
 
 import { 
   Log,
-  LauncherDragItemInfo,
-  DragArea,
   BaseDragHandler,
   CommonConstants,
   CheckEmptyUtils,
@@ -24,7 +22,11 @@ import {
   EventConstants,
   localEventManager,
   layoutConfigManager,
-  PageDesktopModel,
+  PageDesktopModel
+} from '@ohos/common';
+import type {
+  LauncherDragItemInfo,
+  DragArea,
   DragItemPosition
 } from '@ohos/common';
 import { FormViewModel } from '@ohos/form';
@@ -413,7 +415,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     return endLayoutInfo;
   }
 
-  private getStartLayoutInfo(layoutInfo, dragItemInfo: LauncherDragItemInfo) {
+  private getStartLayoutInfo(layoutInfo, dragItemInfo: LauncherDragItemInfo): LauncherDragItemInfo {
     const startLayoutInfo = layoutInfo.find(item => {
       return item.page === dragItemInfo.page && item.row === dragItemInfo.row && item.column === dragItemInfo.column;
     });
@@ -575,7 +577,10 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param allPositions
    * @param dragItemInfo
    */
-  private getPressedObjects(destination, allPositions, dragItemInfo: LauncherDragItemInfo) {
+  private getPressedObjects(destination, allPositions, dragItemInfo: LauncherDragItemInfo): {
+    apps: Array<LauncherDragItemInfo>,
+    foldersAndForms: Array<LauncherDragItemInfo>
+  } {
     Log.showDebug(TAG, 'getPressedObjects start');
     const row = destination.row;
     const column = destination.column;
@@ -830,7 +835,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER) {
       keyName = dragItemInfo.folderId;
     } else if (dragItemInfo.typeId == CommonConstants.TYPE_CARD) {
-      keyName = dragItemInfo.cardId;
+      keyName = dragItemInfo.cardId >= 0 ? String(dragItemInfo.cardId) : '';
     } else if (dragItemInfo.typeId == CommonConstants.TYPE_APP) {
       keyName = dragItemInfo.keyName;
     }
