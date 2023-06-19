@@ -12,18 +12,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AppItemInfo } from './AppItemInfo';
 
 /**
  * drag item info
  */
-export class LauncherDragItemInfo extends AppItemInfo {
+export class LauncherDragItemInfo {
   isDragging: boolean = false;
 
   constructor(isDragging?: boolean) {
-    super();
     this.isDragging = isDragging ? isDragging : false;
   }
 
-  [key: string]: any;
+  cardId: number | undefined;
+  folderId: string | undefined;
+  folderName: string | undefined;
+  appList: string[] | undefined;
+  keyName: string | undefined;
+  bundleName: string | undefined;
+  abilityName: string | undefined;
+  moduleName: string | undefined;
+  cardName: string | undefined;
+  cardDimension: number | undefined;
+  area: number[] | undefined;
+  description = '';
+  formConfigAbility: string | undefined;
+  appLabelId: number | undefined;
+  appName: string | undefined;
+  supportDimensions: number[] | undefined;
+  appId: string | undefined;
+  appIconId: string | undefined;
+  isSystemApp: boolean | undefined;
+  isUninstallAble: boolean | undefined;
+  badgeNumber: number | undefined;
+  checked: boolean | undefined;
+  installTime: string | undefined;
+  typeId: number | undefined;
+  page: number | undefined;
+  column: number | undefined;
+  row: number | undefined;
 }
