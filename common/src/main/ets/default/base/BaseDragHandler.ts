@@ -16,7 +16,7 @@
 import { Log } from '../utils/Log';
 import { DragArea } from '../interface/DragArea';
 import { CommonConstants } from '../constants/CommonConstants';
-import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
+import type { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 
 const TAG = 'BaseDragHandler';
 
