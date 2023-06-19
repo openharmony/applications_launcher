@@ -207,8 +207,15 @@ export default class GestureNavigationExecutors {
     return (this.screenHeight - eventY) / this.screenHeight >= GestureNavigationExecutors.HOME_DISTANCE_LIMIT_MIN;
   }
 
-  private isRecentsViewShowOfSpeedLimit(curTime: number, acceleration: number, curSpeed: number) {
-    return (acceleration > 0.05 && curSpeed > -5.0) || ((curSpeed > -1.0) && (curTime - this.preEventTime) / 1000 > 10.0);
+  private isRecentsViewShowOfSpeedLimit(curTime: number, acceleration: number, curSpeed: number): boolean {
+    const MIN_ACCELERATION = 0.05;
+    const CUR_SPEED_NEGATIVE_FIVE = -5.0;
+    const CUR_SPEED_NEGATIVE_ONE = -1.0;
+    const TIMESTAMP_CONVERTED_TO_MILLISECONDS_CARDINALITY = 1000;// 时间戳转换为毫秒的基数
+    const MIN_TIME_DIFFERENCE = 10.0;// 最小时间差
+    return (acceleration > MIN_ACCELERATION && curSpeed > CUR_SPEED_NEGATIVE_FIVE) ||
+      ((curSpeed > CUR_SPEED_NEGATIVE_ONE) &&
+        (curTime - this.preEventTime) / TIMESTAMP_CONVERTED_TO_MILLISECONDS_CARDINALITY > MIN_TIME_DIFFERENCE);
   }
 
   private isSpecifiesRegion(startXPosition: number, startYPosition: number) {
