@@ -22,6 +22,7 @@ import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 import { AppIcon } from './AppIcon';
 import { AppName } from './AppName';
 import { AppMenu } from './AppMenu';
+import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 
 const TAG = 'FolderComponent';
 
@@ -308,6 +309,10 @@ export struct FolderComponent {
           })
           .onDragStart((event: DragEvent) => {
             return this.dragStart(event);
+          })
+          .onDragEnd((event: DragEvent, extraParams: string) => {
+            Log.showInfo(TAG, `onDragEnd event: [${event.getX()}, ${event.getY()}]` + event.getResult());
+            AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           })
           .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
           .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
