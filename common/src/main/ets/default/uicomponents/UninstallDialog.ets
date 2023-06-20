@@ -17,11 +17,11 @@ import { StyleConstants } from '../constants/StyleConstants';
 import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
 import { ResourceManager } from '../manager/ResourceManager';
 import { LayoutViewModel } from '../viewmodel/LayoutViewModel';
-
+import { AppItemInfo } from '../bean/AppItemInfo';
 
 @CustomDialog
 export struct UninstallDialog {
-  @StorageLink('uninstallAppInfo') appInfo: any = {};
+  @StorageLink('uninstallAppInfo') appInfo: AppItemInfo = new AppItemInfo();
   @StorageLink('isPad') isPad: boolean = false;
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
   controller: CustomDialogController;
@@ -55,6 +55,12 @@ export struct UninstallDialog {
     if (CheckEmptyUtils.isEmpty(this.icon)) {
       this.updateIcon();
     }
+  }
+
+  aboutToDisappear(): void {
+    this.cancel = null;
+    this.confirm = null;
+    this.controller = null;
   }
 
   public iconLoadCallback(image) {

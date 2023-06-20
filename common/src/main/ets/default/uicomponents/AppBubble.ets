@@ -20,6 +20,7 @@ import { AppMenu } from './AppMenu';
 import { StyleConstants } from '../constants/StyleConstants';
 import { ResourceManager } from '../manager/ResourceManager';
 import { PresetStyleConstants } from '../constants/PresetStyleConstants';
+import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 
 const TAG = 'AppBubble';
 
@@ -29,7 +30,7 @@ export struct AppBubble {
   @State abilityName: string = '';
   @State moduleName: string = '';
   @State appIconId: string = '';
-  @State appLabelId: string = '';
+  @State appLabelId: number = undefined;
   iconSize: number = 0;
   nameHeight: number = 0;
   nameSize: number = 0;
@@ -65,15 +66,26 @@ export struct AppBubble {
   build() {
     Column() {
       Column() {
-        AppIcon({
-          iconSize: this.iconSize,
-          iconId: this.appIconId,
-          bundleName: this.bundleName,
-          moduleName: this.moduleName,
-          icon: ResourceManager.getInstance().getCachedAppIcon(this.appIconId, this.bundleName, this.moduleName),
-          badgeNumber: this.badgeNumber,
-          useCache: this.useCache
+        Column() {
+          AppIcon({
+            iconSize: this.iconSize,
+            iconId: this.appIconId,
+            bundleName: this.bundleName,
+            moduleName: this.moduleName,
+            icon: ResourceManager.getInstance().getCachedAppIcon(this.appIconId, this.bundleName, this.moduleName),
+            badgeNumber: this.badgeNumber,
+            useCache: this.useCache
+          })
+        }
+        .onDragStart((event: DragEvent, extraParams: string) => {
+          return this.dragStart(event);
         })
+        .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
+        .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+        .onDragEnd((event: DragEvent, extraParams: string) => {
+          AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+        })
+
         AppName({
           nameHeight: this.nameHeight,
           nameSize: this.nameSize,
@@ -87,11 +99,6 @@ export struct AppBubble {
           marginTop: this.mIconNameMargin
         })
       }
-      .onDragStart((event: DragEvent, extraParams: string) => {
-        return this.dragStart(event);
-      })
-      .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-      .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
       .width(this.isSelect ? this.iconSize + StyleConstants.DEFAULT_40 : StyleConstants.PERCENTAGE_100)
       .height(StyleConstants.PERCENTAGE_100)
       .backgroundColor(this.isSelect ? StyleConstants.DEFAULT_BROAD_COLOR : StyleConstants.DEFAULT_TRANSPARENT_COLOR)

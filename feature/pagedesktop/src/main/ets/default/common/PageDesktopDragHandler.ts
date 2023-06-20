@@ -13,17 +13,22 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
-import { DragArea } from '@ohos/common';
-import { BaseDragHandler } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
-import { CheckEmptyUtils } from '@ohos/common';
-import { SettingsModel } from '@ohos/common';
-import { EventConstants } from '@ohos/common';
-import { localEventManager } from '@ohos/common';
-import { layoutConfigManager } from '@ohos/common';
-import { PageDesktopModel } from '@ohos/common';
-import { DragItemPosition } from '@ohos/common';
+import { 
+  Log,
+  BaseDragHandler,
+  CommonConstants,
+  CheckEmptyUtils,
+  SettingsModel,
+  EventConstants,
+  localEventManager,
+  layoutConfigManager,
+  PageDesktopModel
+} from '@ohos/common';
+import type {
+  LauncherDragItemInfo,
+  DragArea,
+  DragItemPosition
+} from '@ohos/common';
 import { FormViewModel } from '@ohos/form';
 import { BigFolderViewModel } from '@ohos/bigfolder';
 import { PageDesktopGridStyleConfig } from './PageDesktopGridStyleConfig';
@@ -222,8 +227,8 @@ export class PageDesktopDragHandler extends BaseDragHandler {
   }
 
   onDragDrop(x: number, y: number): boolean {
-    const dragItemInfo: any = AppStorage.Get('dragItemInfo');
-    if (JSON.stringify(dragItemInfo) == '{}') {
+    const dragItemInfo: LauncherDragItemInfo = AppStorage.Get<LauncherDragItemInfo>('dragItemInfo');
+    if (!dragItemInfo.isDragging) {
       return false;
     }
     const dragItemType: number = AppStorage.Get('dragItemType');
@@ -243,9 +248,8 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     endPosition = this.copyPosition(this.mEndPosition);
     const info = this.mSettingsModel.getLayoutInfo();
     const layoutInfo = info.layoutInfo;
-    if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER || dragItemInfo.typeId == CommonConstants.TYPE_CARD ) {
+    if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER || dragItemInfo.typeId == CommonConstants.TYPE_CARD) {
       this.updateEndPosition(dragItemInfo);
-      AppStorage.SetOrCreate('positionOffset', []);
     } else {
       if (this.isMoveToSamePosition(dragItemInfo)) {
         this.deleteBlankPageAfterDragging(startPosition, endPosition);
@@ -330,6 +334,20 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     return true;
   }
 
+  private updateEndPosition(dragItemInfo: LauncherDragItemInfo): void {
+    this.mGridConfig = this.mSettingsModel.getGridConfig();
+    if (this.mEndPosition.row < 0) {
+      this.mEndPosition.row = 0;
+    } else if (this.mEndPosition.row + dragItemInfo.area[1] > this.mGridConfig.row) {
+      this.mEndPosition.row = this.mGridConfig.row - dragItemInfo.area[1];
+    }
+    if (this.mEndPosition.column < 0) {
+      this.mEndPosition.column = 0;
+    } else if (this.mEndPosition.column + dragItemInfo.area[0] > this.mGridConfig.column ) {
+      this.mEndPosition.column = this.mGridConfig.column - dragItemInfo.area[0];
+    }
+  }
+
   deleteBlankPageOutsideEffect() {
     // delete Blank Page because of drag outside effect area
     Log.showInfo(TAG, "deleteBlankPageOutsideEffect" );
@@ -394,30 +412,12 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     }
   }
 
-  private isMoveToSamePosition(dragItemInfo): boolean {
+  private isMoveToSamePosition(dragItemInfo: LauncherDragItemInfo): boolean {
     if (this.mEndPosition.page == dragItemInfo.page &&
     this.mEndPosition.row == dragItemInfo.row && this.mEndPosition.column == dragItemInfo.column) {
       return true;
     }
     return false;
-  }
-
-  private updateEndPosition(dragItemInfo): void {
-    const positionOffset = AppStorage.Get('positionOffset');
-
-    this.mEndPosition.row = this.mEndPosition.row - positionOffset[1];
-    this.mEndPosition.column = this.mEndPosition.column - positionOffset[0];
-    this.mGridConfig = this.mSettingsModel.getGridConfig();
-    if (this.mEndPosition.row < 0) {
-      this.mEndPosition.row = 0;
-    } else if (this.mEndPosition.row + dragItemInfo.area[1] > this.mGridConfig.row) {
-      this.mEndPosition.row = this.mGridConfig.row - dragItemInfo.area[1];
-    }
-    if (this.mEndPosition.column < 0) {
-      this.mEndPosition.column = 0;
-    } else if (this.mEndPosition.column + dragItemInfo.area[0] > this.mGridConfig.column ) {
-      this.mEndPosition.column = this.mGridConfig.column - dragItemInfo.area[0];
-    }
   }
 
   private getEndLayoutInfo(layoutInfo) {
@@ -431,7 +431,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     return endLayoutInfo;
   }
 
-  private getStartLayoutInfo(layoutInfo, dragItemInfo) {
+  private getStartLayoutInfo(layoutInfo, dragItemInfo: LauncherDragItemInfo): LauncherDragItemInfo {
     const startLayoutInfo = layoutInfo.find(item => {
       return item.page === dragItemInfo.page && item.row === dragItemInfo.row && item.column === dragItemInfo.column;
     });
@@ -445,7 +445,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param layoutInfo
    * @param dragItemInfo
    */
-  private checkAndMove(source, destination, layoutInfo, dragItemInfo): boolean {
+  private checkAndMove(source, destination, layoutInfo, dragItemInfo: LauncherDragItemInfo): boolean {
     Log.showDebug(TAG, 'checkAndMove start');
 
     const allPositions = this.getAllPositions(destination, layoutInfo);
@@ -593,7 +593,10 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param allPositions
    * @param dragItemInfo
    */
-  private getPressedObjects(destination, allPositions, dragItemInfo) {
+  private getPressedObjects(destination, allPositions, dragItemInfo: LauncherDragItemInfo): {
+    apps: Array<LauncherDragItemInfo>,
+    foldersAndForms: Array<LauncherDragItemInfo>
+  } {
     Log.showDebug(TAG, 'getPressedObjects start');
     const row = destination.row;
     const column = destination.column;
@@ -631,7 +634,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param objectPositionCount
    * @param dragItemInfo
    */
-  private checkCanMoveInSamePage(pressedPositions, objectPositionCount, dragItemInfo): boolean {
+  private checkCanMoveInSamePage(pressedPositions, objectPositionCount, dragItemInfo: LauncherDragItemInfo): boolean {
     Log.showDebug(TAG, 'checkCanMoveInSamePage start');
     const foldersAndForms = pressedPositions.foldersAndForms;
     if (foldersAndForms.length == 0) {
@@ -744,7 +747,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param allPositions
    * @param dragItemInfo
    */
-  private moveFoldersAndForms(foldersAndForms, destination, allPositions, dragItemInfo): boolean {
+  private moveFoldersAndForms(foldersAndForms, destination, allPositions, dragItemInfo: LauncherDragItemInfo): boolean {
     Log.showDebug(TAG, 'moveFoldersAndForms start');
     const movedFoldersAndForms = [];
     for (let i = 0; i < foldersAndForms.length; i++) {
@@ -813,7 +816,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param row
    * @param column
    */
-  private updateDestinationToNull(dragItemInfo, destination, allPositions, row, column): void {
+  private updateDestinationToNull(dragItemInfo: LauncherDragItemInfo, destination, allPositions, row, column): void {
     let destinationFlag = false;
     for (let j = 0; j < dragItemInfo.area[1]; j++) {
       if (destinationFlag) {
@@ -843,12 +846,12 @@ export class PageDesktopDragHandler extends BaseDragHandler {
    * @param destination
    * @param allPositions
    */
-  private updateDestinationByDragItem(dragItemInfo, destination, allPositions): void {
+  private updateDestinationByDragItem(dragItemInfo: LauncherDragItemInfo, destination, allPositions): void {
     let keyName = '';
     if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER) {
       keyName = dragItemInfo.folderId;
     } else if (dragItemInfo.typeId == CommonConstants.TYPE_CARD) {
-      keyName = dragItemInfo.cardId;
+      keyName = dragItemInfo.cardId >= 0 ? String(dragItemInfo.cardId) : '';
     } else if (dragItemInfo.typeId == CommonConstants.TYPE_APP) {
       keyName = dragItemInfo.keyName;
     }

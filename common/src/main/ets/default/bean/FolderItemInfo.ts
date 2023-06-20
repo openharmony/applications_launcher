@@ -16,7 +16,7 @@
 /**
  * Item info of folders.
  */
-export default class FolderItemInfo {
+export class FolderItemInfo {
 
   /**
    * folder id.

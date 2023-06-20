@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
+import { LauncherDragItemInfo, Log } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
@@ -33,7 +33,7 @@ const TAG = 'FolderItem';
  */
 @Component
 export default struct FolderItem {
-  @StorageLink('dragItemInfo') pageDesktopDragItemInfo: any = {};
+  @StorageLink('dragItemInfo') pageDesktopDragItemInfo: LauncherDragItemInfo = new LauncherDragItemInfo();
   @StorageLink('dragItemType') dragItemType: number = CommonConstants.DRAG_FROM_DESKTOP;
   @StorageLink('openFolderStatus') openFolderStatus: number = BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
@@ -52,27 +52,6 @@ export default struct FolderItem {
   private mPageDesktopStartAppHandler: PageDesktopStartAppHandler;
   private mFolderStyleConfig: BigFolderStyleConfig;
   mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
-
-  @Builder dragLayerBuilder() {
-    Column() {
-      FolderComponent({
-        showFolderName: false,
-        nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
-        folderNameHeight: 0,
-        folderNameSize: 0,
-        mFolderItem: this.folderItem,
-        folderGridSize: this.mFolderStyleConfig.mGridSize * 1.05,
-        appIconSize: this.mFolderStyleConfig.mFolderAppSize * 1.05,
-        gridMargin: this.mFolderStyleConfig.mGridMargin * 1.05,
-        gridGap: this.mFolderStyleConfig.mFolderGridGap * 1.05,
-        buildMenu: (folderItem) => {
-          return [];
-        }
-      })
-    }
-    .height(this.mFolderStyleConfig.mGridSize * 1.05 + StyleConstants.DEFAULT_40)
-    .width(this.mFolderStyleConfig.mGridSize * 1.05)
-  }
 
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
@@ -134,20 +113,14 @@ export default struct FolderItem {
   }
 
   dragStart(event: DragEvent): CustomBuilder {
-    AppStorage.SetOrCreate('isDrag', true);
     ContextMenu.close();
     this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
-    this.pageDesktopDragItemInfo = this.folderItem;
+    this.pageDesktopDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.folderItem);
     const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getX(), event.getY());
     const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getX(), event.getY())
     globalThis.PageDesktopDragHandler.mStartPosition = startPosition;
     AppStorage.SetOrCreate('selectAppIndex', selectAppIndex);
     Log.showInfo(TAG, `onDragStart event: [${event.getX()}, ${event.getY()}], selectAppIndex: ${selectAppIndex}`);
-    const rowOffset = startPosition.row - this.pageDesktopDragItemInfo.row;
-    const columnOffset = startPosition.column - this.pageDesktopDragItemInfo.column;
-    const positionOffset = [columnOffset, rowOffset];
-    AppStorage.SetOrCreate('positionOffset', positionOffset);
-    return this.dragLayerBuilder();
   }
 
   build() {
@@ -184,14 +157,13 @@ export default struct FolderItem {
             this.mBigFolderViewModel.openFolder(false, folderItem);
           },
           onFolderTouch: (event, folderItem) => {
-            if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {
+            if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
               let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
               Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
               if (!mIsDragEffectArea) {
                 globalThis.PageDesktopDragHandler.deleteBlankPageOutsideEffect();
-                AppStorage.SetOrCreate('dragItemInfo', {});
+                AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
                 AppStorage.SetOrCreate('selectAppIndex', null);
-                AppStorage.SetOrCreate('isDrag', false);
               }
             }
           },

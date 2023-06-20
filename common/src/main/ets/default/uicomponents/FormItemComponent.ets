@@ -22,6 +22,7 @@ import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 import { CommonConstants } from '../constants/CommonConstants';
 import { localEventManager } from '../manager/LocalEventManager';
 import { EventConstants } from '../constants/EventConstants';
+import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 
 const TAG = 'FormItemComponent';
 
@@ -96,6 +97,15 @@ export struct FormItemComponent {
             this.clickForm(event, this.formItem);
           }
         })
+        .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
+        .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+        .onDragStart((event: DragEvent, extraParams: string) => {
+          return this.dragStart(event);
+        })
+        .onDragEnd((event: DragEvent, extraParams: string) => {
+          Log.showInfo(TAG, `onDragEnd event: [${event.getX()}, ${event.getY()}]` + event.getResult());
+          AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+        })
 
       Column() {
         AppName({
@@ -122,10 +132,5 @@ export struct FormItemComponent {
     .padding({top : this.mPaddingTop})
     .height(StyleConstants.PERCENTAGE_100)
     .width(StyleConstants.PERCENTAGE_100)
-    .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-    .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
-    .onDragStart((event: DragEvent, extraParams: string) => {
-      return this.dragStart(event);
-    })
   }
 }

@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import { AppMenu } from '@ohos/common';
-import { AppIcon } from '@ohos/common';
-import { DockItemInfo } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
-import { StyleConstants } from '@ohos/common';
-import { ResourceManager } from '@ohos/common';
-import { Log } from '@ohos/common';
+import { 
+  AppMenu,
+  AppIcon,
+  DockItemInfo,
+  LauncherDragItemInfo,
+  CommonConstants,
+  StyleConstants,
+  ResourceManager,
+  Log
+} from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 
 let mSmartDockStyleConfig: SmartDockStyleConfig = null;
@@ -110,13 +113,12 @@ export default struct ResidentLayout {
         Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
         const dragResult = globalThis.SmartDockDragHandler.onDragDrop(event.getX(), event.getY());
         AppStorage.SetOrCreate('selectAppIndex', null);
-        AppStorage.SetOrCreate('isDrag', false);
         if (!dragResult) {
-          AppStorage.SetOrCreate('dragItemInfo', {});
+          AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
         } else {
           // Wait for the UI rendering to end.
           setTimeout(() => {
-            AppStorage.SetOrCreate('dragItemInfo', {});
+            AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           }, 50);
         }
       })
@@ -126,27 +128,13 @@ export default struct ResidentLayout {
 
 @Component
 struct AppItem {
-  @StorageLink('dragItemInfo') smartDragItemInfo: any = {};
+  @StorageLink('dragItemInfo') smartDragItemInfo: LauncherDragItemInfo = new LauncherDragItemInfo();
   @StorageLink('dragItemType') dragItemType: number = CommonConstants.DRAG_FROM_DOCK;
   @State isShow: boolean = false;
   onItemClick: Function = null;
   appInfo: DockItemInfo = null;
   buildMenu: Function = null;
   private menuInfo;
-
-  @Builder dragLayerBuilder() {
-    Column() {
-      AppIcon({
-        iconSize: mSmartDockStyleConfig.mIconSize * 1.05,
-        iconId: this.appInfo.appIconId,
-        bundleName: this.appInfo.bundleName,
-        moduleName: this.appInfo.moduleName,
-        icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId,
-        this.appInfo.bundleName, this.appInfo.moduleName),
-        badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE
-      })
-    }
-  }
 
   aboutToAppear(): void {
     this.menuInfo = this.buildMenu(this.appInfo);
@@ -212,21 +200,20 @@ struct AppItem {
     })
     .onTouch((event: TouchEvent) => {
       Log.showInfo(TAG, `onTouch event type: ${event.type}`);
-      if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {
+      if (event.type === CommonConstants.TOUCH_TYPE_UP && this.smartDragItemInfo.isDragging) {
         let mIsDragEffectArea = globalThis.SmartDockDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
         if (!mIsDragEffectArea) {
-          AppStorage.SetOrCreate('dragItemInfo', {});
+          AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           AppStorage.SetOrCreate('selectAppIndex', null);
-          AppStorage.SetOrCreate('isDrag', false);
         }
         AppStorage.SetOrCreate('isLongPress', false);
       }
-      if (AppStorage.Get('isDrag')) {
+      if (this.smartDragItemInfo.isDragging) {
         this.isShow = false;
       }
-      if (event.type === CommonConstants.TOUCH_TYPE_UP && !AppStorage.Get('isDrag') && !this.isShow) {
-        this.onItemClick(event, this.appInfo);
-      }
+    })
+    .onClick((event) => {
+      this.onItemClick(event, this.appInfo);
     })
     .onMouse((event: MouseEvent) => {
       Log.showInfo(TAG, `onMouse MouseType: ${event.button}`);
@@ -238,13 +225,15 @@ struct AppItem {
     })
     .onDragStart((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `DragStart`);
-      AppStorage.SetOrCreate('isDrag', true);
       this.dragItemType = CommonConstants.DRAG_FROM_DOCK;
-      this.smartDragItemInfo = this.appInfo;
+      this.smartDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.appInfo);
       Log.showInfo(TAG, `smartDragItemInfo: ${JSON.stringify(this.smartDragItemInfo)}`);
       const selectAppIndex = globalThis.SmartDockDragHandler.getDragItemIndexByCoordinates(event.getX(), event.getY());
       AppStorage.SetOrCreate('selectAppIndex', selectAppIndex);
-      return this.dragLayerBuilder();
+    })
+    .onDragEnd((event: DragEvent, extraParams: string) => {
+      Log.showInfo(TAG, `onDragEnd event: [${event.getX()}, ${event.getY()}]` + event.getResult());
+      AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
     })
   }
 }

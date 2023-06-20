@@ -2,7 +2,7 @@
   "module": {
     "name": "launcher_settings",
     "type": "feature",
-    "srcEntrance": "./ets/Application/AbilityStage.ts",
+    "srcEntry": "./ets/Application/AbilityStage.ts",
     "description": "$string:mainability_description",
     "mainElement": "com.ohos.launcher.settings.MainAbility",
     "deviceTypes": [
@@ -18,18 +18,17 @@
     "deliveryWithInstall": true,
     "installationFree": false,
     "pages": "$profile:main_pages",
-    "uiSyntax": "ets",
     "abilities": [
       {
         "name": "com.ohos.launcher.settings.MainAbility",
-        "srcEntrance": "./ets/MainAbility/MainAbility.ts",
+        "srcEntry": "./ets/MainAbility/MainAbility.ts",
         "startWindowIcon": "$media:startWindowIcon",
         "startWindowBackground": "$color:startWindowBackground",
         "icon": "$media:icon",
         "description": "$string:mainability_description",
         "label": "$string:settings_MainAbility",
         "launchType": "singleton",
-        "visible": false
+        "exported": false
       }
     ],
     "requestPermissions": [

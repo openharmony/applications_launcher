@@ -23,6 +23,7 @@ import { CheckEmptyUtils } from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 import SmartDockModel from '../model/SmartDockModel';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
+import type { LauncherDragItemInfo } from '@ohos/common';
 
 const TAG = 'SmartDockDragHandler';
 
@@ -147,8 +148,8 @@ export default class SmartDockDragHandler extends BaseDragHandler {
   }
 
   protected onDragDrop(x: number, y: number): boolean {
-    const dragItemInfo: any = AppStorage.Get('dragItemInfo');
-    if (JSON.stringify(dragItemInfo) == '{}') {
+    const dragItemInfo: LauncherDragItemInfo = AppStorage.Get<LauncherDragItemInfo>('dragItemInfo');
+    if (!dragItemInfo.isDragging) {
       return false;
     }
     const dragItemType: number = AppStorage.Get('dragItemType');
@@ -167,7 +168,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     return false;
   }
 
-  addItemToSmartDock(dragItemInfo: any, insertIndex: number): boolean {
+  addItemToSmartDock(dragItemInfo: LauncherDragItemInfo, insertIndex: number): boolean {
     let addToDockRes = this.mSmartDockModel.addToSmartdock(dragItemInfo, insertIndex);
     if (addToDockRes) {
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_DELETE, {

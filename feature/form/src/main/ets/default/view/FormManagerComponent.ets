@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
+import { CardItemInfo, Log } from '@ohos/common';
 import { FormModel } from '@ohos/common';
 import { windowManager } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
@@ -27,8 +27,8 @@ const TAG = 'FormManagerComponent';
  */
 @Component
 export struct FormManagerComponent {
-  @StorageLink('formAppInfo') formAppInfo: any = {};
-  @StorageLink('formMgrItem') formItem: any = [];
+  @StorageLink('formAppInfo') formAppInfo: CardItemInfo = new CardItemInfo();
+  @StorageLink('formMgrItem') formItem: Array<CardItemInfo> = [];
   @State allowUpdate: boolean = false;
   private mSwiperController: SwiperController = new SwiperController();
   private mFormModel: FormModel;
@@ -64,19 +64,19 @@ export struct FormManagerComponent {
    * @return {any} formCardItem
    */
   private getChooseCard() {
-    let formCardItem: any = {};
-    formCardItem.id = this.mFormIdList[this.mSwiperIndex];
+    let formCardItem: CardItemInfo = new CardItemInfo();
+    formCardItem.cardId = this.mFormIdList[this.mSwiperIndex];
     let count = 0;
     let isStop = false;
     for (let i = 0; i < this.formItem.length; i++) {
       if (isStop) break;
       for (let j = 0; j < this.formItem[i].supportDimensions.length; j++) {
         if (count === this.mSwiperIndex) {
-          formCardItem.name = this.formItem[i].cardName;
+          formCardItem.cardName = this.formItem[i].cardName;
           formCardItem.bundleName = this.formItem[i].bundleName;
           formCardItem.abilityName = this.formItem[i].abilityName;
           formCardItem.moduleName = this.formItem[i].moduleName;
-          formCardItem.dimension = this.formItem[i].supportDimensions[j];
+          formCardItem.cardDimension = this.formItem[i].supportDimensions[j];
           formCardItem.formConfigAbility = this.formItem[i].formConfigAbility;
           formCardItem.appLabelId = this.formAppInfo.appLabelId;
           isStop = true;

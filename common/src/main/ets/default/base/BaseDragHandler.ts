@@ -16,6 +16,7 @@
 import { Log } from '../utils/Log';
 import { DragArea } from '../interface/DragArea';
 import { CommonConstants } from '../constants/CommonConstants';
+import type { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 
 const TAG = 'BaseDragHandler';
 
@@ -76,9 +77,9 @@ export abstract class BaseDragHandler {
    *
    * @param dragItemInfo
    */
-  protected setDragItemInfo(dragItemInfo): void {
+  protected setDragItemInfo(dragItemInfo: LauncherDragItemInfo): void {
     Log.showDebug(TAG, `setDragItemInfo dragItemInfo: ${JSON.stringify(dragItemInfo)}`);
-    AppStorage.SetOrCreate('dragItemInfo', dragItemInfo);
+    AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', dragItemInfo);
   }
 
   /**
@@ -87,9 +88,9 @@ export abstract class BaseDragHandler {
    * @return dragItemInfo
    */
   protected getDragItemInfo() {
-    const dragItemInfo: any = AppStorage.Get('dragItemInfo');
+    const dragItemInfo: LauncherDragItemInfo = AppStorage.Get<LauncherDragItemInfo>('dragItemInfo');
     // avoid dragItemInfo from AppStorage is undefined
-    return dragItemInfo ? dragItemInfo : {};
+    return dragItemInfo;
   }
 
   /**

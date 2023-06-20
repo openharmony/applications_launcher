@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log , CheckEmptyUtils } from '@ohos/common';
+import { Log , CheckEmptyUtils, AppItemInfo, FolderItemInfo } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
@@ -231,10 +231,9 @@ export struct FolderOpenComponent {
               })
             })
           }
-          .indicatorStyle({
-            selectedColor: StyleConstants.DEFAULT_FONT_COLOR,
-            bottom: BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_INDICATOR
-          })
+          .indicator(new DotIndicator()
+            .selectedColor(StyleConstants.DEFAULT_FONT_COLOR)
+            .bottom(BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_INDICATOR))
           .onClick(() => {
             Log.showDebug(TAG, `Swiper click`);
             this.saveText();
@@ -438,14 +437,14 @@ struct FolderSwiperPage {
 
 @Component
 struct FolderAppItem {
-  @StorageLink('uninstallAppInfo') appInfo: any = {};
+  @StorageLink('uninstallAppInfo') appInfo: AppItemInfo = new AppItemInfo();
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
-  @State item: any = {};
+  @State item: AppItemInfo = new AppItemInfo();
   private ColumnsTemplate: string = '';
   private RowsTemplate: string = '';
   private isSwappingPage = false;
   private willCloseFolder: boolean = false;
-  private mFolderInfo: any = {};
+  private mFolderInfo: FolderItemInfo = new FolderItemInfo();
   private mouseClick: number = 0;
   private dialogName: string = "";
   private clearForm: Function = null;

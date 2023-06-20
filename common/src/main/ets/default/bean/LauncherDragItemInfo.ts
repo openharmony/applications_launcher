@@ -14,84 +14,40 @@
  */
 
 /**
- * common app info
+ * drag item info
  */
-export class AppItemInfo {
-  /**
-   * Indicates app id.
-   */
-  appId: string | undefined;
+export class LauncherDragItemInfo {
+  isDragging: boolean = false;
 
-  /**
-   * Indicates app name.
-   */
-  appName: string | undefined;
+  constructor(isDragging?: boolean) {
+    this.isDragging = isDragging ? isDragging : false;
+  }
 
-  /**
-   * Indicates appIconId.
-   */
-  appIconId: string | undefined;
-
-  /**
-   * Indicates appLabelId.
-   */
-  appLabelId: number | undefined;
-
-  /**
-   * Indicates bundleName.
-   */
-  bundleName: string | undefined;
-
-  /**
-   * Indicates abilityName.
-   */
-  abilityName: string | undefined;
-
-  /**
-   * Indicates is system App.
-   */
-  isSystemApp: boolean | undefined;
-
-  /**
-   * Indicates is uninstallAble.
-   */
-  isUninstallAble: boolean | undefined;
-
-  /**
-   * badge number
-   */
-  badgeNumber: number | undefined;
-
-  checked: boolean | undefined;
-
-  installTime: string | undefined;
-
-  moduleName: string | undefined;
-
+  cardId: number | undefined;
+  folderId: string | undefined;
+  folderName: string | undefined;
+  appList: string[] | undefined;
   keyName: string | undefined;
-
-  /**
-   * GridLayoutItemInfo: type  0:app  1:card  3:bigFolder
-   */
-  typeId: number | undefined;
-
-  /**
-   * GridLayoutItemInfo: area
-   */
+  bundleName: string | undefined;
+  abilityName: string | undefined;
+  moduleName: string | undefined;
+  cardName: string | undefined;
+  cardDimension: number | undefined;
   area: number[] | undefined;
-
-  /**
-   * GridLayoutItemInfo: page
-   */
+  description = '';
+  formConfigAbility: string | undefined;
+  appLabelId: number | undefined;
+  appName: string | undefined;
+  supportDimensions: number[] | undefined;
+  appId: string | undefined;
+  appIconId: string | undefined;
+  isSystemApp: boolean | undefined;
+  isUninstallAble: boolean | undefined;
+  badgeNumber: number | undefined;
+  checked: boolean | undefined;
+  installTime: string | undefined;
+  typeId: number | undefined;
   page: number | undefined;
-
-  /**
-   * GridLayoutItemInfo: column of positions
-   */
   column: number | undefined;
-
-  /**
-   * GridLayoutItemInfo: row of positions
-   */
   row: number | undefined;
 }

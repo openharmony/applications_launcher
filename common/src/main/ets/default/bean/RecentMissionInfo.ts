@@ -35,7 +35,7 @@ export class RecentMissionInfo {
   /**
    * Recent mission: app label Id
    */
-  appLabelId: string | undefined;
+  appLabelId: number | undefined;
 
   /**
    * Recent mission: bundle name

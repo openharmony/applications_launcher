@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
+import { CardItemInfo, LauncherDragItemInfo, Log } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
 import { PresetStyleConstants } from '@ohos/common';
 import { ResourceManager } from '@ohos/common';
@@ -34,7 +34,7 @@ const TAG = 'FormItem';
  */
 @Component
 export default struct FormItem {
-  @StorageLink('dragItemInfo') pageDesktopDragItemInfo: any = {};
+  @StorageLink('dragItemInfo') pageDesktopDragItemInfo: LauncherDragItemInfo = new LauncherDragItemInfo();
   @StorageLink('isRemoveForm') @Watch('removeFormAnimate') isRemoveForm: boolean = false;
   @StorageLink('dragItemType') dragItemType: number = CommonConstants.DRAG_FROM_DESKTOP;
   @StorageLink('formAnimateData') formAnimateData: {
@@ -45,7 +45,7 @@ export default struct FormItem {
   @State animateOpacity: number = 1.0;
   @State allowUpdate: boolean = true;
   @State isShow: boolean = true;
-  private formItem: any = {};
+  private formItem: CardItemInfo = new CardItemInfo();
   private mPageDesktopViewModel: PageDesktopViewModel = PageDesktopViewModel.getInstance();
   private mFormViewModel: FormViewModel;
   private mFormStyleConfig: FormStyleConfig;
@@ -66,20 +66,6 @@ export default struct FormItem {
   private mForm: string = '';
   private clearForm: Function = null;
 
-  @Builder dragLayerBuilder() {
-    Column() {
-      FormItemComponent({
-        formItem: this.formItem,
-        formItemWidth: this.mFormItemWidth * 1.05,
-        formItemHeight: this.mFormItemHeight * 1.05,
-        formNameHeight: 0,
-        formNameSize: 0
-      })
-    }
-    .height(this.mFormItemWidth * 1.05 + StyleConstants.DEFAULT_10  )
-    .width(this.mFormItemWidth * 1.05)
-  }
-
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mFormViewModel = FormViewModel.getInstance();
@@ -94,8 +80,10 @@ export default struct FormItem {
     this.mFormNameSize = styleConfig.mNameSize;
     this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
-    this.mFormItemWidth = this.mFormStyleConfig.mFormWidth.get(this.formItem.cardDimension.toString());
-    this.mFormItemHeight = this.mFormStyleConfig.mFormHeight.get(this.formItem.cardDimension.toString());
+    if (this.formItem.cardDimension) {
+      this.mFormItemWidth = this.mFormStyleConfig.mFormWidth.get(this.formItem.cardDimension.toString());
+      this.mFormItemHeight = this.mFormStyleConfig.mFormHeight.get(this.formItem.cardDimension.toString());
+    }
     const resourceManager = ResourceManager.getInstance();
     resourceManager.getStringById($r('app.string.is_delete_form').id, this.getDialogNamePre.bind(this));
     resourceManager.getStringById($r('app.string.form').id, this.getDialogNameAft.bind(this));
@@ -208,20 +196,14 @@ export default struct FormItem {
   }
 
   dragStart(event: DragEvent): CustomBuilder {
-    AppStorage.SetOrCreate('isDrag', true);
     ContextMenu.close();
     this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
-    this.pageDesktopDragItemInfo = this.formItem;
+    this.pageDesktopDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.formItem);
     const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getX(), event.getY());
     const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getX(), event.getY())
     globalThis.PageDesktopDragHandler.mStartPosition = startPosition;
     AppStorage.SetOrCreate('selectAppIndex', selectAppIndex);
     Log.showInfo(TAG, `onDragStart event: [${event.getX()}, ${event.getY()}], selectAppIndex: ${selectAppIndex}`);
-    const rowOffset = startPosition.row - this.pageDesktopDragItemInfo.row;
-    const columnOffset = startPosition.column - this.pageDesktopDragItemInfo.column;
-    const positionOffset = [columnOffset, rowOffset];
-    AppStorage.SetOrCreate('positionOffset', positionOffset);
-    return this.dragLayerBuilder();
   }
 
   build() {
@@ -246,7 +228,7 @@ export default struct FormItem {
           },
         })
       }
-      .visibility(this.pageDesktopDragItemInfo.cardId === this.formItem.cardId ? Visibility.None : Visibility.Visible)
+      .visibility(this.pageDesktopDragItemInfo.cardId === this.formItem.cardId && this.pageDesktopDragItemInfo.isDragging ? Visibility.None : Visibility.Visible)
       .scale({ x: this.animateScale, y: this.animateScale })
       .opacity(this.animateOpacity)
       .onMouse((event: MouseEvent) => {
@@ -266,14 +248,13 @@ export default struct FormItem {
       )
       )
       .onTouch((event: TouchEvent) => {
-        if (event.type === CommonConstants.TOUCH_TYPE_UP && AppStorage.Get('isDrag')) {
+        if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
           let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
           Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
           if (!mIsDragEffectArea) {
             globalThis.PageDesktopDragHandler.deleteBlankPageOutsideEffect();
-            this.pageDesktopDragItemInfo = {};
+            this.pageDesktopDragItemInfo = new LauncherDragItemInfo();
             AppStorage.SetOrCreate('selectAppIndex', null);
-            AppStorage.SetOrCreate('isDrag', false);
           }
         }
       })
