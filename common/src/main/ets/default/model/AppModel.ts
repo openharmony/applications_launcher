@@ -81,11 +81,11 @@ export class AppModel {
     let allAbilityList: AppItemInfo[] = await launcherAbilityManager.getLauncherAbilityList();
     Log.showInfo(TAG, `getAppListAsync--->allAbilityList length: ${allAbilityList.length}`);
     let launcherAbilityList: AppItemInfo[] = [];
-    for (let i in allAbilityList) {
-      if (this.mSystemApplicationName.indexOf(allAbilityList[i].bundleName) === CommonConstants.INVALID_VALUE) {
-        launcherAbilityList.push(allAbilityList[i]);
-        this.updateShortcutInfo(allAbilityList[i].bundleName);
-        this.mFormModel.updateAppItemFormInfo(allAbilityList[i].bundleName);
+    for (const ability of allAbilityList) {
+      if (this.mSystemApplicationName.indexOf(ability.bundleName) === CommonConstants.INVALID_VALUE) {
+        launcherAbilityList.push(ability);
+        this.updateShortcutInfo(ability.bundleName);
+        this.mFormModel.updateAppItemFormInfo(ability.bundleName);
       }
     }
     this.mBundleInfoList = launcherAbilityList;

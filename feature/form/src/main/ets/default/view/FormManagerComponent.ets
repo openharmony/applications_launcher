@@ -184,9 +184,7 @@ export struct FormManagerComponent {
         .height('100%')
         .loop(false)
         .index(0)
-        .indicatorStyle({
-          selectedColor: StyleConstants.DEFAULT_FORM_MGR_FONT_COLOR
-        })
+        .indicator(new DotIndicator().selectedColor(StyleConstants.DEFAULT_FORM_MGR_FONT_COLOR))
         .onChange((index: number) => {
           this.mSwiperIndex = index;
         })

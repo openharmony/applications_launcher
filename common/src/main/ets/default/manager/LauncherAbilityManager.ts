@@ -186,7 +186,7 @@ class LauncherAbilityManager {
   async getAppInfoByBundleName(bundleName: string, abilityName?: string): Promise<AppItemInfo | undefined> {
     let appItemInfo: AppItemInfo | undefined = undefined;
     // get from cache
-    if (this.mAppMap != null && this.mAppMap.has(bundleName)) {
+    if (this.mAppMap != null && this.mAppMap.has(bundleName) && !abilityName) {
       appItemInfo = this.mAppMap.get(bundleName);
     }
     if (appItemInfo != undefined) {
@@ -209,7 +209,7 @@ class LauncherAbilityManager {
       return undefined;
     }
     let appInfo = abilityInfos[0];
-    if (abilityName != undefined) {
+    if (!abilityName) {
       appInfo = abilityInfos.find(item => {
         return item.elementName.abilityName === abilityName;
       });
