@@ -250,7 +250,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     const layoutInfo = info.layoutInfo;
     if (dragItemInfo.typeId == CommonConstants.TYPE_FOLDER || dragItemInfo.typeId == CommonConstants.TYPE_CARD) {
       this.updateEndPosition(dragItemInfo);
-    } else  {
+    } else {
       if (this.isMoveToSamePosition(dragItemInfo)) {
         this.deleteBlankPageAfterDragging(startPosition, endPosition);
         return false;
