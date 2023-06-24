@@ -305,6 +305,13 @@ export class PageDesktopDragHandler extends BaseDragHandler {
             this.deleteBlankPageAfterDragging(startPosition, endPosition);
           });
           return true;
+        } else if (endLayoutInfo.typeId === CommonConstants.TYPE_CARD) {
+          if (dragItemType === CommonConstants.DRAG_FROM_DOCK && deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
+            localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, dragItemInfo);
+            localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE, dragItemInfo);
+            localEventManager.sendLocalEventSticky(EventConstants.EVENT_SMARTDOCK_INIT_FINISHED, null);
+            return true;
+          }
         }
       }
     }
