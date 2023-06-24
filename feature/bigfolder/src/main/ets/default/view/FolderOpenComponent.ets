@@ -244,7 +244,7 @@ export struct FolderOpenComponent {
           .loop(false)
           .onChange((index) => {
             Log.showDebug(TAG, `onChange :${index}`);
-            if (this.PageIndex != index) {
+            if (this.PageIndex !== index) {
               this.mFolderInfo = mBigFolderViewModel.addAddIcon(this.mFolderInfo);
               this.PageIndex = index;
             }
