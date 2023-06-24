@@ -248,6 +248,12 @@ struct SettingsDialog {
   @StorageLink('ida') ida: number = 0;
   @StorageLink('settingValue') settingValue: String = '';
 
+  aboutToDisappear(): void {
+    this.cancel = null;
+    this.action = null;
+    this.controller = null;
+  }
+
   build() {
     Column() {
       ForEach(this.valueList, (item: any) => {
