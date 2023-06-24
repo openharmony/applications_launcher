@@ -186,7 +186,9 @@ export struct FormManagerComponent {
         .index(0)
         .indicator(new DotIndicator().selectedColor(StyleConstants.DEFAULT_FORM_MGR_FONT_COLOR))
         .onChange((index: number) => {
-          this.mSwiperIndex = index;
+          if (this.mSwiperIndex !== index) {
+            this.mSwiperIndex = index;
+          }
         })
       }.alignItems(HorizontalAlign.Center)
       .height('60%')
