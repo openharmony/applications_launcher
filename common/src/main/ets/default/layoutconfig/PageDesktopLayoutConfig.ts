@@ -107,7 +107,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
           Log.showError(TAG, `srj updateGridLayoutInfo error: ${err.toString()}`);
         });
       }
-    }, 200);
+    }, 80);
   }
 
   /**
