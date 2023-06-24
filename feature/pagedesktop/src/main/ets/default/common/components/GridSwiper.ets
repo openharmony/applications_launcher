@@ -27,11 +27,24 @@ export default struct GridSwiper {
   @Prop gridConfig: string;
   @StorageLink('pageIndex') pageIndex: number = 0;
   private mPageDesktopViewModel;
-  @StorageLink('appListInfo') appListInfo: {
+  @StorageLink('appListInfo') @Watch('updateSwiperPages') appListInfo: {
     appGridInfo: [[]]
   } = { appGridInfo: [[]] };
+  @State swiperPageItems: Array<{ page: number }> = [{ page: 0 }];
   private swiperController: SwiperController = new SwiperController();
   private dialogController: CustomDialogController;
+
+  updateSwiperPages(): void {
+    let pageItems = [{ page: 0 }];
+    if (this.appListInfo?.appGridInfo?.length) {
+      for (let i = 1; i < this.appListInfo.appGridInfo.length; i++) {
+        pageItems.push({
+          page: i
+        })
+      }
+    }
+    this.swiperPageItems = pageItems;
+  }
 
   aboutToAppear(): void {
     this.mPageDesktopViewModel.setSwiperController(this.swiperController);
@@ -119,14 +132,16 @@ export default struct GridSwiper {
       if (this.buildLog()) {}
         if (this.desktopLoadFinished) {
           Swiper(this.swiperController) {
-            ForEach(this.appListInfo.appGridInfo, (item) => {
+            ForEach(this.swiperPageItems, (item: { page: number }, index) => {
               if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
                 Column() {
                   SwiperPage({
-                    mAppListInfo: item,
+                    // mAppListInfo: this.appListInfo.appGridInfo[item.page],
+                    appListInfo: $appListInfo,
+                    swiperPageIndex: index,
                     gridConfig: this.gridConfig,
                     mPageDesktopViewModel: this.mPageDesktopViewModel
-                  })
+                  }).id(`SwiperPage_${item.page}${index}`)
                 }
                 .gesture(
                 LongPressGesture({ repeat: false })
@@ -137,15 +152,20 @@ export default struct GridSwiper {
                 .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
               } else {
                 SwiperPage({
-                  mAppListInfo: item,
+                  // mAppListInfo: this.appListInfo.appGridInfo[item.page],
+                  appListInfo: $appListInfo,
+                  swiperPageIndex: index,
                   gridConfig: this.gridConfig,
                   mPageDesktopViewModel: this.mPageDesktopViewModel
-                })
+                }).id(`SwiperPage_${item.page}${index}`)
                   .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
                   .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
               }
+            }, (item: { page: number }, index: number) => {
+              return `${item.page}${index}`;
             })
           }
+          .id(`${TAG}_Swiper`)
           .padding({
             top: this.navigationBarStatusValue ?
               this.mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop :
@@ -155,6 +175,8 @@ export default struct GridSwiper {
           .width(StyleConstants.PERCENTAGE_100)
           .indicator(new DotIndicator().selectedColor(StyleConstants.DEFAULT_FONT_COLOR))
           .loop(false)
+          .duration(80)
+          .cachedCount(3)
           .index(this.pageIndex)
           .onChange((index) => {
             this.pageIndex = index;
@@ -163,6 +185,7 @@ export default struct GridSwiper {
           })
         }
     }
+    .id(`${TAG}`)
     .alignItems(HorizontalAlign.Center)
     .justifyContent(FlexAlign.Center)
     .height(StyleConstants.PERCENTAGE_100)
