@@ -55,6 +55,8 @@ export struct RecentMissionsSingleLayout {
             }
           }, (item) => JSON.stringify(item))
         }
+        .cachedCount(3)
+        .scrollBar(BarState.Off)
         .listDirection(Axis.Horizontal)
         .height(RecentsStyleConstants.SINGLE_LIST_MISSION_HEIGHT)
       }
