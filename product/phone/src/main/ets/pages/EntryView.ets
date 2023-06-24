@@ -132,7 +132,7 @@ struct EntryView {
           PageDesktopLayout();
         }
         .height(this.workSpaceHeight)
-        .onAreaChange((oldValue: Area, newValue: Area): void => {
+        .onAreaChange((oldValue: Area, newValue: Area) => {
           Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
           if (JSON.stringify(oldValue) == JSON.stringify(newValue)) return;
           if (this.navigationBarStatus == "1") {
