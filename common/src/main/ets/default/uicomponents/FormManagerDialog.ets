@@ -180,7 +180,9 @@ export struct FormManagerDialog {
         .loop(false)
         .index(0)
         .onChange((index: number) => {
-          this.mSwiperIndex = index;
+          if (this.mSwiperIndex !== index) {
+            this.mSwiperIndex = index;
+          }
         })
       }
       .height('85%')
