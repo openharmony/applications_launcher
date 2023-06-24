@@ -29,6 +29,7 @@ const TAG = "SwiperPage";
 export default struct SwiperPage {
   @StorageLink('workSpaceWidth') @Watch('updateDeskTopScreen') workSpaceWidth: number = 0;
   @StorageLink('formRefresh') formRefresh: string = '';
+  private swiperPageIndex: number;
   @State ColumnsTemplate: string = '';
   @State RowsTemplate: string = ''
   @Prop @Watch('changeColumnAndRow') gridConfig: string;
@@ -38,14 +39,20 @@ export default struct SwiperPage {
   @State mPaddingTop: number = 0;
   @State mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   @State mMarginTop: number = 0;
-  private mAppListInfo;
+  @State mAppListInfo: Array<LauncherDragItemInfo> = new Array<LauncherDragItemInfo>();
+  @Link @Watch('updateAppList') appListInfo: {
+    appGridInfo: [[]]
+  };
   private mPageDesktopViewModel;
   private mPageDesktopStyleConfig:PageDesktopGridStyleConfig;
   private mGridWidth : number;
   private mGridHeight: number;
-  private mIconSize: number;
-  private mGridSpaceWidth : number;
-  private mGridSpaceHeight: number;
+
+  updateAppList(): void {
+    if (this.appListInfo?.appGridInfo?.length) {
+      this.mAppListInfo = this.appListInfo.appGridInfo[this.swiperPageIndex];
+    }
+  }
 
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear');
@@ -63,9 +70,6 @@ export default struct SwiperPage {
     this.mMarginTop = this.mPageDesktopStyleConfig.mDesktopMarginTop;
     this.mGridWidth = this.mPageDesktopStyleConfig.mGridWidth;
     this.mGridHeight = this.mPageDesktopStyleConfig.mGridHeight;
-    this.mIconSize = this.mPageDesktopStyleConfig.mIconSize;
-    this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
-    this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
     this.changeConfig();
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
   }
@@ -94,39 +98,46 @@ export default struct SwiperPage {
 
   build() {
     Grid() {
-      ForEach(this.mAppListInfo, (item) => {
-        GridItem() {
-          if(this.buildLog(item)){}
-          if (item.typeId == CommonConstants.TYPE_APP) {
-            AppItem({
-              item: item,
-              mPageDesktopViewModel: this.mPageDesktopViewModel,
-              mNameLines: this.mNameLines
-            })
-          } else if (item.typeId == CommonConstants.TYPE_FOLDER) {
-            FolderItem({
-              folderItem: item,
-              mNameLines: this.mNameLines
-            })
-          } else {
-            FormItem({
-              formItem: item
-            })
+      if (this.mAppListInfo.length) {
+        ForEach(this.mAppListInfo, (item: LauncherDragItemInfo, index: number) => {
+          GridItem() {
+            if (this.buildLog(item)) {
+            }
+            if (item.typeId === CommonConstants.TYPE_APP) {
+              AppItem({
+                item: item,
+                mPageDesktopViewModel: this.mPageDesktopViewModel,
+                mNameLines: this.mNameLines
+              }).id(`${TAG}_AppItem_${index}`)
+            } else if (item.typeId === CommonConstants.TYPE_FOLDER) {
+              FolderItem({
+                folderItem: item,
+                mNameLines: this.mNameLines
+              }).id(`${TAG}_FolderItem_${index}`)
+            } else {
+              FormItem({
+                formItem: item
+              }).id(`${TAG}_FormItem_${index}`)
+            }
           }
-        }
-        .padding({top:this.mPaddingTop})
-        .rowStart(item.row)
-        .columnStart(item.column)
-        .rowEnd(item.row + item.area[1] - 1)
-        .columnEnd(item.column + item.area[0] - 1)
-      }, (item) => {
-        if (item.typeId == CommonConstants.TYPE_FOLDER || item.typeId == CommonConstants.TYPE_CARD) {
-          return JSON.stringify(item) + this.formRefresh;
-        } else {
-          return `${item.typeId}${item.row}${item.column}`;
-        }
-      })
+          .id(`${TAG}_GridItem_${index}`)
+          .padding({ top: this.mPaddingTop })
+          .rowStart(item.row)
+          .columnStart(item.column)
+          .rowEnd(item.row + item.area[1] - 1)
+          .columnEnd(item.column + item.area[0] - 1)
+        }, (item: LauncherDragItemInfo, index: number) => {
+          if (item.typeId === CommonConstants.TYPE_FOLDER) {
+            return JSON.stringify(item);
+          } else if (item.typeId === CommonConstants.TYPE_CARD) {
+            return JSON.stringify(item) + this.formRefresh;
+          } else if (item.typeId === CommonConstants.TYPE_APP) {
+            return `${item.typeId}${item.row}${item.column}${item.page}${item.keyName}${item.installTime}${index}`;
+          }
+        })
+      }
     }
+    .id(`${TAG}_Grid_${this.swiperPageIndex}`)
     .columnsTemplate(this.ColumnsTemplate)
     .rowsTemplate(this.RowsTemplate)
     .columnsGap(this.mColumnsGap)
