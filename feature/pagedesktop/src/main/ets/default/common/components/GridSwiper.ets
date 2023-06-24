@@ -179,9 +179,11 @@ export default struct GridSwiper {
           .cachedCount(3)
           .index(this.pageIndex)
           .onChange((index) => {
-            this.pageIndex = index;
-            Log.showInfo(TAG, `swiper change to page ${index}`);
-            localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
+            if (this.pageIndex !== index) {
+              this.pageIndex = index;
+              Log.showInfo(TAG, `swiper change to page ${index}`);
+              localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
+            }
           })
         }
     }
