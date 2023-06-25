@@ -33,6 +33,7 @@ export default struct GridSwiper {
   @State swiperPageItems: Array<{ page: number }> = [{ page: 0 }];
   private swiperController: SwiperController = new SwiperController();
   private dialogController: CustomDialogController;
+  @State enabledDomEventResponse: boolean = true;
 
   updateSwiperPages(): void {
     let pageItems = [{ page: 0 }];
@@ -150,6 +151,7 @@ export default struct GridSwiper {
                   })
                 )
                 .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+                .enabled(this.enabledDomEventResponse)
               } else {
                 SwiperPage({
                   // mAppListInfo: this.appListInfo.appGridInfo[item.page],
@@ -160,6 +162,7 @@ export default struct GridSwiper {
                 }).id(`SwiperPage_${item.page}${index}`)
                   .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
                   .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
+                  .enabled(this.enabledDomEventResponse)
               }
             }, (item: { page: number }, index: number) => {
               return `${item.page}${index}`;
@@ -176,7 +179,7 @@ export default struct GridSwiper {
           .indicator(new DotIndicator().selectedColor(StyleConstants.DEFAULT_FONT_COLOR))
           .loop(false)
           .duration(80)
-          .cachedCount(3)
+          .cachedCount(1)
           .index(this.pageIndex)
           .onChange((index) => {
             if (this.pageIndex !== index) {
@@ -184,6 +187,12 @@ export default struct GridSwiper {
               Log.showInfo(TAG, `swiper change to page ${index}`);
               localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
             }
+          })
+          .onAnimationStart(() => {
+            this.enabledDomEventResponse = false;
+          })
+          .onAnimationEnd(() => {
+            this.enabledDomEventResponse = true;
           })
         }
     }
