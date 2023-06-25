@@ -105,7 +105,7 @@ export struct PageDesktopLayout {
       gridConfig: this.gridConfig,
       mPageDesktopViewModel: mPageDesktopViewModel,
       dialogController: this.deviceType == CommonConstants.PAD_DEVICE_TYPE ? null : this.dialogController
-    })
+    }).id(`${TAG}`)
       .width(StyleConstants.PERCENTAGE_100)
       .height(StyleConstants.PERCENTAGE_100)
   }
@@ -118,6 +118,14 @@ struct settingDialog {
   cancel: () => void
   confirm: () => void
   onAccept: () => void
+
+  aboutToAppear(): void {}
+
+  aboutToDisappear(): void {
+    this.cancel = null;
+    this.confirm = null;
+    this.controller = null;
+  }
 
   build() {
     Stack() {

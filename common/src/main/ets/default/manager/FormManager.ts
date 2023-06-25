@@ -114,18 +114,18 @@ export class FormManager {
    */
   async getFormCardItemByWant(params) {
     Log.showDebug(TAG, 'getFormCardItemByWant');
-    let formCardItem: any = {};
-    formCardItem.id = params[FormConstants.ID_PARAM];
-    formCardItem.name = params[FormConstants.NAME_PARAM];
+    let formCardItem: CardItemInfo = new CardItemInfo();
+    formCardItem.cardId = params[FormConstants.ID_PARAM];
+    formCardItem.cardName = params[FormConstants.NAME_PARAM];
     formCardItem.bundleName = params[FormConstants.BUNDLE_PARAM];
     formCardItem.abilityName = params[FormConstants.ABILITY_PARAM];
     formCardItem.moduleName = params[FormConstants.MODULE_PARAM];
-    formCardItem.dimension = params[FormConstants.DIMENSION_PARAM];
+    formCardItem.cardDimension = params[FormConstants.DIMENSION_PARAM];
     formCardItem.formConfigAbility = await this.getFormConfigAbility(params[FormConstants.BUNDLE_PARAM],
       params[FormConstants.MODULE_PARAM], params[FormConstants.ABILITY_PARAM], params[FormConstants.NAME_PARAM]);
     const appInfo = await launcherAbilityManager.getAppInfoByBundleName(params[FormConstants.BUNDLE_PARAM] ,
       params[FormConstants.ABILITY_PARAM]);
-    formCardItem.appLabelId = appInfo.appLabelId;
+    formCardItem.appLabelId = appInfo?.appLabelId;
     return formCardItem;
   }
 
@@ -138,11 +138,11 @@ export class FormManager {
    * @param cardName
    * @return formConfigAbility
    */
-  async getFormConfigAbility(bundle:string, moduleName:string, abilityName:string, cardName:string) : Promise<string> {
+  async getFormConfigAbility(bundle: string, moduleName: string, abilityName: string, cardName: string): Promise<string> {
     const formList = await formManagerAbility.getFormsInfo(bundle);
     let formConfigAbility = "";
     for (const formItem of formList) {
-      if(formItem.moduleName == moduleName && formItem.abilityName == abilityName && formItem.name == cardName ) {
+      if (formItem.moduleName === moduleName && formItem.abilityName === abilityName && formItem.name === cardName ) {
         formConfigAbility = formItem.formConfigAbility;
         break;
       }

@@ -70,8 +70,7 @@ export default struct RecentMissionCard {
     Log.showDebug(TAG, `typeof this.recentImage ${typeof this.recentImage}`);
     this.mReleaseFlag = true;
     // typeof Resource or pixelMap is Object
-    if (!CheckEmptyUtils.isEmpty(this.recentImage)
-    && JSON.stringify(this.recentImage) != JSON.stringify(RecentsStyleConstants.DEFAULT_APP_IMAGE)) {
+    if (!CheckEmptyUtils.isEmpty(this.recentImage)) {
       this.recentImage.release().catch((err) => {
         Log.showError(TAG, `image.PixelMap release err: ${err}`);
       })
@@ -131,25 +130,26 @@ export default struct RecentMissionCard {
         .onClick((event) => {
           this.setStartAppInfo(event?.target?.area?.globalPosition);
         })
-        Column() {
-          Image(RecentsStyleConstants.DEFAULT_LOCKED_IMAGE)
-            .visibility(this.lockedState ? Visibility.Visible : Visibility.Hidden)
-            .width(this.mIsSingleLayout ?
+        if (this.lockedState) {
+          Column() {
+            Image(RecentsStyleConstants.DEFAULT_LOCKED_IMAGE)
+              .width(this.mIsSingleLayout ?
               RecentsStyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE_NEW :
-              RecentsStyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE - 10)
-            .height(this.mIsSingleLayout ?
+                RecentsStyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE - 10)
+              .height(this.mIsSingleLayout ?
               RecentsStyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE_NEW :
-              RecentsStyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE - 10)
-            .margin({
-              right: this.mIsSingleLayout ? (RecentsStyleConstants.SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN) : (RecentsStyleConstants.DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN)
-            })
-            .onClick((event) => {
-              this.isClickSubComponent = true;
-              Log.showDebug(TAG, `click set recent mission: ${this.missionId} Locked status: ${!this.lockedState}`);
-              this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId,!this.lockedState);
-              this.setStartAppInfo(event?.target?.area?.globalPosition);
-              this.isClickSubComponent = false;
-            })
+                RecentsStyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE - 10)
+              .margin({
+                right: this.mIsSingleLayout ? (RecentsStyleConstants.SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN) : (RecentsStyleConstants.DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN)
+              })
+              .onClick((event) => {
+                this.isClickSubComponent = true;
+                Log.showDebug(TAG, `click set recent mission: ${this.missionId} Locked status: ${!this.lockedState}`);
+                this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId,!this.lockedState);
+                this.setStartAppInfo(event?.target?.area?.globalPosition);
+                this.isClickSubComponent = false;
+              })
+          }
         }
       }
       .margin({
@@ -158,7 +158,6 @@ export default struct RecentMissionCard {
       })
 
       Image(this.recentImage)
-        .alt(RecentsStyleConstants.DEFAULT_APP_IMAGE)
         .objectFit(ImageFit.Fill)
         .borderRadius(RecentsStyleConstants.RECENT_IMAGE_RADIUS)
         .width(this.mIsSingleLayout ?

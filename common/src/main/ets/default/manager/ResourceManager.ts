@@ -123,34 +123,30 @@ export class ResourceManager {
     }
   }
 
-  async getAppNameSync(labelId, bundleName: string, moduleName:string, appName: string) {
-    if (CheckEmptyUtils.isEmpty(labelId) || labelId <= 0 || CheckEmptyUtils.checkStrIsEmpty(bundleName)) {
+  async getAppNameSync(labelId, bundleName: string, moduleName:string, appName: string): Promise<string> {
+    if (CheckEmptyUtils.isEmpty(labelId) || labelId <= 0 ||
+    CheckEmptyUtils.checkStrIsEmpty(bundleName) || this.isResourceManagerEmpty()) {
       Log.showDebug(TAG, `getAppNameSync param empty! appName: ${appName}`);
       return appName;
+    }
+    const cacheKey = `${labelId}${bundleName}${moduleName}`;
+    let resMgrName = null;
+    let moduleContext = null;
+    Log.showDebug(TAG, `getAppNameSync bundleName:${bundleName}, moduleName:${moduleName}, iconId:${labelId}`);
+    try {
+      moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
+      resMgrName = await moduleContext.resourceManager.getString(labelId);
+    } catch (error) {
+      resMgrName = null;
+      Log.showError(TAG, `getAppNameSync getString error: ${JSON.stringify(error)}`);
+    } finally {
+      moduleContext = null;
+    };
+    if (resMgrName != null) {
+      this.setAppResourceCache(cacheKey, KEY_NAME, resMgrName);
+      return resMgrName;
     } else {
-      const cacheKey = `${labelId}${bundleName}${moduleName}`;
-      let resMgrName = null;
-      if (this.isResourceManagerEmpty()) {
-        return appName;
-      }
-      Log.showDebug(TAG, `getAppNameSync bundleName:${bundleName}, moduleName:${moduleName}, iconId:${labelId}`);
-      let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
-      await moduleContext.resourceManager
-        .getString(labelId)
-        .then((res) => {
-          resMgrName = res;
-        })
-        .catch((err) => {
-          Log.showError(TAG, `getAppNameSync getString error: ${JSON.stringify(err)}`);
-        })
-        .finally(() => {
-          moduleContext = null;
-        });
-      if (resMgrName != null) {
-        return resMgrName;
-      } else {
-        return appName;
-      }
+      return appName;
     }
   }
 

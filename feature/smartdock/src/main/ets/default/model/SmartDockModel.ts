@@ -484,6 +484,7 @@ export default class SmartDockModel {
   onMissionDestroyedCallback(missionId: number): void {
     Log.showInfo(TAG, 'onMissionDestroyedCallback, missionId=' + missionId);
     this.getRecentDataList().then(() => {}, ( )=> {});
+    this.getRecentViewDataList(missionId).then(() => {}, () => {});
   }
 
   onMissionSnapshotChangedCallback(missionId: number): void {

@@ -226,13 +226,13 @@ class AmsMissionManager {
     Log.showInfo(TAG, `getMissionSnapShot start! missionId: ${missionId}`);
     try {
       let missionSnapshot: missionManager.MissionSnapshot = null;
-      await missionManager.getLowResolutionMissionSnapShot('', missionId)
+      await missionManager.getMissionSnapShot('', missionId)
         .then((res) => {
-          Log.showDebug(TAG, `getLowResolutionMissionSnapShot ${missionId} success ${JSON.stringify(res)}`);
+          Log.showDebug(TAG, `getMissionSnapShot ${missionId} success ${JSON.stringify(res)}`);
           missionSnapshot = res;
         })
         .catch((err) => {
-          Log.showError(TAG, `getLowResolutionMissionSnapShot error: ${JSON.stringify(err)}`);
+          Log.showError(TAG, `getMissionSnapShot error: ${JSON.stringify(err)}`);
         });
       const imageInfo = await missionSnapshot.snapshot.getImageInfo();
       Log.showDebug(TAG, `getMissionSnapShot success ${JSON.stringify(imageInfo)}`);

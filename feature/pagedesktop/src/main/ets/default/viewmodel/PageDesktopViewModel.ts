@@ -1053,7 +1053,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
     };
     menuInfoList.push(open);
 
-    const formInfoList = this.mFormModel.getAppItemFormInfo(appInfo.bundleName);
+    const formInfoList = this.mFormModel.getAppItemFormInfo(appInfo.bundleName, appInfo.moduleName);
     if (!CheckEmptyUtils.isEmptyArr(formInfoList)) {
       let addFormToDeskTopMenu = new MenuInfo();
       addFormToDeskTopMenu.menuType = CommonConstants.MENU_TYPE_FIXED;

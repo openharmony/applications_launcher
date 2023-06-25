@@ -100,7 +100,7 @@ export class RdbStoreManager {
       resultSet.close()
       resultSet = null;
     } catch (e) {
-      Log.showError(TAG, 'getAllBadge error:' + e);
+      Log.showError(TAG, 'getAllBadge error:' + JSON.stringify(e));
     }
     return resultList;
   }
@@ -129,7 +129,7 @@ export class RdbStoreManager {
       resultSet.close()
       resultSet = null;
     } catch (e) {
-      Log.showError(TAG, 'getBadgeByBundle error:' + e);
+      Log.showError(TAG, 'getBadgeByBundle error:' + JSON.stringify(e));
     }
     return resultList;
   }
@@ -160,7 +160,7 @@ export class RdbStoreManager {
         result = (changeRows != CommonConstants.INVALID_VALUE);
       }
     } catch (e) {
-      Log.showError(TAG, 'updateBadgeByBundle error:' + e);
+      Log.showError(TAG, 'updateBadgeByBundle error:' + JSON.stringify(e));
     }
     return result;
   }
@@ -179,7 +179,7 @@ export class RdbStoreManager {
         result = true;
       }
     } catch (e) {
-      Log.showError(TAG, 'deleteBadgeByBundle error:' + e);
+      Log.showError(TAG, 'deleteBadgeByBundle error:' + JSON.stringify(e));
     }
     return result;
   }
@@ -216,7 +216,7 @@ export class RdbStoreManager {
       resultSet.close()
       resultSet = null;
     } catch (e) {
-      Log.showError(TAG, 'getAllFormInfos error:' + e);
+      Log.showError(TAG, 'getAllFormInfos error:' + JSON.stringify(e));
     }
     return resultList;
   }
@@ -266,7 +266,7 @@ export class RdbStoreManager {
         result = (changeRows != CommonConstants.INVALID_VALUE);
       }
     } catch (e) {
-      Log.showError(TAG, 'updateFormInfoById error:' + e);
+      Log.showError(TAG, 'updateFormInfoById error:' + JSON.stringify(e));
     }
     return result;
   }
@@ -282,7 +282,7 @@ export class RdbStoreManager {
         result = true;
       }
     } catch (e) {
-      Log.showError(TAG, 'deleteFormInfoById error:' + e);
+      Log.showError(TAG, 'deleteFormInfoById error:' + JSON.stringify(e));
     }
     return result;
   }
@@ -298,7 +298,7 @@ export class RdbStoreManager {
         result = true;
       }
     } catch (e) {
-      Log.showError(TAG, 'deleteFormInfoByBundle error:' + e);
+      Log.showError(TAG, 'deleteFormInfoByBundle error:' + JSON.stringify(e));
     }
     return result;
   }
@@ -335,7 +335,7 @@ export class RdbStoreManager {
         await this.mRdbStore.executeSql(sql)
       }
     } catch (e) {
-      Log.showError(TAG, 'updateSettings error:' + e);
+      Log.showError(TAG, 'updateSettings error:' + JSON.stringify(e));
     }
     return result;
   }
@@ -366,7 +366,7 @@ export class RdbStoreManager {
         let ret = await this.mRdbStore.insert(RdbStoreConfig.SmartDock.TABLE_NAME, smartdockDbItem);
       }
     } catch (e) {
-      Log.showError(TAG, 'insertIntoSmartdock error:' + e);
+      Log.showError(TAG, 'insertIntoSmartdock error:' + JSON.stringify(e));
       this.sendFaultEvent();
     }
     return result;
@@ -386,7 +386,7 @@ export class RdbStoreManager {
       await this.mRdbStore.executeSql(detelSql, function () {})
       await this.mRdbStore.executeSql(detelSequenceSql, function () {})
     } catch (e) {
-      Log.showError(TAG, `deleteTable err: ${e}`);
+      Log.showError(TAG, `deleteTable err: ${JSON.stringify(e)}`);
     }
   }
 
@@ -403,7 +403,7 @@ export class RdbStoreManager {
       await this.mRdbStore.executeSql(dropSql);
       await this.mRdbStore.executeSql(RdbStoreConfig.GridLayoutInfo.CREATE_TABLE);
     } catch (e) {
-      Log.showError(TAG, `dropTable err: ${e}`);
+      Log.showError(TAG, `dropTable err: ${JSON.stringify(e)}`);
     }
   }
 
@@ -433,7 +433,7 @@ export class RdbStoreManager {
       resultSet.close()
       resultSet = null;
     } catch (e) {
-      Log.showError(TAG, 'querySmartDock error:' + e);
+      Log.showError(TAG, 'querySmartDock error:' + JSON.stringify(e));
     }
     return resultList;
   }
@@ -475,7 +475,7 @@ export class RdbStoreManager {
       }
       this.mRdbStore.commit();
     } catch (e) {
-      Log.showError(TAG, 'insertDesktopApplication error:' + e);
+      Log.showError(TAG, 'insertDesktopApplication error:' + JSON.stringify(e));
       this.mRdbStore.rollBack();
       this.sendFaultEvent();
     }
@@ -525,7 +525,7 @@ export class RdbStoreManager {
       resultSet.close()
       resultSet = null;
     } catch (e) {
-      Log.showError(TAG, 'queryDesktopApplication error:' + e);
+      Log.showError(TAG, 'queryDesktopApplication error:' + JSON.stringify(e));
     }
     return resultList;
   }
@@ -601,7 +601,7 @@ export class RdbStoreManager {
         }
       }
     } catch (e) {
-      Log.showError(TAG, 'insertGridLayoutInfo error:' + e);
+      Log.showError(TAG, 'insertGridLayoutInfo error:' + JSON.stringify(e));
       this.sendFaultEvent();
     }
   }
@@ -667,7 +667,7 @@ export class RdbStoreManager {
       resultSet.close()
       resultSet = null;
     } catch (e) {
-      Log.showError(TAG, 'queryGridLayoutInfo error:' + e);
+      Log.showError(TAG, 'queryGridLayoutInfo error:' + JSON.stringify(e));
     }
     return resultList;
   }
@@ -702,7 +702,7 @@ export class RdbStoreManager {
       resultSet.close()
       resultSet = null;
     } catch (e) {
-      Log.showError(TAG, 'queryLayoutInfo error:' + e);
+      Log.showError(TAG, 'queryLayoutInfo error:' + JSON.stringify(e));
     }
     return resultList;
   }

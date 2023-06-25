@@ -33,6 +33,7 @@ export struct FormManagerComponent {
   private mSwiperController: SwiperController = new SwiperController();
   private mFormModel: FormModel;
   private mSwiperIndex: number = 0;
+  @State enabledDomEventResponse: boolean = true;
   private mFormIdList: number[] = [];
   private mFormComponentWidth: number[] =
     [StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO / 2,
@@ -183,12 +184,20 @@ export struct FormManagerComponent {
         }.width('100%')
         .height('100%')
         .loop(false)
+        .duration(80)
+        .cachedCount(1)
         .index(0)
-        .indicatorStyle({
-          selectedColor: StyleConstants.DEFAULT_FORM_MGR_FONT_COLOR
-        })
+        .indicator(new DotIndicator().selectedColor(StyleConstants.DEFAULT_FORM_MGR_FONT_COLOR))
         .onChange((index: number) => {
-          this.mSwiperIndex = index;
+          if (this.mSwiperIndex !== index) {
+            this.mSwiperIndex = index;
+          }
+        })
+        .onAnimationStart(() => {
+          this.enabledDomEventResponse = false;
+        })
+        .onAnimationEnd(() => {
+          this.enabledDomEventResponse = true;
         })
       }.alignItems(HorizontalAlign.Center)
       .height('60%')
@@ -200,6 +209,7 @@ export struct FormManagerComponent {
             .fontSize(StyleConstants.FORM_MGR_ADD_TO_DESKTOP_TEXT_SIZE * StyleConstants.DPI_RATIO)
         }
       }
+      .enabled(this.enabledDomEventResponse)
       .backgroundColor(0x66ffffff)
       .width(StyleConstants.FORM_MGR_ADD_TO_DESKTOP_BUTTON_WIDTH * StyleConstants.DPI_RATIO)
       .height(StyleConstants.FORM_MGR_ADD_TO_DESKTOP_BUTTON_HEIGHT * StyleConstants.DPI_RATIO)

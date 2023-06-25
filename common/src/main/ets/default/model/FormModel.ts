@@ -171,10 +171,14 @@ export class FormModel {
    *
    * @return {array | undefined} mAppItemFormInfoMap
    */
-  getAppItemFormInfo(bundleName: string): CardItemInfo[] | undefined {
+  getAppItemFormInfo(bundleName: string, moduleName?: string): CardItemInfo[] | undefined {
     Log.showDebug(TAG, `getAppItemFormInfo bundleName: ${bundleName},
       appItemFormInfo: ${JSON.stringify(this.mAppItemFormInfoMap.get(bundleName))}`);
-    return this.mAppItemFormInfoMap.get(bundleName);
+    let formList = this.mAppItemFormInfoMap.get(bundleName);
+    if (formList && formList.length && moduleName) {
+      formList = formList.filter(item => item.moduleName === moduleName);
+    }
+    return formList;
   }
 
   /**

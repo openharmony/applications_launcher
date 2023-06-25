@@ -167,7 +167,7 @@ class LauncherAbilityManager {
         Log.showError(TAG, `getLauncherAbilityInfo error: ${JSON.stringify(err)}`);
       });
     const appItemInfoList = new Array<AppItemInfo>();
-    if (CheckEmptyUtils.isEmpty(abilityInfos)) {
+    if (CheckEmptyUtils.isEmpty(abilityInfos) || abilityInfos.length === 0) {
       Log.showDebug(TAG, 'getLauncherAbilityInfo Empty');
       return appItemInfoList;
     }
@@ -186,33 +186,35 @@ class LauncherAbilityManager {
   async getAppInfoByBundleName(bundleName: string, abilityName?: string): Promise<AppItemInfo | undefined> {
     let appItemInfo: AppItemInfo | undefined = undefined;
     // get from cache
-    if (this.mAppMap != null && this.mAppMap.has(bundleName)) {
+    if (this.mAppMap && this.mAppMap.has(bundleName)) {
       appItemInfo = this.mAppMap.get(bundleName);
     }
-    if (appItemInfo != undefined) {
+    if (appItemInfo && abilityName && appItemInfo.abilityName === abilityName) {
       return appItemInfo;
     }
     // get from system
     let abilityInfos = new Array<LauncherAbilityInfo>();
     await launcherBundleMgr.getLauncherAbilityInfos(bundleName, LauncherAbilityManager.CURRENT_USER_ID)
       .then((res)=>{
-        if (res != undefined) {
+        if (res && res.length) {
           abilityInfos = res;
         }
       })
       .catch((err)=>{
         Log.showError(TAG, `getAppInfoByBundleName launcherBundleMgr getLauncherAbilityInfos error: ${JSON.stringify(err)}`);
       });
-
-    if (abilityInfos == undefined || abilityInfos.length == 0) {
+    if (!abilityInfos || abilityInfos.length === 0) {
       Log.showDebug(TAG, `${bundleName} has no launcher ability`);
       return undefined;
     }
     let appInfo = abilityInfos[0];
-    if (abilityName != undefined) {
+    if (abilityName) {
       appInfo = abilityInfos.find(item => {
         return item.elementName.abilityName === abilityName;
       });
+    }
+    if (!appInfo) {
+      appInfo = abilityInfos[0];
     }
     const data = await this.convertToAppItemInfo(appInfo);
     return data;

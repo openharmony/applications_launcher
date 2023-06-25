@@ -63,8 +63,7 @@ export default class MainAbility extends ServiceExtension {
     let registerWinEvent = (win) => {
       win.on('lifeCycleEvent', (stageEventType) => {
         // 桌面获焦或失焦时，通知桌面的卡片变为可见状态
-        if (stageEventType === Window.WindowStageEventType.INACTIVE
-        || stageEventType === Window.WindowStageEventType.ACTIVE) {
+        if (stageEventType === Window.WindowStageEventType.ACTIVE) {
           localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
           Log.showInfo(TAG, `lifeCycleEvent change: ${stageEventType}`);
         }

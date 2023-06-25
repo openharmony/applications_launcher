@@ -72,6 +72,7 @@ export struct FolderOpenComponent {
     folderId: string
   } = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
   @State newFolderName: string = '';
+  @State enabledDomEventResponse: boolean = true;
 
   aboutToAppear(): void {
     Log.showInfo(TAG, `aboutToAppear start`);
@@ -229,6 +230,7 @@ export struct FolderOpenComponent {
                 newFolderName: this.newFolderName,
                 mFolderInfo: this.mFolderInfo
               })
+                .enabled(this.enabledDomEventResponse)
             })
           }
           .indicator(new DotIndicator()
@@ -240,14 +242,21 @@ export struct FolderOpenComponent {
           })
           .height(mSwiperHeight)
           .width(mGridWidth)
+          .duration(80)
           .index(this.PageIndex)
           .loop(false)
           .onChange((index) => {
             Log.showDebug(TAG, `onChange :${index}`);
-            if (this.PageIndex != index) {
+            if (this.PageIndex !== index) {
               this.mFolderInfo = mBigFolderViewModel.addAddIcon(this.mFolderInfo);
               this.PageIndex = index;
             }
+          })
+          .onAnimationStart(() => {
+            this.enabledDomEventResponse = false;
+          })
+          .onAnimationEnd(() => {
+            this.enabledDomEventResponse = true;
           })
         }
       }
