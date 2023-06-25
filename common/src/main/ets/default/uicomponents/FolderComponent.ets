@@ -307,6 +307,7 @@ export struct FolderComponent {
             Log.showInfo(TAG, `onHover isHover:${isHover}`);
             this.isHover = isHover;
           })
+          .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
           .onDragStart((event: DragEvent) => {
             return this.dragStart(event);
           })
@@ -314,8 +315,6 @@ export struct FolderComponent {
             Log.showInfo(TAG, `onDragEnd event: [${event.getX()}, ${event.getY()}]` + event.getResult());
             AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           })
-          .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-          .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
         }
         .height(this.folderGridSize)
         .width(this.folderGridSize)
@@ -332,6 +331,7 @@ export struct FolderComponent {
         }
         .visibility(this.showFolderName ? Visibility.Visible : Visibility.Hidden)
       }
+      .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
       .width(StyleConstants.PERCENTAGE_100)
       .height(StyleConstants.PERCENTAGE_100)
       .offset({ x: this.folderPositionX, y: this.folderPositionY })

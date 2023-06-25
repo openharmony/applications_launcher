@@ -203,6 +203,7 @@ export default struct FolderItem {
       )
       )
     }
+    .parallelGesture(LongPressGesture({ repeat: false }))
     .width(StyleConstants.PERCENTAGE_100)
     .height(StyleConstants.PERCENTAGE_100)
   }

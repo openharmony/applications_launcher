@@ -234,8 +234,7 @@ export struct FolderOpenComponent {
             })
           }
           .indicator(new DotIndicator()
-            .selectedColor(StyleConstants.DEFAULT_FONT_COLOR)
-            .bottom(BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_INDICATOR))
+            .selectedColor(StyleConstants.DEFAULT_FONT_COLOR))
           .onClick(() => {
             Log.showDebug(TAG, `Swiper click`);
             this.saveText();

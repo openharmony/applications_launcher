@@ -133,11 +133,10 @@ export default struct GridSwiper {
       if (this.buildLog()) {}
         if (this.desktopLoadFinished) {
           Swiper(this.swiperController) {
-            ForEach(this.swiperPageItems, (item: { page: number }, index) => {
+            ForEach(this.swiperPageItems, (item: { page: number }, index: number) => {
               if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
                 Column() {
                   SwiperPage({
-                    // mAppListInfo: this.appListInfo.appGridInfo[item.page],
                     appListInfo: $appListInfo,
                     swiperPageIndex: index,
                     gridConfig: this.gridConfig,
@@ -154,7 +153,6 @@ export default struct GridSwiper {
                 .enabled(this.enabledDomEventResponse)
               } else {
                 SwiperPage({
-                  // mAppListInfo: this.appListInfo.appGridInfo[item.page],
                   appListInfo: $appListInfo,
                   swiperPageIndex: index,
                   gridConfig: this.gridConfig,

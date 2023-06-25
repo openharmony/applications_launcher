@@ -98,7 +98,6 @@ export struct FormItemComponent {
           }
         })
         .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-        .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
         .onDragStart((event: DragEvent, extraParams: string) => {
           return this.dragStart(event);
         })
@@ -122,6 +121,7 @@ export struct FormItemComponent {
       }
       .visibility(this.showFormName ? Visibility.Visible : Visibility.Hidden)
     }
+    .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
     .onHover((isHover: boolean) => {
       Log.showInfo(TAG, `Form onHover isHover: ${isHover}`);
       this.isHover = isHover;

@@ -81,7 +81,6 @@ export struct AppBubble {
           return this.dragStart(event);
         })
         .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
-        .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
         .onDragEnd((event: DragEvent, extraParams: string) => {
           AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
         })
@@ -99,6 +98,7 @@ export struct AppBubble {
           marginTop: this.mIconNameMargin
         })
       }
+      .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
       .width(this.isSelect ? this.iconSize + StyleConstants.DEFAULT_40 : StyleConstants.PERCENTAGE_100)
       .height(StyleConstants.PERCENTAGE_100)
       .backgroundColor(this.isSelect ? StyleConstants.DEFAULT_BROAD_COLOR : StyleConstants.DEFAULT_TRANSPARENT_COLOR)
