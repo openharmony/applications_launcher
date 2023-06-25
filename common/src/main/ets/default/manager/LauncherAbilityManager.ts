@@ -203,7 +203,7 @@ class LauncherAbilityManager {
       .catch((err)=>{
         Log.showError(TAG, `getAppInfoByBundleName launcherBundleMgr getLauncherAbilityInfos error: ${JSON.stringify(err)}`);
       });
-    if (!abilityInfos || abilityInfos.length == 0) {
+    if (!abilityInfos || abilityInfos.length === 0) {
       Log.showDebug(TAG, `${bundleName} has no launcher ability`);
       return undefined;
     }
