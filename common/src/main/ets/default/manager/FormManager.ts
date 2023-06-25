@@ -142,7 +142,7 @@ export class FormManager {
     const formList = await formManagerAbility.getFormsInfo(bundle);
     let formConfigAbility = "";
     for (const formItem of formList) {
-      if(formItem.moduleName === moduleName && formItem.abilityName === abilityName && formItem.name === cardName ) {
+      if (formItem.moduleName === moduleName && formItem.abilityName === abilityName && formItem.name === cardName ) {
         formConfigAbility = formItem.formConfigAbility;
         break;
       }
