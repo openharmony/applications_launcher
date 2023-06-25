@@ -94,6 +94,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
     this.mGridLayoutInfo = gridLayoutInfo;
     Log.showInfo(TAG, " srj updateGridLayoutInfo...");
 
+    const UPDATE_RDB_GRID_LAYOUT_INFO_INTERVAL = 30;
     const timer = setInterval(() => {
       if (!this.locked) {
         this.locked = true;
@@ -107,7 +108,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
           Log.showError(TAG, `srj updateGridLayoutInfo error: ${err.toString()}`);
         });
       }
-    }, 80);
+    }, UPDATE_RDB_GRID_LAYOUT_INFO_INTERVAL);
   }
 
   /**
