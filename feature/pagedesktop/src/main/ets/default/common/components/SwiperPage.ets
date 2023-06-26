@@ -132,7 +132,7 @@ export default struct SwiperPage {
           } else if (item.typeId === CommonConstants.TYPE_CARD) {
             return JSON.stringify(item) + this.formRefresh;
           } else if (item.typeId === CommonConstants.TYPE_APP) {
-            return `${item.typeId}${item.row}${item.column}${item.page}${item.keyName}${item.installTime}${index}`;
+            return `${JSON.stringify(item)}${index}`;
           }
         })
       }

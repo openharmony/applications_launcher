@@ -261,6 +261,7 @@ export default struct FormItem {
       .width(StyleConstants.PERCENTAGE_100)
       .height(StyleConstants.PERCENTAGE_100)
     }
+    .parallelGesture(LongPressGesture({ repeat: false }))
     .width(StyleConstants.PERCENTAGE_100)
     .height(StyleConstants.PERCENTAGE_100)
   }
