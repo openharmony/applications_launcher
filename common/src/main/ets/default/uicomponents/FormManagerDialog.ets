@@ -58,7 +58,10 @@ export struct FormManagerDialog {
   aboutToDisappear(): void {
     this.cancel = null;
     this.confirm = null;
+    delete this.mFormDialogController;
     this.mFormDialogController = null;
+    delete this.mSwiperController;
+    this.mSwiperController = null;
   }
 
   /**

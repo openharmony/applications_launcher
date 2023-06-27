@@ -53,6 +53,8 @@ export default struct GridSwiper {
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, 'aboutToDisappear');
+    delete this.swiperController;
+    this.swiperController = null;
   }
 
   private buildLog(): boolean {
