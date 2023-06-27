@@ -35,7 +35,7 @@ struct FormManagerView {
 
   onBackPress(): boolean {
     Log.showInfo(TAG, 'onBackPress');
-    windowManager.hideWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
+    windowManager.destroyWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
     return true;
   }
 

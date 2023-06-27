@@ -319,6 +319,11 @@ struct FolderSwiperPage {
     this.updateConfig();
   }
 
+  aboutToDisappear(): void {
+    delete this.folderDialogController;
+    this.folderDialogController = null;
+  }
+
   private updateConfig() {
     let styleConfig = mBigFolderViewModel.getFolderStyleConfig();
     this.mGridGap = styleConfig.mOpenFolderGridGap;
@@ -463,6 +468,13 @@ struct FolderAppItem {
       ? $r('app.string.is_delete_form') : $r('app.string.isUninstall')).then((resName) => {
       this.dialogName = resName;
     });
+  }
+
+  aboutToDisappear(): void {
+    delete this.uninstallDialogController;
+    this.uninstallDialogController = null;
+    delete this.formManagerDialogController;
+    this.formManagerDialogController = null;
   }
 
   uninstallDialogController: CustomDialogController = new CustomDialogController({
