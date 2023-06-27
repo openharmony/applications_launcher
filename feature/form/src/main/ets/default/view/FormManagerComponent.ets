@@ -51,6 +51,12 @@ export struct FormManagerComponent {
     this.getCurrentFormInfo();
   }
 
+  aboutToDisappear(): void {
+    this.clearAllFormById();
+    delete this.mSwiperController;
+    this.mSwiperController = null;
+  }
+
   /**
    * Get current form information by bundle name.
    */

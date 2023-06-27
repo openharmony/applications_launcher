@@ -102,6 +102,13 @@ export default struct FormItem {
     Log.showDebug(TAG, `aboutToAppear end formItem: ${JSON.stringify(this.formItem)}`);
   }
 
+  aboutToDisappear(): void {
+    delete this.dialogController;
+    this.dialogController = null;
+    delete this.formManagerDialogController;
+    this.formManagerDialogController = null;
+  }
+
   /**
    * Animation effect when card is removed.
    */

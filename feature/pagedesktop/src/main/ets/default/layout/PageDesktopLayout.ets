@@ -70,6 +70,11 @@ export struct PageDesktopLayout {
     CloseAppManager.getInstance().registerCloseAppHandler(new PageDesktopCloseAppHandler());
   }
 
+  aboutToDisappear(): void {
+    delete this.dialogController;
+    this.dialogController = null;
+  }
+
   private updateStyle() {
     mPageDesktopViewModel.setDevice(this.deviceType);
     this.isPad = mPageDesktopViewModel.getDevice();
