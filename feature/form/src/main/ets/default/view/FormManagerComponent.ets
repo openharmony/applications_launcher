@@ -30,6 +30,7 @@ export struct FormManagerComponent {
   @StorageLink('formAppInfo') formAppInfo: any = {};
   @StorageLink('formMgrItem') formItem: any = [];
   @State allowUpdate: boolean = true;
+  @State chooseCardId: number = -1;
   private mSwiperController: SwiperController = new SwiperController();
   private mFormModel: FormModel;
   private mSwiperIndex: number = 0;
@@ -46,13 +47,18 @@ export struct FormManagerComponent {
     StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO];
 
   aboutToAppear(): void {
+    this.chooseCardId = -1;
     this.mFormModel = FormModel.getInstance();
     Log.showInfo(TAG, `aboutToAppear formAppInfo: ${JSON.stringify(this.formAppInfo)}`);
     this.getCurrentFormInfo();
   }
 
   aboutToDisappear(): void {
-    this.clearAllFormById();
+    if (this.chooseCardId !== -1) {
+      this.clearNoUseFormById();
+    } else {
+      this.clearAllFormById();
+    }
     delete this.mSwiperController;
     this.mSwiperController = null;
   }
@@ -70,6 +76,7 @@ export struct FormManagerComponent {
    * @return {any} formCardItem
    */
   private getChooseCard() {
+    this.chooseCardId = this.mFormIdList[this.mSwiperIndex];
     let formCardItem: any = {};
     formCardItem.id = this.mFormIdList[this.mSwiperIndex];
     let count = 0;
