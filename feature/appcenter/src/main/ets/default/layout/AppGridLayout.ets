@@ -68,6 +68,8 @@ export struct AppGridLayout {
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, "aboutToDisappear");
+    delete this.mDialogController;
+    this.mDialogController = null;
   }
 
   aboutToAppear(): void {

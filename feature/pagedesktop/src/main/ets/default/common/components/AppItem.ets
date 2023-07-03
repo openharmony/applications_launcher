@@ -146,6 +146,13 @@ export default struct AppItem {
     });
   }
 
+  aboutToDisappear(): void {
+    delete this.dialogController;
+    this.dialogController = null;
+    delete this.formManagerDialogController;
+    this.formManagerDialogController = null;
+  }
+
   getMenuInfoList() {
     const menuInfo = this.mPageDesktopViewModel.buildMenuInfoList(this.item,
       this.dialogController, this.formManagerDialogController)

@@ -232,8 +232,7 @@ export struct FolderOpenComponent {
             })
           }
           .indicatorStyle({
-            selectedColor: StyleConstants.DEFAULT_FONT_COLOR,
-            bottom: BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_INDICATOR
+            selectedColor: StyleConstants.DEFAULT_FONT_COLOR
           })
           .onClick(() => {
             Log.showDebug(TAG, `Swiper click`);
@@ -310,6 +309,11 @@ struct FolderSwiperPage {
   aboutToAppear(): void  {
     mFolderModel = BigFolderModel.getInstance();
     this.updateConfig();
+  }
+
+  aboutToDisappear(): void {
+    delete this.folderDialogController;
+    this.folderDialogController = null;
   }
 
   private updateConfig() {
@@ -456,6 +460,13 @@ struct FolderAppItem {
       ? $r('app.string.is_delete_form') : $r('app.string.isUninstall')).then((resName) => {
       this.dialogName = resName;
     });
+  }
+
+  aboutToDisappear(): void {
+    delete this.uninstallDialogController;
+    this.uninstallDialogController = null;
+    delete this.formManagerDialogController;
+    this.formManagerDialogController = null;
   }
 
   uninstallDialogController: CustomDialogController = new CustomDialogController({

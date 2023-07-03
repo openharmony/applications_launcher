@@ -179,6 +179,11 @@ struct SettingItem {
     }
   }
 
+  aboutToDisappear(): void {
+    delete this.dialogController;
+    this.dialogController = null;
+  }
+
   callback(data) {
     this.settingValue = data;
   }

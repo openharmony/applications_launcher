@@ -53,6 +53,11 @@ export struct FormManagerDialog {
     this.getCurrentFormInfo();
   }
 
+  aboutToDisappear(): void {
+    delete this.mSwiperController;
+    this.mSwiperController = null;
+  }
+
   /**
    * Get current form information by bundle name.
    */
