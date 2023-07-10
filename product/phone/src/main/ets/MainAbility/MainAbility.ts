@@ -32,7 +32,7 @@ import { GestureNavigationManager } from '@ohos/gesturenavigation';
 import StyleConstants from '../common/constants/StyleConstants';
 import PageDesktopViewModel from '../../../../../../feature/pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
 import Window from '@ohos.window';
-import { Configuration } from '@ohos.app.ability.Configuration';
+import type { Configuration } from '@ohos.app.ability.Configuration';
 
 const TAG = 'LauncherMainAbility';
 
@@ -126,16 +126,16 @@ export default class MainAbility extends ServiceExtension {
     AppStorage.SetOrCreate('openFolderStatus', StyleConstants.DEFAULT_NUMBER_0);
   }
 
-  onConfigurationUpdate(config: Configuration) {
+  onConfigurationUpdate(config: Configuration): void {
     Log.showInfo(TAG, 'onConfigurationUpdated, config:' + JSON.stringify(config));
     const systemLanguage = AppStorage.Get('systemLanguage');
-    if(systemLanguage !== config.language) {
+    if (systemLanguage !== config.language) {
       this.clearCacheWhenLanguageChange();
     }
-    AppStorage.SetOrCreate("systemLanguage", config.language);
+    AppStorage.SetOrCreate('systemLanguage', config.language);
   }
 
-  private clearCacheWhenLanguageChange() {
+  private clearCacheWhenLanguageChange(): void {
     FormListInfoCacheManager.getInstance().clearCache();
     ResourceManager.getInstance().clearAppResourceCache();
     launcherAbilityManager.cleanAppMapCache();
