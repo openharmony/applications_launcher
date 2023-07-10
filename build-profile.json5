@@ -4,7 +4,22 @@
     "compatibleSdkVersion": 9,
     "products": [
       {
-        "name": "default"
+        "name": "default",
+        "signingConfig": "default"
+      }
+    ],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "material": {
+          "storePassword": "00000016898B7E4E76E6E7089591AB3ECEC5C68F194BBD0C6E6C17446516E8FBDA0E8657F0A8",
+          "certpath": "signature/OpenHarmonyApplication.cer",
+          "keyAlias": "OpenHarmony Application Release",
+          "keyPassword": "0000001607C1E3DE9D968380A780032F24E0099F93A67F346F8C51189010440B5BF58E8E0147",
+          "profile": "signature/launcher.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "signature/OpenHarmony.p12"
+        }
       }
     ]
   },

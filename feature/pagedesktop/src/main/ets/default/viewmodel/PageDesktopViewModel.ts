@@ -216,6 +216,12 @@ export default class PageDesktopViewModel extends BaseViewModel {
     this.pagingFiltering();
   }
 
+  async updateDesktopInfo(): Promise<void> {
+    await this.mAppModel.getAppListAsync();
+    this.getGridList();
+    AppStorage.SetOrCreate('formRefresh', String(new Date()));
+  }
+
   private async getAppList() {
     Log.showInfo(TAG, 'getAppList start');
 
@@ -551,7 +557,6 @@ export default class PageDesktopViewModel extends BaseViewModel {
     Log.showInfo(TAG, 'pagingFiltering appListInfo length:' + appListInfo.length);
     AppStorage.SetOrCreate('selectDesktopAppItem', '');
     AppStorage.SetOrCreate(KEY_APP_LIST, appInfo);
-    AppStorage.SetOrCreate('formRefresh',String(new Date()));
   }
 
   private integrateSwiper(list) {

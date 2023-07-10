@@ -91,7 +91,7 @@ export default class SmartDockModel {
     let rdbResidentList: DockItemInfo[] = [];
     rdbResidentList = await globalThis.RdbStoreManagerInstance.querySmartDock();
 
-    if (CheckEmptyUtils.isEmptyArr(rdbResidentList) && !this.mSmartDockLayoutConfig.isConfigExist()) {
+    if (CheckEmptyUtils.isEmptyArr(rdbResidentList)) {
       // init preset dock data
       const dockDataList = this.mSmartDockLayoutConfig.getDockLayoutInfo();
       Log.showDebug(TAG, `getResidentList from config length: ${dockDataList.length}`);
@@ -484,6 +484,7 @@ export default class SmartDockModel {
   onMissionDestroyedCallback(missionId: number): void {
     Log.showInfo(TAG, 'onMissionDestroyedCallback, missionId=' + missionId);
     this.getRecentDataList().then(() => {}, ( )=> {});
+    this.getRecentViewDataList(missionId).then(() => {}, () => {});
   }
 
   onMissionSnapshotChangedCallback(missionId: number): void {

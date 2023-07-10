@@ -256,4 +256,8 @@ export class ResourceManager {
       return resMgrName;
     }
   }
+
+  clearAppResourceCache(): void {
+    this.getAppResourceCacheManager().clearCache();
+  }
 }

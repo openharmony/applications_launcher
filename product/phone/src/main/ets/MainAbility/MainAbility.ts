@@ -16,17 +16,23 @@
 import ServiceExtension from '@ohos.app.ability.ServiceExtensionAbility';
 import display from '@ohos.display';
 import Want from '@ohos.application.Want';
-import { Log } from '@ohos/common';
-import { windowManager } from '@ohos/common';
-import { RdbStoreManager } from '@ohos/common';
-import { FormConstants } from '@ohos/common';
+import {
+  Log,
+  FormListInfoCacheManager,
+  ResourceManager,
+  launcherAbilityManager,
+  windowManager,
+  RdbStoreManager,
+  FormConstants,
+  navigationBarCommonEventManager,
+  localEventManager,
+  EventConstants
+} from '@ohos/common';
 import { GestureNavigationManager } from '@ohos/gesturenavigation';
 import StyleConstants from '../common/constants/StyleConstants';
-import { navigationBarCommonEventManager }  from '@ohos/common';
 import PageDesktopViewModel from '../../../../../../feature/pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
-import { localEventManager } from '@ohos/common';
-import { EventConstants } from '@ohos/common';
 import Window from '@ohos.window';
+import { Configuration } from '@ohos.app.ability.Configuration';
 
 const TAG = 'LauncherMainAbility';
 
@@ -118,5 +124,21 @@ export default class MainAbility extends ServiceExtension {
   private closeFolder(): void {
     AppStorage.SetOrCreate('openFolderPageIndex', StyleConstants.DEFAULT_NUMBER_0);
     AppStorage.SetOrCreate('openFolderStatus', StyleConstants.DEFAULT_NUMBER_0);
+  }
+
+  onConfigurationUpdate(config: Configuration) {
+    Log.showInfo(TAG, 'onConfigurationUpdated, config:' + JSON.stringify(config));
+    const systemLanguage = AppStorage.Get('systemLanguage');
+    if(systemLanguage !== config.language) {
+      this.clearCacheWhenLanguageChange();
+    }
+    AppStorage.SetOrCreate("systemLanguage", config.language);
+  }
+
+  private clearCacheWhenLanguageChange() {
+    FormListInfoCacheManager.getInstance().clearCache();
+    ResourceManager.getInstance().clearAppResourceCache();
+    launcherAbilityManager.cleanAppMapCache();
+    PageDesktopViewModel.getInstance().updateDesktopInfo();
   }
 }
