@@ -46,6 +46,11 @@ export struct AppBubble {
   shortCutEnabled: boolean = false;
   dragStart: Function;
 
+  aboutToDisappear(): void {
+    this.getMenuInfoList = null;
+    this.dragStart = null;
+  }
+
   @Builder MenuBuilder() {
     Column() {
       AppMenu({

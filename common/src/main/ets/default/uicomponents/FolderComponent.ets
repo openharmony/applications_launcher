@@ -76,6 +76,15 @@ export struct FolderComponent {
     }
   }
 
+  aboutToDisappear(): void {
+    this.onAppIconClick = null;
+    this.onOpenFolderClick = null;
+    this.onFolderTouch = null;
+    this.onGetPosition = null;
+    this.buildMenu = null;
+    this.dragStart = null;
+  }
+
   updateShowList(): void {
     if (this.mFolderItem.layoutInfo[0].length > CommonConstants.FOLDER_STATIC_SHOW_LENGTH) {
       this.mShowAppList = this.mFolderItem.layoutInfo[0].slice(0, CommonConstants.FOLDER_STATIC_SHOW_LENGTH);

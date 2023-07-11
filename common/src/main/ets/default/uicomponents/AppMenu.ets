@@ -53,6 +53,8 @@ export struct AppMenu {
     Log.showInfo(TAG, 'aboutToDisappear start');
     this.fixedMenuList = null;
     this.dynamicMenuList = null;
+    this.getMenuInfoList = null;
+    this.closeMenu = null;
   }
 
   build() {
@@ -113,6 +115,10 @@ struct HorizontalMenuItem {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateIcon();
     this.updateName();
+  }
+
+  aboutToDisappear(): void {
+    this.closeMenu = null;
   }
 
   public shortcutIconLoadCallback(image) {

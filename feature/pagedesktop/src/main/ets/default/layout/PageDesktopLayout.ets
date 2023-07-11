@@ -124,6 +124,13 @@ struct settingDialog {
   confirm: () => void
   onAccept: () => void
 
+  aboutToDisappear(): void {
+    this.controller = null;
+    this.cancel = null;
+    this.confirm = null;
+    this.onAccept = null;
+  }
+
   build() {
     Stack() {
       Column() {

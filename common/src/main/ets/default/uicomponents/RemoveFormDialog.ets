@@ -36,6 +36,12 @@ export struct RemoveFormDialog {
     this.updateScreenSize();
   }
 
+  aboutToDisappear(): void {
+    this.controller = null;
+    this.confirm = null;
+    this.cancel = null;
+  }
+
   build() {
     Flex({ direction: FlexDirection.Column, justifyContent: this.isPad ? FlexAlign.Center : FlexAlign.End }) {
         Column() {

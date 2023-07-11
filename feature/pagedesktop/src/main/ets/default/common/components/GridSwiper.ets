@@ -41,6 +41,7 @@ export default struct GridSwiper {
     Log.showInfo(TAG, 'aboutToDisappear');
     delete this.dialogController;
     this.dialogController = null;
+    this.swiperController = null;
   }
 
   private updatePageList(): void {
