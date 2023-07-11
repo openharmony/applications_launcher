@@ -45,6 +45,12 @@ export default struct ResidentLayout {
     this.onDockListChange();
   }
 
+  aboutToDisappear(): void {
+    this.onItemClick = null;
+    this.buildMenu = null;
+    this.onDockListChangeFunc = null;
+  }
+
   getListWidth(): number {
     let residentMaxNum = this.mSmartDockStyleConfig.mMaxDockNum;
     let width = 0.0;
@@ -150,6 +156,11 @@ struct AppItem {
 
   aboutToAppear(): void {
     this.menuInfo = this.buildMenu(this.appInfo);
+  }
+
+  aboutToDisappear(): void {
+    this.buildMenu = null;
+    this.onItemClick = null;
   }
 
   private getLongPress(): boolean {

@@ -57,6 +57,12 @@ export struct UninstallDialog {
     }
   }
 
+  aboutToDisappear(): void {
+    this.controller = null;
+    this.cancel = null;
+    this.confirm = null;
+  }
+
   public iconLoadCallback(image) {
     this.icon = image;
   }

@@ -51,8 +51,15 @@ export default struct RecentLayout {
   private updateData: Function = null;
 
   aboutToAppear(): void {
-
     mSmartDockStyleConfig = this.mSmartDockStyleConfig;
+  }
+
+  aboutToDisappear(): void {
+    this.onItemClick = null;
+    this.buildMenu = null;
+    this.onHoverEvent = null;
+    this.onDockListChangeFunc = null;
+    this.updateData = null;
   }
 
   private sysUiRecentOnClick() {
@@ -206,6 +213,10 @@ struct AppItem {
 
   aboutToAppear(): void {
     this.menuInfo = this.buildMenu(this.appInfo);
+  }
+
+  aboutToDisappear(): void {
+    this.buildMenu = null;
   }
 
   private getLongPress(): boolean {

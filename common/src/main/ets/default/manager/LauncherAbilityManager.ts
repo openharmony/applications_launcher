@@ -347,6 +347,10 @@ class LauncherAbilityManager {
     });
     Log.showDebug(TAG, `startLauncherAbilityByUri AceApplication : startAbility : ${result}`);
   }
+
+  cleanAppMapCache(): void {
+    this.mAppMap.clear();
+  }
 }
 
 export const launcherAbilityManager = LauncherAbilityManager.getInstance();

@@ -59,6 +59,12 @@ export default struct FolderAppListDialog {
     BigFolderStyleConstants.DEFAULT_BUTTON_HEIGHT - BigFolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN;
   }
 
+  aboutToDisappear(): void {
+    this.controller = null;
+    this.cancel = null;
+    this.confirm = null;
+  }
+
   private updateTitleDes(value: string) {
     this.addToString = value;
     this.onAppListChecked();

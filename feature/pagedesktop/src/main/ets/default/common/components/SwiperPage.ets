@@ -22,6 +22,7 @@ import AppItem from './AppItem';
 import FormItem from './FormItem';
 import FolderItem from './FolderItem';
 import { PageDesktopGridStyleConfig } from '../PageDesktopGridStyleConfig';
+import GridLayoutItemInfo from '@ohos/common/src/main/ets/default/bean/GridLayoutItemInfo';
 
 const TAG = "SwiperPage";
 
@@ -38,7 +39,11 @@ export default struct SwiperPage {
   @State mPaddingTop: number = 0;
   @State mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   @State mMarginTop: number = 0;
-  private mAppListInfo;
+  @StorageLink('appListInfo')  @Watch('updateAppListInfo') appListInfo: {
+    appGridInfo: [[]]
+  } = { appGridInfo: [[]] };
+  @Prop swiperPage: number;
+  @State mAppListInfo: GridLayoutItemInfo[] = this.appListInfo.appGridInfo[this.swiperPage];
   private mPageDesktopViewModel;
   private mPageDesktopStyleConfig:PageDesktopGridStyleConfig;
   private mGridWidth : number;
@@ -50,6 +55,10 @@ export default struct SwiperPage {
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear');
     this.updateDeskTopScreen();
+  }
+
+  private updateAppListInfo(): void {
+    this.mAppListInfo = this.appListInfo.appGridInfo[this.swiperPage];
   }
 
   updateDeskTopScreen(): void {
@@ -97,18 +106,18 @@ export default struct SwiperPage {
       ForEach(this.mAppListInfo, (item) => {
         GridItem() {
           if(this.buildLog(item)){}
-          if (item.typeId == CommonConstants.TYPE_APP) {
+          if (item.typeId === CommonConstants.TYPE_APP) {
             AppItem({
               item: item,
               mPageDesktopViewModel: this.mPageDesktopViewModel,
               mNameLines: this.mNameLines
             })
-          } else if (item.typeId == CommonConstants.TYPE_FOLDER) {
+          } else if (item.typeId === CommonConstants.TYPE_FOLDER) {
             FolderItem({
               folderItem: item,
               mNameLines: this.mNameLines
             })
-          } else {
+          } else if (item.typeId === CommonConstants.TYPE_CARD) {
             FormItem({
               formItem: item
             })
@@ -119,11 +128,11 @@ export default struct SwiperPage {
         .columnStart(item.column)
         .rowEnd(item.row + item.area[1] - 1)
         .columnEnd(item.column + item.area[0] - 1)
-      }, (item) => {
-        if (item.typeId == CommonConstants.TYPE_FOLDER || item.typeId == CommonConstants.TYPE_CARD) {
-          return JSON.stringify(item) + this.formRefresh;
+      }, (item, index) => {
+        if (item.typeId === CommonConstants.TYPE_CARD) {
+          return `${JSON.stringify(item)}${index}${this.formRefresh}`;
         } else {
-          return `${item.typeId}${item.row}${item.column}`;
+          return `${JSON.stringify(item)}${index}`;
         }
       })
     }

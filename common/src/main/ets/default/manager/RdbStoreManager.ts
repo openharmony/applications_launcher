@@ -68,6 +68,7 @@ export class RdbStoreManager {
     try {
       await this.mRdbStore.executeSql(RdbStoreConfig.Badge.CREATE_TABLE);
       await this.mRdbStore.executeSql(RdbStoreConfig.Form.CREATE_TABLE);
+      await this.mRdbStore.executeSql(RdbStoreConfig.Settings.CREATE_TABLE);
       await this.mRdbStore.executeSql(RdbStoreConfig.SmartDock.CREATE_TABLE);
       await this.mRdbStore.executeSql(RdbStoreConfig.DesktopApplicationInfo.CREATE_TABLE);
       await this.mRdbStore.executeSql(RdbStoreConfig.GridLayoutInfo.CREATE_TABLE);

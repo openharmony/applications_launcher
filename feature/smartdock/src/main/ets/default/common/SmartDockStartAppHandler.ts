@@ -59,19 +59,19 @@ export default class SmartDockStartAppHandler extends BaseStartAppHandler {
     (recentList.length > 0 ? this.mSmartDockStyleConfig.mDockGap + this.getListWidth(recentList) : 0);
     const smartDockStartPositionX: number = (screenWidth - smartDockWidth) / 2;
     const startAppTypeFromPageDesktop: number = AppStorage.Get('startAppTypeFromPageDesktop');
-    if (startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_APP_RECENT) {
-      const indexInRecentList: number = this.getIndexInList(appItemInfo, recentList);
-      this.mAppIconPositionX = smartDockStartPositionX + this.getListWidth(residentList) + this.mSmartDockStyleConfig.mDockGap
-      + this.mSmartDockStyleConfig.mDockPadding + indexInRecentList
-      * (this.mSmartDockStyleConfig.mListItemWidth + this.mSmartDockStyleConfig.mListItemGap);
-      return;
-    }else {
-      const indexInResidentList: number = this.getIndexInList(appItemInfo, residentList);
-      this.mAppIconPositionX = smartDockStartPositionX + this.mSmartDockStyleConfig.mDockPadding + indexInResidentList
-      * (this.mSmartDockStyleConfig.mListItemWidth + this.mSmartDockStyleConfig.mListItemGap)
-      - (recentList.length > 0 ? 0 : this.mSmartDockStyleConfig.mListItemGap / 2);
-      return;
-    }
+    // if (startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_APP_RECENT) {
+    //   const indexInRecentList: number = this.getIndexInList(appItemInfo, recentList);
+    //   this.mAppIconPositionX = smartDockStartPositionX + this.getListWidth(residentList) + this.mSmartDockStyleConfig.mDockGap
+    //   + this.mSmartDockStyleConfig.mDockPadding + indexInRecentList
+    //   * (this.mSmartDockStyleConfig.mListItemWidth + this.mSmartDockStyleConfig.mListItemGap);
+    //   return;
+    // }else {
+    //   const indexInResidentList: number = this.getIndexInList(appItemInfo, residentList);
+    //   this.mAppIconPositionX = smartDockStartPositionX + this.mSmartDockStyleConfig.mDockPadding + indexInResidentList
+    //   * (this.mSmartDockStyleConfig.mListItemWidth + this.mSmartDockStyleConfig.mListItemGap)
+    //   - (recentList.length > 0 ? 0 : this.mSmartDockStyleConfig.mListItemGap / 2);
+    //   return;
+    // }
   }
 
   private getIndexInList(appItemInfo, list) : number {

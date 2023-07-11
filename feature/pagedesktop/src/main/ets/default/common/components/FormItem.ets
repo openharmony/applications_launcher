@@ -107,6 +107,7 @@ export default struct FormItem {
     this.dialogController = null;
     delete this.formManagerDialogController;
     this.formManagerDialogController = null;
+    this.clearForm = null;
   }
 
   /**
