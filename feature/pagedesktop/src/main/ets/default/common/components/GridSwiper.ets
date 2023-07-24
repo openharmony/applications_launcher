@@ -27,24 +27,39 @@ export default struct GridSwiper {
   @Prop gridConfig: string;
   @StorageLink('pageIndex') pageIndex: number = 0;
   private mPageDesktopViewModel;
-  @StorageLink('appListInfo') @Watch('updateSwiperPages') appListInfo: {
+  @StorageLink('appListInfo') @Watch('updatePageList') appListInfo: {
     appGridInfo: [[]]
   } = { appGridInfo: [[]] };
-  @State swiperPageItems: Array<{ page: number }> = [{ page: 0 }];
+  @State pageList: number[] = [0];
   private swiperController: SwiperController = new SwiperController();
   private dialogController: CustomDialogController;
   @State enabledDomEventResponse: boolean = true;
+  @StorageLink('desktopEventResponse') desktopEventResponse: boolean = true;
+  @State desktopIndicator: DotIndicator | DigitIndicator = undefined;
 
-  updateSwiperPages(): void {
-    let pageItems = [{ page: 0 }];
-    if (this.appListInfo?.appGridInfo?.length) {
-      for (let i = 1; i < this.appListInfo.appGridInfo.length; i++) {
-        pageItems.push({
-          page: i
-        })
+  private updatePageList(): void {
+    if (this.pageList.length !== this.appListInfo.appGridInfo.length) {
+      if (this.pageList.length < this.appListInfo.appGridInfo.length) {
+        for (let i = this.pageList.length - 1; i < this.appListInfo.appGridInfo.length; i++) {
+          if (this.pageList.indexOf(i) === -1) {
+            this.pageList.push(i);
+          }
+        }
+      } else {
+        for (let i = this.pageList.length - 1; i >= this.appListInfo.appGridInfo.length; i--) {
+          if (this.pageList.indexOf(i) !== -1) {
+            this.pageList.splice(i, 1);
+          }
+        }
       }
     }
-    this.swiperPageItems = pageItems;
+    const NINE = 9;
+    if (this.pageList?.length > NINE) {
+      this.desktopIndicator = new DigitIndicator().fontColor(StyleConstants.DEFAULT_FORM_MGR_FONT_COLOR)
+        .selectedFontColor(StyleConstants.DEFAULT_FONT_COLOR);
+    } else {
+      this.desktopIndicator = new DotIndicator().selectedColor(StyleConstants.DEFAULT_FONT_COLOR);
+    }
   }
 
   aboutToAppear(): void {
@@ -135,15 +150,15 @@ export default struct GridSwiper {
       if (this.buildLog()) {}
         if (this.desktopLoadFinished) {
           Swiper(this.swiperController) {
-            ForEach(this.swiperPageItems, (item: { page: number }, index: number) => {
+            ForEach(this.pageList, (item, index: number) => {
               if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
                 Column() {
                   SwiperPage({
                     appListInfo: $appListInfo,
-                    swiperPageIndex: index,
+                    swiperPage: index.valueOf(),
                     gridConfig: this.gridConfig,
                     mPageDesktopViewModel: this.mPageDesktopViewModel
-                  }).id(`SwiperPage_${item.page}${index}`)
+                  }).id(`SwiperPage_${item}${index}`)
                 }
                 .gesture(
                 LongPressGesture({ repeat: false })
@@ -152,20 +167,18 @@ export default struct GridSwiper {
                   })
                 )
                 .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
-                .enabled(this.enabledDomEventResponse)
               } else {
                 SwiperPage({
                   appListInfo: $appListInfo,
-                  swiperPageIndex: index,
+                  swiperPage: index.valueOf(),
                   gridConfig: this.gridConfig,
                   mPageDesktopViewModel: this.mPageDesktopViewModel
-                }).id(`SwiperPage_${item.page}${index}`)
+                }).id(`SwiperPage_${item}${index}`)
                   .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
                   .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
-                  .enabled(this.enabledDomEventResponse)
               }
-            }, (item: { page: number }, index: number) => {
-              return `${item.page}${index}`;
+            }, (item, index: number) => {
+              return `${item}${index}`;
             })
           }
           .id(`${TAG}_Swiper`)
@@ -176,24 +189,31 @@ export default struct GridSwiper {
           })
           .height(StyleConstants.PERCENTAGE_100)
           .width(StyleConstants.PERCENTAGE_100)
-          .indicator(new DotIndicator().selectedColor(StyleConstants.DEFAULT_FONT_COLOR))
+          .indicator(this.desktopIndicator)
           .loop(false)
-          .duration(80)
-          .cachedCount(1)
           .index(this.pageIndex)
           .onChange((index) => {
-            if (this.pageIndex !== index) {
+            if (typeof index !== 'undefined' && this.pageIndex !== index) {
               this.pageIndex = index;
               Log.showInfo(TAG, `swiper change to page ${index}`);
               localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
             }
           })
+          .onGestureSwipe(() => {
+            this.desktopEventResponse = false;
+          })
           .onAnimationStart(() => {
-            this.enabledDomEventResponse = false;
+            this.desktopEventResponse = false;
           })
-          .onAnimationEnd(() => {
-            this.enabledDomEventResponse = true;
+          .onAnimationEnd((index: number) => {
+            this.desktopEventResponse = true;
+            if (typeof index !== 'undefined') {
+              this.pageIndex = index;
+              Log.showInfo(TAG, `swiper animation end to page ${index}`);
+              localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
+            }
           })
+          .hitTestBehavior(this.desktopEventResponse ? HitTestMode.Default : HitTestMode.Block)
         }
     }
     .id(`${TAG}`)
