@@ -37,6 +37,7 @@ export struct SmartDock {
   @StorageLink('showDock') showDock: boolean = false;
   @StorageLink('recentList') recentList: Array<RecentBundleMissionInfo> = [];
   @StorageLink('missionInfoList') missionInfoList: Array<RecentBundleMissionInfo> = [];
+  @StorageLink('desktopEventResponse') desktopEventResponse: boolean = true;
   private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
   private mSmartDockViewModel: SmartDockViewModel;
   private mSelectedItem = null;
@@ -160,6 +161,7 @@ export struct SmartDock {
         })
       }
     }
+    .hitTestBehavior(this.desktopEventResponse ? HitTestMode.Default : HitTestMode.Block)
     .alignListItem(ListItemAlign.Center)
     .height(SmartDockConstants.PERCENTAGE_100)
     .listDirection(SmartDockConstants.LIST_DIRECTION)
