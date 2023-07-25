@@ -1,6 +1,6 @@
 {
   "module": {
-    "name": "pad-launcher",
+    "name": "pad_launcher",
     "type": "entry",
     "srcEntry": "./ets/Application/AbilityStage.ts",
     "description": "$string:mainability_description",

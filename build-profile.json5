@@ -133,7 +133,7 @@
       ],
     },
     {
-      "name": "phone-launcher",
+      "name": "phone_launcher",
       "srcPath": "./product/phone",
       "targets": [
         {
@@ -145,7 +145,7 @@
       ],
     },
     {
-      "name": "pad-launcher",
+      "name": "pad_launcher",
       "srcPath": "./product/pad",
       "targets": [
         {

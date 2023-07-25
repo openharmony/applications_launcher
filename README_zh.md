@@ -116,7 +116,7 @@ OpenHarmony.p12和OpenHarmonyApplication.cer文件可在[签名工具仓](https:
       "runtimeOS": "OpenHarmony"
     }
   ],
-  "entryModules": ["pad-launcher","phone-launcher"]
+  "entryModules": ["pad_launcher", "phone_launcher"]
 }
 ```
 
@@ -147,8 +147,8 @@ OpenHarmony.p12和OpenHarmonyApplication.cer文件可在[签名工具仓](https:
 **使用以下命令来更新编译出来的Launcher部件hap包**
 
 ```
-ren phone-launcher-default-signed.hap Launcher.hap
-ren launcher_settings-phone-launcher-default-signed.hap Launcher_Settings.hap
+ren phone_launcher-default-signed.hap Launcher.hap
+ren launcher_settings-phone_launcher-default-signed.hap Launcher_Settings.hap
 
 hdc target mount
 hdc shell rm -rf /data/misc_de/0/mdds/0/default/bundle_manager_service

@@ -31,7 +31,7 @@ export class CommonConstants {
   /**
   * Module name of AppCenter.
   */
-  static MODULE_NAME = 'pad-launcher';
+  static MODULE_NAME = 'pad_launcher';
 
   /**
    * Ability name of AppCenter.

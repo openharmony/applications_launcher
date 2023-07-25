@@ -7,5 +7,5 @@
       "name": "default",
     }
   ],
-  "entryModules": ["pad-launcher","phone-launcher"]
+  "entryModules": ["pad_launcher", "phone_launcher"]
 }
