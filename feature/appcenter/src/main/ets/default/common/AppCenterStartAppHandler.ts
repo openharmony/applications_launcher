@@ -50,7 +50,7 @@ export default class AppCenterStartAppHandler extends BaseStartAppHandler {
             return;
         }
 
-        const appItemInfo = AppStorage.Get('startAppItemInfo');
+        const appItemInfo = AppStorage.get('startAppItemInfo');
         const index: number = this.getIndexInAppList(appItemInfo);
         const appCenterMarginLeft = this.mAppCenterGridStyleConfig.mAppCenterMarginLeft;
         const appCenterMarginTop = this.mAppCenterGridStyleConfig.mIconMarginVertical;
@@ -84,7 +84,7 @@ export default class AppCenterStartAppHandler extends BaseStartAppHandler {
 
     private getIndexInAppList(appItemInfo): number {
         let index: number = 0;
-        let listInfo: AppItemInfo[] = AppStorage.Get('listInfo');
+        let listInfo: AppItemInfo[] = AppStorage.get('listInfo');
         for (var i = 0; i < listInfo.length; i++) {
             if (typeof listInfo[i] !== 'undefined') {
                 if (appItemInfo.bundleName === listInfo[i].bundleName) {

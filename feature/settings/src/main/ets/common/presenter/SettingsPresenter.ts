@@ -221,7 +221,7 @@ export default class SettingsPresenter {
       const initValue = this.mSettingsModel.getValue();
       const navigationBarStatusValue = initValue == '0' ? true : false;
       Log.showDebug(TAG, `initNavigationBarStatusValue initValue:${initValue}, navigationBarStatusValue:${navigationBarStatusValue}`);
-      AppStorage.SetOrCreate('NavigationBarStatusValue', navigationBarStatusValue);
+      AppStorage.setOrCreate('NavigationBarStatusValue', navigationBarStatusValue);
     } catch (e) {
       Log.showError(TAG, `initNavigationBarStatusValue error:  ${e.toString()}`);
     }

@@ -203,7 +203,7 @@ export default struct RecentMissionCard {
    * set start app info
    */
   private setStartAppInfo(position) {
-    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
+    AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
     let appParams = {
       bundleName: this.bundleName,
       moduleName: this.moduleName,
@@ -214,7 +214,7 @@ export default struct RecentMissionCard {
       appIconHeight: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_MISSION_HEIGHT : RecentsStyleConstants.DOUBLE_LIST_MISSION_HEIGHT,
       position:position
     }
-    AppStorage.SetOrCreate('startAppItemInfo', appParams);
+    AppStorage.setOrCreate('startAppItemInfo', appParams);
     this.mRecentMissionStartAppHandler.setAppIconSize(appParams.appIconSize, appParams.appIconHeight);
     this.mRecentMissionStartAppHandler.setAppIconInfo();
   }

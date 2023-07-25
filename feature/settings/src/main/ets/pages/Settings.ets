@@ -220,9 +220,9 @@ struct SettingItem {
           }
         }
         .onClick(() => {
-          AppStorage.SetOrCreate('ida', this.ida);
-          AppStorage.SetOrCreate('valueList', this.valueList);
-          AppStorage.SetOrCreate('settingValue', this.settingValue);
+          AppStorage.setOrCreate('ida', this.ida);
+          AppStorage.setOrCreate('valueList', this.valueList);
+          AppStorage.setOrCreate('settingValue', this.settingValue);
           this.dialogController.open();
         })
       } else {

@@ -123,7 +123,7 @@ export default struct RecentLayout {
             buildMenu: this.buildMenu
           })
         }
-        .bindPopup(this.showPopup && item.bundleName == this.onHoverItem && !AppStorage.Get('smartDockShowMenu') as boolean, {
+        .bindPopup(this.showPopup && item.bundleName == this.onHoverItem && !AppStorage.get('smartDockShowMenu') as boolean, {
           builder: this.popupBuilder,
           placement: Placement.Top,
           enableArrow: true,
@@ -137,8 +137,8 @@ export default struct RecentLayout {
               this.onClickWithPopup = false;
               this.autoCancel = false;
               this.showPopup = false;
-              AppStorage.SetOrCreate('snapshotList', []);
-              AppStorage.SetOrCreate('recentShowPopup', false);
+              AppStorage.setOrCreate('snapshotList', []);
+              AppStorage.setOrCreate('recentShowPopup', false);
             }
             if (this.updateData) {
               this.updateData();
@@ -157,14 +157,14 @@ export default struct RecentLayout {
         })
         .onClick((event: ClickEvent) => {
           this.onItemClick(event, item);
-          this.onClickWithPopup = AppStorage.Get('recentShowPopup');
+          this.onClickWithPopup = AppStorage.get('recentShowPopup');
           Log.showInfo(TAG, `onClick this.onClickWithPopup: ${this.onClickWithPopup}`);
           if (this.onClickWithPopup) {
             this.autoCancel = true;
             this.showPopup = true
             this.onHoverItem = item.bundleName;
           }
-          AppStorage.SetOrCreate('recentShowPopup', false);
+          AppStorage.setOrCreate('recentShowPopup', false);
         })
       }, (item) => JSON.stringify(item))
     }
@@ -181,7 +181,7 @@ export default struct RecentLayout {
   getListWidth(): number {
     let mRecentMaxNum = this.mSmartDockStyleConfig.mMaxRecentNum;
     let width = 0;
-    if (AppStorage.Get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (AppStorage.get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
       return width;
     }
     if (typeof this.appList === 'undefined' || this.appList == null || this.appList.length === 0) {
@@ -212,7 +212,7 @@ struct AppItem {
   }
 
   private getLongPress(): boolean {
-    return AppStorage.Get('isLongPress');
+    return AppStorage.get('isLongPress');
   }
 
   @Builder MenuBuilder() {
@@ -252,7 +252,7 @@ struct AppItem {
     LongPressGesture({ repeat: false })
       .onAction((event: GestureEvent) => {
         this.isShow = true;
-        AppStorage.SetOrCreate('isLongPress', true);
+        AppStorage.setOrCreate('isLongPress', true);
       })
     )
     .bindPopup(this.isShow, {
@@ -265,15 +265,15 @@ struct AppItem {
         if (!e.isVisible) {
           this.isShow = false;
         }
-        AppStorage.SetOrCreate('smartDockShowMenu', e.isVisible)
+        AppStorage.setOrCreate('smartDockShowMenu', e.isVisible)
       },
       autoCancel: true
     })
     .onTouch((event: TouchEvent) => {
       if (event.type == CommonConstants.TOUCH_TYPE_UP) {
-        AppStorage.SetOrCreate('isLongPress', false);
+        AppStorage.setOrCreate('isLongPress', false);
       }
-      const dragItemInfo: LauncherDragItemInfo = AppStorage.Get<LauncherDragItemInfo>('dragItemInfo');
+      const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo');
       if (dragItemInfo.isDragging) {
         this.isShow = false;
       }
@@ -282,7 +282,7 @@ struct AppItem {
       Log.showInfo(TAG, `onMouse MouseType: ${event.button}`);
       if (event.button == MouseButton.Right) {
         event.stopPropagation();
-        AppStorage.SetOrCreate('selectDesktopAppItem', '');
+        AppStorage.setOrCreate('selectDesktopAppItem', '');
         this.isShow = true;
       }
     })

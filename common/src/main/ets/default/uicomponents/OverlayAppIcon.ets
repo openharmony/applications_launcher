@@ -36,7 +36,7 @@ export default struct OverlayAppIcon {
         .onComplete(() => {
           Log.showInfo(TAG, 'OverlayAppIcon complete');
           this.overlaySize = 1;
-          AppStorage.SetOrCreate('isOverlayComplete', true);
+          AppStorage.setOrCreate('isOverlayComplete', true);
         })
     }
     .width(this.iconSize)

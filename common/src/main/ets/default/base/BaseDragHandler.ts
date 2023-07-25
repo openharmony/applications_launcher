@@ -79,7 +79,7 @@ export abstract class BaseDragHandler {
    */
   protected setDragItemInfo(dragItemInfo: LauncherDragItemInfo): void {
     Log.showDebug(TAG, `setDragItemInfo dragItemInfo: ${JSON.stringify(dragItemInfo)}`);
-    AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', dragItemInfo);
+    AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', dragItemInfo);
   }
 
   /**
@@ -88,7 +88,7 @@ export abstract class BaseDragHandler {
    * @return dragItemInfo
    */
   protected getDragItemInfo() {
-    const dragItemInfo: LauncherDragItemInfo = AppStorage.Get<LauncherDragItemInfo>('dragItemInfo');
+    const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo');
     // avoid dragItemInfo from AppStorage is undefined
     return dragItemInfo;
   }
@@ -99,7 +99,7 @@ export abstract class BaseDragHandler {
    * @return isLongPress
    */
   protected getIsLongPress(): boolean {
-    const isLongPress: boolean = AppStorage.Get('isLongPress');
+    const isLongPress: boolean = AppStorage.get('isLongPress');
     return isLongPress;
   }
 
@@ -108,7 +108,7 @@ export abstract class BaseDragHandler {
    */
   protected setIsLongPress(isLongPress): void {
     Log.showDebug(TAG, `setIsLongPress isLongPress: ${isLongPress}`);
-    AppStorage.SetOrCreate('isLongPress', isLongPress);
+    AppStorage.setOrCreate('isLongPress', isLongPress);
   }
 
   protected isDragEffectArea(x: number, y: number): boolean {

@@ -51,7 +51,7 @@ export default struct ResidentLayout {
   getListWidth(): number {
     let residentMaxNum = this.mSmartDockStyleConfig.mMaxDockNum;
     let width = 0.0;
-    if (AppStorage.Get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (AppStorage.get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
       Log.showDebug(TAG, `getListWidth mDockPadding: ${this.mSmartDockStyleConfig.mDockPadding}, mMaxNum: ${residentMaxNum}`);
       width = this.mSmartDockStyleConfig.mDockPadding * 2 + residentMaxNum * (this.mSmartDockStyleConfig.mListItemWidth) + (residentMaxNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
       Log.showDebug(TAG, `getListWidth width: ${width}`);
@@ -112,13 +112,13 @@ export default struct ResidentLayout {
       .onDrop((event: DragEvent, extraParams: string) => {
         Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
         const dragResult = globalThis.SmartDockDragHandler.onDragDrop(event.getX(), event.getY());
-        AppStorage.SetOrCreate('selectAppIndex', null);
+        AppStorage.setOrCreate('selectAppIndex', null);
         if (!dragResult) {
-          AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+          AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
         } else {
           // Wait for the UI rendering to end.
           setTimeout(() => {
-            AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+            AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           }, 50);
         }
       })
@@ -141,7 +141,7 @@ struct AppItem {
   }
 
   private getLongPress(): boolean {
-    return AppStorage.Get('isLongPress');
+    return AppStorage.get('isLongPress');
   }
 
   @Builder MenuBuilder() {
@@ -182,19 +182,19 @@ struct AppItem {
       .onAction((event: GestureEvent) => {
         Log.showInfo(TAG, 'onAction start');
         this.isShow = true;
-        AppStorage.SetOrCreate('isLongPress', true);
+        AppStorage.setOrCreate('isLongPress', true);
       })
     )
     .bindPopup(this.isShow, {
       builder: this.MenuBuilder,
       placement: Placement.Top,
       popupColor: Color.White,
-      arrowOffset: AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE ? null : 3 * (mSmartDockStyleConfig.mIconSize / 2) + mSmartDockStyleConfig.mListItemGap, // Avoid the popup offset problem in phone form
+      arrowOffset: AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE ? null : 3 * (mSmartDockStyleConfig.mIconSize / 2) + mSmartDockStyleConfig.mListItemGap, // Avoid the popup offset problem in phone form
       onStateChange: (e) => {
         if (!e.isVisible) {
           this.isShow = false;
         }
-        AppStorage.SetOrCreate('smartDockShowMenu', e.isVisible)
+        AppStorage.setOrCreate('smartDockShowMenu', e.isVisible)
       },
       autoCancel: true
     })
@@ -203,10 +203,10 @@ struct AppItem {
       if (event.type === CommonConstants.TOUCH_TYPE_UP && this.smartDragItemInfo.isDragging) {
         let mIsDragEffectArea = globalThis.SmartDockDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
         if (!mIsDragEffectArea) {
-          AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
-          AppStorage.SetOrCreate('selectAppIndex', null);
+          AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+          AppStorage.setOrCreate('selectAppIndex', null);
         }
-        AppStorage.SetOrCreate('isLongPress', false);
+        AppStorage.setOrCreate('isLongPress', false);
       }
       if (this.smartDragItemInfo.isDragging) {
         this.isShow = false;
@@ -219,7 +219,7 @@ struct AppItem {
       Log.showInfo(TAG, `onMouse MouseType: ${event.button}`);
       if (event.button == MouseButton.Right) {
         event.stopPropagation();
-        AppStorage.SetOrCreate('selectDesktopAppItem', '');
+        AppStorage.setOrCreate('selectDesktopAppItem', '');
         this.isShow = true;
       }
     })
@@ -229,11 +229,11 @@ struct AppItem {
       this.smartDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.appInfo);
       Log.showInfo(TAG, `smartDragItemInfo: ${JSON.stringify(this.smartDragItemInfo)}`);
       const selectAppIndex = globalThis.SmartDockDragHandler.getDragItemIndexByCoordinates(event.getX(), event.getY());
-      AppStorage.SetOrCreate('selectAppIndex', selectAppIndex);
+      AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
     })
     .onDragEnd((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragEnd event: [${event.getX()}, ${event.getY()}]` + event.getResult());
-      AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+      AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
     })
   }
 }

@@ -72,7 +72,7 @@ export default struct FolderAppListDialog {
 
   private onAppListChecked() {
     this.titleDescription = `${this.addToString}${this.folderItem.folderName}(${this.appListChecked.length}/${this.allAppInfoList.length})`;
-    AppStorage.SetOrCreate('titleDescription', this.titleDescription);
+    AppStorage.setOrCreate('titleDescription', this.titleDescription);
   }
 
   private getColumnsTemplate() {
@@ -142,7 +142,7 @@ export default struct FolderAppListDialog {
                         let index = this.appListChecked.indexOf(item);
                         this.appListChecked.splice(index, 1);
                       }
-                      AppStorage.SetOrCreate('appListChecked', this.appListChecked);
+                      AppStorage.setOrCreate('appListChecked', this.appListChecked);
                     })
                 }
               }

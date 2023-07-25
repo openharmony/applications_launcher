@@ -181,7 +181,7 @@ export default struct AppItem {
       if (event.button == MouseButton.Right) {
         event.stopPropagation();
         Log.showInfo(TAG, 'onMouse mouse button right');
-        AppStorage.SetOrCreate('selectDesktopAppItem', this.item.keyName);
+        AppStorage.setOrCreate('selectDesktopAppItem', this.item.keyName);
       }
     })
     .onClick((event) => {
@@ -210,7 +210,7 @@ export default struct AppItem {
         Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
         if (!mIsDragEffectArea) {
           this.pageDesktopDragItemInfo = new LauncherDragItemInfo();
-          AppStorage.SetOrCreate('selectAppIndex', null);
+          AppStorage.setOrCreate('selectAppIndex', null);
         }
       }
     })
@@ -252,8 +252,8 @@ export default struct AppItem {
       row: this.item.row,
       column: this.item.column
     }
-    AppStorage.SetOrCreate('startAppItemInfo', appInfo);
-    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
+    AppStorage.setOrCreate('startAppItemInfo', appInfo);
+    AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
     this.mPageDesktopStartAppHandler.setAppIconSize(this.mIconSize);
     this.mPageDesktopStartAppHandler.setAppIconInfo();
     Trace.end("setStartAppInfo");

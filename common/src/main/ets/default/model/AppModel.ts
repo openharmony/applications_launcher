@@ -180,7 +180,7 @@ export class AppModel {
       }
       if (event === EventConstants.EVENT_PACKAGE_CHANGED) {
         await this.getAppListAsync();
-        AppStorage.SetOrCreate('formRefresh', String(new Date()));
+        AppStorage.setOrCreate('formRefresh', String(new Date()));
         localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
         localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE, abilityInfos[0]);
       }

@@ -219,7 +219,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
   async updateDesktopInfo(): Promise<void> {
     await this.mAppModel.getAppListAsync();
     this.getGridList();
-    AppStorage.SetOrCreate('formRefresh', String(new Date()));
+    AppStorage.setOrCreate('formRefresh', String(new Date()));
   }
 
   private async getAppList() {
@@ -258,7 +258,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
     // update pageDesktop app config
     this.mSettingsModel.setAppListInfo(pageDesktopInfo);
-    AppStorage.SetOrCreate('isDesktopLoadFinished', true);
+    AppStorage.setOrCreate('isDesktopLoadFinished', true);
     return pageDesktopInfo;
   }
 
@@ -555,8 +555,8 @@ export default class PageDesktopViewModel extends BaseViewModel {
     }
     appInfo.appGridInfo = this.integrateSwiper(appListInfo);
     Log.showInfo(TAG, 'pagingFiltering appListInfo length:' + appListInfo.length);
-    AppStorage.SetOrCreate('selectDesktopAppItem', '');
-    AppStorage.SetOrCreate(KEY_APP_LIST, appInfo);
+    AppStorage.setOrCreate('selectDesktopAppItem', '');
+    AppStorage.setOrCreate(KEY_APP_LIST, appInfo);
   }
 
   private integrateSwiper(list) {
@@ -784,7 +784,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
       'row': row,
       'column': column
     };
-    if (AppStorage.Has('isPortrait') && AppStorage.Get('isPortrait')) {
+    if (AppStorage.has('isPortrait') && AppStorage.get('isPortrait')) {
       let cardInfoHorizontal: any[] = [];
       for (let i = 0; i < info.layoutInfo.length; i++) {
         if (info.layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
@@ -809,10 +809,10 @@ export default class PageDesktopViewModel extends BaseViewModel {
           }
         }
       }
-      AppStorage.SetOrCreate('isPortraitCard', cardInfoHorizontal);
+      AppStorage.setOrCreate('isPortraitCard', cardInfoHorizontal);
     }
 
-    if (AppStorage.Has('isPortrait') && !AppStorage.Get('isPortrait')) {
+    if (AppStorage.has('isPortrait') && !AppStorage.get('isPortrait')) {
       for (let i = 0; i < info.layoutInfo.length; i++) {
         if (info.layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
           let tt = info.layoutInfo[i].column
@@ -830,7 +830,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
             info.layoutInfo[i].row = tt;
             newLayoutInfo.layoutInfo.push(info.layoutInfo[i]);
           } else {
-            let cardInfoOld: [] = AppStorage.Get('isPortraitCard');
+            let cardInfoOld: [] = AppStorage.get('isPortraitCard');
             Log.showInfo(TAG, 'cardInfoOld:' + JSON.stringify(cardInfoOld));
             if (!cardInfoOld.find(item => JSON.parse(item).cardId === info.layoutInfo[i].cardId)) {
               this.mPageDesktopModel.updatePageDesktopLayoutInfo(newLayoutInfo, info.layoutInfo[i]);
@@ -846,7 +846,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
       }
     }
 
-    if (!AppStorage.Has('isPortrait')) {
+    if (!AppStorage.has('isPortrait')) {
       newLayoutInfo.layoutDescription = {
         'pageCount': pageNum,
         'row': row,
@@ -1031,8 +1031,8 @@ export default class PageDesktopViewModel extends BaseViewModel {
           if (openClickCallback) {
             openClickCallback();
           }
-          if (AppStorage.Get('openFolderStatus') != 0) {
-            AppStorage.SetOrCreate('openFolderStatus', 0);
+          if (AppStorage.get('openFolderStatus') != 0) {
+            AppStorage.setOrCreate('openFolderStatus', 0);
           }
           this.jumpTo(value.wants[0].targetClass, value.wants[0].targetBundle, value.wants[0].targetModule);
         };
@@ -1045,8 +1045,8 @@ export default class PageDesktopViewModel extends BaseViewModel {
     open.menuImgSrc = '/common/pics/ic_public_add_norm.svg';
     open.menuText = $r('app.string.app_menu_open');
     open.onMenuClick = () => {
-      if (AppStorage.Get('openFolderStatus') != 0 && AppStorage.Get('deviceType') === CommonConstants.PAD_DEVICE_TYPE) {
-        AppStorage.SetOrCreate('openFolderStatus', 0);
+      if (AppStorage.get('openFolderStatus') != 0 && AppStorage.get('deviceType') === CommonConstants.PAD_DEVICE_TYPE) {
+        AppStorage.setOrCreate('openFolderStatus', 0);
       }
       this.setStartAppInfo()
       this.jumpTo(appInfo.abilityName, appInfo.bundleName, appInfo.moduleName);
@@ -1065,7 +1065,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
         if (appName != null) {
           appInfo.appName = appName;
         }
-        AppStorage.SetOrCreate('formAppInfo', appInfo);
+        AppStorage.setOrCreate('formAppInfo', appInfo);
         if (!this.isPad) {
           this.showFormManager(appInfo);
         } else {
@@ -1114,7 +1114,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
       if (appName != null) {
         appInfo.appName = appName;
       }
-      AppStorage.SetOrCreate('uninstallAppInfo', appInfo);
+      AppStorage.setOrCreate('uninstallAppInfo', appInfo);
       dialog.open();
     };
     uninstallMenu.menuEnabled = appInfo.isUninstallAble;
@@ -1147,7 +1147,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
       if (appName != null) {
         formInfo.appName = appName;
       }
-      AppStorage.SetOrCreate('formAppInfo', formInfo);
+      AppStorage.setOrCreate('formAppInfo', formInfo);
       if (!this.isPad) {
         this.showFormManager(formInfo);
       } else {
@@ -1165,7 +1165,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
         cardId: number,
         isOpenRemoveFormDialog: boolean,
       } = { cardId: formInfo.cardId, isOpenRemoveFormDialog: true };
-      AppStorage.SetOrCreate('formAnimateData', formAnimateData);
+      AppStorage.setOrCreate('formAnimateData', formAnimateData);
       dialog.open();
     };
     menuInfoList.push(deleteFormFromDeskTop);
@@ -1197,14 +1197,14 @@ export default class PageDesktopViewModel extends BaseViewModel {
    * Get workSpaceWidth.
    */
   getWorkSpaceWidth() {
-    return AppStorage.Get('workSpaceWidth');
+    return AppStorage.get('workSpaceWidth');
   }
 
   /**
    * Get workSpaceHeight.
    */
   getWorkSpaceHeight() {
-    return AppStorage.Get('workSpaceHeight');
+    return AppStorage.get('workSpaceHeight');
   }
 
   /**
@@ -1226,7 +1226,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
       return;
     }
     Log.showDebug(TAG, `onAppClick keyName ${bundleName + abilityName + moduleName}`);
-    AppStorage.SetOrCreate('selectDesktopAppItem', bundleName + abilityName + moduleName);
+    AppStorage.setOrCreate('selectDesktopAppItem', bundleName + abilityName + moduleName);
   }
 
   /**
@@ -1236,7 +1236,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
    * @param bundleName bundle name
    */
   onAppDoubleClick(abilityName: string, bundleName: string, moduleName: string): void {
-    AppStorage.SetOrCreate('selectDesktopAppItem', '');
+    AppStorage.setOrCreate('selectDesktopAppItem', '');
     this.jumpTo(abilityName, bundleName, moduleName);
   }
 
@@ -1342,7 +1342,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
 
   private removeBottomBarInfo(pageDesktopInfo) {
     let bottomAppList = [];
-    bottomAppList = AppStorage.Get('residentList');
+    bottomAppList = AppStorage.get('residentList');
     Log.showDebug(TAG, `removeBottomBarInfo bottomAppList length: ${bottomAppList.length}`);
     if (!CheckEmptyUtils.isEmptyArr(bottomAppList)) {
       for (let i = 0; i < bottomAppList.length; i++) {
@@ -1387,7 +1387,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
    * set start app info
    */
   private setStartAppInfo() {
-    AppStorage.SetOrCreate('startAppIconInfo', {
+    AppStorage.setOrCreate('startAppIconInfo', {
       appIconSize: 0,
       appIconHeight: 0,
       appIconPositionX: 0,

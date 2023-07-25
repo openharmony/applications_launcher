@@ -80,7 +80,7 @@ export class GestureNavigationManager {
     Log.showInfo(TAG, "dataChangesCallback data:" + data);
     const getRetValue = this.getValue();
     this.handleEventSwitches(getRetValue);
-    AppStorage.SetOrCreate('NavigationBarStatusValue', getRetValue == '0' ? true : false);
+    AppStorage.setOrCreate('NavigationBarStatusValue', getRetValue == '0' ? true : false);
   }
 
   private turnOnTouchEventCallback() {

@@ -68,7 +68,7 @@ export default struct FolderItem {
     this.mMargin = styleConfig.mMargin;
     this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
-    this.openFolderStatus = AppStorage.Get('openFolderStatus') != 'undefined' ? AppStorage.Get('openFolderStatus') : BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
+    this.openFolderStatus = AppStorage.get('openFolderStatus') != 'undefined' ? AppStorage.get('openFolderStatus') : BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
     this.formatFolderInfo();
   }
 
@@ -99,7 +99,7 @@ export default struct FolderItem {
    */
   private renameClick() {
     Log.showInfo(TAG, 'click menu folder rename');
-    AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
+    AppStorage.setOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     this.mBigFolderViewModel.openFolder(true, this.folderItem);
   }
 
@@ -107,7 +107,7 @@ export default struct FolderItem {
     let openFolderData: {
       folderId: string,
       layoutInfo: any
-    } = AppStorage.Get('openFolderData');
+    } = AppStorage.get('openFolderData');
 
     return openFolderData.folderId;
   }
@@ -119,7 +119,7 @@ export default struct FolderItem {
     const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getX(), event.getY());
     const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getX(), event.getY())
     globalThis.PageDesktopDragHandler.mStartPosition = startPosition;
-    AppStorage.SetOrCreate('selectAppIndex', selectAppIndex);
+    AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
     Log.showInfo(TAG, `onDragStart event: [${event.getX()}, ${event.getY()}], selectAppIndex: ${selectAppIndex}`);
   }
 
@@ -162,8 +162,8 @@ export default struct FolderItem {
               Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
               if (!mIsDragEffectArea) {
                 globalThis.PageDesktopDragHandler.deleteBlankPageOutsideEffect();
-                AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
-                AppStorage.SetOrCreate('selectAppIndex', null);
+                AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+                AppStorage.setOrCreate('selectAppIndex', null);
               }
             }
           },
@@ -190,7 +190,7 @@ export default struct FolderItem {
         if (event.button == MouseButton.Right) {
           event.stopPropagation();
           Log.showInfo(TAG, 'onMouse mouse button right');
-          AppStorage.SetOrCreate('selectDesktopAppItem', this.folderItem.folderId);
+          AppStorage.setOrCreate('selectDesktopAppItem', this.folderItem.folderId);
         }
       })
       .gesture(
@@ -212,9 +212,9 @@ export default struct FolderItem {
   * set start app info
   */
   private setStartAppInfo(appItem) {
-    AppStorage.SetOrCreate('startAppItemInfo', appItem);
-    AppStorage.SetOrCreate('startAppFromFolderItemInfo', this.folderItem);
-    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_FOLDER);
+    AppStorage.setOrCreate('startAppItemInfo', appItem);
+    AppStorage.setOrCreate('startAppFromFolderItemInfo', this.folderItem);
+    AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_FOLDER);
     this.mPageDesktopStartAppHandler.setAppIconSize(this.mFolderStyleConfig.mFolderAppSize);
     this.mPageDesktopStartAppHandler.setAppIconInfo();
   }

@@ -114,7 +114,7 @@ export default struct FormItem {
           playMode: PlayMode.Normal,
           onFinish: () => {
             Log.showInfo(TAG, `showAnimate onFinish`);
-            AppStorage.SetOrCreate('isRemoveForm', false);
+            AppStorage.setOrCreate('isRemoveForm', false);
             this.formAnimateData.cardId = 0;
             this.formAnimateData.isOpenRemoveFormDialog = false;
             this.mFormViewModel.deleteForm(this.formItem.cardId);
@@ -152,7 +152,7 @@ export default struct FormItem {
       cancel: () => {},
       confirm: () => {
         // delete form
-        AppStorage.SetOrCreate('isRemoveForm', true);
+        AppStorage.setOrCreate('isRemoveForm', true);
       },
       dialogName: this.getDialogName(),
     }),
@@ -209,7 +209,7 @@ export default struct FormItem {
     const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getX(), event.getY());
     const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getX(), event.getY())
     globalThis.PageDesktopDragHandler.mStartPosition = startPosition;
-    AppStorage.SetOrCreate('selectAppIndex', selectAppIndex);
+    AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
     Log.showInfo(TAG, `onDragStart event: [${event.getX()}, ${event.getY()}], selectAppIndex: ${selectAppIndex}`);
   }
 
@@ -261,7 +261,7 @@ export default struct FormItem {
           if (!mIsDragEffectArea) {
             globalThis.PageDesktopDragHandler.deleteBlankPageOutsideEffect();
             this.pageDesktopDragItemInfo = new LauncherDragItemInfo();
-            AppStorage.SetOrCreate('selectAppIndex', null);
+            AppStorage.setOrCreate('selectAppIndex', null);
           }
         }
       })
@@ -278,8 +278,8 @@ export default struct FormItem {
    */
   private setStartAppInfo() {
     Log.showInfo(TAG, `app setStartAppInfo`);
-    AppStorage.SetOrCreate('startAppItemInfo', this.formItem);
-    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_CARD);
+    AppStorage.setOrCreate('startAppItemInfo', this.formItem);
+    AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_CARD);
     this.mPageDesktopStartAppHandler.setAppIconSize(this.mFormItemWidth, this.mFormItemHeight);
     this.mPageDesktopStartAppHandler.setAppIconInfo();
   }

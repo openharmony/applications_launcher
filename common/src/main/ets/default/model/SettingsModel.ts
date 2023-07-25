@@ -291,8 +291,8 @@ export class SettingsModel {
   }
 
   private updateMenuId(): void {
-    let currentId: number = AppStorage.Get('menuId') as number ?? 0;
+    let currentId: number = AppStorage.get('menuId') as number ?? 0;
     currentId++;
-    AppStorage.SetOrCreate('menuId', currentId % 100);
+    AppStorage.setOrCreate('menuId', currentId % 100);
   }
 }

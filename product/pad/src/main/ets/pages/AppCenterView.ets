@@ -44,7 +44,7 @@ struct AppCenterView {
 
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear');
-    AppStorage.SetOrCreate('deviceType', this.device);
+    AppStorage.setOrCreate('deviceType', this.device);
     this.mLayoutViewModel = LayoutViewModel.getInstance();
   }
 
@@ -74,7 +74,7 @@ struct AppCenterView {
 
   onBackPress(): boolean {
     Log.showInfo(TAG, `onBackPress`);
-    AppStorage.SetOrCreate('selectDesktopAppItem', '');
+    AppStorage.setOrCreate('selectDesktopAppItem', '');
     windowManager.destroyWindow(windowManager.APP_CENTER_WINDOW_NAME);
     return true;
   }
@@ -113,10 +113,10 @@ struct AppCenterView {
     .height('100%')
     .onClick(() => {
       Log.showInfo(TAG, 'click appcenter area');
-      const contextFlag: boolean = AppStorage.Get('contextMenuState');
+      const contextFlag: boolean = AppStorage.get('contextMenuState');
       Log.showInfo(TAG, 'onClick contextFlag: ' + contextFlag);
       if (contextFlag && !ContextMenu.close()) {
-        AppStorage.SetOrCreate('contextMenuState', false);
+        AppStorage.setOrCreate('contextMenuState', false);
       }else {
         this.onBackPress();
       }

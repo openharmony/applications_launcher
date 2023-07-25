@@ -35,7 +35,7 @@ export class RecentMissionStartAppHandler extends BaseStartAppHandler {
   }
 
   protected calculateAppIconPosition(): void {
-    const RecentMissionInfo = AppStorage.Get('startAppItemInfo');
+    const RecentMissionInfo = AppStorage.get('startAppItemInfo');
     Log.showInfo(TAG, `recentMission_CalculateAppIconPosition:${JSON.stringify(RecentMissionInfo)} `);
     const isSingleLayout = RecentMissionInfo['isSingleLayout'];
 //    this.mAppIconSize = RecentsStyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE_NEW ;

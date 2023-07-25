@@ -90,7 +90,7 @@ export class RecentMissionsViewModel {
       });
     }
     Log.showDebug(TAG, `getRecentMissionsList length: ${this.mRecentMissionsList.length}`);
-    AppStorage.SetOrCreate('recentMissionsList', this.mRecentMissionsList);
+    AppStorage.setOrCreate('recentMissionsList', this.mRecentMissionsList);
   }
 
   /**
@@ -103,13 +103,13 @@ export class RecentMissionsViewModel {
     Log.showDebug(TAG, `deleteRecentMissions missionId: ${missionId}`);
     if (!isClickDelBtn && missionId != -1) {
       await amsMissionManager.clearMission(missionId);
-      this.mRecentMissionsList = AppStorage.Get('recentMissionsList');
+      this.mRecentMissionsList = AppStorage.get('recentMissionsList');
       this.mRecentMissionsList = this.mRecentMissionsList == null ? this.mRecentMissionsList : this.mRecentMissionsList.filter((item) => {
         return item.missionId != missionId;
       });
     } else {
       await this.deleteRecentMissions();
-      this.mRecentMissionsList = AppStorage.Get('recentMissionsList');
+      this.mRecentMissionsList = AppStorage.get('recentMissionsList');
       this.mRecentMissionsList = this.mRecentMissionsList == null ? this.mRecentMissionsList : this.mRecentMissionsList.filter((item) => {
         return item.lockedState === true;
       });
@@ -128,7 +128,7 @@ export class RecentMissionsViewModel {
       onFinish: () => {
       }
     }, () => {
-      AppStorage.SetOrCreate('recentMissionsList', this.mRecentMissionsList);
+      AppStorage.setOrCreate('recentMissionsList', this.mRecentMissionsList);
     });
     if (this.mRecentMissionsList.length == 0) {
       this.terminateRecentIfAllClear();

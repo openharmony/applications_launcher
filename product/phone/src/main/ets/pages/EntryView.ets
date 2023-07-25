@@ -85,9 +85,9 @@ struct EntryView {
   onBackPress(): boolean {
     Log.showInfo(TAG, 'onBackPress');
     ContextMenu.close();
-    AppStorage.SetOrCreate('dialogControllerStatus', !AppStorage.Get('dialogControllerStatus'));
-    AppStorage.SetOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
-    AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
+    AppStorage.setOrCreate('dialogControllerStatus', !AppStorage.get('dialogControllerStatus'));
+    AppStorage.setOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
+    AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
     return true;
   }
 
@@ -107,8 +107,8 @@ struct EntryView {
     try {
       this.screenWidth = await windowManager.getWindowWidth();
       this.screenHeight = await windowManager.getWindowHeight();
-      AppStorage.SetOrCreate('screenWidth', this.screenWidth);
-      AppStorage.SetOrCreate('screenHeight', this.screenHeight);
+      AppStorage.setOrCreate('screenWidth', this.screenWidth);
+      AppStorage.setOrCreate('screenHeight', this.screenHeight);
     } catch (error) {
       Log.showError(TAG, `getWindowWidth or getWindowHeight error: ${error}`);
     }
@@ -118,9 +118,9 @@ struct EntryView {
     this.workSpaceWidth = this.screenWidth;
     this.workSpaceHeight = this.mLayoutViewModel.getWorkSpaceHeight();
     this.dockHeight = this.mLayoutViewModel.getDockHeight();
-    AppStorage.SetOrCreate('workSpaceWidth', this.workSpaceWidth);
-    AppStorage.SetOrCreate('workSpaceHeight', this.workSpaceHeight);
-    AppStorage.SetOrCreate('dockHeight', this.dockHeight);
+    AppStorage.setOrCreate('workSpaceWidth', this.workSpaceWidth);
+    AppStorage.setOrCreate('workSpaceHeight', this.workSpaceHeight);
+    AppStorage.setOrCreate('dockHeight', this.dockHeight);
     Log.showDebug(TAG, `updateScreenSize product: ${this.deviceType}, screenWidth: ${this.screenWidth}, screenHeight: ${this.screenHeight},
       workSpaceWidth: ${this.workSpaceWidth}, workSpaceHeight: ${this.workSpaceHeight}, dockHeight: ${this.dockHeight}`);
   }

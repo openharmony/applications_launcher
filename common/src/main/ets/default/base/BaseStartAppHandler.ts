@@ -27,7 +27,7 @@ export abstract class BaseStartAppHandler extends BaseRemoteAnimationHandler {
      */
     public setAppIconInfo(): void {
         super.setAppIconInfo();
-        AppStorage.SetOrCreate('startAppIconInfo', {
+        AppStorage.setOrCreate('startAppIconInfo', {
             appIconSize: this.mAppIconSize,
             appIconHeight: this.mAppIconHeight,
             appIconPositionX: this.mAppIconPositionX,

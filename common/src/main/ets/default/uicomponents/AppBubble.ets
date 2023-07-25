@@ -53,7 +53,7 @@ export struct AppBubble {
         menuInfoList: this.menuInfo,
         getMenuInfoList: this.getMenuInfoList,
         closeMenu: () => {
-          AppStorage.SetOrCreate('contextMenuState', false);
+          AppStorage.setOrCreate('contextMenuState', false);
         }
       })
     }
@@ -82,7 +82,7 @@ export struct AppBubble {
         })
         .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
         .onDragEnd((event: DragEvent, extraParams: string) => {
-          AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+          AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
         })
 
         AppName({
@@ -112,9 +112,9 @@ export struct AppBubble {
         Log.showInfo(TAG, `long press source ${event.source}`);
         if (event.source == SourceType.Mouse) {
           Log.showDebug(TAG, `Mouse keyName ${this.bundleName + this.abilityName + this.moduleName}`);
-          AppStorage.SetOrCreate('selectDesktopAppItem', this.bundleName + this.abilityName + this.moduleName);
+          AppStorage.setOrCreate('selectDesktopAppItem', this.bundleName + this.abilityName + this.moduleName);
         } else {
-          AppStorage.SetOrCreate('selectDesktopAppItem', '');
+          AppStorage.setOrCreate('selectDesktopAppItem', '');
         }
       })
     )

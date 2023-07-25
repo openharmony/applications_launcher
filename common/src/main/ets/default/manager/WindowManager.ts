@@ -370,10 +370,10 @@ class WindowManager {
   public async onPortrait(mediaQueryResult) {
     if (mediaQueryResult.matches) {
       Log.showInfo(TAG, 'screen change to landscape');
-      AppStorage.SetOrCreate('isPortrait', false);
+      AppStorage.setOrCreate('isPortrait', false);
     } else {
       Log.showInfo(TAG, 'screen change to portrait');
-      AppStorage.SetOrCreate('isPortrait', true);
+      AppStorage.setOrCreate('isPortrait', true);
     }
     display.getDefaultDisplay()
       .then((dis: {
@@ -383,9 +383,9 @@ class WindowManager {
         refreshRate: number
       }) => {
         Log.showInfo(TAG, `change to display: ${JSON.stringify(dis)}`);
-        AppStorage.SetOrCreate('screenWidth', px2vp(dis.width));
-        AppStorage.SetOrCreate('screenHeight', px2vp(dis.height));
-        Log.showDebug(TAG, `screenWidth and screenHeight: ${AppStorage.Get('screenWidth')},${AppStorage.Get('screenHeight')}`);
+        AppStorage.setOrCreate('screenWidth', px2vp(dis.width));
+        AppStorage.setOrCreate('screenHeight', px2vp(dis.height));
+        Log.showDebug(TAG, `screenWidth and screenHeight: ${AppStorage.get('screenWidth')},${AppStorage.get('screenHeight')}`);
       });
   }
 

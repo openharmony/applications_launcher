@@ -103,7 +103,7 @@ export struct FormItemComponent {
         })
         .onDragEnd((event: DragEvent, extraParams: string) => {
           Log.showInfo(TAG, `onDragEnd event: [${event.getX()}, ${event.getY()}]` + event.getResult());
-          AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+          AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
         })
 
       Column() {

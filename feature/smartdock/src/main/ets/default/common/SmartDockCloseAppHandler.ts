@@ -68,7 +68,7 @@ export default class SmartDockCloseAppHandler extends BaseCloseAppHandler {
             appIconPositionX: this.mAppIconPositionX,
             appIconPositionY: this.mAppIconPositionY
         };
-        let recentList: AppItemInfo[] = AppStorage.Get('recentList');
+        let recentList: AppItemInfo[] = AppStorage.get('recentList');
         CloseAppManager.getInstance().addSmartDockClosePosition(appCloseIconInfo, recentList[0]);
         Log.showInfo(TAG, `getAppIconInfo addSmartDockClosePosition ${JSON.stringify(appCloseIconInfo)}`);
 
@@ -82,16 +82,16 @@ export default class SmartDockCloseAppHandler extends BaseCloseAppHandler {
 
         this.mAppIconPositionX = 0;
         this.mAppIconPositionY = 0;
-        const residentList: AppItemInfo[] = AppStorage.Get('residentList');
-        const recentList: AppItemInfo[] = AppStorage.Get('recentList');
-        const screenWidth: number = AppStorage.Get('screenWidth');
+        const residentList: AppItemInfo[] = AppStorage.get('residentList');
+        const recentList: AppItemInfo[] = AppStorage.get('recentList');
+        const screenWidth: number = AppStorage.get('screenWidth');
         const workSpaceHeight: number = LayoutViewModel.getInstance().getWorkSpaceHeight();
         this.mAppIconPositionY = workSpaceHeight + (this.mSmartDockStyleConfig.mDockHeight - this.mSmartDockStyleConfig.mIconSize) / 2;
 
         const smartDockWidth: number = this.getListWidth(residentList) +
         (recentList.length > 0 ? this.mSmartDockStyleConfig.mDockGap + this.getListWidth(recentList) : 0);
         const smartDockStartPositionX: number = (screenWidth - smartDockWidth) / 2;
-        const startAppTypeFromPageDesktop: number = AppStorage.Get('startAppTypeFromPageDesktop');
+        const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop');
         this.mAppIconPositionX = smartDockStartPositionX + this.getListWidth(residentList) + this.mSmartDockStyleConfig.mDockGap
         + this.mSmartDockStyleConfig.mDockPadding;
         //    if (startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_APP_RECENT) {
@@ -118,7 +118,7 @@ export default class SmartDockCloseAppHandler extends BaseCloseAppHandler {
 
         for (var i = 0; i < list.length; i++) {
             if (this.mAppItemBundleName === list[i].bundleName) {
-                AppStorage.SetOrCreate('closeAppItemInfo', list[i]);
+                AppStorage.setOrCreate('closeAppItemInfo', list[i]);
                 Log.showInfo(TAG, `getIndexInList  closeAppItemInfo ${JSON.stringify(list[i])} index ${index}`)
                 index = i;
                 break;
