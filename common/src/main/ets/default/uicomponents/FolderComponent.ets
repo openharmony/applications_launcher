@@ -77,6 +77,15 @@ export struct FolderComponent {
     }
   }
 
+  aboutToDisappear(): void {
+    this.onAppIconClick = null;
+    this.onOpenFolderClick = null;
+    this.onFolderTouch = null;
+    this.onGetPosition = null;
+    this.buildMenu = null;
+    this.dragStart = null;
+  }
+
   updateShowList(): void {
     if (this.mFolderItem.layoutInfo[0].length > CommonConstants.FOLDER_STATIC_SHOW_LENGTH) {
       this.mShowAppList = this.mFolderItem.layoutInfo[0].slice(0, CommonConstants.FOLDER_STATIC_SHOW_LENGTH);
@@ -312,7 +321,7 @@ export struct FolderComponent {
             return this.dragStart(event);
           })
           .onDragEnd((event: DragEvent, extraParams: string) => {
-            Log.showInfo(TAG, `onDragEnd event: [${event.getX()}, ${event.getY()}]` + event.getResult());
+            Log.showInfo(TAG, `onDragEnd event: [${event.getWindowX()}, ${event.getWindowY()}]` + event.getResult());
             AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           })
         }

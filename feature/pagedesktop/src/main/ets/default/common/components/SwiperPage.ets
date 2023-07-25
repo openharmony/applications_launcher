@@ -153,17 +153,17 @@ export default struct SwiperPage {
       AppStorage.setOrCreate('selectDesktopAppItem', '')
     })
     .onDragEnter((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getX()}, ${event.getY()}]`);
+      Log.showInfo(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getWindowX()}, ${event.getWindowY()}]`);
     })
     .onDragLeave((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragLeave event: [${event.getX()}, ${event.getY()}]`);
+      Log.showInfo(TAG, `onDragLeave event: [${event.getWindowX()}, ${event.getWindowY()}]`);
     })
     .onDrop((event: DragEvent, extraParams: string) => {
       const dragItemType: number = AppStorage.get('dragItemType');
-      Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
+      Log.showInfo(TAG, `onDrop event: [${event.getWindowX()}, ${event.getWindowY()}]`);
       if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP
       || (dragItemType === CommonConstants.DRAG_FROM_DOCK && AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE)) {
-        const dragResult = globalThis.PageDesktopDragHandler.onDragDrop(event.getX(), event.getY());
+        const dragResult = globalThis.PageDesktopDragHandler.onDragDrop(event.getWindowX(), event.getWindowY());
         Log.showInfo(TAG, `onDrop dragResult: ${dragResult}`);
         AppStorage.setOrCreate('selectAppIndex', null);
         if (!dragResult) {

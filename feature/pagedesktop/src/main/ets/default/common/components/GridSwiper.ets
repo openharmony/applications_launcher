@@ -68,8 +68,8 @@ export default struct GridSwiper {
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, 'aboutToDisappear');
-    delete this.swiperController;
-    this.swiperController = null;
+    delete this.dialogController;
+    this.dialogController = null;
   }
 
   private buildLog(): boolean {
@@ -222,13 +222,13 @@ export default struct GridSwiper {
     .height(StyleConstants.PERCENTAGE_100)
     .width(StyleConstants.PERCENTAGE_100)
     .onDragMove((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
+      Log.showInfo(TAG, `onDragMove event: [${event.getWindowX()}, ${event.getWindowY()}]`);
       const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo');
       if (!dragItemInfo.isDragging) return;
       if (AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE
       || (AppStorage.get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE
       && AppStorage.get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP)) {
-        this.itemMove(event.getX(), event.getY());
+        this.itemMove(event.getWindowX(), event.getWindowY());
       }
     })
   }

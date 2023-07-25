@@ -116,11 +116,11 @@ export default struct FolderItem {
     ContextMenu.close();
     this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
     this.pageDesktopDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.folderItem);
-    const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getX(), event.getY());
-    const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getX(), event.getY())
+    const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getWindowX(), event.getWindowY());
+    const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getWindowX(), event.getWindowY())
     globalThis.PageDesktopDragHandler.mStartPosition = startPosition;
     AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
-    Log.showInfo(TAG, `onDragStart event: [${event.getX()}, ${event.getY()}], selectAppIndex: ${selectAppIndex}`);
+    Log.showInfo(TAG, `onDragStart event: [${event.getWindowX()}, ${event.getWindowY()}], selectAppIndex: ${selectAppIndex}`);
   }
 
   build() {
@@ -158,7 +158,7 @@ export default struct FolderItem {
           },
           onFolderTouch: (event, folderItem) => {
             if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
-              let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
+              let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
               Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
               if (!mIsDragEffectArea) {
                 globalThis.PageDesktopDragHandler.deleteBlankPageOutsideEffect();

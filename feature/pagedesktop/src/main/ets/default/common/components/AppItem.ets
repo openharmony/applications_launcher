@@ -138,6 +138,7 @@ export default struct AppItem {
     this.dialogController = null;
     delete this.formManagerDialogController;
     this.formManagerDialogController = null;
+    this.clearForm = null;
   }
 
   getMenuInfoList() {
@@ -204,9 +205,9 @@ export default struct AppItem {
       }
     })
     .onTouch((event: TouchEvent) => {
-      Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].screenX}, y: ${event.touches[0].screenY}`);
+      Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].windowX}, y: ${event.touches[0].windowY}`);
       if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
-        let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
+        let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
         Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
         if (!mIsDragEffectArea) {
           this.pageDesktopDragItemInfo = new LauncherDragItemInfo();
@@ -232,7 +233,7 @@ export default struct AppItem {
     this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
     this.pageDesktopDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.item);
     Log.showInfo(TAG, `pageDesktopDragItemInfo: ${JSON.stringify(this.pageDesktopDragItemInfo)}`);
-    globalThis.PageDesktopDragHandler.onDragStart(event.getX(), event.getY());
+    globalThis.PageDesktopDragHandler.onDragStart(event.getWindowX(), event.getWindowY());
   }
 
   /**

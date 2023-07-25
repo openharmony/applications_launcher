@@ -29,6 +29,11 @@ export struct AppGrid {
   buildMenu: Function = null;
   @State isScroll: boolean = false;
 
+  aboutToDisappear(): void {
+    this.buildMenu = null;
+    this.onItemClick = null;
+  }
+
   private getColumnsTemplate() {
     let columnsTemplate = '';
     for (let i = 0; i < this.appGridStyleConfig.mColumns; i++) {

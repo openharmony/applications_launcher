@@ -48,6 +48,12 @@ export default struct ResidentLayout {
     this.onDockListChange();
   }
 
+  aboutToDisappear(): void {
+    this.onItemClick = null;
+    this.buildMenu = null;
+    this.onDockListChangeFunc = null;
+  }
+
   getListWidth(): number {
     let residentMaxNum = this.mSmartDockStyleConfig.mMaxDockNum;
     let width = 0.0;
@@ -101,17 +107,17 @@ export default struct ResidentLayout {
       .height(this.mSmartDockStyleConfig.mDockHeight)
       .justifyContent(FlexAlign.Center)
       .onDragEnter((event: DragEvent, extraParams: string) => {
-        Log.showDebug(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getX()}, ${event.getY()}]`);
+        Log.showDebug(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getWindowX()}, ${event.getWindowY()}]`);
       })
       .onDragMove((event: DragEvent, extraParams: string) => {
-        Log.showDebug(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
+        Log.showDebug(TAG, `onDragMove event: [${event.getWindowX()}, ${event.getWindowY()}]`);
       })
       .onDragLeave((event: DragEvent, extraParams: string) => {
-        Log.showDebug(TAG, `onDragLeave event: [${event.getX()}, ${event.getY()}]`);
+        Log.showDebug(TAG, `onDragLeave event: [${event.getWindowX()}, ${event.getWindowY()}]`);
       })
       .onDrop((event: DragEvent, extraParams: string) => {
-        Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
-        const dragResult = globalThis.SmartDockDragHandler.onDragDrop(event.getX(), event.getY());
+        Log.showInfo(TAG, `onDrop event: [${event.getWindowX()}, ${event.getWindowY()}]`);
+        const dragResult = globalThis.SmartDockDragHandler.onDragDrop(event.getWindowX(), event.getWindowY());
         AppStorage.setOrCreate('selectAppIndex', null);
         if (!dragResult) {
           AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
@@ -138,6 +144,14 @@ struct AppItem {
 
   aboutToAppear(): void {
     this.menuInfo = this.buildMenu(this.appInfo);
+  }
+
+  aboutToDisappear(): void {
+    this.buildMenu = null;
+    this.onItemClick = null;
+    this.isShow = false;
+    this.appInfo = null;
+    this.menuInfo = null;
   }
 
   private getLongPress(): boolean {
@@ -201,7 +215,7 @@ struct AppItem {
     .onTouch((event: TouchEvent) => {
       Log.showInfo(TAG, `onTouch event type: ${event.type}`);
       if (event.type === CommonConstants.TOUCH_TYPE_UP && this.smartDragItemInfo.isDragging) {
-        let mIsDragEffectArea = globalThis.SmartDockDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
+        let mIsDragEffectArea = globalThis.SmartDockDragHandler.isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
         if (!mIsDragEffectArea) {
           AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           AppStorage.setOrCreate('selectAppIndex', null);
@@ -228,11 +242,11 @@ struct AppItem {
       this.dragItemType = CommonConstants.DRAG_FROM_DOCK;
       this.smartDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.appInfo);
       Log.showInfo(TAG, `smartDragItemInfo: ${JSON.stringify(this.smartDragItemInfo)}`);
-      const selectAppIndex = globalThis.SmartDockDragHandler.getDragItemIndexByCoordinates(event.getX(), event.getY());
+      const selectAppIndex = globalThis.SmartDockDragHandler.getDragItemIndexByCoordinates(event.getWindowX(), event.getWindowY());
       AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
     })
     .onDragEnd((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragEnd event: [${event.getX()}, ${event.getY()}]` + event.getResult());
+      Log.showInfo(TAG, `onDragEnd event: [${event.getWindowX()}, ${event.getWindowY()}]` + event.getResult());
       AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
     })
   }

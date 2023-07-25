@@ -52,6 +52,12 @@ export struct FormItemComponent {
     this.mFormModel = FormModel.getInstance();
   }
 
+  aboutToDisappear(): void {
+    this.getFormId = null;
+    this.clickForm = null;
+    this.dragStart = null;
+  }
+
   @Builder MenuBuilder() {
     Column() {
       AppMenu({
@@ -102,7 +108,7 @@ export struct FormItemComponent {
           return this.dragStart(event);
         })
         .onDragEnd((event: DragEvent, extraParams: string) => {
-          Log.showInfo(TAG, `onDragEnd event: [${event.getX()}, ${event.getY()}]` + event.getResult());
+          Log.showInfo(TAG, `onDragEnd event: [${event.getWindowX()}, ${event.getWindowY()}]` + event.getResult());
           AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
         })
 

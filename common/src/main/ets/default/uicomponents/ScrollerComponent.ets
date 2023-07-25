@@ -33,6 +33,11 @@ export struct ScrollerComponent {
   popupHide: Function= null;
   updateData: Function= null;
 
+  aboutToDisappear(): void {
+    this.popupHide = null;
+    this.updateData = null;
+  }
+
   build() {
     Row() {
       Column() {

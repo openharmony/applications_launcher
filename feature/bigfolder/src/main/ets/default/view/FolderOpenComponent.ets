@@ -475,6 +475,7 @@ struct FolderAppItem {
     this.uninstallDialogController = null;
     delete this.formManagerDialogController;
     this.formManagerDialogController = null;
+    this.clearForm = null;
   }
 
   uninstallDialogController: CustomDialogController = new CustomDialogController({

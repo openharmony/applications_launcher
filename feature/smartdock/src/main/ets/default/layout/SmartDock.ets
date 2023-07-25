@@ -62,6 +62,7 @@ export struct SmartDock {
     Log.showInfo(TAG, 'aboutToDisappear!');
     delete this.mDialogController;
     this.mDialogController = null;
+    this.showAppCenter = null;
   }
 
   private mDialogController: CustomDialogController = new CustomDialogController({
