@@ -239,13 +239,13 @@ export class PageDesktopModel {
    */
   setPageIndex(idx: number): void {
     Log.showInfo(TAG, 'setPageIndex: ' + idx);
-    AppStorage.SetOrCreate('pageIndex', idx);
+    AppStorage.setOrCreate('pageIndex', idx);
   }
 
   /**
    * Get the Desktop Page Number.
    */
   getPageIndex(): number {
-    return AppStorage.Get('pageIndex');
+    return AppStorage.get('pageIndex');
   }
 }

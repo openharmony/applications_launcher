@@ -49,16 +49,16 @@ export default class SmartDockStartAppHandler extends BaseStartAppHandler {
       Log.showError(TAG, `calculateAppIconPosition with invalid config`)
       return;
     }
-    const appItemInfo = AppStorage.Get('startAppItemInfo');
-    const residentList: AppItemInfo[] = AppStorage.Get('residentList');
-    const recentList: AppItemInfo[] = AppStorage.Get('recentList');
-    const screenWidth: number = AppStorage.Get('screenWidth');
+    const appItemInfo = AppStorage.get('startAppItemInfo');
+    const residentList: AppItemInfo[] = AppStorage.get('residentList');
+    const recentList: AppItemInfo[] = AppStorage.get('recentList');
+    const screenWidth: number = AppStorage.get('screenWidth');
     const workSpaceHeight: number = LayoutViewModel.getInstance().getWorkSpaceHeight();
     this.mAppIconPositionY = workSpaceHeight + this.mSmartDockStyleConfig.mListItemGap;
     const smartDockWidth: number = this.getListWidth(residentList) +
     (recentList.length > 0 ? this.mSmartDockStyleConfig.mDockGap + this.getListWidth(recentList) : 0);
     const smartDockStartPositionX: number = (screenWidth - smartDockWidth) / 2;
-    const startAppTypeFromPageDesktop: number = AppStorage.Get('startAppTypeFromPageDesktop');
+    const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop');
     if (startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_APP_RECENT) {
       const indexInRecentList: number = this.getIndexInList(appItemInfo, recentList);
       this.mAppIconPositionX = smartDockStartPositionX + this.getListWidth(residentList) + this.mSmartDockStyleConfig.mDockGap

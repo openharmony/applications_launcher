@@ -77,6 +77,15 @@ export struct FolderComponent {
     }
   }
 
+  aboutToDisappear(): void {
+    this.onAppIconClick = null;
+    this.onOpenFolderClick = null;
+    this.onFolderTouch = null;
+    this.onGetPosition = null;
+    this.buildMenu = null;
+    this.dragStart = null;
+  }
+
   updateShowList(): void {
     if (this.mFolderItem.layoutInfo[0].length > CommonConstants.FOLDER_STATIC_SHOW_LENGTH) {
       this.mShowAppList = this.mFolderItem.layoutInfo[0].slice(0, CommonConstants.FOLDER_STATIC_SHOW_LENGTH);
@@ -123,14 +132,14 @@ export struct FolderComponent {
   private updateFolderAnimate() {
     Log.showInfo(TAG, `updateFolderAnimate start`);
     if (this.openFolderStatus == 0) {
-      this.folderAnimateData = AppStorage.Get('folderAnimateData');
+      this.folderAnimateData = AppStorage.get('folderAnimateData');
       if (this.mFolderItem.folderId === this.folderAnimateData.folderId &&
       this.folderAnimateData.isOpenFolder &&
       this.folderAnimateData.folderId != '' &&
       this.animateOpacity != 1.0 &&
       this.animateScale != 1.0) {
         this.folderAnimateData.isOpenFolder = false;
-        AppStorage.SetOrCreate('folderAnimateData', this.folderAnimateData);
+        AppStorage.setOrCreate('folderAnimateData', this.folderAnimateData);
         Log.showInfo(TAG, `updateFolderAnimate show`);
         this.showAnimate(1.0, 1.0, false);
       }
@@ -168,8 +177,8 @@ export struct FolderComponent {
   public getPosition(x: number, y: number): void  {
     this.folderItemPositionX = x;
     this.folderItemPositionY = y;
-    let screenWidth: number = AppStorage.Get('screenWidth');
-    let screenHeight: number = AppStorage.Get('screenHeight');
+    let screenWidth: number = AppStorage.get('screenWidth');
+    let screenHeight: number = AppStorage.get('screenHeight');
     this.animateFolderPositionX = (screenWidth - this.folderGridSize * 1.5) / 2 - this.folderItemPositionX;
     this.animateFolderPositionY = (screenHeight - this.folderGridSize * 1.5) / 2 - this.folderItemPositionY;
     Log.showInfo(TAG, `getPosition animatePosition x: ${this.animateFolderPositionX}, y: ${this.animateFolderPositionY}`);
@@ -272,7 +281,7 @@ export struct FolderComponent {
                   if (this.onOpenFolderClick) {
                     this.folderAnimateData.folderId = this.mFolderItem.folderId;
                     this.folderAnimateData.isOpenFolder = true;
-                    AppStorage.SetOrCreate('folderAnimateData', this.folderAnimateData);
+                    AppStorage.setOrCreate('folderAnimateData', this.folderAnimateData);
                     this.onOpenFolderClick(event, this.mFolderItem);
                   }
                 })
@@ -289,7 +298,7 @@ export struct FolderComponent {
               if (this.onOpenFolderClick) {
                 this.folderAnimateData.folderId = this.mFolderItem.folderId;
                 this.folderAnimateData.isOpenFolder = true;
-                AppStorage.SetOrCreate('folderAnimateData', this.folderAnimateData);
+                AppStorage.setOrCreate('folderAnimateData', this.folderAnimateData);
                 this.onOpenFolderClick(event, this.mFolderItem);
               }
             })
@@ -312,8 +321,8 @@ export struct FolderComponent {
             return this.dragStart(event);
           })
           .onDragEnd((event: DragEvent, extraParams: string) => {
-            Log.showInfo(TAG, `onDragEnd event: [${event.getX()}, ${event.getY()}]` + event.getResult());
-            AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+            Log.showInfo(TAG, `onDragEnd event: [${event.getWindowX()}, ${event.getWindowY()}]` + event.getResult());
+            AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           })
         }
         .height(this.folderGridSize)

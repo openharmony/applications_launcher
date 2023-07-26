@@ -315,7 +315,7 @@ export class RdbStoreManager {
     let result = false;
     try {
       // get deviceType
-      let deviceType = AppStorage.Get('deviceType');
+      let deviceType = AppStorage.get('deviceType');
 
       // init default settings config
       if (CheckEmptyUtils.isEmpty(key) || CheckEmptyUtils.isEmpty(value)) {

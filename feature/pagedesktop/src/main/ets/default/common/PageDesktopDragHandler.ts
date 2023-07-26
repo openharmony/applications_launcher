@@ -75,7 +75,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
 
   setDragEffectArea(effectArea): void {
     Log.showDebug(TAG, `setDragEffectArea:${JSON.stringify(effectArea)}`)
-    AppStorage.SetOrCreate('pageDesktopDragEffectArea', effectArea);
+    AppStorage.setOrCreate('pageDesktopDragEffectArea', effectArea);
     super.setDragEffectArea(effectArea);
     this.updateGridParam(effectArea);
   }
@@ -83,8 +83,8 @@ export class PageDesktopDragHandler extends BaseDragHandler {
   isDragEffectArea(x: number, y: number): boolean {
     const isInEffectArea = super.isDragEffectArea(x, y);
     Log.showDebug(TAG, `isDragEffectArea x: ${x}, y: ${y}, isInEffectArea: ${isInEffectArea}`);
-    const deviceType: string = AppStorage.Get('deviceType');
-    const smartDockDragEffectArea: DragArea = AppStorage.Get('smartDockDragEffectArea');
+    const deviceType: string = AppStorage.get('deviceType');
+    const smartDockDragEffectArea: DragArea = AppStorage.get('smartDockDragEffectArea');
     Log.showDebug(TAG, `isDragEffectArea smartDockDragEffectArea: ${JSON.stringify(smartDockDragEffectArea)}`);
     if (smartDockDragEffectArea) {
       if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
@@ -135,7 +135,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
   protected getDragRelativeData(): any {
     const desktopDataInfo: {
       appGridInfo: [[]]
-    } = AppStorage.Get('appListInfo');
+    } = AppStorage.get('appListInfo');
     return desktopDataInfo.appGridInfo;
   }
 
@@ -165,7 +165,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
   protected getItemByIndex(index: number): any {
     const column = index % this.mGridConfig.column;
     const row = Math.floor(index / this.mGridConfig.column);
-    const pageIndex: number = AppStorage.Get('pageIndex');
+    const pageIndex: number = AppStorage.get('pageIndex');
     const appGridInfo = this.getDragRelativeData();
     Log.showInfo(TAG, `getItemByIndex pageIndex: ${pageIndex}, appGridInfo length: ${appGridInfo.length},
     column: ${column}, row: ${row}`);
@@ -190,7 +190,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
   }
 
   private getTouchPosition(x: number, y: number): DragItemPosition {
-    const pageIndex: number = AppStorage.Get('pageIndex');
+    const pageIndex: number = AppStorage.get('pageIndex');
     Log.showDebug(TAG, `getTouchPosition pageIndex: ${pageIndex}`);
     const position: DragItemPosition = {
       page: pageIndex,
@@ -222,22 +222,22 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     this.mStartPosition = null;
     Log.showInfo(TAG, `onDragStart start`);
     const selectAppIndex = this.getItemIndex(x, y);
-    AppStorage.SetOrCreate('selectAppIndex', selectAppIndex);
+    AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
     this.mStartPosition = this.getTouchPosition(x, y);
   }
 
   onDragDrop(x: number, y: number): boolean {
-    const dragItemInfo: LauncherDragItemInfo = AppStorage.Get<LauncherDragItemInfo>('dragItemInfo');
+    const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo');
     if (!dragItemInfo.isDragging) {
       return false;
     }
-    const dragItemType: number = AppStorage.Get('dragItemType');
-    const deviceType: string = AppStorage.Get('deviceType')
+    const dragItemType: number = AppStorage.get('dragItemType');
+    const deviceType: string = AppStorage.get('deviceType')
     // dock appInfo has no location information.
     if (dragItemType === CommonConstants.DRAG_FROM_DOCK && deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
       dragItemInfo.typeId = CommonConstants.TYPE_APP;
       dragItemInfo.area = [1, 1];
-      dragItemInfo.page = AppStorage.Get('pageIndex');
+      dragItemInfo.page = AppStorage.get('pageIndex');
     }
     Log.showDebug(TAG, `onDragEnd dragItemInfo: ${JSON.stringify(dragItemInfo)}`);
     const endIndex = this.getItemIndex(x, y);
@@ -403,13 +403,13 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     }
     if (CheckEmptyUtils.isEmpty(endPosition) || JSON.stringify(startPosition) === JSON.stringify(endPosition)) {
       Log.showDebug(TAG, `pageIndex: ${JSON.stringify(startPosition) === JSON.stringify(endPosition)}`);
-      AppStorage.SetOrCreate('pageIndex', startPosition.page);
+      AppStorage.setOrCreate('pageIndex', startPosition.page);
     } else if (deleteStartFlag) {
       if (startPosition.page > endPosition.page) {
-        AppStorage.SetOrCreate('pageIndex', endPosition.page);
+        AppStorage.setOrCreate('pageIndex', endPosition.page);
       } else if (endPosition.page > startPosition.page &&
       endPosition.page < layoutInfo.layoutDescription.pageCount) {
-        AppStorage.SetOrCreate('pageIndex', endPosition.page - 1);
+        AppStorage.setOrCreate('pageIndex', endPosition.page - 1);
       }
     }
     this.mPageDesktopModel.setAddByDragging(false);

@@ -138,6 +138,7 @@ export default struct AppItem {
     this.dialogController = null;
     delete this.formManagerDialogController;
     this.formManagerDialogController = null;
+    this.clearForm = null;
   }
 
   getMenuInfoList() {
@@ -181,7 +182,7 @@ export default struct AppItem {
       if (event.button == MouseButton.Right) {
         event.stopPropagation();
         Log.showInfo(TAG, 'onMouse mouse button right');
-        AppStorage.SetOrCreate('selectDesktopAppItem', this.item.keyName);
+        AppStorage.setOrCreate('selectDesktopAppItem', this.item.keyName);
       }
     })
     .onClick((event) => {
@@ -204,13 +205,13 @@ export default struct AppItem {
       }
     })
     .onTouch((event: TouchEvent) => {
-      Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].screenX}, y: ${event.touches[0].screenY}`);
+      Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].windowX}, y: ${event.touches[0].windowY}`);
       if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
-        let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
+        let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
         Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
         if (!mIsDragEffectArea) {
           this.pageDesktopDragItemInfo = new LauncherDragItemInfo();
-          AppStorage.SetOrCreate('selectAppIndex', null);
+          AppStorage.setOrCreate('selectAppIndex', null);
         }
       }
     })
@@ -232,7 +233,7 @@ export default struct AppItem {
     this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
     this.pageDesktopDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.item);
     Log.showInfo(TAG, `pageDesktopDragItemInfo: ${JSON.stringify(this.pageDesktopDragItemInfo)}`);
-    globalThis.PageDesktopDragHandler.onDragStart(event.getX(), event.getY());
+    globalThis.PageDesktopDragHandler.onDragStart(event.getWindowX(), event.getWindowY());
   }
 
   /**
@@ -252,8 +253,8 @@ export default struct AppItem {
       row: this.item.row,
       column: this.item.column
     }
-    AppStorage.SetOrCreate('startAppItemInfo', appInfo);
-    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
+    AppStorage.setOrCreate('startAppItemInfo', appInfo);
+    AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
     this.mPageDesktopStartAppHandler.setAppIconSize(this.mIconSize);
     this.mPageDesktopStartAppHandler.setAppIconInfo();
     Trace.end("setStartAppInfo");

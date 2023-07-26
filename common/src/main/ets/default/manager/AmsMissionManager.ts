@@ -212,7 +212,7 @@ class AmsMissionManager {
         }
       });
     }
-    AppStorage.SetOrCreate('recentMissionsList', mRecentMissionsList);
+    AppStorage.setOrCreate('recentMissionsList', mRecentMissionsList);
   };
 
   /**

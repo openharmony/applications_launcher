@@ -53,7 +53,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
 
   setDragEffectArea(effectArea): void {
     Log.showDebug(TAG, `setDragEffectArea: ${JSON.stringify(effectArea)}`);
-    AppStorage.SetOrCreate('smartDockDragEffectArea', effectArea);
+    AppStorage.setOrCreate('smartDockDragEffectArea', effectArea);
     super.setDragEffectArea(effectArea);
     this.updateDockParam(effectArea);
   }
@@ -61,8 +61,8 @@ export default class SmartDockDragHandler extends BaseDragHandler {
   isDragEffectArea(x: number, y: number): boolean {
     const isInEffectArea = super.isDragEffectArea(x, y);
     Log.showDebug(TAG, `isDragEffectArea x: ${x}, y: ${y}, isInEffectArea: ${isInEffectArea}`);
-    const deviceType = AppStorage.Get('deviceType');
-    const pageDesktopDragEffectArea: DragArea = AppStorage.Get('pageDesktopDragEffectArea');
+    const deviceType = AppStorage.get('deviceType');
+    const pageDesktopDragEffectArea: DragArea = AppStorage.get('pageDesktopDragEffectArea');
     Log.showDebug(TAG, `isDragEffectArea pageDesktopDragEffectArea: ${JSON.stringify(pageDesktopDragEffectArea)}`);
     if (pageDesktopDragEffectArea) {
       if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
@@ -82,7 +82,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     const dockWidth = effectArea.right - effectArea.left;
     const dockData: [] = this.getDragRelativeData();
     const dataCount = dockData.length;
-    const dockPadding: {right: number, left: number, top: number, bottom: number} = AppStorage.Get('dockPadding');
+    const dockPadding: {right: number, left: number, top: number, bottom: number} = AppStorage.get('dockPadding');
     const itemSize = this.mSmartDockStyleConfig.mListItemWidth;
     const itemGap = this.mSmartDockStyleConfig.mListItemGap;
     if (dataCount > 0) {
@@ -100,7 +100,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
   }
 
   protected getDragRelativeData(): any {
-    const dockData: [] = AppStorage.Get('residentList');
+    const dockData: [] = AppStorage.get('residentList');
     return dockData;
   }
 
@@ -148,19 +148,19 @@ export default class SmartDockDragHandler extends BaseDragHandler {
   }
 
   protected onDragDrop(x: number, y: number): boolean {
-    const dragItemInfo: LauncherDragItemInfo = AppStorage.Get<LauncherDragItemInfo>('dragItemInfo');
+    const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo');
     if (!dragItemInfo.isDragging) {
       return false;
     }
-    const dragItemType: number = AppStorage.Get('dragItemType');
+    const dragItemType: number = AppStorage.get('dragItemType');
     const insertIndex = this.getItemIndex(x, y);
     if (dragItemType === CommonConstants.DRAG_FROM_DOCK) {
-      const selectAppIndex: number = AppStorage.Get('selectAppIndex');
+      const selectAppIndex: number = AppStorage.get('selectAppIndex');
       globalThis.SmartDockDragHandler.layoutAdjustment(insertIndex, selectAppIndex);
       return true;
     }
     if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP
-    && AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    && AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
       Log.showInfo(TAG, `onDrop insertIndex: ${insertIndex}`);
       this.addItemToSmartDock(dragItemInfo, insertIndex);
       return true;

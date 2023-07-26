@@ -46,7 +46,7 @@ export struct SmartDock {
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear start!');
-    this.deviceType = AppStorage.Get('deviceType');
+    this.deviceType = AppStorage.get('deviceType');
     try {
       this.mSmartDockViewModel = SmartDockViewModel.getInstance();
     } catch (error) {
@@ -62,6 +62,7 @@ export struct SmartDock {
     Log.showInfo(TAG, 'aboutToDisappear!');
     delete this.mDialogController;
     this.mDialogController = null;
+    this.showAppCenter = null;
   }
 
   private mDialogController: CustomDialogController = new CustomDialogController({
@@ -111,8 +112,8 @@ export struct SmartDock {
 
     let list = this.missionInfoList.filter(it => it.bundleName == bundleName);
     if (list.length <= 0) {
-      AppStorage.SetOrCreate('snapshotList', []);
-      AppStorage.SetOrCreate('snapShotWidth', 0);
+      AppStorage.setOrCreate('snapshotList', []);
+      AppStorage.setOrCreate('snapShotWidth', 0);
       this.popup = { show: false, showItem: '', popup: null };
       return;
     }
@@ -169,6 +170,6 @@ export struct SmartDock {
 
   recentOnClickWithPopup(item) {
     this.onHoverEvent(true, item.bundleName);
-    AppStorage.SetOrCreate('recentShowPopup', true);
+    AppStorage.setOrCreate('recentShowPopup', true);
   }
 }

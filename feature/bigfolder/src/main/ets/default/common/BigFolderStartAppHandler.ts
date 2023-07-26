@@ -52,9 +52,9 @@ export default class BigFolderStartAppHandler extends BaseStartAppHandler {
             return;
         }
 
-        const appItemInfo = AppStorage.Get('startAppItemInfo');
-        const screenWidth: number = AppStorage.Get('screenWidth');
-        const screenHeight: number = AppStorage.Get('screenHeight');
+        const appItemInfo = AppStorage.get('startAppItemInfo');
+        const screenWidth: number = AppStorage.get('screenWidth');
+        const screenHeight: number = AppStorage.get('screenHeight');
         const appGridWidth: number = this.mBigFolderStyleConfig.mOpenFolderGridWidth;
         const appGridHeight: number = this.mBigFolderStyleConfig.mOpenFolderGridHeight;
         const swiperHeight: number = this.mBigFolderStyleConfig.mOpenFolderSwiperHeight;
@@ -94,7 +94,7 @@ export default class BigFolderStartAppHandler extends BaseStartAppHandler {
             enterEditing: boolean,
             folderName: string,
             folderId: string
-        } = AppStorage.Get('openFolderData');
+        } = AppStorage.get('openFolderData');
         for (var i = 0; i < folderInfo.layoutInfo.length; i++) {
             for (var j = 0; j < folderInfo.layoutInfo[i].length; j++) {
                 if (appItemInfo.bundleName === folderInfo.layoutInfo[i][j]?.bundleName) {

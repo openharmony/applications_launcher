@@ -102,8 +102,8 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
       let iconLeftMargin: number = (columnSize - this.mPageDesktopStyleConfig.mIconSize) / 2;
       this.mAppIconPositionX = this.mPageDesktopStyleConfig.mMargin + iconLeftMargin + appItem.column * (gridItemWidth);
 
-      if (CommonConstants.OVERLAY_TYPE_CARD !== AppStorage.Get('startAppTypeFromPageDesktop') && appItem.page != AppStorage.Get('pageIndex')) {
-        AppStorage.SetOrCreate('pageIndex', appItem.page);
+      if (CommonConstants.OVERLAY_TYPE_CARD !== AppStorage.get('startAppTypeFromPageDesktop') && appItem.page != AppStorage.get('pageIndex')) {
+        AppStorage.setOrCreate('pageIndex', appItem.page);
       }
     } else {
       let folderItem: any = this.mFolderItem;
@@ -134,8 +134,8 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
       this.mAppIconPositionX = this.mPageDesktopStyleConfig.mMargin + folderItem.column * (gridItemWidth) + folderLeftMargin
       + folderLeftPadding + (column - 1) * (folderGridGap + folderAppSize);
 
-      if (folderItem.page != AppStorage.Get('pageIndex')) {
-        AppStorage.SetOrCreate('pageIndex', folderItem.page);
+      if (folderItem.page != AppStorage.get('pageIndex')) {
+        AppStorage.setOrCreate('pageIndex', folderItem.page);
       }
     }
     this.mFindPagedesktopPosition = true;
@@ -162,7 +162,7 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
     Log.showDebug(TAG, `getCloseAppItemInfo called!`);
     let appListInfo: {
       appGridInfo: [[]]
-    } = AppStorage.Get('appListInfo')
+    } = AppStorage.get('appListInfo')
     let appGridInfo = appListInfo.appGridInfo;
     if (CheckEmptyUtils.isEmptyArr(appGridInfo)) {
       Log.showError(TAG, `getCloseAppItemInfo appGridInfo is null`);

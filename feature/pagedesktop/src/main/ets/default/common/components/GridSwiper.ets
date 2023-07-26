@@ -68,12 +68,12 @@ export default struct GridSwiper {
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, 'aboutToDisappear');
-    delete this.swiperController;
-    this.swiperController = null;
+    delete this.dialogController;
+    this.dialogController = null;
   }
 
   private buildLog(): boolean {
-    let isDesktopLoadFinished = AppStorage.Get('isDesktopLoadFinished');
+    let isDesktopLoadFinished = AppStorage.get('isDesktopLoadFinished');
     Log.showDebug(TAG, `build start ${isDesktopLoadFinished} page ${this.pageIndex}`);
     return isDesktopLoadFinished == true;
   }
@@ -113,13 +113,13 @@ export default struct GridSwiper {
 
   itemMove(moveX: number, moveY: number){
     const hotArea: number = 12;
-    let screenWidth: number = AppStorage.Get('screenWidth') ?? 0;
-    let screenHeight: number = AppStorage.Get('screenHeight') ?? 0;
-    const isSwappingPage: boolean = AppStorage.Get('isSwappingPage');
+    let screenWidth: number = AppStorage.get('screenWidth') ?? 0;
+    let screenHeight: number = AppStorage.get('screenHeight') ?? 0;
+    const isSwappingPage: boolean = AppStorage.get('isSwappingPage');
     if (isSwappingPage || !screenWidth || !screenHeight) {
       return;
     }
-    let curPageIndex: number = AppStorage.Get('pageIndex');
+    let curPageIndex: number = AppStorage.get('pageIndex');
     if (moveX < hotArea && curPageIndex > 0 && moveY < screenHeight) {
       this.mPageDesktopViewModel.showPrevious();
       this.movingIconSwapPageDelay();
@@ -139,9 +139,9 @@ export default struct GridSwiper {
    * Increase delay when dragging app to other page.
    */
   movingIconSwapPageDelay() {
-    AppStorage.SetOrCreate('isSwappingPage', true);
+    AppStorage.setOrCreate('isSwappingPage', true);
     setTimeout(() => {
-      AppStorage.SetOrCreate('isSwappingPage', false);
+      AppStorage.setOrCreate('isSwappingPage', false);
     }, APP_INFO_REFRESH_DELAY);
   }
 
@@ -151,7 +151,7 @@ export default struct GridSwiper {
         if (this.desktopLoadFinished) {
           Swiper(this.swiperController) {
             ForEach(this.pageList, (item, index: number) => {
-              if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+              if (AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
                 Column() {
                   SwiperPage({
                     appListInfo: $appListInfo,
@@ -222,13 +222,13 @@ export default struct GridSwiper {
     .height(StyleConstants.PERCENTAGE_100)
     .width(StyleConstants.PERCENTAGE_100)
     .onDragMove((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
-      const dragItemInfo: LauncherDragItemInfo = AppStorage.Get<LauncherDragItemInfo>('dragItemInfo');
+      Log.showInfo(TAG, `onDragMove event: [${event.getWindowX()}, ${event.getWindowY()}]`);
+      const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo');
       if (!dragItemInfo.isDragging) return;
-      if (AppStorage.Get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE
-      || (AppStorage.Get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE
-      && AppStorage.Get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP)) {
-        this.itemMove(event.getX(), event.getY());
+      if (AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE
+      || (AppStorage.get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE
+      && AppStorage.get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP)) {
+        this.itemMove(event.getWindowX(), event.getWindowY());
       }
     })
   }

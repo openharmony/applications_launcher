@@ -59,7 +59,7 @@ export struct PageDesktopLayout {
   }
 
   aboutToAppear(): void  {
-    this.deviceType = AppStorage.Get('deviceType');
+    this.deviceType = AppStorage.get('deviceType');
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     mPageDesktopViewModel = PageDesktopViewModel.getInstance();
     this.gridConfig = mPageDesktopViewModel.getGridConfig().layout;

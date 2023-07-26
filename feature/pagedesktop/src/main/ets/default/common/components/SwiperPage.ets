@@ -146,32 +146,32 @@ export default struct SwiperPage {
     })
     .onMouse((event: MouseEvent) => {
       if (event.button == MouseButton.Right) {
-        AppStorage.SetOrCreate('selectDesktopAppItem', '');
+        AppStorage.setOrCreate('selectDesktopAppItem', '');
       }
     })
     .onClick(() => {
-      AppStorage.SetOrCreate('selectDesktopAppItem', '')
+      AppStorage.setOrCreate('selectDesktopAppItem', '')
     })
     .onDragEnter((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getX()}, ${event.getY()}]`);
+      Log.showInfo(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getWindowX()}, ${event.getWindowY()}]`);
     })
     .onDragLeave((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragLeave event: [${event.getX()}, ${event.getY()}]`);
+      Log.showInfo(TAG, `onDragLeave event: [${event.getWindowX()}, ${event.getWindowY()}]`);
     })
     .onDrop((event: DragEvent, extraParams: string) => {
-      const dragItemType: number = AppStorage.Get('dragItemType');
-      Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
+      const dragItemType: number = AppStorage.get('dragItemType');
+      Log.showInfo(TAG, `onDrop event: [${event.getWindowX()}, ${event.getWindowY()}]`);
       if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP
-      || (dragItemType === CommonConstants.DRAG_FROM_DOCK && AppStorage.Get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE)) {
-        const dragResult = globalThis.PageDesktopDragHandler.onDragDrop(event.getX(), event.getY());
+      || (dragItemType === CommonConstants.DRAG_FROM_DOCK && AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE)) {
+        const dragResult = globalThis.PageDesktopDragHandler.onDragDrop(event.getWindowX(), event.getWindowY());
         Log.showInfo(TAG, `onDrop dragResult: ${dragResult}`);
-        AppStorage.SetOrCreate('selectAppIndex', null);
+        AppStorage.setOrCreate('selectAppIndex', null);
         if (!dragResult) {
-          AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+          AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
         } else {
           // Wait for the UI rendering to end.
           setTimeout(() => {
-            AppStorage.SetOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
+            AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           }, 50);
         }
       }

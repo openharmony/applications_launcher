@@ -154,7 +154,7 @@ export struct AppGridLayout {
       }
       this.mSelectItem = appInfo;
       this.mDialogController.open();
-      AppStorage.SetOrCreate('uninstallAppInfo', appInfo);
+      AppStorage.setOrCreate('uninstallAppInfo', appInfo);
     };
     uninstallMenu.menuEnabled = appInfo.isUninstallAble;
     menuInfoList.push(uninstallMenu);
@@ -208,9 +208,9 @@ export struct AppGridLayout {
       Log.showError(TAG, `setStartAppInfo with item`)
       return;
     }
-    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
+    AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
     item.icon = ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName);
-    AppStorage.SetOrCreate('startAppItemInfo', item);
+    AppStorage.setOrCreate('startAppItemInfo', item);
     this.mAppCenterStartAppHandler.setAppIconSize(this.mAppCenterGridStyleConfig.mIconSize);
     this.mAppCenterStartAppHandler.setAppIconInfo();
   }

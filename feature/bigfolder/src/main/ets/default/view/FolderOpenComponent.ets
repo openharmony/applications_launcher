@@ -122,8 +122,8 @@ export struct FolderOpenComponent {
       this.mFolderInfo = mBigFolderViewModel.addAddIcon(this.mFolderInfo);
       this.showOpenFolder();
     }
-    AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_STATIC);
-    AppStorage.SetOrCreate('isDraging', false);
+    AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_STATIC);
+    AppStorage.setOrCreate('isDraging', false);
     Log.showDebug(TAG, `updateFolderData end`);
   }
 
@@ -286,10 +286,10 @@ export struct FolderOpenComponent {
         mBigFolderViewModel.modifyFolderName(this.mFolderInfo)
       }
     } else {
-      const contextFlag: boolean = AppStorage.Get('contextMenuState');
+      const contextFlag: boolean = AppStorage.get('contextMenuState');
       Log.showInfo(TAG, 'saveText contextFlag: ' + contextFlag);
       if (contextFlag) {
-        AppStorage.SetOrCreate('contextMenuState', false);
+        AppStorage.setOrCreate('contextMenuState', false);
       } else {
         mBigFolderViewModel.closeFolder();
       }
@@ -350,7 +350,7 @@ struct FolderSwiperPage {
           mBigFolderViewModel.closeFolder();
         }
       },
-      folderItem: AppStorage.Get('openFolderData')
+      folderItem: AppStorage.get('openFolderData')
     }),
     customStyle: true,
     alignment: DialogAlignment.Center,
@@ -436,10 +436,10 @@ struct FolderSwiperPage {
         mBigFolderViewModel.modifyFolderName(this.mFolderInfo);
       }
     } else {
-      const contextFlag: boolean = AppStorage.Get('contextMenuState');
+      const contextFlag: boolean = AppStorage.get('contextMenuState');
       Log.showInfo(TAG, 'saveText contextFlag: ' + contextFlag);
       if (contextFlag) {
-        AppStorage.SetOrCreate('contextMenuState', false);
+        AppStorage.setOrCreate('contextMenuState', false);
       } else {
         mBigFolderViewModel.closeFolder();
       }
@@ -475,6 +475,7 @@ struct FolderAppItem {
     this.uninstallDialogController = null;
     delete this.formManagerDialogController;
     this.formManagerDialogController = null;
+    this.clearForm = null;
   }
 
   uninstallDialogController: CustomDialogController = new CustomDialogController({
@@ -582,7 +583,7 @@ struct FolderAppItem {
         if (event.button == MouseButton.Right) {
           event.stopPropagation();
           Log.showDebug(TAG, `FolderAppItem onMouse MouseButton Right keyName: ${this.item.keyName}`);
-          AppStorage.SetOrCreate('selectDesktopAppItem', this.item.keyName);
+          AppStorage.setOrCreate('selectDesktopAppItem', this.item.keyName);
         }
       })
       .gesture(
@@ -624,10 +625,10 @@ struct FolderAppItem {
       return;
     }
     Log.showInfo(TAG, `app setStartAppInfo`);
-    if (AppStorage.Get('deviceType') === CommonConstants.PAD_DEVICE_TYPE) {
-      AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
+    if (AppStorage.get('deviceType') === CommonConstants.PAD_DEVICE_TYPE) {
+      AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
     }
-    AppStorage.SetOrCreate('startAppItemInfo', this.item);
+    AppStorage.setOrCreate('startAppItemInfo', this.item);
     mBigFolderStartAppHandler.setAppIconSize(mBigFolderStyleConfig.mOpenFolderIconSize);
     mBigFolderStartAppHandler.setAppIconInfo();
   }

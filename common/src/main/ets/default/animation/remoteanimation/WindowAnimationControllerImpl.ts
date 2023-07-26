@@ -95,18 +95,18 @@ class WindowAnimationControllerImpl implements windowAnimationManager.WindowAnim
                              finishCallback: windowAnimationManager.WindowAnimationFinishedCallback,
                              remoteAnimationType: number): void {
     if (!CheckEmptyUtils.isEmpty(startingWindowTarget)) {
-      AppStorage.SetOrCreate('startingWindowTarget', startingWindowTarget);
+      AppStorage.setOrCreate('startingWindowTarget', startingWindowTarget);
     }
 
     if (!CheckEmptyUtils.isEmpty(closingWindowTarget)) {
-      AppStorage.SetOrCreate('closingWindowTarget', closingWindowTarget);
+      AppStorage.setOrCreate('closingWindowTarget', closingWindowTarget);
     }
 
     if (!CheckEmptyUtils.isEmpty(finishCallback)) {
-      AppStorage.SetOrCreate('remoteAnimationFinishCallback', finishCallback);
+      AppStorage.setOrCreate('remoteAnimationFinishCallback', finishCallback);
     }
 
-    AppStorage.SetOrCreate('remoteAnimationType', remoteAnimationType);
+    AppStorage.setOrCreate('remoteAnimationType', remoteAnimationType);
   }
 }
 

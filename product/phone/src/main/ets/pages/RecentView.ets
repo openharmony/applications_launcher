@@ -39,7 +39,7 @@ struct RecentView {
     this.mRecentMissionsStage.onCreate();
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
     this.mRecentMissionsViewModel.getRecentMissionsList();
-    AppStorage.SetOrCreate('recentIdx', 0);
+    AppStorage.setOrCreate('recentIdx', 0);
   }
 
   onPageHide(): void {

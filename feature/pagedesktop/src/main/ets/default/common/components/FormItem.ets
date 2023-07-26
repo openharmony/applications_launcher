@@ -95,6 +95,7 @@ export default struct FormItem {
     this.dialogController = null;
     delete this.formManagerDialogController;
     this.formManagerDialogController = null;
+    this.clearForm = null;
   }
 
   /**
@@ -114,7 +115,7 @@ export default struct FormItem {
           playMode: PlayMode.Normal,
           onFinish: () => {
             Log.showInfo(TAG, `showAnimate onFinish`);
-            AppStorage.SetOrCreate('isRemoveForm', false);
+            AppStorage.setOrCreate('isRemoveForm', false);
             this.formAnimateData.cardId = 0;
             this.formAnimateData.isOpenRemoveFormDialog = false;
             this.mFormViewModel.deleteForm(this.formItem.cardId);
@@ -152,7 +153,7 @@ export default struct FormItem {
       cancel: () => {},
       confirm: () => {
         // delete form
-        AppStorage.SetOrCreate('isRemoveForm', true);
+        AppStorage.setOrCreate('isRemoveForm', true);
       },
       dialogName: this.getDialogName(),
     }),
@@ -206,11 +207,11 @@ export default struct FormItem {
     ContextMenu.close();
     this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
     this.pageDesktopDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.formItem);
-    const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getX(), event.getY());
-    const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getX(), event.getY())
+    const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getWindowX(), event.getWindowY());
+    const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getWindowX(), event.getWindowY())
     globalThis.PageDesktopDragHandler.mStartPosition = startPosition;
-    AppStorage.SetOrCreate('selectAppIndex', selectAppIndex);
-    Log.showInfo(TAG, `onDragStart event: [${event.getX()}, ${event.getY()}], selectAppIndex: ${selectAppIndex}`);
+    AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
+    Log.showInfo(TAG, `onDragStart event: [${event.getWindowX()}, ${event.getWindowY()}], selectAppIndex: ${selectAppIndex}`);
   }
 
   build() {
@@ -256,12 +257,12 @@ export default struct FormItem {
       )
       .onTouch((event: TouchEvent) => {
         if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
-          let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].screenX, event.touches[0].screenY);
+          let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
           Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
           if (!mIsDragEffectArea) {
             globalThis.PageDesktopDragHandler.deleteBlankPageOutsideEffect();
             this.pageDesktopDragItemInfo = new LauncherDragItemInfo();
-            AppStorage.SetOrCreate('selectAppIndex', null);
+            AppStorage.setOrCreate('selectAppIndex', null);
           }
         }
       })
@@ -278,8 +279,8 @@ export default struct FormItem {
    */
   private setStartAppInfo() {
     Log.showInfo(TAG, `app setStartAppInfo`);
-    AppStorage.SetOrCreate('startAppItemInfo', this.formItem);
-    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_CARD);
+    AppStorage.setOrCreate('startAppItemInfo', this.formItem);
+    AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_CARD);
     this.mPageDesktopStartAppHandler.setAppIconSize(this.mFormItemWidth, this.mFormItemHeight);
     this.mPageDesktopStartAppHandler.setAppIconInfo();
   }

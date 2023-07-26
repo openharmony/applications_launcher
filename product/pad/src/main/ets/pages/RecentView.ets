@@ -55,11 +55,11 @@ struct RecentView {
   }
 
   private closeRecentDockPopup(): void {
-    let num: number = AppStorage.Get('sysUiRecentOnClickEvent');
+    let num: number = AppStorage.get('sysUiRecentOnClickEvent');
     if (!num) {
       num = 0;
     }
-    AppStorage.SetOrCreate('sysUiRecentOnClickEvent', ++num);
+    AppStorage.setOrCreate('sysUiRecentOnClickEvent', ++num);
     Log.showDebug(TAG, `closeRecentDockPopup sysUiRecentOnClickEvent closeRecentDockPopup num: ${num}`);
   }
 

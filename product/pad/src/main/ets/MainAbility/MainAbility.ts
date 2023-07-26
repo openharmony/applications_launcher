@@ -175,22 +175,22 @@ export default class MainAbility extends ServiceExtension {
   }
 
   private closeFolder(): void {
-    AppStorage.SetOrCreate('openFolderPageIndex', StyleConstants.DEFAULT_NUMBER_0);
-    AppStorage.SetOrCreate('openFolderStatus', StyleConstants.DEFAULT_NUMBER_0);
+    AppStorage.setOrCreate('openFolderPageIndex', StyleConstants.DEFAULT_NUMBER_0);
+    AppStorage.setOrCreate('openFolderStatus', StyleConstants.DEFAULT_NUMBER_0);
   }
 
   private closeRecentDockPopup(): void {
-    let num: number = AppStorage.Get('sysUiRecentOnClickEvent');
-    AppStorage.SetOrCreate('sysUiRecentOnClickEvent', ++num);
+    let num: number = AppStorage.get('sysUiRecentOnClickEvent');
+    AppStorage.setOrCreate('sysUiRecentOnClickEvent', ++num);
   }
 
   async onConfigurationUpdated(config) {
     Log.showInfo(TAG, 'onConfigurationUpdated, config:' + JSON.stringify(config));
-    const systemLanguage = AppStorage.Get('systemLanguage');
+    const systemLanguage = AppStorage.get('systemLanguage');
     if(systemLanguage !== config.language) {
       this.clearCacheWhenLanguageChange();
     }
-    AppStorage.SetOrCreate("systemLanguage", config.language);
+    AppStorage.setOrCreate("systemLanguage", config.language);
   }
 
   private clearCacheWhenLanguageChange() {

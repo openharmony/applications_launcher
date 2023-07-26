@@ -74,8 +74,8 @@ export class LayoutViewModel {
    * @param navigationBarStatus
    */
   initScreen(navigationBarStatus?: string): void {
-    this.mScreenWidth = AppStorage.Get('screenWidth');
-    this.mScreenHeight = AppStorage.Get('screenHeight');
+    this.mScreenWidth = AppStorage.get('screenWidth');
+    this.mScreenHeight = AppStorage.get('screenHeight');
     Log.showDebug(TAG, `initScreen screenWidth: ${this.mScreenWidth}, screenHeight: ${this.mScreenHeight}`);
     this.mSysUITopHeight = this.mLauncherLayoutStyleConfig.mSysTopHeight;
     this.mNavigationBarStatus = navigationBarStatus === '0' ? true : false;
@@ -89,7 +89,7 @@ export class LayoutViewModel {
     } else {
       this.mSysUIBottomHeight = 0;
     }
-    AppStorage.SetOrCreate('sysUIBottomHeight', this.mSysUIBottomHeight);
+    AppStorage.setOrCreate('sysUIBottomHeight', this.mSysUIBottomHeight);
     this.mIndicatorHeight = this.mLauncherLayoutStyleConfig.mIndicatorHeight;
     Log.showDebug(TAG, `initScreen SysUIBottomHeight: ${this.mSysUIBottomHeight},
       IndicatorHeight: ${this.mIndicatorHeight}, SysUITopHeight: ${this.mSysUITopHeight},
@@ -104,7 +104,7 @@ export class LayoutViewModel {
    */
   setDevice(deviceType: string): void {
     this.mIsPad = deviceType === CommonConstants.PAD_DEVICE_TYPE;
-    AppStorage.SetOrCreate('isPad', this.mIsPad);
+    AppStorage.setOrCreate('isPad', this.mIsPad);
   }
 
   /**
@@ -215,7 +215,7 @@ export class LayoutViewModel {
     let iconMarginVertical = ratio * itemSize;
     let iconHeight = itemSize - 2 * iconMarginVertical - nameHeight - iconNameMargin;
     let iconMarginHorizontal = (itemSize - iconHeight) / 2;
-    if (AppStorage.Get('isPortrait') ) {
+    if (AppStorage.get('isPortrait') ) {
       row = 11;
       column = 5;
     }

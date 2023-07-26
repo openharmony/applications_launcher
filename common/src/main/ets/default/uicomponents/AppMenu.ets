@@ -46,13 +46,15 @@ export struct AppMenu {
       }
     }
     this.isBothTypeMenuExist = this.fixedMenuList.length > 0 && this.dynamicMenuList.length > 0;
-    AppStorage.SetOrCreate('contextMenuState', true);
+    AppStorage.setOrCreate('contextMenuState', true);
   }
 
   aboutToDisappear(): void  {
     Log.showInfo(TAG, 'aboutToDisappear start');
     this.fixedMenuList = null;
     this.dynamicMenuList = null;
+    this.closeMenu = null;
+    this.getMenuInfoList = null;
   }
 
   build() {
@@ -113,6 +115,10 @@ struct HorizontalMenuItem {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateIcon();
     this.updateName();
+  }
+
+  aboutToDisappear(): void {
+    this.closeMenu = null;
   }
 
   public shortcutIconLoadCallback(image) {

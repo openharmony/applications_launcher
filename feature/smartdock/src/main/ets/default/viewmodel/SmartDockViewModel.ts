@@ -78,7 +78,7 @@ export default class SmartDockViewModel extends BaseViewModel {
    */
   residentOnClick(event, item, callback?) {
     // AppCenter entry
-    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_RESIDENTIAL);
+    AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_RESIDENTIAL);
     if (item.abilityName == CommonConstants.APPCENTER_ABILITY && callback != null) {
       callback();
       return;
@@ -100,9 +100,9 @@ export default class SmartDockViewModel extends BaseViewModel {
    * @param item
    */
   public recentOnClick(event, item, callback?) {
-    AppStorage.SetOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_RECENT);
+    AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_RECENT);
     let missionInfoList = [];
-    missionInfoList = AppStorage.Get('missionInfoList');
+    missionInfoList = AppStorage.get('missionInfoList');
     Log.showDebug(TAG, `recentOnClick missionInfoList.length: ${missionInfoList.length}`);
     if (!CheckEmptyUtils.isEmptyArr(missionInfoList)) {
       for (let i = 0; i < missionInfoList.length; i++) {
@@ -136,23 +136,23 @@ export default class SmartDockViewModel extends BaseViewModel {
    * update drag effective area when dockList changed
    */
   async updateDockParams() {
-    const screenWidth: number = AppStorage.Get('screenWidth');
-    const screenHeight: number = AppStorage.Get('screenHeight');
-    const sysUIBottomHeight: number = AppStorage.Get('sysUIBottomHeight');
-    const dockHeight: number = AppStorage.Get('dockHeight');
-    let mResidentWidth: number = this.getListWidth(AppStorage.Get('residentList'));
-    if (AppStorage.Get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE) {
+    const screenWidth: number = AppStorage.get('screenWidth');
+    const screenHeight: number = AppStorage.get('screenHeight');
+    const sysUIBottomHeight: number = AppStorage.get('sysUIBottomHeight');
+    const dockHeight: number = AppStorage.get('dockHeight');
+    let mResidentWidth: number = this.getListWidth(AppStorage.get('residentList'));
+    if (AppStorage.get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE) {
       const maxDockNum = this.getStyleConfig().mMaxDockNum;
       mResidentWidth = this.mSmartDockStyleConfig.mDockPadding * 2 + maxDockNum * (this.mSmartDockStyleConfig.mListItemWidth) + (maxDockNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
     }
-    AppStorage.SetOrCreate('residentWidth', mResidentWidth);
-    AppStorage.SetOrCreate("dockPadding", this.getDockPadding(mResidentWidth));
-    const mRecentWidth: number = this.getListWidth(AppStorage.Get('recentList'));
+    AppStorage.setOrCreate('residentWidth', mResidentWidth);
+    AppStorage.setOrCreate("dockPadding", this.getDockPadding(mResidentWidth));
+    const mRecentWidth: number = this.getListWidth(AppStorage.get('recentList'));
     Log.showDebug(TAG, `updateDockParams screenWidth:${screenWidth}, screenHeight:${screenHeight}, sysUIBottomHeight:${sysUIBottomHeight}, dockHeight:${dockHeight}, mResidentWidth:${mResidentWidth}, mRecentWidth:${mRecentWidth}`);
     if (typeof (this.mSmartDockDragHandler) != 'undefined') {
       let left = mResidentWidth === 0 ? 0 : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2;
       let right = mResidentWidth === 0 ? screenWidth : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2 + mResidentWidth;
-      if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+      if (AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
         left = (screenWidth - mResidentWidth) / 2;
         right = screenWidth - left;
       }
@@ -167,8 +167,8 @@ export default class SmartDockViewModel extends BaseViewModel {
 
   private getDockPadding(residentWidth: number): {right: number, left: number, top: number, bottom: number} {
     let paddingNum: number = this.mSmartDockStyleConfig.mDockPadding;
-    const residentList: [] = AppStorage.Get('residentList');
-    if (AppStorage.Get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE) {
+    const residentList: [] = AppStorage.get('residentList');
+    if (AppStorage.get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE) {
       paddingNum = (residentWidth - (residentList.length * this.mSmartDockStyleConfig.mListItemWidth + (residentList.length - 1) * (this.mSmartDockStyleConfig.mListItemGap))) / 2;
     }
     Log.showDebug(TAG, `getDockPadding paddingNum: ${paddingNum}`);
@@ -213,7 +213,7 @@ export default class SmartDockViewModel extends BaseViewModel {
     menuInfoList.push(open);
 
     if (appInfo.itemType != CommonConstants.TYPE_FUNCTION) {
-      this.mDevice = AppStorage.Get('deviceType');
+      this.mDevice = AppStorage.get('deviceType');
       if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE && dockType === SmartDockConstants.RESIDENT_DOCK_TYPE) {
         const addToWorkSpaceMenu = new MenuInfo();
         addToWorkSpaceMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
@@ -241,7 +241,7 @@ export default class SmartDockViewModel extends BaseViewModel {
         }
         this.mSelectedItem = appInfo;
         this.mSelectedDockType = dockType;
-        AppStorage.SetOrCreate('uninstallAppInfo', appInfo);
+        AppStorage.setOrCreate('uninstallAppInfo', appInfo);
         callback();
       };
       removeMenu.menuEnabled = appInfo.isUninstallAble;
@@ -306,7 +306,7 @@ export default class SmartDockViewModel extends BaseViewModel {
       return;
     }
     item.icon = globalThis.ResourceManager.getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName)
-    AppStorage.SetOrCreate('startAppItemInfo', item);
+    AppStorage.setOrCreate('startAppItemInfo', item);
     this.mSmartDockStartAppHandler.setAppIconSize(this.mSmartDockStyleConfig.mIconSize);
     this.mSmartDockStartAppHandler.setAppIconInfo();
   }

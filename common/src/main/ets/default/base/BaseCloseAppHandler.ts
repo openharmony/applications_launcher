@@ -42,7 +42,7 @@ export abstract class BaseCloseAppHandler extends BaseRemoteAnimationHandler {
      */
     public setAppIconInfo(): void {
         super.setAppIconInfo();
-        AppStorage.SetOrCreate('closeAppIconInfo', {
+        AppStorage.setOrCreate('closeAppIconInfo', {
             appIconSize: this.mAppIconSize,
             appIconHeight: this.mAppIconHeight,
             appIconPositionX: this.mAppIconPositionX,

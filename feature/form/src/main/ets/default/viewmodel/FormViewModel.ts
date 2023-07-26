@@ -92,7 +92,7 @@ export class FormViewModel {
   async getForms() {
     Log.showDebug(TAG, 'getForms start');
     this.mAllFormsInfo = await this.mFormModel.getAllFormsInfo();
-    AppStorage.SetOrCreate('allFormsInfo', this.mAllFormsInfo);
+    AppStorage.setOrCreate('allFormsInfo', this.mAllFormsInfo);
   }
 
   /**

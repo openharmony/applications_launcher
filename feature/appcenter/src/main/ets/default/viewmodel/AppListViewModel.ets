@@ -66,25 +66,25 @@ export class AppListViewModel extends BaseViewModel {
         appScaleX: 0.97,
         appScaleY: 0.97
       }
-      AppStorage.SetOrCreate('animationInfo_scale', animationInfo);
+      AppStorage.setOrCreate('animationInfo_scale', animationInfo);
     })
   }
 
   private closeAppAnimation() {
-    AppStorage.SetOrCreate('animationInfo_alpha', 0.0);
+    AppStorage.setOrCreate('animationInfo_alpha', 0.0);
     animateTo({
       duration: 140,
       delay: 210,
       curve: Curve.Linear,
     }, () => {
-    AppStorage.SetOrCreate('animationInfo_alpha', 1.0);
+    AppStorage.setOrCreate('animationInfo_alpha', 1.0);
     })
 
     let scale = {
       appScaleX: 0.9,
       appScaleY: 0.9
     }
-    AppStorage.SetOrCreate('animationInfo_scale', scale);
+    AppStorage.setOrCreate('animationInfo_scale', scale);
     animateTo({
       duration: 490,
       delay: 210,
@@ -94,7 +94,7 @@ export class AppListViewModel extends BaseViewModel {
         appScaleX: 1.0,
         appScaleY: 1.0
       }
-      AppStorage.SetOrCreate('animationInfo_scale', scale_finish);
+      AppStorage.setOrCreate('animationInfo_scale', scale_finish);
     })
   }
 
@@ -126,13 +126,13 @@ export class AppListViewModel extends BaseViewModel {
 
     appItem.badgeNumber = badgeInfo.badgeNumber;
     appList.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
-    AppStorage.SetOrCreate('listInfo', appList);
+    AppStorage.setOrCreate('listInfo', appList);
   }
 
   public async getAppList(): Promise<void> {
     let appList = await this.mAppModel.getAppList();
     appList.sort(this.mPinyinSort.sortByAppName.bind(this.mPinyinSort));
-    AppStorage.SetOrCreate('listInfo', appList);
+    AppStorage.setOrCreate('listInfo', appList);
   }
 
   public async regroupDataAppListChange(callbackList) {
@@ -160,7 +160,7 @@ export class AppListViewModel extends BaseViewModel {
       onFinish: () => {
       }
     }, () => {
-      AppStorage.SetOrCreate('listInfo', callbackList);
+      AppStorage.setOrCreate('listInfo', callbackList);
     })
   }
 

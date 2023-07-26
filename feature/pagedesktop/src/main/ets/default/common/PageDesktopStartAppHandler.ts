@@ -61,8 +61,8 @@ export class PageDesktopStartAppHandler extends BaseStartAppHandler {
         const rowGap: number = this.mPageDesktopStyleConfig.mRowsGap;
         const gridItemHeight: number = row > 0 ? (gridHeight + rowGap) / row : 0;
         const gridItemWidth: number = column > 0 ? (gridWidth + columnsGap) / column : 0;
-        let appItem: any = AppStorage.Get('startAppItemInfo');
-        const startAppTypeFromPageDesktop: number = AppStorage.Get('startAppTypeFromPageDesktop');
+        let appItem: any = AppStorage.get('startAppItemInfo');
+        const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop');
         if (startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_APP_ICON) {
             let paddingTop = Math.floor(gridHeight / row) - this.mPageDesktopStyleConfig.mAppItemSize;
             this.mAppIconPositionY = this.mPageDesktopStyleConfig.mDesktopMarginTop + paddingTop + appItem.row * (gridItemHeight);
@@ -81,7 +81,7 @@ export class PageDesktopStartAppHandler extends BaseStartAppHandler {
             this.mAppIconPositionX = this.mPageDesktopStyleConfig.mMargin + iconLeftMargin + appItem.column * (gridItemWidth);
 
         } else if (startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_FOLDER) {
-            let folderItem: any = AppStorage.Get('startAppFromFolderItemInfo');
+            let folderItem: any = AppStorage.get('startAppFromFolderItemInfo');
             const folderGridSize: number = this.mFolderStyleConfig.mGridSize;
             const folderGridGap: number = this.mFolderStyleConfig.mFolderGridGap;
             const folderAppSize: number = this.mFolderStyleConfig.mFolderAppSize;

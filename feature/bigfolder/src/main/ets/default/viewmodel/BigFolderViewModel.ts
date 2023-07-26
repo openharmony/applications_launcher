@@ -45,11 +45,11 @@ export class BigFolderViewModel extends BaseViewModel {
   private readonly mLocalEventListener = {
     onReceiveEvent: (event, params) => {
       Log.showDebug(TAG, `onReceiveEvent receive event: ${event}, params: ${JSON.stringify(params)}`);
-      const openStatus = AppStorage.Get('openFolderStatus');
+      const openStatus = AppStorage.get('openFolderStatus');
       if (event === EventConstants.EVENT_BADGE_UPDATE && (openStatus == BigFolderConstants.OPEN_FOLDER_STATUS_OPEN || openStatus == BigFolderConstants.OPEN_FOLDER_STATUS_STATIC)) {
         const openFolderData: {
           layoutInfo: [[]]
-        } = AppStorage.Get('openFolderData');
+        } = AppStorage.get('openFolderData');
         this.updateBadge(openFolderData, params);
       } else if (event === EventConstants.EVENT_FOLDER_PACKAGE_REMOVED) {
         this.deleteAppFromFolderByUninstall(params);
@@ -248,7 +248,7 @@ export class BigFolderViewModel extends BaseViewModel {
     const openFolderData: {
       folderId: string,
       layoutInfo: any
-    } = AppStorage.Get('openFolderData');
+    } = AppStorage.get('openFolderData');
     const removeAppInfos = [dragAppInfo];
     const folderIndex = gridLayoutInfo.layoutInfo.findIndex(item => {
       return item.typeId === CommonConstants.TYPE_FOLDER && item.folderId === openFolderData.folderId;
@@ -321,7 +321,7 @@ export class BigFolderViewModel extends BaseViewModel {
     let openFolderData: {
       folderId: string,
       layoutInfo: any
-    } = AppStorage.Get('openFolderData');
+    } = AppStorage.get('openFolderData');
     const folderLayoutInfo = this.getFolderLayoutInfo(openFolderData, appInfo);
 
     // Delete app from the folder
@@ -623,7 +623,7 @@ export class BigFolderViewModel extends BaseViewModel {
     if (folderAppList.length > 0 && folderAppList[folderAppList.length - 1].typeId == CommonConstants.TYPE_ADD) {
       folderAppList.pop();
     }
-    AppStorage.SetOrCreate('folderAppList', folderAppList);
+    AppStorage.setOrCreate('folderAppList', folderAppList);
     return folderAppList;
   }
 
@@ -646,7 +646,7 @@ export class BigFolderViewModel extends BaseViewModel {
         folderList.push(gridLayoutInfo.layoutInfo[i]);
       }
     }
-    AppStorage.SetOrCreate('allFolderList', folderList);
+    AppStorage.setOrCreate('allFolderList', folderList);
     return folderList;
   }
 
@@ -703,7 +703,7 @@ export class BigFolderViewModel extends BaseViewModel {
       }
     }
     if (!this.getIsPad()) {
-      let bottomAppList: any = AppStorage.Get('residentList');
+      let bottomAppList: any = AppStorage.get('residentList');
       if (!CheckEmptyUtils.isEmptyArr(bottomAppList)) {
         for (let i = 0; i < bottomAppList.length; i++) {
           allAppList = allAppList.filter((item) => {
@@ -715,7 +715,7 @@ export class BigFolderViewModel extends BaseViewModel {
         }
       }
     }
-    AppStorage.SetOrCreate('allAppListForFolder', allAppList);
+    AppStorage.setOrCreate('allAppListForFolder', allAppList);
     return allAppList;
   }
 
@@ -790,10 +790,10 @@ export class BigFolderViewModel extends BaseViewModel {
     Log.showDebug(TAG, 'openFolder start');
     folderItem.enterEditing = isRename;
 
-    AppStorage.SetOrCreate('openFolderData', folderItem);
+    AppStorage.setOrCreate('openFolderData', folderItem);
     this.mPageIndex = 0;
-    AppStorage.SetOrCreate('openFolderPageIndex', this.mPageIndex);
-    AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_OPEN);
+    AppStorage.setOrCreate('openFolderPageIndex', this.mPageIndex);
+    AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_OPEN);
     Log.showDebug(TAG, 'openFolder end');
   }
 
@@ -804,8 +804,8 @@ export class BigFolderViewModel extends BaseViewModel {
     Log.showDebug(TAG, 'closeFolder start');
 
     this.mPageIndex = 0;
-    AppStorage.SetOrCreate('openFolderPageIndex', this.mPageIndex);
-    AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
+    AppStorage.setOrCreate('openFolderPageIndex', this.mPageIndex);
+    AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
   }
 
   /**
@@ -826,7 +826,7 @@ export class BigFolderViewModel extends BaseViewModel {
    * @return {boolean} isPad.
    */
   getIsPad(): boolean {
-    return CommonConstants.PAD_DEVICE_TYPE == AppStorage.Get('deviceType');
+    return CommonConstants.PAD_DEVICE_TYPE == AppStorage.get('deviceType');
   }
 
   /**
@@ -962,7 +962,7 @@ export class BigFolderViewModel extends BaseViewModel {
    */
   changeIndex(idx): void {
     this.mPageIndex = idx;
-    AppStorage.SetOrCreate('openFolderPageIndex', this.mPageIndex);
+    AppStorage.setOrCreate('openFolderPageIndex', this.mPageIndex);
   }
 
   /**
@@ -1067,7 +1067,7 @@ export class BigFolderViewModel extends BaseViewModel {
     let openFolderData: {
       folderId: string,
       layoutInfo: any
-    } = AppStorage.Get('openFolderData');
+    } = AppStorage.get('openFolderData');
 
     const folderAppList = this.getAppListInFolder(openFolderData);
     this.deleteAppFromFolderAppList(appInfo, folderAppList);
@@ -1123,11 +1123,11 @@ export class BigFolderViewModel extends BaseViewModel {
    * @param openFolderData
    */
   private updateOpenFolderStatus(openFolderData): void {
-    AppStorage.SetOrCreate('openFolderData', openFolderData);
+    AppStorage.setOrCreate('openFolderData', openFolderData);
     if (openFolderData.folderId == '') {
-      AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
+      AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
     } else {
-      AppStorage.SetOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_REFRESH);
+      AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_REFRESH);
     }
   }
 
