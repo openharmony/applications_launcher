@@ -82,7 +82,7 @@ export default class SmartDockStartAppHandler extends BaseStartAppHandler {
     }
 
     for (var i = 0; i < list.length; i++) {
-      if (appItemInfo.bundleName === list[i].bundleName) {
+      if (appItemInfo?.bundleName === list[i].bundleName) {
         index = i;
         break;
       }

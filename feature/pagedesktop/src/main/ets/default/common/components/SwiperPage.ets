@@ -29,7 +29,6 @@ const TAG = "SwiperPage";
 export default struct SwiperPage {
   @StorageLink('workSpaceWidth') @Watch('updateDeskTopScreen') workSpaceWidth: number = 0;
   @StorageLink('formRefresh') formRefresh: string = '';
-  private swiperPageIndex: number;
   @State ColumnsTemplate: string = '';
   @State RowsTemplate: string = ''
   @Prop @Watch('changeColumnAndRow') gridConfig: string;
@@ -39,19 +38,18 @@ export default struct SwiperPage {
   @State mPaddingTop: number = 0;
   @State mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   @State mMarginTop: number = 0;
-  @State mAppListInfo: Array<LauncherDragItemInfo> = new Array<LauncherDragItemInfo>();
-  @Link @Watch('updateAppList') appListInfo: {
+  @Link @Watch('updateAppListInfo') appListInfo: {
     appGridInfo: [[]]
   };
+  @Prop swiperPage: number;
+  @State mAppListInfo: LauncherDragItemInfo[] = this.appListInfo.appGridInfo[this.swiperPage];
   private mPageDesktopViewModel;
   private mPageDesktopStyleConfig:PageDesktopGridStyleConfig;
   private mGridWidth : number;
   private mGridHeight: number;
 
-  updateAppList(): void {
-    if (this.appListInfo?.appGridInfo?.length) {
-      this.mAppListInfo = this.appListInfo.appGridInfo[this.swiperPageIndex];
-    }
+  private updateAppListInfo(): void {
+    this.mAppListInfo = this.appListInfo.appGridInfo[this.swiperPage];
   }
 
   aboutToAppear(): void {
@@ -98,46 +96,44 @@ export default struct SwiperPage {
 
   build() {
     Grid() {
-      if (this.mAppListInfo.length) {
-        ForEach(this.mAppListInfo, (item: LauncherDragItemInfo, index: number) => {
-          GridItem() {
-            if (this.buildLog(item)) {
-            }
-            if (item.typeId === CommonConstants.TYPE_APP) {
-              AppItem({
-                item: item,
-                mPageDesktopViewModel: this.mPageDesktopViewModel,
-                mNameLines: this.mNameLines
-              }).id(`${TAG}_AppItem_${index}`)
-            } else if (item.typeId === CommonConstants.TYPE_FOLDER) {
-              FolderItem({
-                folderItem: item,
-                mNameLines: this.mNameLines
-              }).id(`${TAG}_FolderItem_${index}`)
-            } else {
-              FormItem({
-                formItem: item
-              }).id(`${TAG}_FormItem_${index}`)
-            }
+      ForEach(this.mAppListInfo, (item: LauncherDragItemInfo, index: number) => {
+        GridItem() {
+          if (this.buildLog(item)) {
           }
-          .id(`${TAG}_GridItem_${index}`)
-          .padding({ top: this.mPaddingTop })
-          .rowStart(item.row)
-          .columnStart(item.column)
-          .rowEnd(item.row + item.area[1] - 1)
-          .columnEnd(item.column + item.area[0] - 1)
-        }, (item: LauncherDragItemInfo, index: number) => {
-          if (item.typeId === CommonConstants.TYPE_FOLDER) {
-            return JSON.stringify(item);
+          if (item.typeId === CommonConstants.TYPE_APP) {
+            AppItem({
+              item: item,
+              mPageDesktopViewModel: this.mPageDesktopViewModel,
+              mNameLines: this.mNameLines
+            }).id(`${TAG}_AppItem_${index}`)
+          } else if (item.typeId === CommonConstants.TYPE_FOLDER) {
+            FolderItem({
+              folderItem: item,
+              mNameLines: this.mNameLines
+            }).id(`${TAG}_FolderItem_${index}`)
           } else if (item.typeId === CommonConstants.TYPE_CARD) {
-            return JSON.stringify(item) + this.formRefresh;
-          } else if (item.typeId === CommonConstants.TYPE_APP) {
-            return `${JSON.stringify(item)}${index}`;
+            FormItem({
+              formItem: item
+            }).id(`${TAG}_FormItem_${index}`)
           }
-        })
-      }
+        }
+        .id(`${TAG}_GridItem_${index}`)
+        .padding({ top: this.mPaddingTop })
+        .rowStart(item.row)
+        .columnStart(item.column)
+        .rowEnd(item.row + item.area[1] - 1)
+        .columnEnd(item.column + item.area[0] - 1)
+      }, (item: LauncherDragItemInfo, index: number) => {
+        if (item.typeId === CommonConstants.TYPE_FOLDER) {
+          return JSON.stringify(item);
+        } else if (item.typeId === CommonConstants.TYPE_CARD) {
+          return JSON.stringify(item) + this.formRefresh;
+        } else if (item.typeId === CommonConstants.TYPE_APP) {
+          return JSON.stringify(item);
+        }
+      })
     }
-    .id(`${TAG}_Grid_${this.swiperPageIndex}`)
+    .id(`${TAG}_Grid_${this.swiperPage}`)
     .columnsTemplate(this.ColumnsTemplate)
     .rowsTemplate(this.RowsTemplate)
     .columnsGap(this.mColumnsGap)
