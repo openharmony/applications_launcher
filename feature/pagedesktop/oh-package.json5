@@ -1,0 +1,12 @@
+{
+  "devDependencies": {},
+  "name": "@ohos/pagedesktop",
+  "description": "a npm package which contains pagedesktop feature",
+  "main": "index.ets",
+  "version": "1.0.0",
+  "dependencies": {
+    "@ohos/bigfolder": "../bigfolder",
+    "@ohos/form": "../form",
+    "@ohos/common": "../../common"
+  }
+}

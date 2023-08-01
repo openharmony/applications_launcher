@@ -1,0 +1,16 @@
+{
+  "devDependencies": {},
+  "name": "launcher",
+  "description": "",
+  "version": "1.0.0",
+  "dependencies": {
+    "@ohos/pagedesktop": "../../feature/pagedesktop",
+    "@ohos/recents": "../../feature/recents",
+    "@ohos/bigfolder": "../../feature/bigfolder",
+    "@ohos/smartdock": "../../feature/smartdock",
+    "@ohos/form": "../../feature/form",
+    "@ohos/gesturenavigation": "../../feature/gesturenavigation",
+    "@ohos/common": "../../common",
+    "@ohos/numbadge": "../../feature/numbadge"
+  }
+}

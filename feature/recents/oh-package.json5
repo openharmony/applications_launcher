@@ -1,0 +1,10 @@
+{
+  "devDependencies": {},
+  "name": "@ohos/recents",
+  "description": "a npm package which contains recents feature",
+  "main": "index.ets",
+  "version": "1.0.0",
+  "dependencies": {
+    "@ohos/common": "../../common"
+  }
+}

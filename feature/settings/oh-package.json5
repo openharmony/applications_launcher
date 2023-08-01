@@ -1,0 +1,9 @@
+{
+  "devDependencies": {},
+  "name": "launcher_settings",
+  "description": "",
+  "version": "1.0.0",
+  "dependencies": {
+    "@ohos/common": "../../common"
+  }
+}
