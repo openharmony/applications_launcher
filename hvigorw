@@ -29,7 +29,7 @@ fail() {
 
 # Determine node to start hvigor wrapper script
 if [ -n "${NODE_HOME}" ];then
-   EXECUTABLE_NODE="${NODE_HOME}/bin/node"
+   EXECUTABLE_NODE="${NODE_HOME}/node"
    if [ ! -x "$EXECUTABLE_NODE" ];then
        fail "ERROR: NODE_HOME is set to an invalid directory,check $NODE_HOME\n\nPlease set NODE_HOME in your environment to the location where your nodejs installed"
    fi
