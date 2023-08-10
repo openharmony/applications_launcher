@@ -79,9 +79,11 @@
             </filefilter>
             <filefilter name="copyrightPolicyFilter" desc="Filters for copyright header policies">
                 <filteritem type="filename" name="README|README_zh|.*.log|.*.json5|.*.json" desc=""/>
+                <filteritem type="filename" name="hvigorw|hvigorw.bat|hvigor-wrapper.js" desc="Build files"/>
             </filefilter>
             <filefilter name="defaultPolicyFilter" desc="Filters for LICENSE file policies">
                 <filteritem type="filename" name="README|README_zh|*.log|*.json5|*.json" desc="json file"/>
+                <filteritem type="filename" name="hvigorw|hvigorw.bat|hvigor-wrapper.js" desc="Build files"/>
             </filefilter>
         </filefilterlist>
     </oatconfig>

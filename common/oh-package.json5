@@ -1,0 +1,8 @@
+{
+  "devDependencies": {},
+  "name": "@ohos/common",
+  "description": "a npm package which contains common function",
+  "main": "index.ets",
+  "version": "1.0.0",
+  "dependencies": {}
+}
