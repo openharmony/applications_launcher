@@ -13,12 +13,15 @@
  * limitations under the License.
  */
 
-import { CardItemInfo, Log } from '@ohos/common';
-import { FormModel } from '@ohos/common';
-import { windowManager } from '@ohos/common';
-import { localEventManager } from '@ohos/common';
-import { StyleConstants } from '@ohos/common';
-import { EventConstants } from '@ohos/common';
+import {
+  FormModel,
+  CardItemInfo,
+  Log,
+  windowManager,
+  localEventManager,
+  StyleConstants,
+  EventConstants
+} from '@ohos/common';
 
 const TAG = 'FormManagerComponent';
 
@@ -234,6 +237,8 @@ export struct FormManagerComponent {
         localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD, this.getChooseCard());
         this.clearNoUseFormById();
         windowManager.destroyWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
+        windowManager.destroyWindow(windowManager.FORM_SERVICE_WINDOW_NAME);
+        localEventManager.sendLocalEventSticky(EventConstants.EVENT_OPEN_FOLDER_TO_CLOSE, null);
       })
     }
     .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
