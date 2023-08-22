@@ -2,7 +2,7 @@
   "devDependencies": {},
   "name": "@ohos/gesturenavigation",
   "description": "a npm package which contains gesturenavigation feature",
-  "main": "index.ets",
+  "main": "index.ts",
   "version": "1.0.0",
   "dependencies": {
     "@ohos/common": "../../common"

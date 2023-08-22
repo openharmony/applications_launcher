@@ -85,6 +85,10 @@
       "value": "服务卡片"
     },
     {
+      "name": "form_center",
+      "value": "卡片中心"
+    },
+    {
       "name": "form_edit",
       "value": "编辑"
     },

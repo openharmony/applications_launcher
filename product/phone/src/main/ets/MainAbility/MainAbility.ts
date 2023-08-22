@@ -31,7 +31,7 @@ import {
 } from '@ohos/common';
 import { GestureNavigationManager } from '@ohos/gesturenavigation';
 import StyleConstants from '../common/constants/StyleConstants';
-import PageDesktopViewModel from '../../../../../../feature/pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
+import { PageDesktopViewModel } from '@ohos/pagedesktop';
 import Window from '@ohos.window';
 import inputConsumer from '@ohos.multimodalInput.inputConsumer';
 import { KeyCode } from '@ohos.multimodalInput.keyCode';
@@ -176,7 +176,7 @@ export default class MainAbility extends ServiceExtension {
     AppStorage.setOrCreate('openFolderStatus', StyleConstants.DEFAULT_NUMBER_0);
   }
 
-  async onConfigurationUpdated(config) {
+  onConfigurationUpdate(config) {
     Log.showInfo(TAG, 'onConfigurationUpdated, config:' + JSON.stringify(config));
     const systemLanguage = AppStorage.get('systemLanguage');
     if(systemLanguage !== config.language) {
@@ -190,5 +190,6 @@ export default class MainAbility extends ServiceExtension {
     ResourceManager.getInstance().clearAppResourceCache();
     launcherAbilityManager.cleanAppMapCache();
     PageDesktopViewModel.getInstance().updateDesktopInfo();
+    PageDesktopViewModel.getInstance().updateForms();
   }
 }

@@ -13,9 +13,11 @@
  * limitations under the License.
  */
 
-import { CommonConstants } from '@ohos/common';
-import { PresetStyleConstants } from '@ohos/common';
-import { AppGridStyleConfig } from '@ohos/common';
+import {
+  CommonConstants,
+  PresetStyleConstants,
+  AppGridStyleConfig
+} from '@ohos/common';
 import PageDesktopConstants from './constants/PageDesktopConstants';
 
 /**

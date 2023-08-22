@@ -13,11 +13,14 @@
  * limitations under the License.
  */
 
-import { LauncherDragItemInfo, Log } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
-import { PresetStyleConstants } from '@ohos/common';
-import { localEventManager } from '@ohos/common';
-import { EventConstants } from '@ohos/common';
+import {
+  LauncherDragItemInfo,
+  Log,
+  CommonConstants,
+  PresetStyleConstants,
+  localEventManager,
+  EventConstants
+} from '@ohos/common';
 import AppItem from './AppItem';
 import FormItem from './FormItem';
 import FolderItem from './FolderItem';

@@ -77,4 +77,8 @@ export class CardItemInfo {
    */
   supportDimensions: number[] | undefined;
 
+  /**
+   * GridLayoutItemInfo: total count of card
+   */
+  totalDimensionCount: number | undefined;
 }

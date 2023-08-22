@@ -13,11 +13,13 @@
  * limitations under the License.
  */
 
-import { BaseModulePreLoader } from '@ohos/common';
-import { layoutConfigManager } from '@ohos/common';
-import { PageDesktopLayoutConfig } from '@ohos/common';
-import { PageDesktopModeConfig } from '@ohos/common';
-import { PageDesktopAppModeConfig } from '@ohos/common';
+import {
+  BaseModulePreLoader,
+  layoutConfigManager,
+  PageDesktopLayoutConfig,
+  PageDesktopModeConfig,
+  PageDesktopAppModeConfig
+} from '@ohos/common';
 import { PageDesktopGridStyleConfig } from './PageDesktopGridStyleConfig';
 
 /**

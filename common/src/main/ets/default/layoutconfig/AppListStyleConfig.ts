@@ -45,7 +45,7 @@ export class AppListStyleConfig extends ILayoutConfig {
   /**
    * direction of list
    */
-  mListDirection: Axis = Axis.Vertical;
+  mListDirection: string = 'Vertical';
 
   /**
    * isShow name

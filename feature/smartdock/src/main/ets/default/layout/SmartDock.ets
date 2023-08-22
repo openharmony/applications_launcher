@@ -165,7 +165,7 @@ export struct SmartDock {
     .hitTestBehavior(this.desktopEventResponse ? HitTestMode.Default : HitTestMode.Block)
     .alignListItem(ListItemAlign.Center)
     .height(SmartDockConstants.PERCENTAGE_100)
-    .listDirection(SmartDockConstants.LIST_DIRECTION)
+    .listDirection(Axis[SmartDockConstants.LIST_DIRECTION])
   }
 
   recentOnClickWithPopup(item) {

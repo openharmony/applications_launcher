@@ -29,8 +29,8 @@ export struct AppBubble {
   @State bundleName: string = '';
   @State abilityName: string = '';
   @State moduleName: string = '';
-  @State appIconId: string = '';
-  @State appLabelId: number = undefined;
+  @State appIconId: number = 0;
+  @State appLabelId: number = 0;
   iconSize: number = 0;
   nameHeight: number = 0;
   nameSize: number = 0;

@@ -13,8 +13,17 @@
  * limitations under the License.
  */
 
-import { Log, Trace, StyleConstants, CommonConstants, AppMenu, MenuInfo, localEventManager, EventConstants,
-  LauncherDragItemInfo } from '@ohos/common';
+import {
+  Log,
+  Trace,
+  StyleConstants,
+  CommonConstants,
+  AppMenu,
+  MenuInfo,
+  localEventManager,
+  EventConstants,
+  LauncherDragItemInfo
+} from '@ohos/common';
 import SwiperPage from './SwiperPage';
 
 const TAG = "GridSwiper";

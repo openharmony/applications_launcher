@@ -30,7 +30,7 @@ export class RecentMissionInfo {
   /**
    * Recent mission: app icon Id
    */
-  appIconId: string | undefined;
+  appIconId: number | undefined;
 
   /**
    * Recent mission: app label Id

@@ -73,7 +73,7 @@ export class SmartDockStyleConfig extends AppListStyleConfig {
   /**
    * dock list direction
    */
-  mListDirection: Axis = Axis.Horizontal;
+  mListDirection: string = 'Horizontal';
 
   /**
    * dock list name display side

@@ -30,7 +30,7 @@ export struct UninstallDialog {
   dialogName: string
   dialogContent: string
   @State icon: string = '';
-  appIcon: string;
+  appIcon: number;
   bundleName: string;
   moduleName: string;
   mUninstallDialogWidth: string;

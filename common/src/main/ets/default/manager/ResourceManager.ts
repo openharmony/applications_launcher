@@ -26,7 +26,16 @@ const TAG = 'ResourceManager';
  * Wrapper class for resourceManager interfaces.
  */
 export class ResourceManager {
+  private fontWeightRegular: string;
+  private fontWeightMedium: string;
+
   private constructor() {
+    this.getStringByIdSync($r('sys.string.ohos_id_text_font_family_regular').id).then(value => {
+      this.fontWeightRegular = value;
+    });
+    this.getStringByIdSync($r('sys.string.ohos_id_text_font_family_medium').id).then(value => {
+      this.fontWeightMedium = value;
+    });
   }
 
   static getInstance(): ResourceManager {
@@ -256,5 +265,51 @@ export class ResourceManager {
 
   clearAppResourceCache(): void {
     this.getAppResourceCacheManager().clearCache();
+  }
+
+  /**
+   * get number by resource
+   *
+   * @param {Resource} resource
+   * @return {number} resource name
+   */
+  getNumberByResource(res: Resource): number {
+    const json = JSON.parse(JSON.stringify(res));
+    const id: number = json.id;
+    return this.getNumberById(id);
+  }
+
+  /**
+   * get number by resource.id.
+   *
+   * @param {number} resource.id
+   * @return {number} resource name
+   */
+  getNumberById(resId: number): number {
+    let resMgrName = 0;
+    if (resId <= 0) {
+      Log.showInfo(TAG, `getNumberById resId: ${resId}`);
+      return resMgrName;
+    } else {
+      if (this.isResourceManagerEmpty()) {
+        Log.showInfo(TAG, 'getNumberById resourceManager is empty');
+        return resMgrName;
+      }
+      try {
+        resMgrName = globalThis.desktopContext.resourceManager.getNumber(resId);
+      } catch (err) {
+        Log.showError(TAG, `getNumberById error: ${JSON.stringify(err)}`);
+      }
+      Log.showInfo(TAG, `getNumberById resMgrName: ${resMgrName}`);
+      return resMgrName;
+    }
+  }
+
+  getFontWeightRegular(): string {
+    return this.fontWeightRegular;
+  }
+
+  getFontWeightMedium(): string {
+    return this.fontWeightMedium;
   }
 }

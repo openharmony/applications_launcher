@@ -107,6 +107,14 @@ export class LayoutViewModel {
     AppStorage.setOrCreate('isPad', this.mIsPad);
   }
 
+  getSysUITopHeight(): number {
+    return this.mSysUITopHeight;
+  }
+
+  getSysUIBottomHeight(): number {
+    return this.mSysUIBottomHeight;
+  }
+
   /**
    * get workSpaceHeight
    */
