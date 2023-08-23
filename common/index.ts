@@ -87,3 +87,6 @@ export { SettingItemsManager }  from './src/main/ets/default/settings/SettingIte
 export { SettingItemOptionsChecker }  from './src/main/ets/default/settings/SettingItemOptionsChecker'
 export { DragArea }  from './src/main/ets/default/interface/DragArea'
 export { DragItemPosition }  from './src/main/ets/default/interface/DragItemPosition'
+export { NumberConstants } from './src/main/ets/default/constants/NumberConstants'
+export { ObjectCopyUtil } from './src/main/ets/default/utils/ObjectCopyUtil'
+export { AtomicServiceAppModel } from './src/main/ets/default/model/AtomicServiceAppModel'

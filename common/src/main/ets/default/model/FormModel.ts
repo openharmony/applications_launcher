@@ -36,6 +36,7 @@ export class FormModel {
   private readonly mFormListInfoCacheManager: FormListInfoCacheManager;
   private readonly mAppItemFormInfoMap = new Map<string, CardItemInfo[]>();
   private readonly mPageDesktopModel: PageDesktopModel;
+  private readonly mAtomicServiceAppItemFormInfoMap = new Map<string, CardItemInfo[]>();
 
   private constructor() {
     this.mRdbStoreManager = RdbStoreManager.getInstance();
@@ -65,6 +66,10 @@ export class FormModel {
     Log.showDebug(TAG, 'getAllFormsInfo start');
     const allFormList = await this.mFormManager.getAllFormsInfo();
     return allFormList;
+  }
+
+  getAllAppItemFormInfoMap(): Map<string, CardItemInfo[]> {
+    return this.mAppItemFormInfoMap;
   }
 
   /**
@@ -187,7 +192,7 @@ export class FormModel {
    * @param {string} bundleName
    * @param {string | undefined} eventType
    */
-  updateAppItemFormInfo(bundleName: string, eventType?: string): void {
+  async updateAppItemFormInfo(bundleName: string, eventType?: string): Promise<void> {
     if (eventType && eventType === EventConstants.EVENT_PACKAGE_REMOVED) {
       this.mAppItemFormInfoMap.delete(bundleName);
       return;
@@ -312,4 +317,117 @@ export class FormModel {
     }
   }
 
+  private setAtomicServiceAppItemFormInfo(bundleName: string, appItemFormInfo: CardItemInfo[]): void {
+    this.mAtomicServiceAppItemFormInfoMap.set(bundleName, appItemFormInfo);
+  }
+
+  /**
+   * 获取所有原服务app 卡片信息
+   *
+   * @returns {Map<string, CardItemInfo[]>} mAtomicServiceAppItemFormInfoMap
+   */
+  getAllAtomicServiceAppItemFormInfoMap(): Map<string, CardItemInfo[]> {
+    return this.mAtomicServiceAppItemFormInfoMap;
+  }
+
+  /**
+   * 先从缓存中获取原服务卡片信息，没有的话，再从卡片管理器获取
+   *
+   * @param bundleName bundleName
+   * @returns {Promise<CardItemInfo[]>}
+   */
+  async getAtomicServiceFormsInfoFromMapAndManager(bundleName: string): Promise<CardItemInfo[]> {
+    let cardInfo: CardItemInfo[] = this.mAtomicServiceAppItemFormInfoMap.get(bundleName);
+    if (typeof cardInfo === 'undefined') {
+      return this.mFormManager.getFormsInfoByApp(bundleName)
+        .then(bundleFormsInfo => {
+          Log.showInfo(TAG, `getAtomicServiceFormsInfoFromMapAndManager bundleFormsInfo: ${JSON.stringify(bundleFormsInfo)}`);
+          return bundleFormsInfo;
+        })
+        .catch(err => {
+          Log.showError(TAG, `getAtomicServiceFormsInfoFromMapAndManager err: ${JSON.stringify(err)}`);
+          return [];
+        });
+    }
+    return cardInfo;
+  }
+
+  /**
+   * 更新原服务应用的卡片信息
+   *
+   * @param bundleName {string} bundleName
+   * @param eventType {string | undefined} eventType
+   * @returns {Promise<void>}
+   */
+  async updateAtomicServiceAppItemFormInfo(bundleName: string, eventType?: string): Promise<void> {
+    if (eventType && eventType === EventConstants.EVENT_PACKAGE_REMOVED) {
+      this.mAtomicServiceAppItemFormInfoMap.delete(bundleName);
+      return;
+    }
+    await this.getFormsInfoByBundleName(bundleName, this.setAtomicServiceAppItemFormInfo.bind(this));
+  }
+
+  /**
+   * 从缓存中获取原服务app 卡片信息
+   *
+   * @param bundleName bundleName
+   * @returns CardItemInfo[]
+   */
+  getAtomicServiceAppItemFormInfo(bundleName: string): CardItemInfo[] | undefined {
+    Log.showInfo(TAG, `getAtomicServiceAppItemFormInfo bundleName: ${bundleName}, ` +
+      `appItemFormInfo: ${JSON.stringify(this.mAtomicServiceAppItemFormInfoMap.get(bundleName))}`);
+    return this.mAtomicServiceAppItemFormInfoMap.get(bundleName);
+  }
+
+  /**
+   * 删除原服务卡片信息
+   *
+   * @param bundleName 包名
+   */
+  deleteAtomicServiceAppItemFormInfo(bundleName: string): void {
+    this.mAtomicServiceAppItemFormInfoMap.delete(bundleName);
+  }
+
+  getRealForm(cardItemInfos: CardItemInfo[]): CardItemInfo[] {
+    if (cardItemInfos.length <= 0) {
+      return null;
+    }
+    let result: CardItemInfo[] = [];
+    for (let j: number = 0; j < cardItemInfos.length; j++) {
+      let dimensions: number[] = cardItemInfos[j].supportDimensions;
+      for (let i: number = 0; i < dimensions.length; i++) {
+        const tempCard = new CardItemInfo();
+        this.copyCardItemInfo(tempCard, cardItemInfos[j]);
+        let tempDimensions: number[] = [];
+        tempDimensions.push(dimensions[i]);
+        tempCard.supportDimensions = tempDimensions;
+        tempCard.cardDimension = dimensions[i];
+        result.push(tempCard);
+      }
+    }
+    return result;
+  }
+
+  copyCardItemInfo(newCard: CardItemInfo, oldCard: CardItemInfo): void {
+    newCard.description = oldCard.description;
+    newCard.bundleName = oldCard.bundleName;
+    newCard.abilityName = oldCard.abilityName;
+    newCard.moduleName = oldCard.moduleName;
+    newCard.cardName = oldCard.cardName;
+    newCard.area = oldCard.area;
+    newCard.formConfigAbility = oldCard.formConfigAbility;
+  }
+
+  async getFullFormsInfoByBundleName(bundleName: string, callback?): Promise<CardItemInfo[]> {
+    let currentBundleFormsInfo: CardItemInfo[] = [];
+    currentBundleFormsInfo = await this.getFormsInfoByBundleName(bundleName, callback);
+    currentBundleFormsInfo = this.getRealForm(currentBundleFormsInfo);
+    AppStorage.setOrCreate('formMgrItem', currentBundleFormsInfo);
+    return currentBundleFormsInfo;
+  }
+
+  async doBeforeJumpToFormManager(formBundleName : string): Promise<void> {
+    const formItem = await this.getFullFormsInfoByBundleName(formBundleName);
+    AppStorage.setOrCreate('formItem', formItem);
+  }
 }

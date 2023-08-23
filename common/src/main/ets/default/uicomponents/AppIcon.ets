@@ -23,7 +23,7 @@ const TAG = 'AppIcon';
 @Component
 export struct AppIcon {
   iconSize: number;
-  iconId: string;
+  iconId: number;
   bundleName: string;
   moduleName: string;
   @State icon: string = '';

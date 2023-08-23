@@ -13,12 +13,16 @@
  * limitations under the License.
  */
 import image from '@ohos.multimedia.image';
-import { Log } from '@ohos/common';
-import { Trace } from '@ohos/common';
-import { CheckEmptyUtils } from '@ohos/common';
-import { windowManager } from '@ohos/common';
-import { SnapShotInfo } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
+import {
+  EventConstants,
+  localEventManager,
+  Log,
+  Trace,
+  CheckEmptyUtils,
+  windowManager,
+  SnapShotInfo,
+  CommonConstants
+} from '@ohos/common';
 import RecentMissionAppIcon from './RecentMissionAppIcon';
 import RecentMissionAppName from './RecentMissionAppName';
 import { RecentMissionsViewModel } from '../../viewmodel/RecentMissionsViewModel';
@@ -34,8 +38,8 @@ const TAG = 'Recent-RecentMissionCard';
 export default struct RecentMissionCard {
   @Link isClickSubComponent: boolean;
   @State missionId: number = 0;
-  @State appIconId: string = '';
-  @State appLabelId: number = undefined;
+  @State appIconId: number = 0;
+  @State appLabelId: number = 0;
   @State appName: string = '';
   @State bundleName: string = '';
   @State moduleName: string = '';
@@ -169,6 +173,9 @@ export default struct RecentMissionCard {
         .onClick((event) => {
           this.isClickSubComponent = true;
           Log.showDebug(TAG, 'onClick start launcher ability');
+          localEventManager.sendLocalEventSticky(EventConstants.EVENT_OPEN_FOLDER_TO_CLOSE, null);
+          windowManager.destroyWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
+          windowManager.destroyWindow(windowManager.FORM_SERVICE_WINDOW_NAME);
           if (!globalThis.recentMode || !windowManager.isSplitWindowMode(globalThis.recentMode)) {
             windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
           }

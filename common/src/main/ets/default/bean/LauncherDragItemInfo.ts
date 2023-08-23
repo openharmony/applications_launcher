@@ -40,7 +40,7 @@ export class LauncherDragItemInfo {
   appName: string | undefined;
   supportDimensions: number[] | undefined;
   appId: string | undefined;
-  appIconId: string | undefined;
+  appIconId: number | undefined;
   isSystemApp: boolean | undefined;
   isUninstallAble: boolean | undefined;
   badgeNumber: number | undefined;
@@ -50,4 +50,6 @@ export class LauncherDragItemInfo {
   page: number | undefined;
   column: number | undefined;
   row: number | undefined;
+  bundleType: number | undefined;
+  totalDimensionCount: number | undefined;
 }

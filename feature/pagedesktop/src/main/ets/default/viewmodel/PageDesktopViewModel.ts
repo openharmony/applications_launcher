@@ -14,27 +14,29 @@
  */
 
 import Prompt from '@ohos.promptAction';
-import { Log } from '@ohos/common';
-import { Trace } from '@ohos/common';
-import { CheckEmptyUtils } from '@ohos/common';
-import { StyleConstants } from '@ohos/common';
-import { EventConstants } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
-import { FormManager } from '@ohos/common';
-import { BadgeManager } from '@ohos/common';
-import { windowManager } from '@ohos/common';
-import { layoutConfigManager } from '@ohos/common';
-import { BaseViewModel } from '@ohos/common';
-import { SettingsModelObserver } from '@ohos/common';
-import { FormListInfoCacheManager } from '@ohos/common';
-import { FormModel } from '@ohos/common';
-import { SettingsModel } from '@ohos/common';
-import { PageDesktopModel } from '@ohos/common';
-import { MenuInfo } from '@ohos/common';
-import { CardItemInfo } from '@ohos/common';
+import {
+  Log,
+  Trace,
+  CheckEmptyUtils,
+  StyleConstants,
+  EventConstants,
+  CommonConstants,
+  FormManager,
+  BadgeManager,
+  windowManager,
+  layoutConfigManager,
+  BaseViewModel,
+  SettingsModelObserver,
+  FormListInfoCacheManager,
+  FormModel,
+  SettingsModel,
+  PageDesktopModel,
+  MenuInfo,
+  CardItemInfo,
+  localEventManager
+} from '@ohos/common';
 import { BigFolderModel } from '@ohos/bigfolder';
 import { FormDetailLayoutConfig } from '@ohos/form';
-import { localEventManager } from '@ohos/common';
 import PageDesktopConstants from '../common/constants/PageDesktopConstants';
 import { PageDesktopGridStyleConfig } from '../common/PageDesktopGridStyleConfig';
 import formHost from '@ohos.app.form.formHost';
@@ -43,7 +45,7 @@ const TAG = 'PageDesktopViewModel';
 const KEY_APP_LIST = 'appListInfo';
 const KEY_FORM_LIST = 'formListInfo';
 
-export default class PageDesktopViewModel extends BaseViewModel {
+export class PageDesktopViewModel extends BaseViewModel {
   private readonly pageDesktopStyleConfig: PageDesktopGridStyleConfig = null;
   private readonly formDetailLayoutConfig: FormDetailLayoutConfig = null;
   private readonly mSettingsModel: SettingsModel;
@@ -220,6 +222,33 @@ export default class PageDesktopViewModel extends BaseViewModel {
     await this.mAppModel.getAppListAsync();
     this.getGridList();
     AppStorage.setOrCreate('formRefresh', String(new Date()));
+  }
+
+  async updateForms(): Promise<void> {
+    Log.showInfo(TAG, 'updateForms start');
+    let allFormsInfo: CardItemInfo[] = await this.mFormModel.getAllFormsInfoFromRdb();
+    if (allFormsInfo.length) {
+      for (const { cardId } of allFormsInfo) {
+        if (CheckEmptyUtils.isEmpty(cardId)) {
+          continue;
+        }
+        Log.showInfo(TAG, `updateForms cardId: ${cardId}`);
+        this.requestForm(String(cardId));
+      }
+    }
+  }
+
+  requestForm(formId: string): void {
+    Log.showInfo(TAG, `formHost requestForm ${formId}`);
+    try {
+      formHost.requestForm(formId).then(() => {
+        Log.showInfo(TAG, 'formHost requestForm success');
+      }).catch((error) => {
+        Log.showError(TAG, `formHost requestForm error, code: ${error.code}, message: ${error.message}`);
+      });
+    } catch (err) {
+      Log.showError(TAG, `formHost requestForm fail, err->${JSON.stringify(err)}`);
+    }
   }
 
   private async getAppList() {
@@ -631,7 +660,7 @@ export default class PageDesktopViewModel extends BaseViewModel {
   };
 
   private ifInfoIsNull(info) {
-    if (info == undefined || info == '' || info == {} || info == null) {
+    if (info == undefined || info == '' || JSON.stringify(info) == '{}' || info == null) {
       return true;
     }
     return false;
@@ -1073,6 +1102,18 @@ export default class PageDesktopViewModel extends BaseViewModel {
         }
       };
       menuInfoList.push(addFormToDeskTopMenu);
+
+      let formCenterMenu: MenuInfo = new MenuInfo();
+      formCenterMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
+      formCenterMenu.menuImgSrc = '/common/pics/ic_form_center.svg';
+      formCenterMenu.menuText = $r('app.string.form_center');
+      formCenterMenu.onMenuClick = (): void => {
+        Log.showInfo(TAG, 'Launcher click menu into form center view.');
+        if (!this.isPad) {
+          globalThis.createWindowWithName(windowManager.FORM_SERVICE_WINDOW_NAME, windowManager.RECENT_RANK);
+        }
+      };
+      menuInfoList.push(formCenterMenu);
     }
 
     if (this.isPad) {
@@ -1139,8 +1180,8 @@ export default class PageDesktopViewModel extends BaseViewModel {
     }
     const addFormToDeskTopMenu = new MenuInfo();
     addFormToDeskTopMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
-    addFormToDeskTopMenu.menuImgSrc = '/common/pics/ic_public_app.svg';
-    addFormToDeskTopMenu.menuText = $r('app.string.add_form_to_desktop');
+    addFormToDeskTopMenu.menuImgSrc = '/common/pics/ic_desktop_servicewidgets.svg';
+    addFormToDeskTopMenu.menuText = $r('app.string.add_form_to_desktop_more');
     addFormToDeskTopMenu.onMenuClick = () => {
       Log.showDebug(TAG, 'Launcher click menu item into add form to desktop view');
       const appName = this.getAppName(formInfo.appLabelId + formInfo.bundleName + formInfo.moduleName);
@@ -1155,6 +1196,19 @@ export default class PageDesktopViewModel extends BaseViewModel {
       }
     };
     menuInfoList.push(addFormToDeskTopMenu);
+
+    let formCenterMenu: MenuInfo = new MenuInfo();
+    formCenterMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
+    formCenterMenu.menuImgSrc = '/common/pics/ic_form_center.svg';
+    formCenterMenu.menuText = $r('app.string.form_center');
+    formCenterMenu.onMenuClick = (): void => {
+      Log.showInfo(TAG, 'Launcher click menu into form center view.');
+      if (!this.isPad) {
+        globalThis.createWindowWithName(windowManager.FORM_SERVICE_WINDOW_NAME, windowManager.RECENT_RANK);
+      }
+    };
+    menuInfoList.push(formCenterMenu);
+
     const deleteFormFromDeskTop = new MenuInfo();
     deleteFormFromDeskTop.menuType = CommonConstants.MENU_TYPE_FIXED;
     deleteFormFromDeskTop.menuImgSrc = '/common/pics/ic_public_remove.svg';

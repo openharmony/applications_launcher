@@ -21,7 +21,7 @@ import {
   CloseAppManager } from '@ohos/common';
 import GridSwiper from '../common/components/GridSwiper';
 import { PageDesktopDragHandler } from '../common/PageDesktopDragHandler';
-import PageDesktopViewModel from '../viewmodel/PageDesktopViewModel';
+import { PageDesktopViewModel } from '../viewmodel/PageDesktopViewModel';
 import { PageDesktopCloseAppHandler } from '../common/PageDesktopCloseAppHandler';
 
 let mPageDesktopViewModel: PageDesktopViewModel = null;

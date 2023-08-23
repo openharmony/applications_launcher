@@ -14,9 +14,11 @@
  */
 
 import Input from '@ohos.multimodalInput.inputEventClient';
-import { Log } from '@ohos/common';
-import { windowManager } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
+import {
+  Log,
+  windowManager,
+  CommonConstants
+} from '@ohos/common';
 
 const TAG = 'GestureNavigationExecutors';
 

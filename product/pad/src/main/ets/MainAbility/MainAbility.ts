@@ -31,7 +31,7 @@ import {
 } from '@ohos/common';
 import { GestureNavigationManager } from '@ohos/gesturenavigation';
 import StyleConstants from '../common/constants/StyleConstants';
-import PageDesktopViewModel from '../../../../../../feature/pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
+import { PageDesktopViewModel } from '@ohos/pagedesktop';
 import Window from '@ohos.window';
 import inputConsumer from '@ohos.multimodalInput.inputConsumer';
 import { KeyCode } from '@ohos.multimodalInput.keyCode';

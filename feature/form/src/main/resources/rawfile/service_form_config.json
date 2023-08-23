@@ -1,0 +1,5 @@
+{
+  "big_data_source_list": [
+    "com.ohos.camera", "com.ohos.photos"
+  ]
+}

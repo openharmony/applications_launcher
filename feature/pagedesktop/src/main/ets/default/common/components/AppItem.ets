@@ -13,18 +13,23 @@
  * limitations under the License.
  */
 
-import { AppItemInfo, CardItemInfo, LauncherDragItemInfo, Log } from '@ohos/common';
-import { Trace } from '@ohos/common';
-import { StyleConstants } from '@ohos/common';
-import { PresetStyleConstants } from '@ohos/common';
-import { AppBubble } from '@ohos/common';
-import { AppIcon } from '@ohos/common';
-import { UninstallDialog } from '@ohos/common';
-import { FormManagerDialog } from '@ohos/common';
-import { ResourceManager } from '@ohos/common';
+import {
+  AppItemInfo,
+  CardItemInfo,
+  LauncherDragItemInfo,
+  Log,
+  Trace,
+  StyleConstants,
+  PresetStyleConstants,
+  AppBubble,
+  UninstallDialog,
+  FormManagerDialog,
+  ResourceManager,
+  AppIcon,
+  CommonConstants
+} from '@ohos/common';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
-import { CommonConstants } from '@ohos/common';
-import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel';
+import { PageDesktopViewModel } from '../../viewmodel/PageDesktopViewModel';
 import { PageDesktopStartAppHandler } from '../PageDesktopStartAppHandler';
 
 const DOUBLE_CLICK_COUNT = 2

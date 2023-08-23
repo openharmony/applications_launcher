@@ -30,7 +30,7 @@ export class AppItemInfo {
   /**
    * Indicates appIconId.
    */
-  appIconId: string | undefined;
+  appIconId: number | undefined;
 
   /**
    * Indicates appLabelId.
@@ -94,4 +94,5 @@ export class AppItemInfo {
    * GridLayoutItemInfo: row of positions
    */
   row: number | undefined;
+  bundleType: number | undefined;
 }

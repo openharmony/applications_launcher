@@ -96,7 +96,7 @@ export default struct ResidentLayout {
         .animation({
           curve: Curve.Friction
         })
-        .listDirection(this.mSmartDockStyleConfig.mListDirection)
+        .listDirection(Axis[this.mSmartDockStyleConfig.mListDirection])
         .editMode(false)
       }
       .backgroundColor(this.mSmartDockStyleConfig.mBackgroundColor)

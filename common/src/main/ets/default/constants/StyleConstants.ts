@@ -129,6 +129,7 @@ export class StyleConstants {
   //image resources
   static readonly DEFAULT_FORM_MGR_BACKGROUND_IMAGE = '/common/pics/ic_wallpaper_form_manager.jpg';
   static readonly DEFAULT_FORM_MGR_BACK_IMAGE = '/common/pics/ic_form_mgr_back.png';
+  static readonly DEFAULT_ARROW_RIGHT_IMAGE = '/common/pics/ic_arrow_right.svg';
 
   // style
   static readonly DEFAULT_FORM_MARGIN = 10;

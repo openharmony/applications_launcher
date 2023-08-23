@@ -12,15 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Log } from '@ohos/common';
-import { FormModel } from '@ohos/common';
-import { SettingsModel } from '@ohos/common';
-import { PageDesktopModel } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
-import { layoutConfigManager } from '@ohos/common';
-import { FormListInfoCacheManager } from '@ohos/common';
+import {
+  Log,
+  FormModel,
+  SettingsModel,
+  PageDesktopModel,
+  CommonConstants,
+  layoutConfigManager,
+  FormListInfoCacheManager
+} from '@ohos/common';
 import { FormStyleConfig } from '../common/FormStyleConfig';
-import FormConstants from '../common/constants/FormConstants';
+import FeatureConstants from '../common/constants/FeatureConstants';
 
 const TAG = 'FormViewModel';
 const KEY_FORM_LIST = 'formListInfo';
@@ -42,7 +44,7 @@ export class FormViewModel {
     this.mSettingsModel = SettingsModel.getInstance();
     this.mPageDesktopModel = PageDesktopModel.getInstance();
     this.mFormStyleConfig = layoutConfigManager.getStyleConfig(FormStyleConfig.APP_LIST_STYLE_CONFIG,
-      FormConstants.FEATURE_NAME);
+      FeatureConstants.FEATURE_NAME);
     this.mFormListInfoCacheManager = FormListInfoCacheManager.getInstance();
   }
 

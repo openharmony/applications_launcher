@@ -25,7 +25,7 @@ const TAG = 'Recent-RecentMissionAppIcon';
 @Component
 export default struct RecentMissionAppIcon {
   @State iconSize: number = 0;
-  @State @Watch("updateIcon") appIcon: string = '';
+  @State @Watch("updateIcon") appIcon: number = 0;
   @State bundleName: string = '';
   @State moduleName: string = '';
   @State labelId: number = undefined;

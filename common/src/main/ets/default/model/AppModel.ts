@@ -23,6 +23,7 @@ import { AppItemInfo } from '../bean/AppItemInfo';
 import { localEventManager } from '../manager/LocalEventManager';
 import { launcherAbilityManager } from '../manager/LauncherAbilityManager';
 import SystemApplication from '../configs/SystemApplication';
+import { AtomicServiceAppModel } from './AtomicServiceAppModel';
 
 const TAG = 'AppModel';
 
@@ -36,11 +37,13 @@ export class AppModel {
   private readonly mShortcutInfoMap = new Map<string, ShortcutInfo[]>();
   private readonly mFormModel: FormModel;
   private readonly mInstallationListener;
+  private readonly mAtomicServiceAppModel: AtomicServiceAppModel;
 
   private constructor() {
     Log.showInfo(TAG, 'constructor start');
     this.mSystemApplicationName = SystemApplication.SystemApplicationName.split(',');
     this.mFormModel = FormModel.getInstance();
+    this.mAtomicServiceAppModel = AtomicServiceAppModel.getInstance();
     this.mInstallationListener = this.installationSubscriberCallBack.bind(this);
   }
 
@@ -152,6 +155,7 @@ export class AppModel {
     }
     if (event === EventConstants.EVENT_PACKAGE_REMOVED) {
       this.removeItem(bundleName);
+      this.mAtomicServiceAppModel.removeAtomicServiceItem(bundleName);
       this.mFormModel.deleteFormByBundleName(bundleName);
 
       // delete app from folder
@@ -172,20 +176,42 @@ export class AppModel {
         bundleName: bundleName,
         keyName: undefined
       });
+
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RECOMMEND_FORM_DELETE, bundleName);
     } else {
-      const abilityInfos = await launcherAbilityManager.getLauncherAbilityInfo(bundleName);
-      Log.showDebug(TAG, `installationSubscriberCallBack abilityInfos: ${JSON.stringify(abilityInfos)}`);
-      if (!CheckEmptyUtils.isEmptyArr(abilityInfos)){
-        this.replaceItem(bundleName, abilityInfos);
+      let appItemInfo: AppItemInfo = await this.getAndReplaceLauncherAbility(bundleName);
+
+      if (CheckEmptyUtils.isEmpty(appItemInfo)) {
+        appItemInfo = await this.mAtomicServiceAppModel.getAndReplaceAtomicAbility(bundleName);
+      }
+
+      if (CheckEmptyUtils.isEmpty(appItemInfo)) {
+        Log.showError(TAG, `installationSubscriberCallBack neither launcher nor atomic app, bundleName:${bundleName} `);
+        return;
       }
       if (event === EventConstants.EVENT_PACKAGE_CHANGED) {
-        await this.getAppListAsync();
+        Log.showInfo(TAG, `installationSubscriber, PACKAGE_CHANGED, bundleName is ${bundleName}`);
         AppStorage.setOrCreate('formRefresh', String(new Date()));
-        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
-        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_UPDATE, abilityInfos[0]);
+
+        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RECOMMEND_FORM_UPDATE, bundleName);
+        Log.showError(TAG, `installationSubscriberCallBack unKnow bundleType:${appItemInfo.bundleType}`);
+      } else {
+        await this.mFormModel.updateAppItemFormInfo(bundleName);
+        await this.mFormModel.updateAtomicServiceAppItemFormInfo(bundleName);
+        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RECOMMEND_FORM_ADD, bundleName);
       }
     }
     this.notifyAppStateChangeEvent();
+  }
+
+  private async getAndReplaceLauncherAbility(bundleName: string): Promise<AppItemInfo> {
+    const abilityInfos: AppItemInfo[] = await launcherAbilityManager.getLauncherAbilityInfo(bundleName);
+    if (CheckEmptyUtils.isEmptyArr(abilityInfos)) {
+      return undefined;
+    }
+    Log.showDebug(TAG, `launcher abilityInfos: ${JSON.stringify(abilityInfos)}`);
+    this.replaceItem(bundleName, abilityInfos);
+    return abilityInfos[0];
   }
 
   /**
