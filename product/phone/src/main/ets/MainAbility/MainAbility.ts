@@ -168,24 +168,19 @@ export default class MainAbility extends ServiceExtension {
       windowManager.minimizeAllApps();
     }
     windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
-    this.closeFolder();
+    localEventManager.sendLocalEventSticky(EventConstants.EVENT_OPEN_FOLDER_TO_CLOSE, null);
   }
 
-  private closeFolder(): void {
-    AppStorage.setOrCreate('openFolderPageIndex', StyleConstants.DEFAULT_NUMBER_0);
-    AppStorage.setOrCreate('openFolderStatus', StyleConstants.DEFAULT_NUMBER_0);
-  }
-
-  onConfigurationUpdate(config) {
+  onConfigurationUpdate(config): void {
     Log.showInfo(TAG, 'onConfigurationUpdated, config:' + JSON.stringify(config));
     const systemLanguage = AppStorage.get('systemLanguage');
     if(systemLanguage !== config.language) {
       this.clearCacheWhenLanguageChange();
     }
-    AppStorage.setOrCreate("systemLanguage", config.language);
+    AppStorage.setOrCreate('systemLanguage', config.language);
   }
 
-  private clearCacheWhenLanguageChange() {
+  private clearCacheWhenLanguageChange(): void {
     FormListInfoCacheManager.getInstance().clearCache();
     ResourceManager.getInstance().clearAppResourceCache();
     launcherAbilityManager.cleanAppMapCache();

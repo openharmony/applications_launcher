@@ -27,7 +27,6 @@ import {
 import SwiperPage from './SwiperPage';
 
 const TAG = "GridSwiper";
-const APP_INFO_REFRESH_DELAY = 1000;
 
 @Component
 export default struct GridSwiper {
@@ -42,14 +41,13 @@ export default struct GridSwiper {
   @State pageList: number[] = [0];
   private swiperController: SwiperController = new SwiperController();
   private dialogController: CustomDialogController;
-  @State enabledDomEventResponse: boolean = true;
   @StorageLink('desktopEventResponse') desktopEventResponse: boolean = true;
-  @State desktopIndicator: DotIndicator | DigitIndicator = undefined;
+  @State desktopIndicator: DotIndicator | DigitIndicator = Indicator.dot().selectedColor(StyleConstants.DEFAULT_FONT_COLOR);
 
-  private updatePageList(): void {
+  updatePageList(): void {
     if (this.pageList.length !== this.appListInfo.appGridInfo.length) {
       if (this.pageList.length < this.appListInfo.appGridInfo.length) {
-        for (let i = this.pageList.length - 1; i < this.appListInfo.appGridInfo.length; i++) {
+        for (let i = this.pageList.length; i < this.appListInfo.appGridInfo.length; i++) {
           if (this.pageList.indexOf(i) === -1) {
             this.pageList.push(i);
           }
@@ -64,10 +62,10 @@ export default struct GridSwiper {
     }
     const NINE = 9;
     if (this.pageList?.length > NINE) {
-      this.desktopIndicator = new DigitIndicator().fontColor(StyleConstants.DEFAULT_FORM_MGR_FONT_COLOR)
+      this.desktopIndicator = Indicator.digit().fontColor(StyleConstants.DEFAULT_FORM_MGR_FONT_COLOR)
         .selectedFontColor(StyleConstants.DEFAULT_FONT_COLOR);
     } else {
-      this.desktopIndicator = new DotIndicator().selectedColor(StyleConstants.DEFAULT_FONT_COLOR);
+      this.desktopIndicator = Indicator.dot().selectedColor(StyleConstants.DEFAULT_FONT_COLOR);
     }
   }
 
@@ -118,40 +116,6 @@ export default struct GridSwiper {
     }
     menuInfoList.push(addOrDeleteBlankPage);
     return menuInfoList;
-  }
-
-  itemMove(moveX: number, moveY: number){
-    const hotArea: number = 12;
-    let screenWidth: number = AppStorage.get('screenWidth') ?? 0;
-    let screenHeight: number = AppStorage.get('screenHeight') ?? 0;
-    const isSwappingPage: boolean = AppStorage.get('isSwappingPage');
-    if (isSwappingPage || !screenWidth || !screenHeight) {
-      return;
-    }
-    let curPageIndex: number = AppStorage.get('pageIndex');
-    if (moveX < hotArea && curPageIndex > 0 && moveY < screenHeight) {
-      this.mPageDesktopViewModel.showPrevious();
-      this.movingIconSwapPageDelay();
-    }
-    if (moveX > (screenWidth - hotArea) && moveY < screenHeight) {
-      let cachePageIndex = this.mPageDesktopViewModel.getGridPageCount();
-      if (curPageIndex == cachePageIndex - 1 && !this.mPageDesktopViewModel.isBlankPage()) {
-        this.mPageDesktopViewModel.addBlankPage(true);
-      } else if(curPageIndex < cachePageIndex - 1) {
-        this.mPageDesktopViewModel.showNext();
-      }
-      this.movingIconSwapPageDelay();
-    }
-  }
-
-  /**
-   * Increase delay when dragging app to other page.
-   */
-  movingIconSwapPageDelay() {
-    AppStorage.setOrCreate('isSwappingPage', true);
-    setTimeout(() => {
-      AppStorage.setOrCreate('isSwappingPage', false);
-    }, APP_INFO_REFRESH_DELAY);
   }
 
   build() {
@@ -208,13 +172,13 @@ export default struct GridSwiper {
               localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
             }
           })
-          .onGestureSwipe(() => {
+          .onGestureSwipe((index: number, extraInfo: SwiperAnimationEvent) => {
             this.desktopEventResponse = false;
           })
-          .onAnimationStart(() => {
+          .onAnimationStart((index: number, targetIndex: number, extraInfo: SwiperAnimationEvent) => {
             this.desktopEventResponse = false;
           })
-          .onAnimationEnd((index: number) => {
+          .onAnimationEnd((index: number, extraInfo: SwiperAnimationEvent) => {
             this.desktopEventResponse = true;
             if (typeof index !== 'undefined') {
               this.pageIndex = index;
@@ -230,15 +194,5 @@ export default struct GridSwiper {
     .justifyContent(FlexAlign.Center)
     .height(StyleConstants.PERCENTAGE_100)
     .width(StyleConstants.PERCENTAGE_100)
-    .onDragMove((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `onDragMove event: [${event.getWindowX()}, ${event.getWindowY()}]`);
-      const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo');
-      if (!dragItemInfo.isDragging) return;
-      if (AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE
-      || (AppStorage.get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE
-      && AppStorage.get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP)) {
-        this.itemMove(event.getWindowX(), event.getWindowY());
-      }
-    })
   }
 }

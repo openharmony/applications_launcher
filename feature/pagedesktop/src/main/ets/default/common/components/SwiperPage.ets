@@ -27,6 +27,7 @@ import FolderItem from './FolderItem';
 import { PageDesktopGridStyleConfig } from '../PageDesktopGridStyleConfig';
 
 const TAG = "SwiperPage";
+const APP_INFO_REFRESH_DELAY = 1000;
 
 @Component
 export default struct SwiperPage {
@@ -50,6 +51,9 @@ export default struct SwiperPage {
   private mPageDesktopStyleConfig:PageDesktopGridStyleConfig;
   private mGridWidth : number;
   private mGridHeight: number;
+  private mIconSize: number;
+  private mGridSpaceWidth : number;
+  private mGridSpaceHeight: number;
 
   private updateAppListInfo(): void {
     this.mAppListInfo = this.appListInfo.appGridInfo[this.swiperPage];
@@ -71,6 +75,9 @@ export default struct SwiperPage {
     this.mMarginTop = this.mPageDesktopStyleConfig.mDesktopMarginTop;
     this.mGridWidth = this.mPageDesktopStyleConfig.mGridWidth;
     this.mGridHeight = this.mPageDesktopStyleConfig.mGridHeight;
+    this.mIconSize = this.mPageDesktopStyleConfig.mIconSize;
+    this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
+    this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
     this.changeConfig();
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
   }
@@ -91,6 +98,36 @@ export default struct SwiperPage {
     for (let i = 0;i < row; i++) {
       this.RowsTemplate += '1fr '
     }
+  }
+
+  itemMove(moveX: number, moveY: number): void {
+    const isSwappingPage: boolean = AppStorage.get('isSwappingPage');
+    if (isSwappingPage) {
+      return;
+    }
+    let curPageIndex: number = AppStorage.get('pageIndex');
+    if ((moveX - this.mIconSize / 2) < this.mMargin && curPageIndex > 0 && moveY < this.mGridSpaceHeight) {
+      this.mPageDesktopViewModel.showPrevious();
+      this.movingIconSwapPageDelay();
+    } else if ((moveX + this.mIconSize / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
+      let cachePageIndex = this.mPageDesktopViewModel.getGridPageCount();
+      if (curPageIndex === cachePageIndex - 1 && !this.mPageDesktopViewModel.isBlankPage()) {
+        this.mPageDesktopViewModel.addBlankPage(true);
+      } else if(curPageIndex < cachePageIndex - 1) {
+        this.mPageDesktopViewModel.showNext();
+      }
+      this.movingIconSwapPageDelay();
+    }
+  }
+
+  /**
+   * Increase delay when dragging app to other page.
+   */
+  movingIconSwapPageDelay() {
+    AppStorage.setOrCreate('isSwappingPage', true);
+    setTimeout(() => {
+      AppStorage.setOrCreate('isSwappingPage', false);
+    }, APP_INFO_REFRESH_DELAY);
   }
 
   private buildLog(item): boolean {
@@ -157,6 +194,16 @@ export default struct SwiperPage {
     })
     .onDragEnter((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getWindowX()}, ${event.getWindowY()}]`);
+    })
+    .onDragMove((event: DragEvent, extraParams: string) => {
+      Log.showInfo(TAG, `onDragMove event: [${event.getWindowX()}, ${event.getWindowY()}]`);
+      const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo');
+      if (!dragItemInfo.isDragging) return;
+      if (AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE
+      || (AppStorage.get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE
+      && AppStorage.get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP)) {
+        this.itemMove(event.getWindowX(), event.getWindowY());
+      }
     })
     .onDragLeave((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragLeave event: [${event.getWindowX()}, ${event.getWindowY()}]`);
