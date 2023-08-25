@@ -203,7 +203,7 @@ export struct FormManagerComponent {
         .duration(80)
         .cachedCount(1)
         .index(0)
-        .indicator(new DotIndicator().selectedColor(StyleConstants.DEFAULT_FORM_MGR_FONT_COLOR))
+        .indicator(Indicator.dot().selectedColor(StyleConstants.DEFAULT_FORM_MGR_FONT_COLOR))
         .onChange((index: number) => {
           if (this.mSwiperIndex !== index) {
             this.mSwiperIndex = index;

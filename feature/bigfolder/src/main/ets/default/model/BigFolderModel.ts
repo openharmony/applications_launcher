@@ -89,7 +89,8 @@ export class BigFolderModel {
   registerFolderUpdateEvent(listener): void {
     localEventManager.registerEventListener(listener, [
       EventConstants.EVENT_BADGE_UPDATE,
-      EventConstants.EVENT_FOLDER_PACKAGE_REMOVED
+      EventConstants.EVENT_FOLDER_PACKAGE_REMOVED,
+      EventConstants.EVENT_OPEN_FOLDER_TO_CLOSE
     ]);
   }
 }
