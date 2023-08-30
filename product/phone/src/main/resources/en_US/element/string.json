@@ -89,6 +89,10 @@
       "value": "add widget to desktop"
     },
     {
+      "name": "form_center",
+      "value": "Form Center"
+    },
+    {
       "name": "form_edit",
       "value": "edit service widget"
     },

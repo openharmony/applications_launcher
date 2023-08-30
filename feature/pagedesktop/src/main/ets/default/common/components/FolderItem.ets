@@ -13,18 +13,23 @@
  * limitations under the License.
  */
 
-import { LauncherDragItemInfo, Log } from '@ohos/common';
-import { Trace } from '@ohos/common';
-import { StyleConstants } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
-import { FolderComponent } from '@ohos/common'
-import { PresetStyleConstants } from '@ohos/common';
-import { BigFolderViewModel } from '@ohos/bigfolder';
-import { BigFolderStyleConfig } from '@ohos/bigfolder';
+import {
+  LauncherDragItemInfo,
+  Log,
+  Trace,
+  StyleConstants,
+  CommonConstants,
+  FolderComponent,
+  PresetStyleConstants
+} from '@ohos/common';
+import {
+  BigFolderViewModel,
+  BigFolderStyleConfig,
+  BigFolderConstants
+} from '@ohos/bigfolder';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
-import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel'
+import { PageDesktopViewModel } from '../../viewmodel/PageDesktopViewModel'
 import { PageDesktopStartAppHandler } from '../PageDesktopStartAppHandler';
-import { BigFolderConstants } from '@ohos/bigfolder';
 
 const TAG = 'FolderItem';
 

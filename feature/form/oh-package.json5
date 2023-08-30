@@ -2,7 +2,7 @@
   "devDependencies": {},
   "name": "@ohos/form",
   "description": "a npm package which contains form feature",
-  "main": "index.ets",
+  "main": "index.ts",
   "version": "1.0.0",
   "dependencies": {
     "@ohos/common": "../../common"

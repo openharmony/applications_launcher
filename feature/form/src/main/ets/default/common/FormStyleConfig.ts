@@ -13,10 +13,12 @@
  * limitations under the License.
  */
 
-import { CommonConstants } from '@ohos/common';
-import { LayoutViewModel } from '@ohos/common';
-import { AppListStyleConfig } from '@ohos/common';
-import FormConstants from './constants/FormConstants';
+import {
+  CommonConstants,
+  LayoutViewModel,
+  AppListStyleConfig
+} from '@ohos/common';
+import FeatureConstants from './constants/FeatureConstants';
 
 /**
  * Form style config
@@ -130,6 +132,6 @@ export class FormStyleConfig extends AppListStyleConfig {
    * @return {string} feature name
    */
   getFeatureName(): string {
-    return FormConstants.FEATURE_NAME;
+    return FeatureConstants.FEATURE_NAME;
   }
 }

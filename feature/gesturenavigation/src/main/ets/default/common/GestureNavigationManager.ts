@@ -14,12 +14,12 @@
  */
 
 import { AsyncCallback} from '@ohos.base';
-import { DataAbilityHelper } from 'ability/dataAbilityHelper';
 import inputMonitor from '@ohos.multimodalInput.inputMonitor';
-
-import { Log } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
-import { settingsDataManager } from '@ohos/common';
+import {
+  Log,
+  CommonConstants,
+  settingsDataManager
+} from '@ohos/common';
 import GestureNavigationExecutors from './GestureNavigationExecutors';
 
 const TAG = 'GestureNavigationManage';

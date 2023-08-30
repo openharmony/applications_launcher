@@ -188,7 +188,7 @@ export default struct RecentLayout {
     .borderRadius(this.mSmartDockStyleConfig.mDockRadius)
     .backdropBlur(this.mSmartDockStyleConfig.mBackdropBlur)
     .visibility(this.getListWidth() === 0 ? Visibility.None : Visibility.Visible)
-    .listDirection(this.mSmartDockStyleConfig.mListDirection)
+    .listDirection(Axis[this.mSmartDockStyleConfig.mListDirection])
   }
 
   getListWidth(): number {

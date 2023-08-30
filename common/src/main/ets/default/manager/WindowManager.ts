@@ -47,6 +47,8 @@ class WindowManager {
 
   FORM_MANAGER_WINDOW_NAME = 'FormManagerView';
 
+  FORM_SERVICE_WINDOW_NAME = 'FormServiceView';
+
   DESKTOP_RANK = Window.WindowType.TYPE_DESKTOP;
 
   RECENT_RANK = Window.WindowType.TYPE_LAUNCHER_RECENT;
@@ -130,6 +132,42 @@ class WindowManager {
   async setWindowPosition(x: number, y: number): Promise<void> {
     const abilityWindow = await Window.getTopWindow();
     void abilityWindow.moveTo(x, y);
+  }
+
+  /**
+   * 隐藏状态栏
+   *
+   * @param name windowName
+   */
+  hideWindowStatusBar(name: string) {
+    let names: Array<'status'|'navigation'> = ['navigation'];
+    this.setWindowSystemBar(name, names);
+  }
+
+  /**
+   * 显示状态栏
+   *
+   * @param name
+   */
+  showWindowStatusBar(name: string) {
+    let names: Array<'status'|'navigation'> = ['navigation', 'status'];
+    this.setWindowSystemBar(name, names);
+  }
+
+  /**
+   * 设置状态栏与导航栏显隐
+   *
+   * @param windowName
+   * @param names 值为 'status'|'navigation' 枚举
+   */
+  private setWindowSystemBar(windowName: string, names: Array<'status'|'navigation'>) {
+    this.findWindow(windowName, win => {
+      win.setWindowSystemBarEnable(names).then(() => {
+        Log.showInfo(TAG, `set statusBar success`);
+      }).catch(err => {
+        Log.showInfo(TAG, `set statusBar failed, Cause: ${JSON.stringify(err)}`);
+      })
+    })
   }
 
   createWindow(context: ServiceExtensionContext, name: string, windowType: number, loadContent: string,
@@ -224,6 +262,7 @@ class WindowManager {
       });
     });
     this.destroyWindow(this.FORM_MANAGER_WINDOW_NAME);
+    this.destroyWindow(this.FORM_SERVICE_WINDOW_NAME);
   }
 
   destroyWindow(name: string, callback?: Function): void {

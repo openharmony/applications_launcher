@@ -49,6 +49,10 @@
       "value": "服务卡片"
     },
     {
+      "name": "form_center",
+      "value": "卡片中心"
+    },
+    {
       "name": "form_edit",
       "value": "编辑"
     },
@@ -67,6 +71,26 @@
     {
       "name": "isUninstall",
       "value": "是否卸载"
+    },
+    {
+      "name": "form",
+      "value": "卡片"
+    },
+    {
+      "name": "duplicate_add",
+      "value": "重复添加"
+    },
+    {
+      "name": "app_menu_open",
+      "value": "打开"
+    },
+    {
+      "name": "app_center_menu_add_dock",
+      "value": "添加到快捷栏"
+    },
+    {
+      "name": "remove_app_from_folder",
+      "value": "移出文件夹"
     }
   ]
 }

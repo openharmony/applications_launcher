@@ -13,18 +13,20 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
-import { PinyinSort } from '@ohos/common';
-import { CheckEmptyUtils } from '@ohos/common';
-import { EventConstants } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
-import { BaseViewModel } from '@ohos/common';
-import { SettingsModel } from '@ohos/common';
-import { PageDesktopModel } from '@ohos/common';
-import { ResourceManager } from '@ohos/common';
-import { localEventManager } from '@ohos/common';
-import { layoutConfigManager } from '@ohos/common';
-import { FolderLayoutConfig } from '@ohos/common';
+import {
+  Log,
+  PinyinSort,
+  CheckEmptyUtils,
+  EventConstants,
+  CommonConstants,
+  BaseViewModel,
+  SettingsModel,
+  PageDesktopModel,
+  ResourceManager,
+  localEventManager,
+  layoutConfigManager,
+  FolderLayoutConfig
+} from '@ohos/common';
 import { BigFolderModel } from '../model/BigFolderModel';
 import { BigFolderStyleConfig } from '../common/BigFolderStyleConfig';
 import { BigFolderConstants } from '../common/constants/BigFolderConstants';
@@ -53,6 +55,8 @@ export class BigFolderViewModel extends BaseViewModel {
         this.updateBadge(openFolderData, params);
       } else if (event === EventConstants.EVENT_FOLDER_PACKAGE_REMOVED) {
         this.deleteAppFromFolderByUninstall(params);
+      } else if (event === EventConstants.EVENT_OPEN_FOLDER_TO_CLOSE) {
+        this.closeFolder();
       }
     }
   };

@@ -17,3 +17,4 @@ export { PageDesktopLayout } from './src/main/ets/default/layout/PageDesktopLayo
 export { pageDesktopPreLoader } from './src/main/ets/default/common/PageDesktopPreLoader'
 export { PageDesktopDragHandler } from './src/main/ets/default/common/PageDesktopDragHandler'
 export { PageDesktopGridStyleConfig } from './src/main/ets/default/common/PageDesktopGridStyleConfig'
+export { PageDesktopViewModel } from './src/main/ets/default/viewmodel/PageDesktopViewModel'

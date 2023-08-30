@@ -22,7 +22,7 @@ import {
   StyleConstants
 } from '@ohos/common';
 import { BigFolderViewModel } from '@ohos/bigfolder';
-import PageDesktopViewModel from '../viewmodel/PageDesktopViewModel';
+import { PageDesktopViewModel } from '../viewmodel/PageDesktopViewModel';
 
 const TAG = 'PageDesktopCloseAppHandler';
 

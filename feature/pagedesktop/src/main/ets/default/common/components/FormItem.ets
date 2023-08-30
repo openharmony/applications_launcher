@@ -13,18 +13,24 @@
  * limitations under the License.
  */
 
-import { CardItemInfo, LauncherDragItemInfo, Log } from '@ohos/common';
-import { StyleConstants } from '@ohos/common';
-import { PresetStyleConstants } from '@ohos/common';
-import { ResourceManager } from '@ohos/common';
-import { RemoveFormDialog } from '@ohos/common';
-import { FormManagerDialog } from '@ohos/common';
-import { FormItemComponent } from '@ohos/common';
-import { FormViewModel } from '@ohos/form';
-import { FormStyleConfig } from '@ohos/form';
+import {
+  CardItemInfo,
+  LauncherDragItemInfo,
+  Log,
+  StyleConstants,
+  PresetStyleConstants,
+  ResourceManager,
+  RemoveFormDialog,
+  FormManagerDialog,
+  FormItemComponent,
+  CommonConstants
+} from '@ohos/common';
+import {
+  FormViewModel,
+  FormStyleConfig
+} from '@ohos/form';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
-import { CommonConstants } from '@ohos/common';
-import PageDesktopViewModel from '../../viewmodel/PageDesktopViewModel';
+import { PageDesktopViewModel } from '../../viewmodel/PageDesktopViewModel';
 import { PageDesktopStartAppHandler } from '../PageDesktopStartAppHandler';
 
 const TAG = 'FormItem';

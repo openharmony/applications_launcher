@@ -16,7 +16,7 @@
 export default class SmartDockConstants {
   static readonly FEATURE_NAME = 'featureSmartDock';
 
-  static readonly LIST_DIRECTION: Axis = Axis.Horizontal;
+  static readonly LIST_DIRECTION: string = 'Horizontal';
 
   static readonly PERCENTAGE_100 = '100%';
 

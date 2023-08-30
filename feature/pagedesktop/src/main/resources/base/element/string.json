@@ -49,6 +49,10 @@
       "value": "add service widget to desktop"
     },
     {
+      "name": "form_center",
+      "value": "Form Center"
+    },
+    {
       "name": "form_edit",
       "value": "edit service widget"
     },
@@ -59,6 +63,26 @@
     {
       "name": "add_form_to_desktop_more",
       "value": "add service widget to desktop more"
+    },
+    {
+      "name": "form",
+      "value": "service widget"
+    },
+    {
+      "name": "duplicate_add",
+      "value": "Duplicate add to desktop"
+    },
+    {
+      "name": "app_menu_open",
+      "value": "open"
+    },
+    {
+      "name": "app_center_menu_add_dock",
+      "value": "add to dock"
+    },
+    {
+      "name": "remove_app_from_folder",
+      "value": "remove app from folder"
     }
   ]
 }

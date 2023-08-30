@@ -12,9 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CommonConstants } from '@ohos/common';
-import { FormLayoutConfig } from '@ohos/common';
-import FormConstants from './constants/FormConstants';
+import {
+  CommonConstants,
+  FormLayoutConfig
+} from '@ohos/common';
+import FeatureConstants from './constants/FeatureConstants';
 
 const TAG = 'FormDetailLayoutConfig';
 
@@ -61,6 +63,6 @@ export class FormDetailLayoutConfig extends FormLayoutConfig{
    * @return {string} feature name
    */
   getFeatureName(): string {
-    return FormConstants.FEATURE_NAME;
+    return FeatureConstants.FEATURE_NAME;
   }
 }

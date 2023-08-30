@@ -40,7 +40,6 @@ export struct FormManagerDialog {
     StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT / 2,
     StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT / 2,
     StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT];
-  @State enabledDomEventResponse: boolean = true;
 
   mFormDialogController: CustomDialogController;
   cancel: (callback?) => void;
@@ -190,12 +189,6 @@ export struct FormManagerDialog {
             this.mSwiperIndex = index;
           }
         })
-        .onAnimationStart(() => {
-          this.enabledDomEventResponse = false;
-        })
-        .onAnimationEnd(() => {
-          this.enabledDomEventResponse = true;
-        })
       }
       .height('85%')
       Flex({ justifyContent: FlexAlign.SpaceAround }) {
@@ -220,7 +213,6 @@ export struct FormManagerDialog {
             .fontSize(StyleConstants.DEFAULT_BADGE_FONT_SIZE)
             .fontColor(StyleConstants.BUTTON_FONT_COLOR)
         }
-        .enabled(this.enabledDomEventResponse)
         .backgroundColor(StyleConstants.DEFAULT_BG_COLOR)
         .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
         .width(StyleConstants.DEFAULT_BUTTON_WIDTH)

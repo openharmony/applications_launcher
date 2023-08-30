@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,8 +13,6 @@
  * limitations under the License.
  */
 
-export { formPreLoader } from './src/main/ets/default/common/FormPreLoader'
-export { FormStyleConfig } from './src/main/ets/default/common/FormStyleConfig'
-export { FormViewModel } from './src/main/ets/default/viewmodel/FormViewModel'
-export { FormManagerComponent } from './src/main/ets/default/view/FormManagerComponent'
-export { FormDetailLayoutConfig } from './src/main/ets/default/common/FormDetailLayoutConfig'
+export default class FeatureConstants {
+  static readonly FEATURE_NAME = 'featureForm';
+}
