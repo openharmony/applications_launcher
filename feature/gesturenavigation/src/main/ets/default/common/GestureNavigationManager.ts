@@ -84,10 +84,12 @@ export class GestureNavigationManager {
   }
 
   private turnOnTouchEventCallback() {
+    Log.showWarn(TAG, 'turnOnTouchEventCallback start');
     inputMonitor.on('touch', this.touchEventCallback);
   }
 
   private turnOffTouchEventCallback() {
+    Log.showWarn(TAG, 'turnOffTouchEventCallback start');
     inputMonitor.off('touch', this.touchEventCallback);
   }
 
