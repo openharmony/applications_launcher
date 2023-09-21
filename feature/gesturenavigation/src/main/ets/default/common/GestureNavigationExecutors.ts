@@ -69,7 +69,7 @@ export default class GestureNavigationExecutors {
    * @return true: Returns true if the gesture is within the specified hot zone.
    */
   touchEventCallback(event: any): boolean {
-    Log.showDebug(TAG, 'touchEventCallback enter');
+    Log.showDebug(TAG, `touchEventCallback enter. ${JSON.stringify(event)}`);
     if (event.touches.length != 1) {
       return false;
     }

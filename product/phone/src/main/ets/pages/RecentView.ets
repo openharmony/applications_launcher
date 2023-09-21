@@ -46,11 +46,13 @@ struct RecentView {
     Log.showInfo(TAG, `onPageHide`);
     this.isClickSubComponent = false;
     this.mRecentMissionsStage.onDestroy();
+    Log.showInfo(TAG, `onPageHide end`);
   }
 
   onBackPress(): boolean {
     Log.showInfo(TAG, 'RecentMission EntryView onBackPress');
     windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
+    Log.showInfo(TAG, 'RecentMission EntryView onBackPress end');
     return true;
   }
 
