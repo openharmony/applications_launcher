@@ -77,10 +77,6 @@ export class RecentMissionsViewModel {
   async getRecentMissionsList(): Promise<void> {
     Log.showDebug(TAG, 'getRecentMissionsList start');
     this.mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
-    const snapShotTime = new Date().toString();
-    for (let item of this.mRecentMissionsList) {
-      item.snapShotTime = snapShotTime;
-    }
     if (globalThis.recentMode && windowManager.isSplitWindowMode(globalThis.recentMode)) {
       this.mRecentMissionsList.forEach((item, index) => {
         if (item.missionId == globalThis.splitMissionId) {

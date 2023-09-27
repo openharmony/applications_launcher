@@ -31,19 +31,21 @@ struct RecentView {
   @StorageLink('recentMissionsList') recentMissionsList: RecentMissionInfo[] = [];
   @State isClickSubComponent: boolean = false;
   private mRecentMissionsStage: RecentMissionsStage = new RecentMissionsStage();
-  @State mRecentMissionsViewModel: RecentMissionsViewModel = undefined;
+  @State mRecentMissionsViewModel: RecentMissionsViewModel = RecentMissionsViewModel.getInstance();
+  @State recentLoadedCompleted: boolean = false;
 
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
     this.isClickSubComponent = false;
     this.mRecentMissionsStage.onCreate();
-    this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
     this.mRecentMissionsViewModel.getRecentMissionsList();
     AppStorage.SetOrCreate('recentIdx', 0);
+    this.recentLoadedCompleted = true;
   }
 
   onPageHide(): void {
     Log.showInfo(TAG, `onPageHide`);
+    this.recentLoadedCompleted = false;
     this.isClickSubComponent = false;
     this.mRecentMissionsStage.onDestroy();
   }
@@ -56,17 +58,21 @@ struct RecentView {
 
   build() {
     Column() {
-      if (!Array.isArray(this.recentMissionsList) || this.recentMissionsList.length == 0 || !this.mRecentMissionsViewModel) {
-        Text($r('app.string.No_running_apps_recently'))
-          .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)
-          .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE);
-      } else {
-        if (this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single') {
-          RecentMissionsSingleLayout({ recentMissionsSingleList: $recentMissionsList,
-            isClickSubComponent: $isClickSubComponent});
+      if (this.recentMissionsList && this.mRecentMissionsViewModel) {
+        if (this.recentMissionsList.length) {
+          if (this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single') {
+            RecentMissionsSingleLayout({ recentMissionsSingleList: $recentMissionsList,
+              isClickSubComponent: $isClickSubComponent});
+          } else {
+            RecentMissionsDoubleLayout({ recentMissionsDoubleList: $recentMissionsList,
+              isClickSubComponent: $isClickSubComponent});
+          }
         } else {
-          RecentMissionsDoubleLayout({ recentMissionsDoubleList: $recentMissionsList,
-            isClickSubComponent: $isClickSubComponent});
+          if (this.recentLoadedCompleted) {
+            Text($r('app.string.No_running_apps_recently'))
+              .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)
+              .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE)
+          }
         }
       }
       if (this.traceBuildEnd()) { }

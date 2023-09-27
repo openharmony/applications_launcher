@@ -83,6 +83,7 @@ class AmsMissionManager {
       recentMissionInfo.abilityName = recentItem.want.abilityName;
       recentMissionInfo.moduleName = recentItem.want.parameters?.moduleName ? String(recentItem.want.parameters?.moduleName) : '';
       recentMissionInfo.lockedState = recentItem.lockedState;
+      recentMissionInfo.snapShotTime = recentItem.timestamp;
       const appInfo = await launcherAbilityManager.getAppInfoByBundleName(recentMissionInfo.bundleName, recentMissionInfo.abilityName);
       if (appInfo == undefined) {
         continue;
