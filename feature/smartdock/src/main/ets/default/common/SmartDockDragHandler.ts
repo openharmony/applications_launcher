@@ -64,7 +64,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     const pageDesktopDragEffectArea: DragArea = AppStorage.Get('pageDesktopDragEffectArea');
     Log.showDebug(TAG, `isDragEffectArea pageDesktopDragEffectArea: ${JSON.stringify(pageDesktopDragEffectArea)}`);
     if (pageDesktopDragEffectArea) {
-      if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
+      if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || AppStorage.Get('deviceType') === 'default') {
         if (isInEffectArea || (y < pageDesktopDragEffectArea.bottom && y > pageDesktopDragEffectArea.top)
         && x < pageDesktopDragEffectArea.right && x > pageDesktopDragEffectArea.left) {
           return true;
@@ -159,7 +159,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
       return true;
     }
     if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP
-    && AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    && (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE || AppStorage.Get('deviceType') === 'default')) {
       Log.showInfo(TAG, `onDrop insertIndex: ${insertIndex}`);
       this.addItemToSmartDock(dragItemInfo, insertIndex);
       return true;

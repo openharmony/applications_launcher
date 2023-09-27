@@ -134,7 +134,7 @@ export struct SmartDock {
 
   build() {
     List({
-      space: this.deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || this.recentList.length == 0 ? CommonConstants.DOCK_SPACE :
+      space: (this.deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || this.deviceType === 'default') || this.recentList.length == 0 ? CommonConstants.DOCK_SPACE :
         this.mSmartDockViewModel.getStyleConfig().mDockGap
     }) {
       if (this.buildLog()) {

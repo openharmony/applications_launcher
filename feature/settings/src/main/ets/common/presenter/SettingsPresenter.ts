@@ -87,7 +87,7 @@ export default class SettingsPresenter {
    * @return [settingList] - setting list.
    */
   getSettingList(): SettingItemInfo[] {
-    const deviceType = this.mSettingsModel.getDevice() == 'phone' ?
+    const deviceType = (this.mSettingsModel.getDevice() === 'phone' || this.mSettingsModel.getDevice() === 'default') ?
       SettingItemsConfig.DEVICE_TYPE_PHONE : SettingItemsConfig.DEVICE_TYPE_PAD;
 
     const condition = this.mSettingsModel.getAppPageStartConfig() == 'Grid' ?

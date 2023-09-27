@@ -141,7 +141,7 @@ export default class SmartDockViewModel extends BaseViewModel {
     const sysUIBottomHeight: number = AppStorage.Get('sysUIBottomHeight');
     const dockHeight: number = AppStorage.Get('dockHeight');
     let mResidentWidth: number = this.getListWidth(AppStorage.Get('residentList'));
-    if (AppStorage.Get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (AppStorage.Get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE || AppStorage.Get("deviceType") === 'default') {
       const maxDockNum = this.getStyleConfig().mMaxDockNum;
       mResidentWidth = this.mSmartDockStyleConfig.mDockPadding * 2 + maxDockNum * (this.mSmartDockStyleConfig.mListItemWidth) + (maxDockNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
     }
@@ -152,7 +152,7 @@ export default class SmartDockViewModel extends BaseViewModel {
     if (typeof (this.mSmartDockDragHandler) != 'undefined') {
       let left = mResidentWidth === 0 ? 0 : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2;
       let right = mResidentWidth === 0 ? screenWidth : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2 + mResidentWidth;
-      if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+      if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE || AppStorage.Get("deviceType") === 'default') {
         left = (screenWidth - mResidentWidth) / 2;
         right = screenWidth - left;
       }
@@ -168,7 +168,7 @@ export default class SmartDockViewModel extends BaseViewModel {
   private getDockPadding(residentWidth: number): {right: number, left: number, top: number, bottom: number} {
     let paddingNum: number = this.mSmartDockStyleConfig.mDockPadding;
     const residentList: [] = AppStorage.Get('residentList');
-    if (AppStorage.Get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (AppStorage.Get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE || AppStorage.Get("deviceType") === 'default') {
       paddingNum = (residentWidth - (residentList.length * this.mSmartDockStyleConfig.mListItemWidth + (residentList.length - 1) * (this.mSmartDockStyleConfig.mListItemGap))) / 2;
     }
     Log.showDebug(TAG, `getDockPadding paddingNum: ${paddingNum}`);

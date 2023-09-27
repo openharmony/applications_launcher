@@ -157,7 +157,7 @@ export default class SmartDockModel {
    */
   async getRecentDataList(): Promise<void> {
     Log.showDebug(TAG, 'getRecentDataList start!');
-    if (this.mDevice === CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (this.mDevice === CommonConstants.DEFAULT_DEVICE_TYPE || this.mDevice === 'default') {
       return;
     }
     const recentList = await amsMissionManager.getRecentBundleMissionsList();

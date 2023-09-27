@@ -164,7 +164,7 @@ export default struct SwiperPage {
       const dragItemType: number = AppStorage.Get('dragItemType');
       Log.showInfo(TAG, `onDrop event: [${event.getX()}, ${event.getY()}]`);
       if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP
-      || (dragItemType === CommonConstants.DRAG_FROM_DOCK && AppStorage.Get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE)) {
+      || (dragItemType === CommonConstants.DRAG_FROM_DOCK && (AppStorage.Get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE || AppStorage.Get('deviceType') === 'default'))) {
         const dragResult = globalThis.PageDesktopDragHandler.onDragDrop(event.getX(), event.getY());
         Log.showInfo(TAG, `onDrop dragResult: ${dragResult}`);
         AppStorage.SetOrCreate('selectAppIndex', null);
