@@ -31,6 +31,7 @@ export class RecentMissionsViewModel {
   private mRecentModeFeatureConfig: RecentModeFeatureConfig;
   private mRecentMissionsLimit: number;
   private mRecentMissionsList: RecentMissionInfo[] = [];
+  private mRecentMissionsRowType: string = 'single';
 
   private constructor() {
     Log.showInfo(TAG, 'constructor start');
@@ -39,6 +40,7 @@ export class RecentMissionsViewModel {
     if (config instanceof RecentModeFeatureConfig) {
       this.mRecentModeFeatureConfig = <RecentModeFeatureConfig> config;
       this.mRecentMissionsLimit = this.mRecentModeFeatureConfig.getRecentMissionsLimit();
+      this.mRecentMissionsRowType = this.mRecentModeFeatureConfig.getRecentMissionsRowType();
     }
   }
 
@@ -68,7 +70,7 @@ export class RecentMissionsViewModel {
    * @return {string} row type
    */
   getRecentMissionsRowType(): string {
-    return this.mRecentModeFeatureConfig.getRecentMissionsRowType();
+    return this.mRecentMissionsRowType;
   }
 
   /**

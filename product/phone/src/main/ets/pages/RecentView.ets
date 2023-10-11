@@ -31,13 +31,16 @@ struct RecentView {
   @StorageLink('recentMissionsList') recentMissionsList: RecentMissionInfo[] = [];
   @State isClickSubComponent: boolean = false;
   private mRecentMissionsStage: RecentMissionsStage = new RecentMissionsStage();
-  @State mRecentMissionsViewModel: RecentMissionsViewModel = RecentMissionsViewModel.getInstance();
+  private mRecentMissionsViewModel?: RecentMissionsViewModel;
+  @State mRecentMissionsRowType: string = 'single';
   @State recentLoadedCompleted: boolean = false;
 
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
     this.isClickSubComponent = false;
     this.mRecentMissionsStage.onCreate();
+    this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
+    this.mRecentMissionsRowType = this.mRecentMissionsViewModel.getRecentMissionsRowType();
     this.mRecentMissionsViewModel.getRecentMissionsList();
     AppStorage.SetOrCreate('recentIdx', 0);
     this.recentLoadedCompleted = true;
@@ -60,10 +63,11 @@ struct RecentView {
     Column() {
       if (this.recentMissionsList && this.mRecentMissionsViewModel) {
         if (this.recentMissionsList.length) {
-          if (this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single') {
+          if (this.mRecentMissionsRowType === 'single') {
             RecentMissionsSingleLayout({ recentMissionsSingleList: $recentMissionsList,
               isClickSubComponent: $isClickSubComponent});
-          } else {
+          }
+          if (this.mRecentMissionsRowType === 'double') {
             RecentMissionsDoubleLayout({ recentMissionsDoubleList: $recentMissionsList,
               isClickSubComponent: $isClickSubComponent});
           }

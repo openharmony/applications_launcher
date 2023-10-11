@@ -198,7 +198,7 @@ export default struct AppItem {
         AppStorage.SetOrCreate('selectDesktopAppItem', this.item.keyName);
       }
     })
-    .onClick((event) => {
+    .onClick((event: ClickEvent) => {
       Log.showInfo(TAG, `tap action ${JSON.stringify(event)}`);
       if (event.source == SourceType.Mouse) {
         this.mouseClick++;
