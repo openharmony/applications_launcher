@@ -32,7 +32,7 @@ export class AppListViewModel extends BaseViewModel {
   protected constructor() {
     super();
     this.mPinyinSort = new PinyinSort();
-    this.mAppGridStyleConfig = layoutConfigManager.getStyleConfig(AppCenterGridStyleConfig.APP_GRID_STYLE_CONFIG, AppcenterConstants.FEATURE_NAME);
+    this.mAppGridStyleConfig = layoutConfigManager.getStyleConfig<AppCenterGridStyleConfig>(AppCenterGridStyleConfig.APP_GRID_STYLE_CONFIG, AppcenterConstants.FEATURE_NAME);
   }
 
   public static getInstance(): AppListViewModel {

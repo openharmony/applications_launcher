@@ -41,7 +41,7 @@ export class FormViewModel {
     this.mFormModel = FormModel.getInstance();
     this.mSettingsModel = SettingsModel.getInstance();
     this.mPageDesktopModel = PageDesktopModel.getInstance();
-    this.mFormStyleConfig = layoutConfigManager.getStyleConfig(FormStyleConfig.APP_LIST_STYLE_CONFIG,
+    this.mFormStyleConfig = layoutConfigManager.getStyleConfig<FormStyleConfig>(FormStyleConfig.APP_LIST_STYLE_CONFIG,
       FormConstants.FEATURE_NAME);
     this.mFormListInfoCacheManager = FormListInfoCacheManager.getInstance();
   }

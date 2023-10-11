@@ -33,12 +33,12 @@ const TAG = 'SmartDockCloseAppHandler';
  * smartDock close app processing class
  */
 export default class SmartDockCloseAppHandler extends BaseCloseAppHandler {
-    private mSmartDockStyleConfig;
+    private mSmartDockStyleConfig: SmartDockStyleConfig;
     private mAppItemBundleName: string;
 
     constructor() {
         super();
-        this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG,
+        this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig<SmartDockStyleConfig>(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG,
             SmartDockConstants.FEATURE_NAME);
     }
 

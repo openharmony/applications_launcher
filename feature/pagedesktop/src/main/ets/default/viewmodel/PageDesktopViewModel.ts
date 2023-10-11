@@ -161,8 +161,8 @@ export default class PageDesktopViewModel extends BaseViewModel {
     this.mSettingsModel.addObserver(this.mSettingsChangeObserver);
     this.onPageDesktopCreate();
     this.mGridConfig = this.getGridConfig();
-    this.pageDesktopStyleConfig = layoutConfigManager.getStyleConfig(PageDesktopGridStyleConfig.APP_GRID_STYLE_CONFIG, PageDesktopConstants.FEATURE_NAME);
-    this.formDetailLayoutConfig = layoutConfigManager.getStyleConfig(FormDetailLayoutConfig.FORM_LAYOUT_INFO, PageDesktopConstants.FEATURE_NAME);
+    this.pageDesktopStyleConfig = layoutConfigManager.getStyleConfig<PageDesktopGridStyleConfig>(PageDesktopGridStyleConfig.APP_GRID_STYLE_CONFIG, PageDesktopConstants.FEATURE_NAME);
+    this.formDetailLayoutConfig = layoutConfigManager.getStyleConfig<FormDetailLayoutConfig>(FormDetailLayoutConfig.FORM_LAYOUT_INFO, PageDesktopConstants.FEATURE_NAME);
   }
 
   /**

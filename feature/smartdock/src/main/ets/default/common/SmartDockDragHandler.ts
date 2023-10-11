@@ -38,7 +38,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
   constructor() {
     super();
     this.mSmartDockModel = SmartDockModel.getInstance();
-    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
+    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig<SmartDockStyleConfig>(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
     Log.showInfo(TAG, 'constructor!');
   }
 

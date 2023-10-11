@@ -57,7 +57,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     this.mSettingsModel = SettingsModel.getInstance();
     this.mFormViewModel = FormViewModel.getInstance();
     this.mPageDesktopModel = PageDesktopModel.getInstance();
-    this.mPageDesktopStyleConfig = layoutConfigManager.getStyleConfig(PageDesktopGridStyleConfig.APP_GRID_STYLE_CONFIG,
+    this.mPageDesktopStyleConfig = layoutConfigManager.getStyleConfig<PageDesktopGridStyleConfig>(PageDesktopGridStyleConfig.APP_GRID_STYLE_CONFIG,
       PageDesktopConstants.FEATURE_NAME);
   }
 

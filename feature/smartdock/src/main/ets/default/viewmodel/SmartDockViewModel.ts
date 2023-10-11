@@ -49,8 +49,8 @@ export default class SmartDockViewModel extends BaseViewModel {
 
   constructor() {
     super();
-    this.mSmartDockLayoutConfig = layoutConfigManager.getFunctionConfig(SmartDockLayoutConfig.SMART_DOCK_LAYOUT_INFO);
-    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
+    this.mSmartDockLayoutConfig = layoutConfigManager.getFunctionConfig<SmartDockLayoutConfig>(SmartDockLayoutConfig.SMART_DOCK_LAYOUT_INFO);
+    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig<SmartDockStyleConfig>(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
     this.mSmartDockDragHandler = SmartDockDragHandler.getInstance();
     this.mSmartDockStartAppHandler = SmartDockStartAppHandler.getInstance();
     this.mSmartDockModel = SmartDockModel.getInstance();
@@ -66,8 +66,8 @@ export default class SmartDockViewModel extends BaseViewModel {
   /**
    * get SmartDockStyleConfig
    */
-  getStyleConfig(): SmartDockStyleConfig{
-    return layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
+  getStyleConfig(): SmartDockStyleConfig {
+    return this.mSmartDockStyleConfig;
   }
 
   /**
