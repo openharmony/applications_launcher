@@ -14,6 +14,7 @@
  */
 
 import Input from '@ohos.multimodalInput.inputEventClient';
+import touchEvent from '@ohos.multimodalInput.touchEvent';
 import {
   Log,
   windowManager,
@@ -29,7 +30,7 @@ export default class GestureNavigationExecutors {
   private timeOfFirstLeavingTheBackEventHotArea: number | null = null;
   private screenWidth = 0;
   private screenHeight = 0;
-  private curEventType: string | null = null;
+  private curEventType: touchEvent.Action | null = null;
   private eventName: string | null = null;
   private startEventPosition: {x: number, y: number} | null = null;
   private preEventPosition: {x: number, y: number} | null = null;
@@ -68,30 +69,30 @@ export default class GestureNavigationExecutors {
    * touchEvent Callback.
    * @return true: Returns true if the gesture is within the specified hot zone.
    */
-  touchEventCallback(event: any): boolean {
+  touchEventCallback(event: touchEvent.TouchEvent): boolean {
     Log.showDebug(TAG, `touchEventCallback enter. ${JSON.stringify(event)}`);
-    if (event.touches.length != 1) {
+    if (event.touches.length !== 1 || !event.actionTime || !event.action) {
       return false;
     }
-    const startXPosition = event.touches[0].globalX;
-    const startYPosition = event.touches[0].globalY;
-    if (event.type == 'down' && this.isSpecifiesRegion(startXPosition, startYPosition)) {
+    const startXPosition = event.touches[0].screenX;
+    const startYPosition = event.touches[0].screenY;
+    if (event.action === touchEvent.Action.DOWN && this.isSpecifiesRegion(startXPosition, startYPosition)) {
       this.initializationParameters();
       this.startEventPosition = this.preEventPosition = {
         x: startXPosition,
         y: startYPosition
       };
-      this.startTime = this.preEventTime = event.timestamp;
-      this.curEventType = event.type;
+      this.startTime = this.preEventTime = event.actionTime;
+      this.curEventType = event.action;
       if (vp2px(16) >= startXPosition || startXPosition >= (this.screenWidth - vp2px(16))) {
         this.eventName = 'backEvent';
         return true;
       }
     }
     if (this.startEventPosition && this.isSpecifiesRegion(this.startEventPosition.x, this.startEventPosition.y)) {
-      if (event.type == 'move') {
-        this.curEventType = event.type;
-        const curTime = event.timestamp;
+      if (event.action === touchEvent.Action.MOVE) {
+        this.curEventType = event.action;
+        const curTime = event.actionTime;
         const speedX = (startXPosition - this.preEventPosition.x) / ((curTime - this.preEventTime) / 1000);
         const speedY = (startYPosition - this.preEventPosition.y) / ((curTime - this.preEventTime) / 1000);
         const sqrt = Math.sqrt(speedX * speedX + speedY * speedY);
@@ -114,10 +115,10 @@ export default class GestureNavigationExecutors {
           this.timeOfFirstLeavingTheBackEventHotArea = (curTime - this.startTime) / 1000;
         }
       }
-      if (event.type == 'up') {
+      if (event.action === touchEvent.Action.UP) {
         let distance = 0;
         let slidingSpeed = 0;
-        if (this.curEventType == 'move') {
+        if (this.curEventType === touchEvent.Action.MOVE) {
           if (this.eventName == 'backEvent') {
             distance = Math.abs((startXPosition - this.startEventPosition.x));
             if (distance >= vp2px(16) * 1.2 && this.timeOfFirstLeavingTheBackEventHotArea <= 120) {
@@ -133,7 +134,7 @@ export default class GestureNavigationExecutors {
             const isDistance = this.isHomeViewShowOfDistanceLimit(startYPosition);
             Log.showDebug(TAG, `touchEventCallback isDistance: ${isDistance}`);
             if (isDistance) {
-              slidingSpeed = distance / ((event.timestamp - this.startTime) / GestureNavigationExecutors.NS_PER_MS);
+              slidingSpeed = distance / ((event.actionTime - this.startTime) / GestureNavigationExecutors.NS_PER_MS);
               Log.showDebug(TAG, `touchEventCallback homeEvent slidingSpeed: ${slidingSpeed}`);
               if (slidingSpeed >= vp2px(500)) {
                 this.homeEventCall();
