@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { 
+import {
   AppMenu,
   AppIcon,
+} from '@ohos/common/component'
+import {
   DockItemInfo,
   LauncherDragItemInfo,
   CommonConstants,

@@ -14,15 +14,17 @@
  */
 
 import {
+  RemoveFormDialog,
+  FormManagerDialog,
+  FormItemComponent,
+} from '@ohos/common/component'
+import {
   CardItemInfo,
   LauncherDragItemInfo,
   Log,
   StyleConstants,
   PresetStyleConstants,
   ResourceManager,
-  RemoveFormDialog,
-  FormManagerDialog,
-  FormItemComponent,
   CommonConstants
 } from '@ohos/common';
 import {

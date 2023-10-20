@@ -14,10 +14,13 @@
  */
 
 import {
+  UninstallDialog,
+} from '@ohos/common/component'
+import {
   Log,
   CommonConstants,
   ResourceManager,
-  UninstallDialog, RecentBundleMissionInfo
+  RecentBundleMissionInfo
 } from '@ohos/common';
 import RecentLayout from './RecentLayout';
 import ResidentLayout from './ResidentLayout';

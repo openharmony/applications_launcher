@@ -13,80 +13,91 @@
  * limitations under the License.
  */
 
-export { Log }  from './src/main/ets/default/utils/Log'
-export { Trace }  from './src/main/ets/default/utils/Trace'
-export { PinyinSort }  from './src/main/ets/default/utils/PinyinSort'
-export { CheckEmptyUtils }  from './src/main/ets/default/utils/CheckEmptyUtils'
-export { MenuInfo }  from './src/main/ets/default/bean/MenuInfo'
-export { MissionInfo }  from './src/main/ets/default/bean/MissionInfo'
-export { AppItemInfo }  from './src/main/ets/default/bean/AppItemInfo'
-export { DockItemInfo }  from './src/main/ets/default/bean/DockItemInfo'
-export { CardItemInfo }  from './src/main/ets/default/bean/CardItemInfo'
-export { LauncherDragItemInfo } from './src/main/ets/default/bean/LauncherDragItemInfo'
-export { FolderItemInfo } from './src/main/ets/default/bean/FolderItemInfo'
-export { SnapShotInfo }  from './src/main/ets/default/bean/SnapShotInfo'
-export { SettingItemInfo }  from './src/main/ets/default/bean/SettingItemInfo'
-export { RecentMissionInfo }  from './src/main/ets/default/bean/RecentMissionInfo'
-export { RecentBundleMissionInfo }  from './src/main/ets/default/bean/RecentBundleMissionInfo'
-export { EventConstants }  from './src/main/ets/default/constants/EventConstants'
-export { FormConstants }  from './src/main/ets/default/constants/FormConstants'
-export { StyleConstants }  from './src/main/ets/default/constants/StyleConstants'
-export { CommonConstants }  from './src/main/ets/default/constants/CommonConstants'
-export { PresetStyleConstants }  from './src/main/ets/default/constants/PresetStyleConstants'
-export { AppGrid }  from './src/main/ets/default/uicomponents/AppGrid'
-export { AppName }  from './src/main/ets/default/uicomponents/AppName'
-export { AppIcon }  from './src/main/ets/default/uicomponents/AppIcon'
-export { AppMenu }  from './src/main/ets/default/uicomponents/AppMenu'
-export { AppBubble }  from './src/main/ets/default/uicomponents/AppBubble'
-export { ScrollerComponent } from './src/main/ets/default/uicomponents/ScrollerComponent';
-export { RemoveFormDialog }  from './src/main/ets/default/uicomponents/RemoveFormDialog'
-export { UninstallDialog }  from './src/main/ets/default/uicomponents/UninstallDialog'
-export { FolderComponent }  from './src/main/ets/default/uicomponents/FolderComponent'
-export { FormManagerDialog }  from './src/main/ets/default/uicomponents/FormManagerDialog'
-export { FormItemComponent }  from './src/main/ets/default/uicomponents/FormItemComponent'
-export { RemoteWindowWrapper }  from './src/main/ets/default/uicomponents/RemoteWindowWrapper'
-export { FormManager }  from './src/main/ets/default/manager/FormManager'
-export { BadgeManager }  from './src/main/ets/default/manager/BadgeManager'
-export { windowManager }  from './src/main/ets/default/manager/WindowManager'
-export { RdbStoreManager }  from './src/main/ets/default/manager/RdbStoreManager'
-export { ResourceManager }  from './src/main/ets/default/manager/ResourceManager'
-export { localEventManager }  from './src/main/ets/default/manager/LocalEventManager'
-export { amsMissionManager }  from './src/main/ets/default/manager/AmsMissionManager'
-export { InputMethodManager }  from './src/main/ets/default/manager/InputMethodManager'
-export { settingsDataManager }  from './src/main/ets/default/manager/SettingsDataManager'
-export { layoutConfigManager }  from './src/main/ets/default/layoutconfig/LayoutConfigManager'
-export { launcherAbilityManager }  from './src/main/ets/default/manager/LauncherAbilityManager'
-export { navigationBarCommonEventManager }  from './src/main/ets/default/manager/NavigationBarCommonEventManager'
-export { CloseAppManager } from './src/main/ets/default/manager/CloseAppManager'
-export { ILayoutConfig }  from './src/main/ets/default/layoutconfig/ILayoutConfig'
-export { FormLayoutConfig }  from './src/main/ets/default/layoutconfig/FormLayoutConfig'
-export { FolderLayoutConfig }  from './src/main/ets/default/layoutconfig/FolderLayoutConfig'
-export { AppListStyleConfig }  from './src/main/ets/default/layoutconfig/AppListStyleConfig'
-export { AppGridStyleConfig }  from './src/main/ets/default/layoutconfig/AppGridStyleConfig'
-export { RecentsModeConfig }  from './src/main/ets/default/layoutconfig/RecentsModeConfig'
-export { PageDesktopModeConfig }  from './src/main/ets/default/layoutconfig/PageDesktopModeConfig'
-export { PageDesktopLayoutConfig }  from './src/main/ets/default/layoutconfig/PageDesktopLayoutConfig'
-export { PageDesktopAppModeConfig }  from './src/main/ets/default/layoutconfig/PageDesktopAppModeConfig'
-export { LauncherLayoutStyleConfig }  from './src/main/ets/default/layoutconfig/LauncherLayoutStyleConfig'
-export { BaseStage }  from './src/main/ets/default/base/BaseStage'
-export { BaseDragHandler }  from './src/main/ets/default/base/BaseDragHandler'
-export { BaseViewModel }  from './src/main/ets/default/base/BaseViewModel'
-export { BaseModulePreLoader }  from './src/main/ets/default/base/BaseModulePreLoader'
-export { BaseCloseAppHandler } from './src/main/ets/default/base/BaseCloseAppHandler'
-export { BaseStartAppHandler} from './src/main/ets/default/base/BaseStartAppHandler'
-export { LayoutViewModel }  from './src/main/ets/default/viewmodel/LayoutViewModel'
-export { AppModel }  from './src/main/ets/default/model/AppModel'
-export { FormModel }  from './src/main/ets/default/model/FormModel'
-export { SettingsModel }  from './src/main/ets/default/model/SettingsModel'
-export { PageDesktopModel }  from './src/main/ets/default/model/PageDesktopModel'
-export { RecentMissionsModel }  from './src/main/ets/default/model/RecentMissionsModel'
-export { SettingsModelObserver }  from './src/main/ets/default/model/SettingsModelObserver'
-export { FormListInfoCacheManager }  from './src/main/ets/default/cache/FormListInfoCacheManager'
-export { SettingItemsConfig }  from './src/main/ets/default/configs/SettingItemsConfig'
-export { SettingItemsManager }  from './src/main/ets/default/settings/SettingItemsManager'
-export { SettingItemOptionsChecker }  from './src/main/ets/default/settings/SettingItemOptionsChecker'
-export { DragArea }  from './src/main/ets/default/interface/DragArea'
-export { DragItemPosition }  from './src/main/ets/default/interface/DragItemPosition'
-export { NumberConstants } from './src/main/ets/default/constants/NumberConstants'
-export { ObjectCopyUtil } from './src/main/ets/default/utils/ObjectCopyUtil'
-export { AtomicServiceAppModel } from './src/main/ets/default/model/AtomicServiceAppModel'
+export {
+  Log, Trace, PinyinSort, CheckEmptyUtils, ObjectCopyUtil
+} from './src/main/ets/default/utils'
+
+export {
+  BaseStage,
+  BaseDragHandler,
+  BaseViewModel,
+  BaseModulePreLoader,
+  BaseCloseAppHandler,
+  BaseStartAppHandler
+} from './src/main/ets/default/base'
+
+export {
+  MenuInfo,
+  MissionInfo,
+  AppItemInfo,
+  DockItemInfo,
+  CardItemInfo,
+  LauncherDragItemInfo,
+  FolderItemInfo,
+  SnapShotInfo,
+  SettingItemInfo,
+  RecentMissionInfo,
+  RecentBundleMissionInfo
+} from './src/main/ets/default/bean'
+
+export {
+  EventConstants,
+  FormConstants,
+  StyleConstants,
+  CommonConstants,
+  PresetStyleConstants,
+  NumberConstants
+} from './src/main/ets/default/constants'
+
+export {
+  FormManager,
+  BadgeManager,
+  windowManager,
+  RdbStoreManager,
+  ResourceManager,
+  localEventManager,
+  amsMissionManager,
+  InputMethodManager,
+  settingsDataManager,
+  launcherAbilityManager,
+  navigationBarCommonEventManager,
+  CloseAppManager
+} from './src/main/ets/default/manager'
+
+export {
+  DragArea, DragItemPosition
+} from './src/main/ets/default/interface'
+
+export {
+  AppModel,
+  FormModel,
+  SettingsModel,
+  PageDesktopModel,
+  RecentMissionsModel,
+  SettingsModelObserver,
+  AtomicServiceAppModel
+} from './src/main/ets/default/model'
+
+export {
+  layoutConfigManager,
+  ILayoutConfig,
+  FormLayoutConfig,
+  FolderLayoutConfig,
+  AppListStyleConfig,
+  AppGridStyleConfig,
+  RecentsModeConfig,
+  PageDesktopModeConfig,
+  PageDesktopLayoutConfig,
+  PageDesktopAppModeConfig,
+  LauncherLayoutStyleConfig
+} from './src/main/ets/default/layoutconfig'
+
+export { FormListInfoCacheManager } from './src/main/ets/default/cache/FormListInfoCacheManager'
+
+export { LayoutViewModel } from './src/main/ets/default/viewmodel/LayoutViewModel'
+
+export { SettingItemsConfig } from './src/main/ets/default/configs/SettingItemsConfig'
+
+export { SettingItemsManager } from './src/main/ets/default/settings/SettingItemsManager'
+
+export { SettingItemOptionsChecker } from './src/main/ets/default/settings/SettingItemOptionsChecker'
