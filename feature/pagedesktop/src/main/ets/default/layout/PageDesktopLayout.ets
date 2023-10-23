@@ -71,7 +71,6 @@ export struct PageDesktopLayout {
   }
 
   aboutToDisappear(): void {
-    delete this.dialogController;
     this.dialogController = null;
   }
 

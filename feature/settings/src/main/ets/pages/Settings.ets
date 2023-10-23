@@ -180,7 +180,6 @@ struct SettingItem {
   }
 
   aboutToDisappear(): void {
-    delete this.dialogController;
     this.dialogController = null;
   }
 

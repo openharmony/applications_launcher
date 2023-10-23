@@ -105,7 +105,6 @@ export struct FormServiceComponent {
   }
 
   aboutToDisappear(): void {
-    delete this.formManagerDialogController;
     this.formManagerDialogController = undefined;
     this.clearForm = null;
     this.mAppModel.unregisterAppStateChangeListener(this.listener);

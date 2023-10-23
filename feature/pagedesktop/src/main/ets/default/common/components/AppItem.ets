@@ -141,9 +141,7 @@ export default struct AppItem {
   }
 
   aboutToDisappear(): void {
-    delete this.dialogController;
     this.dialogController = null;
-    delete this.formManagerDialogController;
     this.formManagerDialogController = null;
     this.clearForm = null;
   }

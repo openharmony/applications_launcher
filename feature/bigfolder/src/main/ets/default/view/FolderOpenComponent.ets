@@ -311,7 +311,6 @@ struct FolderSwiperPage {
   }
 
   aboutToDisappear(): void {
-    delete this.folderDialogController;
     this.folderDialogController = null;
   }
 
@@ -462,9 +461,7 @@ struct FolderAppItem {
   }
 
   aboutToDisappear(): void {
-    delete this.uninstallDialogController;
     this.uninstallDialogController = null;
-    delete this.formManagerDialogController;
     this.formManagerDialogController = null;
     this.clearForm = null;
   }

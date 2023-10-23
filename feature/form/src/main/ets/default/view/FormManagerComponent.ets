@@ -63,8 +63,6 @@ export struct FormManagerComponent {
     } else {
       this.clearAllFormById();
     }
-    delete this.mSwiperController;
-    this.mSwiperController = null;
   }
 
   /**
