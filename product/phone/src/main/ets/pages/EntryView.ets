@@ -39,7 +39,7 @@ struct EntryView {
   @State workSpaceHeight: number = 0;
   @State dockHeight: number = 0;
   private mStage: PhoneStage = new PhoneStage();
-  private mLayoutViewModel: LayoutViewModel;
+  private mLayoutViewModel?: LayoutViewModel;
   private navigationBarStatus: string | undefined;
 
   onPageShow(): void {
@@ -93,7 +93,7 @@ struct EntryView {
 
   private updateScreenInfo(): void {
     Log.showDebug(TAG, 'updateScreenInfo');
-    if (this.screenWidth != 0 && this.screenHeight != 0) {
+    if (this.screenWidth != 0 && this.screenHeight != 0 && this.mLayoutViewModel) {
       this.mLayoutViewModel.initScreen(this.navigationBarStatus);
       globalThis.SmartDockStyleConfig.initConfig();
       globalThis.PhonePageDesktopGridStyleConfig.initConfig();

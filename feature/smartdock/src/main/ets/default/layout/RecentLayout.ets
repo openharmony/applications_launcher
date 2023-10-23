@@ -185,7 +185,7 @@ export default struct RecentLayout {
   getListWidth(): number {
     let mRecentMaxNum = this.mSmartDockStyleConfig.mMaxRecentNum;
     let width = 0;
-    if (AppStorage.Get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (AppStorage.Get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE || AppStorage.Get('deviceType') === 'default') {
       return width;
     }
     if (typeof this.appList === 'undefined' || this.appList == null || this.appList.length === 0) {

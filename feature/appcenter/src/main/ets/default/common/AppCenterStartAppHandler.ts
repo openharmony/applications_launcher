@@ -29,11 +29,11 @@ const TAG = 'AppCenterStartAppHandler';
  * app center start app processing class
  */
 export default class AppCenterStartAppHandler extends BaseStartAppHandler {
-    private mAppCenterGridStyleConfig;
+    private mAppCenterGridStyleConfig: AppCenterGridStyleConfig;
 
     private constructor() {
         super();
-        this.mAppCenterGridStyleConfig = layoutConfigManager.getStyleConfig(AppCenterGridStyleConfig.APP_GRID_STYLE_CONFIG,
+        this.mAppCenterGridStyleConfig = layoutConfigManager.getStyleConfig<AppCenterGridStyleConfig>(AppCenterGridStyleConfig.APP_GRID_STYLE_CONFIG,
             AppcenterConstants.FEATURE_NAME);
     }
 

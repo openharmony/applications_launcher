@@ -51,7 +51,7 @@ export class LayoutViewModel {
   private mCommonDialogWidth = '';
 
   private constructor() {
-    this.mLauncherLayoutStyleConfig = layoutConfigManager.getStyleConfig(
+    this.mLauncherLayoutStyleConfig = layoutConfigManager.getStyleConfig<LauncherLayoutStyleConfig>(
       LauncherLayoutStyleConfig.LAUNCHER_COMMON_STYLE_CONFIG, LauncherLayoutStyleConfig.LAUNCHER_PRODUCT_STYLE_CONFIG);
   }
 

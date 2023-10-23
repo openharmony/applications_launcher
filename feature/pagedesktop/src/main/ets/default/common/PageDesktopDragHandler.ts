@@ -57,7 +57,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     this.mSettingsModel = SettingsModel.getInstance();
     this.mFormViewModel = FormViewModel.getInstance();
     this.mPageDesktopModel = PageDesktopModel.getInstance();
-    this.mPageDesktopStyleConfig = layoutConfigManager.getStyleConfig(PageDesktopGridStyleConfig.APP_GRID_STYLE_CONFIG,
+    this.mPageDesktopStyleConfig = layoutConfigManager.getStyleConfig<PageDesktopGridStyleConfig>(PageDesktopGridStyleConfig.APP_GRID_STYLE_CONFIG,
       PageDesktopConstants.FEATURE_NAME);
   }
 
@@ -82,7 +82,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     const smartDockDragEffectArea: DragArea = AppStorage.Get('smartDockDragEffectArea');
     Log.showDebug(TAG, `isDragEffectArea smartDockDragEffectArea: ${JSON.stringify(smartDockDragEffectArea)}`);
     if (smartDockDragEffectArea) {
-      if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
+      if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || deviceType === 'default') {
         if (isInEffectArea || (y <= smartDockDragEffectArea.bottom && y >= smartDockDragEffectArea.top)
         && x <= smartDockDragEffectArea.right && x >= smartDockDragEffectArea.left) {
           return true;
@@ -229,7 +229,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     const dragItemType: number = AppStorage.Get('dragItemType');
     const deviceType: string = AppStorage.Get('deviceType')
     // dock appInfo has no location information.
-    if (dragItemType === CommonConstants.DRAG_FROM_DOCK && deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (dragItemType === CommonConstants.DRAG_FROM_DOCK && (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || deviceType === 'default')) {
       dragItemInfo.typeId = CommonConstants.TYPE_APP;
       dragItemInfo.area = [1, 1];
       dragItemInfo.page = AppStorage.Get('pageIndex');
@@ -256,7 +256,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
         // add app to folder
         if (endLayoutInfo.typeId === CommonConstants.TYPE_FOLDER) {
           this.mBigFolderViewModel.addOneAppToFolder(dragItemInfo, endLayoutInfo.folderId);
-          if (dragItemType === CommonConstants.DRAG_FROM_DOCK && deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
+          if (dragItemType === CommonConstants.DRAG_FROM_DOCK && (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || deviceType === 'default')) {
             localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE, dragItemInfo);
           }
           this.deleteBlankPageAfterDragging(startPosition, endPosition);
@@ -265,7 +265,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
           // create a new folder
           const layoutInfoList = [endLayoutInfo];
           let startLayoutInfo = null;
-          if (dragItemType === CommonConstants.DRAG_FROM_DOCK && deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
+          if (dragItemType === CommonConstants.DRAG_FROM_DOCK && (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || deviceType === 'default')) {
             let appInfoList = this.mSettingsModel.getAppListInfo();
             const appIndex = appInfoList.findIndex(item => {
               return item.keyName === dragItemInfo.keyName;
@@ -305,7 +305,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
       }
     }
 
-    if (dragItemType === CommonConstants.DRAG_FROM_DOCK && deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (dragItemType === CommonConstants.DRAG_FROM_DOCK && (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || deviceType === 'default')) {
       let appInfoTemp = {
         "bundleName": dragItemInfo.bundleName,
         "typeId": dragItemInfo.typeId,

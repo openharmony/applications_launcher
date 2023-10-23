@@ -54,7 +54,7 @@ export default struct ResidentLayout {
   getListWidth(): number {
     let residentMaxNum = this.mSmartDockStyleConfig.mMaxDockNum;
     let width = 0.0;
-    if (AppStorage.Get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (AppStorage.Get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE || AppStorage.Get('deviceType') === 'default') {
       Log.showDebug(TAG, `getListWidth mDockPadding: ${this.mSmartDockStyleConfig.mDockPadding}, mMaxNum: ${residentMaxNum}`);
       width = this.mSmartDockStyleConfig.mDockPadding * 2 + residentMaxNum * (this.mSmartDockStyleConfig.mListItemWidth) + (residentMaxNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
       Log.showDebug(TAG, `getListWidth width: ${width}`);
@@ -212,7 +212,7 @@ struct AppItem {
       builder: this.MenuBuilder,
       placement: Placement.Top,
       popupColor: Color.White,
-      arrowOffset: AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE ? null : 3 * (mSmartDockStyleConfig.mIconSize / 2) + mSmartDockStyleConfig.mListItemGap, // Avoid the popup offset problem in phone form
+      arrowOffset: (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE || AppStorage.Get('deviceType') === 'default') ? null : 3 * (mSmartDockStyleConfig.mIconSize / 2) + mSmartDockStyleConfig.mListItemGap, // Avoid the popup offset problem in phone form
       onStateChange: (e) => {
         if (!e.isVisible) {
           this.isShow = false;

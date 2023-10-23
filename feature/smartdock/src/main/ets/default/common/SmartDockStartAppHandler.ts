@@ -29,11 +29,11 @@ const TAG = 'SmartDockStartAppHandler';
  * smartDock start app processing class
  */
 export default class SmartDockStartAppHandler extends BaseStartAppHandler {
-  private mSmartDockStyleConfig;
+  private mSmartDockStyleConfig: SmartDockStyleConfig;
 
   private constructor() {
     super();
-    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG,
+    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig<SmartDockStyleConfig>(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG,
       SmartDockConstants.FEATURE_NAME);
   }
 

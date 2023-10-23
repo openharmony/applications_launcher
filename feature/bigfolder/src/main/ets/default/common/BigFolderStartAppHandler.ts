@@ -28,11 +28,11 @@ const TAG = 'BigFolderStartAppHandler';
  * open big folder start app processing class
  */
 export default class BigFolderStartAppHandler extends BaseStartAppHandler {
-    private mBigFolderStyleConfig;
+    private mBigFolderStyleConfig: BigFolderStyleConfig;
 
     private constructor() {
         super();
-        this.mBigFolderStyleConfig = layoutConfigManager.getStyleConfig(BigFolderStyleConfig.APP_LIST_STYLE_CONFIG,
+        this.mBigFolderStyleConfig = layoutConfigManager.getStyleConfig<BigFolderStyleConfig>(BigFolderStyleConfig.APP_LIST_STYLE_CONFIG,
             BigFolderConstants.FEATURE_NAME);
     }
 

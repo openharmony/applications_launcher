@@ -142,7 +142,7 @@ export default struct GridSwiper {
       if (this.desktopLoadFinished) {
         Swiper(this.swiperController) {
           ForEach(this.pageList, (item, index: number) => {
-            if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+            if (AppStorage.Get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE || AppStorage.Get('deviceType') === 'default') {
               Column() {
                 SwiperPage({
                   swiperPage: index.valueOf(),
@@ -194,8 +194,8 @@ export default struct GridSwiper {
     .onDragMove((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragMove event: [${event.getX()}, ${event.getY()}]`);
       if (!AppStorage.Get('isDrag')) return;
-      if (AppStorage.Get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE
-      || (AppStorage.Get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE
+      if ((AppStorage.Get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE || AppStorage.Get('deviceType') === 'default')
+      || ((AppStorage.Get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE && AppStorage.Get('deviceType') !== 'default')
       && AppStorage.Get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP)) {
         this.itemMove(event.getX(), event.getY());
       }

@@ -71,7 +71,7 @@ export struct FolderComponent {
     Log.showInfo(TAG, `aboutToAppear start`);
     this.updateShowList();
     this.mSettingsModel = SettingsModel.getInstance();
-    if (this.mSettingsModel.getDevice() != "phone") {
+    if (this.mSettingsModel.getDevice() !== 'phone' && this.mSettingsModel.getDevice() !== 'default') {
       this.isPad = true;
     }
   }

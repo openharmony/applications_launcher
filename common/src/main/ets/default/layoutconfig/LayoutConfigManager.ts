@@ -109,7 +109,7 @@ class LayoutConfigManager {
    * @params configName
    * @params featureName
    */
-  getStyleConfig(configName: string, featureName?: string): any {
+  getStyleConfig<T extends ILayoutConfig>(configName: string, featureName?: string): T {
     const configArr = this.getTargetTypeConfigs(CommonConstants.LAYOUT_CONFIG_TYPE_STYLE);
     return this.getConfigByName(configArr, configName, featureName);
   }

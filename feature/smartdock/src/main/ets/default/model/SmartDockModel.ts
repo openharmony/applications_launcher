@@ -55,8 +55,8 @@ export default class SmartDockModel {
   protected mAppModel: AppModel;
 
   private constructor() {
-    this.mSmartDockLayoutConfig = layoutConfigManager.getFunctionConfig(SmartDockLayoutConfig.SMART_DOCK_LAYOUT_INFO);
-    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
+    this.mSmartDockLayoutConfig = layoutConfigManager.getFunctionConfig<SmartDockLayoutConfig>(SmartDockLayoutConfig.SMART_DOCK_LAYOUT_INFO);
+    this.mSmartDockStyleConfig = layoutConfigManager.getStyleConfig<SmartDockStyleConfig>(SmartDockStyleConfig.APP_LIST_STYLE_CONFIG, SmartDockConstants.FEATURE_NAME);
     this.mCloseAppManager = CloseAppManager.getInstance();
     this.mSmartDockCloseAppHandler = new SmartDockCloseAppHandler();
     this.mCloseAppManager.registerCloseAppHandler(this.mSmartDockCloseAppHandler);
@@ -157,7 +157,7 @@ export default class SmartDockModel {
    */
   async getRecentDataList(): Promise<void> {
     Log.showDebug(TAG, 'getRecentDataList start!');
-    if (this.mDevice === CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (this.mDevice === CommonConstants.DEFAULT_DEVICE_TYPE || this.mDevice === 'default') {
       return;
     }
     const recentList = await amsMissionManager.getRecentBundleMissionsList();

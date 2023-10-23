@@ -82,9 +82,9 @@ export class BigFolderViewModel extends BaseViewModel {
     this.mGridConfig = this.mSettingsModel.getGridConfig();
     this.mPinyinSort = new PinyinSort();
     this.mBigFolderModel.registerFolderUpdateEvent(this.mLocalEventListener);
-    this.mFolderStyleConfig = layoutConfigManager.getStyleConfig(BigFolderStyleConfig.APP_LIST_STYLE_CONFIG,
+    this.mFolderStyleConfig = layoutConfigManager.getStyleConfig<BigFolderStyleConfig>(BigFolderStyleConfig.APP_LIST_STYLE_CONFIG,
       BigFolderConstants.FEATURE_NAME);
-    this.mFolderLayoutConfig = layoutConfigManager.getFunctionConfig(FolderLayoutConfig.FOLDER_GRID_LAYOUT_INFO);
+    this.mFolderLayoutConfig = layoutConfigManager.getFunctionConfig<FolderLayoutConfig>(FolderLayoutConfig.FOLDER_GRID_LAYOUT_INFO);
   }
 
   static getInstance(): BigFolderViewModel {

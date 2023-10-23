@@ -37,7 +37,7 @@ export struct SmartDock {
   @StorageLink('recentList') recentList: any = [];
   @StorageLink('missionInfoList') missionInfoList: any = [];
   private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
-  private mSmartDockViewModel: SmartDockViewModel;
+  private mSmartDockViewModel?: SmartDockViewModel;
   private mSelectedItem = null;
   private mSelectedDockType = 0;
   private dialogName = "";
@@ -133,36 +133,38 @@ export struct SmartDock {
   }
 
   build() {
-    List({
-      space: this.deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || this.recentList.length == 0 ? CommonConstants.DOCK_SPACE :
+    if (this.mSmartDockViewModel?.getStyleConfig) {
+      List({
+        space: (this.deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || this.deviceType === 'default') || this.recentList.length == 0 ? CommonConstants.DOCK_SPACE :
         this.mSmartDockViewModel.getStyleConfig().mDockGap
-    }) {
-      if (this.buildLog()) {
-      }
-      ListItem() {
-        ResidentLayout({
-          mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
-          onItemClick: (event, item) => this.mSmartDockViewModel.residentOnClick(event, item, this.showAppCenter),
-          buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
-          onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
-        })
-      }
+      }) {
+        if (this.buildLog()) {
+        }
+        ListItem() {
+          ResidentLayout({
+            mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
+            onItemClick: (event, item) => this.mSmartDockViewModel.residentOnClick(event, item, this.showAppCenter),
+            buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
+            onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
+          })
+        }
 
-      ListItem() {
-        RecentLayout({
-          appList: $recentList,
-          mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
-          onItemClick: (event, item) => this.mSmartDockViewModel.recentOnClick(event, item, () => this.recentOnClickWithPopup(item)),
-          buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
-          onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
-          popup: this.popup,
-          onHoverEvent: (onHover, bundleName) => this.onHoverEvent(onHover, bundleName)
-        })
+        ListItem() {
+          RecentLayout({
+            appList: $recentList,
+            mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
+            onItemClick: (event, item) => this.mSmartDockViewModel.recentOnClick(event, item, () => this.recentOnClickWithPopup(item)),
+            buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
+            onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
+            popup: this.popup,
+            onHoverEvent: (onHover, bundleName) => this.onHoverEvent(onHover, bundleName)
+          })
+        }
       }
+      .alignListItem(ListItemAlign.Center)
+      .height(SmartDockConstants.PERCENTAGE_100)
+      .listDirection(SmartDockConstants.LIST_DIRECTION)
     }
-    .alignListItem(ListItemAlign.Center)
-    .height(SmartDockConstants.PERCENTAGE_100)
-    .listDirection(SmartDockConstants.LIST_DIRECTION)
   }
 
   recentOnClickWithPopup(item) {

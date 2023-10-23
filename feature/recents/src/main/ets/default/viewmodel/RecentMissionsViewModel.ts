@@ -31,6 +31,7 @@ export class RecentMissionsViewModel {
   private mRecentModeFeatureConfig: RecentModeFeatureConfig;
   private mRecentMissionsLimit: number;
   private mRecentMissionsList: RecentMissionInfo[] = [];
+  private mRecentMissionsRowType: string = 'single';
 
   private constructor() {
     Log.showInfo(TAG, 'constructor start');
@@ -39,6 +40,7 @@ export class RecentMissionsViewModel {
     if (config instanceof RecentModeFeatureConfig) {
       this.mRecentModeFeatureConfig = <RecentModeFeatureConfig> config;
       this.mRecentMissionsLimit = this.mRecentModeFeatureConfig.getRecentMissionsLimit();
+      this.mRecentMissionsRowType = this.mRecentModeFeatureConfig.getRecentMissionsRowType();
     }
   }
 
@@ -68,7 +70,7 @@ export class RecentMissionsViewModel {
    * @return {string} row type
    */
   getRecentMissionsRowType(): string {
-    return this.mRecentModeFeatureConfig.getRecentMissionsRowType();
+    return this.mRecentMissionsRowType;
   }
 
   /**
@@ -77,10 +79,6 @@ export class RecentMissionsViewModel {
   async getRecentMissionsList(): Promise<void> {
     Log.showDebug(TAG, 'getRecentMissionsList start');
     this.mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
-    const snapShotTime = new Date().toString();
-    for (let item of this.mRecentMissionsList) {
-      item.snapShotTime = snapShotTime;
-    }
     if (globalThis.recentMode && windowManager.isSplitWindowMode(globalThis.recentMode)) {
       this.mRecentMissionsList.forEach((item, index) => {
         if (item.missionId == globalThis.splitMissionId) {

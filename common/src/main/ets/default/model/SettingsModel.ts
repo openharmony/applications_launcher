@@ -26,6 +26,7 @@ import { PageDesktopLayoutConfig } from '../layoutconfig/PageDesktopLayoutConfig
 import { PageDesktopAppModeConfig } from '../layoutconfig/PageDesktopAppModeConfig';
 import { SettingsModelObserver } from './SettingsModelObserver';
 import GridLayoutConfigs from '../configs/GridLayoutConfigs';
+import deviceInfo from '@ohos.deviceInfo';
 
 const TAG = 'SettingsModel';
 
@@ -47,10 +48,10 @@ export class SettingsModel {
 
   private constructor() {
     this.mPageDesktopModeConfig = layoutConfigManager.getModeConfig(PageDesktopModeConfig.DESKTOP_MODE_CONFIG);
-    const deviceType = this.mPageDesktopModeConfig.getDeviceType();
-    if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    const deviceType = deviceInfo?.deviceType || this.mPageDesktopModeConfig?.getDeviceType();
+    if (deviceType === CommonConstants.DEFAULT_DEVICE_TYPE || deviceType === 'default') {
       this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
-    } else if (deviceType == CommonConstants.PAD_DEVICE_TYPE) {
+    } else if (deviceType === CommonConstants.PAD_DEVICE_TYPE) {
       this.mGridLayoutTable = GridLayoutConfigs.PadGridLayoutTableHorizontal;
     } else {
       this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTableHorizontal;
@@ -204,7 +205,7 @@ export class SettingsModel {
    */
   setDevice(deviceType): void {
     Log.showDebug(TAG, `setDevice ${deviceType}`);
-    if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || deviceType === 'default') {
       this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
     } else if (deviceType == CommonConstants.PAD_DEVICE_TYPE) {
       this.mGridLayoutTable = GridLayoutConfigs.PadGridLayoutTableHorizontal;
@@ -220,6 +221,9 @@ export class SettingsModel {
    * @return {string} device type
    */
   getDevice(): string {
+    if (deviceInfo?.deviceType) {
+      return deviceInfo!.deviceType;
+    }
     return this.mPageDesktopModeConfig.getDeviceType();
   }
 

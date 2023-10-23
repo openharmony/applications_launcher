@@ -32,7 +32,7 @@ class RecentMissionsPreLoader extends BaseModulePreLoader {
   protected loadConfig(): void {
     layoutConfigManager.addConfigToManager(PageDesktopModeConfig.getInstance());
     this.mSettingsModel = SettingsModel.getInstance();
-    if (this.mSettingsModel.getDevice() === 'phone') {
+    if (this.mSettingsModel.getDevice() === 'phone' || this.mSettingsModel.getDevice() === 'default') {
       layoutConfigManager.addConfigToManager(RecentModeFeatureConfig.getInstance());
     } else {
       layoutConfigManager.addConfigToManager(RecentModePadConfig.getInstance());
