@@ -42,8 +42,8 @@ export struct FormManagerDialog {
     StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT];
 
   mFormDialogController?: CustomDialogController;
-  cancel: (callback?) => void;
-  confirm: (formCardItem) => void;
+  cancel = (callback?: Function) => {};
+  confirm = (formCardItem: CardItemInfo) => {};
   bundleName: string;
   appName: string;
   appLabelId: number;

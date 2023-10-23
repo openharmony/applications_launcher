@@ -63,7 +63,7 @@ export default struct AppItem {
   private mPageDesktopStartAppHandler: PageDesktopStartAppHandler;
   private mouseClick: number = 0;
   private dialogName: string = '';
-  private clearForm: Function = null;
+  private clearForm = () => {};
 
   dialogController: CustomDialogController | null = new CustomDialogController({
     builder:  UninstallDialog({
@@ -143,7 +143,6 @@ export default struct AppItem {
   aboutToDisappear(): void {
     this.dialogController = null;
     this.formManagerDialogController = null;
-    this.clearForm = null;
   }
 
   getMenuInfoList() {
