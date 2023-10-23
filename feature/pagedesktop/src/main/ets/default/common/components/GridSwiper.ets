@@ -77,7 +77,6 @@ export default struct GridSwiper {
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, 'aboutToDisappear');
-    delete this.dialogController;
     this.dialogController = null;
   }
 
