@@ -24,9 +24,9 @@ export struct UninstallDialog {
   @StorageLink('uninstallAppInfo') appInfo: AppItemInfo = new AppItemInfo();
   @StorageLink('isPad') isPad: boolean = false;
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
-  controller: CustomDialogController;
-  cancel: () => void
-  confirm: () => void
+  controller?: CustomDialogController;
+  cancel = () => {};
+  confirm = () => {};
   dialogName: string
   dialogContent: string
   @State icon: string = '';
@@ -58,9 +58,6 @@ export struct UninstallDialog {
   }
 
   aboutToDisappear(): void {
-    this.cancel = null;
-    this.confirm = null;
-    this.controller = null;
   }
 
   public iconLoadCallback(image) {

@@ -40,9 +40,9 @@ export default struct FolderAppListDialog {
   private mColumnsTemplate: string;
   private mDialogHeight: number = 0;
   private mGridHeight: number = 0;
-  controller: CustomDialogController;
-  cancel: () => void;
-  confirm: (isDestory) => void;
+  controller?: CustomDialogController;
+  cancel = () => {};
+  confirm = (isDestory: boolean) => {};
   folderItem: any;
   addToString: string = '';
 
@@ -60,9 +60,6 @@ export default struct FolderAppListDialog {
   }
 
   aboutToDisappear(): void {
-    this.cancel = null;
-    this.confirm = null;
-    this.controller = null;
   }
 
   private updateTitleDes(value: string) {

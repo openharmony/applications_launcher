@@ -42,7 +42,7 @@ export default struct GridSwiper {
   } = { appGridInfo: [[]] };
   @State pageList: number[] = [0];
   private swiperController: SwiperController = new SwiperController();
-  private dialogController: CustomDialogController;
+  dialogController?: CustomDialogController;
   @StorageLink('desktopEventResponse') desktopEventResponse: boolean = true;
   @State desktopIndicator: DotIndicator | DigitIndicator = Indicator.dot().selectedColor(StyleConstants.DEFAULT_FONT_COLOR);
 
@@ -77,7 +77,6 @@ export default struct GridSwiper {
 
   aboutToDisappear(): void {
     Log.showInfo(TAG, 'aboutToDisappear');
-    this.dialogController = null;
   }
 
   private buildLog(): boolean {

@@ -21,9 +21,11 @@ export struct RemoveFormDialog {
   @StorageLink('isPad') isPad: boolean = false;
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
   mRemoveFormDialogWidth: string;
-  controller: CustomDialogController;
-  cancel: () => void
-  confirm: () => void
+  controller?: CustomDialogController;
+  cancel: () => void = () => {
+  };
+  confirm: () => void = () => {
+  };
   dialogName: string;
   private mLayoutViewModel: LayoutViewModel;
 
@@ -37,9 +39,6 @@ export struct RemoveFormDialog {
   }
 
   aboutToDisappear(): void {
-    this.cancel = null;
-    this.confirm = null;
-    this.controller = null;
   }
 
   build() {

@@ -20,15 +20,15 @@ export default class SettingItemOption {
   /**
    * Name of this option
    */
-  name: string | undefined;
+  name: string | '';
 
   /**
    * Value of this option
    */
-  value: string | undefined;
+  value: string | '';
 
   /**
    * True if this item is checked
    */
-  checked: boolean | undefined;
+  checked: boolean | false;
 }

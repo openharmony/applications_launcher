@@ -41,7 +41,7 @@ export struct FormManagerDialog {
     StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT / 2,
     StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT];
 
-  mFormDialogController: CustomDialogController;
+  mFormDialogController?: CustomDialogController;
   cancel: (callback?) => void;
   confirm: (formCardItem) => void;
   bundleName: string;
@@ -55,10 +55,6 @@ export struct FormManagerDialog {
   }
 
   aboutToDisappear(): void {
-    this.cancel = null;
-    this.confirm = null;
-    this.mFormDialogController = null;
-    this.mSwiperController = null;
   }
 
   /**

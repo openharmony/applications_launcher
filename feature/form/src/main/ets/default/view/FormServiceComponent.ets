@@ -54,7 +54,7 @@ export struct FormServiceComponent {
   private mFormModel: FormModel = FormModel.getInstance();
   private mAppModel: AppModel = AppModel.getInstance();
   private clickedformApp: AppItemInfo = null;
-  private clearForm: Function = null;
+  private clearForm = () => {};
   private gridRowUtils: GridRowUtils;
   private formServiceWidth: number;
   private titleBarWidth: number;
@@ -151,7 +151,7 @@ export struct FormServiceComponent {
     }
   }
 
-  formManagerDialogController: CustomDialogController = new CustomDialogController({
+  formManagerDialogController: CustomDialogController | null = new CustomDialogController({
     builder: FormManagerDialog({
       cancel: (callback?) => {
         // delete all form

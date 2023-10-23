@@ -41,8 +41,8 @@ export struct AppGridLayout {
   @StorageLink('appGridStyleConfig') mAppCenterGridStyleConfig: AppCenterGridStyleConfig = null;
   mSelectItem = null;
   private mAppCenterStartAppHandler: AppCenterStartAppHandler;
-  private dialogName: string = "";
-  mDialogController: CustomDialogController = new CustomDialogController({
+  private dialogName: string = '';
+  mDialogController: CustomDialogController | null = new CustomDialogController({
     builder: UninstallDialog({
       cancel: () => {
       },
