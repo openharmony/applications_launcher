@@ -14,12 +14,14 @@
  */
 
 import {
+  FolderComponent,
+} from '@ohos/common/component'
+import {
   LauncherDragItemInfo,
   Log,
   Trace,
   StyleConstants,
   CommonConstants,
-  FolderComponent,
   PresetStyleConstants
 } from '@ohos/common';
 import {

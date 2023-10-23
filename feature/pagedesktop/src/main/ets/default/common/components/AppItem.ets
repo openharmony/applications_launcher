@@ -14,6 +14,12 @@
  */
 
 import {
+  AppBubble,
+  UninstallDialog,
+  FormManagerDialog,
+  AppIcon,
+} from '@ohos/common/component'
+import {
   AppItemInfo,
   CardItemInfo,
   LauncherDragItemInfo,
@@ -21,11 +27,7 @@ import {
   Trace,
   StyleConstants,
   PresetStyleConstants,
-  AppBubble,
-  UninstallDialog,
-  FormManagerDialog,
   ResourceManager,
-  AppIcon,
   CommonConstants
 } from '@ohos/common';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';

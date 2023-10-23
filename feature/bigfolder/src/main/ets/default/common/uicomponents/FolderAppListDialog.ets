@@ -14,8 +14,8 @@
  */
 
 import { AppItemInfo, Log } from '@ohos/common';
-import { AppIcon } from '@ohos/common';
-import { AppName } from '@ohos/common';
+import { AppIcon } from '@ohos/common/component';
+import { AppName } from '@ohos/common/component';
 import { CommonConstants } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
 import { ResourceManager } from '@ohos/common';

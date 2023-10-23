@@ -14,11 +14,13 @@
  */
 
 import {
+  AppMenu,
+} from '@ohos/common/component'
+import {
   Log,
   Trace,
   StyleConstants,
   CommonConstants,
-  AppMenu,
   MenuInfo,
   localEventManager,
   EventConstants,

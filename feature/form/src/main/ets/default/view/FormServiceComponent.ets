@@ -14,6 +14,10 @@
  */
 
 import {
+  AppMenu,
+  FormManagerDialog,
+} from '@ohos/common/component'
+import {
   CommonConstants,
   StyleConstants,
   LayoutViewModel,
@@ -25,8 +29,6 @@ import {
   AppItemInfo,
   ResourceManager,
   MenuInfo,
-  AppMenu,
-  FormManagerDialog,
   AppModel,
   localEventManager,
   EventConstants
