@@ -62,10 +62,10 @@ export default struct AppItem {
   private mPageDesktopDragHandler: PageDesktopDragHandler;
   private mPageDesktopStartAppHandler: PageDesktopStartAppHandler;
   private mouseClick: number = 0;
-  private dialogName: string = "";
-  private clearForm: Function = null;
+  private dialogName: string = '';
+  private clearForm = () => {};
 
-  dialogController: CustomDialogController = new CustomDialogController({
+  dialogController: CustomDialogController | null = new CustomDialogController({
     builder:  UninstallDialog({
       cancel: () => {},
       confirm: () => {
@@ -89,7 +89,7 @@ export default struct AppItem {
   /**
    * Dialog for form manager view (pad adaptation).
    */
-  formManagerDialogController: CustomDialogController = new CustomDialogController({
+  formManagerDialogController: CustomDialogController | null = new CustomDialogController({
     builder: FormManagerDialog({
       cancel: (callback?) => {
         // delete all form
@@ -143,7 +143,6 @@ export default struct AppItem {
   aboutToDisappear(): void {
     this.dialogController = null;
     this.formManagerDialogController = null;
-    this.clearForm = null;
   }
 
   getMenuInfoList() {

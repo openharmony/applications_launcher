@@ -67,7 +67,7 @@ export struct SmartDock {
     this.showAppCenter = null;
   }
 
-  private mDialogController: CustomDialogController = new CustomDialogController({
+  private mDialogController: CustomDialogController | null = new CustomDialogController({
     builder: UninstallDialog({
       cancel: () => {
         this.mDialogController.close()

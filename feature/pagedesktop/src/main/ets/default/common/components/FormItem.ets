@@ -154,7 +154,7 @@ export default struct FormItem {
   /**
    * Dialog for form remove.
    */
-  dialogController: CustomDialogController = new CustomDialogController({
+  dialogController: CustomDialogController | null = new CustomDialogController({
     builder:  RemoveFormDialog({
       cancel: () => {},
       confirm: () => {
@@ -178,7 +178,7 @@ export default struct FormItem {
   /**
    * Dialog for form manager view (pad adaptation).
    */
-  formManagerDialogController: CustomDialogController = new CustomDialogController({
+  formManagerDialogController: CustomDialogController | null = new CustomDialogController({
     builder: FormManagerDialog({
       cancel: (callback?) => {
         // delete all form

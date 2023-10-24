@@ -331,7 +331,7 @@ struct FolderSwiperPage {
     }
   }
 
-  folderDialogController: CustomDialogController = new CustomDialogController({
+  folderDialogController: CustomDialogController | null = new CustomDialogController({
     builder: FolderAppListDialog({
       cancel: () => {
       },
@@ -466,7 +466,7 @@ struct FolderAppItem {
     this.clearForm = null;
   }
 
-  uninstallDialogController: CustomDialogController = new CustomDialogController({
+  uninstallDialogController: CustomDialogController | null = new CustomDialogController({
     builder: UninstallDialog({
       cancel: () => {
       },
@@ -492,7 +492,7 @@ struct FolderAppItem {
     customStyle: true
   });
 
-  formManagerDialogController: CustomDialogController = new CustomDialogController({
+  formManagerDialogController: CustomDialogController | null = new CustomDialogController({
     builder: FormManagerDialog({
       cancel: (callback?) => {
         // delete all form

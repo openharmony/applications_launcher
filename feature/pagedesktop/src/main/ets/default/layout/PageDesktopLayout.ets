@@ -38,7 +38,7 @@ export struct PageDesktopLayout {
   private mPageDesktopDragHandler: PageDesktopDragHandler = null;
   private isPad: boolean = false;
   private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
-  dialogController: CustomDialogController = new CustomDialogController({
+  dialogController: CustomDialogController | null = new CustomDialogController({
     builder: settingDialog({ cancel: this.onCancel, confirm: this.confirm, onAccept: this.onAccept }),
     cancel: this.onCancel,
     autoCancel: true,
@@ -118,17 +118,14 @@ export struct PageDesktopLayout {
 @CustomDialog
 struct settingDialog {
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
-  controller: CustomDialogController
-  cancel: () => void
-  confirm: () => void
-  onAccept: () => void
+  controller?: CustomDialogController
+  cancel = () => {};
+  confirm = () => {};
+  onAccept = () => {};
 
   aboutToAppear(): void {}
 
   aboutToDisappear(): void {
-    this.cancel = null;
-    this.confirm = null;
-    this.controller = null;
   }
 
   build() {
