@@ -13,6 +13,4 @@
  * limitations under the License.
  */
 
-export { AppGridViewModel } from './src/main/ets/default/viewmodel/AppGridViewModel'
-export { AppListViewModel } from './src/main/ets/default/viewmodel/AppListViewModel'
-export { appCenterPreLoader } from './src/main/ets/default/common/AppCenterPreLoader'
+export { PageDesktopLayout } from './src/main/ets/default/layout/PageDesktopLayout';

@@ -18,8 +18,8 @@ import { StyleConstants } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { windowManager } from '@ohos/common';
 import { LayoutViewModel } from '@ohos/common';
-import { SmartDock } from '@ohos/smartdock';
-import { AppGridLayout } from '@ohos/appcenter';
+import { SmartDock } from '@ohos/smartdock/component';
+import { AppGridLayout } from '@ohos/appcenter/component';
 import { AppGridViewModel } from '@ohos/appcenter';
 import PadStage from '../common/PadStage';
 

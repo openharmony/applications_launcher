@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-export { SmartDock } from './src/main/ets/default/layout/SmartDock'
 export { smartDockPreLoader } from './src/main/ets/default/common/SmartDockPreLoader'
 export { SmartDockStyleConfig } from './src/main/ets/default/config/SmartDockStyleConfig'
 export { SmartDockLayoutConfig } from './src/main/ets/default/config/SmartDockLayoutConfig'
