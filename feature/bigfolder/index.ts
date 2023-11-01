@@ -15,7 +15,6 @@
 
 export { BigFolderModel } from './src/main/ets/default/model/BigFolderModel'
 export { BigFolderViewModel } from './src/main/ets/default/viewmodel/BigFolderViewModel'
-export { FolderOpenComponent } from './src/main/ets/default/view/FolderOpenComponent'
 export { bigFolderPreLoader } from './src/main/ets/default/common/BigFolderPreLoader'
 export { BigFolderStyleConfig } from './src/main/ets/default/common/BigFolderStyleConfig'
 export { BigFolderConstants } from './src/main/ets/default/common/constants/BigFolderConstants'

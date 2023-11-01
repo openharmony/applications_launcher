@@ -16,5 +16,3 @@
 export { RecentMissionsStage }  from './src/main/ets/default/common/RecentMissionsStage'
 export { RecentsStyleConstants }  from './src/main/ets/default/common/constants/RecentsStyleConstants'
 export { RecentMissionsViewModel }  from './src/main/ets/default/viewmodel/RecentMissionsViewModel'
-export { RecentMissionsSingleLayout }  from './src/main/ets/default/view/RecentMissionsSingleLayout'
-export { RecentMissionsDoubleLayout }  from './src/main/ets/default/view/RecentMissionsDoubleLayout'

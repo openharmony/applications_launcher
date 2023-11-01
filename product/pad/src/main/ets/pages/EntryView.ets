@@ -23,10 +23,10 @@ import { windowManager } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
 import { SettingsModel, LayoutViewModel } from '@ohos/common';
 import { RemoteWindowWrapper } from '@ohos/common/component';
-import { SmartDock } from '@ohos/smartdock';
-import { PageDesktopLayout } from '@ohos/pagedesktop';
+import { SmartDock } from '@ohos/smartdock/component';
+import { PageDesktopLayout } from '@ohos/pagedesktop/component';
 import { BigFolderConstants } from '@ohos/bigfolder';
-import { FolderOpenComponent } from '@ohos/bigfolder';
+import { FolderOpenComponent } from '@ohos/bigfolder/component';
 import PadStage from '../common/PadStage';
 import StyleConstants from '../common/constants/StyleConstants';
 

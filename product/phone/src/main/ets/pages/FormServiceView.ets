@@ -15,7 +15,7 @@
 
 import { Log } from '@ohos/common';
 import { windowManager } from '@ohos/common';
-import { FormServiceComponent } from '@ohos/form';
+import { FormServiceComponent } from '@ohos/form/component';
 import PhonePresetStyleConstants from '../common/constants/PhonePresetStyleConstants';
 
 const TAG = "FormServiceView";

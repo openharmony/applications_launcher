@@ -26,4 +26,4 @@ export {
   FormManagerDialog,
   FormItemComponent,
   RemoteWindowWrapper
-} from './src/main/ets/default/uicomponents'
+} from './src/main/ets/default/uicomponents';

@@ -20,8 +20,8 @@ import { RecentMissionInfo } from '@ohos/common';
 import { RecentsStyleConstants } from '@ohos/recents';
 import { RecentMissionsStage } from '@ohos/recents';
 import { RecentMissionsViewModel } from '@ohos/recents';
-import { RecentMissionsSingleLayout } from '@ohos/recents';
-import { RecentMissionsDoubleLayout } from '@ohos/recents';
+import { RecentMissionsSingleLayout } from '@ohos/recents/component';
+import { RecentMissionsDoubleLayout } from '@ohos/recents/component';
 
 const TAG = "RecentView";
 
