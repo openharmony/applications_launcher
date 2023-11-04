@@ -236,7 +236,7 @@ export struct RemoteWindowWrapper {
     control.onStartAppFromLauncher = (startingWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onStartAppFromLauncher`);
       const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
-      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop');
+      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
       const appItemInfo: any = AppStorage.get('startAppItemInfo');
       const startAppIconInfo: any = AppStorage.get('startAppIconInfo');
       let remoteVo: RemoteVo | null = this.getRemoteWindowVo(remoteWindowKey);
@@ -267,7 +267,7 @@ export struct RemoteWindowWrapper {
     control.onStartAppFromRecent = (startingWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onStartAppFromRecent`);
       const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
-      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop');
+      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
       const appItemInfo: any = AppStorage.get('startAppItemInfo');
       const startAppIconInfo: any = AppStorage.get('startAppIconInfo');
       let remoteVo: RemoteVo | null = this.getRemoteWindowVo(remoteWindowKey);
@@ -298,7 +298,7 @@ export struct RemoteWindowWrapper {
     control.onStartAppFromOther = (startingWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onStartAppFromOther`);
       const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
-      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop');
+      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
       const appItemInfo: any = AppStorage.setOrCreate('startAppItemInfo', {});
       const startAppIconInfo: any = AppStorage.setOrCreate('startAppIconInfo', {});
       let remoteVo: RemoteVo | null = this.getRemoteWindowVo(remoteWindowKey);
@@ -329,7 +329,7 @@ export struct RemoteWindowWrapper {
     control.onAppTransition = (fromWindowTarget, toWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onAppTransition`);
       const remoteWindowKey = toWindowTarget.bundleName + toWindowTarget.abilityName + toWindowTarget.missionId;
-      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop');
+      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
       const remoteVo = new RemoteVo(
         RemoteConstants.TYPE_APP_TRANSITION,
         startAppTypeFromPageDesktop,
@@ -346,7 +346,7 @@ export struct RemoteWindowWrapper {
 
     control.onMinimizeWindow = (minimizingWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onMinimizeWindow`);
-      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop');
+      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
       const appInfo: {iconInfo: any, appItemInfo: any} = this.mCloseAppManager.getAppInfo(minimizingWindowTarget);
       const remoteWindowKey = minimizingWindowTarget.bundleName + minimizingWindowTarget.abilityName + minimizingWindowTarget.missionId;
       let remoteVo: RemoteVo | null = this.getRemoteWindowVo(remoteWindowKey);
@@ -379,7 +379,7 @@ export struct RemoteWindowWrapper {
 
     control.onCloseWindow = (closingWindowTarget, finishCallback) => {
       Log.showInfo(TAG, `remote window animaion onCloseWindow`);
-      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop');
+      const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
       const appInfo: {iconInfo: any, appItemInfo: any} = this.mCloseAppManager.getAppInfo(closingWindowTarget);
       const remoteWindowKey = closingWindowTarget.bundleName + closingWindowTarget.abilityName + closingWindowTarget.missionId;
       let remoteVo: RemoteVo | null = this.getRemoteWindowVo(remoteWindowKey);

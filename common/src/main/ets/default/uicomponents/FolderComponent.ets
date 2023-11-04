@@ -177,8 +177,8 @@ export struct FolderComponent {
   public getPosition(x: number, y: number): void  {
     this.folderItemPositionX = x;
     this.folderItemPositionY = y;
-    let screenWidth: number = AppStorage.get('screenWidth');
-    let screenHeight: number = AppStorage.get('screenHeight');
+    let screenWidth: number = AppStorage.get('screenWidth') as number;
+    let screenHeight: number = AppStorage.get('screenHeight') as number;
     this.animateFolderPositionX = (screenWidth - this.folderGridSize * 1.5) / 2 - this.folderItemPositionX;
     this.animateFolderPositionY = (screenHeight - this.folderGridSize * 1.5) / 2 - this.folderItemPositionY;
     Log.showInfo(TAG, `getPosition animatePosition x: ${this.animateFolderPositionX}, y: ${this.animateFolderPositionY}`);

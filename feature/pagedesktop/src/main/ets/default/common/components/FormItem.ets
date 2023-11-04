@@ -89,8 +89,8 @@ export default struct FormItem {
     this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
     if (this.formItem.cardDimension) {
-      this.mFormItemWidth = this.mFormStyleConfig.mFormWidth.get(this.formItem.cardDimension.toString());
-      this.mFormItemHeight = this.mFormStyleConfig.mFormHeight.get(this.formItem.cardDimension.toString());
+      this.mFormItemWidth = this.mFormStyleConfig.mFormWidth.get(this.formItem.cardDimension.toString()) as number;
+      this.mFormItemHeight = this.mFormStyleConfig.mFormHeight.get(this.formItem.cardDimension.toString()) as number;
     }
     const resourceManager = ResourceManager.getInstance();
     resourceManager.getStringById($r('app.string.is_delete_form').id, this.getDialogNamePre.bind(this));

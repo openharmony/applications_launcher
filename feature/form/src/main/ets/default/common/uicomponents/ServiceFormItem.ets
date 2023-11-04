@@ -61,7 +61,7 @@ export default struct ServiceFormItem {
     Column() {
       Stack() {
         FormComponent({
-          id: this.formItem.cardId,
+          id: this.formItem.cardId as number,
           name: this.formItem.cardName,
           bundle: this.formItem.bundleName,
           ability: this.formItem.abilityName,

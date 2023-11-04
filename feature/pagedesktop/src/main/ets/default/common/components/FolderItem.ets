@@ -75,7 +75,7 @@ export default struct FolderItem {
     this.mMargin = styleConfig.mMargin;
     this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
-    this.openFolderStatus = AppStorage.get('openFolderStatus') != 'undefined' ? AppStorage.get('openFolderStatus') : BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
+    this.openFolderStatus = AppStorage.get('openFolderStatus') != 'undefined' ? (AppStorage.get('openFolderStatus') as number) : BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
     this.formatFolderInfo();
   }
 

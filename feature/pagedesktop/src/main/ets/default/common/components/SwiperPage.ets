@@ -105,7 +105,7 @@ export default struct SwiperPage {
     if (isSwappingPage) {
       return;
     }
-    let curPageIndex: number = AppStorage.get('pageIndex');
+    let curPageIndex: number = AppStorage.get('pageIndex') as number;
     if ((moveX - this.mIconSize / 2) < this.mMargin && curPageIndex > 0 && moveY < this.mGridSpaceHeight) {
       this.mPageDesktopViewModel.showPrevious();
       this.movingIconSwapPageDelay();
@@ -209,7 +209,7 @@ export default struct SwiperPage {
       Log.showInfo(TAG, `onDragLeave event: [${event.getWindowX()}, ${event.getWindowY()}]`);
     })
     .onDrop((event: DragEvent, extraParams: string) => {
-      const dragItemType: number = AppStorage.get('dragItemType');
+      const dragItemType: number = AppStorage.get('dragItemType') as number;
       Log.showInfo(TAG, `onDrop event: [${event.getWindowX()}, ${event.getWindowY()}]`);
       if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP
       || (dragItemType === CommonConstants.DRAG_FROM_DOCK && AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE)) {
