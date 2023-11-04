@@ -62,10 +62,10 @@ export default struct ServiceFormItem {
       Stack() {
         FormComponent({
           id: this.formItem.cardId as number,
-          name: this.formItem.cardName,
-          bundle: this.formItem.bundleName,
-          ability: this.formItem.abilityName,
-          module: this.formItem.moduleName,
+          name: this.formItem.cardName as string,
+          bundle: this.formItem.bundleName as string,
+          ability: this.formItem.abilityName as string,
+          module: this.formItem.moduleName as string,
           dimension: this.formItem.cardDimension
         })
           .hoverEffect(HoverEffect.None)

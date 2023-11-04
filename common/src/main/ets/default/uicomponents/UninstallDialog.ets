@@ -49,8 +49,8 @@ export struct UninstallDialog {
     this.mResourceManager = ResourceManager.getInstance();
 
     this.appIcon = this.appInfo.appIconId;
-    this.bundleName = this.appInfo.bundleName;
-    this.moduleName = this.appInfo.moduleName;
+    this.bundleName = this.appInfo.bundleName as string;
+    this.moduleName = this.appInfo.moduleName as string;
 
     if (CheckEmptyUtils.isEmpty(this.icon)) {
       this.updateIcon();

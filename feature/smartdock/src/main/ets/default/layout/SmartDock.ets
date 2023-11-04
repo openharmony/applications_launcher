@@ -49,7 +49,7 @@ export struct SmartDock {
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear start!');
-    this.deviceType = AppStorage.get('deviceType');
+    this.deviceType = AppStorage.get('deviceType') as string;
     try {
       this.mSmartDockViewModel = SmartDockViewModel.getInstance();
     } catch (error) {
