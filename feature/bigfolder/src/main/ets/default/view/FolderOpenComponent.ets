@@ -277,7 +277,7 @@ export struct FolderOpenComponent {
         mBigFolderViewModel.modifyFolderName(this.mFolderInfo)
       }
     } else {
-      const contextFlag: boolean = AppStorage.get('contextMenuState');
+      const contextFlag: boolean = AppStorage.get('contextMenuState') as boolean;
       Log.showInfo(TAG, 'saveText contextFlag: ' + contextFlag);
       if (contextFlag) {
         AppStorage.setOrCreate('contextMenuState', false);
@@ -426,7 +426,7 @@ struct FolderSwiperPage {
         mBigFolderViewModel.modifyFolderName(this.mFolderInfo);
       }
     } else {
-      const contextFlag: boolean = AppStorage.get('contextMenuState');
+      const contextFlag: boolean = AppStorage.get('contextMenuState') as boolean;
       Log.showInfo(TAG, 'saveText contextFlag: ' + contextFlag);
       if (contextFlag) {
         AppStorage.setOrCreate('contextMenuState', false);

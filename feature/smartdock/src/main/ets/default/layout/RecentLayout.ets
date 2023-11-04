@@ -172,7 +172,7 @@ export default struct RecentLayout {
         })
         .onClick((event: ClickEvent) => {
           this.onItemClick(event, item);
-          this.onClickWithPopup = AppStorage.get('recentShowPopup');
+          this.onClickWithPopup = AppStorage.get('recentShowPopup') as boolean;
           Log.showInfo(TAG, `onClick this.onClickWithPopup: ${this.onClickWithPopup}`);
           if (this.onClickWithPopup) {
             this.autoCancel = true;
@@ -234,7 +234,7 @@ struct AppItem {
   }
 
   private getLongPress(): boolean {
-    return AppStorage.get('isLongPress');
+    return AppStorage.get('isLongPress') as boolean;
   }
 
   @Builder MenuBuilder() {

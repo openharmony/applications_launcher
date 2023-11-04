@@ -101,7 +101,7 @@ export default struct SwiperPage {
   }
 
   itemMove(moveX: number, moveY: number): void {
-    const isSwappingPage: boolean = AppStorage.get('isSwappingPage');
+    const isSwappingPage: boolean = AppStorage.get('isSwappingPage') as boolean;
     if (isSwappingPage) {
       return;
     }
