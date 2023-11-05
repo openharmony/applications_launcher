@@ -23,6 +23,7 @@ import { CommonConstants } from '../constants/CommonConstants';
 import { localEventManager } from '../manager/LocalEventManager';
 import { EventConstants } from '../constants/EventConstants';
 import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
+import { CardItemInfo, MenuInfo } from '../bean';
 
 const TAG = 'FormItemComponent';
 
@@ -32,20 +33,20 @@ export struct FormItemComponent {
   @State isAllowUpdate: boolean = true;
   @State isShow: boolean = true;
   @State isHover: boolean = false;
-  formNameHeight: number;
-  formNameSize: number;
-  nameFontColor: string;
+  formNameHeight: number = 0;
+  formNameSize: number = 0;
+  nameFontColor: string = '#ffffff';
   iconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
-  private formItemWidth;
-  private formItemHeight;
-  private menuInfo;
-  private formItem;
-  private formId;
-  private mFormModel: FormModel;
+  private formItemWidth: number = 0;
+  private formItemHeight: number = 0;
+  private menuInfo: MenuInfo[] = [];
+  private formItem: CardItemInfo = new CardItemInfo();
+  private formId = 0;
+  private mFormModel: FormModel = FormModel.getInstance();
   private nameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   mPaddingTop: number = StyleConstants.DEFAULT_10;
   getFormId: (id: number) => void = (id: number) => {};
-  clickForm?: Function = () => {};
+  clickForm: Function = () => {};
   dragStart: Function = () => {};
 
   aboutToAppear(): void  {
@@ -69,12 +70,12 @@ export struct FormItemComponent {
   build() {
     Column() {
       FormComponent({
-        id: this.formItem.cardId,
-        name: this.formItem.cardName,
-        bundle: this.formItem.bundleName,
-        ability: this.formItem.abilityName,
-        module: this.formItem.moduleName,
-        dimension: this.formItem.cardDimension
+        id: this.formItem.cardId as number,
+        name: this.formItem.cardName as string,
+        bundle: this.formItem.bundleName as string,
+        ability: this.formItem.abilityName as string,
+        module: this.formItem.moduleName as string,
+        dimension: this.formItem.cardDimension as number
       })
         .clip(new Rect({ width: this.formItemWidth, height: this.formItemHeight, radius: 24}))
         .size({ width: this.formItemWidth, height: this.formItemHeight })
