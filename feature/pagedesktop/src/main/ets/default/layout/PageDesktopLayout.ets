@@ -24,7 +24,7 @@ import { PageDesktopDragHandler } from '../common/PageDesktopDragHandler';
 import { PageDesktopViewModel } from '../viewmodel/PageDesktopViewModel';
 import { PageDesktopCloseAppHandler } from '../common/PageDesktopCloseAppHandler';
 
-let mPageDesktopViewModel: PageDesktopViewModel = null;
+let mPageDesktopViewModel: PageDesktopViewModel | null = null;
 const TAG = "PageDesktopLayout";
 
 @Component
@@ -35,7 +35,7 @@ export struct PageDesktopLayout {
   @State mTop: number = 0;
   @State @Watch('changeGridConfig') gridConfig: string = '';
   @StorageLink('menuId') menuId: number = 0;
-  private mPageDesktopDragHandler: PageDesktopDragHandler = null;
+  private mPageDesktopDragHandler: PageDesktopDragHandler | null = null;
   private isPad: boolean = false;
   private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
   dialogController: CustomDialogController | null = new CustomDialogController({
@@ -50,12 +50,12 @@ export struct PageDesktopLayout {
   }
 
   onAccept() {
-    mPageDesktopViewModel.addOrDeleteBlankPage();
+    mPageDesktopViewModel?.addOrDeleteBlankPage();
   }
 
   confirm() {
     Trace.start(Trace.CORE_METHOD_START_SETTINGS);
-    mPageDesktopViewModel.intoSetting();
+    mPageDesktopViewModel?.intoSetting();
   }
 
   aboutToAppear(): void  {
@@ -75,8 +75,8 @@ export struct PageDesktopLayout {
   }
 
   private updateStyle() {
-    mPageDesktopViewModel.setDevice(this.deviceType);
-    this.isPad = mPageDesktopViewModel.getDevice();
+    mPageDesktopViewModel?.setDevice(this.deviceType);
+    this.isPad = mPageDesktopViewModel?.getDevice();
     Log.showDebug(TAG, `updateStyle isPad: ${this.isPad}`);
   }
 
@@ -158,7 +158,7 @@ struct settingDialog {
           .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
           .onClick(() => {
             this.cancel()
-            this.controller.close();
+            this.controller?.close();
           })
 
           Divider()
@@ -168,7 +168,7 @@ struct settingDialog {
             .height(StyleConstants.DEFAULT_DIVIDER_HEIGHT)
 
           Button() {
-            Text(mPageDesktopViewModel.isBlankPage() ? $r('app.string.delete_blank_page') : $r('app.string.add_blank_page'))
+            Text(mPageDesktopViewModel?.isBlankPage() ? $r('app.string.delete_blank_page') : $r('app.string.add_blank_page'))
               .fontSize(StyleConstants.DEFAULT_BADGE_FONT_SIZE)
               .fontColor(StyleConstants.BUTTON_FONT_COLOR)
           }
@@ -176,7 +176,7 @@ struct settingDialog {
           .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
           .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
           .onClick(() => {
-            this.controller.close();
+            this.controller?.close();
             this.onAccept()
           })
 
@@ -196,7 +196,7 @@ struct settingDialog {
           .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
           .onClick(() => {
             this.confirm()
-            this.controller.close();
+            this.controller?.close();
 
           })
         }

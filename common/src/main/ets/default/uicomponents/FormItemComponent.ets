@@ -44,18 +44,15 @@ export struct FormItemComponent {
   private mFormModel: FormModel;
   private nameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   mPaddingTop: number = StyleConstants.DEFAULT_10;
-  getFormId: (id: number) => void;
-  clickForm?: Function = null;
-  dragStart: Function;
+  getFormId: (id: number) => void = (id: number) => {};
+  clickForm?: Function = () => {};
+  dragStart: Function = () => {};
 
   aboutToAppear(): void  {
     this.mFormModel = FormModel.getInstance();
   }
 
   aboutToDisappear(): void {
-    this.getFormId = null;
-    this.clickForm = null;
-    this.dragStart = null;
   }
 
   @Builder MenuBuilder() {

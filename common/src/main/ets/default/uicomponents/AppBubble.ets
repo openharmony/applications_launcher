@@ -21,6 +21,7 @@ import { StyleConstants } from '../constants/StyleConstants';
 import { ResourceManager } from '../manager/ResourceManager';
 import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
+import { MenuInfo } from '../bean';
 
 const TAG = 'AppBubble';
 
@@ -39,18 +40,15 @@ export struct AppBubble {
   mPaddingTop: number = StyleConstants.DEFAULT_10;
   nameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   mIconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
-  private menuInfo;
-  private getMenuInfoList: Function;
+  private menuInfo: MenuInfo[] = [];
+  private getMenuInfoList?: Function;
   isSelect?: boolean;
   appName: string = '';
   useCache: boolean = true;
   shortCutEnabled: boolean = false;
-  dragStart: Function;
+  dragStart: Function = (event: DragEvent) => {};
 
   aboutToDisappear(): void {
-    this.getMenuInfoList = null;
-    this.dragStart = null;
-    this.menuInfo = null;
   }
 
   @Builder MenuBuilder() {

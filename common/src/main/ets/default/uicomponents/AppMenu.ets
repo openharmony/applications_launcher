@@ -24,10 +24,10 @@ const TAG = 'AppMenu';
 @Component
 export struct AppMenu {
   menuInfoList: Array<MenuInfo> = new Array<MenuInfo>();
-  getMenuInfoList: Function;
+  getMenuInfoList?: Function;
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
-  fixedMenuList: Array<MenuInfo> = null;
-  dynamicMenuList: Array<MenuInfo> = null;
+  fixedMenuList: Array<MenuInfo> = [];
+  dynamicMenuList: Array<MenuInfo> = [];
   isBothTypeMenuExist: boolean = true;
   closeMenu: Function = () => {};
 
@@ -51,10 +51,8 @@ export struct AppMenu {
 
   aboutToDisappear(): void  {
     Log.showInfo(TAG, 'aboutToDisappear start');
-    this.fixedMenuList = null;
-    this.dynamicMenuList = null;
-    this.closeMenu = null;
-    this.getMenuInfoList = null;
+    this.fixedMenuList = [];
+    this.dynamicMenuList = [];
   }
 
   build() {
@@ -118,7 +116,6 @@ struct HorizontalMenuItem {
   }
 
   aboutToDisappear(): void {
-    this.closeMenu = null;
   }
 
   public shortcutIconLoadCallback(image) {

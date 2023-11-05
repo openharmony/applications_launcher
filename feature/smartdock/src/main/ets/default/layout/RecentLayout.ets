@@ -24,11 +24,12 @@ import {
   CommonConstants,
   StyleConstants,
   ResourceManager,
-  Log
+  Log,
+  MenuInfo
 } from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 
-let mSmartDockStyleConfig: SmartDockStyleConfig = null;
+let mSmartDockStyleConfig: SmartDockStyleConfig | null= null;
 const TAG = 'RecentLayout';
 
 @Component
@@ -39,12 +40,12 @@ export default struct RecentLayout {
   @State showPopup: boolean = false;
   @State onHoverItem: string = '';
   @Link @Watch('onDockListChange') appList: Array<DockItemInfo>;
-  mRecentMaxNum: number;
-  mSmartDockStyleConfig: SmartDockStyleConfig;
-  onItemClick: Function = null;
-  buildMenu: Function = null;
-  onHoverEvent: Function = null;
-  onDockListChangeFunc: Function = null;
+  mRecentMaxNum: number = 0;
+  mSmartDockStyleConfig: SmartDockStyleConfig | null = null;
+  onItemClick: Function = () => {};
+  buildMenu: (item: DockItemInfo) => MenuInfo[] = (item: DockItemInfo): MenuInfo[] => [];
+  onHoverEvent: Function = () => {};
+  onDockListChangeFunc: Function = () => {};
   isScrollHover: boolean = false;
   popup: {
     show: boolean,
@@ -53,24 +54,19 @@ export default struct RecentLayout {
   } = { show: false, showItem: '', popup: null };
   onClickWithPopup: boolean = false;
   autoCancel: boolean = false;
-  private updateData: Function = null;
+  private updateData: Function = () => {};
 
   aboutToAppear(): void {
     mSmartDockStyleConfig = this.mSmartDockStyleConfig;
   }
 
   aboutToDisappear(): void {
-    this.buildMenu = null;
     this.isHover = false;
     this.showPopup = false;
     this.onHoverItem = '';
-    this.onItemClick = null;
-    this.onHoverEvent = null;
-    this.onDockListChangeFunc = null;
     this.isScrollHover = false;
     this.onClickWithPopup = false;
     this.autoCancel = false;
-    this.updateData = null;
   }
 
   private sysUiRecentOnClick() {
@@ -218,9 +214,9 @@ export default struct RecentLayout {
 @Component
 struct AppItem {
   @State isShow: boolean = false;
-  appInfo: DockItemInfo = null;
-  buildMenu: Function = null;
-  private menuInfo;
+  appInfo: DockItemInfo | null = null;
+  buildMenu: (item: DockItemInfo) => MenuInfo[] = (item: DockItemInfo): MenuInfo[] => [];
+  private menuInfo: MenuInfo[] = [];
 
   aboutToAppear(): void {
     this.menuInfo = this.buildMenu(this.appInfo);
@@ -228,9 +224,6 @@ struct AppItem {
 
   aboutToDisappear(): void {
     this.isShow = false;
-    this.appInfo = null;
-    this.buildMenu = null;
-    this.menuInfo = null;
   }
 
   private getLongPress(): boolean {
@@ -295,7 +288,7 @@ struct AppItem {
       if (event.type == CommonConstants.TOUCH_TYPE_UP) {
         AppStorage.setOrCreate('isLongPress', false);
       }
-      const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo');
+      const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo') as LauncherDragItemInfo;
       if (dragItemInfo.isDragging) {
         this.isShow = false;
       }

@@ -64,19 +64,18 @@ export struct SmartDock {
   aboutToDisappear(): void  {
     Log.showInfo(TAG, 'aboutToDisappear!');
     this.mDialogController = null;
-    this.showAppCenter = null;
   }
 
   private mDialogController: CustomDialogController | null = new CustomDialogController({
     builder: UninstallDialog({
       cancel: () => {
-        this.mDialogController.close()
+        this.mDialogController?.close()
       },
       confirm: () => {
         this.onConfirm()
       },
       dialogName: this.dialogName,
-      dialogContent: this.mSelectedItem.appName + ' ?',
+      dialogContent: this.mSelectedItem?.appName + ' ?',
     }),
     cancel: () => {
     },
@@ -92,18 +91,18 @@ export struct SmartDock {
     if (this.deviceType === CommonConstants.PAD_DEVICE_TYPE) {
       this.mSmartDockViewModel.deleteDockItem({
         bundleName: undefined,
-        keyName: this.mSelectedItem.keyName
+        keyName: this.mSelectedItem?.keyName
       }, this.mSelectedDockType);
     } else {
-      this.mSmartDockViewModel.uninstallApp(this.mSelectedItem.bundleName, this.mSelectedItem.isUninstallAble);
+      this.mSmartDockViewModel.uninstallApp(this.mSelectedItem?.bundleName, this.mSelectedItem?.isUninstallAble);
     }
-    this.mDialogController.close();
+    this.mDialogController?.close();
   }
 
   showDialog() {
     this.mSelectedItem = this.mSmartDockViewModel.getSelectedItem();
     this.mSelectedDockType = this.mSmartDockViewModel.getSelectedDockType();
-    this.mDialogController.open();
+    this.mDialogController?.open();
   }
 
   async onHoverEvent(onHover, bundleName) {

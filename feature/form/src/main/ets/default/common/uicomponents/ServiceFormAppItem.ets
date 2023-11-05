@@ -37,7 +37,7 @@ export default struct ServiceFormAppItem {
   iconId: number;
   @State appName: string = '';
   mDefaultAppIcon: string = '';
-  clickApp?: Function = null;
+  clickApp?: Function | null = null;
   private item: AppItemInfo;
   private mResourceManager: ResourceManager;
   private mIconSize: number = ThisStyleConstants.FORM_SERVICE_APP_ICON_SIZE_WIDTH;

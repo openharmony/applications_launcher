@@ -69,7 +69,7 @@ class RemoteVo {
     target: windowAnimationManager.WindowAnimationTarget,
     iconInfo: any = {},
     appItemInfo: any = {},
-    fromWindowTarget: windowAnimationManager.WindowAnimationTarget = undefined,
+    fromWindowTarget: windowAnimationManager.WindowAnimationTarget | undefined = undefined,
     finishCallback: windowAnimationManager.WindowAnimationFinishedCallback
   ) {
     this.remoteAnimationType = remoteAnimationType;
@@ -207,7 +207,7 @@ export struct RemoteWindowWrapper {
   private mLastRemoteVo: RemoteVo;
   @StorageLink('remoteWindowList') remoteWindowList: RemoteVo[] = [];
 
-  getRemoteWindowVo(remoteWindowKey: string): RemoteVo {
+  getRemoteWindowVo(remoteWindowKey: string): RemoteVo | null {
     const remoteVoIndex = this.remoteWindowList.findIndex(item => {
       return (item.remoteWindowKey) == remoteWindowKey;
     })
@@ -637,7 +637,7 @@ export struct StartAppFromLauncherRemoteWindow {
 export struct StartAppTransitionRemoteWindow {
   @ObjectLink targetInfo: RemoteVo;
   private target: windowAnimationManager.WindowAnimationTarget;
-  private mFromWindowTarget: windowAnimationManager.WindowAnimationTarget = undefined;
+  private mFromWindowTarget?: windowAnimationManager.WindowAnimationTarget = undefined;
   private remoteAnimationType: number = 0;
   private startAppTypeFromPageDesktop: number = 1;
   private mScreenWidth: number = 0;

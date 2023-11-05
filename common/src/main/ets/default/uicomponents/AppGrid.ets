@@ -18,6 +18,7 @@ import { AppBubble } from './AppBubble';
 import { AppItemInfo } from '../bean/AppItemInfo';
 import { CommonConstants } from '../constants/CommonConstants';
 import { AppGridStyleConfig } from '../layoutconfig/AppGridStyleConfig';
+import { MenuInfo } from '../bean';
 
 const TAG = 'AppGrid';
 
@@ -25,13 +26,11 @@ const TAG = 'AppGrid';
 export struct AppGrid {
   @Link appGridList: Array<AppItemInfo>;
   @Link appGridStyleConfig: AppGridStyleConfig;
-  onItemClick: Function = null;
-  buildMenu: Function = null;
+  onItemClick: Function = (event: ClickEvent, item: AppItemInfo) => {};
+  buildMenu: Function = (item: AppItemInfo):  MenuInfo[] => [];
   @State isScroll: boolean = false;
 
   aboutToDisappear(): void {
-    this.buildMenu = null;
-    this.onItemClick = null;
   }
 
   private getColumnsTemplate() {

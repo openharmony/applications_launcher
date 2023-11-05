@@ -72,7 +72,7 @@ export default struct FormItem {
   private mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   private mIsDeleteForm: string = '';
   private mForm: string = '';
-  private clearForm: Function = null;
+  private clearForm: Function = () => {};
 
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
@@ -101,7 +101,6 @@ export default struct FormItem {
   aboutToDisappear(): void {
     this.dialogController = null;
     this.formManagerDialogController = null;
-    this.clearForm = null;
   }
 
   /**
@@ -193,7 +192,7 @@ export default struct FormItem {
         // delete other form
       },
       bundleName: this.formItem.bundleName,
-      appName: this.mPageDesktopViewModel.getAppName(this.formItem.appLabelId + this.formItem.bundleName + this.formItem.moduleName),
+      appName: this.mPageDesktopViewModel.getAppName(this.formItem?.appLabelId + this.formItem?.bundleName + this.formItem?.moduleName),
       appLabelId: this.formItem.appLabelId
     }),
     cancel: this.cancelFormDialog,

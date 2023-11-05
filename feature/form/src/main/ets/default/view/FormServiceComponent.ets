@@ -53,7 +53,7 @@ export struct FormServiceComponent {
   private readonly mServiceFormManager: ServiceFormManager = ServiceFormManager.getInstance();
   private mFormModel: FormModel = FormModel.getInstance();
   private mAppModel: AppModel = AppModel.getInstance();
-  private clickedformApp: AppItemInfo = null;
+  private clickedformApp: AppItemInfo | null = null;
   private clearForm = () => {};
   private gridRowUtils: GridRowUtils;
   private formServiceWidth: number;
@@ -105,8 +105,7 @@ export struct FormServiceComponent {
   }
 
   aboutToDisappear(): void {
-    this.formManagerDialogController = undefined;
-    this.clearForm = null;
+    this.formManagerDialogController = null;
     this.mAppModel.unregisterAppStateChangeListener(this.listener);
   }
 

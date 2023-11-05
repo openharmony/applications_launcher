@@ -197,7 +197,7 @@ export default struct SwiperPage {
     })
     .onDragMove((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragMove event: [${event.getWindowX()}, ${event.getWindowY()}]`);
-      const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo');
+      const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo') as LauncherDragItemInfo;
       if (!dragItemInfo.isDragging) return;
       if (AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE
       || (AppStorage.get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE

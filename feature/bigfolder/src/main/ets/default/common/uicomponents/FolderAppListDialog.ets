@@ -166,7 +166,7 @@ export default struct FolderAppListDialog {
           .width(BigFolderStyleConstants.DEFAULT_BUTTON_WIDTH)
           .height(BigFolderStyleConstants.DEFAULT_BUTTON_HEIGHT)
           .onClick(() => {
-            this.controller.close();
+            this.controller?.close();
             this.cancel()
           })
 
@@ -193,7 +193,7 @@ export default struct FolderAppListDialog {
             } else {
               this.mBigFolderViewModel.refreshFolder(this.folderItem);
             }
-            this.controller.close();
+            this.controller?.close();
             this.confirm(isDestory);
             Log.showDebug(TAG, `Dialog confirm end`);
           })

@@ -42,7 +42,7 @@ export default struct GridSwiper {
   } = { appGridInfo: [[]] };
   @State pageList: number[] = [0];
   private swiperController: SwiperController = new SwiperController();
-  dialogController?: CustomDialogController;
+  dialogController?: CustomDialogController | null;
   @StorageLink('desktopEventResponse') desktopEventResponse: boolean = true;
   @State desktopIndicator: DotIndicator | DigitIndicator = Indicator.dot().selectedColor(StyleConstants.DEFAULT_FONT_COLOR);
 
@@ -136,7 +136,7 @@ export default struct GridSwiper {
                 .gesture(
                 LongPressGesture({ repeat: false })
                   .onAction((event: GestureEvent) => {
-                    this.dialogController.open()
+                    this.dialogController?.open()
                   })
                 )
                 .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)

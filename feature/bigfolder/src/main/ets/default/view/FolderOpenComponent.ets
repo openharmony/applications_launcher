@@ -383,7 +383,7 @@ struct FolderSwiperPage {
               .height(BigFolderStyleConstants.PERCENTAGE_100)
               .onClick(() => {
                 Log.showDebug(TAG, `add app to this folder`);
-                this.folderDialogController.open();
+                this.folderDialogController?.open();
               })
             } else {
               FolderAppItem({
@@ -450,7 +450,7 @@ struct FolderAppItem {
   private mFolderInfo: FolderItemInfo = new FolderItemInfo();
   private mouseClick: number = 0;
   private dialogName: string = "";
-  private clearForm: Function = null;
+  private clearForm: Function = () => {};
 
   aboutToAppear(): void  {
     mFolderModel = BigFolderModel.getInstance();
@@ -463,7 +463,6 @@ struct FolderAppItem {
   aboutToDisappear(): void {
     this.uninstallDialogController = null;
     this.formManagerDialogController = null;
-    this.clearForm = null;
   }
 
   uninstallDialogController: CustomDialogController | null = new CustomDialogController({
@@ -506,7 +505,7 @@ struct FolderAppItem {
         localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD, formCardItem);
       },
       bundleName: this.item.bundleName,
-      appName: globalThis.PageDesktopViewModel.getAppName(this.item.appLabelId + this.item.bundleName + this.item.moduleName),
+      appName: globalThis.PageDesktopViewModel.getAppName(this.item?.appLabelId + this.item?.bundleName + this.item?.moduleName),
       appLabelId: this.item.appLabelId
     }),
     cancel: this.cancelFormDialog,

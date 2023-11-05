@@ -23,6 +23,9 @@ import { AppIcon } from './AppIcon';
 import { AppName } from './AppName';
 import { AppMenu } from './AppMenu';
 import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
+import { AppItemInfo } from '../bean/AppItemInfo';
+import { FolderItemInfo } from '../bean/FolderItemInfo';
+import { MenuInfo } from '../bean';
 
 const TAG = 'FolderComponent';
 
@@ -58,15 +61,15 @@ export struct FolderComponent {
   private mFolderItem: any;
   private mShowAppList: any = [];
   private mSuperposeAppList: any = [];
-  onAppIconClick?: Function = null;
-  onOpenFolderClick?: Function = null;
-  onFolderTouch?: Function = null;
-  onGetPosition?: Function = null;
-  buildMenu: Function = null;
+  onAppIconClick: Function = (event: ClickEvent, item: AppItemInfo) => {};
+  onOpenFolderClick: Function = (event: ClickEvent, folderItem: FolderItemInfo) => {};
+  onFolderTouch: Function = (event: ClickEvent, folderItem: FolderItemInfo) => {};
+  onGetPosition: Function = (callback: (x: number, y: number) => void) => {};
+  buildMenu: (item: FolderItemInfo) => MenuInfo[] = (item: FolderItemInfo) => [];
   folderNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   iconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
-  isSelect?: boolean;
-  dragStart: Function;
+  isSelect: boolean = false;
+  dragStart: Function = (event: DragEvent) => {};
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, `aboutToAppear start`);
@@ -78,12 +81,6 @@ export struct FolderComponent {
   }
 
   aboutToDisappear(): void {
-    this.onAppIconClick = null;
-    this.onOpenFolderClick = null;
-    this.onFolderTouch = null;
-    this.onGetPosition = null;
-    this.buildMenu = null;
-    this.dragStart = null;
   }
 
   updateShowList(): void {
@@ -132,7 +129,7 @@ export struct FolderComponent {
   private updateFolderAnimate() {
     Log.showInfo(TAG, `updateFolderAnimate start`);
     if (this.openFolderStatus == 0) {
-      this.folderAnimateData = AppStorage.get('folderAnimateData');
+      this.folderAnimateData = AppStorage.get('folderAnimateData') as { folderId: string; isOpenFolder: boolean; };
       if (this.mFolderItem.folderId === this.folderAnimateData.folderId &&
       this.folderAnimateData.isOpenFolder &&
       this.folderAnimateData.folderId != '' &&

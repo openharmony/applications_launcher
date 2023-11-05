@@ -30,12 +30,10 @@ export struct ScrollerComponent {
   @StorageLink('snapShotWidth') listWidth: number = 0;
   scroller: Scroller= new Scroller() ;
   private screenWidth = 800;
-  popupHide: Function= null;
-  updateData: Function= null;
+  popupHide: Function = () => {};
+  updateData: Function = (isUpdate: boolean, bundleName: string, callback: () => void) => {};
 
   aboutToDisappear(): void {
-    this.popupHide = null;
-    this.updateData = null;
   }
 
   build() {

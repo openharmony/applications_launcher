@@ -114,7 +114,10 @@ export default struct FolderItem {
     let openFolderData: {
       folderId: string,
       layoutInfo: any
-    } = AppStorage.get('openFolderData');
+    } = AppStorage.get('openFolderData') as {
+      folderId: string,
+      layoutInfo: any
+    };
 
     return openFolderData.folderId;
   }
