@@ -29,16 +29,16 @@ export default struct RecentMissionAppIcon {
   @State bundleName: string = '';
   @State moduleName: string = '';
   @State labelId: number = 0;
-  @State icon: string = ' ';
+  @State icon: string = '';
   @State useCache: boolean = true;
   private mIsSingleLayout: boolean = true;
   private mResourceManager = ResourceManager.getInstance();
-  private mDefaultAppIcon;
+  private mDefaultAppIcon?: ResourceStr;
   private mRecentMissionsViewModel: RecentMissionsViewModel = RecentMissionsViewModel.getInstance();
 
   aboutToAppear(): void  {
     this.mDefaultAppIcon = RecentsStyleConstants.DEFAULT_APP_ICON_IMAGE;
-    this.icon = this.mDefaultAppIcon;
+    // this.icon = this.mDefaultAppIcon;
     this.updateIcon();
     this.mIsSingleLayout = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ? true : false;
   }
@@ -48,7 +48,7 @@ export default struct RecentMissionAppIcon {
    *
    * @param {string} image - the value get from ResourceManager
    */
-  iconLoadCallback(image): void {
+  iconLoadCallback = (image: string): void => {
     this.icon = image;
   }
 
@@ -57,12 +57,17 @@ export default struct RecentMissionAppIcon {
    */
   updateIcon(): void {
     this.mResourceManager.getAppIconWithCache(this.appIcon,
-      this.bundleName, this.moduleName, this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+      this.bundleName, this.moduleName, this.iconLoadCallback, '');
   }
 
   build() {
     Column() {
-      Image(this.icon)
+      if (this.icon) {
+        Image(this.icon)
+      } else {
+        Image(this.mDefaultAppIcon)
+      }
+
     }
     .width(this.iconSize)
     .height(this.iconSize)

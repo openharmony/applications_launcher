@@ -26,7 +26,7 @@ struct FormManagerView {
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
   }
-  
+
   onPageHide(): void {
     Log.showInfo(TAG, `onPageHide`);
   }

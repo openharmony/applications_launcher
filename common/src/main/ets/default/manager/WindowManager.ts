@@ -55,6 +55,8 @@ class WindowManager {
 
   DOCK_RANK = Window.WindowType.TYPE_LAUNCHER_DOCK;
 
+  recentMode?: number;
+
   /**
    * get WindowManager instance
    *
@@ -292,10 +294,10 @@ class WindowManager {
   createRecentWindow(mode?: number) {
     Log.showDebug(TAG, 'createRecentWindow Begin, mode=' + mode);
     let setWinMode = (mode && this.isSplitWindowMode(mode)) ? (win) => {
-      globalThis.recentMode = mode;
+      windowManager.recentMode = mode;
       win.setWindowMode(mode).then();
     } : (win) => {
-      globalThis.recentMode = featureAbility.AbilityWindowConfiguration.WINDOW_MODE_FULLSCREEN;
+      windowManager.recentMode = featureAbility.AbilityWindowConfiguration.WINDOW_MODE_FULLSCREEN;
       win.setFullScreen(true).then(() => {
         Log.showDebug(TAG, `${this.RECENT_WINDOW_NAME} setFullScreen`);
       });
