@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { BaseStage } from '@ohos/common';
+import { BaseStage, LayoutViewModel } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
 import { bigFolderPreLoader } from '@ohos/bigfolder';
 import { formPreLoader } from '@ohos/form';
@@ -30,6 +30,7 @@ import PhoneFormLayoutConfig from './PhoneFormLayoutConfig';
  * phone product stage
  */
 export default class PhoneStage extends BaseStage {
+  mLayoutViewModel: LayoutViewModel;
   /**
    * Stage onCreate callback
    */
@@ -43,6 +44,8 @@ export default class PhoneStage extends BaseStage {
     bigFolderPreLoader.load();
     formPreLoader.load();
     NumBadgeManager.getInstance().registerNumBadge();
+    // init layout config
+    this.mLayoutViewModel = LayoutViewModel.getInstance();
   }
 
   /**

@@ -23,11 +23,18 @@ import { LayoutViewModel } from '@ohos/common';
 import { SmartDock } from '@ohos/smartdock/component';
 import { PageDesktopLayout } from '@ohos/pagedesktop/component';
 import { FolderOpenComponent } from '@ohos/bigfolder/component';
-import { BigFolderConstants } from '@ohos/bigfolder';
+import { BigFolderConstants, BigFolderStyleConfig } from '@ohos/bigfolder';
 import PhoneStage from '../common/PhoneStage';
 import StyleConstants from '../common/constants/StyleConstants';
+import { SmartDockStyleConfig } from '@ohos/smartdock';
+import PhonePageDesktopGridStyleConfig from '../common/PhonePageDesktopGridStyleConfig';
+import { FormStyleConfig } from '@ohos/form';
 
 const TAG = "EntryView";
+
+interface LocalEventListener {
+  onReceiveEvent: (event: string, params: string) => void;
+}
 
 @Entry
 @Component
@@ -39,7 +46,7 @@ struct EntryView {
   @State workSpaceHeight: number = 0;
   @State dockHeight: number = 0;
   private mStage: PhoneStage = new PhoneStage();
-  private mLayoutViewModel: LayoutViewModel;
+  // private mLayoutViewModel: LayoutViewModel;
   private navigationBarStatus: string | undefined;
 
   onPageShow(): void {
@@ -53,9 +60,6 @@ struct EntryView {
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear');
     this.mStage.onCreate();
-
-    // init layout config
-    this.mLayoutViewModel = LayoutViewModel.getInstance();
     this.getWindowSize();
     this.updateScreenSize();
 
@@ -63,12 +67,12 @@ struct EntryView {
     this.navigationBarStatus = SettingsModel.getInstance().getValue();
   }
 
-  registerPageDesktopNavigatorStatusChangeEvent(listener): void {
+  registerPageDesktopNavigatorStatusChangeEvent(listener: LocalEventListener): void {
     localEventManager.registerEventListener(listener, [EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE]);
   }
 
-  private readonly mLocalEventListener = {
-    onReceiveEvent: (event, params) => {
+  private readonly mLocalEventListener: LocalEventListener = {
+    onReceiveEvent: (event: string, params: string) => {
       Log.showDebug(TAG, `receive event: ${event}, params: ${params}`);
       if (event === EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE) {
         this.navigationBarStatus = params;
@@ -94,11 +98,11 @@ struct EntryView {
   private updateScreenInfo(): void {
     Log.showDebug(TAG, 'updateScreenInfo');
     if (this.screenWidth != 0 && this.screenHeight != 0) {
-      this.mLayoutViewModel.initScreen(this.navigationBarStatus);
-      globalThis.SmartDockStyleConfig.initConfig();
-      globalThis.PhonePageDesktopGridStyleConfig.initConfig();
-      globalThis.BigFolderStyleConfigInstance.initConfig();
-      globalThis.FormStyleConfigInstance.initConfig();
+      LayoutViewModel.getInstance().initScreen(this.navigationBarStatus);
+      SmartDockStyleConfig.getInstance();
+      PhonePageDesktopGridStyleConfig.getInstance();
+      BigFolderStyleConfig.getInstance();
+      FormStyleConfig.getInstance();
       this.updateScreenSize();
     }
   }
@@ -116,8 +120,8 @@ struct EntryView {
 
   private updateScreenSize(): void {
     this.workSpaceWidth = this.screenWidth;
-    this.workSpaceHeight = this.mLayoutViewModel.getWorkSpaceHeight();
-    this.dockHeight = this.mLayoutViewModel.getDockHeight();
+    this.workSpaceHeight = LayoutViewModel.getInstance().getWorkSpaceHeight() as number;
+    this.dockHeight = LayoutViewModel.getInstance().getDockHeight() as number;
     AppStorage.setOrCreate('workSpaceWidth', this.workSpaceWidth);
     AppStorage.setOrCreate('workSpaceHeight', this.workSpaceHeight);
     AppStorage.setOrCreate('dockHeight', this.dockHeight);
