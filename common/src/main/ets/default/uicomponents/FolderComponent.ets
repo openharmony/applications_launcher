@@ -204,7 +204,7 @@ export struct FolderComponent {
             .width(this.folderGridSize)
 
             Grid() {
-              ForEach(this.mShowAppList, (item) => {
+              ForEach(this.mShowAppList, (item: AppItemInfo) => {
                 GridItem() {
                   AppIcon({
                     iconSize: this.appIconSize,
@@ -222,7 +222,7 @@ export struct FolderComponent {
                     this.onAppIconClick(event, item);
                   }
                 })
-              }, (item) => JSON.stringify(item))
+              }, (item: AppItemInfo) => JSON.stringify(item))
 
               if (this.mSuperposeAppList.length > 0) {
                 GridItem() {

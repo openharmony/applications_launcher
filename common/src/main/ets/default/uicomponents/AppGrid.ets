@@ -54,7 +54,7 @@ export struct AppGrid {
 
   build() {
     Grid() {
-      ForEach(this.appGridList, (item) => {
+      ForEach(this.appGridList, (item: AppItemInfo) => {
         GridItem() {
           Column() {
             AppBubble({
@@ -88,7 +88,7 @@ export struct AppGrid {
         .width(this.appGridStyleConfig.mAppItemSize)
         .height(this.appGridStyleConfig.mAppItemSize)
         .transition({ scale: { x: 0.5, y: 0.5 } })
-      }, (item) => JSON.stringify(item))
+      }, (item: AppItemInfo) => JSON.stringify(item))
     }
     .columnsTemplate(this.getColumnsTemplate())
     .rowsTemplate(this.getRowsTemplate())
