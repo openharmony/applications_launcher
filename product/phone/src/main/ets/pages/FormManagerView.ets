@@ -23,12 +23,10 @@ const TAG = "FormManagerView";
 @Entry
 @Component
 struct FormManagerView {
-  private mFormInfo: Object = {};
-
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
   }
-
+  
   onPageHide(): void {
     Log.showInfo(TAG, `onPageHide`);
   }

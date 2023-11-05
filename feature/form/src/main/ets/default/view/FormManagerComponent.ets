@@ -34,7 +34,7 @@ export struct FormManagerComponent {
   @StorageLink('formMgrItem') formItem: Array<CardItemInfo> = [];
   @State allowUpdate: boolean = false;
   private mSwiperController: SwiperController = new SwiperController();
-  private mFormModel: FormModel;
+  private mFormModel: FormModel = FormModel.getInstance();
   private mSwiperIndex: number = 0;
   @State enabledDomEventResponse: boolean = true;
   @State chooseCardId: number = -1;
@@ -148,8 +148,8 @@ export struct FormManagerComponent {
         .margin({top: 10 * StyleConstants.DPI_RATIO, bottom: 8 * StyleConstants.DPI_RATIO })
       Column({ space: 5 }) {
         Swiper(this.mSwiperController) {
-          ForEach(this.formItem, (formItem) => {
-            ForEach(formItem.supportDimensions, (dimensionItem) => {
+          ForEach(this.formItem, (formItem: CardItemInfo) => {
+            ForEach(formItem.supportDimensions, (dimensionItem: number) => {
               Column() {
                 Text(formItem.description)
                   .width('70%')
@@ -161,11 +161,11 @@ export struct FormManagerComponent {
                     direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
                     if (this.formAppInfo.bundleName == formItem.bundleName) {
                       FormComponent({
-                        id: formItem.cardId,
-                        name: formItem.cardName,
-                        bundle: formItem.bundleName,
-                        ability: formItem.abilityName,
-                        module: formItem.moduleName,
+                        id: formItem.cardId as number,
+                        name: formItem.cardName as string,
+                        bundle: formItem.bundleName as string,
+                        ability: formItem.abilityName as string,
+                        module: formItem.moduleName as string,
                         dimension: dimensionItem,
                       })
                         .enabled(false)
@@ -193,8 +193,8 @@ export struct FormManagerComponent {
                 }
                 .height('80%')
               }.width('100%')
-            }, (dimensionItem) => JSON.stringify(dimensionItem))
-          }, (formItem) => JSON.stringify(formItem))
+            }, (dimensionItem: number) => JSON.stringify(dimensionItem))
+          }, (formItem: CardItemInfo) => JSON.stringify(formItem))
         }.width('100%')
         .height('100%')
         .loop(false)
