@@ -38,6 +38,7 @@ import ServiceFormItem from '../common/uicomponents/ServiceFormItem';
 import ThisStyleConstants from '../common/constants/StyleConstants';
 import GridRowUtils from '../manager/GridRowManager';
 import ServiceFormManager from '../manager/ServiceFormManager';
+import { PageDesktopViewModel } from '../../../../../../pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
 
 const TAG = 'FormServiceComponent';
 
@@ -53,18 +54,17 @@ export struct FormServiceComponent {
   private readonly mServiceFormManager: ServiceFormManager = ServiceFormManager.getInstance();
   private mFormModel: FormModel = FormModel.getInstance();
   private mAppModel: AppModel = AppModel.getInstance();
-  private clickedformApp: AppItemInfo | null = null;
-  private clearForm = () => {};
-  private gridRowUtils: GridRowUtils;
-  private formServiceWidth: number;
-  private titleBarWidth: number;
+  private clickedformApp: AppItemInfo = new AppItemInfo();
+  private clearForm: Function = () => {};
+  private gridRowUtils: GridRowUtils = new GridRowUtils(0, 0, 0);
+  private formServiceWidth: number = 0;
+  private titleBarWidth: number = 0;
   private sysUITopHeight: number = 0;
   private sysUIBottomHeight: number = 0;
   private scrollerWrapHeight: number = 0;
   private scroller: Scroller = new Scroller();
   @StorageProp('cornerRadiusDefaultL') cornerRadiusDefaultL: number = px2vp(ResourceManager.getInstance()
     .getNumberByResource($r('sys.float.ohos_id_corner_radius_default_l')));
-  private readonly listener = this.onAppStateChanged.bind(this);
 
   private async initServiceFormInfo(): Promise<void> {
     // 从包管理获取app
@@ -75,16 +75,17 @@ export struct FormServiceComponent {
     let recommendForms: CardItemInfo[] = await this.mServiceFormManager.getServiceForm();
     Log.showInfo(TAG, `recommendCardsDataPool has ${recommendForms.length} cards`);
     // 卡片信息补全
-    await this.mServiceFormManager.formInfoComplete(recommendForms, this.formAppInfos);
+    this.mServiceFormManager.formInfoComplete(recommendForms, this.formAppInfos);
     // 获取展示卡片
     this.showFormInfos = this.mServiceFormManager.getShowFormInfos(recommendForms);
     Log.showInfo(TAG, `this.showFormInfos has ${this.showFormInfos.length} cards`);
   }
 
-  private onAppStateChanged() {
+  private onAppStateChanged = () => {
     // 推荐卡片更新后需要重新获取推荐列表
     this.initServiceFormInfo();
   }
+  private readonly listener = this.onAppStateChanged;
 
   /**
    * 返回箭头
@@ -142,17 +143,17 @@ export struct FormServiceComponent {
     if (SettingsModel.getInstance().getDevice() == CommonConstants.DEFAULT_DEVICE_TYPE) {
       this.mFormModel.doBeforeJumpToFormManager(formAppInfo.bundleName).then(() => {
         AppStorage.setOrCreate('formAppInfo', formAppInfo);
-        globalThis.createWindowWithName(windowManager.FORM_MANAGER_WINDOW_NAME, windowManager.RECENT_RANK);
+        windowManager.createWindowWithName(windowManager.FORM_MANAGER_WINDOW_NAME, windowManager.RECENT_RANK);
       })
     } else {
       this.clickedformApp = JSON.parse(JSON.stringify(formAppInfo));
-      this.formManagerDialogController.open();
+      this.formManagerDialogController?.open();
     }
   }
 
   formManagerDialogController: CustomDialogController | null = new CustomDialogController({
     builder: FormManagerDialog({
-      cancel: (callback?) => {
+      cancel: (callback?: () => void) => {
         // delete all form
         if (callback !== undefined) {
           this.clearForm = callback;
@@ -160,12 +161,12 @@ export struct FormServiceComponent {
           Log.showError(TAG, `FormManagerDialog callback error`); // 维测日志
         }
       },
-      confirm: (formCardItem) => {
-        globalThis.PageDesktopViewModel?.createCardToDeskTop(formCardItem);
+      confirm: (formCardItem: CardItemInfo) => {
+        PageDesktopViewModel.getInstance().createCardToDeskTop(formCardItem);
       },
-      bundleName: this.clickedformApp.bundleName,
-      appName: this.clickedformApp.appName,
-      appLabelId: this.clickedformApp.appLabelId
+      bundleName: this.clickedformApp.bundleName as string,
+      appName: this.clickedformApp.appName as string,
+      appLabelId: this.clickedformApp.appLabelId as number
     }),
     cancel: this.cancelFormDialog,
     autoCancel: true,
@@ -179,19 +180,19 @@ export struct FormServiceComponent {
     this.clearForm();
   }
 
-  formAppClick(event: ClickEvent, appItem: AppItemInfo): void {
+  formAppClick = (event: ClickEvent, appItem: AppItemInfo): void => {
     if (SettingsModel.getInstance().getDevice() == CommonConstants.DEFAULT_DEVICE_TYPE) {
       this.mFormModel.doBeforeJumpToFormManager(appItem.bundleName).then(() => {
         AppStorage.setOrCreate('formAppInfo', appItem);
-        globalThis.createWindowWithName(windowManager.FORM_MANAGER_WINDOW_NAME, windowManager.RECENT_RANK);
+        windowManager.createWindowWithName(windowManager.FORM_MANAGER_WINDOW_NAME, windowManager.RECENT_RANK);
       })
     } else {
       this.clickedformApp = appItem;
-      this.formManagerDialogController.open();
+      this.formManagerDialogController?.open();
     }
   }
 
-  private getFormWidth(dimension: number): number {
+  private getFormWidth(dimension?: number): number {
     if (dimension == CommonConstants.CARD_DIMENSION_2x4) {
       return this.gridRowUtils.getSpanWidth(4);
     }
@@ -201,7 +202,7 @@ export struct FormServiceComponent {
     return 0;
   }
 
-  private getFormHeight(dimension: number): number {
+  private getFormHeight(dimension?: number): number {
     if (dimension == CommonConstants.CARD_DIMENSION_2x4
       || dimension == CommonConstants.CARD_DIMENSION_2x2) {
       return this.gridRowUtils.getSpanWidth(2);
@@ -222,7 +223,7 @@ export struct FormServiceComponent {
    *
    * @param formInfo 卡片信息
    */
-  private createAddFormToDesktopMenuInfo(formItem): MenuInfo[] {
+  private createAddFormToDesktopMenuInfo(formItem: CardItemInfo): MenuInfo[] {
     let menuInfoList: MenuInfo[] = new Array<MenuInfo>();
     let addFormToDesktopMenuInfo: MenuInfo = new MenuInfo();
     addFormToDesktopMenuInfo.menuType = CommonConstants.MENU_TYPE_FIXED;
@@ -231,20 +232,20 @@ export struct FormServiceComponent {
     addFormToDesktopMenuInfo.onMenuClick = (): void => {
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_OPEN_FOLDER_TO_CLOSE, null);
       let formInfo: CardItemInfo = this.getChoosedCard(formItem);
-      globalThis.PageDesktopViewModel?.createCardToDeskTop(formInfo);
+      PageDesktopViewModel.getInstance().createCardToDeskTop(formInfo);
       this.backToDeskTop();
     };
     menuInfoList.push(addFormToDesktopMenuInfo);
     return menuInfoList;
   }
 
-  private getChoosedCard(choosedItem): CardItemInfo {
+  private getChoosedCard(choosedItem: CardItemInfo): CardItemInfo {
     let formItem = choosedItem;
-    formItem.id = choosedItem.cardId;
-    formItem.name = choosedItem.cardName;
-    formItem.dimension = choosedItem.cardDimension;
-    formItem.dragLayerWidth = this.getFormWidth(formItem.dimension) * 1.05;
-    formItem.dragLayerHeight = this.getFormHeight(formItem.dimension) * 1.05;
+    formItem.cardId = choosedItem.cardId;
+    formItem.cardName = choosedItem.cardName;
+    formItem.cardDimension = choosedItem.cardDimension;
+    formItem.dragLayerWidth = this.getFormWidth(formItem.cardDimension) * 1.05;
+    formItem.dragLayerHeight = this.getFormHeight(formItem.cardDimension) * 1.05;
     return formItem;
   }
 
@@ -286,7 +287,7 @@ export struct FormServiceComponent {
                   y: $r('sys.float.ohos_id_card_margin_middle')
                 }
               }) {
-                ForEach(this.showFormInfos, (item: CardItemInfo, index) => {
+                ForEach(this.showFormInfos, (item: CardItemInfo, index: number) => {
                   GridCol({
                     span: item.cardDimension == CommonConstants.CARD_DIMENSION_2x4 ? 4 : 2
                   }) {
@@ -302,7 +303,7 @@ export struct FormServiceComponent {
                         this.formClick(event, item);
                       })
                   }
-                }, (item) => JSON.stringify(item))
+                }, (item: CardItemInfo) => JSON.stringify(item))
               }
             }
             .width(this.formServiceWidth)
@@ -321,11 +322,11 @@ export struct FormServiceComponent {
                     appLabelId: Number(item.appLabelId).valueOf(),
                     iconId: item.appIconId,
                     item: item,
-                    clickApp: this.formAppClick.bind(this),
+                    clickApp: this.formAppClick,
                     idIndex: index
                   })
                 }
-              }, (item) => JSON.stringify(item))
+              }, (item: AppItemInfo) => JSON.stringify(item))
             }
             .divider({
               strokeWidth: ThisStyleConstants.SERVICE_FORM_APP_ITEM_GROUP_DIVIDER_WIDTH,

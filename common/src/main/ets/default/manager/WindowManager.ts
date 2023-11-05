@@ -428,6 +428,15 @@ class WindowManager {
       });
   }
 
+  createWindowWithName = ((windowName: string, windowRank: number): void => {
+    Log.showInfo(TAG, `createWindowWithName begin windowName: ${windowName}`);
+    if (windowName === windowManager.RECENT_WINDOW_NAME) {
+      windowManager.createRecentWindow();
+    } else {
+      windowManager.createWindowIfAbsent(globalThis.desktopContext, windowName, windowRank, 'pages/' + windowName);
+    }
+  })
+
 }
 
 export const windowManager = WindowManager.getInstance();

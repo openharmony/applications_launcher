@@ -81,4 +81,6 @@ export class CardItemInfo {
    * GridLayoutItemInfo: total count of card
    */
   totalDimensionCount: number | undefined;
+  dragLayerWidth?: number;
+  dragLayerHeight?: number;
 }
