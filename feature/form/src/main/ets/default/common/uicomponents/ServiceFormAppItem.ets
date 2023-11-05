@@ -22,6 +22,7 @@ import {
   Log
 } from '@ohos/common';
 import ThisStyleConstants from '../../common/constants/StyleConstants';
+import { PageDesktopViewModel } from '../../../../../../../pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
 
 const TAG = 'ServiceFormAppItem';
 
@@ -33,18 +34,18 @@ export default struct ServiceFormAppItem {
   bundleName: string = '';
   abilityName: string = '';
   moduleName: string = '';
-  appLabelId: number;
-  iconId: number;
+  appLabelId: number = 0;
+  iconId: number = 0;
   @State appName: string = '';
   mDefaultAppIcon: string = '';
   clickApp?: Function | null = null;
-  private item: AppItemInfo;
-  private mResourceManager: ResourceManager;
+  private item: AppItemInfo = new AppItemInfo();
+  private mResourceManager: ResourceManager = ResourceManager.getInstance();
   private mIconSize: number = ThisStyleConstants.FORM_SERVICE_APP_ICON_SIZE_WIDTH;
-  private mNameLines: number = globalThis.PageDesktopViewModel?.getPageDesktopStyleConfig().mNameLines;
+  private mNameLines: number = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig().mNameLines;
   private mNameMarginLeft: number = ThisStyleConstants.FORM_SERVICE_APP_NAME_MARGIN_LEFT;
   private mAppItemHeight: number = ThisStyleConstants.FORM_SERVICE_APP_ITEM_HEIGHT;
-  private idIndex: number;
+  private idIndex: number = 0;
 
   aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
@@ -54,10 +55,10 @@ export default struct ServiceFormAppItem {
 
   private updateIcon(): void  {
     this.mResourceManager.getAppIconWithCache(this.iconId, this.bundleName, this.moduleName,
-    this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    this.iconLoadCallback, this.mDefaultAppIcon);
   }
 
-  private iconLoadCallback(image: string): void  {
+  private iconLoadCallback = (image: string): void => {
     Log.showInfo(TAG, `iconLoadCallback  ${this.bundleName}   ${this.abilityName}`);
     if (SettingsModel.getInstance().getDevice() == CommonConstants.PAD_DEVICE_TYPE
     && this.bundleName == CommonConstants.LAUNCHER_BUNDLE) {
@@ -70,12 +71,12 @@ export default struct ServiceFormAppItem {
   private updateName(): void  {
     if (CheckEmptyUtils.isEmpty(this.appName)) {
       this.mResourceManager.getAppNameWithCache(this.appLabelId, this.bundleName, this.moduleName,
-      this.appName, this.appNameLoadCallback.bind(this));
+      this.appName, this.appNameLoadCallback);
       return;
     }
   }
 
-  private appNameLoadCallback(name: string): void  {
+  private appNameLoadCallback = (name: string): void => {
     this.appName = name;
   }
 
