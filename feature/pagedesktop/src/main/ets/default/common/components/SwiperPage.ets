@@ -19,15 +19,31 @@ import {
   CommonConstants,
   PresetStyleConstants,
   localEventManager,
-  EventConstants
+  EventConstants,
+  CardItemInfo
 } from '@ohos/common';
 import AppItem from './AppItem';
 import FormItem from './FormItem';
 import FolderItem from './FolderItem';
 import { PageDesktopGridStyleConfig } from '../PageDesktopGridStyleConfig';
+import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
+import { PageDesktopViewModel } from '../../viewmodel/PageDesktopViewModel';
 
 const TAG = "SwiperPage";
 const APP_INFO_REFRESH_DELAY = 1000;
+
+interface AppListInfo {
+  appGridInfo: LauncherDragItemInfo[][]
+}
+interface GridLayout {
+  id: number;
+  layout: string;
+  name: string;
+  value: number;
+  row: number;
+  column: number;
+  checked: boolean;
+}
 
 @Component
 export default struct SwiperPage {
@@ -42,18 +58,16 @@ export default struct SwiperPage {
   @State mPaddingTop: number = 0;
   @State mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   @State mMarginTop: number = 0;
-  @Link @Watch('updateAppListInfo') appListInfo: {
-    appGridInfo: [[]]
-  };
+  @Link @Watch('updateAppListInfo') appListInfo: AppListInfo;
   @Prop swiperPage: number;
   @State mAppListInfo: LauncherDragItemInfo[] = this.appListInfo.appGridInfo[this.swiperPage];
-  private mPageDesktopViewModel;
-  private mPageDesktopStyleConfig:PageDesktopGridStyleConfig;
-  private mGridWidth : number;
-  private mGridHeight: number;
-  private mIconSize: number;
-  private mGridSpaceWidth : number;
-  private mGridSpaceHeight: number;
+  private mPageDesktopViewModel?: PageDesktopViewModel;
+  private mPageDesktopStyleConfig = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig();
+  private mGridWidth : number = 0;
+  private mGridHeight: number = 0;
+  private mIconSize: number = 0;
+  private mGridSpaceWidth : number = 0;
+  private mGridSpaceHeight: number = 0;
 
   private updateAppListInfo(): void {
     this.mAppListInfo = this.appListInfo.appGridInfo[this.swiperPage];
@@ -61,12 +75,13 @@ export default struct SwiperPage {
 
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear');
+    this.mPageDesktopViewModel = PageDesktopViewModel.getInstance();
     this.updateDeskTopScreen();
   }
 
   updateDeskTopScreen(): void {
     Log.showInfo(TAG, 'updateDeskTopScreen');
-    this.mPageDesktopStyleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
+    this.mPageDesktopStyleConfig = this.mPageDesktopViewModel?.getPageDesktopStyleConfig();
     this.mMargin = this.mPageDesktopStyleConfig.mMargin;
     this.mColumnsGap = this.mPageDesktopStyleConfig.mColumnsGap;
     this.mRowsGap = this.mPageDesktopStyleConfig.mRowsGap;
@@ -76,8 +91,8 @@ export default struct SwiperPage {
     this.mGridWidth = this.mPageDesktopStyleConfig.mGridWidth;
     this.mGridHeight = this.mPageDesktopStyleConfig.mGridHeight;
     this.mIconSize = this.mPageDesktopStyleConfig.mIconSize;
-    this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
-    this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
+    this.mGridSpaceWidth = Number(this.mPageDesktopViewModel?.getWorkSpaceWidth()) - this.mMargin;
+    this.mGridSpaceHeight = Number(this.mPageDesktopViewModel?.getWorkSpaceHeight());
     this.changeConfig();
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
   }
@@ -87,9 +102,9 @@ export default struct SwiperPage {
   }
 
   private changeConfig(): void {
-    let mGridConfig = this.mPageDesktopViewModel.getGridConfig();
-    let column = mGridConfig.column;
-    let row = mGridConfig.row;
+    let mGridConfig = this.mPageDesktopViewModel?.getGridConfig() as GridLayout;
+    let column = mGridConfig.column as number;
+    let row = mGridConfig.row as number;
     this.ColumnsTemplate = '';
     this.RowsTemplate = '';
     for (let i = 0;i < column; i++) {
@@ -107,14 +122,14 @@ export default struct SwiperPage {
     }
     let curPageIndex: number = AppStorage.get('pageIndex') as number;
     if ((moveX - this.mIconSize / 2) < this.mMargin && curPageIndex > 0 && moveY < this.mGridSpaceHeight) {
-      this.mPageDesktopViewModel.showPrevious();
+      this.mPageDesktopViewModel?.showPrevious();
       this.movingIconSwapPageDelay();
     } else if ((moveX + this.mIconSize / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
-      let cachePageIndex = this.mPageDesktopViewModel.getGridPageCount();
-      if (curPageIndex === cachePageIndex - 1 && !this.mPageDesktopViewModel.isBlankPage()) {
-        this.mPageDesktopViewModel.addBlankPage(true);
+      let cachePageIndex = this.mPageDesktopViewModel?.getGridPageCount();
+      if (curPageIndex === cachePageIndex - 1 && !this.mPageDesktopViewModel?.isBlankPage()) {
+        this.mPageDesktopViewModel?.addBlankPage(true);
       } else if(curPageIndex < cachePageIndex - 1) {
-        this.mPageDesktopViewModel.showNext();
+        this.mPageDesktopViewModel?.showNext();
       }
       this.movingIconSwapPageDelay();
     }
@@ -130,8 +145,24 @@ export default struct SwiperPage {
     }, APP_INFO_REFRESH_DELAY);
   }
 
-  private buildLog(item): boolean {
+  private buildLog(item: LauncherDragItemInfo): boolean {
     return true;
+  }
+
+  getRowEnd(item: LauncherDragItemInfo): number {
+    let result = 0;
+    if (item.row && item.area?.length) {
+      result = item.row + item.area[1] - 1;
+    }
+    return result;
+  }
+
+  getColumnEnd(item: LauncherDragItemInfo): number {
+    let result = 0;
+    if (item.column && item.area?.length) {
+      result = item.column + item.area[0] - 1;
+    }
+    return result;
   }
 
   build() {
@@ -153,7 +184,7 @@ export default struct SwiperPage {
             }).id(`${TAG}_FolderItem_${index}`)
           } else if (item.typeId === CommonConstants.TYPE_CARD) {
             FormItem({
-              formItem: item
+              formItem: item as CardItemInfo
             }).id(`${TAG}_FormItem_${index}`)
           }
         }
@@ -161,8 +192,8 @@ export default struct SwiperPage {
         .padding({ top: this.mPaddingTop })
         .rowStart(item.row)
         .columnStart(item.column)
-        .rowEnd(item.row + item.area[1] - 1)
-        .columnEnd(item.column + item.area[0] - 1)
+        .rowEnd(this.getRowEnd(item))
+        .columnEnd(this.getColumnEnd(item))
       }, (item: LauncherDragItemInfo, index: number) => {
         if (item.typeId === CommonConstants.TYPE_FOLDER) {
           return JSON.stringify(item);
@@ -170,6 +201,8 @@ export default struct SwiperPage {
           return JSON.stringify(item) + this.formRefresh;
         } else if (item.typeId === CommonConstants.TYPE_APP) {
           return JSON.stringify(item);
+        } else {
+          return '';
         }
       })
     }
@@ -213,7 +246,7 @@ export default struct SwiperPage {
       Log.showInfo(TAG, `onDrop event: [${event.getWindowX()}, ${event.getWindowY()}]`);
       if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP
       || (dragItemType === CommonConstants.DRAG_FROM_DOCK && AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE)) {
-        const dragResult = globalThis.PageDesktopDragHandler.onDragDrop(event.getWindowX(), event.getWindowY());
+        const dragResult = PageDesktopDragHandler.getInstance().onDragDrop(event.getWindowX(), event.getWindowY());
         Log.showInfo(TAG, `onDrop dragResult: ${dragResult}`);
         AppStorage.setOrCreate('selectAppIndex', null);
         if (!dragResult) {

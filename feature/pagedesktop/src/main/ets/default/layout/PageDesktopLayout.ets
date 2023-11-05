@@ -24,7 +24,7 @@ import { PageDesktopDragHandler } from '../common/PageDesktopDragHandler';
 import { PageDesktopViewModel } from '../viewmodel/PageDesktopViewModel';
 import { PageDesktopCloseAppHandler } from '../common/PageDesktopCloseAppHandler';
 
-let mPageDesktopViewModel: PageDesktopViewModel | null = null;
+let mPageDesktopViewModel: PageDesktopViewModel | undefined = undefined;
 const TAG = "PageDesktopLayout";
 
 @Component
@@ -76,7 +76,7 @@ export struct PageDesktopLayout {
 
   private updateStyle() {
     mPageDesktopViewModel?.setDevice(this.deviceType);
-    this.isPad = mPageDesktopViewModel?.getDevice();
+    this.isPad = mPageDesktopViewModel?.getDevice() as boolean;
     Log.showDebug(TAG, `updateStyle isPad: ${this.isPad}`);
   }
 
