@@ -16,17 +16,19 @@
 import { StyleConstants } from '../constants/StyleConstants';
 import { amsMissionManager }from '../manager/AmsMissionManager'
 
+interface DataList {
+  name: string;
+  image: ResourceStr | PixelMap;
+  missionId: number;
+  boxSize: number;
+  bundleName: string;
+  left?: number;
+  right?: number;
+}
+
 @Component
 export struct ScrollerComponent {
-  @StorageLink('snapshotList') dataList: {
-    name: any,
-    image: any,
-    missionId: number,
-    boxSize: number,
-    bundleName: string,
-    left?: number,
-    right?: number,
-  }[] = [];
+  @StorageLink('snapshotList') dataList: DataList[] = [];
   @StorageLink('snapShotWidth') listWidth: number = 0;
   scroller: Scroller= new Scroller() ;
   private screenWidth = 800;
@@ -60,7 +62,7 @@ export struct ScrollerComponent {
 
       Scroll(this.scroller) {
         Row({ space: StyleConstants.DEFAULT_14 }) {
-          ForEach(this.dataList, (item) => {
+          ForEach(this.dataList, (item: DataList) => {
             Column() {
               Row() {
                 Text(item.name.toString())
@@ -103,7 +105,7 @@ export struct ScrollerComponent {
             .width(item.boxSize)
             .borderRadius(StyleConstants.DEFAULT_5)
             .justifyContent(FlexAlign.Center)
-          }, item => JSON.stringify(item))
+          }, (item: DataList) => JSON.stringify(item))
         }
         .alignItems(VerticalAlign.Center)
         .margin({

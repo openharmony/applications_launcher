@@ -20,17 +20,19 @@ import { LayoutViewModel } from '../viewmodel/LayoutViewModel';
 export struct RemoveFormDialog {
   @StorageLink('isPad') isPad: boolean = false;
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
-  mRemoveFormDialogWidth: string;
+  mRemoveFormDialogWidth: string = '';
   controller?: CustomDialogController;
   cancel: () => void = () => {
   };
   confirm: () => void = () => {
   };
-  dialogName: string;
-  private mLayoutViewModel: LayoutViewModel;
+  dialogName: string = '';
+  private mLayoutViewModel?: LayoutViewModel;
 
   private async updateScreenSize() {
-    this.mRemoveFormDialogWidth = this.mLayoutViewModel.getCommonDialogWidth();
+    if (this.mLayoutViewModel?.getCommonDialogWidth()) {
+      this.mRemoveFormDialogWidth = this.mLayoutViewModel?.getCommonDialogWidth();
+    }
   }
 
   aboutToAppear(): void  {
@@ -72,7 +74,7 @@ export struct RemoveFormDialog {
             .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
             .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
             .onClick(() => {
-              this.controller.close();
+              this.controller?.close();
               this.cancel()
             })
 
@@ -90,7 +92,7 @@ export struct RemoveFormDialog {
             .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
             .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
             .onClick(() => {
-              this.controller.close();
+              this.controller?.close();
               this.confirm()
             })
           }
