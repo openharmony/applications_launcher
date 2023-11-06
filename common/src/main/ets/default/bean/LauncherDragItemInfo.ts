@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { AppItemInfo } from './AppItemInfo';
 
 /**
  * drag item info
@@ -52,4 +53,5 @@ export class LauncherDragItemInfo {
   row: number | undefined;
   bundleType: number | undefined;
   totalDimensionCount: number | undefined;
+  layoutInfo?: AppItemInfo[][]
 }

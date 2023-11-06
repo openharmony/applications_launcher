@@ -30,8 +30,8 @@ import { MenuInfo } from '../bean';
 const TAG = 'FolderComponent';
 
 interface FolderAnimateData {
-  folderId: string;
-  isOpenFolder: boolean;
+  folderId?: string;
+  isOpenFolder?: boolean;
 }
 
 class FolderItem {
@@ -71,14 +71,14 @@ export struct FolderComponent {
   badgeNumber: number = 0;
   private mSettingsModel: SettingsModel = SettingsModel.getInstance();
   private isPad: boolean = false;
-  private mFolderItem: FolderItem = new FolderItem();
+  private mFolderItem: LauncherDragItemInfo = new LauncherDragItemInfo();
   private mShowAppList: AppItemInfo[] = [];
   private mSuperposeAppList: SuperposeApp[] = [];
   onAppIconClick: Function = (event: ClickEvent, item: AppItemInfo) => {};
   onOpenFolderClick: Function = (event: ClickEvent, folderItem: FolderItemInfo) => {};
   onFolderTouch: Function = (event: ClickEvent, folderItem: FolderItemInfo) => {};
   onGetPosition: Function = (callback: (x: number, y: number) => void) => {};
-  buildMenu: (item: FolderItem) => MenuInfo[] = (item: FolderItem) => [];
+  buildMenu: (item: LauncherDragItemInfo) => MenuInfo[] = (item: LauncherDragItemInfo) => [];
   folderNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   iconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
   isSelect: boolean = false;
@@ -97,6 +97,7 @@ export struct FolderComponent {
   }
 
   updateShowList(): void {
+    if (typeof this.mFolderItem.layoutInfo === 'undefined') return;
     if (this.mFolderItem.layoutInfo[0].length > CommonConstants.FOLDER_STATIC_SHOW_LENGTH) {
       this.mShowAppList = this.mFolderItem.layoutInfo[0].slice(0, CommonConstants.FOLDER_STATIC_SHOW_LENGTH);
     } else {

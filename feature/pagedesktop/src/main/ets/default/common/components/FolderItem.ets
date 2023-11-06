@@ -22,7 +22,9 @@ import {
   Trace,
   StyleConstants,
   CommonConstants,
-  PresetStyleConstants
+  PresetStyleConstants,
+  AppItemInfo,
+  FolderItemInfo
 } from '@ohos/common';
 import {
   BigFolderViewModel,
@@ -46,7 +48,7 @@ export default struct FolderItem {
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
   private mAppNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   private mAppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
-  private folderItem: any;
+  private folderItem: LauncherDragItemInfo = new LauncherDragItemInfo();
   private isSwappingPage = false;
   private mAppItemWidth: number = 0;
   private mPageDesktopViewModel: PageDesktopViewModel;
@@ -104,7 +106,7 @@ export default struct FolderItem {
   /**
    * When rename is clicked, call this function to change folder state.
    */
-  private renameClick() {
+  private renameClick = () => {
     Log.showInfo(TAG, 'click menu folder rename');
     AppStorage.setOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     this.mBigFolderViewModel.openFolder(true, this.folderItem);
@@ -122,13 +124,14 @@ export default struct FolderItem {
     return openFolderData.folderId;
   }
 
-  dragStart(event: DragEvent): CustomBuilder {
+  dragStart = (event: DragEvent): CustomBuilder => {
     ContextMenu.close();
     this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
-    this.pageDesktopDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.folderItem);
-    const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getWindowX(), event.getWindowY());
-    const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getWindowX(), event.getWindowY())
-    globalThis.PageDesktopDragHandler.mStartPosition = startPosition;
+    this.folderItem.isDragging = true;
+    this.pageDesktopDragItemInfo = this.folderItem;
+    const selectAppIndex = PageDesktopDragHandler.getInstance().getItemIndex(event.getWindowX(), event.getWindowY());
+    const startPosition = PageDesktopDragHandler.getInstance().getTouchPosition(event.getWindowX(), event.getWindowY())
+    PageDesktopDragHandler.getInstance().mStartPosition = startPosition;
     AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
     Log.showInfo(TAG, `onDragStart event: [${event.getWindowX()}, ${event.getWindowY()}], selectAppIndex: ${selectAppIndex}`);
   }
@@ -155,23 +158,23 @@ export default struct FolderItem {
           gridGap:this.mFolderStyleConfig.mFolderGridGap,
           iconNameMargin: this.mFolderStyleConfig.mIconNameMargin,
           nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
-          onAppIconClick: (event, appItem) => {
+          onAppIconClick: (event: ClickEvent, appItem: AppItemInfo) => {
             Log.showInfo(TAG, "onAppIconClick");
             Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
             this.setStartAppInfo(appItem);
             this.mPageDesktopViewModel.openApplication(appItem.abilityName, appItem.bundleName, appItem.moduleName);
           },
-          onOpenFolderClick: (event, folderItem) => {
+          onOpenFolderClick: (event: ClickEvent, folderItem: FolderItemInfo) => {
             Log.showInfo(TAG, "onOpenFolderClick");
             Trace.start(Trace.CORE_METHOD_OPEN_FOLDER);
             this.mBigFolderViewModel.openFolder(false, folderItem);
           },
-          onFolderTouch: (event, folderItem) => {
+          onFolderTouch: (event: TouchEvent, folderItem: FolderItemInfo) => {
             if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
-              let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
+              let mIsDragEffectArea = PageDesktopDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
               Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
               if (!mIsDragEffectArea) {
-                globalThis.PageDesktopDragHandler.deleteBlankPageOutsideEffect();
+                PageDesktopDragHandler.getInstance().deleteBlankPageOutsideEffect();
                 AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
                 AppStorage.setOrCreate('selectAppIndex', null);
               }
@@ -180,8 +183,8 @@ export default struct FolderItem {
           onGetPosition: (getPosition: Function) => {
             Log.showInfo(TAG, "onGetPosition");
             let styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
-            let row = this.folderItem.row;
-            let column = this.folderItem.column;
+            let row = this.folderItem.row as number;
+            let column = this.folderItem.column as number;
             Log.showInfo(TAG, `onGetPosition currentFolderPosition row: ${row}, column: ${column}`);
             let x = styleConfig.mAppItemSize * column
             + styleConfig.mColumnsGap * column + styleConfig.mMargin + styleConfig.mIconMarginHorizontal;
@@ -191,8 +194,8 @@ export default struct FolderItem {
             getPosition(x, y);
           },
           buildMenu: (folderItem) =>
-          this.mPageDesktopViewModel.buildRenameMenuInfoList(folderItem, this.renameClick.bind(this)),
-          dragStart: this.dragStart.bind(this)
+          this.mPageDesktopViewModel.buildRenameMenuInfoList(folderItem, this.renameClick),
+          dragStart: this.dragStart
         })
       }
       .visibility((this.pageDesktopDragItemInfo.folderId === this.folderItem.folderId || (this.openFolderStatus != 0 && this.getOpenFolder() == this.folderItem.folderId)) ? Visibility.Hidden : Visibility.Visible)
@@ -221,7 +224,7 @@ export default struct FolderItem {
   /**
   * set start app info
   */
-  private setStartAppInfo(appItem) {
+  private setStartAppInfo(appItem: AppItemInfo) {
     AppStorage.setOrCreate('startAppItemInfo', appItem);
     AppStorage.setOrCreate('startAppFromFolderItemInfo', this.folderItem);
     AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_FOLDER);
