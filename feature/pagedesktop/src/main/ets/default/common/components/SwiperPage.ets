@@ -81,7 +81,7 @@ export default struct SwiperPage {
 
   updateDeskTopScreen(): void {
     Log.showInfo(TAG, 'updateDeskTopScreen');
-    this.mPageDesktopStyleConfig = this.mPageDesktopViewModel?.getPageDesktopStyleConfig();
+    this.mPageDesktopStyleConfig = this.mPageDesktopViewModel?.getPageDesktopStyleConfig() as PageDesktopGridStyleConfig;
     this.mMargin = this.mPageDesktopStyleConfig.mMargin;
     this.mColumnsGap = this.mPageDesktopStyleConfig.mColumnsGap;
     this.mRowsGap = this.mPageDesktopStyleConfig.mRowsGap;
@@ -125,7 +125,7 @@ export default struct SwiperPage {
       this.mPageDesktopViewModel?.showPrevious();
       this.movingIconSwapPageDelay();
     } else if ((moveX + this.mIconSize / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
-      let cachePageIndex = this.mPageDesktopViewModel?.getGridPageCount();
+      let cachePageIndex = this.mPageDesktopViewModel?.getGridPageCount() as number;
       if (curPageIndex === cachePageIndex - 1 && !this.mPageDesktopViewModel?.isBlankPage()) {
         this.mPageDesktopViewModel?.addBlankPage(true);
       } else if(curPageIndex < cachePageIndex - 1) {
