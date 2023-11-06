@@ -311,6 +311,7 @@ struct FolderSwiperPage {
   private ColumnsTemplate: string = '';
   private RowsTemplate: string = '';
   private mGridGap = BigFolderStyleConfig.getInstance().mOpenFolderGridGap;
+  @State mBigFolderViewModel: BigFolderViewModel = mBigFolderViewModel;
 
   aboutToAppear(): void  {
     mFolderModel = BigFolderModel.getInstance();
@@ -347,7 +348,8 @@ struct FolderSwiperPage {
           mBigFolderViewModel.closeFolder();
         }
       },
-      folderItem: AppStorage.get('openFolderData')
+      folderItem: AppStorage.get('openFolderData'),
+      mBigFolderViewModel: $mBigFolderViewModel
     }),
     customStyle: true,
     alignment: DialogAlignment.Center,

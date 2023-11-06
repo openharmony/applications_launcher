@@ -25,7 +25,8 @@ import {
   ResourceManager,
   localEventManager,
   layoutConfigManager,
-  FolderLayoutConfig
+  FolderLayoutConfig,
+  AppItemInfo
 } from '@ohos/common';
 import { BigFolderModel } from '../model/BigFolderModel';
 import { BigFolderStyleConfig } from '../common/BigFolderStyleConfig';
@@ -988,7 +989,7 @@ export class BigFolderViewModel extends BaseViewModel {
    *
    * @param appList
    */
-  getDialogHeight(appList: []): number {
+  getDialogHeight(appList: AppItemInfo[]): number {
     let height = 0;
     const styleConfig = this.mFolderStyleConfig;
     const column = this.mBigFolderModel.getFolderAddAppLayout().column;
