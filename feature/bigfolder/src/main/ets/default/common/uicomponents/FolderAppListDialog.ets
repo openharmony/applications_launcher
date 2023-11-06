@@ -26,7 +26,7 @@ import { BigFolderStyleConstants } from '../constants/BigFolderStyleConstants';
 
 const TAG = 'FolderAppListDialog';
 
-interface FolderItem {
+interface FolderItemType {
   folderId: string;
   folderName: string;
   enterEditing?: boolean;
@@ -49,7 +49,7 @@ export default struct FolderAppListDialog {
   controller?: CustomDialogController;
   cancel = () => {};
   confirm = (isDestory: boolean) => {};
-  folderItem: FolderItem = { layoutInfo: [], folderName: '', folderId: '' };
+  folderItem: FolderItemType = { layoutInfo: [], folderName: '', folderId: '' };
   addToString: string = '';
 
   aboutToAppear(): void  {

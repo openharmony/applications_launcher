@@ -180,6 +180,7 @@ export default struct SwiperPage {
           } else if (item.typeId === CommonConstants.TYPE_FOLDER) {
             FolderItem({
               folderItem: item,
+              mPageDesktopViewModel: this.mPageDesktopViewModel,
               mNameLines: this.mNameLines
             }).id(`${TAG}_FolderItem_${index}`)
           } else if (item.typeId === CommonConstants.TYPE_CARD) {
