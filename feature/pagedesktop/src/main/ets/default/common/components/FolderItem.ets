@@ -58,34 +58,33 @@ export default struct FolderItem {
   private mAppNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   private mAppNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
   private folderItem: LauncherDragItemInfo = new LauncherDragItemInfo();
-  // private isSwappingPage = false;
-  // private mAppItemWidth: number = 0;
+  private isSwappingPage = false;
+  private mAppItemWidth: number = 0;
   private mPageDesktopViewModel?: PageDesktopViewModel;
   private mBigFolderViewModel?: BigFolderViewModel;
   private mMargin: number = 0;
-  // private mGridSpaceWidth: number = 0;
-  // private mGridSpaceHeight: number = 0;
+  private mGridSpaceWidth: number = 0;
+  private mGridSpaceHeight: number = 0;
   private mIconMarginVertical: number = StyleConstants.DEFAULT_10;
-  // private mPageDesktopDragHandler: PageDesktopDragHandler = PageDesktopDragHandler.getInstance();
+  private mPageDesktopDragHandler: PageDesktopDragHandler = PageDesktopDragHandler.getInstance();
   private mPageDesktopStartAppHandler: PageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
   private mFolderStyleConfig: BigFolderStyleConfig = BigFolderViewModel.getInstance().getFolderStyleConfig();
   mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
 
   aboutToAppear(): void  {
-    // this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
+    this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mPageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
     this.mBigFolderViewModel = BigFolderViewModel.getInstance();
     this.mFolderStyleConfig = this.mBigFolderViewModel.getFolderStyleConfig();
     this.mPageDesktopViewModel = PageDesktopViewModel.getInstance();
-    // let mGridConfig = this.mPageDesktopViewModel.getGridConfig();
     let styleConfig = this.mPageDesktopViewModel.getPageDesktopStyleConfig();
-    // this.mAppItemWidth = styleConfig.mIconSize;
+    this.mAppItemWidth = styleConfig.mIconSize;
     this.mAppNameHeight = styleConfig.mNameHeight;
     this.mAppNameSize = styleConfig.mNameSize;
     this.mIconMarginVertical = styleConfig.mIconMarginVertical;
     this.mMargin = styleConfig.mMargin;
-    // this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
-    // this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
+    this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
+    this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
     this.openFolderStatus = AppStorage.get('openFolderStatus') != 'undefined' ? (AppStorage.get('openFolderStatus') as number) : BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
     this.formatFolderInfo();
   }
