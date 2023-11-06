@@ -151,7 +151,7 @@ export default struct SwiperPage {
 
   getRowEnd(item: LauncherDragItemInfo): number {
     let result = 0;
-    if (item.row && item.area?.length) {
+    if (typeof item.row !== 'undefined' && item.area?.length) {
       result = item.row + item.area[1] - 1;
     }
     return result;
@@ -159,7 +159,7 @@ export default struct SwiperPage {
 
   getColumnEnd(item: LauncherDragItemInfo): number {
     let result = 0;
-    if (item.column && item.area?.length) {
+    if (typeof item.column !== 'undefined' && item.area?.length) {
       result = item.column + item.area[0] - 1;
     }
     return result;
@@ -194,6 +194,7 @@ export default struct SwiperPage {
         .columnStart(item.column)
         .rowEnd(this.getRowEnd(item))
         .columnEnd(this.getColumnEnd(item))
+        .zIndex(10)
       }, (item: LauncherDragItemInfo, index: number) => {
         if (item.typeId === CommonConstants.TYPE_FOLDER) {
           return JSON.stringify(item);
@@ -222,7 +223,7 @@ export default struct SwiperPage {
         AppStorage.setOrCreate('selectDesktopAppItem', '');
       }
     })
-    .onClick(() => {
+    .onClick((event: ClickEvent) => {
       AppStorage.setOrCreate('selectDesktopAppItem', '')
     })
     .onDragEnter((event: DragEvent, extraParams: string) => {

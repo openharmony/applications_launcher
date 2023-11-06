@@ -23,7 +23,7 @@ import { LayoutViewModel } from '@ohos/common';
 import { SmartDock } from '@ohos/smartdock/component';
 import { PageDesktopLayout } from '@ohos/pagedesktop/component';
 import { FolderOpenComponent } from '@ohos/bigfolder/component';
-import { BigFolderConstants, BigFolderStyleConfig } from '@ohos/bigfolder';
+import { BigFolderConstants, BigFolderStyleConfig, BigFolderViewModel } from '@ohos/bigfolder';
 import PhoneStage from '../common/PhoneStage';
 import StyleConstants from '../common/constants/StyleConstants';
 import { SmartDockStyleConfig } from '@ohos/smartdock';
@@ -152,7 +152,9 @@ struct EntryView {
         .height(this.dockHeight)
       }
 
-      FolderOpenComponent();
+      if ((AppStorage.get<number>('openFolderStatus') as number) !== BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE) {
+        FolderOpenComponent();
+      }
     }
     .backgroundImage(StyleConstants.DEFAULT_BACKGROUND_IMAGE)
     .backgroundImageSize(ImageSize.Cover)

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log , CheckEmptyUtils, AppItemInfo, FolderItemInfo } from '@ohos/common';
+import { Log , CheckEmptyUtils, AppItemInfo, FolderItemInfo, CardItemInfo } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
@@ -33,9 +33,26 @@ import { BigFolderConstants } from '../common/constants/BigFolderConstants';
 import { BigFolderStyleConstants } from '../common/constants/BigFolderStyleConstants';
 import FolderAppListDialog from '../common/uicomponents/FolderAppListDialog';
 import BigFolderStartAppHandler from '../common/BigFolderStartAppHandler';
+import { PageDesktopViewModel } from '../../../../../../pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
 
 const TAG = 'FolderOpenComponent';
 const DOUBLE_CLICK_COUNT = 2;
+
+interface FolderOpenLayoutTable {
+  id: number;
+  layout: string;
+  name: string;
+  row: number;
+  column: number;
+  checked: boolean;
+}
+
+interface FolderInfo {
+  layoutInfo: AppItemInfo[][];
+  enterEditing: boolean;
+  folderName: string;
+  folderId: string;
+}
 
 const FOLDER_CLOSE_DELAY = 500;
 let mBigFolderViewModel: BigFolderViewModel;
@@ -48,13 +65,13 @@ let mAppIconSize = BigFolderStyleConstants.DEFAULT_APP_ITEM_WIDTH;
 let mAddIconSize = BigFolderStyleConstants.DEFAULT_ADD_APP_SIZE;
 let mNameLines = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
 let mIconNameMargin = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
-let mSwiperHeight;
-let mGridWidth;
-let mGridHeight;
-let mGridPadding;
-let mGridMarginTop;
-let mFolderOpenTitle;
-let mGridIconTopPadding;
+let mSwiperHeight = 0;
+let mGridWidth = 0;
+let mGridHeight = 0;
+let mGridPadding = 0;
+let mGridMarginTop = 0;
+let mFolderOpenTitle = 0;
+let mGridIconTopPadding = 0;
 let isPad = false;
 let mBigFolderStartAppHandler: BigFolderStartAppHandler;
 
@@ -65,12 +82,7 @@ export struct FolderOpenComponent {
   @StorageLink('openFolderStatus') @Watch('updateFolderData') openFolderStatus: number = BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
   @State overLayAlpha: number = 0.3;
   @State isRenaming: boolean = false;
-  @StorageLink('openFolderData') mFolderInfo: {
-    layoutInfo: [],
-    enterEditing: boolean,
-    folderName: string,
-    folderId: string
-  } = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
+  @StorageLink('openFolderData') mFolderInfo: FolderInfo = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
   @State newFolderName: string = '';
 
   aboutToAppear(): void {
@@ -112,7 +124,7 @@ export struct FolderOpenComponent {
     if (this.openFolderStatus == BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE) {
       this.hideOpenFolder();
       mBigFolderViewModel.delAddIcon(this.mFolderInfo);
-      globalThis.PageDesktopViewModel.pagingFiltering();
+      PageDesktopViewModel.getInstance().pagingFiltering();
       this.newFolderName = '';
       return;
     } else {
@@ -222,14 +234,14 @@ export struct FolderOpenComponent {
 
         Stack() {
           Swiper() {
-            ForEach(this.mFolderInfo.layoutInfo, (item) => {
+            ForEach(this.mFolderInfo.layoutInfo, (item: AppItemInfo[]) => {
               FolderSwiperPage({
                 mAppInfo: item,
                 isRenaming: $isRenaming,
                 newFolderName: this.newFolderName,
                 mFolderInfo: this.mFolderInfo
               })
-            })
+            }, (item: AppItemInfo[]) => JSON.stringify(item))
           }
           .indicator(Indicator.dot().selectedColor(StyleConstants.DEFAULT_FONT_COLOR))
           .onClick(() => {
@@ -294,16 +306,11 @@ struct FolderSwiperPage {
   @StorageLink('isDraging') isDraging: boolean = false;
   @Link isRenaming: boolean;
   @Prop newFolderName: string;
-  private mFolderInfo: {
-    layoutInfo: [],
-    enterEditing: boolean,
-    folderName: string,
-    folderId: string
-  } = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
-  private mAppInfo: any = {};
+  private mFolderInfo: FolderInfo = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
+  private mAppInfo: AppItemInfo[] = [];
   private ColumnsTemplate: string = '';
   private RowsTemplate: string = '';
-  private mGridGap;
+  private mGridGap = BigFolderStyleConfig.getInstance().mOpenFolderGridGap;
 
   aboutToAppear(): void  {
     mFolderModel = BigFolderModel.getInstance();
@@ -317,10 +324,10 @@ struct FolderSwiperPage {
   private updateConfig() {
     let styleConfig = mBigFolderViewModel.getFolderStyleConfig();
     this.mGridGap = styleConfig.mOpenFolderGridGap;
-    let openFolderConfig = mFolderModel.getFolderOpenLayout();
+    let openFolderConfig = mFolderModel.getFolderOpenLayout() as FolderOpenLayoutTable;
 
-    let column = openFolderConfig.column;
-    let row = openFolderConfig.row;
+    let column = openFolderConfig.column as number;
+    let row = openFolderConfig.row as number;
     this.ColumnsTemplate = '';
     this.RowsTemplate = '';
     for (let i = 0; i < column; i++) {
@@ -335,7 +342,7 @@ struct FolderSwiperPage {
     builder: FolderAppListDialog({
       cancel: () => {
       },
-      confirm: (isDestory) => {
+      confirm: (isDestory: boolean) => {
         if (isDestory) {
           mBigFolderViewModel.closeFolder();
         }
@@ -352,7 +359,7 @@ struct FolderSwiperPage {
   build() {
     Column() {
       Grid() {
-        ForEach(this.mAppInfo, (item) => {
+        ForEach(this.mAppInfo, (item: AppItemInfo) => {
           GridItem() {
             if (item.typeId === CommonConstants.TYPE_ADD) {
               Column() {
@@ -391,7 +398,7 @@ struct FolderSwiperPage {
               })
             }
           }
-        }, (item) => JSON.stringify(item))
+        }, (item: AppItemInfo) => JSON.stringify(item))
       }
       .margin(mGridPadding)
       .width(mGridWidth - 2 * mGridPadding)
@@ -491,22 +498,29 @@ struct FolderAppItem {
     customStyle: true
   });
 
+  concatCacheKey(item: AppItemInfo): string {
+    if (item.appLabelId && item.bundleName && item.moduleName) {
+      return `${item.appLabelId}${item.bundleName}${item.moduleName}`;
+    }
+    return '';
+  }
+
   formManagerDialogController: CustomDialogController | null = new CustomDialogController({
     builder: FormManagerDialog({
-      cancel: (callback?) => {
+      cancel: (callback?: () => void) => {
         // delete all form
         if (callback != undefined) {
           this.clearForm = callback;
         }
       },
-      confirm: (formCardItem) => {
+      confirm: (formCardItem: CardItemInfo) => {
         // add form to desktop
         Log.showDebug(TAG, `createCardToDeskTop formCardItem: ${JSON.stringify(formCardItem)}`);
         localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD, formCardItem);
       },
-      bundleName: this.item.bundleName,
-      appName: globalThis.PageDesktopViewModel.getAppName(this.item?.appLabelId + this.item?.bundleName + this.item?.moduleName),
-      appLabelId: this.item.appLabelId
+      bundleName: this.item.bundleName as string,
+      appName: PageDesktopViewModel.getInstance().getAppName(this.concatCacheKey(this.item)),
+      appLabelId: this.item.appLabelId as number
     }),
     cancel: this.cancelFormDialog,
     autoCancel: false,
@@ -525,14 +539,14 @@ struct FolderAppItem {
     }, FOLDER_CLOSE_DELAY);
   }
 
-  removeAppOutOfFolder(appInfo) {
+  removeAppOutOfFolder = (appInfo: AppItemInfo) => {
     mBigFolderViewModel.removeAppOutOfFolder(appInfo);
   }
 
   private launchApp() {
     Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     this.setStartAppInfo();
-    globalThis.PageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+    PageDesktopViewModel.getInstance().onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
   }
 
   build() {
@@ -552,8 +566,10 @@ struct FolderAppItem {
           badgeNumber: this.item.badgeNumber,
           isSelect: this.selectDesktopAppItem == this.item.keyName,
           mPaddingTop: mGridIconTopPadding,
-          menuInfo: globalThis.PageDesktopViewModel.buildMenuInfoList(this.item, this.uninstallDialogController,
-            this.formManagerDialogController, this.removeAppOutOfFolder.bind(this), () => this.setStartAppInfo()),
+          menuInfo: PageDesktopViewModel.getInstance().buildMenuInfoList(this.item, this.uninstallDialogController,
+            this.formManagerDialogController, this.removeAppOutOfFolder, () => {
+              this.setStartAppInfo();
+            }),
           nameLines: mNameLines,
           mIconNameMargin: mIconNameMargin,
           dragStart: () => {}
@@ -564,7 +580,7 @@ struct FolderAppItem {
       .onClick(() => {
         Log.showDebug(TAG, 'App click');
         this.setStartAppInfo();
-        globalThis.PageDesktopViewModel.openApplication(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+        PageDesktopViewModel.getInstance().openApplication(this.item.abilityName, this.item.bundleName, this.item.moduleName);
       })
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
@@ -586,7 +602,7 @@ struct FolderAppItem {
               this.launchApp();
             } else {
               this.setStartAppInfo();
-              globalThis.PageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+              PageDesktopViewModel.getInstance().onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
               setTimeout(() => {
                 this.mouseClick = 0;
               }, 300)
