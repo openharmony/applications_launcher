@@ -185,7 +185,7 @@ export default struct SwiperPage {
             }).id(`${TAG}_FolderItem_${index}`)
           } else if (item.typeId === CommonConstants.TYPE_CARD) {
             FormItem({
-              formItem: item as CardItemInfo
+              formItem: item
             }).id(`${TAG}_FormItem_${index}`)
           }
         }
