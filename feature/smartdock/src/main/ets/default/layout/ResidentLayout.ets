@@ -24,7 +24,8 @@ import {
   CommonConstants,
   StyleConstants,
   ResourceManager,
-  Log
+  Log,
+  MenuInfo
 } from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 
@@ -42,7 +43,7 @@ export default struct ResidentLayout {
   @StorageLink('residentList') @Watch('onDockListChange') appList: Array<DockItemInfo> = [];
   mSmartDockStyleConfig: SmartDockStyleConfig;
   onItemClick: Function = null;
-  buildMenu: Function = null;
+  buildMenu: (item: DockItemInfo) => MenuInfo[] = (item: DockItemInfo): MenuInfo[] => [];
   onDockListChangeFunc: Function = null;
 
   aboutToAppear(): void {

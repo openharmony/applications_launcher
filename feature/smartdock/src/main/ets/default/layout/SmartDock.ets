@@ -20,8 +20,8 @@ import {
   Log,
   CommonConstants,
   ResourceManager,
-  RecentBundleMissionInfo
-} from '@ohos/common';
+  RecentBundleMissionInfo, DockItemInfo,
+  MenuInfo } from '@ohos/common';
 import RecentLayout from './RecentLayout';
 import ResidentLayout from './ResidentLayout';
 import SmartDockViewModel from '../viewmodel/SmartDockViewModel';
@@ -99,13 +99,13 @@ export struct SmartDock {
     this.mDialogController?.close();
   }
 
-  showDialog() {
+  showDialog = () => {
     this.mSelectedItem = this.mSmartDockViewModel.getSelectedItem();
     this.mSelectedDockType = this.mSmartDockViewModel.getSelectedDockType();
     this.mDialogController?.open();
   }
 
-  async onHoverEvent(onHover, bundleName) {
+  async onHoverEvent(onHover: boolean, bundleName: string) {
     if (!onHover) {
       this.popup = { show: false, showItem: '', popup: null };
       return;
@@ -145,9 +145,16 @@ export struct SmartDock {
       ListItem() {
         ResidentLayout({
           mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
-          onItemClick: (event, item) => this.mSmartDockViewModel.residentOnClick(event, item, this.showAppCenter),
-          buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
-          onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
+          onItemClick: (event: ClickEvent, item: DockItemInfo) => {
+            this.mSmartDockViewModel.residentOnClick(event, item, this.showAppCenter)
+          },
+          // buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
+          buildMenu: (item: DockItemInfo): MenuInfo[] => {
+            return this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog);
+          },
+          onDockListChangeFunc: () => {
+            this.mSmartDockViewModel.onDockListChange()
+          },
         })
       }
 
@@ -155,11 +162,22 @@ export struct SmartDock {
         RecentLayout({
           appList: $recentList,
           mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
-          onItemClick: (event, item) => this.mSmartDockViewModel.recentOnClick(event, item, () => this.recentOnClickWithPopup(item)),
-          buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
-          onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
+          onItemClick: (event: ClickEvent, item: DockItemInfo) => {
+            this.mSmartDockViewModel.recentOnClick(event, item, () => {
+              this.recentOnClickWithPopup(item)
+            })
+          },
+          // buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
+          buildMenu: (item: DockItemInfo): MenuInfo[] => {
+            return this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog);
+          },
+          onDockListChangeFunc: () => {
+            this.mSmartDockViewModel.onDockListChange()
+          },
           popup: this.popup,
-          onHoverEvent: (onHover, bundleName) => this.onHoverEvent(onHover, bundleName)
+          onHoverEvent: (onHover: boolean, bundleName: string) => {
+            this.onHoverEvent(onHover, bundleName)
+          }
         })
       }
     }
@@ -169,7 +187,7 @@ export struct SmartDock {
     .listDirection(Axis[SmartDockConstants.LIST_DIRECTION])
   }
 
-  recentOnClickWithPopup(item) {
+  recentOnClickWithPopup(item: DockItemInfo) {
     this.onHoverEvent(true, item.bundleName);
     AppStorage.setOrCreate('recentShowPopup', true);
   }

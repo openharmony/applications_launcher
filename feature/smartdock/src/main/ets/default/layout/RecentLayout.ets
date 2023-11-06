@@ -127,7 +127,7 @@ export default struct RecentLayout {
 
   build() {
     List({ space: mSmartDockStyleConfig.mListItemGap }) {
-      ForEach(this.appList, (item) => {
+      ForEach(this.appList, (item: DockItemInfo) => {
         ListItem() {
           AppItem({
             appInfo: item,
