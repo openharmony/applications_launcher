@@ -46,7 +46,6 @@ export struct AppMenu {
       }
     }
     this.isBothTypeMenuExist = this.fixedMenuList.length > 0 && this.dynamicMenuList.length > 0;
-    AppStorage.setOrCreate('contextMenuState', true);
   }
 
   aboutToDisappear(): void  {
