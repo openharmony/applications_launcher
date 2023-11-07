@@ -48,8 +48,8 @@ export struct SmartDock {
   private mSmartDockViewModel?: SmartDockViewModel;
   private mSelectedItem: DockItemInfo | null = null;
   private mSelectedDockType = 0;
-  private dialogName = "";
-  @State mSmartDockStyleConfig?: SmartDockStyleConfig = undefined;
+  private dialogName = '';
+  @State mSmartDockStyleConfig: SmartDockStyleConfig | undefined = undefined;
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear start!');

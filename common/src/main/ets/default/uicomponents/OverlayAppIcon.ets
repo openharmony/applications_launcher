@@ -20,7 +20,7 @@ const TAG = 'OverlayAppIcon';
 @Component
 export default struct OverlayAppIcon {
   iconSize: number = 0;
-  icon: string = '';
+  icon: ResourceStr = '';
 
   // 0.9(pressed size) / 1.05(hover size) = 0.8571
   @State overlaySize: number = 0.8571;
