@@ -31,4 +31,5 @@ export class DockItemInfo extends AppItemInfo {
    * true if this item is editable
    */
   editable: boolean | undefined;
+  isDragging?: boolean;
 }

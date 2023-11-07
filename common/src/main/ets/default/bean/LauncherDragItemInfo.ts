@@ -24,34 +24,36 @@ export class LauncherDragItemInfo {
     this.isDragging = isDragging ? isDragging : false;
   }
 
-  cardId: number | undefined;
-  folderId: string | undefined;
-  folderName: string | undefined;
-  appList: string[] | undefined;
+  cardId?: number | undefined;
+  folderId?: string | undefined;
+  folderName?: string | undefined;
+  appList?: string[] | undefined;
   keyName: string | undefined;
   bundleName: string | undefined;
   abilityName: string | undefined;
   moduleName: string | undefined;
-  cardName: string | undefined;
-  cardDimension: number | undefined;
+  cardName?: string | undefined;
+  cardDimension?: number | undefined;
   area: number[] | undefined;
-  description = '';
-  formConfigAbility: string | undefined;
+  description?: string = '';
+  formConfigAbility?: string | undefined;
   appLabelId: number | undefined;
   appName: string | undefined;
-  supportDimensions: number[] | undefined;
+  supportDimensions?: number[] | undefined;
   appId: string | undefined;
   appIconId: number | undefined;
   isSystemApp: boolean | undefined;
   isUninstallAble: boolean | undefined;
   badgeNumber: number | undefined;
-  checked: boolean | undefined;
-  installTime: string | undefined;
+  checked?: boolean | undefined;
+  installTime?: string | undefined;
   typeId: number | undefined;
   page: number | undefined;
   column: number | undefined;
   row: number | undefined;
-  bundleType: number | undefined;
-  totalDimensionCount: number | undefined;
-  layoutInfo?: AppItemInfo[][]
+  bundleType?: number | undefined;
+  totalDimensionCount?: number | undefined;
+  layoutInfo?: AppItemInfo[][];
+  itemType?: number;
+  editable?: boolean;
 }

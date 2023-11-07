@@ -147,7 +147,7 @@ export default class SmartDockDragHandler extends BaseDragHandler {
     }
   }
 
-  protected onDragDrop(x: number, y: number): boolean {
+  onDragDrop(x: number, y: number): boolean {
     const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo');
     if (!dragItemInfo.isDragging) {
       return false;

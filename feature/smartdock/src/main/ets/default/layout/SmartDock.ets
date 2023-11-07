@@ -49,12 +49,14 @@ export struct SmartDock {
   private mSelectedItem: DockItemInfo | null = null;
   private mSelectedDockType = 0;
   private dialogName = "";
+  @State mSmartDockStyleConfig?: SmartDockStyleConfig = undefined;
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear start!');
     this.deviceType = AppStorage.get('deviceType') as string;
     try {
       this.mSmartDockViewModel = SmartDockViewModel.getInstance();
+      this.mSmartDockStyleConfig = this.mSmartDockViewModel.getStyleConfig() as SmartDockStyleConfig;
     } catch (error) {
       Log.showError(TAG, `catch error ${JSON.stringify(error)}`);
     }
@@ -147,9 +149,9 @@ export struct SmartDock {
       }
       ListItem() {
         ResidentLayout({
-          mSmartDockStyleConfig: this.mSmartDockViewModel?.getStyleConfig() as SmartDockStyleConfig,
+          mSmartDockStyleConfig: $mSmartDockStyleConfig,
           onItemClick: (event: ClickEvent, item: DockItemInfo) => {
-            this.mSmartDockViewModel?.residentOnClick(event, item, this.showAppCenter)
+            this.mSmartDockViewModel?.residentOnClick(event, item, this.showAppCenter);
           },
           buildMenu: (item: DockItemInfo): MenuInfo[] => {
             return this.mSmartDockViewModel?.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE,
