@@ -29,7 +29,7 @@ import {
 } from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 
-let mSmartDockStyleConfig: SmartDockStyleConfig | null= null;
+let mSmartDockStyleConfig: SmartDockStyleConfig | null = null;
 const TAG = 'RecentLayout';
 
 interface DockRecentPopup {
@@ -38,16 +38,23 @@ interface DockRecentPopup {
   popup: CustomPopupOptions | null;
 }
 
+interface DockPadding {
+  right: number;
+  left: number;
+  top: number;
+  bottom: number;
+}
+
 @Component
 export default struct RecentLayout {
   @StorageLink('sysUiRecentOnClickEvent') @Watch('sysUiRecentOnClick') sysUiRecentOnClickEvent: number = 0;
-  @StorageLink('dockPadding') dockPadding: {right: number, left: number, top: number, bottom: number} = {right: 0, left: 0, top: 0, bottom: 0};
+  @StorageLink('dockPadding') dockPadding: DockPadding = {right: 0, left: 0, top: 0, bottom: 0};
   @State isHover: boolean = false;
   @State showPopup: boolean = false;
   @State onHoverItem: string = '';
   @Link @Watch('onDockListChange') appList: Array<DockItemInfo>;
   mRecentMaxNum: number = 0;
-  mSmartDockStyleConfig: SmartDockStyleConfig | null = null;
+  @Link mSmartDockStyleConfig: SmartDockStyleConfig;
   onItemClick: Function = () => {};
   buildMenu: (item: DockItemInfo) => MenuInfo[] = (item: DockItemInfo): MenuInfo[] => [];
   onHoverEvent: Function = () => {};
@@ -83,7 +90,7 @@ export default struct RecentLayout {
           this.showPopup = false;
           this.popup = { show: false, showItem: '', popup: null };
         },
-        updateData: (show, bundleName, callback) => {
+        updateData: (show: boolean, bundleName: string, callback: () => void) => {
           this.updateData = () => {
             callback();
             setTimeout(() => {
@@ -124,11 +131,11 @@ export default struct RecentLayout {
   }
 
   delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise<PromiseConstructor>(resolve => setTimeout(resolve, ms));
   }
 
   build() {
-    List({ space: mSmartDockStyleConfig.mListItemGap }) {
+    List({ space: (mSmartDockStyleConfig?.mListItemGap as number) }) {
       ForEach(this.appList, (item: DockItemInfo) => {
         ListItem() {
           AppItem({
@@ -164,7 +171,7 @@ export default struct RecentLayout {
           this.autoCancel = false;
           if (this.onHoverEvent) {
             this.onHoverEvent(isHover, item.bundleName);
-            this.onHoverItem = item.bundleName;
+            this.onHoverItem = item.bundleName as string;
             this.getShowPopup();
           }
         })
@@ -175,24 +182,24 @@ export default struct RecentLayout {
           if (this.onClickWithPopup) {
             this.autoCancel = true;
             this.showPopup = true
-            this.onHoverItem = item.bundleName;
+            this.onHoverItem = item.bundleName as string;
           }
           AppStorage.setOrCreate('recentShowPopup', false);
         })
-      }, (item) => JSON.stringify(item))
+      }, (item: DockItemInfo) => JSON.stringify(item))
     }
     .padding(this.dockPadding)
     .width(this.getListWidth())
-    .height(this.mSmartDockStyleConfig.mDockHeight)
-    .backgroundColor(this.mSmartDockStyleConfig.mBackgroundColor)
-    .borderRadius(this.mSmartDockStyleConfig.mDockRadius)
-    .backdropBlur(this.mSmartDockStyleConfig.mBackdropBlur)
+    .height(this.mSmartDockStyleConfig?.mDockHeight as number)
+    .backgroundColor(this.mSmartDockStyleConfig?.mBackgroundColor as string)
+    .borderRadius(this.mSmartDockStyleConfig?.mDockRadius as number)
+    .backdropBlur(this.mSmartDockStyleConfig?.mBackdropBlur as number)
     .visibility(this.getListWidth() === 0 ? Visibility.None : Visibility.Visible)
-    .listDirection(Axis[this.mSmartDockStyleConfig.mListDirection])
+    .listDirection(Axis[(this.mSmartDockStyleConfig?.mListDirection as string)])
   }
 
   getListWidth(): number {
-    let mRecentMaxNum = this.mSmartDockStyleConfig.mMaxRecentNum;
+    let mRecentMaxNum = this.mSmartDockStyleConfig?.mMaxRecentNum as number;
     let width = 0;
     if (AppStorage.get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
       return width;
@@ -204,7 +211,9 @@ export default struct RecentLayout {
     if (num > mRecentMaxNum) {
       num = mRecentMaxNum;
     }
-    width = this.mSmartDockStyleConfig.mDockPadding * 2 + num * (this.mSmartDockStyleConfig.mListItemWidth) + (num - 1) * (this.mSmartDockStyleConfig.mListItemGap);
+    width = (this.mSmartDockStyleConfig?.mDockPadding as number) * 2
+      + num * (this.mSmartDockStyleConfig?.mListItemWidth as number)
+      + (num - 1) * (this.mSmartDockStyleConfig?.mListItemGap as number);
     return width;
   }
 
@@ -216,7 +225,7 @@ export default struct RecentLayout {
 @Component
 struct AppItem {
   @State isShow: boolean = false;
-  appInfo: DockItemInfo | null = null;
+  appInfo: DockItemInfo = new DockItemInfo();
   buildMenu: (item: DockItemInfo) => MenuInfo[] = (item: DockItemInfo): MenuInfo[] => [];
   private menuInfo: MenuInfo[] = [];
 
@@ -251,19 +260,19 @@ struct AppItem {
     Column() {
       Row() {
         AppIcon({
-          iconSize: mSmartDockStyleConfig.mIconSize,
-          iconId: this.appInfo.appIconId,
-          bundleName: this.appInfo.bundleName,
-          moduleName: this.appInfo.moduleName,
-          icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId,
-            this.appInfo.bundleName, this.appInfo.moduleName),
-          badgeNumber: this.appInfo.badgeNumber
+          iconSize: mSmartDockStyleConfig?.mIconSize as number,
+          iconId: this.appInfo.appIconId as number,
+          bundleName: this.appInfo.bundleName as string,
+          moduleName: this.appInfo.moduleName as string,
+          icon: ResourceManager.getInstance().getCachedAppIcon(this.appInfo.appIconId as number,
+            this.appInfo.bundleName as string, this.appInfo.moduleName as string),
+          badgeNumber: this.appInfo.badgeNumber as number
         })
       }
-      .width(mSmartDockStyleConfig.mListItemWidth)
-      .height(mSmartDockStyleConfig.mListItemHeight)
-      .backgroundColor(mSmartDockStyleConfig.mItemBackgroundColor)
-      .borderRadius(mSmartDockStyleConfig.mItemBorderRadius)
+      .width(mSmartDockStyleConfig?.mListItemWidth as number)
+      .height(mSmartDockStyleConfig?.mListItemHeight as number)
+      .backgroundColor(mSmartDockStyleConfig?.mItemBackgroundColor as string)
+      .borderRadius(mSmartDockStyleConfig?.mItemBorderRadius as number)
     }
     .gesture(
     LongPressGesture({ repeat: false })
@@ -276,8 +285,8 @@ struct AppItem {
       builder: this.MenuBuilder,
       placement: Placement.Top,
       popupColor: Color.White,
-      //@ts-ignore
-      arrowOffset: 3 * (mSmartDockStyleConfig.mIconSize / 2) + mSmartDockStyleConfig.mListItemGap,
+      arrowOffset: 3 * ((mSmartDockStyleConfig?.mIconSize as number) / 2)
+        + (mSmartDockStyleConfig?.mListItemGap as number),
       onStateChange: (e) => {
         if (!e.isVisible) {
           this.isShow = false;

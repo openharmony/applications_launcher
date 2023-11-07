@@ -166,7 +166,7 @@ export struct SmartDock {
       ListItem() {
         RecentLayout({
           appList: $recentList,
-          mSmartDockStyleConfig: this.mSmartDockViewModel?.getStyleConfig() as SmartDockStyleConfig,
+          mSmartDockStyleConfig: $mSmartDockStyleConfig,
           onItemClick: (event: ClickEvent, item: DockItemInfo) => {
             this.mSmartDockViewModel?.recentOnClick(event, item, () => {
               this.recentOnClickWithPopup(item);
