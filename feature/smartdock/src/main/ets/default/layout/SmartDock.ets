@@ -26,24 +26,27 @@ import RecentLayout from './RecentLayout';
 import ResidentLayout from './ResidentLayout';
 import SmartDockViewModel from '../viewmodel/SmartDockViewModel';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
+import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 
 const TAG = 'SmartDock';
 
+interface DockRecentPopup {
+  show: boolean;
+  showItem: string;
+  popup: CustomPopupOptions | null;
+}
+
 @Component
 export struct SmartDock {
-  popup: {
-    show: boolean,
-    showItem: string,
-    popup
-  } = { show: false, showItem: '', popup: null };
+  popup: DockRecentPopup = { show: false, showItem: '', popup: null };
   showAppCenter: Function = () => {};
   @StorageLink('showDock') showDock: boolean = false;
   @StorageLink('recentList') recentList: Array<RecentBundleMissionInfo> = [];
   @StorageLink('missionInfoList') missionInfoList: Array<RecentBundleMissionInfo> = [];
   @StorageLink('desktopEventResponse') desktopEventResponse: boolean = true;
   private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
-  private mSmartDockViewModel: SmartDockViewModel;
-  private mSelectedItem = null;
+  private mSmartDockViewModel?: SmartDockViewModel;
+  private mSelectedItem: DockItemInfo | null = null;
   private mSelectedDockType = 0;
   private dialogName = "";
 
@@ -89,24 +92,24 @@ export struct SmartDock {
       return;
     }
     if (this.deviceType === CommonConstants.PAD_DEVICE_TYPE) {
-      this.mSmartDockViewModel.deleteDockItem({
+      this.mSmartDockViewModel?.deleteDockItem({
         bundleName: undefined,
         keyName: this.mSelectedItem?.keyName
       }, this.mSelectedDockType);
     } else {
-      this.mSmartDockViewModel.uninstallApp(this.mSelectedItem?.bundleName, this.mSelectedItem?.isUninstallAble);
+      this.mSmartDockViewModel?.uninstallApp(this.mSelectedItem?.bundleName, this.mSelectedItem?.isUninstallAble);
     }
     this.mDialogController?.close();
   }
 
   showDialog = () => {
-    this.mSelectedItem = this.mSmartDockViewModel.getSelectedItem();
-    this.mSelectedDockType = this.mSmartDockViewModel.getSelectedDockType();
+    this.mSelectedItem = this.mSmartDockViewModel?.getSelectedItem();
+    this.mSelectedDockType = this.mSmartDockViewModel?.getSelectedDockType();
     this.mDialogController?.open();
   }
 
-  async onHoverEvent(onHover: boolean, bundleName: string) {
-    if (!onHover) {
+  async onHoverEvent(onHover: boolean, bundleName?: string) {
+    if (!onHover || !bundleName) {
       this.popup = { show: false, showItem: '', popup: null };
       return;
     }
@@ -122,12 +125,12 @@ export struct SmartDock {
       show: true,
       showItem: bundleName,
       popup: {
-        builder: null,
+        builder: () => {},
         placement: Placement.Top,
         enableArrow: true
       }
     }
-    await this.mSmartDockViewModel.getSnapshot(list[0].missionInfoList, list[0].appName);
+    await this.mSmartDockViewModel?.getSnapshot(list[0].missionInfoList, list[0].appName);
   }
 
   private buildLog(): boolean {
@@ -138,22 +141,22 @@ export struct SmartDock {
   build() {
     List({
       space: this.deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || this.recentList.length == 0 ? CommonConstants.DOCK_SPACE :
-        this.mSmartDockViewModel.getStyleConfig().mDockGap
+        (this.mSmartDockViewModel?.getStyleConfig().mDockGap as number)
     }) {
       if (this.buildLog()) {
       }
       ListItem() {
         ResidentLayout({
-          mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
+          mSmartDockStyleConfig: this.mSmartDockViewModel?.getStyleConfig() as SmartDockStyleConfig,
           onItemClick: (event: ClickEvent, item: DockItemInfo) => {
-            this.mSmartDockViewModel.residentOnClick(event, item, this.showAppCenter)
+            this.mSmartDockViewModel?.residentOnClick(event, item, this.showAppCenter)
           },
-          // buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
           buildMenu: (item: DockItemInfo): MenuInfo[] => {
-            return this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog);
+            return this.mSmartDockViewModel?.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE,
+              this.showAppCenter, this.showDialog) as MenuInfo[];
           },
           onDockListChangeFunc: () => {
-            this.mSmartDockViewModel.onDockListChange()
+            this.mSmartDockViewModel?.onDockListChange();
           },
         })
       }
@@ -161,22 +164,22 @@ export struct SmartDock {
       ListItem() {
         RecentLayout({
           appList: $recentList,
-          mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
+          mSmartDockStyleConfig: this.mSmartDockViewModel?.getStyleConfig() as SmartDockStyleConfig,
           onItemClick: (event: ClickEvent, item: DockItemInfo) => {
-            this.mSmartDockViewModel.recentOnClick(event, item, () => {
-              this.recentOnClickWithPopup(item)
+            this.mSmartDockViewModel?.recentOnClick(event, item, () => {
+              this.recentOnClickWithPopup(item);
             })
           },
-          // buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
           buildMenu: (item: DockItemInfo): MenuInfo[] => {
-            return this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog);
+            return this.mSmartDockViewModel?.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE,
+              this.showAppCenter, this.showDialog) as MenuInfo[];
           },
           onDockListChangeFunc: () => {
-            this.mSmartDockViewModel.onDockListChange()
+            this.mSmartDockViewModel?.onDockListChange();
           },
           popup: this.popup,
           onHoverEvent: (onHover: boolean, bundleName: string) => {
-            this.onHoverEvent(onHover, bundleName)
+            this.onHoverEvent(onHover, bundleName);
           }
         })
       }

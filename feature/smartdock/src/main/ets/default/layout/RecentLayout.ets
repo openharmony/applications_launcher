@@ -32,6 +32,12 @@ import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 let mSmartDockStyleConfig: SmartDockStyleConfig | null= null;
 const TAG = 'RecentLayout';
 
+interface DockRecentPopup {
+  show: boolean;
+  showItem: string;
+  popup: CustomPopupOptions | null;
+}
+
 @Component
 export default struct RecentLayout {
   @StorageLink('sysUiRecentOnClickEvent') @Watch('sysUiRecentOnClick') sysUiRecentOnClickEvent: number = 0;
@@ -47,11 +53,7 @@ export default struct RecentLayout {
   onHoverEvent: Function = () => {};
   onDockListChangeFunc: Function = () => {};
   isScrollHover: boolean = false;
-  popup: {
-    show: boolean,
-    showItem: string,
-    popup
-  } = { show: false, showItem: '', popup: null };
+  popup: DockRecentPopup = { show: false, showItem: '', popup: null };
   onClickWithPopup: boolean = false;
   autoCancel: boolean = false;
   private updateData: Function = () => {};
