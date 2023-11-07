@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-import { ShortcutInfo } from 'bundle/shortcutInfo';
 import launcherBundleManager from '@ohos.bundle.launcherBundleManager';
 import { AppItemInfo, CheckEmptyUtils } from '@ohos/common';
 import { Log } from '@ohos/common'
