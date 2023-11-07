@@ -46,7 +46,6 @@ struct EntryView {
   @State workSpaceHeight: number = 0;
   @State dockHeight: number = 0;
   private mStage: PhoneStage = new PhoneStage();
-  // private mLayoutViewModel: LayoutViewModel;
   private navigationBarStatus: string | undefined;
 
   onPageShow(): void {
@@ -89,7 +88,6 @@ struct EntryView {
   onBackPress(): boolean {
     Log.showInfo(TAG, 'onBackPress');
     ContextMenu.close();
-    AppStorage.setOrCreate('dialogControllerStatus', !AppStorage.get('dialogControllerStatus'));
     AppStorage.setOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
     return true;

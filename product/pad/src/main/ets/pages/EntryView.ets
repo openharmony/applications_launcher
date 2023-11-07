@@ -25,13 +25,21 @@ import { SettingsModel, LayoutViewModel } from '@ohos/common';
 import { RemoteWindowWrapper } from '@ohos/common/component';
 import { SmartDock } from '@ohos/smartdock/component';
 import { PageDesktopLayout } from '@ohos/pagedesktop/component';
-import { BigFolderConstants } from '@ohos/bigfolder';
+import { BigFolderConstants, BigFolderStyleConfig } from '@ohos/bigfolder';
 import { FolderOpenComponent } from '@ohos/bigfolder/component';
 import PadStage from '../common/PadStage';
 import StyleConstants from '../common/constants/StyleConstants';
+import { FormStyleConfig } from '@ohos/form';
+import AppCenterGridStyleConfig from '@ohos/appcenter/src/main/ets/default/common/AppCenterGridStyleConfig';
+import PadPageDesktopGridStyleConfig from '../common/PadPageDesktopGridStyleConfig';
+import { SmartDockStyleConfig } from '@ohos/smartdock';
 
 const RAW_IMAGE_CACHE_SIZE = 20000000;
 const TAG = 'EntryView';
+
+interface LocalEventListener {
+  onReceiveEvent: (event: string, params: string) => void;
+}
 
 @Entry
 @Component
@@ -43,19 +51,17 @@ struct EntryView {
   @State workSpaceHeight: number = 0;
   @State dockHeight: number = 0;
   private mStage: PadStage = new PadStage();
-  private mLayoutViewModel: LayoutViewModel;
   private navigationBarStatus: string | undefined;
   private mOrientationListener = mediaquery.matchMediaSync('(orientation: landscape)');
   @State mAppScaleX: number = 1.0;
   @State mAppScaleY: number = 1.0;
   @State mAppAlpha: number = 1.0;
+  @StorageLink('IsSetImageRawDataCacheSize') IsSetImageRawDataCacheSize?: boolean = undefined;
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
     this.mStage.onCreate();
 
-    // init layout config
-    this.mLayoutViewModel = LayoutViewModel.getInstance();
     this.getWindowSize();
     this.updateScreenSize();
     this.mOrientationListener.on('change', windowManager.onPortrait);
@@ -63,7 +69,7 @@ struct EntryView {
     this.navigationBarStatus = SettingsModel.getInstance().getValue();
   }
 
-  registerPageDesktopNavigatorStatusChangeEvent(listener): void {
+  registerPageDesktopNavigatorStatusChangeEvent(listener: LocalEventListener): void {
     localEventManager.registerEventListener(listener, [
       EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE,
       EventConstants.EVENT_ANIMATION_START_APPLICATION,
@@ -71,8 +77,8 @@ struct EntryView {
     ]);
   }
 
-  private readonly mLocalEventListener = {
-    onReceiveEvent: (event, params) => {
+  private readonly mLocalEventListener: LocalEventListener = {
+    onReceiveEvent: (event: string, params: string) => {
       Log.showInfo(TAG, `receive event: ${event}, params: ${params}`);
       if (event === EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE) {
         this.navigationBarStatus = params;
@@ -110,26 +116,26 @@ struct EntryView {
   private updateScreenInfo(): void {
     Log.showInfo(TAG, 'updateScreenInfo');
     if (this.screenWidth !== 0 && this.screenHeight !== 0) {
-      this.mLayoutViewModel.initScreen(this.navigationBarStatus);
-      globalThis.SmartDockStyleConfig.initConfig();
-      globalThis.PadPageDesktopGridStyleConfig.initConfig();
-      globalThis.AppCenterGridStyleConfigInstance.initConfig();
-      globalThis.BigFolderStyleConfigInstance.initConfig();
-      globalThis.FormStyleConfigInstance.initConfig();
+      LayoutViewModel.getInstance().initScreen(this.navigationBarStatus);
+      SmartDockStyleConfig.getInstance();
+      PadPageDesktopGridStyleConfig.getInstance();
+      AppCenterGridStyleConfig.getInstance();
+      BigFolderStyleConfig.getInstance();
+      FormStyleConfig.getInstance();
       this.updateScreenSize();
     }
   }
 
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
-    if (typeof globalThis.IsSetImageRawDataCacheSize === 'undefined') {
+    if (typeof this.IsSetImageRawDataCacheSize === 'undefined') {
       Log.showInfo(TAG, 'onPageShow setImageRawDataCacheSize');
 
       // If cannot compile this, comment next line or add following code into Class App in "@system.app.d.ts":
       // static setImageRawDataCacheSize(value: number): void;
       app.setImageRawDataCacheSize(RAW_IMAGE_CACHE_SIZE);
       app.setImageCacheCount(100);
-      globalThis.IsSetImageRawDataCacheSize = true;
+      this.IsSetImageRawDataCacheSize = true;
     }
   }
 
@@ -146,8 +152,8 @@ struct EntryView {
 
   private updateScreenSize(): void {
     this.workSpaceWidth = this.screenWidth;
-    this.workSpaceHeight = this.mLayoutViewModel.getWorkSpaceHeight();
-    this.dockHeight = this.mLayoutViewModel.getDockHeight();
+    this.workSpaceHeight = LayoutViewModel.getInstance().getWorkSpaceHeight() as number;
+    this.dockHeight = LayoutViewModel.getInstance().getDockHeight() as number;
     AppStorage.setOrCreate('workSpaceWidth', this.workSpaceWidth);
     AppStorage.setOrCreate('workSpaceHeight', this.workSpaceHeight);
     AppStorage.setOrCreate('dockHeight', this.dockHeight);
@@ -162,7 +168,6 @@ struct EntryView {
   onBackPress(): boolean {
     Log.showInfo(TAG, 'onBackPress');
     ContextMenu.close();
-    AppStorage.setOrCreate('dialogControllerStatus', !AppStorage.get('dialogControllerStatus'));
     AppStorage.setOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
     AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
     AppStorage.setOrCreate('selectDesktopAppItem', '');
@@ -171,7 +176,7 @@ struct EntryView {
   }
 
   private closeRecentDockPopup(): void {
-    let num: number = AppStorage.get('sysUiRecentOnClickEvent');
+    let num: number = AppStorage.get('sysUiRecentOnClickEvent') as number;
     AppStorage.setOrCreate('sysUiRecentOnClickEvent', ++num);
   }
 
@@ -204,7 +209,7 @@ struct EntryView {
           SmartDock({
             showAppCenter: () => {
               Trace.start(Trace.CORE_METHOD_START_APP_CENTER);
-              globalThis.createWindowWithName(windowManager.APP_CENTER_WINDOW_NAME, windowManager.DESKTOP_RANK);
+              windowManager.createWindowWithName(windowManager.APP_CENTER_WINDOW_NAME, windowManager.DESKTOP_RANK);
             }
           });
         }
@@ -215,7 +220,9 @@ struct EntryView {
       .scale({ x: this.mAppScaleX, y: this.mAppScaleY })
       .opacity(this.mAppAlpha)
 
-      FolderOpenComponent();
+      if ((AppStorage.get<number>('openFolderStatus') as number) !== BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE) {
+        FolderOpenComponent();
+      }
       RemoteWindowWrapper();
     }
     .backgroundImage(StyleConstants.DEFAULT_BACKGROUND_IMAGE)

@@ -13,7 +13,9 @@
  * limitations under the License.
  */
 
-import { CheckEmptyUtils } from '@ohos/common';
+import { ShortcutInfo } from 'bundle/shortcutInfo';
+import launcherBundleManager from '@ohos.bundle.launcherBundleManager';
+import { AppItemInfo, CheckEmptyUtils } from '@ohos/common';
 import { Log } from '@ohos/common'
 import { Trace } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
@@ -29,18 +31,23 @@ import AppCenterGridStyleConfig from '../common/AppCenterGridStyleConfig';
 import AppCenterStartAppHandler from '../common/AppCenterStartAppHandler';
 import { windowManager } from '@ohos/common';
 
-const TAG = 'AppGridLayout'
+const TAG = 'AppGridLayout';
+
+class StartAppInfo extends AppItemInfo {
+  icon?: ResourceStr;
+}
 
 @Component
 export struct AppGridLayout {
   @StorageLink('workSpaceHeight')@Watch('updateAppCenterScreen') workSpaceHeight: number = 0;
   @State mColumns: number = StyleConstants.DEFAULT_APP_GRID_COLUMN;
   @State mRows: number = StyleConstants.DEFAULT_APP_GRID_ROW;
-  @StorageLink('listInfo') appGridList: [] = [];
-  mAppGridViewModel: AppGridViewModel = null;
-  @StorageLink('appGridStyleConfig') mAppCenterGridStyleConfig: AppCenterGridStyleConfig = null;
-  mSelectItem = null;
-  private mAppCenterStartAppHandler: AppCenterStartAppHandler;
+  @StorageLink('listInfo') appGridList: AppItemInfo[] = [];
+  mAppGridViewModel: AppGridViewModel = AppGridViewModel.getInstance();
+  @StorageLink('appGridStyleConfig') mAppCenterGridStyleConfig: AppCenterGridStyleConfig
+    = this.mAppGridViewModel.getAppGridStyleConfig();
+  mSelectItem: AppItemInfo = new AppItemInfo();
+  private mAppCenterStartAppHandler: AppCenterStartAppHandler = AppCenterStartAppHandler.getInstance();
   private dialogName: string = '';
   mDialogController: CustomDialogController | null = new CustomDialogController({
     builder: UninstallDialog({
@@ -59,11 +66,11 @@ export struct AppGridLayout {
   });
 
   onAccept() {
-    if (this.mSelectItem == null) {
+    if (typeof this.mSelectItem.bundleName === 'undefined') {
       return;
     }
-    this.mAppGridViewModel.uninstallApp(this.mSelectItem.bundleName, this.mSelectItem.isUninstallAble);
-    this.mDialogController.close();
+    this.mAppGridViewModel.uninstallApp(this.mSelectItem.bundleName, this.mSelectItem.isUninstallAble as boolean);
+    this.mDialogController?.close();
   }
 
   aboutToDisappear(): void {
@@ -85,12 +92,12 @@ export struct AppGridLayout {
     });
   }
 
-  public buildMenuInfoList(appInfo) {
+  public buildMenuInfoList(appInfo: AppItemInfo) {
     let menuInfoList = new Array<MenuInfo>();
-    let shortcutInfo: any = this.mAppGridViewModel.getShortcutInfo(appInfo.bundleName);
+    let shortcutInfo = this.mAppGridViewModel.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
-      let menu = null;
-      shortcutInfo.forEach((value) => {
+      let menu: MenuInfo | null = null;
+      shortcutInfo.forEach((value: launcherBundleManager.ShortcutInfo) => {
         menu = new MenuInfo();
         menu.menuType = CommonConstants.MENU_TYPE_DYNAMIC;
         menu.menuImgSrc = value.icon;
@@ -100,7 +107,7 @@ export struct AppGridLayout {
         menu.bundleName = value.bundleName;
         menu.moduleName = value.moduleName;
         menu.onMenuClick = () => {
-          this.mAppGridViewModel.jumpTo(value.wants[0].targetClass, value.wants[0].targetBundle, value.wants[0].targetModule);
+          this.mAppGridViewModel.jumpTo(value.wants[0].targetAbility, value.wants[0].targetBundle, value.wants[0].targetModule);
         };
         value.bundleName == appInfo.bundleName && value.moduleName == appInfo.moduleName && menuInfoList.push(menu);
       });
@@ -113,7 +120,7 @@ export struct AppGridLayout {
     open.onMenuClick = () => {
       Log.showInfo(TAG,`open.OnMenuClick--:${JSON.stringify(appInfo)}`);
       Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
-      this.setStartAppInfo(appInfo);
+      this.setStartAppInfo(appInfo as StartAppInfo);
       this.mAppGridViewModel.jumpTo(appInfo.abilityName, appInfo.bundleName, appInfo.moduleName);
       windowManager.hideWindow(windowManager.APP_CENTER_WINDOW_NAME);
     };
@@ -145,17 +152,20 @@ export struct AppGridLayout {
     uninstallMenu.menuText = $r('app.string.uninstall');
     uninstallMenu.onMenuClick = () => {
       Log.showDebug(TAG, `click menu item uninstall: ${JSON.stringify(appInfo)}`);
-      let cacheKey = appInfo.appLabelId + appInfo.bundleName + appInfo.moduleName;
+      let cacheKey = '';
+      if (appInfo.appLabelId && appInfo.bundleName && appInfo.moduleName) {
+        cacheKey = appInfo.appLabelId + appInfo.bundleName + appInfo.moduleName;
+      }
       let appName = this.mAppGridViewModel.getAppName(cacheKey);
       Log.showDebug(TAG, `buildMenuInfoList appName: ${appName}`);
       if (appName != null) {
         appInfo.appName = appName;
       }
       this.mSelectItem = appInfo;
-      this.mDialogController.open();
+      this.mDialogController?.open();
       AppStorage.setOrCreate('uninstallAppInfo', appInfo);
     };
-    uninstallMenu.menuEnabled = appInfo.isUninstallAble;
+    uninstallMenu.menuEnabled = appInfo.isUninstallAble as boolean;
     menuInfoList.push(uninstallMenu);
     return menuInfoList;
   }
@@ -167,14 +177,14 @@ export struct AppGridLayout {
           appGridList: $appGridList,
           isScroll: true,
           appGridStyleConfig: $mAppCenterGridStyleConfig,
-          onItemClick: (event, item) => {
+          onItemClick: (event: ClickEvent, item: AppItemInfo) => {
             Log.showDebug(TAG,`open.onAppGridClick--:${JSON.stringify(item)}`);
             Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
-            this.setStartAppInfo(item);
+            this.setStartAppInfo(item as StartAppInfo);
             this.mAppGridViewModel.jumpTo(item.abilityName, item.bundleName, item.moduleName);
             windowManager.hideWindow(windowManager.APP_CENTER_WINDOW_NAME);
           },
-          buildMenu: (item) => this.buildMenuInfoList(item)
+          buildMenu: (item: AppItemInfo): MenuInfo[] => this.buildMenuInfoList(item)
         })
       }
       .width(this.mAppCenterGridStyleConfig.mGridWidth)
@@ -201,7 +211,7 @@ export struct AppGridLayout {
   /**
    * set start app info
    */
-  private setStartAppInfo(item) {
+  private setStartAppInfo(item: StartAppInfo) {
     Log.showInfo(TAG, `appcenter StartAppInfo:${JSON.stringify(item)}`);
     if (CheckEmptyUtils.isEmpty(item)) {
       Log.showError(TAG, `setStartAppInfo with item`)

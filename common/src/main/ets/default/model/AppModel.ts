@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-import { ShortcutInfo } from 'bundle/shortcutInfo';
 import { Log } from '../utils/Log';
 import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
 import { EventConstants } from '../constants/EventConstants';
@@ -24,6 +23,7 @@ import { localEventManager } from '../manager/LocalEventManager';
 import { launcherAbilityManager } from '../manager/LauncherAbilityManager';
 import SystemApplication from '../configs/SystemApplication';
 import { AtomicServiceAppModel } from './AtomicServiceAppModel';
+import launcherBundleManager from '@ohos.bundle.launcherBundleManager';
 
 const TAG = 'AppModel';
 
@@ -34,7 +34,7 @@ export class AppModel {
   private mBundleInfoList: AppItemInfo[] = [];
   private readonly mSystemApplicationName = [];
   private readonly mAppStateChangeListener = [];
-  private readonly mShortcutInfoMap = new Map<string, ShortcutInfo[]>();
+  private readonly mShortcutInfoMap = new Map<string, launcherBundleManager.ShortcutInfo[]>();
   private readonly mFormModel: FormModel;
   private readonly mInstallationListener;
   private readonly mAtomicServiceAppModel: AtomicServiceAppModel;
@@ -296,7 +296,7 @@ export class AppModel {
    * @param {string} bundleName
    * @param {array} shortcutInfo
    */
-  setShortcutInfo(bundleName: string, shortcutInfo: ShortcutInfo[]): void {
+  setShortcutInfo(bundleName: string, shortcutInfo: launcherBundleManager.ShortcutInfo[]): void {
     this.mShortcutInfoMap.set(bundleName, shortcutInfo);
   }
 
@@ -306,7 +306,7 @@ export class AppModel {
    * @param {string} bundleName
    * @return {array | undefined} shortcutInfo
    */
-  getShortcutInfo(bundleName: string): ShortcutInfo[] | undefined {
+  getShortcutInfo(bundleName: string): launcherBundleManager.ShortcutInfo[] | undefined {
     return this.mShortcutInfoMap.get(bundleName);
   }
 
