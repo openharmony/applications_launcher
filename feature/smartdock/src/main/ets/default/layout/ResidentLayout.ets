@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,26 +23,30 @@ import {
   CommonConstants,
   StyleConstants,
   ResourceManager,
-  Log
+  Log,
+  MenuInfo
 } from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
+import SmartDockDragHandler from '../common/SmartDockDragHandler';
 
-let mSmartDockStyleConfig: SmartDockStyleConfig = null;
+let mSmartDockStyleConfig: SmartDockStyleConfig | null = null;
 const TAG = 'ResidentLayout';
+
+interface DockPadding {
+  right: number;
+  left: number;
+  top: number;
+  bottom: number;
+}
 
 @Component
 export default struct ResidentLayout {
-  @StorageLink('dockPadding') dockPadding: {
-    right: number,
-    left: number,
-    top: number,
-    bottom: number
-  } = { right: 0, left: 0, top: 0, bottom: 0 };
+  @StorageLink('dockPadding') dockPadding: DockPadding = { right: 0, left: 0, top: 0, bottom: 0 };
   @StorageLink('residentList') @Watch('onDockListChange') appList: Array<DockItemInfo> = [];
-  mSmartDockStyleConfig: SmartDockStyleConfig;
-  onItemClick: Function = null;
-  buildMenu: Function = null;
-  onDockListChangeFunc: Function = null;
+  @Link mSmartDockStyleConfig: SmartDockStyleConfig;
+  onItemClick: (event: ClickEvent, item: DockItemInfo) => void = (event: ClickEvent, item: DockItemInfo) => {};
+  buildMenu: (item: DockItemInfo) => MenuInfo[] = (item: DockItemInfo): MenuInfo[] => [];
+  onDockListChangeFunc: () => void = () => {};
 
   aboutToAppear(): void {
     mSmartDockStyleConfig = this.mSmartDockStyleConfig;
@@ -51,9 +54,6 @@ export default struct ResidentLayout {
   }
 
   aboutToDisappear(): void {
-    this.onItemClick = null;
-    this.buildMenu = null;
-    this.onDockListChangeFunc = null;
   }
 
   getListWidth(): number {
@@ -84,7 +84,7 @@ export default struct ResidentLayout {
     if (this.getListWidth && this.getListWidth() !== 0) {
       Row() {
         List({ space: this.appList.length == 0 ? 0 : this.mSmartDockStyleConfig.mListItemGap }) {
-          ForEach(this.appList, (item) => {
+          ForEach(this.appList, (item: DockItemInfo) => {
             ListItem() {
               AppItem({
                 appInfo: item,
@@ -92,7 +92,7 @@ export default struct ResidentLayout {
                 onItemClick: this.onItemClick
               })
             }
-          }, (item) => JSON.stringify(item))
+          }, (item: DockItemInfo) => JSON.stringify(item))
         }
         .height('100%')
         .animation({
@@ -119,7 +119,7 @@ export default struct ResidentLayout {
       })
       .onDrop((event: DragEvent, extraParams: string) => {
         Log.showInfo(TAG, `onDrop event: [${event.getWindowX()}, ${event.getWindowY()}]`);
-        const dragResult = globalThis.SmartDockDragHandler.onDragDrop(event.getWindowX(), event.getWindowY());
+        const dragResult = SmartDockDragHandler.getInstance().onDragDrop(event.getWindowX(), event.getWindowY());
         AppStorage.setOrCreate('selectAppIndex', null);
         if (!dragResult) {
           AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
@@ -139,25 +139,22 @@ struct AppItem {
   @StorageLink('dragItemInfo') smartDragItemInfo: LauncherDragItemInfo = new LauncherDragItemInfo();
   @StorageLink('dragItemType') dragItemType: number = CommonConstants.DRAG_FROM_DOCK;
   @State isShow: boolean = false;
-  onItemClick: Function = null;
-  appInfo: DockItemInfo = null;
-  buildMenu: Function = null;
-  private menuInfo;
+  onItemClick: (event: ClickEvent, item: DockItemInfo) => void = (event: ClickEvent, item: DockItemInfo) => {};
+  appInfo: DockItemInfo = new DockItemInfo();
+  buildMenu: (item: DockItemInfo) => MenuInfo[] = (item: DockItemInfo): MenuInfo[] => [];
+  private menuInfo: MenuInfo[] = [];
 
   aboutToAppear(): void {
     this.menuInfo = this.buildMenu(this.appInfo);
   }
 
   aboutToDisappear(): void {
-    this.buildMenu = null;
-    this.onItemClick = null;
     this.isShow = false;
-    this.appInfo = null;
-    this.menuInfo = null;
+    this.menuInfo = [];
   }
 
   private getLongPress(): boolean {
-    return AppStorage.get('isLongPress');
+    return AppStorage.get('isLongPress') as boolean;
   }
 
   @Builder MenuBuilder() {
@@ -178,7 +175,7 @@ struct AppItem {
   build() {
     Column() {
       AppIcon({
-        iconSize: mSmartDockStyleConfig.mIconSize,
+        iconSize: mSmartDockStyleConfig?.mIconSize as number,
         iconId: this.appInfo.appIconId,
         bundleName: this.appInfo.bundleName,
         moduleName: this.appInfo.moduleName,
@@ -189,10 +186,10 @@ struct AppItem {
     }
     .visibility(this.dragItemType === CommonConstants.DRAG_FROM_DOCK && this.smartDragItemInfo.keyName === this.appInfo.keyName ?
     Visibility.Hidden : Visibility.Visible)
-    .width(mSmartDockStyleConfig.mListItemWidth)
-    .height(mSmartDockStyleConfig.mListItemHeight)
-    .backgroundColor(mSmartDockStyleConfig.mItemBackgroundColor)
-    .borderRadius(mSmartDockStyleConfig.mItemBorderRadius)
+    .width(mSmartDockStyleConfig?.mListItemWidth as number)
+    .height(mSmartDockStyleConfig?.mListItemHeight as number)
+    .backgroundColor(mSmartDockStyleConfig?.mItemBackgroundColor as string)
+    .borderRadius(mSmartDockStyleConfig?.mItemBorderRadius as number)
     .parallelGesture(
     LongPressGesture({ repeat: false })
       .onAction((event: GestureEvent) => {
@@ -205,7 +202,9 @@ struct AppItem {
       builder: this.MenuBuilder,
       placement: Placement.Top,
       popupColor: Color.White,
-      arrowOffset: AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE ? null : 3 * (mSmartDockStyleConfig.mIconSize / 2) + mSmartDockStyleConfig.mListItemGap, // Avoid the popup offset problem in phone form
+      arrowOffset: AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE
+        ? null
+        : 3 * ((mSmartDockStyleConfig?.mIconSize as number) / 2) + (mSmartDockStyleConfig?.mListItemGap as number), // Avoid the popup offset problem in phone form
       onStateChange: (e) => {
         if (!e.isVisible) {
           this.isShow = false;
@@ -217,7 +216,7 @@ struct AppItem {
     .onTouch((event: TouchEvent) => {
       Log.showInfo(TAG, `onTouch event type: ${event.type}`);
       if (event.type === CommonConstants.TOUCH_TYPE_UP && this.smartDragItemInfo.isDragging) {
-        let mIsDragEffectArea = globalThis.SmartDockDragHandler.isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
+        let mIsDragEffectArea = SmartDockDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
         if (!mIsDragEffectArea) {
           AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           AppStorage.setOrCreate('selectAppIndex', null);
@@ -242,9 +241,10 @@ struct AppItem {
     .onDragStart((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `DragStart`);
       this.dragItemType = CommonConstants.DRAG_FROM_DOCK;
-      this.smartDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.appInfo);
+      this.appInfo.isDragging = true;
+      this.smartDragItemInfo = this.appInfo as LauncherDragItemInfo;
       Log.showInfo(TAG, `smartDragItemInfo: ${JSON.stringify(this.smartDragItemInfo)}`);
-      const selectAppIndex = globalThis.SmartDockDragHandler.getDragItemIndexByCoordinates(event.getWindowX(), event.getWindowY());
+      const selectAppIndex = SmartDockDragHandler.getInstance().getDragItemIndexByCoordinates(event.getWindowX(), event.getWindowY());
       AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
     })
     .onDragEnd((event: DragEvent, extraParams: string) => {

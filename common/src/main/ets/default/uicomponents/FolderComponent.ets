@@ -23,16 +23,32 @@ import { AppIcon } from './AppIcon';
 import { AppName } from './AppName';
 import { AppMenu } from './AppMenu';
 import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
+import { AppItemInfo } from '../bean/AppItemInfo';
+import { FolderItemInfo } from '../bean/FolderItemInfo';
+import { MenuInfo } from '../bean';
 
 const TAG = 'FolderComponent';
+
+interface FolderAnimateData {
+  folderId?: string;
+  isOpenFolder?: boolean;
+}
+
+class FolderItem {
+  layoutInfo: AppItemInfo[][] = [];
+  folderId: string = '';
+  folderName: string = '';
+}
+
+class SuperposeApp extends AppItemInfo {
+  isEmpty?: boolean;
+  alignContent?: Alignment;
+}
 
 @Component
 export struct FolderComponent {
   @StorageLink('openFolderStatus') @Watch('updateFolderAnimate') openFolderStatus: number = 1;
-  @State folderAnimateData: {
-    folderId: string,
-    isOpenFolder: boolean,
-  } = { folderId: '', isOpenFolder: false };
+  @State folderAnimateData: FolderAnimateData = { folderId: '', isOpenFolder: false };
   @State folderPositionX: number = 0;
   @State folderPositionY: number = 0;
   @State folderItemPositionX: number = 0;
@@ -53,20 +69,20 @@ export struct FolderComponent {
   gridMargin: number = StyleConstants.DEFAULT_FOLDER_GRID_MARGIN;
   gridGap: number = StyleConstants.DEFAULT_FOLDER_GRID_GAP;
   badgeNumber: number = 0;
-  private mSettingsModel: SettingsModel;
+  private mSettingsModel: SettingsModel = SettingsModel.getInstance();
   private isPad: boolean = false;
-  private mFolderItem: any;
-  private mShowAppList: any = [];
-  private mSuperposeAppList: any = [];
-  onAppIconClick?: Function = null;
-  onOpenFolderClick?: Function = null;
-  onFolderTouch?: Function = null;
-  onGetPosition?: Function = null;
-  buildMenu: Function = null;
+  private mFolderItem: LauncherDragItemInfo = new LauncherDragItemInfo();
+  private mShowAppList: AppItemInfo[] = [];
+  private mSuperposeAppList: SuperposeApp[] = [];
+  onAppIconClick: Function = (event: ClickEvent, item: AppItemInfo) => {};
+  onOpenFolderClick: Function = (event: ClickEvent, folderItem: FolderItemInfo) => {};
+  onFolderTouch: Function = (event: ClickEvent, folderItem: FolderItemInfo) => {};
+  onGetPosition: Function = (callback: (x: number, y: number) => void) => {};
+  buildMenu: (item: LauncherDragItemInfo) => MenuInfo[] = (item: LauncherDragItemInfo) => [];
   folderNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   iconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
-  isSelect?: boolean;
-  dragStart: Function;
+  isSelect: boolean = false;
+  dragStart: Function = (event: DragEvent) => {};
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, `aboutToAppear start`);
@@ -78,15 +94,10 @@ export struct FolderComponent {
   }
 
   aboutToDisappear(): void {
-    this.onAppIconClick = null;
-    this.onOpenFolderClick = null;
-    this.onFolderTouch = null;
-    this.onGetPosition = null;
-    this.buildMenu = null;
-    this.dragStart = null;
   }
 
   updateShowList(): void {
+    if (typeof this.mFolderItem.layoutInfo === 'undefined') return;
     if (this.mFolderItem.layoutInfo[0].length > CommonConstants.FOLDER_STATIC_SHOW_LENGTH) {
       this.mShowAppList = this.mFolderItem.layoutInfo[0].slice(0, CommonConstants.FOLDER_STATIC_SHOW_LENGTH);
     } else {
@@ -101,11 +112,13 @@ export struct FolderComponent {
     }
 
     let length = this.mSuperposeAppList.length;
+    let mSuperposeApp = new SuperposeApp();
     if (length > CommonConstants.FOLDER_STATIC_SUPERPOSEAPP_LENGTH) {
       this.mSuperposeAppList = this.mSuperposeAppList.slice(0, CommonConstants.FOLDER_STATIC_SUPERPOSEAPP_LENGTH);
     } else {
       for (let i = 0; i < (CommonConstants.FOLDER_STATIC_SUPERPOSEAPP_LENGTH - length); i++) {
-        this.mSuperposeAppList.push({ 'isEmpty': true });
+        mSuperposeApp.isEmpty = true;
+        this.mSuperposeAppList.push(mSuperposeApp);
       }
     }
     this.mSuperposeAppList = this.mSuperposeAppList.reverse();
@@ -115,7 +128,7 @@ export struct FolderComponent {
 
     Log.showInfo(TAG, `superposeIconVisible:${this.superposeIconVisible}`);
     Log.showInfo(TAG, `FolderItem.layoutInfo[0].length:${this.mFolderItem.layoutInfo[0].length}`);
-    Log.showInfo(TAG, `SuperposeAppList length:${this.mSuperposeAppList.length}`);
+    Log.showInfo(TAG, `mSuperposeAppList length:${this.mSuperposeAppList.length}`);
   }
 
   @Builder MenuBuilder() {
@@ -132,7 +145,7 @@ export struct FolderComponent {
   private updateFolderAnimate() {
     Log.showInfo(TAG, `updateFolderAnimate start`);
     if (this.openFolderStatus == 0) {
-      this.folderAnimateData = AppStorage.get('folderAnimateData');
+      this.folderAnimateData = AppStorage.get('folderAnimateData') as FolderAnimateData;
       if (this.mFolderItem.folderId === this.folderAnimateData.folderId &&
       this.folderAnimateData.isOpenFolder &&
       this.folderAnimateData.folderId != '' &&
@@ -150,7 +163,7 @@ export struct FolderComponent {
     let positionX = 0;
     let positionY = 0;
     if (this.onGetPosition) {
-      this.onGetPosition(this.getPosition.bind(this));
+      this.onGetPosition(this.getPosition);
       if (isMoveFolder) {
         positionX = this.animateFolderPositionX;
         positionY = this.animateFolderPositionY;
@@ -174,11 +187,11 @@ export struct FolderComponent {
     })
   }
 
-  public getPosition(x: number, y: number): void  {
+  public getPosition = (x: number, y: number): void => {
     this.folderItemPositionX = x;
     this.folderItemPositionY = y;
-    let screenWidth: number = AppStorage.get('screenWidth');
-    let screenHeight: number = AppStorage.get('screenHeight');
+    let screenWidth: number = AppStorage.get('screenWidth') as number;
+    let screenHeight: number = AppStorage.get('screenHeight') as number;
     this.animateFolderPositionX = (screenWidth - this.folderGridSize * 1.5) / 2 - this.folderItemPositionX;
     this.animateFolderPositionY = (screenHeight - this.folderGridSize * 1.5) / 2 - this.folderItemPositionY;
     Log.showInfo(TAG, `getPosition animatePosition x: ${this.animateFolderPositionX}, y: ${this.animateFolderPositionY}`);
@@ -207,7 +220,7 @@ export struct FolderComponent {
             .width(this.folderGridSize)
 
             Grid() {
-              ForEach(this.mShowAppList, (item) => {
+              ForEach(this.mShowAppList, (item: AppItemInfo) => {
                 GridItem() {
                   AppIcon({
                     iconSize: this.appIconSize,
@@ -225,12 +238,12 @@ export struct FolderComponent {
                     this.onAppIconClick(event, item);
                   }
                 })
-              }, (item) => JSON.stringify(item))
+              }, (item: AppItemInfo) => JSON.stringify(item))
 
               if (this.mSuperposeAppList.length > 0) {
                 GridItem() {
                   Stack() {
-                    ForEach(this.mSuperposeAppList, (item) => {
+                    ForEach(this.mSuperposeAppList, (item: SuperposeApp) => {
                       Stack({ alignContent: item.alignContent }) {
                         if (item.isEmpty) {
                           Column() {
@@ -263,7 +276,7 @@ export struct FolderComponent {
                       }
                       .width(StyleConstants.PERCENTAGE_100)
                       .height(StyleConstants.PERCENTAGE_100)
-                    }, (item) => JSON.stringify(item))
+                    }, (item: SuperposeApp) => JSON.stringify(item))
                   }
                   .width(this.isPad ?
                     StyleConstants.DEFAULT_FOLDER_APP_ITEM_WIDTH_SMALL :

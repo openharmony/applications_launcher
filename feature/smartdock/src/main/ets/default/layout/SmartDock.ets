@@ -20,38 +20,43 @@ import {
   Log,
   CommonConstants,
   ResourceManager,
-  RecentBundleMissionInfo
-} from '@ohos/common';
+  RecentBundleMissionInfo, DockItemInfo,
+  MenuInfo } from '@ohos/common';
 import RecentLayout from './RecentLayout';
 import ResidentLayout from './ResidentLayout';
 import SmartDockViewModel from '../viewmodel/SmartDockViewModel';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
+import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 
 const TAG = 'SmartDock';
 
+interface DockRecentPopup {
+  show: boolean;
+  showItem: string;
+  popup: CustomPopupOptions | null;
+}
+
 @Component
 export struct SmartDock {
-  popup: {
-    show: boolean,
-    showItem: string,
-    popup
-  } = { show: false, showItem: '', popup: null };
+  popup: DockRecentPopup = { show: false, showItem: '', popup: null };
   showAppCenter: Function = () => {};
   @StorageLink('showDock') showDock: boolean = false;
   @StorageLink('recentList') recentList: Array<RecentBundleMissionInfo> = [];
   @StorageLink('missionInfoList') missionInfoList: Array<RecentBundleMissionInfo> = [];
   @StorageLink('desktopEventResponse') desktopEventResponse: boolean = true;
   private deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
-  private mSmartDockViewModel: SmartDockViewModel;
-  private mSelectedItem = null;
+  private mSmartDockViewModel?: SmartDockViewModel;
+  private mSelectedItem: DockItemInfo | null = null;
   private mSelectedDockType = 0;
-  private dialogName = "";
+  private dialogName = '';
+  @State mSmartDockStyleConfig: SmartDockStyleConfig | undefined = undefined;
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear start!');
-    this.deviceType = AppStorage.get('deviceType');
+    this.deviceType = AppStorage.get('deviceType') as string;
     try {
       this.mSmartDockViewModel = SmartDockViewModel.getInstance();
+      this.mSmartDockStyleConfig = this.mSmartDockViewModel.getStyleConfig() as SmartDockStyleConfig;
     } catch (error) {
       Log.showError(TAG, `catch error ${JSON.stringify(error)}`);
     }
@@ -64,19 +69,18 @@ export struct SmartDock {
   aboutToDisappear(): void  {
     Log.showInfo(TAG, 'aboutToDisappear!');
     this.mDialogController = null;
-    this.showAppCenter = null;
   }
 
   private mDialogController: CustomDialogController | null = new CustomDialogController({
     builder: UninstallDialog({
       cancel: () => {
-        this.mDialogController.close()
+        this.mDialogController?.close()
       },
       confirm: () => {
         this.onConfirm()
       },
       dialogName: this.dialogName,
-      dialogContent: this.mSelectedItem.appName + ' ?',
+      dialogContent: this.mSelectedItem?.appName + ' ?',
     }),
     cancel: () => {
     },
@@ -90,24 +94,24 @@ export struct SmartDock {
       return;
     }
     if (this.deviceType === CommonConstants.PAD_DEVICE_TYPE) {
-      this.mSmartDockViewModel.deleteDockItem({
+      this.mSmartDockViewModel?.deleteDockItem({
         bundleName: undefined,
-        keyName: this.mSelectedItem.keyName
+        keyName: this.mSelectedItem?.keyName
       }, this.mSelectedDockType);
     } else {
-      this.mSmartDockViewModel.uninstallApp(this.mSelectedItem.bundleName, this.mSelectedItem.isUninstallAble);
+      this.mSmartDockViewModel?.uninstallApp(this.mSelectedItem?.bundleName, this.mSelectedItem?.isUninstallAble);
     }
-    this.mDialogController.close();
+    this.mDialogController?.close();
   }
 
-  showDialog() {
-    this.mSelectedItem = this.mSmartDockViewModel.getSelectedItem();
-    this.mSelectedDockType = this.mSmartDockViewModel.getSelectedDockType();
-    this.mDialogController.open();
+  showDialog = () => {
+    this.mSelectedItem = this.mSmartDockViewModel?.getSelectedItem();
+    this.mSelectedDockType = this.mSmartDockViewModel?.getSelectedDockType();
+    this.mDialogController?.open();
   }
 
-  async onHoverEvent(onHover, bundleName) {
-    if (!onHover) {
+  async onHoverEvent(onHover: boolean, bundleName?: string) {
+    if (!onHover || !bundleName) {
       this.popup = { show: false, showItem: '', popup: null };
       return;
     }
@@ -123,12 +127,12 @@ export struct SmartDock {
       show: true,
       showItem: bundleName,
       popup: {
-        builder: null,
+        builder: () => {},
         placement: Placement.Top,
         enableArrow: true
       }
     }
-    await this.mSmartDockViewModel.getSnapshot(list[0].missionInfoList, list[0].appName);
+    await this.mSmartDockViewModel?.getSnapshot(list[0].missionInfoList, list[0].appName);
   }
 
   private buildLog(): boolean {
@@ -139,28 +143,46 @@ export struct SmartDock {
   build() {
     List({
       space: this.deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || this.recentList.length == 0 ? CommonConstants.DOCK_SPACE :
-        this.mSmartDockViewModel.getStyleConfig().mDockGap
+        (this.mSmartDockViewModel?.getStyleConfig().mDockGap as number)
     }) {
       if (this.buildLog()) {
       }
       ListItem() {
         ResidentLayout({
-          mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
-          onItemClick: (event, item) => this.mSmartDockViewModel.residentOnClick(event, item, this.showAppCenter),
-          buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
-          onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
+          mSmartDockStyleConfig: $mSmartDockStyleConfig,
+          onItemClick: (event: ClickEvent, item: DockItemInfo) => {
+            this.mSmartDockViewModel?.residentOnClick(event, item, this.showAppCenter);
+          },
+          buildMenu: (item: DockItemInfo): MenuInfo[] => {
+            return this.mSmartDockViewModel?.buildMenuInfoList(item, SmartDockConstants.RESIDENT_DOCK_TYPE,
+              this.showAppCenter, this.showDialog) as MenuInfo[];
+          },
+          onDockListChangeFunc: () => {
+            this.mSmartDockViewModel?.onDockListChange();
+          },
         })
       }
 
       ListItem() {
         RecentLayout({
           appList: $recentList,
-          mSmartDockStyleConfig: this.mSmartDockViewModel.getStyleConfig(),
-          onItemClick: (event, item) => this.mSmartDockViewModel.recentOnClick(event, item, () => this.recentOnClickWithPopup(item)),
-          buildMenu: ((item) => this.mSmartDockViewModel.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE, this.showAppCenter, this.showDialog.bind(this))).bind(this.mSmartDockViewModel),
-          onDockListChangeFunc: () => this.mSmartDockViewModel.onDockListChange(),
+          mSmartDockStyleConfig: $mSmartDockStyleConfig,
+          onItemClick: (event: ClickEvent, item: DockItemInfo) => {
+            this.mSmartDockViewModel?.recentOnClick(event, item, () => {
+              this.recentOnClickWithPopup(item);
+            })
+          },
+          buildMenu: (item: DockItemInfo): MenuInfo[] => {
+            return this.mSmartDockViewModel?.buildMenuInfoList(item, SmartDockConstants.RECENT_DOCK_TYPE,
+              this.showAppCenter, this.showDialog) as MenuInfo[];
+          },
+          onDockListChangeFunc: () => {
+            this.mSmartDockViewModel?.onDockListChange();
+          },
           popup: this.popup,
-          onHoverEvent: (onHover, bundleName) => this.onHoverEvent(onHover, bundleName)
+          onHoverEvent: (onHover: boolean, bundleName: string) => {
+            this.onHoverEvent(onHover, bundleName);
+          }
         })
       }
     }
@@ -170,7 +192,7 @@ export struct SmartDock {
     .listDirection(Axis[SmartDockConstants.LIST_DIRECTION])
   }
 
-  recentOnClickWithPopup(item) {
+  recentOnClickWithPopup(item: DockItemInfo) {
     this.onHoverEvent(true, item.bundleName);
     AppStorage.setOrCreate('recentShowPopup', true);
   }

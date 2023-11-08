@@ -50,7 +50,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     gridXAxis: [],
     gridYAxis: []
   };
-  private mStartPosition: DragItemPosition;
+  mStartPosition: DragItemPosition;
   private mEndPosition: DragItemPosition;
   private readonly styleConfig;
   private mGridItemHeight: number;
@@ -139,7 +139,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     return desktopDataInfo.appGridInfo;
   }
 
-  protected getItemIndex(x: number, y: number): number {
+  getItemIndex(x: number, y: number): number {
     Log.showInfo(TAG, `getItemIndex x: ${x}, y: ${y}`);
     let rowVal = CommonConstants.INVALID_VALUE;
     for (let index = 0; index < this.mPageCoordinateData.gridYAxis.length; index++) {
@@ -189,7 +189,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
     return item.column <= column && column < item.column + item.area[0] && item.row <= row && row < item.row + item.area[1];
   }
 
-  private getTouchPosition(x: number, y: number): DragItemPosition {
+  getTouchPosition(x: number, y: number): DragItemPosition {
     const pageIndex: number = AppStorage.get('pageIndex');
     Log.showDebug(TAG, `getTouchPosition pageIndex: ${pageIndex}`);
     const position: DragItemPosition = {

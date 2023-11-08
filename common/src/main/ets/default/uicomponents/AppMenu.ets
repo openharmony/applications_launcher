@@ -24,10 +24,10 @@ const TAG = 'AppMenu';
 @Component
 export struct AppMenu {
   menuInfoList: Array<MenuInfo> = new Array<MenuInfo>();
-  getMenuInfoList: Function;
+  getMenuInfoList?: Function;
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
-  fixedMenuList: Array<MenuInfo> = null;
-  dynamicMenuList: Array<MenuInfo> = null;
+  fixedMenuList: Array<MenuInfo> = [];
+  dynamicMenuList: Array<MenuInfo> = [];
   isBothTypeMenuExist: boolean = true;
   closeMenu: Function = () => {};
 
@@ -46,21 +46,18 @@ export struct AppMenu {
       }
     }
     this.isBothTypeMenuExist = this.fixedMenuList.length > 0 && this.dynamicMenuList.length > 0;
-    AppStorage.setOrCreate('contextMenuState', true);
   }
 
   aboutToDisappear(): void  {
     Log.showInfo(TAG, 'aboutToDisappear start');
-    this.fixedMenuList = null;
-    this.dynamicMenuList = null;
-    this.closeMenu = null;
-    this.getMenuInfoList = null;
+    this.fixedMenuList = [];
+    this.dynamicMenuList = [];
   }
 
   build() {
     Column() {
       Column() {
-        ForEach(this.dynamicMenuList, (item) => {
+        ForEach(this.dynamicMenuList, (item: MenuInfo) => {
           Column() {
             HorizontalMenuItem({
               menuInfo: item,
@@ -68,7 +65,7 @@ export struct AppMenu {
               closeMenu: this.closeMenu
             })
           }
-        }, item => JSON.stringify(item))
+        }, (item: MenuInfo) => JSON.stringify(item))
       }
       .visibility(this.dynamicMenuList.length > 0 ? Visibility.Visible : Visibility.None)
 
@@ -80,7 +77,7 @@ export struct AppMenu {
       }
 
       Column() {
-        ForEach(this.fixedMenuList, (item) => {
+        ForEach(this.fixedMenuList, (item: MenuInfo) => {
           Column() {
             HorizontalMenuItem({
               menuInfo: item,
@@ -88,7 +85,7 @@ export struct AppMenu {
               closeMenu: this.closeMenu
             })
           }
-        }, item => JSON.stringify(item))
+        }, (item: MenuInfo) => JSON.stringify(item))
       }
       .visibility(this.fixedMenuList.length > 0 ? Visibility.Visible : Visibility.None)
     }
@@ -106,8 +103,8 @@ export struct AppMenu {
 struct HorizontalMenuItem {
   @State shortcutIcon: string = StyleConstants.DEFAULT_ICON;
   @State shortcutName: string = "";
-  private mResourceManager;
-  menuInfo: MenuInfo;
+  private mResourceManager = ResourceManager.getInstance();
+  menuInfo: MenuInfo = new MenuInfo();
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
   closeMenu: Function = () => {};
 
@@ -118,21 +115,20 @@ struct HorizontalMenuItem {
   }
 
   aboutToDisappear(): void {
-    this.closeMenu = null;
   }
 
-  public shortcutIconLoadCallback(image) {
+  public shortcutIconLoadCallback = (image: string) => {
     this.shortcutIcon = image;
   }
 
-  public shortcutNameLoadCallback(name) {
+  public shortcutNameLoadCallback = (name: string) => {
     this.shortcutName = name;
   }
 
   public updateIcon() {
     if (this.menuInfo.shortcutIconId != -1 && this.menuInfo.menuImgSrc != "" && this.menuInfo.menuImgSrc != null) {
       this.mResourceManager.getAppIconWithCache(this.menuInfo.shortcutIconId, this.menuInfo.bundleName,
-        this.menuInfo.moduleName, this.shortcutIconLoadCallback.bind(this), StyleConstants.DEFAULT_ICON);
+        this.menuInfo.moduleName, this.shortcutIconLoadCallback, StyleConstants.DEFAULT_ICON);
     } else {
       this.shortcutIconLoadCallback(this.menuInfo.menuImgSrc);
     }
@@ -141,7 +137,7 @@ struct HorizontalMenuItem {
   public updateName() {
     if (this.menuInfo.shortcutLabelId != -1 && this.menuInfo.menuText != "" && this.menuInfo.menuText != null && this.mResourceManager) {
       this.mResourceManager.getAppNameWithCache(this.menuInfo.shortcutLabelId, this.menuInfo.bundleName,
-        this.menuInfo.moduleName, this.shortcutName, this.shortcutNameLoadCallback.bind(this));
+        this.menuInfo.moduleName, this.shortcutName, this.shortcutNameLoadCallback);
     } else {
       this.shortcutNameLoadCallback(this.menuInfo.menuText);
     }
@@ -181,7 +177,7 @@ struct HorizontalMenuItem {
     .height(StyleConstants.DEFAULT_40)
     .width(235)
     .onClick(() => {
-      this.menuInfo.onMenuClick();
+      this.menuInfo?.onMenuClick();
       this.closeMenu();
     })
   }

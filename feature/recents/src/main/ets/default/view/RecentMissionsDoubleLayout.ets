@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Log } from '@ohos/common';
+import { Log, RecentMissionInfo } from '@ohos/common';
 import { localEventManager } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
@@ -28,9 +28,9 @@ const TAG = 'RecentMissionsDoubleLayout';
  */
 @Component
 export struct RecentMissionsDoubleLayout {
-  @Link recentMissionsDoubleList: [];
+  @Link recentMissionsDoubleList: RecentMissionInfo[];
   @Link isClickSubComponent: boolean;
-  private mRecentMissionsViewModel: RecentMissionsViewModel;
+  private mRecentMissionsViewModel?: RecentMissionsViewModel;
 
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear start');
@@ -41,7 +41,7 @@ export struct RecentMissionsDoubleLayout {
     Log.showInfo(TAG, `aboutToDisappear start`);
   }
 
-  itemChance(item: any): any {
+  itemChance(item: RecentMissionInfo): RecentMissionInfo {
     item.snapShotTime = '';
     return item;
   }
@@ -50,7 +50,7 @@ export struct RecentMissionsDoubleLayout {
     Column() {
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Start, justifyContent: FlexAlign.Center }) {
         Grid() {
-          ForEach(this.recentMissionsDoubleList, (item) => {
+          ForEach(this.recentMissionsDoubleList, (item: RecentMissionInfo) => {
               GridItem() {
                 RecentMissionCard({
                   missionId: item.missionId,
@@ -66,7 +66,7 @@ export struct RecentMissionsDoubleLayout {
                 })
               }
               .align(Alignment.Center)
-          },(item) => JSON.stringify(this.itemChance(item)))
+          },(item: RecentMissionInfo) => JSON.stringify(this.itemChance(item)))
         }
         .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
         .rowsTemplate('1fr 1fr')
@@ -99,9 +99,9 @@ export struct RecentMissionsDoubleLayout {
           this.isClickSubComponent = true;
           Log.showDebug(TAG, 'onClick click delete button');
           localEventManager.sendLocalEventSticky(EventConstants.EVENT_ANIMATION_CLOSE_APPLICATION, null);
-          this.mRecentMissionsViewModel.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
-          this.mRecentMissionsViewModel.backView();
-          this.mRecentMissionsViewModel.getRecentMissionsList();
+          this.mRecentMissionsViewModel?.deleteRecentMission(true, CommonConstants.INVALID_VALUE);
+          this.mRecentMissionsViewModel?.backView();
+          this.mRecentMissionsViewModel?.getRecentMissionsList();
         })
       }
       .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)

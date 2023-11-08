@@ -15,7 +15,7 @@
 
 import Prompt from '@ohos.promptAction';
 import missionManager from '@ohos.app.ability.missionManager';
-import { CloseAppManager, windowManager } from '@ohos/common';
+import { CloseAppManager, LauncherDragItemInfo, windowManager } from '@ohos/common';
 import { Log } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
@@ -212,7 +212,7 @@ export default class SmartDockModel {
    * @param appInfo
    * @param index
    */
-  addToSmartdock(appInfo: AppItemInfo, index?: number): boolean {
+  addToSmartdock(appInfo: LauncherDragItemInfo, index?: number): boolean {
     if (appInfo.typeId != CommonConstants.TYPE_APP) {
       return false;
     }

@@ -25,19 +25,21 @@ import PadStage from '../common/PadStage';
 
 const TAG = "AppCenterView";
 
+interface AnimationInfo {
+  appScaleX: number;
+  appScaleY: number;
+}
+
 @Entry
 @Component
 struct AppCenterView {
   @State workSpaceHeight: number = 0;
   @State dockHeight: number = 0;
   @State device: string = CommonConstants.PAD_DEVICE_TYPE;
-  private mLayoutViewModel: LayoutViewModel;
-  mAppGridViewModel: AppGridViewModel = null;
+  private mLayoutViewModel?: LayoutViewModel;
+  mAppGridViewModel: AppGridViewModel = AppGridViewModel.getInstance();
   @StorageLink('animationInfo_alpha') mAppAlpha: number = 1.0;
-  @StorageLink('animationInfo_scale') mAnimationInfo: {
-    appScaleX: number,
-    appScaleY: number,
-  } = {
+  @StorageLink('animationInfo_scale') mAnimationInfo: AnimationInfo = {
     appScaleX: 1.0,
     appScaleY: 1.0,
   }
@@ -68,8 +70,8 @@ struct AppCenterView {
   }
 
   private async updateScreenSize(): Promise<void> {
-    this.workSpaceHeight = this.mLayoutViewModel.getWorkSpaceHeight();
-    this.dockHeight = this.mLayoutViewModel.getDockHeight();
+    this.workSpaceHeight = LayoutViewModel.getInstance().getWorkSpaceHeight() as number;
+    this.dockHeight = LayoutViewModel.getInstance().getDockHeight() as number;
   }
 
   onBackPress(): boolean {
@@ -113,7 +115,7 @@ struct AppCenterView {
     .height('100%')
     .onClick(() => {
       Log.showInfo(TAG, 'click appcenter area');
-      const contextFlag: boolean = AppStorage.get('contextMenuState');
+      const contextFlag: boolean = AppStorage.get('contextMenuState') as boolean;
       Log.showInfo(TAG, 'onClick contextFlag: ' + contextFlag);
       if (contextFlag && !ContextMenu.close()) {
         AppStorage.setOrCreate('contextMenuState', false);

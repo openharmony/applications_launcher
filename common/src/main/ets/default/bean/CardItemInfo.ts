@@ -75,10 +75,12 @@ export class CardItemInfo {
   /**
    * Indicates form of support Dimensions.
    */
-  supportDimensions: number[] | undefined;
+  supportDimensions: number[] | [];
 
   /**
    * GridLayoutItemInfo: total count of card
    */
   totalDimensionCount: number | undefined;
+  dragLayerWidth?: number;
+  dragLayerHeight?: number;
 }

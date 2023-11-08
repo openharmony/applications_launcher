@@ -22,18 +22,18 @@ const TAG = 'AppIcon';
 
 @Component
 export struct AppIcon {
-  iconSize: number;
-  iconId: number;
-  bundleName: string;
-  moduleName: string;
+  iconSize: number = 0;
+  iconId: number = 0;
+  bundleName: string = '';
+  moduleName: string = '';
   @State icon: string = '';
   badgeNumber: number = 0;
   @State iconScale: number = 1;
   useCache: boolean = true;
   badgeFontSize: number = StyleConstants.DEFAULT_BADGE_FONT_SIZE;
-  private mResourceManager;
-  private mBadgeManager;
-  private mDefaultAppIcon;
+  private mResourceManager = ResourceManager.getInstance();
+  private mBadgeManager = BadgeManager.getInstance();
+  private mDefaultAppIcon: ResourceStr = '';
 
   aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
@@ -42,23 +42,23 @@ export struct AppIcon {
     this.initBadge();
   }
 
-  public iconLoadCallback(image: string) {
+  public iconLoadCallback = (image: string) => {
     this.icon = image;
   }
 
   public updateIcon() {
     this.mResourceManager.getAppIconWithCache(this.iconId, this.bundleName, this.moduleName,
-    this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+    this.iconLoadCallback, this.mDefaultAppIcon);
   }
 
-  public badgeInitCallback(badgeNumber) {
+  public badgeInitCallback = (badgeNumber: number) => {
     if (this.badgeNumber != badgeNumber) {
       this.badgeNumber = badgeNumber;
     }
   }
 
   public initBadge() {
-    this.mBadgeManager.getBadgeByBundle(this.bundleName, this.badgeInitCallback.bind(this));
+    this.mBadgeManager.getBadgeByBundle(this.bundleName, this.badgeInitCallback);
   }
 
   build() {

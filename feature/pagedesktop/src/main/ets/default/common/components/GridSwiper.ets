@@ -27,8 +27,13 @@ import {
   LauncherDragItemInfo
 } from '@ohos/common';
 import SwiperPage from './SwiperPage';
+import { PageDesktopViewModel } from '../../viewmodel/PageDesktopViewModel';
 
 const TAG = "GridSwiper";
+
+interface AppListInfo {
+  appGridInfo: LauncherDragItemInfo[][]
+}
 
 @Component
 export default struct GridSwiper {
@@ -36,13 +41,11 @@ export default struct GridSwiper {
   @StorageLink('isDesktopLoadFinished') desktopLoadFinished: boolean = false;
   @Prop gridConfig: string;
   @StorageLink('pageIndex') pageIndex: number = 0;
-  private mPageDesktopViewModel;
-  @StorageLink('appListInfo') @Watch('updatePageList') appListInfo: {
-    appGridInfo: [[]]
-  } = { appGridInfo: [[]] };
+  private mPageDesktopViewModel?: PageDesktopViewModel;
+  @StorageLink('appListInfo') @Watch('updatePageList') appListInfo: AppListInfo = { appGridInfo: [[]] };
   @State pageList: number[] = [0];
   private swiperController: SwiperController = new SwiperController();
-  dialogController?: CustomDialogController;
+  dialogController?: CustomDialogController | null;
   @StorageLink('desktopEventResponse') desktopEventResponse: boolean = true;
   @State desktopIndicator: DotIndicator | DigitIndicator = Indicator.dot().selectedColor(StyleConstants.DEFAULT_FONT_COLOR);
 
@@ -72,6 +75,7 @@ export default struct GridSwiper {
   }
 
   aboutToAppear(): void {
+    this.mPageDesktopViewModel = PageDesktopViewModel.getInstance();
     this.mPageDesktopViewModel.setSwiperController(this.swiperController);
   }
 
@@ -80,7 +84,7 @@ export default struct GridSwiper {
   }
 
   private buildLog(): boolean {
-    let isDesktopLoadFinished = AppStorage.get('isDesktopLoadFinished');
+    let isDesktopLoadFinished = AppStorage.get('isDesktopLoadFinished') as boolean;
     Log.showDebug(TAG, `build start ${isDesktopLoadFinished} page ${this.pageIndex}`);
     return isDesktopLoadFinished == true;
   }
@@ -88,7 +92,7 @@ export default struct GridSwiper {
   @Builder MenuBuilder() {
     Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
       AppMenu({
-        getMenuInfoList: this.getMenu.bind(this),
+        getMenuInfoList: () => this.getMenu()
       })
     }
     .width(StyleConstants.CONTEXT_MENU_WIDTH)
@@ -103,16 +107,16 @@ export default struct GridSwiper {
     setting.menuText = $r('app.string.into_settings')
     setting.onMenuClick = () => {
       Trace.start(Trace.CORE_METHOD_START_SETTINGS);
-      this.mPageDesktopViewModel.intoSetting();
+      this.mPageDesktopViewModel?.intoSetting();
     }
     menuInfoList.push(setting);
 
     let addOrDeleteBlankPage = new MenuInfo();
     addOrDeleteBlankPage.menuType = CommonConstants.MENU_TYPE_FIXED
-    addOrDeleteBlankPage.menuImgSrc = this.mPageDesktopViewModel.getBlankPageBtnIcon()
-    addOrDeleteBlankPage.menuText = this.mPageDesktopViewModel.getBlankPageBtnStr()
+    addOrDeleteBlankPage.menuImgSrc = this.mPageDesktopViewModel?.getBlankPageBtnIcon()
+    addOrDeleteBlankPage.menuText = this.mPageDesktopViewModel?.getBlankPageBtnStr()
     addOrDeleteBlankPage.onMenuClick = () => {
-      this.mPageDesktopViewModel.addOrDeleteBlankPage();
+      this.mPageDesktopViewModel?.addOrDeleteBlankPage();
     }
     menuInfoList.push(addOrDeleteBlankPage);
     return menuInfoList;
@@ -123,7 +127,7 @@ export default struct GridSwiper {
       if (this.buildLog()) {}
         if (this.desktopLoadFinished) {
           Swiper(this.swiperController) {
-            ForEach(this.pageList, (item, index: number) => {
+            ForEach(this.pageList, (item: number, index: number) => {
               if (AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
                 Column() {
                   SwiperPage({
@@ -136,7 +140,7 @@ export default struct GridSwiper {
                 .gesture(
                 LongPressGesture({ repeat: false })
                   .onAction((event: GestureEvent) => {
-                    this.dialogController.open()
+                    this.dialogController?.open()
                   })
                 )
                 .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
@@ -150,15 +154,15 @@ export default struct GridSwiper {
                   .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
                   .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)
               }
-            }, (item, index: number) => {
+            }, (item: number, index: number) => {
               return `${item}${index}`;
             })
           }
           .id(`${TAG}_Swiper`)
           .padding({
             top: this.navigationBarStatusValue ?
-              this.mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop :
-              this.mPageDesktopViewModel.getPageDesktopStyleConfig().mDesktopMarginTop + 0
+              this.mPageDesktopViewModel!.getPageDesktopStyleConfig().mDesktopMarginTop :
+              this.mPageDesktopViewModel!.getPageDesktopStyleConfig().mDesktopMarginTop + 0
           })
           .height(StyleConstants.PERCENTAGE_100)
           .width(StyleConstants.PERCENTAGE_100)
