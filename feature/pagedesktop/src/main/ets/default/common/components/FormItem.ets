@@ -14,15 +14,17 @@
  */
 
 import {
+  RemoveFormDialog,
+  FormManagerDialog,
+  FormItemComponent,
+} from '@ohos/common/component'
+import {
   CardItemInfo,
   LauncherDragItemInfo,
   Log,
   StyleConstants,
   PresetStyleConstants,
   ResourceManager,
-  RemoveFormDialog,
-  FormManagerDialog,
-  FormItemComponent,
   CommonConstants
 } from '@ohos/common';
 import {
@@ -35,6 +37,11 @@ import { PageDesktopStartAppHandler } from '../PageDesktopStartAppHandler';
 
 const TAG = 'FormItem';
 
+interface FormAnimateData {
+  cardId: number;
+  isOpenRemoveFormDialog: boolean;
+}
+
 /**
  * Form item, which display on desktop workspace.
  */
@@ -43,23 +50,20 @@ export default struct FormItem {
   @StorageLink('dragItemInfo') pageDesktopDragItemInfo: LauncherDragItemInfo = new LauncherDragItemInfo();
   @StorageLink('isRemoveForm') @Watch('removeFormAnimate') isRemoveForm: boolean = false;
   @StorageLink('dragItemType') dragItemType: number = CommonConstants.DRAG_FROM_DESKTOP;
-  @StorageLink('formAnimateData') formAnimateData: {
-    cardId: number,
-    isOpenRemoveFormDialog: boolean,
-  } = { cardId: 0, isOpenRemoveFormDialog: false };
+  @StorageLink('formAnimateData') formAnimateData: FormAnimateData = { cardId: 0, isOpenRemoveFormDialog: false };
   @State animateScale: number = 1.0;
   @State animateOpacity: number = 1.0;
   @State allowUpdate: boolean = true;
   @State isShow: boolean = true;
-  private formItem: CardItemInfo = new CardItemInfo();
+  private formItem: LauncherDragItemInfo = new LauncherDragItemInfo();
   private mPageDesktopViewModel: PageDesktopViewModel = PageDesktopViewModel.getInstance();
-  private mFormViewModel: FormViewModel;
-  private mFormStyleConfig: FormStyleConfig;
-  private mPageDesktopDragHandler: PageDesktopDragHandler;
+  private mFormViewModel?: FormViewModel;
+  private mFormStyleConfig: FormStyleConfig = FormViewModel.getInstance().getFormStyleConfig();
+  private mPageDesktopDragHandler: PageDesktopDragHandler = PageDesktopDragHandler.getInstance();
   @State mFormNameHeight: number = StyleConstants.DEFAULT_APP_NAME_HEIGHT;
   @State mAppItemWidth: number = StyleConstants.DEFAULT_APP_ITEM_WIDTH;
   @State mFormNameSize: number = StyleConstants.DEFAULT_APP_NAME_SIZE;
-  private mPageDesktopStartAppHandler: PageDesktopStartAppHandler;
+  private mPageDesktopStartAppHandler: PageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
   private mIconMarginVertical: number = StyleConstants.DEFAULT_10;
   private isSwappingPage = false;
   private mMargin: number = 0;
@@ -70,7 +74,7 @@ export default struct FormItem {
   private mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   private mIsDeleteForm: string = '';
   private mForm: string = '';
-  private clearForm: Function = null;
+  private clearForm: Function = () => {};
 
   aboutToAppear(): void  {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
@@ -87,21 +91,18 @@ export default struct FormItem {
     this.mGridSpaceWidth = Number(this.mPageDesktopViewModel.getWorkSpaceWidth()) - this.mMargin;
     this.mGridSpaceHeight = Number(this.mPageDesktopViewModel.getWorkSpaceHeight());
     if (this.formItem.cardDimension) {
-      this.mFormItemWidth = this.mFormStyleConfig.mFormWidth.get(this.formItem.cardDimension.toString());
-      this.mFormItemHeight = this.mFormStyleConfig.mFormHeight.get(this.formItem.cardDimension.toString());
+      this.mFormItemWidth = this.mFormStyleConfig.mFormWidth.get(this.formItem.cardDimension.toString()) as number;
+      this.mFormItemHeight = this.mFormStyleConfig.mFormHeight.get(this.formItem.cardDimension.toString()) as number;
     }
     const resourceManager = ResourceManager.getInstance();
-    resourceManager.getStringById($r('app.string.is_delete_form').id, this.getDialogNamePre.bind(this));
-    resourceManager.getStringById($r('app.string.form').id, this.getDialogNameAft.bind(this));
+    resourceManager.getStringById($r('app.string.is_delete_form').id, this.getDialogNamePre);
+    resourceManager.getStringById($r('app.string.form').id, this.getDialogNameAft);
     Log.showDebug(TAG, `aboutToAppear end formItem: ${JSON.stringify(this.formItem)}`);
   }
 
   aboutToDisappear(): void {
-    delete this.dialogController;
     this.dialogController = null;
-    delete this.formManagerDialogController;
     this.formManagerDialogController = null;
-    this.clearForm = null;
   }
 
   /**
@@ -124,7 +125,7 @@ export default struct FormItem {
             AppStorage.setOrCreate('isRemoveForm', false);
             this.formAnimateData.cardId = 0;
             this.formAnimateData.isOpenRemoveFormDialog = false;
-            this.mFormViewModel.deleteForm(this.formItem.cardId);
+            this.mFormViewModel?.deleteForm(this.formItem.cardId);
             this.mPageDesktopViewModel.getGridList();
           }
         }, () => {
@@ -134,11 +135,11 @@ export default struct FormItem {
     }
   }
 
-  private getDialogNamePre(value): void {
+  private getDialogNamePre = (value: string): void => {
     this.mIsDeleteForm = value;
   }
 
-  private getDialogNameAft(value): void {
+  private getDialogNameAft = (value: string): void => {
     this.mForm = value;
   }
 
@@ -146,7 +147,7 @@ export default struct FormItem {
    * get dialogName
    */
   private getDialogName(): string {
-    const appName = this.mPageDesktopViewModel.getAppName(this.formItem.appLabelId + this.formItem.bundleName + this.formItem.moduleName);
+    const appName = this.mPageDesktopViewModel.getAppName(this.concatCacheKey(this.formItem));
     const dialogName = `${this.mIsDeleteForm}"${appName}"${this.mForm}`;
     return dialogName;
   }
@@ -154,7 +155,7 @@ export default struct FormItem {
   /**
    * Dialog for form remove.
    */
-  dialogController: CustomDialogController = new CustomDialogController({
+  dialogController: CustomDialogController | null = new CustomDialogController({
     builder:  RemoveFormDialog({
       cancel: () => {},
       confirm: () => {
@@ -175,25 +176,32 @@ export default struct FormItem {
     Log.showInfo(TAG, 'cancel form dialog');
   }
 
+  concatCacheKey(item: LauncherDragItemInfo): string {
+    if (item.appLabelId && item.bundleName && item.moduleName) {
+      return `${item.appLabelId}${item.bundleName}${item.moduleName}`;
+    }
+    return '';
+  }
+
   /**
    * Dialog for form manager view (pad adaptation).
    */
-  formManagerDialogController: CustomDialogController = new CustomDialogController({
+  formManagerDialogController: CustomDialogController | null = new CustomDialogController({
     builder: FormManagerDialog({
-      cancel: (callback?) => {
+      cancel: (callback?: () => void) => {
         // delete all form
         if (callback != undefined) {
           this.clearForm = callback;
         }
       },
-      confirm: (formCardItem) => {
+      confirm: (formCardItem: CardItemInfo) => {
         // add form to desktop
         Log.showInfo(TAG, `createCardToDeskTop formCardItem: ${JSON.stringify(formCardItem)}`);
         this.mPageDesktopViewModel.createCardToDeskTop(formCardItem);
         // delete other form
       },
       bundleName: this.formItem.bundleName,
-      appName: this.mPageDesktopViewModel.getAppName(this.formItem.appLabelId + this.formItem.bundleName + this.formItem.moduleName),
+      appName: this.mPageDesktopViewModel.getAppName(this.concatCacheKey(this.formItem)),
       appLabelId: this.formItem.appLabelId
     }),
     cancel: this.cancelFormDialog,
@@ -209,13 +217,14 @@ export default struct FormItem {
     this.clearForm();
   }
 
-  dragStart(event: DragEvent): CustomBuilder {
+  dragStart = (event: DragEvent): CustomBuilder => {
     ContextMenu.close();
     this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
-    this.pageDesktopDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.formItem);
-    const selectAppIndex = globalThis.PageDesktopDragHandler.getItemIndex(event.getWindowX(), event.getWindowY());
-    const startPosition = globalThis.PageDesktopDragHandler.getTouchPosition(event.getWindowX(), event.getWindowY())
-    globalThis.PageDesktopDragHandler.mStartPosition = startPosition;
+    this.formItem.isDragging = true;
+    this.pageDesktopDragItemInfo = this.formItem;
+    const selectAppIndex = PageDesktopDragHandler.getInstance().getItemIndex(event.getWindowX(), event.getWindowY());
+    const startPosition = PageDesktopDragHandler.getInstance().getTouchPosition(event.getWindowX(), event.getWindowY())
+    PageDesktopDragHandler.getInstance().mStartPosition = startPosition;
     AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
     Log.showInfo(TAG, `onDragStart event: [${event.getWindowX()}, ${event.getWindowY()}], selectAppIndex: ${selectAppIndex}`);
   }
@@ -229,14 +238,14 @@ export default struct FormItem {
           formNameHeight: this.mFormNameHeight,
           formNameSize: this.mFormNameSize,
           nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
-          formItem: this.formItem,
+          formItem: this.formItem as CardItemInfo,
           nameLines: this.mNameLines,
           mPaddingTop: this.mIconMarginVertical,
           iconNameMargin: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mIconNameMargin,
           menuInfo: this.mPageDesktopViewModel.buildCardMenuInfoList(this.formItem,
             this.dialogController, this.formManagerDialogController),
-          dragStart: this.dragStart.bind(this),
-          clickForm: (event, formItem) => {
+          dragStart: this.dragStart,
+          clickForm: (event: ClickEvent, formItem: CardItemInfo) => {
             Log.showInfo(TAG, 'click form');
             this.setStartAppInfo();
           },
@@ -263,10 +272,10 @@ export default struct FormItem {
       )
       .onTouch((event: TouchEvent) => {
         if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
-          let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
+          let mIsDragEffectArea = PageDesktopDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
           Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
           if (!mIsDragEffectArea) {
-            globalThis.PageDesktopDragHandler.deleteBlankPageOutsideEffect();
+            PageDesktopDragHandler.getInstance().deleteBlankPageOutsideEffect();
             this.pageDesktopDragItemInfo = new LauncherDragItemInfo();
             AppStorage.setOrCreate('selectAppIndex', null);
           }

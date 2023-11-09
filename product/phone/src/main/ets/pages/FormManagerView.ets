@@ -15,7 +15,7 @@
 
 import { Log } from '@ohos/common';
 import { windowManager } from '@ohos/common';
-import { FormManagerComponent } from '@ohos/form';
+import { FormManagerComponent } from '@ohos/form/component';
 import PhonePresetStyleConstants from '../common/constants/PhonePresetStyleConstants';
 
 const TAG = "FormManagerView";
@@ -23,8 +23,6 @@ const TAG = "FormManagerView";
 @Entry
 @Component
 struct FormManagerView {
-  private mFormInfo: Object = {};
-
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
   }

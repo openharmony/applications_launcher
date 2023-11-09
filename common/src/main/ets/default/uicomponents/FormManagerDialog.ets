@@ -27,7 +27,7 @@ export struct FormManagerDialog {
   @StorageLink('formMgrItem') formItem: Array<CardItemInfo> = [];
   @State mAllowUpdate: boolean = false;
   private mSwiperController: SwiperController = new SwiperController()
-  private mFormModel: FormModel;
+  private mFormModel: FormModel = FormModel.getInstance();
   private mSwiperIndex: number = 0;
   private mFormIdList: number[] = [];
   private mFormComponentWidth: number[] =
@@ -41,26 +41,20 @@ export struct FormManagerDialog {
     StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT / 2,
     StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT];
 
-  mFormDialogController: CustomDialogController;
-  cancel: (callback?) => void;
-  confirm: (formCardItem) => void;
-  bundleName: string;
-  appName: string;
-  appLabelId: number;
+  mFormDialogController?: CustomDialogController;
+  cancel = (callback?: Function) => {};
+  confirm = (formCardItem: CardItemInfo) => {};
+  bundleName: string = '';
+  appName: string = '';
+  appLabelId: number = 0;
 
   aboutToAppear(): void {
     this.mFormModel = FormModel.getInstance();
-    this.cancel(this.clearAllFormById.bind(this));
+    this.cancel(this.clearAllFormById);
     this.getCurrentFormInfo();
   }
 
   aboutToDisappear(): void {
-    this.cancel = null;
-    this.confirm = null;
-    delete this.mFormDialogController;
-    this.mFormDialogController = null;
-    delete this.mSwiperController;
-    this.mSwiperController = null;
   }
 
   /**
@@ -81,7 +75,7 @@ export struct FormManagerDialog {
     let count = 0;
     let isStop = false;
     for (let i = 0; i < this.formItem.length; i++) {
-      if (isStop) break;
+      if (isStop || !this.formItem[i]?.supportDimensions.length) break;
       for (let j = 0; j < this.formItem[i].supportDimensions.length; j++) {
         if (count === this.mSwiperIndex) {
           formCardItem.cardName = this.formItem[i].cardName;
@@ -115,7 +109,7 @@ export struct FormManagerDialog {
   /**
    * Delete all form by id.
    */
-  private clearAllFormById(): void {
+  private clearAllFormById = (): void => {
     for (let i = 0; i < this.mFormIdList.length; i++) {
         this.mFormModel.deleteFormByFormID(this.mFormIdList[i]);
     }
@@ -130,8 +124,8 @@ export struct FormManagerDialog {
         .textAlign(TextAlign.Center)
       Column({ space: 5 }) {
         Swiper(this.mSwiperController) {
-          ForEach(this.formItem, (formItem) => {
-            ForEach(formItem.supportDimensions, (dimensionItem) => {
+          ForEach(this.formItem, (formItem: CardItemInfo) => {
+            ForEach(formItem.supportDimensions, (dimensionItem: number) => {
               Column() {
                 Text(formItem.description)
                   .width('70%')
@@ -143,11 +137,11 @@ export struct FormManagerDialog {
                   direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
                   if (this.bundleName == formItem.bundleName) {
                     FormComponent({
-                      id: formItem.cardId,
-                      name: formItem.cardName,
-                      bundle: formItem.bundleName,
-                      ability: formItem.abilityName,
-                      module: formItem.moduleName,
+                      id: formItem.cardId as number,
+                      name: formItem.cardName as string,
+                      bundle: formItem.bundleName as string,
+                      ability: formItem.abilityName as string,
+                      module: formItem.moduleName as string,
                       dimension: dimensionItem,
                     })
                       .enabled(false)
@@ -176,8 +170,8 @@ export struct FormManagerDialog {
               .height('70%')
               .hitTestBehavior(HitTestMode.Block)
               }
-            }, (dimensionItem) => JSON.stringify(dimensionItem))
-          }, (formItem) => JSON.stringify(formItem))
+            }, (dimensionItem: number) => JSON.stringify(dimensionItem))
+          }, (formItem: CardItemInfo) => JSON.stringify(formItem))
         }
         .height('100%')
         .loop(false)
@@ -201,7 +195,7 @@ export struct FormManagerDialog {
         .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
         .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
         .onClick(() => {
-          this.mFormDialogController.close();
+          this.mFormDialogController?.close();
           this.clearAllFormById();
         })
         Divider()
@@ -217,7 +211,7 @@ export struct FormManagerDialog {
         .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
         .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
         .onClick(() => {
-          this.mFormDialogController.close();
+          this.mFormDialogController?.close();
           this.confirm(this.getChooseCard());
           this.clearNoUseFormById();
         })

@@ -20,8 +20,8 @@ import { RecentMissionInfo } from '@ohos/common';
 import { RecentsStyleConstants } from '@ohos/recents';
 import { RecentMissionsStage } from '@ohos/recents';
 import { RecentMissionsViewModel } from '@ohos/recents';
-import { RecentMissionsSingleLayout } from '@ohos/recents';
-import { RecentMissionsDoubleLayout } from '@ohos/recents';
+import { RecentMissionsSingleLayout } from '@ohos/recents/component';
+import { RecentMissionsDoubleLayout } from '@ohos/recents/component';
 
 const TAG = "RecentView";
 
@@ -31,19 +31,23 @@ struct RecentView {
   @StorageLink('recentMissionsList') recentMissionsList: RecentMissionInfo[] = [];
   @State isClickSubComponent: boolean = false;
   private mRecentMissionsStage: RecentMissionsStage = new RecentMissionsStage();
-  @State mRecentMissionsViewModel: RecentMissionsViewModel = undefined;
+  private mRecentMissionsViewModel?: RecentMissionsViewModel;
+  @State mRecentMissionsRowType: string = '';
+  @State recentLoadedCompleted: boolean = false;
 
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
     this.isClickSubComponent = false;
     this.mRecentMissionsStage.onCreate();
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
+    this.mRecentMissionsRowType = this.mRecentMissionsViewModel.getRecentMissionsRowType();
     this.mRecentMissionsViewModel.getRecentMissionsList();
     this.closeRecentDockPopup();
   }
 
   onPageHide(): void {
     Log.showInfo(TAG, `onPageHide`);
+    this.recentLoadedCompleted = false;
     this.isClickSubComponent = false;
     this.mRecentMissionsStage.onDestroy();
   }
@@ -55,7 +59,7 @@ struct RecentView {
   }
 
   private closeRecentDockPopup(): void {
-    let num: number = AppStorage.get('sysUiRecentOnClickEvent');
+    let num: number = AppStorage.get('sysUiRecentOnClickEvent') as number;
     if (!num) {
       num = 0;
     }
@@ -65,24 +69,24 @@ struct RecentView {
 
   build() {
     Column() {
-      if (!Array.isArray(this.recentMissionsList) || this.recentMissionsList.length === 0
-      || (this.mRecentMissionsViewModel == undefined)) {
-        Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-          Text($r('app.string.No_running_apps_recently'))
-            .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)
-            .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE)
-        }
-      } else {
-        if (this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single') {
-          RecentMissionsSingleLayout({
-            recentMissionsSingleList: $recentMissionsList,
-            isClickSubComponent: $isClickSubComponent,
-          });
+      if (this.recentMissionsList && this.mRecentMissionsViewModel && this.mRecentMissionsRowType) {
+        if (this.recentMissionsList.length) {
+          if (this.mRecentMissionsRowType === 'single') {
+            RecentMissionsSingleLayout({ recentMissionsSingleList: $recentMissionsList,
+              isClickSubComponent: $isClickSubComponent});
+          }
+          if (this.mRecentMissionsRowType === 'double') {
+            RecentMissionsDoubleLayout({ recentMissionsDoubleList: $recentMissionsList,
+              isClickSubComponent: $isClickSubComponent});
+          }
         } else {
-          RecentMissionsDoubleLayout({
-            recentMissionsDoubleList: $recentMissionsList,
-            isClickSubComponent: $isClickSubComponent,
-          });
+          if (this.recentLoadedCompleted) {
+            Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
+              Text($r('app.string.No_running_apps_recently'))
+                .fontColor(RecentsStyleConstants.DEFAULT_FONT_COLOR)
+                .fontSize(RecentsStyleConstants.DEFAULT_FONT_SIZE)
+            }
+          }
         }
       }
 
@@ -94,7 +98,7 @@ struct RecentView {
     .onClick(() => {
       if (!this.isClickSubComponent) {
         Log.showInfo(TAG, 'click recent missions area');
-        this.mRecentMissionsViewModel.backView();
+        this.mRecentMissionsViewModel?.backView && this.mRecentMissionsViewModel.backView();
       }
     })
   }

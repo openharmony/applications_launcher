@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Log } from '@ohos/common';
+import { Log, RecentMissionInfo } from '@ohos/common';
 import RecentMissionCard from '../common/uicomponents/RecentMissionCard';
 import { RecentsStyleConstants } from '../common/constants/RecentsStyleConstants';
 import { RecentMissionsViewModel } from '../viewmodel/RecentMissionsViewModel';
@@ -24,10 +24,10 @@ const TAG = 'RecentMissionsSingleLayout';
  */
 @Component
 export struct RecentMissionsSingleLayout {
-  @Link recentMissionsSingleList: [];
+  @Link recentMissionsSingleList: RecentMissionInfo[];
   @Link isClickSubComponent: boolean;
   @StorageLink('recentIdx') recentIdx: number = 0;
-  private mRecentMissionsViewModel: RecentMissionsViewModel;
+  private mRecentMissionsViewModel?: RecentMissionsViewModel;
 
   aboutToAppear(): void {
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
@@ -38,7 +38,7 @@ export struct RecentMissionsSingleLayout {
       // middle area, mission list
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
         List({ space: RecentsStyleConstants.SINGLE_LIST_MIDDLE_AREA_SPACE, initialIndex: this.recentIdx}) {
-          ForEach(this.recentMissionsSingleList, (item) => {
+          ForEach(this.recentMissionsSingleList, (item: RecentMissionInfo) => {
             ListItem() {
               RecentMissionCard({
                 missionId: item.missionId,
@@ -53,7 +53,7 @@ export struct RecentMissionsSingleLayout {
                 snapShotTime: item.snapShotTime
               })
             }
-          }, (item) => JSON.stringify(item))
+          }, (item: RecentMissionInfo) => JSON.stringify(item))
         }
         .cachedCount(3)
         .scrollBar(BarState.Off)
@@ -82,9 +82,9 @@ export struct RecentMissionsSingleLayout {
         .onClick(() => {
           this.isClickSubComponent = true;
           Log.showDebug(TAG, 'onClick click delete button');
-          this.mRecentMissionsViewModel.deleteRecentMission(true, -1);
-          this.mRecentMissionsViewModel.backView();
-          this.mRecentMissionsViewModel.getRecentMissionsList();
+          this.mRecentMissionsViewModel?.deleteRecentMission(true, -1);
+          this.mRecentMissionsViewModel?.backView();
+          this.mRecentMissionsViewModel?.getRecentMissionsList();
         })
       }
       .margin({ bottom: RecentsStyleConstants.SINGLE_LIST_DELETE_IMAGE_FULL_BOTTOM_MARGIN })

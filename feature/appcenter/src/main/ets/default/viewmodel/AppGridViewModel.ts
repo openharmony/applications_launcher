@@ -14,6 +14,7 @@
  */
 
 import { ShortcutInfo } from 'bundle/shortcutInfo';
+import launcherBundleManager from '@ohos.bundle.launcherBundleManager';
 import { AppListViewModel } from './AppListViewModel';
 
 const TAG = 'AppGridViewModel';
@@ -61,7 +62,7 @@ export class AppGridViewModel extends AppListViewModel {
   /**
    * Get shortcut information by bundleName
    */
-  getShortcutInfo(bundleName: string): ShortcutInfo[] | undefined {
+  getShortcutInfo(bundleName: string): launcherBundleManager.ShortcutInfo[] | undefined {
     return this.mAppModel.getShortcutInfo(bundleName);
   }
 }

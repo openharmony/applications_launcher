@@ -14,6 +14,12 @@
  */
 
 import {
+  AppBubble,
+  UninstallDialog,
+  FormManagerDialog,
+  AppIcon,
+} from '@ohos/common/component'
+import {
   AppItemInfo,
   CardItemInfo,
   LauncherDragItemInfo,
@@ -21,12 +27,9 @@ import {
   Trace,
   StyleConstants,
   PresetStyleConstants,
-  AppBubble,
-  UninstallDialog,
-  FormManagerDialog,
   ResourceManager,
-  AppIcon,
-  CommonConstants
+  CommonConstants,
+  MenuInfo
 } from '@ohos/common';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
 import { PageDesktopViewModel } from '../../viewmodel/PageDesktopViewModel';
@@ -35,6 +38,17 @@ import { PageDesktopStartAppHandler } from '../PageDesktopStartAppHandler';
 const DOUBLE_CLICK_COUNT = 2
 
 const TAG = "AppItem";
+
+interface StartAppItemInfo {
+  bundleName?: string;
+  abilityName?: string;
+  moduleName?: string;
+  appIconSize: number;
+  appIconId?: number;
+  icon: ResourceStr;
+  row?: number;
+  column?: number;
+}
 
 @Component
 export default struct AppItem {
@@ -51,29 +65,29 @@ export default struct AppItem {
   mIconNameMargin: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
   private mMargin: number = 0;
   private mMarginVertical: number = 0;
-  private mGridSpaceWidth : number;
-  private mGridSpaceHeight : number;
+  private mGridSpaceWidth : number = 0;
+  private mGridSpaceHeight : number = 0;
   private isSwappingPage = false;
-  private item: any;
-  private mPageDesktopViewModel: PageDesktopViewModel;
+  private item: LauncherDragItemInfo = new LauncherDragItemInfo();
+  private mPageDesktopViewModel?: PageDesktopViewModel;
   private isPad: boolean = false;
-  private mPageDesktopDragHandler: PageDesktopDragHandler;
-  private mPageDesktopStartAppHandler: PageDesktopStartAppHandler;
+  private mPageDesktopDragHandler: PageDesktopDragHandler = PageDesktopDragHandler.getInstance();
+  private mPageDesktopStartAppHandler: PageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
   private mouseClick: number = 0;
-  private dialogName: string = "";
-  private clearForm: Function = null;
+  private dialogName: string = '';
+  private clearForm = () => {};
 
-  dialogController: CustomDialogController = new CustomDialogController({
+  dialogController: CustomDialogController | null = new CustomDialogController({
     builder:  UninstallDialog({
       cancel: () => {},
       confirm: () => {
         if (this.isPad) {
-          this.mPageDesktopViewModel.deleteAppItem({
+          this.mPageDesktopViewModel?.deleteAppItem({
             bundleName: undefined,
             keyName: this.appInfo.keyName
           });
         } else {
-          this.mPageDesktopViewModel.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
+          this.mPageDesktopViewModel?.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
         }
       },
       dialogName: this.dialogName,
@@ -87,18 +101,18 @@ export default struct AppItem {
   /**
    * Dialog for form manager view (pad adaptation).
    */
-  formManagerDialogController: CustomDialogController = new CustomDialogController({
+  formManagerDialogController: CustomDialogController | null = new CustomDialogController({
     builder: FormManagerDialog({
-      cancel: (callback?) => {
+      cancel: (callback?: () => void) => {
         // delete all form
         if (callback != undefined) {
           this.clearForm = callback;
         }
       },
-      confirm: (formCardItem) => {
+      confirm: (formCardItem: CardItemInfo) => {
         // add form to desktop
         Log.showInfo(TAG, `createCardToDeskTop formCardItem: ${JSON.stringify(formCardItem)}`);
-        this.mPageDesktopViewModel.createCardToDeskTop(formCardItem);
+        this.mPageDesktopViewModel?.createCardToDeskTop(formCardItem);
         // delete other form
       },
       bundleName: this.formAppInfo.bundleName,
@@ -119,6 +133,7 @@ export default struct AppItem {
   }
 
   aboutToAppear(): void  {
+    this.mPageDesktopViewModel = PageDesktopViewModel.getInstance();
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mPageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
     this.isPad = this.mPageDesktopViewModel.getDevice();
@@ -139,16 +154,13 @@ export default struct AppItem {
   }
 
   aboutToDisappear(): void {
-    delete this.dialogController;
     this.dialogController = null;
-    delete this.formManagerDialogController;
     this.formManagerDialogController = null;
-    this.clearForm = null;
   }
 
-  getMenuInfoList() {
-    const menuInfo = this.mPageDesktopViewModel.buildMenuInfoList(this.item,
-      this.dialogController, this.formManagerDialogController)
+  getMenuInfoList = (): MenuInfo[] => {
+    const menuInfo = this.mPageDesktopViewModel?.buildMenuInfoList(this.item,
+      this.dialogController, this.formManagerDialogController) as MenuInfo[];
     return menuInfo;
   }
 
@@ -165,7 +177,7 @@ export default struct AppItem {
         iconSize: this.mIconSize,
         nameSize: this.mAppNameSize,
         nameHeight: this.mAppNameHeight,
-        nameFontColor: this.mPageDesktopViewModel.getPageDesktopStyleConfig().mNameFontColor,
+        nameFontColor: this.mPageDesktopViewModel?.getPageDesktopStyleConfig().mNameFontColor as string,
         appName: this.item.appName,
         bundleName: this.item.bundleName,
         abilityName: this.item.abilityName,
@@ -174,11 +186,11 @@ export default struct AppItem {
         appLabelId: this.item.appLabelId,
         badgeNumber: this.item.badgeNumber,
         isSelect: this.selectDesktopAppItem == this.item.keyName,
-        getMenuInfoList: this.getMenuInfoList.bind(this),
+        getMenuInfoList: this.getMenuInfoList,
         mPaddingTop: this.mMarginVertical,
         nameLines: this.mNameLines,
         mIconNameMargin: this.mIconNameMargin,
-        dragStart: this.dragStart.bind(this)
+        dragStart: this.dragStart
       })
     }
     .visibility(this.dragItemType === CommonConstants.DRAG_FROM_DESKTOP && this.pageDesktopDragItemInfo.keyName === this.item.keyName ?
@@ -199,7 +211,7 @@ export default struct AppItem {
           this.mouseClick = 0;
           this.launchApp();
         } else {
-          this.mPageDesktopViewModel.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+          this.mPageDesktopViewModel?.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
           setTimeout(() => {
             this.mouseClick = 0;
           }, 300)
@@ -212,7 +224,7 @@ export default struct AppItem {
     .onTouch((event: TouchEvent) => {
       Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].windowX}, y: ${event.touches[0].windowY}`);
       if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
-        let mIsDragEffectArea = globalThis.PageDesktopDragHandler.isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
+        let mIsDragEffectArea = PageDesktopDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
         Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
         if (!mIsDragEffectArea) {
           this.pageDesktopDragItemInfo = new LauncherDragItemInfo();
@@ -230,15 +242,16 @@ export default struct AppItem {
   private launchApp() {
     Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     this.setStartAppInfo();
-    this.mPageDesktopViewModel.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+    this.mPageDesktopViewModel?.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
   }
 
-  dragStart(event: DragEvent): CustomBuilder {
+  dragStart = (event: DragEvent): CustomBuilder => {
     ContextMenu.close();
     this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
-    this.pageDesktopDragItemInfo = Object.assign(new LauncherDragItemInfo(true), this.item);
+    this.item.isDragging = true;
+    this.pageDesktopDragItemInfo = this.item;
     Log.showInfo(TAG, `pageDesktopDragItemInfo: ${JSON.stringify(this.pageDesktopDragItemInfo)}`);
-    globalThis.PageDesktopDragHandler.onDragStart(event.getWindowX(), event.getWindowY());
+    PageDesktopDragHandler.getInstance().onDragStart(event.getWindowX(), event.getWindowY());
   }
 
   /**
@@ -247,7 +260,7 @@ export default struct AppItem {
   private setStartAppInfo() {
     Log.showInfo(TAG, `app setStartAppInfo ${this.mIconSize}`);
     Trace.start("setStartAppInfo");
-    const appInfo = {
+    const appInfo: StartAppItemInfo = {
       bundleName: this.item.bundleName,
       abilityName: this.item.abilityName,
       moduleName: this.item.moduleName,

@@ -16,6 +16,4 @@
 export { formPreLoader } from './src/main/ets/default/common/FormPreLoader'
 export { FormStyleConfig } from './src/main/ets/default/common/FormStyleConfig'
 export { FormViewModel } from './src/main/ets/default/viewmodel/FormViewModel'
-export { FormManagerComponent } from './src/main/ets/default/view/FormManagerComponent'
 export { FormDetailLayoutConfig } from './src/main/ets/default/common/FormDetailLayoutConfig'
-export { FormServiceComponent } from './src/main/ets/default/view/FormServiceComponent'

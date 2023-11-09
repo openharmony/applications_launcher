@@ -14,8 +14,8 @@
  */
 
 import { AppItemInfo, Log } from '@ohos/common';
-import { AppIcon } from '@ohos/common';
-import { AppName } from '@ohos/common';
+import { AppIcon } from '@ohos/common/component';
+import { AppName } from '@ohos/common/component';
 import { CommonConstants } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
 import { ResourceManager } from '@ohos/common';
@@ -26,46 +26,47 @@ import { BigFolderStyleConstants } from '../constants/BigFolderStyleConstants';
 
 const TAG = 'FolderAppListDialog';
 
+interface FolderItemType {
+  folderId: string;
+  folderName: string;
+  enterEditing?: boolean;
+  layoutInfo: AppItemInfo[][]
+}
+
 @CustomDialog
 export default struct FolderAppListDialog {
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
   @StorageLink('isPad') isPad: boolean = false;
-  @StorageLink('allAppListForFolder') allAppInfoList: [] = [];
+  @StorageLink('allAppListForFolder') allAppInfoList: AppItemInfo[] = [];
   @StorageLink('folderAppList') folderAppList: [] = [];
   @StorageLink('appListChecked') @Watch('onAppListChecked') appListChecked: Array<AppItemInfo> = [];
   @StorageLink('titleDescription') titleDescription: string = '';
   @State mNameFontColor: string = BigFolderStyleConstants.FOLDER_ADD_APP_FONT_COLOR;
-  private mBigFolderViewModel: BigFolderViewModel;
-  private mFolderStyleConfig: BigFolderStyleConfig;
-  private mColumnsTemplate: string;
+  @Link mBigFolderViewModel: BigFolderViewModel;
+  private mFolderStyleConfig: BigFolderStyleConfig = this.mBigFolderViewModel.getFolderStyleConfig();
   private mDialogHeight: number = 0;
   private mGridHeight: number = 0;
-  controller: CustomDialogController;
-  cancel: () => void;
-  confirm: (isDestory) => void;
-  folderItem: any;
+  controller?: CustomDialogController;
+  cancel = () => {};
+  confirm = (isDestory: boolean) => {};
+  folderItem: FolderItemType = { layoutInfo: [], folderName: '', folderId: '' };
   addToString: string = '';
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, `aboutToAppear`);
-    this.mBigFolderViewModel = BigFolderViewModel.getInstance();
-    this.mFolderStyleConfig = this.mBigFolderViewModel.getFolderStyleConfig();
     this.mBigFolderViewModel.getFolderAddAppList(this.folderItem.folderId);
     this.mBigFolderViewModel.getFolderAppList(this.folderItem.folderId);
     this.appListChecked = this.folderAppList;
-    ResourceManager.getInstance().getStringById($r('app.string.add_to').id, this.updateTitleDes.bind(this));
+    ResourceManager.getInstance().getStringById($r('app.string.add_to').id, this.updateTitleDes);
     this.mDialogHeight = this.mBigFolderViewModel.getDialogHeight(this.allAppInfoList);
     this.mGridHeight = this.mDialogHeight - BigFolderStyleConstants.DEFAULT_APP_ADD_TITLE_SIZE -
     BigFolderStyleConstants.DEFAULT_BUTTON_HEIGHT - BigFolderStyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN;
   }
 
   aboutToDisappear(): void {
-    this.cancel = null;
-    this.confirm = null;
-    this.controller = null;
   }
 
-  private updateTitleDes(value: string) {
+  private updateTitleDes = (value: string) => {
     this.addToString = value;
     this.onAppListChecked();
   }
@@ -77,30 +78,31 @@ export default struct FolderAppListDialog {
 
   private getColumnsTemplate() {
     let columnsTemplate = '';
-    for (let index = 0; index < this.mBigFolderViewModel.getAddListColumn(); index++) {
+    for (let index = 0; index < (this.mBigFolderViewModel?.getAddListColumn() as number); index++) {
       columnsTemplate += '1fr ';
     }
     return columnsTemplate;
   }
 
   build() {
-    Column(){
-      Flex({direction: FlexDirection.Column, justifyContent: FlexAlign.Center}) {
+    Column() {
+      Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center }) {
         TitleDescriptionComponent({
-          mTextSize: this.mFolderStyleConfig.mAddFolderTitleSize})
+          mTextSize: this.mFolderStyleConfig.mAddFolderTitleSize })
         Column() {
           Grid() {
-            ForEach(this.allAppInfoList, (item) => {
+            ForEach(this.allAppInfoList, (item: AppItemInfo) => {
               GridItem() {
                 Stack() {
                   Column() {
                     Column() {
                       AppIcon({
-                        iconSize: this.mFolderStyleConfig.mAddFolderIconSize,
+                        iconSize: (this.mFolderStyleConfig.mAddFolderIconSize as number),
                         iconId: item.appIconId,
                         bundleName: item.bundleName,
                         moduleName: item.moduleName,
-                        icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
+                        icon: ResourceManager.getInstance()
+                          .getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
                         badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE,
                       })
                       AppName({
@@ -121,18 +123,19 @@ export default struct FolderAppListDialog {
                     .borderRadius(StyleConstants.DEFAULT_0)
                     .padding({ top: BigFolderStyleConstants.DEFAULT_APP_TITLE_MARGIN })
                   }
+
                   Toggle({ type: ToggleType.Checkbox, isOn: item.checked })
                     .width(this.mFolderStyleConfig.mFolderToggleSize)
                     .height(this.mFolderStyleConfig.mFolderToggleSize)
                     .padding(0)
                     .selectedColor(0x007DFF)
-                    .position({x: 0,
-                      y: 0})
+                    .position({ x: 0,
+                      y: 0 })
                     .onChange((isOn: boolean) => {
                       Log.showDebug(TAG, `Toggle onChange this.isOn: ${isOn}`);
                       if (isOn) {
                         item.checked = true;
-                        let appItem: any;
+                        let appItem: AppItemInfo;
                         appItem = item;
                         appItem.area = [1, 1];
                         appItem.typeId = CommonConstants.TYPE_APP;
@@ -148,12 +151,12 @@ export default struct FolderAppListDialog {
               }
               .width(this.mFolderStyleConfig.mAddFolderItemSize)
               .height(this.mFolderStyleConfig.mAddFolderIconSize + this.mFolderStyleConfig.mAddFolderTextLines + this.mFolderStyleConfig.mFolderToggleSize + this.mFolderStyleConfig.mAddFolderGridMargin)
-            }, (item) => JSON.stringify(item))
+            }, (item: AppItemInfo) => JSON.stringify(item))
           }
           .columnsTemplate(this.getColumnsTemplate())
           .columnsGap(this.mFolderStyleConfig.mAddFolderGridGap)
           .rowsGap(this.mFolderStyleConfig.mAddFolderGridGap)
-          .margin( this.mFolderStyleConfig.mAddFolderGridMargin )
+          .margin(this.mFolderStyleConfig.mAddFolderGridMargin)
         }
         .width(this.mFolderStyleConfig.mAddFolderDialogWidth)
         .height(this.mGridHeight)
@@ -169,7 +172,7 @@ export default struct FolderAppListDialog {
           .width(BigFolderStyleConstants.DEFAULT_BUTTON_WIDTH)
           .height(BigFolderStyleConstants.DEFAULT_BUTTON_HEIGHT)
           .onClick(() => {
-            this.controller.close();
+            this.controller?.close();
             this.cancel()
           })
 
@@ -189,14 +192,14 @@ export default struct FolderAppListDialog {
           .width(BigFolderStyleConstants.DEFAULT_BUTTON_WIDTH)
           .onClick(() => {
             Log.showDebug(TAG, `Dialog confirm start`);
-            this.mBigFolderViewModel.updateFolderAppList(this.appListChecked, this.folderItem);
+            this.mBigFolderViewModel?.updateFolderAppList(this.appListChecked, this.folderItem);
             let isDestory = false;
             if (this.folderItem.layoutInfo[0].length < 2) {
               isDestory = true;
             } else {
-              this.mBigFolderViewModel.refreshFolder(this.folderItem);
+              this.mBigFolderViewModel?.refreshFolder(this.folderItem);
             }
-            this.controller.close();
+            this.controller?.close();
             this.confirm(isDestory);
             Log.showDebug(TAG, `Dialog confirm end`);
           })
@@ -215,8 +218,11 @@ export default struct FolderAppListDialog {
       })
       .width(this.mFolderStyleConfig.mAddFolderDialogWidth)
       .height(this.mDialogHeight)
-      if (!this.navigationBarStatusValue){
-        Stack().width(this.mFolderStyleConfig.mAddFolderDialogWidth).height(BigFolderStyleConstants.DEFAULT_APP_GRID_TOGGLE_SIZE)
+
+      if (!this.navigationBarStatusValue) {
+        Stack()
+          .width(this.mFolderStyleConfig.mAddFolderDialogWidth)
+          .height(BigFolderStyleConstants.DEFAULT_APP_GRID_TOGGLE_SIZE)
       }
     }
     .width('100%')

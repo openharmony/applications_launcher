@@ -21,15 +21,28 @@ import {
   CheckEmptyUtils,
   windowManager,
   SnapShotInfo,
-  CommonConstants
+  CommonConstants,
+  LauncherDragItemInfo
 } from '@ohos/common';
 import RecentMissionAppIcon from './RecentMissionAppIcon';
 import RecentMissionAppName from './RecentMissionAppName';
 import { RecentMissionsViewModel } from '../../viewmodel/RecentMissionsViewModel';
 import { RecentsStyleConstants } from '../../common/constants/RecentsStyleConstants';
 import { RecentMissionStartAppHandler } from './../RecentMissionStartAppHandler';
+import { BusinessError } from '@ohos.base';
 
 const TAG = 'Recent-RecentMissionCard';
+
+interface AppParams {
+  bundleName: string;
+  moduleName: string;
+  appIconId: number;
+  borderRadius?: number;
+  isSingleLayout?: boolean;
+  appIconSize?: number;
+  appIconHeight?: number;
+  position?: Position
+}
 
 /**
  * Common card component for recent missions.
@@ -48,11 +61,11 @@ export default struct RecentMissionCard {
   @State cardMargin: number = RecentsStyleConstants.SINGLE_LIST_LAYOUT_MARGIN;
   @State cardLayoutWeight: number = RecentsStyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT;
   // recentImage default is Resource type, to avoid toolchain typeCheck
-  @State recentImage: image.PixelMap = undefined;
+  @State recentImage?: image.PixelMap = undefined;
   private mIsSingleLayout: boolean = true;
   private snapShotTime: string = '';
-  private mRecentMissionsViewModel: RecentMissionsViewModel;
-  private mRecentMissionStartAppHandler: RecentMissionStartAppHandler;
+  private mRecentMissionsViewModel?: RecentMissionsViewModel;
+  private mRecentMissionStartAppHandler?: RecentMissionStartAppHandler;
   private mReleaseFlag = true;
 
   aboutToAppear(): void {
@@ -65,7 +78,7 @@ export default struct RecentMissionCard {
       RecentsStyleConstants.SINGLE_LIST_LAYOUT_MARGIN * RecentsStyleConstants.DPI_RATIO : RecentsStyleConstants.DOUBLE_LIST_LAYOUT_MARGIN;
     this.cardLayoutWeight = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
       RecentsStyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT : RecentsStyleConstants.DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT;
-    this.mRecentMissionsViewModel.getMissionSnapShot(this.missionId, this.recentMissionsSnapshotCallback.bind(this));
+    this.mRecentMissionsViewModel.getMissionSnapShot(this.missionId, this.recentMissionsSnapshotCallback);
     this.mRecentMissionStartAppHandler = RecentMissionStartAppHandler.getInstance();
   }
 
@@ -75,8 +88,8 @@ export default struct RecentMissionCard {
     this.mReleaseFlag = true;
     // typeof Resource or pixelMap is Object
     if (!CheckEmptyUtils.isEmpty(this.recentImage)) {
-      this.recentImage.release().catch((err) => {
-        Log.showError(TAG, `image.PixelMap release err: ${err}`);
+      this.recentImage?.release().catch((err: BusinessError) => {
+        Log.showError(TAG, `image.PixelMap release err: ${JSON.stringify(err)}`);
       })
       Log.showInfo(TAG, `aboutToDisappear end ${this.missionId}`);
     }
@@ -88,7 +101,7 @@ export default struct RecentMissionCard {
  * @param {number} missionId
  * @param {any} snapShotInfo
  */
-  recentMissionsSnapshotCallback(missionId: number, snapShotInfo: SnapShotInfo): void {
+  recentMissionsSnapshotCallback = (missionId: number, snapShotInfo: SnapShotInfo): void => {
     Log.showDebug(TAG, `recentMissionsSnapshotCallback missionId: ${this.missionId}`);
     if (!this.mReleaseFlag && missionId === this.missionId) {
       this.recentImage = snapShotInfo.snapShotImage;
@@ -97,8 +110,8 @@ export default struct RecentMissionCard {
       Log.showDebug(TAG, `recentMissionsSnapshotCallback recentImage: ${JSON.stringify(this.recentImage)},
         width: ${JSON.stringify(width)}, height: ${JSON.stringify(height)}`);
     } else {
-      snapShotInfo.snapShotImage.release().catch((err) => {
-        Log.showError(TAG, `image.PixelMap release err :${err}`)
+      snapShotInfo.snapShotImage.release().catch((err: BusinessError) => {
+        Log.showError(TAG, `image.PixelMap release err :${JSON.stringify(err)}`)
       })
     }
   }
@@ -149,7 +162,7 @@ export default struct RecentMissionCard {
               .onClick((event) => {
                 this.isClickSubComponent = true;
                 Log.showDebug(TAG, `click set recent mission: ${this.missionId} Locked status: ${!this.lockedState}`);
-                this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId,!this.lockedState);
+                this.mRecentMissionsViewModel?.setRecentMissionLock(this.missionId,!this.lockedState);
                 this.setStartAppInfo(event?.target?.area?.globalPosition);
                 this.isClickSubComponent = false;
               })
@@ -176,12 +189,12 @@ export default struct RecentMissionCard {
           localEventManager.sendLocalEventSticky(EventConstants.EVENT_OPEN_FOLDER_TO_CLOSE, null);
           windowManager.destroyWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
           windowManager.destroyWindow(windowManager.FORM_SERVICE_WINDOW_NAME);
-          if (!globalThis.recentMode || !windowManager.isSplitWindowMode(globalThis.recentMode)) {
+          if (!windowManager.recentMode || !windowManager.isSplitWindowMode(windowManager.recentMode)) {
             windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
           }
           Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
           this.setStartAppInfo(event?.target?.area?.globalPosition);
-          this.mRecentMissionsViewModel.moveMissionToFront(this.missionId);
+          this.mRecentMissionsViewModel?.moveMissionToFront(this.missionId);
         })
     }
     .width(this.mIsSingleLayout ?
@@ -198,10 +211,10 @@ export default struct RecentMissionCard {
           RecentsStyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH * RecentsStyleConstants.DPI_RATIO :
           RecentsStyleConstants.DOUBLE_LIST_APP_IMAGE_WIDTH) / 2;
         if (e.offsetY < -50 && e.offsetX <= offsetWidth && -offsetWidth <= e.offsetX) {
-          this.mRecentMissionsViewModel.deleteRecentMission(false, this.missionId);
+          this.mRecentMissionsViewModel?.deleteRecentMission(false, this.missionId);
         } else if (e.offsetY > 50 && e.offsetX <= offsetWidth && -offsetWidth <= e.offsetX) {
           Log.showDebug(TAG, `gesture set recent mission: ${this.missionId} Locked status: ${!this.lockedState}`);
-          this.mRecentMissionsViewModel.setRecentMissionLock(this.missionId,!this.lockedState);
+          this.mRecentMissionsViewModel?.setRecentMissionLock(this.missionId,!this.lockedState);
         }
       }))
   }
@@ -209,9 +222,9 @@ export default struct RecentMissionCard {
   /**
    * set start app info
    */
-  private setStartAppInfo(position) {
+  private setStartAppInfo(position?: Position) {
     AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
-    let appParams = {
+    let appParams: AppParams = {
       bundleName: this.bundleName,
       moduleName: this.moduleName,
       appIconId: this.appIconId,
@@ -219,10 +232,10 @@ export default struct RecentMissionCard {
       isSingleLayout: this.mIsSingleLayout,
       appIconSize:this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH : RecentsStyleConstants.DOUBLE_LIST_APP_IMAGE_WIDTH,
       appIconHeight: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_MISSION_HEIGHT : RecentsStyleConstants.DOUBLE_LIST_MISSION_HEIGHT,
-      position:position
+      position: position
     }
     AppStorage.setOrCreate('startAppItemInfo', appParams);
-    this.mRecentMissionStartAppHandler.setAppIconSize(appParams.appIconSize, appParams.appIconHeight);
-    this.mRecentMissionStartAppHandler.setAppIconInfo();
+    this.mRecentMissionStartAppHandler?.setAppIconSize(appParams.appIconSize, appParams.appIconHeight);
+    this.mRecentMissionStartAppHandler?.setAppIconInfo();
   }
 }

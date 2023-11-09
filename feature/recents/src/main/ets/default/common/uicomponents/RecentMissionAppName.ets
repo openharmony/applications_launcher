@@ -29,7 +29,7 @@ export default struct RecentMissionAppName {
   @Prop bundleName: string;
   @Prop moduleName: string;
   @Prop labelId: number;
-  private mResourceManager;
+  private mResourceManager = ResourceManager.getInstance();
 
   aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
@@ -41,7 +41,7 @@ export default struct RecentMissionAppName {
    *
    * @param {string} name - the value get from ResourceManager
    */
-  appNameLoadCallback(name: string): void {
+  appNameLoadCallback = (name: string): void => {
     this.name = name;
   }
 
@@ -51,7 +51,7 @@ export default struct RecentMissionAppName {
   updateName(): void {
     if (this.bundleName && this.bundleName.length > 0 && this.mResourceManager) {
       this.mResourceManager.getAppNameWithCache(this.labelId,
-        this.bundleName, this.moduleName, this.appName, this.appNameLoadCallback.bind(this));
+        this.bundleName, this.moduleName, this.appName, this.appNameLoadCallback);
     }
   }
 

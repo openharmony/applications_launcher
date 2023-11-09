@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { BaseStage } from '@ohos/common';
+import { BaseStage, LayoutViewModel } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
 import { appCenterPreLoader } from '@ohos/appcenter';
 import { bigFolderPreLoader } from '@ohos/bigfolder';
@@ -31,6 +31,7 @@ import PadPageDesktopGridStyleConfig from './PadPageDesktopGridStyleConfig';
  * pad product stage
  */
 export default class PadStage extends BaseStage {
+  mLayoutViewModel: LayoutViewModel;
   /**
    * Stage onCreate callback
    */
@@ -45,6 +46,8 @@ export default class PadStage extends BaseStage {
     bigFolderPreLoader.load();
     formPreLoader.load();
     NumBadgeManager.getInstance().registerNumBadge();
+    // init layout config
+    this.mLayoutViewModel = LayoutViewModel.getInstance();
   }
 
   /**

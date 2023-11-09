@@ -62,9 +62,9 @@ export class AppItemInfo {
    */
   badgeNumber: number | undefined;
 
-  checked: boolean | undefined;
+  checked?: boolean | undefined;
 
-  installTime: string | undefined;
+  installTime?: string | undefined;
 
   moduleName: string | undefined;
 
@@ -94,5 +94,5 @@ export class AppItemInfo {
    * GridLayoutItemInfo: row of positions
    */
   row: number | undefined;
-  bundleType: number | undefined;
+  bundleType?: number | undefined;
 }

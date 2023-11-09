@@ -21,7 +21,8 @@ import {
   CardItemInfo
 } from '@ohos/common';
 import ThisStyleConstants from '../constants/StyleConstants';
-import Curves from '@ohos.curves'
+import Curves from '@ohos.curves';
+import { PageDesktopViewModel } from '../../../../../../../pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
 
 const TAG = 'ServiceFormItem';
 
@@ -43,9 +44,9 @@ export default struct ServiceFormItem {
     curve: Curves.springCurve(0.5, 1, 350, 35)
   };
   private idIndex: number = 0;
-  private formItem: CardItemInfo;
-  private formId: number;
-  getFormId: (id: number) => void;
+  private formItem: CardItemInfo = new CardItemInfo();
+  private formId: number = 0;
+  getFormId: (id: number) => void = (id: number) => {};
   @State opacityValue: number = 1;
   @State blurValue: number = 50;
 
@@ -61,11 +62,11 @@ export default struct ServiceFormItem {
     Column() {
       Stack() {
         FormComponent({
-          id: this.formItem.cardId,
-          name: this.formItem.cardName,
-          bundle: this.formItem.bundleName,
-          ability: this.formItem.abilityName,
-          module: this.formItem.moduleName,
+          id: this.formItem.cardId as number,
+          name: this.formItem.cardName as string,
+          bundle: this.formItem.bundleName as string,
+          ability: this.formItem.abilityName as string,
+          module: this.formItem.moduleName as string,
           dimension: this.formItem.cardDimension
         })
           .hoverEffect(HoverEffect.None)
@@ -141,14 +142,14 @@ export default struct ServiceFormItem {
 
 @Component
 struct ServiceFormName {
-  private nameLines: number = globalThis.PageDesktopViewModel?.getPageDesktopStyleConfig().mNameLines;
-  bundleName: string;
-  moduleName: string;
-  labelId: number;
+  private nameLines: number = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig().mNameLines;
+  bundleName: string = '';
+  moduleName: string = '';
+  labelId: number = 0;
   @State @Watch("updateName") appName: string = '';
-  formNum: number;
+  formNum: number = 0;
   useCache: boolean = true;
-  private mResourceManager;
+  private mResourceManager = ResourceManager.getInstance();
   private idIndex: number = 0;
 
   public aboutToAppear(): void  {
@@ -156,14 +157,14 @@ struct ServiceFormName {
     this.updateName();
   }
 
-  public appNameLoadCallback(name: string) {
+  public appNameLoadCallback = (name: string) => {
     this.appName = name;
   }
 
   public updateName() {
     if (CheckEmptyUtils.isEmpty(this.appName)) {
       this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.moduleName,
-      this.appName, this.appNameLoadCallback.bind(this));
+      this.appName, this.appNameLoadCallback);
     }
   }
 

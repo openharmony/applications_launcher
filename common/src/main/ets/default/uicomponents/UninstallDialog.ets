@@ -24,33 +24,34 @@ export struct UninstallDialog {
   @StorageLink('uninstallAppInfo') appInfo: AppItemInfo = new AppItemInfo();
   @StorageLink('isPad') isPad: boolean = false;
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
-  controller: CustomDialogController;
-  cancel: () => void
-  confirm: () => void
-  dialogName: string
-  dialogContent: string
+  controller?: CustomDialogController;
+  cancel = () => {};
+  confirm = () => {};
+  dialogName: string = '';
+  dialogContent: string = '';
   @State icon: string = '';
-  appIcon: number;
-  bundleName: string;
-  moduleName: string;
-  mUninstallDialogWidth: string;
-  private mLayoutViewModel: LayoutViewModel;
+  appIcon: number = 0;
+  bundleName: string = '';
+  moduleName: string = '';
+  mUninstallDialogWidth: string = '';
+  private mLayoutViewModel?: LayoutViewModel;
+  private mResourceManager = ResourceManager.getInstance();
+  private mDefaultAppIcon?: ResourceStr;
 
   private async updateScreenSize() {
-    this.mUninstallDialogWidth = this.mLayoutViewModel.getCommonDialogWidth();
+    if (this.mLayoutViewModel?.getCommonDialogWidth()) {
+      this.mUninstallDialogWidth = this.mLayoutViewModel?.getCommonDialogWidth();
+    }
   }
-
-  private mResourceManager;
-  private mDefaultAppIcon;
 
   aboutToAppear(): void  {
     this.mLayoutViewModel = LayoutViewModel.getInstance();
     this.updateScreenSize();
     this.mResourceManager = ResourceManager.getInstance();
 
-    this.appIcon = this.appInfo.appIconId;
-    this.bundleName = this.appInfo.bundleName;
-    this.moduleName = this.appInfo.moduleName;
+    this.appIcon = this.appInfo.appIconId as number;
+    this.bundleName = this.appInfo.bundleName as string;
+    this.moduleName = this.appInfo.moduleName as string;
 
     if (CheckEmptyUtils.isEmpty(this.icon)) {
       this.updateIcon();
@@ -58,18 +59,15 @@ export struct UninstallDialog {
   }
 
   aboutToDisappear(): void {
-    this.cancel = null;
-    this.confirm = null;
-    this.controller = null;
   }
 
-  public iconLoadCallback(image) {
+  public iconLoadCallback = (image: string) => {
     this.icon = image;
   }
 
   public updateIcon() {
     this.mResourceManager.getAppIconWithCache(this.appIcon, this.bundleName, this.moduleName,
-      this.iconLoadCallback.bind(this), this.mDefaultAppIcon);
+      this.iconLoadCallback, this.mDefaultAppIcon);
   }
 
   build() {
@@ -96,7 +94,7 @@ export struct UninstallDialog {
             .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
             .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
             .onClick(() => {
-              this.controller.close();
+              this.controller?.close();
               this.cancel()
             })
 
@@ -114,7 +112,7 @@ export struct UninstallDialog {
             .height(StyleConstants.DEFAULT_BUTTON_HEIGHT)
             .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
             .onClick(() => {
-              this.controller.close();
+              this.controller?.close();
               this.confirm()
             })
           }

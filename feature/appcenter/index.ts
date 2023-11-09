@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-export { AppGridLayout } from './src/main/ets/default/layout/AppGridLayout'
 export { AppGridViewModel } from './src/main/ets/default/viewmodel/AppGridViewModel'
 export { AppListViewModel } from './src/main/ets/default/viewmodel/AppListViewModel'
 export { appCenterPreLoader } from './src/main/ets/default/common/AppCenterPreLoader'

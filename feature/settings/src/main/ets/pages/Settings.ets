@@ -20,6 +20,7 @@ import { SettingItemInfo } from '@ohos/common';
 import SettingsStage from '../common/SettingsStage';
 import SettingsStyleConstants from '../common/constants/SettingsStyleConstants';
 import SettingsPresenter from '../common/presenter/SettingsPresenter';
+import SettingItemOption from '@ohos/common/src/main/ets/default/bean/SettingItemOption';
 
 let mSettingsPresenter: SettingsPresenter;
 const TAG = 'Settings';
@@ -137,7 +138,7 @@ struct SettingPage {
 
   build() {
     Column() {
-      ForEach(this.SettingList, (item: any) => {
+      ForEach(this.SettingList, (item: SettingItemInfo) => {
         SettingItem({
           ida: item.ida,
           settingName: item.settingName,
@@ -145,7 +146,7 @@ struct SettingPage {
           valueList: item.valueList,
           settingType: item.settingType
         })
-      }, (item: any) => JSON.stringify(item))
+      }, (item: SettingItemInfo) => JSON.stringify(item))
     }
     .width(SettingsStyleConstants.PERCENTAGE_100)
     .height(SettingsStyleConstants.DEFAULT_VP_56)
@@ -160,13 +161,16 @@ struct SettingItem {
   @State settingValue: string = ' ';
   @State settingName: string = ' ';
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
-  private settingType: number;
-  private valueList: SettingItemInfo[] = [];
-  dialogController: CustomDialogController = new CustomDialogController({
+  private settingType?: number;
+  private valueList: SettingItemOption[] = [];
+  dialogController: CustomDialogController | null = new CustomDialogController({
     builder: SettingsDialog(),
     cancel: this.cancelDialog,
     autoCancel: true
   });
+  callback = (data: string) => {
+    this.settingValue = data;
+  }
 
   cancelDialog() {
     Log.showDebug(TAG, 'cancelDialog');
@@ -175,17 +179,12 @@ struct SettingItem {
   aboutToAppear(): void  {
     mSettingsPresenter.initNavigationBarStatusValue();
     if (this.settingType == 1) {
-      mSettingsPresenter.registerValueCallback(this.ida, this.callback.bind(this));
+      mSettingsPresenter.registerValueCallback(this.ida, this.callback);
     }
   }
 
   aboutToDisappear(): void {
-    delete this.dialogController;
     this.dialogController = null;
-  }
-
-  callback(data) {
-    this.settingValue = data;
   }
 
   build() {
@@ -223,7 +222,9 @@ struct SettingItem {
           AppStorage.setOrCreate('ida', this.ida);
           AppStorage.setOrCreate('valueList', this.valueList);
           AppStorage.setOrCreate('settingValue', this.settingValue);
-          this.dialogController.open();
+          if (this.dialogController) {
+            this.dialogController.open();
+          }
         })
       } else {
         Toggle({ type: ToggleType.Switch, isOn: this.navigationBarStatusValue })
@@ -246,22 +247,21 @@ struct SettingItem {
 @CustomDialog
 @Component
 struct SettingsDialog {
-  controller: CustomDialogController;
-  action: () => void;
-  cancel: () => void;
-  @StorageLink('valueList') valueList: SettingItemInfo[] = [];
+  controller?: CustomDialogController;
+  action: () => void = () => {
+  };
+  cancel: () => void = () => {
+  };
+  @StorageLink('valueList') valueList: SettingItemOption[] = [];
   @StorageLink('ida') ida: number = 0;
   @StorageLink('settingValue') settingValue: String = '';
 
   aboutToDisappear(): void {
-    this.cancel = null;
-    this.action = null;
-    this.controller = null;
   }
 
   build() {
     Column() {
-      ForEach(this.valueList, (item: any) => {
+      ForEach(this.valueList, (item: SettingItemOption) => {
         Row() {
           Text(item.name)
             .margin({ left: SettingsStyleConstants.DEFAULT_VP_10 })
@@ -274,16 +274,18 @@ struct SettingsDialog {
             .checked(item.name === this.settingValue)
             .width(SettingsStyleConstants.DEFAULT_VP_30)
             .height(SettingsStyleConstants.DEFAULT_VP_30)
-            .onChange((isChecked) => {})
+            .onChange((isChecked: boolean) => {})
         }.width(SettingsStyleConstants.PERCENTAGE_100)
         .height(SettingsStyleConstants.DEFAULT_VP_80)
         .onClick(() => {
           mSettingsPresenter.changeSettingValue(this.ida, item.name);
           mSettingsPresenter.setSettingsValue(this.ida, item.value);
-          this.controller.close();
+          if (this.controller) {
+            this.controller.close();
+          }
           this.action();
         })
-      }, (item: any) => JSON.stringify(item))
+      }, (item: SettingItemOption) => JSON.stringify(item))
       Text($r('app.string.cancel'))
         .textAlign(TextAlign.Center)
         .height(SettingsStyleConstants.DEFAULT_VP_80)
@@ -291,7 +293,9 @@ struct SettingsDialog {
         .fontSize(SettingsStyleConstants.DEFAULT_VP_30)
         .fontColor(Color.Blue)
         .onClick(() => {
-          this.controller.close();
+          if (this.controller) {
+            this.controller.close();
+          }
           this.action();
         })
     }.padding(SettingsStyleConstants.DEFAULT_VP_20)

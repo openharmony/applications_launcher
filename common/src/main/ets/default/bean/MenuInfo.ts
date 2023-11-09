@@ -42,7 +42,7 @@ export class MenuInfo {
   /**
    * Callback when item is clicked.
    */
-  onMenuClick: Function | undefined;
+  onMenuClick: Function = () => [];
 
   /**
    * shortcut icon Id

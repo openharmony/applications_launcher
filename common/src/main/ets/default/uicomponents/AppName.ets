@@ -18,32 +18,32 @@ import { PresetStyleConstants } from '../constants/PresetStyleConstants';
 
 @Component
 export struct AppName {
-  nameSize: number;
-  nameHeight: number;
-  bundleName: string;
-  moduleName: string;
-  labelId: number;
-  nameFontColor: string;
+  nameSize: number = 0;
+  nameHeight: number = 0;
+  bundleName: string = '';
+  moduleName: string = '';
+  labelId: number = 0;
+  nameFontColor: string = '#ffffff';
   @State @Watch("updateName") appName: string = '';
   useCache: boolean = true;
   nameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   marginTop: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;
   marginLeft: number = PresetStyleConstants.DEFAULT_DESKTOP_NAME_MARGIN;
-  private mResourceManager;
+  private mResourceManager = ResourceManager.getInstance();
 
   aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateName();
   }
 
-  public appNameLoadCallback(name: string) {
+  public appNameLoadCallback = (name: string) => {
     this.appName = name;
   }
 
   private updateName() {
     if (this.mResourceManager) {
       this.mResourceManager.getAppNameWithCache(this.labelId, this.bundleName, this.moduleName,
-        this.appName, this.appNameLoadCallback.bind(this));
+        this.appName, this.appNameLoadCallback);
     }
   }
 
