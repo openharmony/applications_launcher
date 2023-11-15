@@ -220,7 +220,7 @@ export default struct SwiperPage {
       left: this.mMargin
     })
     .onMouse((event: MouseEvent) => {
-      if (event.button === MouseButton.Right || event.button === MouseButton.Left) {
+      if (event.button === MouseButton.Right) {
         AppStorage.setOrCreate('selectDesktopAppItem', '');
       }
     })
