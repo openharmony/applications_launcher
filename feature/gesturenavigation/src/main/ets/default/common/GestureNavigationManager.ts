@@ -70,6 +70,10 @@ export class GestureNavigationManager {
       gestureNavigationStatus = this.getValue();
       Log.showDebug(TAG, `getGestureNavigationStatus gestureNavigationStatus:  ${gestureNavigationStatus}`);
       this.handleEventSwitches(gestureNavigationStatus);
+
+      // 初始化时保持弹窗的距离底部的位置和（打开/关闭）三键时的位置一致
+      AppStorage.setOrCreate('NavigationBarStatusValue', gestureNavigationStatus === '0' ? true : false);
+
       this.registerListenForDataChanges(this.dataChangesCallback.bind(this));
     }catch (error) {
       Log.showError(TAG, `getGestureNavigationStatus error: ${JSON.stringify(error)}`);
