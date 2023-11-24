@@ -60,10 +60,10 @@ struct EntryView {
     Log.showInfo(TAG, 'aboutToAppear');
     this.mStage.onCreate();
     this.getWindowSize();
+    this.navigationBarStatus = SettingsModel.getInstance().getValue();
     this.updateScreenSize();
 
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
-    this.navigationBarStatus = SettingsModel.getInstance().getValue();
   }
 
   registerPageDesktopNavigatorStatusChangeEvent(listener: LocalEventListener): void {
