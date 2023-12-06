@@ -65,7 +65,7 @@ export {
 } from './src/main/ets/default/manager'
 
 export {
-  DragArea, DragItemPosition, GridLayoutInfo
+  DragArea, DragItemPosition, GridLayoutInfo, FolderData
 } from './src/main/ets/default/interface'
 
 export {

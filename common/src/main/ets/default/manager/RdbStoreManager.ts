@@ -30,6 +30,7 @@ import GridLayoutItemBuilder from '../bean/GridLayoutItemBuilder';
 import GridLayoutInfoColumns from '../bean/GridLayoutInfoColumns';
 import DesktopApplicationColumns from '../bean/DesktopApplicationColumns';
 import { GridLayoutInfo } from '../interface';
+import { LauncherDragItemInfo } from '../bean';
 
 const TAG = 'RdbStoreManager';
 
@@ -552,7 +553,7 @@ export class RdbStoreManager {
       // delete gridlayoutinfo table
       await this.dropTable(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
       // insert into gridlayoutinfo
-      let layoutInfo: Array<GridLayoutItemInfo> = gridLayoutInfo.layoutInfo;
+      let layoutInfo: Array<LauncherDragItemInfo> = gridLayoutInfo.layoutInfo;
       for (const element of layoutInfo) {
         let item = {};
         if (element.typeId === CommonConstants.TYPE_APP) {

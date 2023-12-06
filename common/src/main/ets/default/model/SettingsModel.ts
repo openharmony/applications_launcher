@@ -229,7 +229,7 @@ export class SettingsModel {
    *
    * @return {object} layout information.
    */
-  getLayoutInfo(): any {
+  getLayoutInfo(): GridLayoutInfo {
     this.updateMenuId();
     return this.mPageDesktopLayoutConfig.getGridLayoutInfo();
   }

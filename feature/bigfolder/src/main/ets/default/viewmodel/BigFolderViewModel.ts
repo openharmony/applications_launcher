@@ -27,12 +27,16 @@ import {
   layoutConfigManager,
   FolderLayoutConfig,
   AppItemInfo,
-  GridLayoutInfo
+  GridLayoutInfo,
+  FolderData,
+  LauncherDragItemInfo
 } from '@ohos/common';
 import { BigFolderModel } from '../model/BigFolderModel';
 import { BigFolderStyleConfig } from '../common/BigFolderStyleConfig';
 import { BigFolderConstants } from '../common/constants/BigFolderConstants';
 import { BigFolderStyleConstants } from '../common/constants/BigFolderStyleConstants';
+import GridLayoutItemInfo from '@ohos/common/src/main/ets/default/bean/GridLayoutItemInfo';
+import GridLayoutItemBuilder from '@ohos/common/src/main/ets/default/bean/GridLayoutItemBuilder';
 
 const TAG = 'BigFolderViewModel';
 const HEXADECIMAL_VALUE = 36;
@@ -51,9 +55,7 @@ export class BigFolderViewModel extends BaseViewModel {
       Log.showDebug(TAG, `onReceiveEvent receive event: ${event}, params: ${JSON.stringify(params)}`);
       const openStatus = AppStorage.get('openFolderStatus');
       if (event === EventConstants.EVENT_BADGE_UPDATE && (openStatus == BigFolderConstants.OPEN_FOLDER_STATUS_OPEN || openStatus == BigFolderConstants.OPEN_FOLDER_STATUS_STATIC)) {
-        const openFolderData: {
-          layoutInfo: [[]]
-        } = AppStorage.get('openFolderData');
+        const openFolderData: FolderData = AppStorage.get('openFolderData');
         this.updateBadge(openFolderData, params);
       } else if (event === EventConstants.EVENT_FOLDER_PACKAGE_REMOVED) {
         this.deleteAppFromFolderByUninstall(params);
@@ -64,12 +66,12 @@ export class BigFolderViewModel extends BaseViewModel {
   };
 
   // badge will be designed lastly
-  private updateBadge(openFolderData, params): void {
+  private updateBadge(openFolderData: FolderData, params: AppItemInfo): void {
     for (let i = 0; i < openFolderData.layoutInfo.length; i++) {
-      const appInfo: any = openFolderData.layoutInfo[i].find(item => {
-        return item.bundleName == params.bundleName;
+      const appInfo: AppItemInfo = openFolderData.layoutInfo[i].find(item => {
+        return item.bundleName === params.bundleName;
       });
-      if (appInfo != undefined && appInfo.bundleName.length > 0) {
+      if (appInfo !== undefined && appInfo.bundleName.length > 0) {
         const index = openFolderData.layoutInfo[i].indexOf(appInfo);
         appInfo.badgeNumber = params.badgeNumber;
         openFolderData.layoutInfo[i][index] = appInfo;
@@ -117,12 +119,12 @@ export class BigFolderViewModel extends BaseViewModel {
   /**
    * add new folder
    *
-   * @param {any} appLayoutInfo (two app for create new folder).
+   * @param {AppItemInfo[]} appLayoutInfo (two app for create new folder).
    */
-  async addNewFolder(appLayoutInfo) {
+  async addNewFolder(appLayoutInfo: AppItemInfo[]) {
     const gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
     const settingAppInfoList = this.mSettingsModel.getAppListInfo();
-    const folderAppInfo = [];
+    const folderAppInfo: AppItemInfo[] = [];
     for (let j = 0; j < appLayoutInfo.length; j++) {
       Log.showDebug(TAG, `addNewFolder appLayoutInfo: ${JSON.stringify(appLayoutInfo[j])}`)
       for (let i = 0; i < settingAppInfoList.length; i++) {
@@ -143,7 +145,7 @@ export class BigFolderViewModel extends BaseViewModel {
 
     // Delete {the app list} from desktop app list
     for (let i = 0; i < appLayoutInfo.length; i++) {
-      const index = gridLayoutInfo.layoutInfo.indexOf(appLayoutInfo[i]);
+      const index = gridLayoutInfo.layoutInfo.indexOf(appLayoutInfo[i] as LauncherDragItemInfo);
       if (index != CommonConstants.INVALID_VALUE) {
         gridLayoutInfo.layoutInfo.splice(index, 1);
       }
@@ -164,7 +166,7 @@ export class BigFolderViewModel extends BaseViewModel {
     }
 
     // Push folder into the layoutInfo,include {the app list}
-    gridLayoutInfo.layoutInfo.push(folderInfo);
+    gridLayoutInfo.layoutInfo.push(folderInfo as LauncherDragItemInfo);
     this.deleteAppLayoutItems(gridLayoutInfo, appLayoutInfo);
     if (needNewPage) {
       this.mPageDesktopModel.setPageIndex(this.mPageDesktopModel.getPageIndex() + 1);
@@ -229,10 +231,10 @@ export class BigFolderViewModel extends BaseViewModel {
   /**
    * Delete app from folder by dragging
    *
-   * @param {any} folderAppList.
+   * @param {AppItemInfo[]} folderAppList.
    * @param {number} index.
    */
-  deleteAppByDraging(folderAppList, index): boolean {
+  deleteAppByDraging(folderAppList: AppItemInfo[], index: number): boolean {
     const gridLayoutInfo = this.mSettingsModel.getLayoutInfo();
     if (folderAppList.length == 0 || folderAppList.length <= index) {
       return false;
@@ -251,10 +253,7 @@ export class BigFolderViewModel extends BaseViewModel {
       folderAppList.pop();
     }
     const folderLayoutInfo = this.filterFolderPage(folderAppList);
-    const openFolderData: {
-      folderId: string,
-      layoutInfo: any
-    } = AppStorage.get('openFolderData');
+    const openFolderData: FolderData = AppStorage.get('openFolderData');
     const removeAppInfos = [dragAppInfo];
     const folderIndex = gridLayoutInfo.layoutInfo.findIndex(item => {
       return item.typeId === CommonConstants.TYPE_FOLDER && item.folderId === openFolderData.folderId;
@@ -273,7 +272,7 @@ export class BigFolderViewModel extends BaseViewModel {
     for (let i = 0; i < removeAppInfos.length; i++) {
       this.mPageDesktopModel.updatePageDesktopLayoutInfo(gridLayoutInfo, removeAppInfos[i]);
       const gridLayout = this.createAppLayoutInfo(removeAppInfos[i]);
-      gridLayoutInfo.layoutInfo.push(gridLayout);
+      gridLayoutInfo.layoutInfo.push(gridLayout as LauncherDragItemInfo);
       appListInfo.push(removeAppInfos[i]);
     }
     this.mSettingsModel.setAppListInfo(appListInfo);
@@ -286,18 +285,17 @@ export class BigFolderViewModel extends BaseViewModel {
    *
    * @param appInfo
    */
-  private createAppLayoutInfo(appInfo): any {
-    const appLayout = {
-      bundleName: appInfo.bundleName,
-      abilityName: appInfo.abilityName,
-      moduleName: appInfo.moduleName,
-      keyName: appInfo.keyName,
-      typeId: appInfo.typeId,
-      area: appInfo.area,
-      page: appInfo.page,
-      column: appInfo.column,
-      row: appInfo.row
-    };
+  private createAppLayoutInfo(appInfo: AppItemInfo): AppItemInfo {
+    const appLayout: AppItemInfo = new AppItemInfo();
+    appLayout.bundleName = appInfo.bundleName;
+    appLayout.abilityName = appInfo.abilityName;
+    appLayout.moduleName = appInfo.moduleName;
+    appLayout.keyName = appInfo.keyName;
+    appLayout.typeId = appInfo.typeId;
+    appLayout.area = appInfo.area;
+    appLayout.page = appInfo.page;
+    appLayout.column = appInfo.column;
+    appLayout.row = appInfo.row;
     return appLayout;
   }
 
@@ -321,13 +319,10 @@ export class BigFolderViewModel extends BaseViewModel {
   /**
    * Delete app from open folder
    *
-   * @param {any} appInfo.
+   * @param {AppItemInfo} appInfo.
    */
-  deleteAppFromOpenFolder(appInfo): any {
-    let openFolderData: {
-      folderId: string,
-      layoutInfo: any
-    } = AppStorage.get('openFolderData');
+  deleteAppFromOpenFolder(appInfo: AppItemInfo): FolderData {
+    let openFolderData: FolderData = AppStorage.get('openFolderData');
     const folderLayoutInfo = this.getFolderLayoutInfo(openFolderData, appInfo);
 
     // Delete app from the folder
@@ -350,11 +345,11 @@ export class BigFolderViewModel extends BaseViewModel {
         column: gridLayoutInfo.layoutInfo[folderIndex].column,
         row: gridLayoutInfo.layoutInfo[folderIndex].row
       };
-      gridLayoutInfo.layoutInfo.push(appLayout);
+      gridLayoutInfo.layoutInfo.push(appLayout as LauncherDragItemInfo);
       appListInfo.push(folderLayoutInfo[0][0]);
       gridLayoutInfo.layoutInfo.splice(folderIndex, 1);
       openFolderData = {
-        folderId: '', layoutInfo: []
+        folderId: '',folderName: '', enterEditing: false, layoutInfo: []
       };
     } else {
       this.updateBadgeNumber(gridLayoutInfo.layoutInfo[folderIndex], appInfo);
@@ -368,13 +363,13 @@ export class BigFolderViewModel extends BaseViewModel {
   /**
    * update folder app list info
    *
-   * @param {any} appInfos.
-   * @param {any} folderItem.
+   * @param {AppItemInfo[]} appInfos.
+   * @param {FolderData} folderItem.
    */
-  async updateFolderAppList(appInfos, folderItem) {
+  async updateFolderAppList(appInfos: AppItemInfo[], folderItem: FolderData): Promise<void> {
     Log.showDebug(TAG, 'updateFolderAppList start');
-    let removeFolderApp = [];
-    let gridLayoutInfoTemp: any;
+    let removeFolderApp: AppItemInfo[] = [];
+    let gridLayoutInfoTemp: GridLayoutInfo;
     let gridLayoutInfo = {
       layoutInfo: []
     };
@@ -394,7 +389,7 @@ export class BigFolderViewModel extends BaseViewModel {
         localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, removeFolderApp[i]);
         this.mPageDesktopModel.updatePageDesktopLayoutInfo(gridLayoutInfoTemp, removeFolderApp[i]);
         const gridLayout = this.createAppLayoutInfo(removeFolderApp[i]);
-        gridLayoutInfoTemp.layoutInfo.push(gridLayout);
+        gridLayoutInfoTemp.layoutInfo.push(gridLayout as LauncherDragItemInfo);
       }
       this.mSettingsModel.setLayoutInfo(gridLayoutInfoTemp);
     } else {
@@ -456,7 +451,7 @@ export class BigFolderViewModel extends BaseViewModel {
    * @param appInfos
    * @param folderAppList
    */
-  getAppRemainInOtherFolder(appInfos, folderAppList): any[] {
+  getAppRemainInOtherFolder(appInfos: AppItemInfo[], folderAppList: AppItemInfo[]): AppItemInfo[] {
     const appInfosRemaining = [];
     for (let m = 0; m < folderAppList.length; m++) {
       const appIndex = appInfos.findIndex(item => {
@@ -476,7 +471,7 @@ export class BigFolderViewModel extends BaseViewModel {
    * @param folderItem
    * @param gridLayoutInfo
    */
-  private updateFolderBadgeNumber(appInfos, folderItem, gridLayoutInfo, gridLayoutInfoTemp): void {
+  private updateFolderBadgeNumber(appInfos: AppItemInfo[], folderItem: FolderData, gridLayoutInfo, gridLayoutInfoTemp): void {
     for (let i = 0; i < gridLayoutInfo.layoutInfo.length; i++) {
       if (gridLayoutInfo.layoutInfo[i].typeId === CommonConstants.TYPE_FOLDER
       && gridLayoutInfo.layoutInfo[i].folderId === folderItem.folderId) {
@@ -662,14 +657,14 @@ export class BigFolderViewModel extends BaseViewModel {
    * @param {number} folderId
    *
    */
-  async getFolderAddAppList(folderId) {
+  async getFolderAddAppList(folderId: string): Promise<AppItemInfo[]> {
     Log.showDebug(TAG, 'getFolderAddAppList start');
     if (CheckEmptyUtils.checkStrIsEmpty(folderId)) {
       Log.showDebug(TAG, 'getFolderAddAppList folderId is Empty');
       return;
     }
-    let allAppList = [];
-    let appInfos: any;
+    let allAppList: AppItemInfo[] = [];
+    let appInfos: AppItemInfo[] = [];
     let gridLayoutInfo = {
       layoutInfo: []
     };
@@ -709,7 +704,7 @@ export class BigFolderViewModel extends BaseViewModel {
       }
     }
     if (!this.getIsPad()) {
-      let bottomAppList: any = AppStorage.get('residentList');
+      let bottomAppList: AppItemInfo[] = AppStorage.get('residentList') as AppItemInfo[];
       if (!CheckEmptyUtils.isEmptyArr(bottomAppList)) {
         for (let i = 0; i < bottomAppList.length; i++) {
           allAppList = allAppList.filter((item) => {
@@ -728,9 +723,9 @@ export class BigFolderViewModel extends BaseViewModel {
   /**
    * open folder
    *
-   * @param {any} folderInfo.
+   * @param {FolderData} folderInfo.
    */
-  addAddIcon(folderItem: any): any {
+  addAddIcon(folderItem: FolderData): FolderData {
     Log.showDebug(TAG, 'addAddIcon start');
 
     if (folderItem.layoutInfo.length == 0) {
@@ -744,13 +739,9 @@ export class BigFolderViewModel extends BaseViewModel {
     const openFolderConfig = this.mBigFolderModel.getFolderOpenLayout();
     const column = openFolderConfig.column;
     const row = openFolderConfig.row;
-    const addInfo = {
-      typeId: CommonConstants.TYPE_ADD,
-      appName: $r('app.string.add'),
-      bundleName: '',
-      appIconId: BigFolderStyleConstants.DEFAULT_ADD_FOLDER_APP_IMAGE,
-      appLabelId: 0
-    };
+    const addInfo: AppItemInfo = new AppItemInfo();
+    addInfo.typeId = CommonConstants.TYPE_ADD;
+    addInfo.appName = '';
     if (folderItem.layoutInfo[folderItem.layoutInfo.length - 1].length === column * row) {
       folderItem.layoutInfo.push([addInfo]);
     } else {
@@ -764,9 +755,9 @@ export class BigFolderViewModel extends BaseViewModel {
   /**
    * open folder
    *
-   * @param {any} folderInfo.
+   * @param {FolderData} folderInfo.
    */
-  delAddIcon(folderItem: any): any {
+  delAddIcon(folderItem: FolderData): FolderData {
     Log.showDebug(TAG, 'delAddIcon start');
 
     if (folderItem.layoutInfo.length == 0) {
@@ -790,9 +781,10 @@ export class BigFolderViewModel extends BaseViewModel {
   /**
    * open folder
    *
-   * @param {any} folderInfo.
+   * @param {boolean} isRename.
+   * @param {FolderData} folderItem.
    */
-  async openFolder(isRename: boolean, folderItem: any) {
+  async openFolder(isRename: boolean, folderItem: FolderData) {
     Log.showDebug(TAG, 'openFolder start');
     folderItem.enterEditing = isRename;
 
@@ -819,7 +811,7 @@ export class BigFolderViewModel extends BaseViewModel {
    *
    * @param folderItem
    */
-  async refreshFolder(folderItem: any) {
+  async refreshFolder(folderItem: FolderData) {
     Log.showDebug(TAG, 'refreshFolder start');
     folderItem.enterEditing = false;
     this.updateOpenFolderStatus(folderItem);
@@ -838,9 +830,9 @@ export class BigFolderViewModel extends BaseViewModel {
   /**
    * modify folder name
    *
-   * @param {any} folderModel.
+   * @param {FolderData} folderModel.
    */
-  modifyFolderName(folderModel): void {
+  modifyFolderName(folderModel: FolderData): void {
     let gridLayoutInfo: GridLayoutInfo = {
       layoutDescription: undefined,
       layoutInfo: []
@@ -861,7 +853,7 @@ export class BigFolderViewModel extends BaseViewModel {
    *
    * @param appInfos
    */
-  filterFolderPage(appInfos): any[] {
+  filterFolderPage(appInfos: AppItemInfo[]): AppItemInfo[][] {
     const folderLayoutInfo = [];
     const appListInfo = JSON.parse(JSON.stringify(appInfos));
     const openFolderConfig = this.mBigFolderModel.getFolderOpenLayout();
@@ -887,10 +879,10 @@ export class BigFolderViewModel extends BaseViewModel {
   /**
    * make the folder layoutInfo into list
    *
-   * @param folderInfo
+   * @param {FolderData} folderInfo
    */
-  private layoutInfoToList(folderInfo): any[] {
-    let appInfo = [];
+  private layoutInfoToList(folderInfo: FolderData): AppItemInfo[] {
+    let appInfo: AppItemInfo[] = [];
     for (let i = 0; i < folderInfo.layoutInfo.length; i++) {
       for (let j = 0; j < folderInfo.layoutInfo[i].length; j++) {
         if (folderInfo.layoutInfo[i][j].typeId != CommonConstants.TYPE_ADD) {
@@ -904,7 +896,7 @@ export class BigFolderViewModel extends BaseViewModel {
   /**
    * create folder info
    *
-   * @return {any} folderInfo.
+   * @return {LauncherDragItemInfo} folderInfo.
    */
   private async createNewFolderInfo() {
     const folderConfig = this.mBigFolderModel.getFolderLayout();
@@ -918,7 +910,7 @@ export class BigFolderViewModel extends BaseViewModel {
       area: folderConfig.area,
       badgeNumber: 0
     };
-    return folderInfo;
+    return folderInfo as LauncherDragItemInfo;
   }
 
   /**
@@ -1022,7 +1014,7 @@ export class BigFolderViewModel extends BaseViewModel {
     const layoutInfo = gridLayoutInfo.layoutInfo;
     for (let i = 0; i < layoutInfo.length; i++) {
       if (layoutInfo[i].typeId == CommonConstants.TYPE_FOLDER) {
-        let folderAppList = this.layoutInfoToList(layoutInfo[i]);
+        let folderAppList = this.layoutInfoToList(layoutInfo[i] as FolderData);
         folderAppList = folderAppList.filter(item => item.bundleName != bundleName);
         this.updateFolderInfo(folderAppList, gridLayoutInfo, i);
       }
@@ -1068,13 +1060,10 @@ export class BigFolderViewModel extends BaseViewModel {
   /**
    * remove app from folder
    *
-   * @param {any} appInfo.
+   * @param {AppItemInfo} appInfo.
    */
-  removeAppOutOfFolder(appInfo): void {
-    let openFolderData: {
-      folderId: string,
-      layoutInfo: any
-    } = AppStorage.get('openFolderData');
+  removeAppOutOfFolder(appInfo: AppItemInfo): void {
+    let openFolderData: FolderData = AppStorage.get('openFolderData');
 
     const folderAppList = this.getAppListInFolder(openFolderData);
     this.deleteAppFromFolderAppList(appInfo, folderAppList);
@@ -1091,7 +1080,7 @@ export class BigFolderViewModel extends BaseViewModel {
       removeAppInfos.push(folderLayoutInfo[0][0]);
       gridLayoutInfo.layoutInfo.splice(folderIndex, 1);
       openFolderData = {
-        folderId: '', layoutInfo: []
+        folderId: '',enterEditing: false, folderName: '', layoutInfo: []
       };
     } else {
       this.updateBadgeNumber(gridLayoutInfo.layoutInfo[folderIndex], appInfo);
@@ -1110,7 +1099,7 @@ export class BigFolderViewModel extends BaseViewModel {
         }
       }
       const gridLayout = this.createAppLayoutInfo(removeAppInfos[i]);
-      gridLayoutInfo.layoutInfo.push(gridLayout);
+      gridLayoutInfo.layoutInfo.push(gridLayout as LauncherDragItemInfo);
       const appIndex = appListInfo.findIndex(item => {
         return item.keyName === removeAppInfos[i].keyName;
       })
@@ -1129,7 +1118,7 @@ export class BigFolderViewModel extends BaseViewModel {
    *
    * @param openFolderData
    */
-  private updateOpenFolderStatus(openFolderData): void {
+  private updateOpenFolderStatus(openFolderData: FolderData): void {
     AppStorage.setOrCreate('openFolderData', openFolderData);
     if (openFolderData.folderId == '') {
       AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
@@ -1158,12 +1147,12 @@ export class BigFolderViewModel extends BaseViewModel {
    *
    * @param openFolderData
    */
-  private getAppListInFolder(openFolderData): any[] {
+  private getAppListInFolder(openFolderData: FolderData): AppItemInfo[] {
     let folderAppList = [];
     for (let i = 0; i < openFolderData.layoutInfo.length; i++) {
       folderAppList = folderAppList.concat(openFolderData.layoutInfo[i]);
     }
-    if (folderAppList.length > 0 && folderAppList[folderAppList.length - 1].typeId == CommonConstants.TYPE_ADD) {
+    if (folderAppList.length > 0 && folderAppList[folderAppList.length - 1].typeId === CommonConstants.TYPE_ADD) {
       folderAppList.pop();
     }
     return folderAppList;
@@ -1175,7 +1164,7 @@ export class BigFolderViewModel extends BaseViewModel {
    * @param openFolderData
    * @param appInfo
    */
-  private getFolderLayoutInfo(openFolderData, appInfo): any {
+  private getFolderLayoutInfo(openFolderData: FolderData, appInfo: AppItemInfo): AppItemInfo[][] {
     let folderAppList = this.getAppListInFolder(openFolderData);
     const index = folderAppList.findIndex(item => {
       return item.keyName === appInfo.keyName;

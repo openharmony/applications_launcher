@@ -328,7 +328,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
         "column": this.getColumn(endIndex),
         "row": this.getRow(endIndex)
       };
-      layoutInfo.push(appInfoTemp);
+      layoutInfo.push(appInfoTemp as LauncherDragItemInfo);
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE, dragItemInfo);
     } else {
       this.checkAndMove(this.mStartPosition, this.mEndPosition, layoutInfo, dragItemInfo);

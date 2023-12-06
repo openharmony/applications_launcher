@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import GridLayoutItemInfo from '../bean/GridLayoutItemInfo';
+import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 
 export interface GridLayoutInfo {
   layoutDescription: {
@@ -21,5 +21,5 @@ export interface GridLayoutInfo {
     row: number;
     column: number;
   } | undefined;
-  layoutInfo: GridLayoutItemInfo[];
+  layoutInfo: LauncherDragItemInfo[];
 }

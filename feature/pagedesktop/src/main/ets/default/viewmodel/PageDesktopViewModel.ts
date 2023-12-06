@@ -34,7 +34,8 @@ import {
   MenuInfo,
   CardItemInfo,
   localEventManager,
-  GridLayoutInfo
+  GridLayoutInfo,
+  LauncherDragItemInfo
 } from '@ohos/common';
 import { BigFolderModel } from '@ohos/bigfolder';
 import { FormDetailLayoutConfig } from '@ohos/form';
@@ -1346,7 +1347,7 @@ export class PageDesktopViewModel extends BaseViewModel {
       }
 
       // Push card into the layoutInfo
-      gridLayoutInfo.layoutInfo.push(cardItemLayoutInfo);
+      gridLayoutInfo.layoutInfo.push(cardItemLayoutInfo as LauncherDragItemInfo);
       this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
       if (needNewPage) {
         this.mPageDesktopModel.setPageIndex(curPageIndex + 1);
