@@ -13,7 +13,9 @@
  * limitations under the License.
  */
 
-import dataRdb from '@ohos.data.rdb';
+import relationalStore from '@ohos.data.relationalStore';
+import { BusinessError } from '@ohos.base';
+import deviceInfo from '@ohos.deviceInfo';
 import hiSysEvent from '@ohos.hiSysEvent';
 import { Log } from '../utils/Log';
 import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
@@ -34,7 +36,7 @@ const TAG = 'RdbStoreManager';
  * Wrapper class for rdb interfaces.
  */
 export class RdbStoreManager {
-  private mRdbStore;
+  private mRdbStore: relationalStore.RdbStore;
 
   private constructor() {
   }
@@ -52,20 +54,23 @@ export class RdbStoreManager {
 
   async initRdbConfig(): Promise<void> {
     Log.showInfo(TAG, 'initRdbConfig start');
-    await dataRdb.getRdbStore(globalThis.desktopContext, {
-      name: RdbStoreConfig.DB_NAME
-    }, RdbStoreConfig.DB_VERSION)
-      .then((rdbStore) => {
-        this.mRdbStore = rdbStore;
-      })
-      .catch((error) => {
-        Log.showError(TAG, `initRdbConfig Failed to obtain the rdbStore. Cause: ${error.message}`);
-      });
+    try {
+      const STORE_CONFIG: relationalStore.StoreConfig = {
+        name: RdbStoreConfig.DB_NAME,
+        securityLevel: relationalStore.SecurityLevel.S3
+      };
+
+      this.mRdbStore = await relationalStore.getRdbStore(globalThis.desktopContext, STORE_CONFIG);
+    } catch (error) {
+      let err = error as BusinessError;
+      Log.showError(TAG, `initRdbConfig Failed. code: ${err.code}, message: ${err.message}`);
+    }
   }
 
   async createTable(): Promise<void> {
     Log.showDebug(TAG, 'create table start');
     try {
+      await this.mRdbStore.executeSql(RdbStoreConfig.Settings.CREATE_TABLE);
       await this.mRdbStore.executeSql(RdbStoreConfig.Badge.CREATE_TABLE);
       await this.mRdbStore.executeSql(RdbStoreConfig.Form.CREATE_TABLE);
       await this.mRdbStore.executeSql(RdbStoreConfig.SmartDock.CREATE_TABLE);
@@ -75,24 +80,24 @@ export class RdbStoreManager {
       // set default settings data
       await this.updateSettings();
     } catch (error) {
-      Log.showError(TAG, `create table error: ${error}`);
+      Log.showError(TAG, `createTable error: ${JSON.stringify(error)}`);
     }
     Log.showDebug(TAG, 'create table end');
   }
 
   async getAllBadge(): Promise<BadgeItemInfo[]> {
     Log.showDebug(TAG, 'getAllBadge start');
-    const predicates = new dataRdb.RdbPredicates(RdbStoreConfig.Badge.TABLE_NAME);
+    const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.Badge.TABLE_NAME);
     const resultList: BadgeItemInfo[] = [];
     try {
       let resultSet = await this.mRdbStore.query(predicates, []);
       let isLast = resultSet.goToFirstRow();
       while (isLast) {
         const itemInfo: BadgeItemInfo = new BadgeItemInfo();
-        itemInfo.id = resultSet.getLong(resultSet.getColumnIndex('id'));
+        itemInfo.id = resultSet.getString(resultSet.getColumnIndex('id'));
         itemInfo.bundleName = resultSet.getString(resultSet.getColumnIndex('bundle_name'));
         itemInfo.badgeNumber = resultSet.getLong(resultSet.getColumnIndex('badge_number'));
-        itemInfo.display = resultSet.getLong(resultSet.getColumnIndex('display'));
+        itemInfo.display = this.numberToBoolean(resultSet.getLong(resultSet.getColumnIndex('display')));
         itemInfo.userId = resultSet.getLong(resultSet.getColumnIndex('user_id'));
         resultList.push(itemInfo);
         isLast = resultSet.goToNextRow();
@@ -112,16 +117,16 @@ export class RdbStoreManager {
       return resultList;
     }
     try {
-      const predicates = new dataRdb.RdbPredicates(RdbStoreConfig.Badge.TABLE_NAME);
+      const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.Badge.TABLE_NAME);
       predicates.equalTo('bundle_name', bundleName);
       let resultSet = await this.mRdbStore.query(predicates, []);
       let isLast = resultSet.goToFirstRow();
       while (isLast) {
         const itemInfo: BadgeItemInfo = new BadgeItemInfo();
-        itemInfo.id = resultSet.getLong(resultSet.getColumnIndex('id'));
+        itemInfo.id = resultSet.getString(resultSet.getColumnIndex('id'));
         itemInfo.bundleName = resultSet.getString(resultSet.getColumnIndex('bundle_name'));
         itemInfo.badgeNumber = resultSet.getLong(resultSet.getColumnIndex('badge_number'));
-        itemInfo.display = resultSet.getLong(resultSet.getColumnIndex('display'));
+        itemInfo.display = this.numberToBoolean(resultSet.getLong(resultSet.getColumnIndex('display')));
         itemInfo.userId = resultSet.getLong(resultSet.getColumnIndex('user_id'));
         resultList.push(itemInfo);
         isLast = resultSet.goToNextRow();
@@ -141,7 +146,7 @@ export class RdbStoreManager {
       return result;
     }
     try {
-      const predicates = new dataRdb.RdbPredicates(RdbStoreConfig.Badge.TABLE_NAME);
+      const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.Badge.TABLE_NAME);
       predicates.equalTo('bundle_name', bundleName);
       const updateBucket = {
         'badge_number': badgeNum
@@ -172,7 +177,7 @@ export class RdbStoreManager {
       return result;
     }
     try {
-      const predicates = new dataRdb.RdbPredicates(RdbStoreConfig.Badge.TABLE_NAME);
+      const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.Badge.TABLE_NAME);
       predicates.equalTo('bundle_name', bundleName);
       const changeRows = await this.mRdbStore.delete(predicates);
       if (changeRows == 1) {
@@ -192,7 +197,7 @@ export class RdbStoreManager {
    */
   async getAllFormInfos(cardId = CommonConstants.INVALID_VALUE): Promise<CardItemInfo[]> {
     Log.showDebug(TAG, 'getAllFormInfos start');
-    const predicates = new dataRdb.RdbPredicates(RdbStoreConfig.Form.TABLE_NAME);
+    const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.Form.TABLE_NAME);
     if (cardId != CommonConstants.INVALID_VALUE) {
       predicates.equalTo('card_id', cardId);
     }
@@ -237,7 +242,7 @@ export class RdbStoreManager {
     Log.showDebug(TAG, 'updateFormInfoById start');
     let result = false;
     try {
-      const predicates = new dataRdb.RdbPredicates(RdbStoreConfig.Form.TABLE_NAME);
+      const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.Form.TABLE_NAME);
       predicates.equalTo('card_id', cardItemInfo.cardId);
       const updateBucket = {
         'card_name': cardItemInfo.cardName,
@@ -275,7 +280,7 @@ export class RdbStoreManager {
     Log.showDebug(TAG, 'deleteFormInfoById start');
     let result = false;
     try {
-      const predicates = new dataRdb.RdbPredicates(RdbStoreConfig.Form.TABLE_NAME);
+      const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.Form.TABLE_NAME);
       predicates.equalTo('card_id', cardId);
       const changeRows = await this.mRdbStore.delete(predicates);
       if (changeRows == 1) {
@@ -291,7 +296,7 @@ export class RdbStoreManager {
     Log.showDebug(TAG, 'deleteFormInfoByBundle start');
     let result = false;
     try {
-      const predicates = new dataRdb.RdbPredicates(RdbStoreConfig.Form.TABLE_NAME);
+      const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.Form.TABLE_NAME);
       predicates.equalTo('bundle_name', bundleName);
       const changeRows = await this.mRdbStore.delete(predicates);
       if (changeRows == 1) {
@@ -315,7 +320,7 @@ export class RdbStoreManager {
     let result = false;
     try {
       // get deviceType
-      let deviceType = AppStorage.get('deviceType');
+      let deviceType = deviceInfo.deviceType;
 
       // init default settings config
       if (CheckEmptyUtils.isEmpty(key) || CheckEmptyUtils.isEmpty(value)) {
@@ -332,7 +337,7 @@ export class RdbStoreManager {
       } else {
         // update settings by key and value
         let sql = `UPDATE ${RdbStoreConfig.Settings.TABLE_NAME} SET ${key} = '${value}' WHERE id = 1`;
-        await this.mRdbStore.executeSql(sql)
+        await this.mRdbStore.executeSql(sql);
       }
     } catch (e) {
       Log.showError(TAG, 'updateSettings error:' + JSON.stringify(e));
@@ -410,7 +415,7 @@ export class RdbStoreManager {
   async querySmartDock(): Promise<DockItemInfo[]> {
     const resultList: DockItemInfo[] = [];
     try {
-      const predicates = new dataRdb.RdbPredicates(RdbStoreConfig.SmartDock.TABLE_NAME);
+      const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.SmartDock.TABLE_NAME);
       let resultSet = await this.mRdbStore.query(predicates, []);
       let isLast = resultSet.goToFirstRow();
       while (isLast) {
@@ -503,7 +508,7 @@ export class RdbStoreManager {
   async queryDesktopApplication(): Promise<AppItemInfo[]> {
     const resultList: AppItemInfo[] = [];
     try {
-      const predicates = new dataRdb.RdbPredicates(RdbStoreConfig.DesktopApplicationInfo.TABLE_NAME);
+      const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.DesktopApplicationInfo.TABLE_NAME);
       let resultSet = await this.mRdbStore.query(predicates, []);
       let isLast = resultSet.goToFirstRow();
       while (isLast) {
@@ -595,6 +600,7 @@ export class RdbStoreManager {
           }
           Log.showDebug(TAG, `element prev: ${JSON.stringify(element)}`);
           let ret: number = await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
+          Log.showDebug(TAG, `element ret: ${JSON.stringify(ret)}`);
           if (ret > 0) {
             await this.insertLayoutInfo(element.layoutInfo, ret);
           }
@@ -649,7 +655,7 @@ export class RdbStoreManager {
   async queryGridLayoutInfo(): Promise<GridLayoutItemInfo[]> {
     const resultList: GridLayoutItemInfo[] = [];
     try {
-      const predicates = new dataRdb.RdbPredicates(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
+      const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
       predicates.equalTo(GridLayoutInfoColumns.CONTAINER, -100);
       let resultSet = await this.mRdbStore.query(predicates, []);
       let isLast = resultSet.goToFirstRow();
@@ -664,7 +670,7 @@ export class RdbStoreManager {
         resultList.push(builder.buildGridLayoutItem());
         isLast = resultSet.goToNextRow();
       }
-      resultSet.close()
+      resultSet.close();
       resultSet = null;
     } catch (e) {
       Log.showError(TAG, 'queryGridLayoutInfo error:' + JSON.stringify(e));
@@ -675,7 +681,7 @@ export class RdbStoreManager {
   private async queryLayoutInfo(container: number): Promise<AppItemInfo[]> {
     const resultList: AppItemInfo[] = [];
     try {
-      let layoutPredicates = new dataRdb.RdbPredicates(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
+      let layoutPredicates = new relationalStore.RdbPredicates(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
       layoutPredicates.equalTo("container", container);
       let columns = [GridLayoutInfoColumns.APP_NAME,
       GridLayoutInfoColumns.IS_SYSTEM_APP,

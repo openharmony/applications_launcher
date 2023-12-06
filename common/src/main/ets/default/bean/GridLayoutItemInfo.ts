@@ -97,7 +97,7 @@ export default class GridLayoutItemInfo {
     /**
      * GridLayoutItemInfo: bigFolder apps info
      */
-    layoutInfo:  AppItemInfo[][] | undefined;
+    layoutInfo: AppItemInfo[][] | undefined;
 
     /**
      * GridLayoutItemInfo: extend1

@@ -253,11 +253,16 @@ class WindowManager {
   }
 
   minimizeAllApps(): void {
-    display.getDefaultDisplay().then(dis => {
+    try {
+      let dis: display.Display = display.getDefaultDisplaySync();
       Window.minimizeAll(dis.id).then(() => {
         Log.showDebug(TAG, 'Launcher minimizeAll');
       });
-    });
+    } catch (err) {
+      let errCode = (err as BusinessError).code;
+      let errMsg = (err as BusinessError).message;
+      Log.showError(TAG, `minimizeAllApps errCode: ${errCode}, errMsg: ${errMsg}`);
+    }
     this.destroyWindow(this.FORM_MANAGER_WINDOW_NAME);
     this.destroyWindow(this.FORM_SERVICE_WINDOW_NAME);
   }

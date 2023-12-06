@@ -222,7 +222,7 @@ export default class SmartDockModel {
     if (this.checkDockNum(dockItemCount)) {
       return false;
     }
-    const flag = this.idDuplicate(this.mResidentList, appInfo);
+    const flag = this.idDuplicate(this.mResidentList, appInfo as AppItemInfo);
     if (flag) {
       const dockItemInfo = new DockItemInfo();
       dockItemInfo.itemType = CommonConstants.TYPE_APP;

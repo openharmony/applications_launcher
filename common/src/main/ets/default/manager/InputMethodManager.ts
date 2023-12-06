@@ -28,6 +28,6 @@ export class InputMethodManager {
   }
 
   stopInput(): void {
-    inputMethod.getInputMethodController()?.stopInput();
+    inputMethod.getController()?.stopInputSession();
   }
 }
