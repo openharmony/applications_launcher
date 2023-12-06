@@ -33,7 +33,8 @@ import {
   PageDesktopModel,
   MenuInfo,
   CardItemInfo,
-  localEventManager
+  localEventManager,
+  GridLayoutInfo
 } from '@ohos/common';
 import { BigFolderModel } from '@ohos/bigfolder';
 import { FormDetailLayoutConfig } from '@ohos/form';
@@ -783,8 +784,8 @@ export class PageDesktopViewModel extends BaseViewModel {
     const layoutNum = this.mBundleInfoList.length;
     const maxPerPage = column * row;
     const pageNum = Math.ceil(layoutNum / maxPerPage);
-    const newLayoutInfo = {
-      layoutDescription: {},
+    const newLayoutInfo: GridLayoutInfo = {
+      layoutDescription: undefined,
       layoutInfo: []
     };
     newLayoutInfo.layoutDescription = {
@@ -804,8 +805,8 @@ export class PageDesktopViewModel extends BaseViewModel {
     const layoutNum = info.layoutInfo.length;
     const maxPerPage = column * row;
     const pageNum = Math.ceil(layoutNum / maxPerPage);
-    const newLayoutInfo = {
-      layoutDescription: {},
+    const newLayoutInfo: GridLayoutInfo = {
+      layoutDescription: undefined,
       layoutInfo: []
     };
     newLayoutInfo.layoutDescription = {

@@ -21,7 +21,8 @@ import {
   layoutConfigManager,
   FormListInfoCacheManager,
   CardItemInfo,
-  LauncherDragItemInfo
+  LauncherDragItemInfo,
+  GridLayoutInfo
 } from '@ohos/common';
 import { FormStyleConfig } from '../common/FormStyleConfig';
 import FeatureConstants from '../common/constants/FeatureConstants';
@@ -106,7 +107,8 @@ export class FormViewModel {
    */
   async deleteForm(cardId) {
     Log.showDebug(TAG, 'deleteForm start');
-    let gridLayoutInfo = {
+    let gridLayoutInfo: GridLayoutInfo = {
+      layoutDescription: undefined,
       layoutInfo: []
     };
     gridLayoutInfo = this.mSettingsModel.getLayoutInfo();

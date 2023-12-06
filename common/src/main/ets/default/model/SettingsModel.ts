@@ -26,6 +26,7 @@ import { PageDesktopAppModeConfig } from '../layoutconfig/PageDesktopAppModeConf
 import { SettingsModelObserver } from './SettingsModelObserver';
 import GridLayoutConfigs from '../configs/GridLayoutConfigs';
 import dataShare from '@ohos.data.dataShare';
+import { GridLayoutInfo } from '../interface';
 
 const TAG = 'SettingsModel';
 
@@ -236,7 +237,7 @@ export class SettingsModel {
   /**
    * Set layout information of grid view.
    */
-  setLayoutInfo(layoutInfo): void {
+  setLayoutInfo(layoutInfo: GridLayoutInfo): void {
     this.mPageDesktopLayoutConfig.updateGridLayoutInfo(layoutInfo);
   }
 

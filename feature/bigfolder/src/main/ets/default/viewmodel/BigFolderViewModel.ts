@@ -26,7 +26,8 @@ import {
   localEventManager,
   layoutConfigManager,
   FolderLayoutConfig,
-  AppItemInfo
+  AppItemInfo,
+  GridLayoutInfo
 } from '@ohos/common';
 import { BigFolderModel } from '../model/BigFolderModel';
 import { BigFolderStyleConfig } from '../common/BigFolderStyleConfig';
@@ -840,7 +841,8 @@ export class BigFolderViewModel extends BaseViewModel {
    * @param {any} folderModel.
    */
   modifyFolderName(folderModel): void {
-    let gridLayoutInfo = {
+    let gridLayoutInfo: GridLayoutInfo = {
+      layoutDescription: undefined,
       layoutInfo: []
     };
     gridLayoutInfo = this.mSettingsModel.getLayoutInfo();

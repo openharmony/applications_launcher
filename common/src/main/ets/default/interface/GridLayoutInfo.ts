@@ -13,8 +13,13 @@
  * limitations under the License.
  */
 
-export { DragArea } from './DragArea';
+import GridLayoutItemInfo from '../bean/GridLayoutItemInfo';
 
-export { DragItemPosition } from './DragItemPosition';
-
-export { GridLayoutInfo } from './GridLayoutInfo';
+export interface GridLayoutInfo {
+  layoutDescription: {
+    pageCount: number;
+    row: number;
+    column: number;
+  } | undefined;
+  layoutInfo: GridLayoutItemInfo[];
+}

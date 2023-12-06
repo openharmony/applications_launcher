@@ -22,6 +22,7 @@ import { FormManager } from '../manager/FormManager';
 import { RdbStoreManager } from '../manager/RdbStoreManager';
 import { FormListInfoCacheManager } from '../cache/FormListInfoCacheManager';
 import {PageDesktopModel} from './PageDesktopModel';
+import { GridLayoutInfo } from '../interface';
 
 
 const TAG = 'FormModel';
@@ -254,7 +255,8 @@ export class FormModel {
    */
   async deleteForm(cardId) {
     Log.showDebug(TAG, 'deleteForm start');
-    let gridLayoutInfo = {
+    let gridLayoutInfo: GridLayoutInfo = {
+      layoutDescription: undefined,
       layoutInfo: []
     };
     gridLayoutInfo = SettingsModel.getInstance().getLayoutInfo();

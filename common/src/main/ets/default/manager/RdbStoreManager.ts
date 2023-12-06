@@ -29,6 +29,7 @@ import GridLayoutItemInfo from '../bean/GridLayoutItemInfo';
 import GridLayoutItemBuilder from '../bean/GridLayoutItemBuilder';
 import GridLayoutInfoColumns from '../bean/GridLayoutInfoColumns';
 import DesktopApplicationColumns from '../bean/DesktopApplicationColumns';
+import { GridLayoutInfo } from '../interface';
 
 const TAG = 'RdbStoreManager';
 
@@ -90,7 +91,7 @@ export class RdbStoreManager {
     const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.Badge.TABLE_NAME);
     const resultList: BadgeItemInfo[] = [];
     try {
-      let resultSet = await this.mRdbStore.query(predicates, []);
+      let resultSet = await this.mRdbStore.query(predicates);
       let isLast = resultSet.goToFirstRow();
       while (isLast) {
         const itemInfo: BadgeItemInfo = new BadgeItemInfo();
@@ -119,7 +120,7 @@ export class RdbStoreManager {
     try {
       const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.Badge.TABLE_NAME);
       predicates.equalTo('bundle_name', bundleName);
-      let resultSet = await this.mRdbStore.query(predicates, []);
+      let resultSet = await this.mRdbStore.query(predicates);
       let isLast = resultSet.goToFirstRow();
       while (isLast) {
         const itemInfo: BadgeItemInfo = new BadgeItemInfo();
@@ -203,7 +204,7 @@ export class RdbStoreManager {
     }
     const resultList: CardItemInfo[] = [];
     try {
-      let resultSet = await this.mRdbStore.query(predicates, []);
+      let resultSet = await this.mRdbStore.query(predicates);
       let isLast = resultSet.goToFirstRow();
       while (isLast) {
         const itemInfo: CardItemInfo = new CardItemInfo();
@@ -334,10 +335,12 @@ export class RdbStoreManager {
         };
         // insert sql
         let ret = await this.mRdbStore.insert(RdbStoreConfig.Settings.TABLE_NAME, firstDbData);
+        Log.showDebug(TAG, `updateSettings insert successful. ${ret}`);
       } else {
         // update settings by key and value
         let sql = `UPDATE ${RdbStoreConfig.Settings.TABLE_NAME} SET ${key} = '${value}' WHERE id = 1`;
         await this.mRdbStore.executeSql(sql);
+        Log.showDebug(TAG, `updateSettings update successful.`);
       }
     } catch (e) {
       Log.showError(TAG, 'updateSettings error:' + JSON.stringify(e));
@@ -353,22 +356,23 @@ export class RdbStoreManager {
       await this.deleteTable(RdbStoreConfig.SmartDock.TABLE_NAME);
 
       // insert into smartdock
-      for (let i in dockInfoList) {
-        let smartdockDbItem = {
-          'item_type': dockInfoList[i].itemType,
-          'editable': this.booleanToNumber(dockInfoList[i].editable),
-          'bundle_name': dockInfoList[i].bundleName,
-          'ability_name': dockInfoList[i].abilityName,
-          'module_name': dockInfoList[i].moduleName,
-          'app_icon_id': dockInfoList[i].appIconId,
-          'app_label_id': dockInfoList[i].appLabelId,
-          'app_name': dockInfoList[i].appName,
-          'is_system_app': this.booleanToNumber(dockInfoList[i].isSystemApp),
-          'is_uninstallAble': this.booleanToNumber(dockInfoList[i].isUninstallAble),
-          'key_name': dockInfoList[i].keyName,
-          'install_time': dockInfoList[i].installTime
+      for (const element of dockInfoList) {
+        let smartDockDbItem = {
+          'item_type': element.itemType,
+          'editable': this.booleanToNumber(element.editable),
+          'bundle_name': element.bundleName,
+          'ability_name': element.abilityName,
+          'module_name': element.moduleName,
+          'app_icon_id': element.appIconId,
+          'app_label_id': element.appLabelId,
+          'app_name': element.appName,
+          'is_system_app': this.booleanToNumber(element.isSystemApp),
+          'is_uninstallAble': this.booleanToNumber(element.isUninstallAble),
+          'key_name': element.keyName,
+          'install_time': element.installTime
         }
-        let ret = await this.mRdbStore.insert(RdbStoreConfig.SmartDock.TABLE_NAME, smartdockDbItem);
+        let ret = await this.mRdbStore.insert(RdbStoreConfig.SmartDock.TABLE_NAME, smartDockDbItem);
+        Log.showDebug(TAG, `insertIntoSmartdock insert successful. ${ret}-${element.keyName}`);
       }
     } catch (e) {
       Log.showError(TAG, 'insertIntoSmartdock error:' + JSON.stringify(e));
@@ -386,10 +390,11 @@ export class RdbStoreManager {
   async deleteTable(tableName: string): Promise<void> {
     Log.showDebug(TAG, 'deleteTable start');
     try {
-      let detelSql = `DELETE FROM ${tableName};`
-      let detelSequenceSql = `UPDATE sqlite_sequence SET seq=0 WHERE name = '${tableName}';`
-      await this.mRdbStore.executeSql(detelSql, function () {})
-      await this.mRdbStore.executeSql(detelSequenceSql, function () {})
+      let detelSql = `DELETE FROM ${tableName};`;
+      let detelSequenceSql = `UPDATE sqlite_sequence SET seq=0 WHERE name = '${tableName}';`;
+      await this.mRdbStore.executeSql(detelSql);
+      await this.mRdbStore.executeSql(detelSequenceSql);
+      Log.showDebug(TAG, 'deleteTable successful.');
     } catch (e) {
       Log.showError(TAG, `deleteTable err: ${JSON.stringify(e)}`);
     }
@@ -407,6 +412,7 @@ export class RdbStoreManager {
       let dropSql = `DROP TABLE IF EXISTS ${tableName}`;
       await this.mRdbStore.executeSql(dropSql);
       await this.mRdbStore.executeSql(RdbStoreConfig.GridLayoutInfo.CREATE_TABLE);
+      Log.showDebug(TAG, 'dropTable successful.');
     } catch (e) {
       Log.showError(TAG, `dropTable err: ${JSON.stringify(e)}`);
     }
@@ -416,7 +422,7 @@ export class RdbStoreManager {
     const resultList: DockItemInfo[] = [];
     try {
       const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.SmartDock.TABLE_NAME);
-      let resultSet = await this.mRdbStore.query(predicates, []);
+      let resultSet = await this.mRdbStore.query(predicates);
       let isLast = resultSet.goToFirstRow();
       while (isLast) {
         const itemInfo: DockItemInfo = new DockItemInfo();
@@ -435,7 +441,7 @@ export class RdbStoreManager {
         resultList.push(itemInfo);
         isLast = resultSet.goToNextRow();
       }
-      resultSet.close()
+      resultSet.close();
       resultSet = null;
     } catch (e) {
       Log.showError(TAG, 'querySmartDock error:' + JSON.stringify(e));
@@ -509,7 +515,7 @@ export class RdbStoreManager {
     const resultList: AppItemInfo[] = [];
     try {
       const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.DesktopApplicationInfo.TABLE_NAME);
-      let resultSet = await this.mRdbStore.query(predicates, []);
+      let resultSet = await this.mRdbStore.query(predicates);
       let isLast = resultSet.goToFirstRow();
       while (isLast) {
         let appItemInfo: AppItemInfo = new AppItemInfo();
@@ -535,9 +541,9 @@ export class RdbStoreManager {
     return resultList;
   }
 
-  async insertGridLayoutInfo(gridlayoutinfo: any): Promise<void> {
+  async insertGridLayoutInfo(gridLayoutInfo: GridLayoutInfo): Promise<void> {
     Log.showDebug(TAG, 'insertGridLayoutInfo start');
-    if (CheckEmptyUtils.isEmpty(gridlayoutinfo) || CheckEmptyUtils.isEmptyArr(gridlayoutinfo.layoutInfo)) {
+    if (CheckEmptyUtils.isEmpty(gridLayoutInfo) || CheckEmptyUtils.isEmptyArr(gridLayoutInfo.layoutInfo)) {
       Log.showError(TAG, 'insertGridLayoutInfo gridlayoutinfo is empty');
       return;
     }
@@ -546,9 +552,8 @@ export class RdbStoreManager {
       // delete gridlayoutinfo table
       await this.dropTable(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
       // insert into gridlayoutinfo
-      let layoutinfo: any[] = gridlayoutinfo.layoutInfo;
-      for (let i in layoutinfo) {
-        let element = layoutinfo[i];
+      let layoutInfo: Array<GridLayoutItemInfo> = gridLayoutInfo.layoutInfo;
+      for (const element of layoutInfo) {
         let item = {};
         if (element.typeId === CommonConstants.TYPE_APP) {
           item = {
@@ -563,10 +568,8 @@ export class RdbStoreManager {
             'row': element.row,
             'container': -100,
             'badge_number': element.badgeNumber
-          }
-
-          let ret = await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
-
+          };
+          await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
         } else if (element.typeId === CommonConstants.TYPE_CARD) {
           item = {
             'bundle_name':element.bundleName,
@@ -581,7 +584,7 @@ export class RdbStoreManager {
             'row': element.row,
             'container': -100,
             'badge_number': element.badgeNumber
-          }
+          };
           await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
         } else {
           item = {
@@ -597,11 +600,11 @@ export class RdbStoreManager {
             'row': element.row,
             'container': -100,
             'badge_number': element.badgeNumber
-          }
+          };
           Log.showDebug(TAG, `element prev: ${JSON.stringify(element)}`);
           let ret: number = await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
           Log.showDebug(TAG, `element ret: ${JSON.stringify(ret)}`);
-          if (ret > 0) {
+          if (ret !== -1) {
             await this.insertLayoutInfo(element.layoutInfo, ret);
           }
         }
@@ -612,7 +615,7 @@ export class RdbStoreManager {
     }
   }
 
-  private async insertLayoutInfo(layoutInfo: [[]], container: number): Promise<boolean> {
+  private async insertLayoutInfo(layoutInfo: AppItemInfo[][], container: number): Promise<boolean> {
     Log.showDebug(TAG, 'insertLayoutInfo start');
     let result: boolean = true;
     if (CheckEmptyUtils.isEmptyArr(layoutInfo)) {
@@ -620,10 +623,8 @@ export class RdbStoreManager {
       result = false;
       return result;
     }
-    for (var i in layoutInfo) {
-      let curItem = layoutInfo[i];
-      for (let j in curItem) {
-        let bigFolderApp: any = curItem[j];
+    for (const curItem of layoutInfo) {
+      for (const bigFolderApp of curItem) {
         let item = {
           'container': container,
           'app_name': bigFolderApp.appName,
@@ -642,8 +643,9 @@ export class RdbStoreManager {
           'column': bigFolderApp.column,
           'row': bigFolderApp.row,
           'badge_number': bigFolderApp.badgeNumber
-        }
+        };
         let ret: number = await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
+        Log.showDebug(TAG, `insertLayoutInfo ret ${container}-${ret}`);
         if (ret === -1) {
           result = false;
         }
@@ -657,7 +659,7 @@ export class RdbStoreManager {
     try {
       const predicates = new relationalStore.RdbPredicates(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
       predicates.equalTo(GridLayoutInfoColumns.CONTAINER, -100);
-      let resultSet = await this.mRdbStore.query(predicates, []);
+      let resultSet = await this.mRdbStore.query(predicates);
       let isLast = resultSet.goToFirstRow();
       while (isLast) {
         let typeId: number = resultSet.getLong(resultSet.getColumnIndex(GridLayoutInfoColumns.TYPE_ID));
@@ -693,11 +695,14 @@ export class RdbStoreManager {
       GridLayoutInfoColumns.MODULE_NAME,
       GridLayoutInfoColumns.KEY_NAME,
       GridLayoutInfoColumns.CONTAINER,
+      GridLayoutInfoColumns.INSTALL_TIME,
       GridLayoutInfoColumns.TYPE_ID,
       GridLayoutInfoColumns.AREA,
       GridLayoutInfoColumns.PAGE,
       GridLayoutInfoColumns.COLUMN,
       GridLayoutInfoColumns.ROW];
+
+      // columns - The columns to query. If the value is null, the query applies to all columns.
       let resultSet = await this.mRdbStore.query(layoutPredicates, columns);
       let isLast = resultSet.goToFirstRow();
       while (isLast) {
@@ -705,7 +710,7 @@ export class RdbStoreManager {
         resultList.push(itemInfo);
         isLast = resultSet.goToNextRow();
       }
-      resultSet.close()
+      resultSet.close();
       resultSet = null;
     } catch (e) {
       Log.showError(TAG, 'queryLayoutInfo error:' + JSON.stringify(e));
