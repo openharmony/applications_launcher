@@ -33,6 +33,7 @@ import { FormStyleConfig } from '@ohos/form';
 import AppCenterGridStyleConfig from '@ohos/appcenter/src/main/ets/default/common/AppCenterGridStyleConfig';
 import PadPageDesktopGridStyleConfig from '../common/PadPageDesktopGridStyleConfig';
 import { SmartDockStyleConfig } from '@ohos/smartdock';
+import display from '@ohos.display';
 
 const RAW_IMAGE_CACHE_SIZE = 20000000;
 const TAG = 'EntryView';
@@ -57,16 +58,34 @@ struct EntryView {
   @State mAppScaleY: number = 1.0;
   @State mAppAlpha: number = 1.0;
   @StorageLink('IsSetImageRawDataCacheSize') IsSetImageRawDataCacheSize?: boolean = undefined;
+  async onPortrait(mediaQueryResult: mediaquery.MediaQueryResult) {
+    if (mediaQueryResult.matches) {
+      Log.showInfo(TAG, 'screen change to landscape');
+      AppStorage.setOrCreate('isPortrait', false);
+    } else {
+      Log.showInfo(TAG, 'screen change to portrait');
+      AppStorage.setOrCreate('isPortrait', true);
+    }
+    let dis: display.Display | null = null;
+    try {
+      dis = display.getDefaultDisplaySync();
+      Log.showInfo(TAG, `change to display: ${JSON.stringify(dis)}`);
+      AppStorage.setOrCreate('screenWidth', px2vp(dis.width));
+      AppStorage.setOrCreate('screenHeight', px2vp(dis.height));
+      Log.showDebug(TAG, `screenWidth and screenHeight: ${AppStorage.get('screenWidth')},${AppStorage.get('screenHeight')}`);
+    } catch (err) {
+      Log.showError(TAG, `display.getDefaultDisplaySync err: ${JSON.stringify(err)}`)
+    }
+  }
 
   aboutToAppear(): void  {
     Log.showInfo(TAG, 'aboutToAppear');
     this.mStage.onCreate();
-
+    this.navigationBarStatus = SettingsModel.getInstance().getValue();
     this.getWindowSize();
     this.updateScreenSize();
-    this.mOrientationListener.on('change', windowManager.onPortrait);
+    this.mOrientationListener.on('change', this.onPortrait);
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
-    this.navigationBarStatus = SettingsModel.getInstance().getValue();
   }
 
   registerPageDesktopNavigatorStatusChangeEvent(listener: LocalEventListener): void {
@@ -139,10 +158,10 @@ struct EntryView {
     }
   }
 
-  private async getWindowSize(): Promise<void> {
+  private getWindowSize(): void {
     try {
-      this.screenWidth = await windowManager.getWindowWidth();
-      this.screenHeight = await windowManager.getWindowHeight();
+      this.screenWidth = px2vp(windowManager.getWindowWidth());
+      this.screenHeight = px2vp(windowManager.getWindowHeight());
       AppStorage.setOrCreate('screenWidth', this.screenWidth);
       AppStorage.setOrCreate('screenHeight', this.screenHeight);
     } catch (error) {
@@ -161,7 +180,7 @@ struct EntryView {
   }
 
   aboutToDisappear(): void {
-    this.mOrientationListener.off('change', windowManager.onPortrait);
+    this.mOrientationListener.off('change', this.onPortrait);
     this.mStage.onDestroy();
   }
 

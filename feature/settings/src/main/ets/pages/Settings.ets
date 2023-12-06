@@ -28,15 +28,16 @@ const TAG = 'Settings';
 @Entry
 @Component
 struct Index {
-  private mSettingsStage = new SettingsStage();
+  private mSettingsStage: SettingsStage = new SettingsStage();
   private mDevice = SettingsStyleConstants.DEFAULT_DEVICE_TYPE_PHONE;
+  @State mSettingsPresenter: SettingsPresenter | null = null;
 
   onPageShow(): void { }
 
   aboutToAppear(): void  {
     this.getDeviceType();
     this.mSettingsStage.onCreate();
-    mSettingsPresenter = SettingsPresenter.getInstance();
+    this.mSettingsPresenter = SettingsPresenter.getInstance();
   }
 
   aboutToDisappear(): void  {
@@ -45,13 +46,13 @@ struct Index {
 
   async getDeviceType() {
     try {
-      let sysWidth = await windowManager.getWindowWidth();
-      let sysHeigh = await windowManager.getWindowHeight();
-      if (sysWidth > sysHeigh) {
+      let sysWidth = px2vp(windowManager.getWindowWidth());
+      let sysHeight = px2vp(windowManager.getWindowHeight());
+      if (sysWidth > sysHeight) {
         this.mDevice = SettingsStyleConstants.DEFAULT_DEVICE_TYPE_PAD;
       }
     } catch (e) {
-      Log.showError(TAG, 'getWindowWidth or getWindowHeight error:' + e);
+      Log.showError(TAG, `getWindowWidth or getWindowHeight error: ${JSON.stringify(e)}`);
     }
   }
 
@@ -109,7 +110,7 @@ struct top_bar {
         .width(SettingsStyleConstants.DEFAULT_VP_24)
         .height(SettingsStyleConstants.DEFAULT_VP_24)
         .onClick(() => {
-          mSettingsPresenter.backToTheDesktop();
+          SettingsPresenter.getInstance().backToTheDesktop();
         })
 
       Text($r('app.string.into_settings'))
@@ -128,12 +129,8 @@ struct SettingPage {
   @State SettingList: SettingItemInfo[] = [];
 
   aboutToAppear(): void  {
-    this.SettingList = mSettingsPresenter.getSettingList();
+    this.SettingList = SettingsPresenter.getInstance().getSettingList();
     Log.showInfo(TAG, `aboutToAppear SettingList length: ${this.SettingList.length}`);
-  }
-
-  onPageShow(): void {
-    this.SettingList = mSettingsPresenter.getSettingList();
   }
 
   build() {
@@ -177,9 +174,9 @@ struct SettingItem {
   }
 
   aboutToAppear(): void  {
-    mSettingsPresenter.initNavigationBarStatusValue();
+    SettingsPresenter.getInstance().initNavigationBarStatusValue();
     if (this.settingType == 1) {
-      mSettingsPresenter.registerValueCallback(this.ida, this.callback);
+      SettingsPresenter.getInstance().registerValueCallback(this.ida, this.callback);
     }
   }
 
@@ -232,7 +229,7 @@ struct SettingItem {
           .height(40)
           .onChange((isOn: boolean) => {
             Log.showDebug(TAG, `SettingItemToggle onChange for GestureNavigation Enable: ${isOn}`);
-            mSettingsPresenter.sendLocalEvent(isOn ? '0' : '1');
+            SettingsPresenter.getInstance().sendLocalEvent(isOn ? '0' : '1');
           })
       }
     }
@@ -278,8 +275,8 @@ struct SettingsDialog {
         }.width(SettingsStyleConstants.PERCENTAGE_100)
         .height(SettingsStyleConstants.DEFAULT_VP_80)
         .onClick(() => {
-          mSettingsPresenter.changeSettingValue(this.ida, item.name);
-          mSettingsPresenter.setSettingsValue(this.ida, item.value);
+          SettingsPresenter.getInstance().changeSettingValue(this.ida, item.name);
+          SettingsPresenter.getInstance().setSettingsValue(this.ida, item.value);
           if (this.controller) {
             this.controller.close();
           }

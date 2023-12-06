@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { AppItemInfo } from './AppItemInfo';
 
 import GridLayoutItemBuilder from './GridLayoutItemBuilder';
 
@@ -96,7 +97,7 @@ export default class GridLayoutItemInfo {
     /**
      * GridLayoutItemInfo: bigFolder apps info
      */
-    layoutInfo: any | undefined;
+    layoutInfo:  AppItemInfo[][] | undefined;
 
     /**
      * GridLayoutItemInfo: extend1

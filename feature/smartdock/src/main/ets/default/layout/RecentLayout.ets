@@ -188,6 +188,7 @@ export default struct RecentLayout {
         })
       }, (item: DockItemInfo) => JSON.stringify(item))
     }
+    .scrollBar(BarState.Off)
     .padding(this.dockPadding)
     .width(this.getListWidth())
     .height(this.mSmartDockStyleConfig?.mDockHeight as number)

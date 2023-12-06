@@ -186,6 +186,7 @@ export struct SmartDock {
         })
       }
     }
+    .scrollBar(BarState.Off)
     .hitTestBehavior(this.desktopEventResponse ? HitTestMode.Default : HitTestMode.Block)
     .alignListItem(ListItemAlign.Center)
     .height(SmartDockConstants.PERCENTAGE_100)

@@ -19,7 +19,9 @@ import {
   PageDesktopModel,
   CommonConstants,
   layoutConfigManager,
-  FormListInfoCacheManager
+  FormListInfoCacheManager,
+  CardItemInfo,
+  LauncherDragItemInfo
 } from '@ohos/common';
 import { FormStyleConfig } from '../common/FormStyleConfig';
 import FeatureConstants from '../common/constants/FeatureConstants';
@@ -36,7 +38,7 @@ export class FormViewModel {
   private readonly mPageDesktopModel: PageDesktopModel;
   private readonly mFormStyleConfig: FormStyleConfig;
   private readonly mFormListInfoCacheManager: FormListInfoCacheManager;
-  private mAllFormsInfo;
+  private mAllFormsInfo?: CardItemInfo[];
 
   private constructor() {
     Log.showInfo(TAG, 'constructor start');
@@ -74,15 +76,15 @@ export class FormViewModel {
    *
    * @param {any} appInfo
    */
-  async isSupportForm(appInfo) {
+  async isSupportForm(appInfo: LauncherDragItemInfo) {
     const formInfoList = await this.mFormModel.getAllFormsInfo();
-    const formInfo: any = formInfoList.find(item => {
+    const formInfo: CardItemInfo = formInfoList.find(item => {
       if (item.bundleName === appInfo.bundleName) {
         return true;
       }
     });
     let isSupportForm = false;
-    if (formInfo.length > 0) {
+    if (formInfo) {
       isSupportForm = true;
     }
     return isSupportForm;

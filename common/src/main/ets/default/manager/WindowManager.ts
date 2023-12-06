@@ -15,14 +15,10 @@
 
 import Window from '@ohos.window';
 import display from '@ohos.display';
-import CommonEvent from '@ohos.commonEvent';
-import featureAbility from '@ohos.ability.featureAbility';
-import ServiceExtensionContext from 'application/ServiceExtensionContext';
-import { AsyncCallback, BusinessError} from '@ohos.base';
-import { CommonEventData } from 'commonEvent/commonEventData';
-import { CommonEventSubscriber } from 'commonEvent/commonEventSubscriber';
-import { CommonEventSubscribeInfo } from 'commonEvent/commonEventSubscribeInfo';
-
+import commonEventMgr from '@ohos.commonEventManager';
+import common from '@ohos.app.ability.common';
+import { AsyncCallback, BusinessError } from '@ohos.base';
+import AbilityConstant from '@ohos.app.ability.AbilityConstant';
 import commonEventManager from './CommonEventManager'
 import { Log } from '../utils/Log';
 import { StyleConstants } from '../constants/StyleConstants';
@@ -33,11 +29,11 @@ const TAG = 'WindowManager';
  * Wrapper class for window interfaces.
  */
 class WindowManager {
-  private mDisplayData = null;
+  private mDisplayData: display.Display | null = null;
 
-  private static subscriber: CommonEventSubscriber;
+  private static subscriber: commonEventMgr.CommonEventSubscriber;
 
-  private static eventCallback: AsyncCallback<CommonEventData>;
+  private static eventCallback: AsyncCallback<commonEventMgr.CommonEventData>;
 
   RECENT_WINDOW_NAME = 'RecentView';
 
@@ -76,11 +72,11 @@ class WindowManager {
    *
    * @return windowWidth
    */
-  async getWindowWidth() {
+  getWindowWidth(): number {
     if (this.mDisplayData == null) {
-      this.mDisplayData = await this.getWindowDisplayData();
+      this.mDisplayData = this.getWindowDisplayData();
     }
-    return px2vp(this.mDisplayData.width);
+    return this.mDisplayData?.width as number;
   }
 
   /**
@@ -88,27 +84,26 @@ class WindowManager {
    *
    * @return windowHeight
    */
-  async getWindowHeight() {
+  getWindowHeight(): number {
     if (this.mDisplayData == null) {
-      this.mDisplayData = await this.getWindowDisplayData();
+      this.mDisplayData = this.getWindowDisplayData();
     }
-    return px2vp(this.mDisplayData.height);
+    return this.mDisplayData?.height as number;
   }
 
-  private async getWindowDisplayData() {
-    let displayData = null;
-    await display.getDefaultDisplay()
-      .then((res)=>{
-        displayData = res;
-      }).catch((err)=>{
-        Log.showError(TAG, 'getWindowDisplayData error:' + err);
-      });
+  private getWindowDisplayData(): display.Display | null {
+    let displayData: display.Display | null = null;
+    try {
+      displayData = display.getDefaultDisplaySync();
+    } catch(err) {
+      Log.showError(TAG, `display.getDefaultDisplaySync error: ${JSON.stringify(err)}`);
+    }
     return displayData;
   }
 
   isSplitWindowMode(mode): boolean {
-    if ((mode == featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_PRIMARY) ||
-    (mode == featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_SECONDARY)) {
+    if ((mode === AbilityConstant.WindowMode.WINDOW_MODE_SPLIT_PRIMARY) ||
+    (mode === AbilityConstant.WindowMode.WINDOW_MODE_SPLIT_SECONDARY)) {
       return true;
     }
     return false;
@@ -121,8 +116,8 @@ class WindowManager {
    * @param height window height
    */
   async setWindowSize(width: number, height: number): Promise<void> {
-    const abilityWindow = await Window.getTopWindow();
-    void abilityWindow.resetSize(width, height);
+    const abilityWindow = await Window.getLastWindow(globalThis.desktopContext as common.BaseContext);
+    void abilityWindow.resize(width, height);
   }
 
   /**
@@ -132,8 +127,8 @@ class WindowManager {
    * @param y coordinate y
    */
   async setWindowPosition(x: number, y: number): Promise<void> {
-    const abilityWindow = await Window.getTopWindow();
-    void abilityWindow.moveTo(x, y);
+    const abilityWindow = await Window.getLastWindow(globalThis.desktopContext as common.BaseContext);
+    void abilityWindow.moveWindowTo(x, y);
   }
 
   /**
@@ -172,7 +167,7 @@ class WindowManager {
     })
   }
 
-  createWindow(context: ServiceExtensionContext, name: string, windowType: number, loadContent: string,
+  createWindow(context: common.ServiceExtensionContext, name: string, windowType: number, loadContent: string,
                isShow: boolean, callback?: Function) {
     Window.create(context, name, windowType).then((win) => {
       void win.setPreferredOrientation(Window.Orientation.AUTO_ROTATION_RESTRICTED);
@@ -203,7 +198,7 @@ class WindowManager {
     });
   }
 
-  createWindowIfAbsent(context: ServiceExtensionContext, name: string, windowType: number, loadContent: string): void {
+  createWindowIfAbsent(context: common.ServiceExtensionContext, name: string, windowType: number, loadContent: string): void {
     Log.showDebug(TAG, `create, name ${name}`);
     Window.find(name).then(win => {
       void win.show().then(() => {
@@ -297,7 +292,7 @@ class WindowManager {
       windowManager.recentMode = mode;
       win.setWindowMode(mode).then();
     } : (win) => {
-      windowManager.recentMode = featureAbility.AbilityWindowConfiguration.WINDOW_MODE_FULLSCREEN;
+      windowManager.recentMode = AbilityConstant.WindowMode.WINDOW_MODE_FULLSCREEN;
       win.setFullScreen(true).then(() => {
         Log.showDebug(TAG, `${this.RECENT_WINDOW_NAME} setFullScreen`);
       });
@@ -346,10 +341,10 @@ class WindowManager {
     if (WindowManager.subscriber != null) {
       return;
     }
-    const subscribeInfo: CommonEventSubscribeInfo = {
+    const subscribeInfo: commonEventMgr.CommonEventSubscribeInfo = {
       events: [commonEventManager.RECENT_FULL_SCREEN, commonEventManager.RECENT_SPLIT_SCREEN]
     };
-    CommonEvent.createSubscriber(subscribeInfo).then((commonEventSubscriber: CommonEventSubscriber) => {
+    commonEventMgr.createSubscriber(subscribeInfo).then((commonEventSubscriber: commonEventMgr.CommonEventSubscriber) => {
       Log.showDebug(TAG, "init SPLIT_SCREEN subscriber success");
       WindowManager.subscriber = commonEventSubscriber;
     }, (err) => {
@@ -374,9 +369,9 @@ class WindowManager {
   /**
    * Window event handler.
    */
-  private static async winEventCallback(error: BusinessError, data: CommonEventData) {
+  private static async winEventCallback(error: BusinessError, data: commonEventMgr.CommonEventData) {
     Log.showDebug(TAG,`Launcher WindowManager winEventCallback receive data: ${JSON.stringify(data)}.`);
-    if (error.code != 0) {
+    if (data.code !== 0) {
       Log.showError(TAG, `get winEventCallback error: ${JSON.stringify(error)}`);
       return;
     }
@@ -389,15 +384,15 @@ class WindowManager {
       case commonEventManager.RECENT_SPLIT_SCREEN:
         // split window mode
         const windowModeMap = {
-          'Primary': featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_PRIMARY,
-          'Secondary': featureAbility.AbilityWindowConfiguration.WINDOW_MODE_SPLIT_SECONDARY
+          'Primary': AbilityConstant.WindowMode.WINDOW_MODE_SPLIT_PRIMARY,
+          'Secondary': AbilityConstant.WindowMode.WINDOW_MODE_SPLIT_SECONDARY
         };
-        if (data.parameters.windowMode != 'Primary' && data.parameters.windowMode != 'Secondary') {
+        if (data.parameters.windowMode !== 'Primary' && data.parameters.windowMode !== 'Secondary') {
           break;
         }
         windowManager.createRecentWindow(windowModeMap[data.parameters.windowMode]);
         globalThis.splitMissionId = data.parameters.missionId;
-        await WindowManager.subscriber.setCode(0)
+        await WindowManager.subscriber.setCode(0);
         await WindowManager.subscriber.finishCommonEvent();
         break;
       default:

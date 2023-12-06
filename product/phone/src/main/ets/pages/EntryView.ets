@@ -59,11 +59,12 @@ struct EntryView {
   aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear');
     this.mStage.onCreate();
+    this.navigationBarStatus = SettingsModel.getInstance().getValue();
     this.getWindowSize();
     this.updateScreenSize();
 
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
-    this.navigationBarStatus = SettingsModel.getInstance().getValue();
+
   }
 
   registerPageDesktopNavigatorStatusChangeEvent(listener: LocalEventListener): void {
@@ -105,10 +106,10 @@ struct EntryView {
     }
   }
 
-  private async getWindowSize(): Promise<void> {
+  private getWindowSize(): void {
     try {
-      this.screenWidth = await windowManager.getWindowWidth();
-      this.screenHeight = await windowManager.getWindowHeight();
+      this.screenWidth = px2vp(windowManager.getWindowWidth());
+      this.screenHeight = px2vp(windowManager.getWindowHeight());
       AppStorage.setOrCreate('screenWidth', this.screenWidth);
       AppStorage.setOrCreate('screenHeight', this.screenHeight);
     } catch (error) {
