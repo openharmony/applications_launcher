@@ -23,13 +23,13 @@ const TAG = 'AppIcon';
 
 @Component
 export struct AppIcon {
-  @StorageLink('dragItemInfo') @Watch('updateIconScale') mDragItemInfo: LauncherDragItemInfo = new LauncherDragItemInfo();
+  @StorageLink('dragItemInfo') @Watch('updateAppIcon') mDragItemInfo: LauncherDragItemInfo = new LauncherDragItemInfo();
   iconSize: number = 0;
   iconId: number = 0;
   bundleName: string = '';
   moduleName: string = '';
   @State icon: string = '';
-  badgeNumber: number = 0;
+  @State badgeNumber: number = 0;
   @State iconScale: number = 1;
   useCache: boolean = true;
   badgeFontSize: number = StyleConstants.DEFAULT_BADGE_FONT_SIZE;
@@ -37,10 +37,8 @@ export struct AppIcon {
   private mBadgeManager = BadgeManager.getInstance();
   private mDefaultAppIcon: ResourceStr = '';
 
-  /**
-   * 拖动图标到无效区域，松手后图标缩放恢复原有尺寸
-   */
-  updateIconScale() {
+  updateAppIcon() {
+    // 拖动图标到无效区域，松手后图标缩放恢复原有尺寸
     if (!this.mDragItemInfo.isDragging) {
       this.iconScale = 1;
     }
@@ -101,9 +99,9 @@ export struct AppIcon {
       }
     })
     .onMouse((event: MouseEvent) => {
-      if (event.button == MouseButton.Left && event.action == MouseAction.Press) {
+      if (event.button === MouseButton.Left && event.action === MouseAction.Press) {
         this.iconScale = 0.9;
-      } else if (event.button == MouseButton.Left && event.action == MouseAction.Release) {
+      } else if (event.button === MouseButton.Left && event.action === MouseAction.Release) {
         this.iconScale = 1;
       }
     })

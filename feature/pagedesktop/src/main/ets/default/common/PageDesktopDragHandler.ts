@@ -291,7 +291,8 @@ export class PageDesktopDragHandler extends BaseDragHandler {
                 "column": this.getColumn(endIndex),
                 "row": this.getRow(endIndex),
                 "x": 0,
-                "installTime": dragItemInfo.installTime
+                "installTime": dragItemInfo.installTime,
+                "badgeNumber": dragItemInfo.badgeNumber
               })
               this.mSettingsModel.setAppListInfo(appInfoList);
             }
@@ -326,7 +327,8 @@ export class PageDesktopDragHandler extends BaseDragHandler {
         "area": dragItemInfo.area,
         "page": dragItemInfo.page,
         "column": this.getColumn(endIndex),
-        "row": this.getRow(endIndex)
+        "row": this.getRow(endIndex),
+        "badgeNumber": dragItemInfo.badgeNumber
       };
       layoutInfo.push(appInfoTemp as LauncherDragItemInfo);
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_RESIDENT_DOCK_ITEM_DELETE, dragItemInfo);

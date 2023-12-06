@@ -116,6 +116,7 @@ export default class SmartDockModel {
           dockItemInfo.isSystemApp = typeof (appData) === 'undefined' ? dockItemInfo.isSystemApp : appData.isSystemApp;
           dockItemInfo.isUninstallAble = typeof (appData) === 'undefined' ? dockItemInfo.isUninstallAble : appData.isUninstallAble;
           dockItemInfo.installTime = typeof (appData) === 'undefined' ? dockItemInfo.installTime : appData.installTime;
+          dockItemInfo.badgeNumber = typeof (appData) === 'undefined' ? dockItemInfo.badgeNumber : appData.badgeNumber;
           residentList.push(dockItemInfo);
         } else if (dockDataList[i].itemType == CommonConstants.TYPE_CARD) {
         } else {
@@ -130,6 +131,8 @@ export default class SmartDockModel {
           dockItemInfo.appLabelId = typeof (dockDataList[i].appLabelId) != 'undefined' ? dockDataList[i].appLabelId : dockDataList[i].labelId.id;
           dockItemInfo.isSystemApp = typeof (dockDataList[i].isSystemApp) === 'undefined' ? true : dockDataList[i].isSystemApp;
           dockItemInfo.isUninstallAble = typeof (dockDataList[i].isUninstallAble) === 'undefined' ? true : dockDataList[i].isUninstallAble;
+          dockItemInfo.badgeNumber = typeof (dockDataList[i].badgeNumber) === 'undefined' ?
+            CommonConstants.BADGE_DISPLAY_HIDE : dockDataList[i].badgeNumber;
           const loadAppName = await this.mResourceManager
             .getAppNameSync(dockItemInfo.appLabelId, dockItemInfo.bundleName, dockItemInfo.moduleName, '');
           dockItemInfo.appName = loadAppName;
@@ -237,6 +240,7 @@ export default class SmartDockModel {
       dockItemInfo.appLabelId = appInfo.appLabelId;
       dockItemInfo.isSystemApp = appInfo.isSystemApp;
       dockItemInfo.isUninstallAble = appInfo.isUninstallAble;
+      dockItemInfo.badgeNumber = appInfo.badgeNumber;
       if (dockItemCount == 0 || index == undefined || index >= dockItemCount || index < 0) {
         this.mResidentList.push(dockItemInfo);
       } else {
@@ -648,6 +652,7 @@ export default class SmartDockModel {
           dockItemInfo.installTime = appInfo.installTime;
           dockItemInfo.isSystemApp = appInfo.isSystemApp;
           dockItemInfo.isUninstallAble = appInfo.isUninstallAble;
+          dockItemInfo.badgeNumber = appInfo.badgeNumber;
           resistDockItem[i] = dockItemInfo;
           AppStorage.setOrCreate('residentList', resistDockItem);
         }
