@@ -17,11 +17,13 @@ import { Log } from '../utils/Log';
 import { BadgeManager } from '../manager/BadgeManager';
 import { StyleConstants } from '../constants/StyleConstants';
 import { ResourceManager } from '../manager/ResourceManager';
+import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 
 const TAG = 'AppIcon';
 
 @Component
 export struct AppIcon {
+  @StorageLink('dragItemInfo') @Watch('updateIconScale') mDragItemInfo: LauncherDragItemInfo = new LauncherDragItemInfo();
   iconSize: number = 0;
   iconId: number = 0;
   bundleName: string = '';
@@ -34,6 +36,15 @@ export struct AppIcon {
   private mResourceManager = ResourceManager.getInstance();
   private mBadgeManager = BadgeManager.getInstance();
   private mDefaultAppIcon: ResourceStr = '';
+
+  /**
+   * 拖动图标到无效区域，松手后图标缩放恢复原有尺寸
+   */
+  updateIconScale() {
+    if (!this.mDragItemInfo.isDragging) {
+      this.iconScale = 1;
+    }
+  }
 
   aboutToAppear(): void  {
     this.mResourceManager = ResourceManager.getInstance();

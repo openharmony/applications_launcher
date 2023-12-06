@@ -140,7 +140,7 @@ export default struct GridSwiper {
                 .gesture(
                 LongPressGesture({ repeat: false })
                   .onAction((event: GestureEvent) => {
-                    this.dialogController?.open()
+                    this.dialogController?.open();
                   })
                 )
                 .bindContextMenu(this.MenuBuilder, ResponseType.RightClick)

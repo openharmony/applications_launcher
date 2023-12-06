@@ -36,6 +36,7 @@ import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 import { SmartDockLayoutConfig } from '../config/SmartDockLayoutConfig';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
 import { RecentMissionInfo } from '@ohos/common';
+import launcherBundleManager from '@ohos.bundle.launcherBundleManager';
 
 const TAG = 'SmartDockModel';
 const KEY_NAME = 'name';
@@ -197,7 +198,7 @@ export default class SmartDockModel {
    * @param dockItem
    * @param dockType
    */
-  deleteDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}, dockType: number): boolean {
+  deleteDockItem(dockItem: DockItemInfo, dockType: number): boolean {
     if (SmartDockConstants.RESIDENT_DOCK_TYPE === dockType) {
       return this.deleteResistDockItem(dockItem);
     }
@@ -521,7 +522,7 @@ export default class SmartDockModel {
    * get ShortcutInfo by bundleName
    * @param bundleName
    */
-  getShortcutInfo(bundleName: string): any {
+  getShortcutInfo(bundleName: string): launcherBundleManager.ShortcutInfo[] | undefined {
     return this.mAppModel.getShortcutInfo(bundleName);
   }
 

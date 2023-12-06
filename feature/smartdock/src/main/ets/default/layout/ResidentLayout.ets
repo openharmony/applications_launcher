@@ -94,6 +94,7 @@ export default struct ResidentLayout {
             }
           }, (item: DockItemInfo) => JSON.stringify(item))
         }
+        .enableScrollInteraction(false)
         .scrollBar(BarState.Off)
         .height('100%')
         .animation({

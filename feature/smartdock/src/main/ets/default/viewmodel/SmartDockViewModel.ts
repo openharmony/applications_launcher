@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log } from '@ohos/common';
+import { LauncherDragItemInfo, Log, RecentBundleMissionInfo, ResourceManager } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { CheckEmptyUtils } from '@ohos/common';
 import { MenuInfo } from '@ohos/common';
@@ -34,6 +34,10 @@ import { SmartDockLayoutConfig } from '../config/SmartDockLayoutConfig';
 
 const TAG = 'SmartDockViewModel';
 
+class StartAppItemInfo extends LauncherDragItemInfo {
+  icon?: ResourceStr;
+}
+
 /**
  * SmartDock Viewmodel
  */
@@ -43,7 +47,7 @@ export default class SmartDockViewModel extends BaseViewModel {
   private readonly mSmartDockDragHandler: SmartDockDragHandler;
   private readonly mSmartDockStartAppHandler: SmartDockStartAppHandler;
   private readonly mSmartDockModel: SmartDockModel;
-  private mSelectedItem: DockItemInfo;
+  private mSelectedItem: DockItemInfo | null = null;
   private mSelectedDockType = 0;
   private mDevice = CommonConstants.DEFAULT_DEVICE_TYPE;
 
@@ -76,7 +80,7 @@ export default class SmartDockViewModel extends BaseViewModel {
    * @param item
    * @param callback
    */
-  residentOnClick(event, item, callback?) {
+  residentOnClick(event: ClickEvent | null, item: DockItemInfo, callback?: () => void) {
     // AppCenter entry
     AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_RESIDENTIAL);
     if (item.abilityName == CommonConstants.APPCENTER_ABILITY && callback != null) {
@@ -84,13 +88,13 @@ export default class SmartDockViewModel extends BaseViewModel {
       return;
     }
     if (item.abilityName == CommonConstants.RECENT_ABILITY) {
-      globalThis.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
+      windowManager.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
       Trace.start(Trace.CORE_METHOD_START_RECENTS);
       return;
     }
     // app entry
     Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
-    this.setStartAppInfo(item);
+    this.setStartAppInfo(item as StartAppItemInfo);
     launcherAbilityManager.startLauncherAbility(item.abilityName, item.bundleName, item.moduleName);
   }
 
@@ -99,9 +103,9 @@ export default class SmartDockViewModel extends BaseViewModel {
    * @param event
    * @param item
    */
-  public recentOnClick(event, item, callback?) {
+  public recentOnClick(event: ClickEvent | null, item: DockItemInfo, callback?: () => void) {
     AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_RECENT);
-    let missionInfoList = [];
+    let missionInfoList: RecentBundleMissionInfo[] = [];
     missionInfoList = AppStorage.get('missionInfoList');
     Log.showDebug(TAG, `recentOnClick missionInfoList.length: ${missionInfoList.length}`);
     if (!CheckEmptyUtils.isEmptyArr(missionInfoList)) {
@@ -117,7 +121,7 @@ export default class SmartDockViewModel extends BaseViewModel {
             amsMissionManager.moveMissionToFront(missionId).then(() => {}, () => {});
             // set start app info
             Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
-            this.setStartAppInfo(item);
+            this.setStartAppInfo(item as StartAppItemInfo);
           }
           break;
         }
@@ -136,14 +140,16 @@ export default class SmartDockViewModel extends BaseViewModel {
    * update drag effective area when dockList changed
    */
   async updateDockParams() {
-    const screenWidth: number = AppStorage.get('screenWidth');
-    const screenHeight: number = AppStorage.get('screenHeight');
-    const sysUIBottomHeight: number = AppStorage.get('sysUIBottomHeight');
-    const dockHeight: number = AppStorage.get('dockHeight');
+    const screenWidth: number = AppStorage.get('screenWidth') as number;
+    const screenHeight: number = AppStorage.get('screenHeight') as number;
+    const sysUIBottomHeight: number = AppStorage.get('sysUIBottomHeight') as number;
+    const dockHeight: number = AppStorage.get('dockHeight') as number;
     let mResidentWidth: number = this.getListWidth(AppStorage.get('residentList'));
-    if (AppStorage.get("deviceType") === CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if ((AppStorage.get('deviceType') as string) === CommonConstants.DEFAULT_DEVICE_TYPE) {
       const maxDockNum = this.getStyleConfig().mMaxDockNum;
-      mResidentWidth = this.mSmartDockStyleConfig.mDockPadding * 2 + maxDockNum * (this.mSmartDockStyleConfig.mListItemWidth) + (maxDockNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
+      mResidentWidth = this.mSmartDockStyleConfig.mDockPadding * 2 +
+        maxDockNum * (this.mSmartDockStyleConfig.mListItemWidth) +
+        (maxDockNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
     }
     AppStorage.setOrCreate('residentWidth', mResidentWidth);
     AppStorage.setOrCreate("dockPadding", this.getDockPadding(mResidentWidth));
@@ -152,7 +158,7 @@ export default class SmartDockViewModel extends BaseViewModel {
     if (typeof (this.mSmartDockDragHandler) != 'undefined') {
       let left = mResidentWidth === 0 ? 0 : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2;
       let right = mResidentWidth === 0 ? screenWidth : (screenWidth - mResidentWidth - (mRecentWidth === 0 ? 0 : (this.mSmartDockStyleConfig.mDockGap + mRecentWidth))) / 2 + mResidentWidth;
-      if (AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
+      if ((AppStorage.get('deviceType') as string) == CommonConstants.DEFAULT_DEVICE_TYPE) {
         left = (screenWidth - mResidentWidth) / 2;
         right = screenWidth - left;
       }
@@ -181,11 +187,11 @@ export default class SmartDockViewModel extends BaseViewModel {
    * @param dockType
    * @param callback
    */
-  buildMenuInfoList(appInfo, dockType, showAppcenter, callback?) {
+  buildMenuInfoList(appInfo: DockItemInfo, dockType: number, showAppcenter: () => void, callback?: () => void) {
     const menuInfoList = new Array<MenuInfo>();
     const shortcutInfo = this.mSmartDockModel.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
-      let menu = null;
+      let menu: MenuInfo | null = null;
       shortcutInfo.forEach((value) => {
         menu = new MenuInfo();
         menu.menuType = CommonConstants.MENU_TYPE_DYNAMIC;
@@ -197,7 +203,8 @@ export default class SmartDockViewModel extends BaseViewModel {
         menu.moduleName = value.moduleName;
         menu.onMenuClick = () => {
           Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
-          launcherAbilityManager.startLauncherAbility(value.wants[0].targetClass, value.wants[0].targetBundle, value.wants[0].targetModule);
+          launcherAbilityManager.startLauncherAbility(value.wants[0].targetAbility,
+            value.wants[0].targetBundle, value.wants[0].targetModule);
         };
         value.bundleName == appInfo.bundleName && value.moduleName == appInfo.moduleName && menuInfoList.push(menu);
       });
@@ -213,7 +220,7 @@ export default class SmartDockViewModel extends BaseViewModel {
     menuInfoList.push(open);
 
     if (appInfo.itemType != CommonConstants.TYPE_FUNCTION) {
-      this.mDevice = AppStorage.get('deviceType');
+      this.mDevice = AppStorage.get('deviceType') as string;
       if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE && dockType === SmartDockConstants.RESIDENT_DOCK_TYPE) {
         const addToWorkSpaceMenu = new MenuInfo();
         addToWorkSpaceMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
@@ -250,16 +257,16 @@ export default class SmartDockViewModel extends BaseViewModel {
     return menuInfoList;
   }
 
-  deleteDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}, dockType: number) {
+  deleteDockItem(dockItem: DockItemInfo, dockType: number) {
     this.mSmartDockModel.deleteDockItem(dockItem, dockType);
   }
 
-  getSelectedItem(): any {
+  getSelectedItem(): DockItemInfo | null {
     Log.showDebug(TAG, `getSelectedItem: ${JSON.stringify(this.mSelectedItem)}`);
     return this.mSelectedItem;
   }
 
-  getSelectedDockType(): any {
+  getSelectedDockType(): number {
     Log.showDebug(TAG, `getSelectedDockType: ${JSON.stringify(this.mSelectedDockType)}`);
     return this.mSelectedDockType;
   }
@@ -268,7 +275,7 @@ export default class SmartDockViewModel extends BaseViewModel {
    * calcaulate dock list width after list change
    * @param itemList
    */
-  private getListWidth(itemList: []): number {
+  private getListWidth(itemList: RecentBundleMissionInfo[]): number {
     let width = 0;
     if (typeof itemList === 'undefined' || itemList == null || itemList.length === 0) {
       return width;
@@ -300,12 +307,12 @@ export default class SmartDockViewModel extends BaseViewModel {
   /**
    * set start app info
    */
-  private setStartAppInfo(item) {
+  private setStartAppInfo(item: StartAppItemInfo) {
     if (CheckEmptyUtils.isEmpty(item)) {
       Log.showError(TAG, `setStartAppInfo with item`)
       return;
     }
-    item.icon = globalThis.ResourceManager.getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName)
+    item.icon = ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName)
     AppStorage.setOrCreate('startAppItemInfo', item);
     this.mSmartDockStartAppHandler.setAppIconSize(this.mSmartDockStyleConfig.mIconSize);
     this.mSmartDockStartAppHandler.setAppIconInfo();
