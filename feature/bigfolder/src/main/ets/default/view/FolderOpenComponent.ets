@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { Log , CheckEmptyUtils, AppItemInfo, FolderItemInfo, CardItemInfo } from '@ohos/common';
+import { Log , CheckEmptyUtils, AppItemInfo, FolderItemInfo, CardItemInfo, FolderData } from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';
@@ -47,13 +47,6 @@ interface FolderOpenLayoutTable {
   checked: boolean;
 }
 
-interface FolderInfo {
-  layoutInfo: AppItemInfo[][];
-  enterEditing: boolean;
-  folderName: string;
-  folderId: string;
-}
-
 const FOLDER_CLOSE_DELAY = 500;
 let mBigFolderViewModel: BigFolderViewModel;
 let mBigFolderStyleConfig: BigFolderStyleConfig;
@@ -82,7 +75,7 @@ export struct FolderOpenComponent {
   @StorageLink('openFolderStatus') @Watch('updateFolderData') openFolderStatus: number = BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
   @State overLayAlpha: number = 0.3;
   @State isRenaming: boolean = false;
-  @StorageLink('openFolderData') mFolderInfo: FolderInfo = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
+  @StorageLink('openFolderData') mFolderInfo: FolderData = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
   @State newFolderName: string = '';
 
   aboutToAppear(): void {
@@ -306,15 +299,19 @@ struct FolderSwiperPage {
   @StorageLink('isDraging') isDraging: boolean = false;
   @Link isRenaming: boolean;
   @Prop newFolderName: string;
-  private mFolderInfo: FolderInfo = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
+  private mFolderInfo: FolderData = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
   private mAppInfo: AppItemInfo[] = [];
   private ColumnsTemplate: string = '';
   private RowsTemplate: string = '';
   private mGridGap = BigFolderStyleConfig.getInstance().mOpenFolderGridGap;
   @State mBigFolderViewModel: BigFolderViewModel = mBigFolderViewModel;
+  @State appNameAdd: string = '';
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     mFolderModel = BigFolderModel.getInstance();
+    ResourceManager.getInstance().getStringByResource($r('app.string.add')).then((resName) => {
+      this.appNameAdd = resName;
+    });
     this.updateConfig();
   }
 
@@ -378,15 +375,17 @@ struct FolderSwiperPage {
                     .height(BigFolderStyleConstants.DEFAULT_ADD_APP_ICON_SIZE)
                 }.margin({ top: mGridIconTopPadding })
 
-                AppName({
-                  nameHeight: mAppNameHeight,
-                  nameSize: mAppNameSize,
-                  nameFontColor: BigFolderStyleConstants.DEFAULT_FONT_COLOR,
-                  appName: item.appName,
-                  useCache: false,
-                  nameLines: mNameLines,
-                  marginTop: mIconNameMargin
-                })
+                if (this.appNameAdd) {
+                  AppName({
+                    nameHeight: mAppNameHeight,
+                    nameSize: mAppNameSize,
+                    nameFontColor: BigFolderStyleConstants.DEFAULT_FONT_COLOR,
+                    appName: this.appNameAdd,
+                    useCache: false,
+                    nameLines: mNameLines,
+                    marginTop: mIconNameMargin
+                  })
+                }
               }
               .width(BigFolderStyleConstants.PERCENTAGE_100)
               .height(BigFolderStyleConstants.PERCENTAGE_100)
@@ -456,7 +455,7 @@ struct FolderAppItem {
   private RowsTemplate: string = '';
   private isSwappingPage = false;
   private willCloseFolder: boolean = false;
-  private mFolderInfo: FolderItemInfo = new FolderItemInfo();
+  private mFolderInfo: FolderData = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
   private mouseClick: number = 0;
   private dialogName: string = "";
   private clearForm: Function = () => {};

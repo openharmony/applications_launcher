@@ -13,6 +13,10 @@
  * limitations under the License.
  */
 
-export { DragArea } from './DragArea'
+export { DragArea } from './DragArea';
 
-export { DragItemPosition } from './DragItemPosition'
+export { DragItemPosition } from './DragItemPosition';
+
+export { GridLayoutInfo } from './GridLayoutInfo';
+
+export { FolderData } from './FolderData';

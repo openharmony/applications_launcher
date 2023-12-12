@@ -18,15 +18,19 @@ import inputMonitor from '@ohos.multimodalInput.inputMonitor';
 import {
   Log,
   CommonConstants,
-  settingsDataManager
+  settingsDataManager,
+  localEventManager,
+  EventConstants
 } from '@ohos/common';
+import dataShare from '@ohos.data.dataShare';
 import GestureNavigationExecutors from './GestureNavigationExecutors';
+import display from '@ohos.display';
 
 const TAG = 'GestureNavigationManage';
 
 export class GestureNavigationManager {
   private readonly uri: string | null = null;
-  private helper: any = null;
+  private helper: dataShare.DataShareHelper;
   private readonly sGestureNavigationExecutors: GestureNavigationExecutors = GestureNavigationExecutors.getInstance();
   private touchEventCallback: inputMonitor.TouchEventReceiver | null = null;
 
@@ -53,7 +57,7 @@ export class GestureNavigationManager {
     this.helper.on('dataChange', this.uri, callback);
   }
 
-  initWindowSize(display: any) {
+  initWindowSize(display: display.Display) {
     if (globalThis.sGestureNavigationExecutors) {
       globalThis.sGestureNavigationExecutors.setScreenWidth(display.width);
       globalThis.sGestureNavigationExecutors.setScreenHeight(display.height);
@@ -66,12 +70,16 @@ export class GestureNavigationManager {
   private getGestureNavigationStatus() {
     Log.showDebug(TAG, 'getGestureNavigationStatus enter');
     let gestureNavigationStatus = null;
-    try{
+    try {
       gestureNavigationStatus = this.getValue();
       Log.showDebug(TAG, `getGestureNavigationStatus gestureNavigationStatus:  ${gestureNavigationStatus}`);
       this.handleEventSwitches(gestureNavigationStatus);
+
+      // 初始化时保持弹窗的距离底部的位置和（打开/关闭）三键时的位置一致
+      AppStorage.setOrCreate('NavigationBarStatusValue', gestureNavigationStatus === '0' ? true : false);
+
       this.registerListenForDataChanges(this.dataChangesCallback.bind(this));
-    }catch (error) {
+    } catch (error) {
       Log.showError(TAG, `getGestureNavigationStatus error: ${JSON.stringify(error)}`);
     }
   }
@@ -80,7 +88,8 @@ export class GestureNavigationManager {
     Log.showInfo(TAG, "dataChangesCallback data:" + data);
     const getRetValue = this.getValue();
     this.handleEventSwitches(getRetValue);
-    AppStorage.setOrCreate('NavigationBarStatusValue', getRetValue == '0' ? true : false);
+    AppStorage.setOrCreate('NavigationBarStatusValue', getRetValue === '0' ? true : false);
+    localEventManager.sendLocalEventSticky(EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE, getRetValue);
   }
 
   private turnOnTouchEventCallback() {

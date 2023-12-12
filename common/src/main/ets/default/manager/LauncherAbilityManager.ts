@@ -13,43 +13,48 @@
  * limitations under the License.
  */
 
-import bundleMgr from '@ohos.bundle';
+import installer from '@ohos.bundle.installer';
+import bundleMonitor from '@ohos.bundle.bundleMonitor';
 import osAccount from '@ohos.account.osAccount';
 import hiSysEvent from '@ohos.hiSysEvent';
-import launcherBundleMgr from '@ohos.bundle.innerBundleManager';
-import { LauncherAbilityInfo } from 'bundle/launcherAbilityInfo';
+import launcherBundleManager from '@ohos.bundle.launcherBundleManager';
 import { Log } from '../utils/Log';
-import { Trace } from '../utils/Trace';
 import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
 import { AppItemInfo } from '../bean/AppItemInfo';
 import { CommonConstants } from '../constants/CommonConstants';
 import { ResourceManager } from './ResourceManager';
 import { EventConstants } from '../constants/EventConstants';
 import { BadgeManager } from '../manager/BadgeManager';
+import { BusinessError } from '@ohos.base';
 
 const TAG = 'LauncherAbilityManager';
+
+interface BundleStatusCallback {
+  add: (bundleName: string, userId: number) => void;
+  remove: (bundleName: string, userId: number) => void;
+  update: (bundleName: string, userId: number) => void;
+}
 
 /**
  * Wrapper class for innerBundleManager and formManager interfaces.
  */
 class LauncherAbilityManager {
   private static readonly CURRENT_USER_ID = -2;
-  private static readonly BUNDLE_STATUS_CHANGE_KEY = 'BundleStatusChange';
   private readonly mAppMap = new Map<string, AppItemInfo>();
   private mUserId: number = 100;
 
-  private readonly mBundleStatusCallback: any = {
+  private readonly mBundleStatusCallback: BundleStatusCallback = {
     add: (bundleName, userId) => {
-      Log.showDebug(TAG, `mBundleStatusCallback add bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
-      this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_ADDED, bundleName, userId);
+      Log.showDebug(TAG, `PACKAGE_ADDED bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
+      this.mUserId === userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_ADDED, bundleName, userId);
     },
     remove: (bundleName, userId) => {
-      Log.showDebug(TAG, `mBundleStatusCallback remove bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
-      this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_REMOVED, bundleName, userId);
+      Log.showDebug(TAG, `PACKAGE_REMOVED bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
+      this.mUserId === userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_REMOVED, bundleName, userId);
     },
     update: (bundleName, userId) => {
-      Log.showDebug(TAG, `mBundleStatusCallback update bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
-      this.mUserId == userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_CHANGED, bundleName, userId);
+      Log.showDebug(TAG, `PACKAGE_CHANGED bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
+      this.mUserId === userId && this.notifyLauncherAbilityChange(EventConstants.EVENT_PACKAGE_CHANGED, bundleName, userId);
     }
   };
 
@@ -87,11 +92,25 @@ class LauncherAbilityManager {
   registerLauncherAbilityChangeListener(listener: any): void {
     if (listener != null) {
       if (this.mLauncherAbilityChangeListeners.length == 0) {
-        launcherBundleMgr.on(LauncherAbilityManager.BUNDLE_STATUS_CHANGE_KEY, this.mBundleStatusCallback).then(data => {
-          Log.showDebug(TAG, `registerCallback success: ${JSON.stringify(data)}`);
-        }).catch(err => {
-          Log.showError(TAG, `registerCallback fail: ${JSON.stringify(err)}`);
-        });
+        try {
+          bundleMonitor.on('add', (bundleChangeInfo) => {
+            Log.showInfo(TAG, `add bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
+            this.mBundleStatusCallback.add(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
+          });
+          bundleMonitor.on('update', (bundleChangeInfo) => {
+            Log.showInfo(TAG, `update bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
+            this.mBundleStatusCallback.update(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
+          });
+          bundleMonitor.on('remove', (bundleChangeInfo) => {
+            Log.showInfo(TAG, `remove bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
+            this.mBundleStatusCallback.remove(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
+          });
+          Log.showInfo(TAG, `registerCallback success`);
+        } catch (errData) {
+          let message = (errData as BusinessError).message;
+          let errCode = (errData as BusinessError).code;
+          Log.showError(TAG, `registerCallback fail errCode:${errCode}, message:${message}`);
+        }
       }
       const index = this.mLauncherAbilityChangeListeners.indexOf(listener);
       if (index == CommonConstants.INVALID_VALUE) {
@@ -112,11 +131,16 @@ class LauncherAbilityManager {
         this.mLauncherAbilityChangeListeners.splice(index, 1);
       }
       if (this.mLauncherAbilityChangeListeners.length == 0) {
-        launcherBundleMgr.off(LauncherAbilityManager.BUNDLE_STATUS_CHANGE_KEY).then(data => {
-          Log.showDebug(TAG, 'unregisterCallback success');
-        }).catch(err => {
-          Log.showError(TAG, `unregisterCallback fail: ${JSON.stringify(err)}`);
-        });
+        try {
+          bundleMonitor.off('add');
+          bundleMonitor.off('update');
+          bundleMonitor.off('remove');
+          Log.showInfo(TAG, 'unregisterCallback success');
+        } catch (errData) {
+          let message = (errData as BusinessError).message;
+          let errCode = (errData as BusinessError).code;
+          Log.showError(TAG, `unregisterCallback fail errCode:${errCode}, message:${message}`);
+        }
       }
     }
   }
@@ -132,7 +156,7 @@ class LauncherAbilityManager {
    */
   async getLauncherAbilityList(): Promise<AppItemInfo[]> {
     let abilityList = null;
-    await launcherBundleMgr.getAllLauncherAbilityInfos(LauncherAbilityManager.CURRENT_USER_ID)
+    await launcherBundleManager.getAllLauncherAbilityInfo(LauncherAbilityManager.CURRENT_USER_ID)
       .then((res) => {
         abilityList = res;
       })
@@ -158,8 +182,8 @@ class LauncherAbilityManager {
    * @return List of entry capabilities information of the target application
    */
   async getLauncherAbilityInfo(bundleName: string): Promise<AppItemInfo[]> {
-    let abilityInfos: LauncherAbilityInfo[];
-    await launcherBundleMgr.getLauncherAbilityInfos(bundleName, this.mUserId)
+    let abilityInfos: launcherBundleManager.LauncherAbilityInfo[];
+    await launcherBundleManager.getLauncherAbilityInfo(bundleName, this.mUserId)
       .then((res) => {
         abilityInfos = res;
       })
@@ -193,15 +217,15 @@ class LauncherAbilityManager {
       return appItemInfo;
     }
     // get from system
-    let abilityInfos = new Array<LauncherAbilityInfo>();
-    await launcherBundleMgr.getLauncherAbilityInfos(bundleName, LauncherAbilityManager.CURRENT_USER_ID)
+    let abilityInfos = new Array<launcherBundleManager.LauncherAbilityInfo>();
+    await launcherBundleManager.getLauncherAbilityInfo(bundleName, LauncherAbilityManager.CURRENT_USER_ID)
       .then((res)=>{
         if (res && res.length) {
           abilityInfos = res;
         }
       })
       .catch((err)=>{
-        Log.showError(TAG, `getAppInfoByBundleName launcherBundleMgr getLauncherAbilityInfos error: ${JSON.stringify(err)}`);
+        Log.showError(TAG, `getAppInfoByBundleName getLauncherAbilityInfo error: ${JSON.stringify(err)}`);
       });
     if (!abilityInfos || abilityInfos.length === 0) {
       Log.showDebug(TAG, `${bundleName} has no launcher ability`);
@@ -247,17 +271,28 @@ class LauncherAbilityManager {
    * @params bundleName application bundleName
    * @params callback to get result
    */
-  async uninstallLauncherAbility(bundleName: string, callback): Promise<void> {
+  async uninstallLauncherAbility(bundleName: string, callback: (resultCode: number) => void): Promise<void> {
     Log.showInfo(TAG, `uninstallLauncherAbility bundleName: ${bundleName}`);
-    const bundlerInstaller = await bundleMgr.getBundleInstaller();
-    bundlerInstaller.uninstall(bundleName, {
-      userId: this.mUserId,
-      installFlag: 0,
-      isKeepData: false
-    }, (result) => {
-      Log.showDebug(TAG, `uninstallLauncherAbility result => ${JSON.stringify(result)}`);
-      callback(result);
-    });
+    try {
+      const bundlerInstaller = await installer.getBundleInstaller();
+      bundlerInstaller.uninstall(bundleName, {
+        userId: this.mUserId,
+        installFlag: 0,
+        isKeepData: false
+      }, (err: BusinessError) => {
+        if (err) {
+          callback(CommonConstants.INVALID_VALUE);
+          Log.showError(TAG, `uninstallLauncherAbility failed: ${JSON.stringify(err)}`);
+        } else {
+          callback(CommonConstants.UNINSTALL_SUCCESS);
+          Log.showDebug(TAG, `uninstallLauncherAbility successfully: ${JSON.stringify(err)}`);
+        }
+      });
+    } catch (err) {
+      let errCode = (err as BusinessError).code;
+      let errMsg = (err as BusinessError).message;
+      Log.showError(TAG, `uninstallLauncherAbility errCode: ${errCode}, errMsg: ${errMsg}`);
+    }
   }
 
   /**
@@ -321,9 +356,9 @@ class LauncherAbilityManager {
     });
   }
 
-  async getShortcutInfo(paramBundleName, callback) {
+  async getShortcutInfo(paramBundleName: string, callback) {
     Log.showDebug(TAG, `getShortcutInfo bundleName: ${paramBundleName}`);
-    await launcherBundleMgr.getShortcutInfos(paramBundleName)
+    await launcherBundleManager.getShortcutInfo(paramBundleName)
       .then(shortcutInfo => {
         callback(paramBundleName, shortcutInfo);
       })
@@ -337,7 +372,7 @@ class LauncherAbilityManager {
    * @params paramBundleName application bundle name
    * @params paramAbilityName application abilit uri
    */
-  startLauncherAbilityByUri(paramBundleName, abilityUri) {
+  startLauncherAbilityByUri(paramBundleName: string, abilityUri) {
     Log.showInfo(TAG, `startLauncherAbilityByUri bundleName:${paramBundleName} abilityUri:${abilityUri}`);
     const result = globalThis.desktopContext.startAbility({
       bundleName: paramBundleName,

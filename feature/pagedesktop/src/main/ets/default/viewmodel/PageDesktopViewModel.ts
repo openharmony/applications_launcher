@@ -33,7 +33,9 @@ import {
   PageDesktopModel,
   MenuInfo,
   CardItemInfo,
-  localEventManager
+  localEventManager,
+  GridLayoutInfo,
+  LauncherDragItemInfo
 } from '@ohos/common';
 import { BigFolderModel } from '@ohos/bigfolder';
 import { FormDetailLayoutConfig } from '@ohos/form';
@@ -67,7 +69,7 @@ export class PageDesktopViewModel extends BaseViewModel {
   private desktopSwiperController: SwiperController;
 
   async showFormManager(params) {
-    globalThis.createWindowWithName(windowManager.FORM_MANAGER_WINDOW_NAME, windowManager.RECENT_RANK);
+    windowManager.createWindowWithName(windowManager.FORM_MANAGER_WINDOW_NAME, windowManager.RECENT_RANK);
   }
 
   setSwiperController(swiperController: SwiperController): void {
@@ -783,8 +785,8 @@ export class PageDesktopViewModel extends BaseViewModel {
     const layoutNum = this.mBundleInfoList.length;
     const maxPerPage = column * row;
     const pageNum = Math.ceil(layoutNum / maxPerPage);
-    const newLayoutInfo = {
-      layoutDescription: {},
+    const newLayoutInfo: GridLayoutInfo = {
+      layoutDescription: undefined,
       layoutInfo: []
     };
     newLayoutInfo.layoutDescription = {
@@ -804,8 +806,8 @@ export class PageDesktopViewModel extends BaseViewModel {
     const layoutNum = info.layoutInfo.length;
     const maxPerPage = column * row;
     const pageNum = Math.ceil(layoutNum / maxPerPage);
-    const newLayoutInfo = {
-      layoutDescription: {},
+    const newLayoutInfo: GridLayoutInfo = {
+      layoutDescription: undefined,
       layoutInfo: []
     };
     newLayoutInfo.layoutDescription = {
@@ -1045,7 +1047,7 @@ export class PageDesktopViewModel extends BaseViewModel {
     let menuInfoList = new Array<MenuInfo>();
     const shortcutInfo: any = this.mAppModel.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
-      let menu = null;
+      let menu: MenuInfo | null = null;
       shortcutInfo.forEach((value) => {
         menu = new MenuInfo();
         menu.menuType = CommonConstants.MENU_TYPE_DYNAMIC;
@@ -1110,7 +1112,7 @@ export class PageDesktopViewModel extends BaseViewModel {
       formCenterMenu.onMenuClick = (): void => {
         Log.showInfo(TAG, 'Launcher click menu into form center view.');
         if (!this.isPad) {
-          globalThis.createWindowWithName(windowManager.FORM_SERVICE_WINDOW_NAME, windowManager.RECENT_RANK);
+          windowManager.createWindowWithName(windowManager.FORM_SERVICE_WINDOW_NAME, windowManager.RECENT_RANK);
         }
       };
       menuInfoList.push(formCenterMenu);
@@ -1204,7 +1206,7 @@ export class PageDesktopViewModel extends BaseViewModel {
     formCenterMenu.onMenuClick = (): void => {
       Log.showInfo(TAG, 'Launcher click menu into form center view.');
       if (!this.isPad) {
-        globalThis.createWindowWithName(windowManager.FORM_SERVICE_WINDOW_NAME, windowManager.RECENT_RANK);
+        windowManager.createWindowWithName(windowManager.FORM_SERVICE_WINDOW_NAME, windowManager.RECENT_RANK);
       }
     };
     menuInfoList.push(formCenterMenu);
@@ -1345,7 +1347,7 @@ export class PageDesktopViewModel extends BaseViewModel {
       }
 
       // Push card into the layoutInfo
-      gridLayoutInfo.layoutInfo.push(cardItemLayoutInfo);
+      gridLayoutInfo.layoutInfo.push(cardItemLayoutInfo as LauncherDragItemInfo);
       this.mSettingsModel.setLayoutInfo(gridLayoutInfo);
       if (needNewPage) {
         this.mPageDesktopModel.setPageIndex(curPageIndex + 1);

@@ -20,7 +20,8 @@ import {
   PresetStyleConstants,
   localEventManager,
   EventConstants,
-  CardItemInfo
+  CardItemInfo,
+  FolderData
 } from '@ohos/common';
 import AppItem from './AppItem';
 import FormItem from './FormItem';
@@ -71,6 +72,19 @@ export default struct SwiperPage {
 
   private updateAppListInfo(): void {
     this.mAppListInfo = this.appListInfo.appGridInfo[this.swiperPage];
+    this.updateOpenFolderData();
+  }
+
+  /**
+   * 监听桌面元素变化时，更新打开的大文件的数据。
+   * eg：应用角标更新时，大文件内的应用角标同步更新。
+   */
+  updateOpenFolderData() {
+    const openFolderData = AppStorage.get('openFolderData') as FolderData;
+    if (openFolderData?.folderId && this.mAppListInfo.length) {
+      let temp = this.mAppListInfo.find((item: LauncherDragItemInfo) => item?.folderId === openFolderData.folderId);
+      AppStorage.setOrCreate('openFolderData', temp as FolderData);
+    }
   }
 
   aboutToAppear(): void {
@@ -220,12 +234,9 @@ export default struct SwiperPage {
       left: this.mMargin
     })
     .onMouse((event: MouseEvent) => {
-      if (event.button == MouseButton.Right) {
+      if (event.button === MouseButton.Right || event.button === MouseButton.Left) {
         AppStorage.setOrCreate('selectDesktopAppItem', '');
       }
-    })
-    .onClick((event: ClickEvent) => {
-      AppStorage.setOrCreate('selectDesktopAppItem', '')
     })
     .onDragEnter((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragEnter extraParams: ${extraParams}, event: [${event.getWindowX()}, ${event.getWindowY()}]`);

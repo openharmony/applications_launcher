@@ -328,6 +328,7 @@ export struct FormServiceComponent {
                 }
               }, (item: AppItemInfo) => JSON.stringify(item))
             }
+            .scrollBar(BarState.Off)
             .divider({
               strokeWidth: ThisStyleConstants.SERVICE_FORM_APP_ITEM_GROUP_DIVIDER_WIDTH,
               color: ThisStyleConstants.FORM_SERVICE_APP_LIST_DIVIDER_COLOR,

@@ -19,6 +19,7 @@ import { AppModel } from '../model/AppModel';
 import { ResourceManager } from '../manager/ResourceManager';
 import { CommonConstants } from '../constants/CommonConstants';
 import { launcherAbilityManager } from '../manager/LauncherAbilityManager';
+import { AsyncCallback } from '@ohos.base';
 
 const TAG = 'BaseViewModel';
 
@@ -27,7 +28,7 @@ const KEY_NAME = 'name';
 /**
  * Base class for view models.
  */
- export class BaseViewModel {
+export class BaseViewModel {
   protected mAppModel: AppModel;
   protected mResourceManager: ResourceManager;
   private readonly listener;
@@ -66,6 +67,10 @@ const KEY_NAME = 'name';
     this.jumpTo(CommonConstants.SETTING_ABILITY, CommonConstants.LAUNCHER_BUNDLE, CommonConstants.SETTING_MODULE);
   }
 
+  private uninstallAppCallback = (resultCode: number): void => {
+    this.informUninstallResult(resultCode);
+  }
+
   /**
    * Uninstall target app by bundle name.
    *
@@ -76,12 +81,8 @@ const KEY_NAME = 'name';
     if (!isUninstallable) {
       this.informUninstallResult(CommonConstants.UNINSTALL_FORBID);
     } else {
-      void launcherAbilityManager.uninstallLauncherAbility(uninstallBundleName, this.uninstallAppCallback.bind(this));
+      void launcherAbilityManager.uninstallLauncherAbility(uninstallBundleName, this.uninstallAppCallback);
     }
-  }
-
-  private uninstallAppCallback(resultData: {code: number}): void {
-    this.informUninstallResult(resultData.code);
   }
 
   registerAppListChangeCallback(): void {
@@ -101,7 +102,7 @@ const KEY_NAME = 'name';
   }
 
   informUninstallResult(resultCode: number): void {
-      Log.showDebug(TAG, `Launcher AppListView getUninstallApp uninstallationResult: ${resultCode}`);
+    Log.showDebug(TAG, `Launcher AppListView getUninstallApp uninstallationResult: ${resultCode}`);
     if (resultCode === CommonConstants.UNINSTALL_FORBID) {
       Prompt.showToast({
         message: $r("app.string.disable_uninstall")
