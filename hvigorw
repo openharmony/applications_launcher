@@ -10,7 +10,7 @@
 #    Add /usr/local/nodejs/bin to the PATH environment variable
 # ----------------------------------------------------------------------------
 
-HVIGOR_APP_HOME=$(dirname $(readlink -f $0))
+HVIGOR_APP_HOME="`pwd -P`"
 HVIGOR_WRAPPER_SCRIPT=${HVIGOR_APP_HOME}/hvigor/hvigor-wrapper.js
 warn() {
 	echo ""
@@ -29,7 +29,7 @@ fail() {
 
 # Determine node to start hvigor wrapper script
 if [ -n "${NODE_HOME}" ];then
-   EXECUTABLE_NODE="${NODE_HOME}/node"
+   EXECUTABLE_NODE="${NODE_HOME}/bin/node"
    if [ ! -x "$EXECUTABLE_NODE" ];then
        fail "ERROR: NODE_HOME is set to an invalid directory,check $NODE_HOME\n\nPlease set NODE_HOME in your environment to the location where your nodejs installed"
    fi
