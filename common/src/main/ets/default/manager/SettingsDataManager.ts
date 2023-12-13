@@ -19,6 +19,7 @@ import settings from '@ohos.settings';
 import dataShare from '@ohos.data.dataShare';
 import common from '@ohos.app.ability.common';
 import { Context } from '@ohos.abilityAccessCtrl';
+import { BusinessError } from '@ohos.base';
 
 const TAG = 'SettingsDataManager'
 /**
@@ -43,13 +44,20 @@ class SettingsDataManager {
   }
 
   public createDataShareHelper() {
-    Log.showInfo(TAG, "createDataShareHelper context:" + globalThis.desktopContext);
-    dataShare.createDataShareHelper(globalThis.desktopContext, this.uriShare)
-      .then((dataHelper) => {
-        Log.showInfo(TAG, "then dataHelper:" + dataHelper);
-        this.dataShareHelper = dataHelper;
-        globalThis.sGestureNavigationManager.getGestureNavigationStatus();
-      })
+    Log.showInfo(TAG, 'createDataShareHelper context:' + globalThis.desktopContext);
+    const UPDATE_INTERVAL = 30;
+    const timer = setInterval(() => {
+      dataShare.createDataShareHelper(globalThis.desktopContext, this.uriShare)
+        .then((dataHelper) => {
+          Log.showInfo(TAG, `createDataShareHelper success.`);
+          this.dataShareHelper = dataHelper;
+          globalThis.sGestureNavigationManager.getGestureNavigationStatus();
+          clearInterval(timer);
+        })
+        .catch((err: BusinessError) => {
+          Log.showError(TAG, `createDataShareHelper fail. ${JSON.stringify(err)}`);
+        });
+    }, UPDATE_INTERVAL);
   }
 
   /**
