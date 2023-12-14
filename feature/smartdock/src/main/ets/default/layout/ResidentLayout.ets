@@ -24,7 +24,8 @@ import {
   StyleConstants,
   ResourceManager,
   Log,
-  MenuInfo
+  MenuInfo,
+  BadgeManager
 } from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 import SmartDockDragHandler from '../common/SmartDockDragHandler';
@@ -94,12 +95,13 @@ export default struct ResidentLayout {
             }
           }, (item: DockItemInfo) => JSON.stringify(item))
         }
+        .enableScrollInteraction(false)
+        .scrollBar(BarState.Off)
         .height('100%')
         .animation({
           curve: Curve.Friction
         })
         .listDirection(Axis[this.mSmartDockStyleConfig.mListDirection])
-        .editMode(false)
       }
       .backgroundColor(this.mSmartDockStyleConfig.mBackgroundColor)
       .borderRadius(this.mSmartDockStyleConfig.mDockRadius)
@@ -121,6 +123,10 @@ export default struct ResidentLayout {
         Log.showInfo(TAG, `onDrop event: [${event.getWindowX()}, ${event.getWindowY()}]`);
         const dragResult = SmartDockDragHandler.getInstance().onDragDrop(event.getWindowX(), event.getWindowY());
         AppStorage.setOrCreate('selectAppIndex', null);
+        const dragItemInfo: LauncherDragItemInfo = AppStorage.get('dragItemInfo') as LauncherDragItemInfo;
+        if (dragItemInfo.bundleName) {
+          BadgeManager.getInstance().updateBadgeNumber(dragItemInfo.bundleName, dragItemInfo.badgeNumber);
+        }
         if (!dragResult) {
           AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
         } else {

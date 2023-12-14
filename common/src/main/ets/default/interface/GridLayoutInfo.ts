@@ -13,21 +13,13 @@
  * limitations under the License.
  */
 
-import inputMethod from '@ohos.inputMethod';
+import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 
-/**
- * Wrapper class for inputMethod interfaces.
- */
-export class InputMethodManager {
-
-  static getInstance(): InputMethodManager {
-    if (globalThis.InputMethodManagerInstance == null) {
-      globalThis.InputMethodManagerInstance = new InputMethodManager();
-    }
-    return globalThis.InputMethodManagerInstance;
-  }
-
-  stopInput(): void {
-    inputMethod.getController()?.stopInputSession();
-  }
+export interface GridLayoutInfo {
+  layoutDescription: {
+    pageCount: number;
+    row: number;
+    column: number;
+  } | undefined;
+  layoutInfo: LauncherDragItemInfo[];
 }

@@ -19,6 +19,10 @@
     {
       "name": "confirm_dialog",
       "value": "确认"
+    },
+    {
+      "name": "add",
+      "value": "添加"
     }
   ]
 }

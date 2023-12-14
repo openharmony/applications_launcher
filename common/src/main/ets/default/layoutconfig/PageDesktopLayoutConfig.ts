@@ -17,6 +17,7 @@ import { Log } from '../utils/Log';
 import { ILayoutConfig } from './ILayoutConfig';
 import { CommonConstants } from '../constants/CommonConstants';
 import FileUtils from '../utils/FileUtils';
+import { GridLayoutInfo } from '../interface';
 
 const TAG = 'PageDesktopLayoutConfig';
 
@@ -35,7 +36,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
 
   private static readonly DEFAULT_COLUMN_COUNT = 4;
 
-  private static readonly DEFAULT_LAYOUT_INFO: any = {
+  private static readonly DEFAULT_LAYOUT_INFO: GridLayoutInfo = {
     layoutDescription: {
       pageCount: PageDesktopLayoutConfig.DEFAULT_PAGE_COUNT,
       row: PageDesktopLayoutConfig.DEFAULT_ROW_COUNT,
@@ -44,7 +45,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
     layoutInfo: []
   };
 
-  private mGridLayoutInfo: any = PageDesktopLayoutConfig.DEFAULT_LAYOUT_INFO;
+  private mGridLayoutInfo: GridLayoutInfo = PageDesktopLayoutConfig.DEFAULT_LAYOUT_INFO;
 
   locked: boolean = false;
 
@@ -88,7 +89,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
    *
    * @params gridLayoutInfo
    */
-  updateGridLayoutInfo(gridLayoutInfo: any): void {
+  updateGridLayoutInfo(gridLayoutInfo: GridLayoutInfo): void {
     const temp = gridLayoutInfo;
     FileUtils.writeStringToFile(JSON.stringify(temp), this.getConfigFileAbsPath());
     this.mGridLayoutInfo = gridLayoutInfo;
@@ -116,7 +117,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
    *
    * @return Workspace layout data
    */
-  getGridLayoutInfo(): any {
+  getGridLayoutInfo(): GridLayoutInfo {
     return this.mGridLayoutInfo;
   }
 

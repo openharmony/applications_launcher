@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,22 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+import { AppItemInfo } from '../bean';
 
-import inputMethod from '@ohos.inputMethod';
-
-/**
- * Wrapper class for inputMethod interfaces.
- */
-export class InputMethodManager {
-
-  static getInstance(): InputMethodManager {
-    if (globalThis.InputMethodManagerInstance == null) {
-      globalThis.InputMethodManagerInstance = new InputMethodManager();
-    }
-    return globalThis.InputMethodManagerInstance;
-  }
-
-  stopInput(): void {
-    inputMethod.getController()?.stopInputSession();
-  }
+export class FolderData {
+  layoutInfo: AppItemInfo[][];
+  enterEditing: boolean;
+  folderName: string;
+  folderId: string;
+  badgeNumber?: number;
 }

@@ -205,21 +205,17 @@ export default class SettingsPresenter {
 
   sendLocalEvent(value: string) {
     Log.showDebug(TAG, `setValue value: ${value}`);
-    if (value != '1' && value != '0') {
+    if (value !== '1' && value !== '0') {
       Log.showDebug(TAG, 'setValue error');
       return;
     }
-    if (value == '0') {
-      this.mSettingsModel.setValue(value);
-    } else {
-      localEventManager.sendLocalEventSticky(EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE, value);
-    }
+    this.mSettingsModel.setValue(value);
   }
 
   initNavigationBarStatusValue() {
     try {
       const initValue = this.mSettingsModel.getValue();
-      const navigationBarStatusValue = initValue == '0' ? true : false;
+      const navigationBarStatusValue = initValue === '0' ? true : false;
       Log.showDebug(TAG, `initNavigationBarStatusValue initValue:${initValue}, navigationBarStatusValue:${navigationBarStatusValue}`);
       AppStorage.setOrCreate('NavigationBarStatusValue', navigationBarStatusValue);
     } catch (e) {

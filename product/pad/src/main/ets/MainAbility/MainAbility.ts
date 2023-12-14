@@ -110,7 +110,7 @@ export default class MainAbility extends ServiceExtension {
       isFinalKeyDown: true
     }, () => {
       Log.showInfo(TAG, 'RECENT inputConsumer recentEvent start');
-      globalThis.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
+      windowManager.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
     });
   }
 

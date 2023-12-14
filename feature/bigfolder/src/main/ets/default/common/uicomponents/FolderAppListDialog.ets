@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { AppItemInfo, Log } from '@ohos/common';
+import { AppItemInfo, FolderData, Log } from '@ohos/common';
 import { AppIcon } from '@ohos/common/component';
 import { AppName } from '@ohos/common/component';
 import { CommonConstants } from '@ohos/common';
@@ -49,7 +49,7 @@ export default struct FolderAppListDialog {
   controller?: CustomDialogController;
   cancel = () => {};
   confirm = (isDestory: boolean) => {};
-  folderItem: FolderItemType = { layoutInfo: [], folderName: '', folderId: '' };
+  folderItem: FolderData = { layoutInfo: [], folderName: '', folderId: '', enterEditing: false };
   addToString: string = '';
 
   aboutToAppear(): void  {

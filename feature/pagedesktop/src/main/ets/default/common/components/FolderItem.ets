@@ -25,7 +25,8 @@ import {
   PresetStyleConstants,
   AppItemInfo,
   FolderItemInfo,
-  MenuInfo
+  MenuInfo,
+  FolderData
 } from '@ohos/common';
 import {
   BigFolderViewModel,
@@ -118,11 +119,11 @@ export default struct FolderItem {
   private renameClick = () => {
     Log.showInfo(TAG, 'click menu folder rename');
     AppStorage.setOrCreate('overlayMode', CommonConstants.OVERLAY_TYPE_HIDE);
-    this.mBigFolderViewModel?.openFolder(true, this.folderItem);
+    this.mBigFolderViewModel?.openFolder(true, this.folderItem as FolderData);
   }
 
   private getOpenFolder(): string {
-    let openFolderData: FolderItemType = AppStorage.get('openFolderData') as FolderItemType;
+    let openFolderData: FolderData = AppStorage.get('openFolderData') as FolderData;
 
     return openFolderData.folderId;
   }
@@ -167,12 +168,12 @@ export default struct FolderItem {
             this.setStartAppInfo(appItem);
             this.mPageDesktopViewModel?.openApplication(appItem.abilityName, appItem.bundleName, appItem.moduleName);
           },
-          onOpenFolderClick: (event: ClickEvent, folderItem: FolderItemInfo) => {
+          onOpenFolderClick: (event: ClickEvent, folderItem: FolderData) => {
             Log.showInfo(TAG, "onOpenFolderClick");
             Trace.start(Trace.CORE_METHOD_OPEN_FOLDER);
             this.mBigFolderViewModel?.openFolder(false, folderItem);
           },
-          onFolderTouch: (event: TouchEvent, folderItem: FolderItemInfo) => {
+          onFolderTouch: (event: TouchEvent, folderItem: FolderData) => {
             if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
               let mIsDragEffectArea = PageDesktopDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
               Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
@@ -215,7 +216,7 @@ export default struct FolderItem {
       TapGesture({ count: 2 })
         .onAction((event: GestureEvent) => {
           Log.showInfo(TAG, 'TapGesture double click');
-          this.mBigFolderViewModel?.openFolder(false, this.folderItem);
+          this.mBigFolderViewModel?.openFolder(false, this.folderItem as FolderData);
         })
       )
       )

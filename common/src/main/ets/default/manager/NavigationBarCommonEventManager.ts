@@ -13,11 +13,8 @@
  * limitations under the License.
  */
 
-import CommonEvent from '@ohos.commonEvent';
 import { AsyncCallback, BusinessError} from '@ohos.base';
-import { CommonEventData } from 'commonEvent/commonEventData';
-import { CommonEventSubscriber } from 'commonEvent/commonEventSubscriber';
-import { CommonEventSubscribeInfo } from 'commonEvent/commonEventSubscribeInfo';
+import commonEventMgr from '@ohos.commonEventManager';
 import { EventConstants } from '../constants/EventConstants';
 import { localEventManager } from './LocalEventManager';
 import commonEventManager from './CommonEventManager';
@@ -29,71 +26,74 @@ const TAG = 'NavigationBarCommonEventManager';
  * Wrapper class for NavigationBarCommonEvent interfaces.
  */
 class NavigationBarCommonEventManager {
-    private static NAVIGATION_BAR_HIDE = 'systemui.event.NAVIGATIONBAR_HIDE';
-    private static subscriber: CommonEventSubscriber;
-    private static eventCallback: AsyncCallback<CommonEventData>;
+  private static NAVIGATION_BAR_HIDE = 'systemui.event.NAVIGATIONBAR_HIDE';
+  private static subscriber: commonEventMgr.CommonEventSubscriber;
+  private static eventCallback: AsyncCallback<commonEventMgr.CommonEventData>;
 
-    /**
-     * get NavigationBarCommonEvent instance
-     *
-     * @return NavigationBarCommonEvent singleton
-     */
-    static getInstance(): NavigationBarCommonEventManager {
-        if (globalThis.NavigationBarCommonEvent == null) {
-            globalThis.NavigationBarCommonEvent = new NavigationBarCommonEventManager();
-            this.eventCallback = this.navigationBarEventCallback.bind(this);
-            this.initSubscriber();
-        }
-        return globalThis.NavigationBarCommonEvent;
+  /**
+   * get NavigationBarCommonEvent instance
+   *
+   * @return NavigationBarCommonEvent singleton
+   */
+  static getInstance(): NavigationBarCommonEventManager {
+    if (globalThis.NavigationBarCommonEvent == null) {
+      globalThis.NavigationBarCommonEvent = new NavigationBarCommonEventManager();
+      this.eventCallback = this.navigationBarEventCallback.bind(this);
+      this.initSubscriber();
     }
+    return globalThis.NavigationBarCommonEvent;
+  }
 
-    private static initSubscriber() {
-        if (NavigationBarCommonEventManager.subscriber != null) {
-            return;
-        }
-        const subscribeInfo: CommonEventSubscribeInfo = {
-            events: [NavigationBarCommonEventManager.NAVIGATION_BAR_HIDE]
-        };
-        CommonEvent.createSubscriber(subscribeInfo).then((commonEventSubscriber: CommonEventSubscriber) => {
-            Log.showDebug(TAG, "init SPLIT_SCREEN subscriber success");
-            NavigationBarCommonEventManager.subscriber = commonEventSubscriber;
-        }, (err) => {
-            Log.showError(TAG, `Failed to createSubscriber ${err}`)
-        })
+  private static initSubscriber() {
+    if (NavigationBarCommonEventManager.subscriber != null) {
+      return;
     }
+    const subscribeInfo: commonEventMgr.CommonEventSubscribeInfo = {
+      events: [NavigationBarCommonEventManager.NAVIGATION_BAR_HIDE]
+    };
+    commonEventMgr.createSubscriber(subscribeInfo).then(
+      (commonEventSubscriber: commonEventMgr.CommonEventSubscriber) => {
+        Log.showDebug(TAG, "init SPLIT_SCREEN subscriber success");
+        NavigationBarCommonEventManager.subscriber = commonEventSubscriber;
+      }, (err) => {
+      Log.showError(TAG, `Failed to createSubscriber ${err}`);
+    })
+  }
 
-    /**
-     * Register navigationBar event listener.
-     */
-    public registerNavigationBarEvent() {
-        commonEventManager.registerCommonEvent(NavigationBarCommonEventManager.subscriber, NavigationBarCommonEventManager.eventCallback);
-    }
+  /**
+   * Register navigationBar event listener.
+   */
+  public registerNavigationBarEvent() {
+    commonEventManager.registerCommonEvent(NavigationBarCommonEventManager.subscriber,
+      NavigationBarCommonEventManager.eventCallback);
+  }
 
-    /**
-     * Unregister navigationBar event listener.
-     */
-    public unregisterNavigationBarEvent() {
-        commonEventManager.unregisterCommonEvent(NavigationBarCommonEventManager.subscriber, NavigationBarCommonEventManager.eventCallback);
-    }
+  /**
+   * Unregister navigationBar event listener.
+   */
+  public unregisterNavigationBarEvent() {
+    commonEventManager.unregisterCommonEvent(NavigationBarCommonEventManager.subscriber,
+      NavigationBarCommonEventManager.eventCallback);
+  }
 
-    /**
-     * navigationBar event handler.
-     */
-    private static async navigationBarEventCallback(error: BusinessError, data: CommonEventData) {
-        Log.showDebug(TAG,`navigationBarEventCallback receive data: ${JSON.stringify(data)}.`);
-        if (error.code != 0) {
-            Log.showError(TAG, `navigationBarEventCallback error: ${JSON.stringify(error)}`);
-            return;
-        }
-        switch (data.event) {
-            case NavigationBarCommonEventManager.NAVIGATION_BAR_HIDE:
-                setTimeout(() => {
-                    localEventManager.sendLocalEventSticky(EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE, '0');
-                }, 30)
-            default:
-                break;
-        }
+  /**
+   * navigationBar event handler.
+   */
+  private static async navigationBarEventCallback(error: BusinessError, data: commonEventMgr.CommonEventData) {
+    Log.showDebug(TAG,`navigationBarEventCallback receive data: ${JSON.stringify(data)}.`);
+    if (data.code !== 0) {
+      Log.showError(TAG, `navigationBarEventCallback error: ${JSON.stringify(error)}`);
+      return;
     }
+    switch (data.event) {
+      case NavigationBarCommonEventManager.NAVIGATION_BAR_HIDE:
+        setTimeout(() => {
+          localEventManager.sendLocalEventSticky(EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE, '0');
+        }, 30)
+      default:
+        break;
+    }
+  }
 }
 
 export const navigationBarCommonEventManager = NavigationBarCommonEventManager.getInstance();

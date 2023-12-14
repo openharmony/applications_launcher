@@ -39,7 +39,7 @@ interface DockRecentPopup {
 @Component
 export struct SmartDock {
   popup: DockRecentPopup = { show: false, showItem: '', popup: null };
-  showAppCenter: Function = () => {};
+  showAppCenter: () => void = () => {};
   @StorageLink('showDock') showDock: boolean = false;
   @StorageLink('recentList') recentList: Array<RecentBundleMissionInfo> = [];
   @StorageLink('missionInfoList') missionInfoList: Array<RecentBundleMissionInfo> = [];
@@ -97,7 +97,7 @@ export struct SmartDock {
       this.mSmartDockViewModel?.deleteDockItem({
         bundleName: undefined,
         keyName: this.mSelectedItem?.keyName
-      }, this.mSelectedDockType);
+      } as DockItemInfo, this.mSelectedDockType);
     } else {
       this.mSmartDockViewModel?.uninstallApp(this.mSelectedItem?.bundleName, this.mSelectedItem?.isUninstallAble);
     }
@@ -105,8 +105,8 @@ export struct SmartDock {
   }
 
   showDialog = () => {
-    this.mSelectedItem = this.mSmartDockViewModel?.getSelectedItem();
-    this.mSelectedDockType = this.mSmartDockViewModel?.getSelectedDockType();
+    this.mSelectedItem = this.mSmartDockViewModel?.getSelectedItem() as DockItemInfo|null;
+    this.mSelectedDockType = this.mSmartDockViewModel?.getSelectedDockType() as number;
     this.mDialogController?.open();
   }
 
@@ -186,6 +186,8 @@ export struct SmartDock {
         })
       }
     }
+    .enableScrollInteraction(false)
+    .scrollBar(BarState.Off)
     .hitTestBehavior(this.desktopEventResponse ? HitTestMode.Default : HitTestMode.Block)
     .alignListItem(ListItemAlign.Center)
     .height(SmartDockConstants.PERCENTAGE_100)

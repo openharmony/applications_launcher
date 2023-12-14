@@ -12,6 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { GridLayoutInfo } from '../interface';
 import BitSet from './BitSet';
 
 export default class GridLayoutUtil {
@@ -23,7 +25,8 @@ export default class GridLayoutUtil {
    *
    * @return new GridLayoutInfo
    */
-  static updateGridLayoutInfo(gridLayoutInfo: any, newLayoutRows: number, newLayoutColumns: number): any {
+  static updateGridLayoutInfo(gridLayoutInfo: GridLayoutInfo, newLayoutRows: number,
+                              newLayoutColumns: number): GridLayoutInfo {
     gridLayoutInfo.layoutDescription.pageCount = GridLayoutUtil.updateLayoutInfo(
       gridLayoutInfo.layoutInfo, newLayoutRows, newLayoutColumns);
     gridLayoutInfo.layoutDescription.row = newLayoutRows;
