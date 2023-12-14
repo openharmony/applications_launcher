@@ -21,7 +21,8 @@ import {
   localEventManager,
   EventConstants,
   CardItemInfo,
-  FolderData
+  FolderData,
+  BadgeManager
 } from '@ohos/common';
 import AppItem from './AppItem';
 import FormItem from './FormItem';
@@ -262,6 +263,10 @@ export default struct SwiperPage {
         const dragResult = PageDesktopDragHandler.getInstance().onDragDrop(event.getWindowX(), event.getWindowY());
         Log.showInfo(TAG, `onDrop dragResult: ${dragResult}`);
         AppStorage.setOrCreate('selectAppIndex', null);
+        const dragItemInfo: LauncherDragItemInfo = AppStorage.get('dragItemInfo') as LauncherDragItemInfo;
+        if (dragItemInfo.bundleName) {
+          BadgeManager.getInstance().updateBadgeNumber(dragItemInfo.bundleName, dragItemInfo.badgeNumber);
+        }
         if (!dragResult) {
           AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
         } else {
