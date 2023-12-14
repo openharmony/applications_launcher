@@ -64,8 +64,12 @@ export default class MainAbility extends ServiceExtension {
       win.on('lifeCycleEvent', (stageEventType) => {
         // 桌面获焦或失焦时，通知桌面的卡片变为可见状态
         if (stageEventType === Window.WindowStageEventType.ACTIVE) {
+          AppStorage.setOrCreate('entryViewFocus', true);
           localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
           Log.showInfo(TAG, `lifeCycleEvent change: ${stageEventType}`);
+        }
+        if (stageEventType === Window.WindowStageEventType.INACTIVE) {
+          AppStorage.setOrCreate('entryViewFocus', false);
         }
       })
     };
