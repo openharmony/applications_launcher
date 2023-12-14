@@ -297,6 +297,7 @@ class WindowManager {
       windowManager.recentMode = mode;
       win.setWindowMode(mode).then();
     } : (win) => {
+      windowManager.minimizeAllApps();
       windowManager.recentMode = AbilityConstant.WindowMode.WINDOW_MODE_FULLSCREEN;
       win.setFullScreen(true).then(() => {
         Log.showDebug(TAG, `${this.RECENT_WINDOW_NAME} setFullScreen`);
@@ -384,7 +385,6 @@ class WindowManager {
     switch (data.event) {
       case commonEventManager.RECENT_FULL_SCREEN:
         // full screen recent window
-        windowManager.minimizeAllApps();
         windowManager.createRecentWindow();
         break;
       case commonEventManager.RECENT_SPLIT_SCREEN:
