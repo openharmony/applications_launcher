@@ -16,7 +16,7 @@
 export class BigFolderStyleConstants {
 
   // image resources
-  static readonly DEFAULT_ICON: any = $r('app.media.icon');
+  static readonly DEFAULT_ICON = $r('app.media.icon');
   static readonly DEFAULT_BACKGROUND_IMAGE = '$media:ic_wallpaper_folder';
   static readonly DEFAULT_ADD_FOLDER_APP_IMAGE = '/common/pics/ic_public_add.svg';
   static readonly DEFAULT_CANCEL_APP_IMAGE = '/common/pics/ic_public_cancel.svg';

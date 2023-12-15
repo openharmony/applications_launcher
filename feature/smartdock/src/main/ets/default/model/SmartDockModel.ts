@@ -36,6 +36,7 @@ import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 import { SmartDockLayoutConfig } from '../config/SmartDockLayoutConfig';
 import SmartDockConstants from '../common/constants/SmartDockConstants';
 import { RecentMissionInfo } from '@ohos/common';
+import launcherBundleManager from '@ohos.bundle.launcherBundleManager';
 
 const TAG = 'SmartDockModel';
 const KEY_NAME = 'name';
@@ -115,6 +116,7 @@ export default class SmartDockModel {
           dockItemInfo.isSystemApp = typeof (appData) === 'undefined' ? dockItemInfo.isSystemApp : appData.isSystemApp;
           dockItemInfo.isUninstallAble = typeof (appData) === 'undefined' ? dockItemInfo.isUninstallAble : appData.isUninstallAble;
           dockItemInfo.installTime = typeof (appData) === 'undefined' ? dockItemInfo.installTime : appData.installTime;
+          dockItemInfo.badgeNumber = typeof (appData) === 'undefined' ? dockItemInfo.badgeNumber : appData.badgeNumber;
           residentList.push(dockItemInfo);
         } else if (dockDataList[i].itemType == CommonConstants.TYPE_CARD) {
         } else {
@@ -129,6 +131,8 @@ export default class SmartDockModel {
           dockItemInfo.appLabelId = typeof (dockDataList[i].appLabelId) != 'undefined' ? dockDataList[i].appLabelId : dockDataList[i].labelId.id;
           dockItemInfo.isSystemApp = typeof (dockDataList[i].isSystemApp) === 'undefined' ? true : dockDataList[i].isSystemApp;
           dockItemInfo.isUninstallAble = typeof (dockDataList[i].isUninstallAble) === 'undefined' ? true : dockDataList[i].isUninstallAble;
+          dockItemInfo.badgeNumber = typeof (dockDataList[i].badgeNumber) === 'undefined' ?
+            CommonConstants.BADGE_DISPLAY_HIDE : dockDataList[i].badgeNumber;
           const loadAppName = await this.mResourceManager
             .getAppNameSync(dockItemInfo.appLabelId, dockItemInfo.bundleName, dockItemInfo.moduleName, '');
           dockItemInfo.appName = loadAppName;
@@ -197,7 +201,7 @@ export default class SmartDockModel {
    * @param dockItem
    * @param dockType
    */
-  deleteDockItem(dockItem: {bundleName: string | undefined, keyName: string | undefined}, dockType: number): boolean {
+  deleteDockItem(dockItem: DockItemInfo, dockType: number): boolean {
     if (SmartDockConstants.RESIDENT_DOCK_TYPE === dockType) {
       return this.deleteResistDockItem(dockItem);
     }
@@ -221,7 +225,7 @@ export default class SmartDockModel {
     if (this.checkDockNum(dockItemCount)) {
       return false;
     }
-    const flag = this.idDuplicate(this.mResidentList, appInfo);
+    const flag = this.idDuplicate(this.mResidentList, appInfo as AppItemInfo);
     if (flag) {
       const dockItemInfo = new DockItemInfo();
       dockItemInfo.itemType = CommonConstants.TYPE_APP;
@@ -236,6 +240,7 @@ export default class SmartDockModel {
       dockItemInfo.appLabelId = appInfo.appLabelId;
       dockItemInfo.isSystemApp = appInfo.isSystemApp;
       dockItemInfo.isUninstallAble = appInfo.isUninstallAble;
+      dockItemInfo.badgeNumber = appInfo.badgeNumber;
       if (dockItemCount == 0 || index == undefined || index >= dockItemCount || index < 0) {
         this.mResidentList.push(dockItemInfo);
       } else {
@@ -521,7 +526,7 @@ export default class SmartDockModel {
    * get ShortcutInfo by bundleName
    * @param bundleName
    */
-  getShortcutInfo(bundleName: string): any {
+  getShortcutInfo(bundleName: string): launcherBundleManager.ShortcutInfo[] | undefined {
     return this.mAppModel.getShortcutInfo(bundleName);
   }
 
@@ -647,6 +652,7 @@ export default class SmartDockModel {
           dockItemInfo.installTime = appInfo.installTime;
           dockItemInfo.isSystemApp = appInfo.isSystemApp;
           dockItemInfo.isUninstallAble = appInfo.isUninstallAble;
+          dockItemInfo.badgeNumber = appInfo.badgeNumber;
           resistDockItem[i] = dockItemInfo;
           AppStorage.setOrCreate('residentList', resistDockItem);
         }

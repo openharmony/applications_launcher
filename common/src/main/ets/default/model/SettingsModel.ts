@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DataAbilityHelper } from 'ability/dataAbilityHelper';
 
 import { Log } from '../utils/Log';
 import FileUtils from '../utils/FileUtils';
@@ -26,6 +25,8 @@ import { PageDesktopLayoutConfig } from '../layoutconfig/PageDesktopLayoutConfig
 import { PageDesktopAppModeConfig } from '../layoutconfig/PageDesktopAppModeConfig';
 import { SettingsModelObserver } from './SettingsModelObserver';
 import GridLayoutConfigs from '../configs/GridLayoutConfigs';
+import dataShare from '@ohos.data.dataShare';
+import { GridLayoutInfo } from '../interface';
 
 const TAG = 'SettingsModel';
 
@@ -41,12 +42,12 @@ export class SettingsModel {
   private readonly mPageDesktopAppModeConfig: PageDesktopAppModeConfig;
   private mGridConfig = 1;
   private mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
-  private readonly uri: string = null;
-  private helper: any = null;
+  private readonly uri: string = '';
+  private helper: dataShare.DataShareHelper | null = null;
   private readonly mObserverList: SettingsModelObserver[] = [];
 
   private constructor() {
-    this.mPageDesktopModeConfig = layoutConfigManager.getModeConfig(PageDesktopModeConfig.DESKTOP_MODE_CONFIG);
+    this.mPageDesktopModeConfig = PageDesktopModeConfig.getInstance();
     const deviceType = this.mPageDesktopModeConfig.getDeviceType();
     if (deviceType == CommonConstants.DEFAULT_DEVICE_TYPE) {
       this.mGridLayoutTable = GridLayoutConfigs.GridLayoutTable;
@@ -228,7 +229,7 @@ export class SettingsModel {
    *
    * @return {object} layout information.
    */
-  getLayoutInfo(): any {
+  getLayoutInfo(): GridLayoutInfo {
     this.updateMenuId();
     return this.mPageDesktopLayoutConfig.getGridLayoutInfo();
   }
@@ -236,7 +237,7 @@ export class SettingsModel {
   /**
    * Set layout information of grid view.
    */
-  setLayoutInfo(layoutInfo): void {
+  setLayoutInfo(layoutInfo: GridLayoutInfo): void {
     this.mPageDesktopLayoutConfig.updateGridLayoutInfo(layoutInfo);
   }
 
@@ -287,7 +288,9 @@ export class SettingsModel {
    */
   registerListenForDataChanges(callback): void {
     this.helper = settingsDataManager.getHelper(globalThis.desktopContext, this.uri);
-    this.helper.on('dataChange', this.uri, callback);
+    if (this.helper !== null) {
+      this.helper.on('dataChange', this.uri, callback);
+    }
   }
 
   private updateMenuId(): void {

@@ -118,7 +118,7 @@ export struct PageDesktopLayout {
 @CustomDialog
 struct settingDialog {
   @StorageLink('NavigationBarStatusValue') navigationBarStatusValue: boolean = false;
-  controller?: CustomDialogController
+  controller?: CustomDialogController;
   cancel = () => {};
   confirm = () => {};
   onAccept = () => {};

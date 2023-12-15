@@ -56,4 +56,5 @@ export class LauncherDragItemInfo {
   layoutInfo?: AppItemInfo[][];
   itemType?: number;
   editable?: boolean;
+  enterEditing?: boolean;
 }

@@ -13,10 +13,8 @@
  * limitations under the License.
  */
 
-import CommonEvent from '@ohos.commonEvent';
 import { AsyncCallback } from '@ohos.base';
-import { CommonEventData } from 'commonEvent/commonEventData';
-import { CommonEventSubscriber } from 'commonEvent/commonEventSubscriber';
+import commonEventMgr from '@ohos.commonEventManager';
 
 const TAG = 'CommonEventManager';
 
@@ -27,8 +25,8 @@ class CommonEventManager {
   RECENT_FULL_SCREEN = 'CREATE_RECENT_WINDOW_EVENT';
   RECENT_SPLIT_SCREEN = 'common.event.SPLIT_SCREEN';
 
-  private callbackList: AsyncCallback<CommonEventData>[] = [];
-  private subscriberList: CommonEventSubscriber[] = [];
+  private callbackList: AsyncCallback<commonEventMgr.CommonEventData>[] = [];
+  private subscriberList: commonEventMgr.CommonEventSubscriber[] = [];
 
   /**
    * get CommonEventManager instance
@@ -48,11 +46,12 @@ class CommonEventManager {
   /**
    * Register common event listener.
    */
-  public registerCommonEvent(subscriber: CommonEventSubscriber, eventCallback: AsyncCallback<CommonEventData>): void {
-    if (this.subscriberList.indexOf(subscriber) != -1) {
+  public registerCommonEvent(subscriber: commonEventMgr.CommonEventSubscriber,
+                             eventCallback: AsyncCallback<commonEventMgr.CommonEventData>): void {
+    if (this.subscriberList.indexOf(subscriber) !== -1) {
       return;
     }
-    CommonEvent.subscribe(subscriber, eventCallback);
+    commonEventMgr.subscribe(subscriber, eventCallback);
     this.subscriberList.push(subscriber);
     this.callbackList.push(eventCallback);
   }
@@ -60,14 +59,15 @@ class CommonEventManager {
   /**
    * Unregister common event listener.
    */
-  public unregisterCommonEvent(subscriber: CommonEventSubscriber, eventCallback: AsyncCallback<CommonEventData>): void {
+  public unregisterCommonEvent(subscriber: commonEventMgr.CommonEventSubscriber,
+                               eventCallback: AsyncCallback<commonEventMgr.CommonEventData>): void {
     const subscriberIndex: number = this.subscriberList.indexOf(subscriber);
     const callbackIndex: number = this.callbackList.indexOf(eventCallback);
-    if (subscriberIndex != -1) {
-      CommonEvent.unsubscribe(subscriber);
+    if (subscriberIndex !== -1) {
+      commonEventMgr.unsubscribe(subscriber);
       this.subscriberList.splice(subscriberIndex, 1);
     }
-    callbackIndex != -1 && this.callbackList.splice(callbackIndex, 1);
+    callbackIndex !== -1 && this.callbackList.splice(callbackIndex, 1);
   }
 }
 

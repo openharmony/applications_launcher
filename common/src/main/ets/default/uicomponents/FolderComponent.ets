@@ -26,6 +26,7 @@ import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 import { AppItemInfo } from '../bean/AppItemInfo';
 import { FolderItemInfo } from '../bean/FolderItemInfo';
 import { MenuInfo } from '../bean';
+import { FolderData } from '../interface/FolderData';
 
 const TAG = 'FolderComponent';
 
@@ -75,8 +76,8 @@ export struct FolderComponent {
   private mShowAppList: AppItemInfo[] = [];
   private mSuperposeAppList: SuperposeApp[] = [];
   onAppIconClick: Function = (event: ClickEvent, item: AppItemInfo) => {};
-  onOpenFolderClick: Function = (event: ClickEvent, folderItem: FolderItemInfo) => {};
-  onFolderTouch: Function = (event: ClickEvent, folderItem: FolderItemInfo) => {};
+  onOpenFolderClick: Function = (event: ClickEvent, folderItem: FolderData) => {};
+  onFolderTouch: Function = (event: ClickEvent, folderItem: FolderData) => {};
   onGetPosition: Function = (callback: (x: number, y: number) => void) => {};
   buildMenu: (item: LauncherDragItemInfo) => MenuInfo[] = (item: LauncherDragItemInfo) => [];
   folderNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;

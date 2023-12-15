@@ -15,9 +15,11 @@
  */
 
 import { Log } from '../utils/Log';
-import { DataAbilityHelper } from 'ability/dataAbilityHelper';
 import settings from '@ohos.settings';
 import dataShare from '@ohos.data.dataShare';
+import common from '@ohos.app.ability.common';
+import { Context } from '@ohos.abilityAccessCtrl';
+import { BusinessError } from '@ohos.base';
 
 const TAG = 'SettingsDataManager'
 /**
@@ -25,7 +27,7 @@ const TAG = 'SettingsDataManager'
  */
 class SettingsDataManager {
   private readonly uriShare: string = 'datashare:///com.ohos.settingsdata/entry/settingsdata/SETTINGSDATA?Proxy=true&key=';
-  private dataShareHelper;
+  private dataShareHelper: dataShare.DataShareHelper | null = null;
   private constructor() {
   }
 
@@ -42,21 +44,32 @@ class SettingsDataManager {
   }
 
   public createDataShareHelper() {
-    Log.showInfo(TAG, "createDataShareHelper context:" + globalThis.desktopContext);
-    dataShare.createDataShareHelper(globalThis.desktopContext, this.uriShare)
-      .then((dataHelper) => {
-        Log.showInfo(TAG, "then dataHelper:" + dataHelper);
-        this.dataShareHelper = dataHelper;
-        globalThis.sGestureNavigationManager.getGestureNavigationStatus();
-      })
+    Log.showInfo(TAG, 'createDataShareHelper context:' + globalThis.desktopContext);
+    const UPDATE_INTERVAL = 30;
+    const timer = setInterval(() => {
+      dataShare.createDataShareHelper(globalThis.desktopContext, this.uriShare)
+        .then((dataHelper) => {
+          Log.showInfo(TAG, `createDataShareHelper success.`);
+          this.dataShareHelper = dataHelper;
+          globalThis.sGestureNavigationManager.getGestureNavigationStatus();
+          clearInterval(timer);
+        })
+        .catch((err: BusinessError) => {
+          Log.showError(TAG, `createDataShareHelper fail. ${JSON.stringify(err)}`);
+        });
+    }, UPDATE_INTERVAL);
   }
 
   /**
    * Update settingData by settingDataKey.
    */
-  setValue(helper: any, settingDataKey: string, value: string): void {
+  setValue(helper: dataShare.DataShareHelper | null, settingDataKey: string, value: string): void {
     Log.showInfo(TAG, "setValue:" + value)
-    settings.setValueSync(globalThis.desktopContext, settingDataKey, value);
+    if (typeof globalThis.desktopContext === 'undefined') {
+      settings.setValueSync(globalThis.settingsContext as Context, settingDataKey, value);
+    } else {
+      settings.setValueSync(globalThis.desktopContext as Context, settingDataKey, value);
+    }
   }
 
   /**
@@ -64,8 +77,13 @@ class SettingsDataManager {
    *
    * @return settingsDataValue by settingDataKey.
    */
-  getValue(helper: any, settingDataKey: string, defaultValue: string): string {
-    let value: string = settings.getValueSync(globalThis.desktopContext, settingDataKey, defaultValue);
+  getValue(helper: dataShare.DataShareHelper | null, settingDataKey: string, defaultValue: string): string {
+    let value: string = '1';
+    if (typeof globalThis.desktopContext === 'undefined') {
+      value = settings.getValueSync(globalThis.settingsContext as Context, settingDataKey, defaultValue);
+    } else {
+      value = settings.getValueSync(globalThis.desktopContext as Context, settingDataKey, defaultValue);
+    }
     Log.showInfo(TAG, "getValue:" + value);
     return value;
   }
@@ -84,8 +102,7 @@ class SettingsDataManager {
    *
    * @return settingDataHelper by settingDataUri.
    */
-  getHelper(context: any, uri: string): any{
-    // @ts-ignore api8 d.ts
+  getHelper(context: common.Context, uri: string): dataShare.DataShareHelper | null {
     return this.dataShareHelper;
   }
 }

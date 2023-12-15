@@ -23,6 +23,11 @@ import AppCenterGridStyleConfig from '../common/AppCenterGridStyleConfig';
 
 const TAG = 'AppListViewModel';
 
+interface AnimationInfo {
+  appScaleX: number;
+  appScaleY: number;
+}
+
 const KEY_NAME = "name";
 
 export class AppListViewModel extends BaseViewModel {
@@ -62,7 +67,7 @@ export class AppListViewModel extends BaseViewModel {
       onFinish: () => {
       }
     }, () => {
-      let animationInfo:any = {
+      let animationInfo: AnimationInfo = {
         appScaleX: 0.97,
         appScaleY: 0.97
       }
