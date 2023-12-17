@@ -42,7 +42,6 @@ struct EntryView {
   @StorageLink('screenWidth') screenWidth: number = 0;
   @StorageLink('screenHeight') @Watch('updateScreenInfo') screenHeight: number = 0;
   @StorageLink('deviceType') deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
-  @StorageLink('entryViewFocus') entryViewFocus: boolean = true;
   @State workSpaceWidth: number = 0;
   @State workSpaceHeight: number = 0;
   @State dockHeight: number = 0;
@@ -157,7 +156,6 @@ struct EntryView {
     .backgroundImage(StyleConstants.DEFAULT_BACKGROUND_IMAGE)
     .backgroundImageSize(ImageSize.Cover)
     .backgroundImagePosition(Alignment.Center)
-    .foregroundBlurStyle(this.entryViewFocus ? BlurStyle.NONE : BlurStyle.Thick)
     .width('100%')
     .height('100%')
   }
