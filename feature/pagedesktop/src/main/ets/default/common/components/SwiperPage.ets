@@ -96,7 +96,7 @@ export default struct SwiperPage {
 
   updateDeskTopScreen(): void {
     Log.showInfo(TAG, 'updateDeskTopScreen');
-    this.mPageDesktopStyleConfig = this.mPageDesktopViewModel?.getPageDesktopStyleConfig() as PageDesktopGridStyleConfig;
+    this.mPageDesktopStyleConfig = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig() as PageDesktopGridStyleConfig;
     this.mMargin = this.mPageDesktopStyleConfig.mMargin;
     this.mColumnsGap = this.mPageDesktopStyleConfig.mColumnsGap;
     this.mRowsGap = this.mPageDesktopStyleConfig.mRowsGap;
@@ -106,8 +106,8 @@ export default struct SwiperPage {
     this.mGridWidth = this.mPageDesktopStyleConfig.mGridWidth;
     this.mGridHeight = this.mPageDesktopStyleConfig.mGridHeight;
     this.mIconSize = this.mPageDesktopStyleConfig.mIconSize;
-    this.mGridSpaceWidth = Number(this.mPageDesktopViewModel?.getWorkSpaceWidth()) - this.mMargin;
-    this.mGridSpaceHeight = Number(this.mPageDesktopViewModel?.getWorkSpaceHeight());
+    this.mGridSpaceWidth = Number(PageDesktopViewModel.getInstance().getWorkSpaceWidth()) - this.mMargin;
+    this.mGridSpaceHeight = Number(PageDesktopViewModel.getInstance().getWorkSpaceHeight());
     this.changeConfig();
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
   }
@@ -117,7 +117,7 @@ export default struct SwiperPage {
   }
 
   private changeConfig(): void {
-    let mGridConfig = this.mPageDesktopViewModel?.getGridConfig() as GridLayout;
+    let mGridConfig = PageDesktopViewModel.getInstance().getGridConfig() as GridLayout;
     let column = mGridConfig.column as number;
     let row = mGridConfig.row as number;
     this.ColumnsTemplate = '';
@@ -137,14 +137,14 @@ export default struct SwiperPage {
     }
     let curPageIndex: number = AppStorage.get('pageIndex') as number;
     if ((moveX - this.mIconSize / 2) < this.mMargin && curPageIndex > 0 && moveY < this.mGridSpaceHeight) {
-      this.mPageDesktopViewModel?.showPrevious();
+      PageDesktopViewModel.getInstance().showPrevious();
       this.movingIconSwapPageDelay();
     } else if ((moveX + this.mIconSize / 2) > this.mGridSpaceWidth && moveY < this.mGridSpaceHeight) {
-      let cachePageIndex = this.mPageDesktopViewModel?.getGridPageCount() as number;
-      if (curPageIndex === cachePageIndex - 1 && !this.mPageDesktopViewModel?.isBlankPage()) {
-        this.mPageDesktopViewModel?.addBlankPage(true);
+      let cachePageIndex = PageDesktopViewModel.getInstance().getGridPageCount() as number;
+      if (curPageIndex === cachePageIndex - 1 && !PageDesktopViewModel.getInstance().isBlankPage()) {
+        PageDesktopViewModel.getInstance().addBlankPage(true);
       } else if(curPageIndex < cachePageIndex - 1) {
-        this.mPageDesktopViewModel?.showNext();
+        PageDesktopViewModel.getInstance().showNext();
       }
       this.movingIconSwapPageDelay();
     }

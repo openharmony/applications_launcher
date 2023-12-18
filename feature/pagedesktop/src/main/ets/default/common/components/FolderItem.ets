@@ -161,12 +161,12 @@ export default struct FolderItem {
           mPaddingTop: this.mIconMarginVertical,
           gridGap:this.mFolderStyleConfig.mFolderGridGap,
           iconNameMargin: this.mFolderStyleConfig.mIconNameMargin,
-          nameFontColor: this.mPageDesktopViewModel?.getPageDesktopStyleConfig().mNameFontColor as string,
+          nameFontColor: PageDesktopViewModel.getInstance().getPageDesktopStyleConfig().mNameFontColor as string,
           onAppIconClick: (event: ClickEvent, appItem: AppItemInfo) => {
             Log.showInfo(TAG, "onAppIconClick");
             Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
             this.setStartAppInfo(appItem);
-            this.mPageDesktopViewModel?.openApplication(appItem.abilityName, appItem.bundleName, appItem.moduleName);
+            PageDesktopViewModel.getInstance().openApplication(appItem.abilityName, appItem.bundleName, appItem.moduleName);
           },
           onOpenFolderClick: (event: ClickEvent, folderItem: FolderData) => {
             Log.showInfo(TAG, "onOpenFolderClick");
@@ -186,7 +186,7 @@ export default struct FolderItem {
           },
           onGetPosition: (getPosition: Function) => {
             Log.showInfo(TAG, "onGetPosition");
-            let styleConfig = this.mPageDesktopViewModel?.getPageDesktopStyleConfig() as PageDesktopGridStyleConfig;
+            let styleConfig = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig() as PageDesktopGridStyleConfig;
             let row = this.folderItem.row as number;
             let column = this.folderItem.column as number;
             Log.showInfo(TAG, `onGetPosition currentFolderPosition row: ${row}, column: ${column}`);
@@ -198,7 +198,7 @@ export default struct FolderItem {
             getPosition(x, y);
           },
           buildMenu: (folderItem: LauncherDragItemInfo) => {
-            return this.mPageDesktopViewModel?.buildRenameMenuInfoList(folderItem, this.renameClick) as MenuInfo[];
+            return PageDesktopViewModel.getInstance().buildRenameMenuInfoList(folderItem, this.renameClick) as MenuInfo[];
           },
           dragStart: this.dragStart
         })
