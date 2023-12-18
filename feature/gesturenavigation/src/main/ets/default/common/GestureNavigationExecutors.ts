@@ -198,7 +198,7 @@ export default class GestureNavigationExecutors {
 
   private recentEventCall() {
     Log.showInfo(TAG, 'recentEventCall recentEvent start');
-    globalThis.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
+    windowManager.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
   }
 
   private isRecentsViewShowOfDistanceLimit(eventY: number) {

@@ -258,8 +258,8 @@ export default struct SwiperPage {
     .onDrop((event: DragEvent, extraParams: string) => {
       const dragItemType: number = AppStorage.get('dragItemType') as number;
       Log.showInfo(TAG, `onDrop event: [${event.getWindowX()}, ${event.getWindowY()}]`);
-      if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP
-      || (dragItemType === CommonConstants.DRAG_FROM_DOCK &&
+      if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP ||
+        (dragItemType === CommonConstants.DRAG_FROM_DOCK &&
           AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE)) {
         const dragResult = PageDesktopDragHandler.getInstance().onDragDrop(event.getWindowX(), event.getWindowY());
         Log.showInfo(TAG, `onDrop dragResult: ${dragResult}`);

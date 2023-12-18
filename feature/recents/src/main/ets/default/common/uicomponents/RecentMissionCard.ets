@@ -162,7 +162,7 @@ export default struct RecentMissionCard {
               .onClick((event) => {
                 this.isClickSubComponent = true;
                 Log.showDebug(TAG, `click set recent mission: ${this.missionId} Locked status: ${!this.lockedState}`);
-                this.mRecentMissionsViewModel?.setRecentMissionLock(this.missionId,!this.lockedState);
+                RecentMissionsViewModel.getInstance().setRecentMissionLock(this.missionId,!this.lockedState);
                 this.setStartAppInfo(event?.target?.area?.globalPosition);
                 this.isClickSubComponent = false;
               })
@@ -194,7 +194,7 @@ export default struct RecentMissionCard {
           }
           Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
           this.setStartAppInfo(event?.target?.area?.globalPosition);
-          this.mRecentMissionsViewModel?.moveMissionToFront(this.missionId);
+          RecentMissionsViewModel.getInstance().moveMissionToFront(this.missionId);
         })
     }
     .width(this.mIsSingleLayout ?
@@ -211,10 +211,10 @@ export default struct RecentMissionCard {
           RecentsStyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH * RecentsStyleConstants.DPI_RATIO :
           RecentsStyleConstants.DOUBLE_LIST_APP_IMAGE_WIDTH) / 2;
         if (e.offsetY < -50 && e.offsetX <= offsetWidth && -offsetWidth <= e.offsetX) {
-          this.mRecentMissionsViewModel?.deleteRecentMission(false, this.missionId);
+          RecentMissionsViewModel.getInstance().deleteRecentMission(false, this.missionId);
         } else if (e.offsetY > 50 && e.offsetX <= offsetWidth && -offsetWidth <= e.offsetX) {
           Log.showDebug(TAG, `gesture set recent mission: ${this.missionId} Locked status: ${!this.lockedState}`);
-          this.mRecentMissionsViewModel?.setRecentMissionLock(this.missionId,!this.lockedState);
+          RecentMissionsViewModel.getInstance().setRecentMissionLock(this.missionId,!this.lockedState);
         }
       }))
   }
