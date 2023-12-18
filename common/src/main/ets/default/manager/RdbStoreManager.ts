@@ -587,7 +587,7 @@ export class RdbStoreManager {
             'badge_number': element.badgeNumber
           };
           await this.mRdbStore.insert(RdbStoreConfig.GridLayoutInfo.TABLE_NAME, item);
-        } else {
+        } else if (element.typeId === CommonConstants.TYPE_FOLDER) {
           item = {
             'bundle_name':element.bundleName,
             'ability_name': element.abilityName,
@@ -608,6 +608,8 @@ export class RdbStoreManager {
           if (ret !== -1) {
             await this.insertLayoutInfo(element.layoutInfo, ret);
           }
+        } else {
+          continue;
         }
       }
     } catch (e) {
@@ -626,6 +628,9 @@ export class RdbStoreManager {
     }
     for (const curItem of layoutInfo) {
       for (const bigFolderApp of curItem) {
+        if (bigFolderApp.typeId !== CommonConstants.TYPE_APP) {
+          continue;
+        }
         let item = {
           'container': container,
           'app_name': bigFolderApp.appName,
@@ -687,21 +692,21 @@ export class RdbStoreManager {
       let layoutPredicates = new relationalStore.RdbPredicates(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
       layoutPredicates.equalTo("container", container);
       let columns = [GridLayoutInfoColumns.APP_NAME,
-      GridLayoutInfoColumns.IS_SYSTEM_APP,
-      GridLayoutInfoColumns.IS_UNINSTALLABLE,
-      GridLayoutInfoColumns.APPICON_ID,
-      GridLayoutInfoColumns.APPLABEL_ID,
-      GridLayoutInfoColumns.BUNDLE_NAME,
-      GridLayoutInfoColumns.ABILITY_NAME,
-      GridLayoutInfoColumns.MODULE_NAME,
-      GridLayoutInfoColumns.KEY_NAME,
-      GridLayoutInfoColumns.CONTAINER,
-      GridLayoutInfoColumns.INSTALL_TIME,
-      GridLayoutInfoColumns.TYPE_ID,
-      GridLayoutInfoColumns.AREA,
-      GridLayoutInfoColumns.PAGE,
-      GridLayoutInfoColumns.COLUMN,
-      GridLayoutInfoColumns.ROW];
+        GridLayoutInfoColumns.IS_SYSTEM_APP,
+        GridLayoutInfoColumns.IS_UNINSTALLABLE,
+        GridLayoutInfoColumns.APPICON_ID,
+        GridLayoutInfoColumns.APPLABEL_ID,
+        GridLayoutInfoColumns.BUNDLE_NAME,
+        GridLayoutInfoColumns.ABILITY_NAME,
+        GridLayoutInfoColumns.MODULE_NAME,
+        GridLayoutInfoColumns.KEY_NAME,
+        GridLayoutInfoColumns.CONTAINER,
+        GridLayoutInfoColumns.INSTALL_TIME,
+        GridLayoutInfoColumns.TYPE_ID,
+        GridLayoutInfoColumns.AREA,
+        GridLayoutInfoColumns.PAGE,
+        GridLayoutInfoColumns.COLUMN,
+        GridLayoutInfoColumns.ROW];
 
       // columns - The columns to query. If the value is null, the query applies to all columns.
       let resultSet = await this.mRdbStore.query(layoutPredicates, columns);

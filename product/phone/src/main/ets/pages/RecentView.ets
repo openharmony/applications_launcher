@@ -89,7 +89,7 @@ struct RecentView {
     .onClick(() => {
       if (!this.isClickSubComponent) {
         Log.showInfo(TAG, 'click recent missions area');
-        this.mRecentMissionsViewModel?.backView && this.mRecentMissionsViewModel.backView();
+        RecentMissionsViewModel.getInstance().backView();
       }
     })
   }
