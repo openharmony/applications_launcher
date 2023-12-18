@@ -35,6 +35,7 @@ import { PageDesktopViewModel } from '@ohos/pagedesktop';
 import Window from '@ohos.window';
 import inputConsumer from '@ohos.multimodalInput.inputConsumer';
 import { KeyCode } from '@ohos.multimodalInput.keyCode';
+import window from '@ohos.window';
 
 const TAG = 'LauncherMainAbility';
 
@@ -60,10 +61,10 @@ export default class MainAbility extends ServiceExtension {
     await dbStore.initRdbConfig();
     await dbStore.createTable();
 
-    let registerWinEvent = (win) => {
-      win.on('lifeCycleEvent', (stageEventType) => {
+    let registerWinEvent = (win: window.Window) => {
+      win.on('windowEvent', (stageEventType) => {
         // 桌面获焦或失焦时，通知桌面的卡片变为可见状态
-        if (stageEventType === Window.WindowStageEventType.ACTIVE) {
+        if (stageEventType === window.WindowEventType.WINDOW_ACTIVE) {
           localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
           Log.showInfo(TAG, `lifeCycleEvent change: ${stageEventType}`);
         }

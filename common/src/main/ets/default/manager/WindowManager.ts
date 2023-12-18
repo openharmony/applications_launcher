@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import Window from '@ohos.window';
+import window from '@ohos.window';
 import display from '@ohos.display';
 import commonEventMgr from '@ohos.commonEventManager';
 import common from '@ohos.app.ability.common';
@@ -45,11 +45,11 @@ class WindowManager {
 
   FORM_SERVICE_WINDOW_NAME = 'FormServiceView';
 
-  DESKTOP_RANK = Window.WindowType.TYPE_DESKTOP;
+  DESKTOP_RANK = window.WindowType.TYPE_DESKTOP;
 
-  RECENT_RANK = Window.WindowType.TYPE_LAUNCHER_RECENT;
+  RECENT_RANK = window.WindowType.TYPE_LAUNCHER_RECENT;
 
-  DOCK_RANK = Window.WindowType.TYPE_LAUNCHER_DOCK;
+  DOCK_RANK = window.WindowType.TYPE_LAUNCHER_DOCK;
 
   recentMode?: number;
 
@@ -116,7 +116,7 @@ class WindowManager {
    * @param height window height
    */
   async setWindowSize(width: number, height: number): Promise<void> {
-    const abilityWindow = await Window.getLastWindow(globalThis.desktopContext as common.BaseContext);
+    const abilityWindow = await window.getLastWindow(globalThis.desktopContext as common.BaseContext);
     void abilityWindow.resize(width, height);
   }
 
@@ -127,7 +127,7 @@ class WindowManager {
    * @param y coordinate y
    */
   async setWindowPosition(x: number, y: number): Promise<void> {
-    const abilityWindow = await Window.getLastWindow(globalThis.desktopContext as common.BaseContext);
+    const abilityWindow = await window.getLastWindow(globalThis.desktopContext as common.BaseContext);
     void abilityWindow.moveWindowTo(x, y);
   }
 
@@ -169,45 +169,61 @@ class WindowManager {
 
   createWindow(context: common.ServiceExtensionContext, name: string, windowType: number, loadContent: string,
                isShow: boolean, callback?: Function) {
-    Window.create(context, name, windowType).then((win) => {
-      void win.setPreferredOrientation(Window.Orientation.AUTO_ROTATION_RESTRICTED);
-      void win.loadContent(loadContent).then(() => {
-        void win.setSystemBarProperties({
-          navigationBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR,
-          statusBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR
-        }).then(() => {
-          win.setBackgroundColor(StyleConstants.DEFAULT_SYSTEM_UI_COLOR, () => {
-            Log.showDebug(TAG, `then begin ${name} window loadContent in then!`);
-            if (name !== this.RECENT_WINDOW_NAME) {
-              void win.setLayoutFullScreen(true).then(() => {
-                Log.showDebug(TAG, `${name} setLayoutFullScreen`);
+    let cfg: window.Configuration = {
+      name: name,
+      windowType: windowType,
+      ctx: context
+    };
+    try {
+      window.createWindow(cfg)
+        .then((win: window.Window) => {
+          win.setPreferredOrientation(window.Orientation.AUTO_ROTATION_RESTRICTED);
+          win.setUIContent(loadContent)
+            .then(() => {
+              win.setWindowSystemBarProperties({
+                navigationBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR,
+                statusBarColor: StyleConstants.DEFAULT_SYSTEM_UI_COLOR
+              }).then(() => {
+                win.setWindowBackgroundColor(StyleConstants.DEFAULT_SYSTEM_UI_COLOR);
+                Log.showDebug(TAG, `then begin ${name} window loadContent in then!`);
+                if (name !== this.RECENT_WINDOW_NAME) {
+                  win.setWindowLayoutFullScreen(true).then(() => {
+                    Log.showDebug(TAG, `${name} setLayoutFullScreen`);
+                  });
+                }
+                if (callback) {
+                  callback(win);
+                }
+                // there is a low probability that white flashes when no delay because of setBackgroundColor is asynchronous
+                setTimeout(() => {
+                  isShow && this.showWindow(name);
+                }, StyleConstants.WINDOW_SHOW_DELAY)
               });
-            }
-            if (callback) {
-              callback(win);
-            }
-            // there is a low probability that white flashes when no delay because of setBackgroundColor is asynchronous
-            setTimeout(() => {
-              isShow && this.showWindow(name);
-            }, StyleConstants.WINDOW_SHOW_DELAY)
-          })
-        });
-      }, (error) => {
-        Log.showError(TAG, `createWindow, create error: ${JSON.stringify(error)}`);
-      });
-    });
+            }, (err: BusinessError) => {
+              Log.showError(TAG, `createWindow, setUIContent error: ${JSON.stringify(err)}`);
+            });
+        })
+        .catch((err: BusinessError) => {
+          Log.showError(TAG, `createWindow, createWindow error: ${JSON.stringify(err)}`);
+        })
+    } catch (err) {
+      let _err = err as BusinessError;
+      Log.showError(TAG, `createWindow, error: ${JSON.stringify(_err)}`);
+    }
   }
 
   createWindowIfAbsent(context: common.ServiceExtensionContext, name: string, windowType: number, loadContent: string): void {
     Log.showDebug(TAG, `create, name ${name}`);
-    Window.find(name).then(win => {
-      void win.show().then(() => {
+    try {
+      let win: window.Window = window.findWindow(name);
+      win.showWindow().then(() => {
         Log.showDebug(TAG, `show launcher ${name}`);
       });
-    }).catch(error => {
-      Log.showError(TAG, `${name} ability is not created, because ${error}`);
+    } catch (err) {
+      let _err = err as BusinessError;
+      Log.showError(TAG, `${name} ability is not created, because ${_err.message}`);
       this.createWindow(context, name, windowType, loadContent, true);
-    });
+    }
   }
 
   resetSizeWindow(name: string, rect: {
@@ -255,7 +271,7 @@ class WindowManager {
   minimizeAllApps(): void {
     try {
       let dis: display.Display = display.getDefaultDisplaySync();
-      Window.minimizeAll(dis.id).then(() => {
+      window.minimizeAll(dis.id).then(() => {
         Log.showDebug(TAG, 'Launcher minimizeAll');
       });
     } catch (err) {
@@ -282,13 +298,16 @@ class WindowManager {
 
   findWindow(name: string, callback?: Function): void {
     Log.showDebug(TAG, `findWindow, name ${name}`);
-    void Window.find(name)
-      .then((win) => {
-        Log.showDebug(TAG, `findWindow, find then name: ${name}`);
-        if (callback) {
-          callback(win);
-        }
-      });
+    try {
+      let win: window.Window = window.findWindow(name);
+      Log.showDebug(TAG, `findWindow, find then name: ${name}`);
+      if (callback) {
+        callback(win);
+      }
+    } catch (err) {
+      let _err = err as BusinessError;
+      Log.showError(TAG, `findWindow errCode: ${_err.code}, errMsg: ${_err.message}`);
+    }
   }
 
   createRecentWindow(mode?: number) {
@@ -297,31 +316,39 @@ class WindowManager {
       windowManager.recentMode = mode;
       win.setWindowMode(mode).then();
     } : (win) => {
+      windowManager.minimizeAllApps();
       windowManager.recentMode = AbilityConstant.WindowMode.WINDOW_MODE_FULLSCREEN;
       win.setFullScreen(true).then(() => {
         Log.showDebug(TAG, `${this.RECENT_WINDOW_NAME} setFullScreen`);
       });
     };
-    let registerWinEvent = (win) => {
+    let registerWinEvent = (win: window.Window) => {
       Log.showDebug(TAG, 'registerWinEvent Begin');
-      win.on('lifeCycleEvent', (stageEventType) => {
+      win.on('windowEvent', (stageEventType) => {
         Log.showDebug(TAG,`Recent lifeCycleEvent callback stageEventType=${stageEventType}`);
-        if (stageEventType == Window.WindowStageEventType.INACTIVE) {
+        if (stageEventType === window.WindowEventType.WINDOW_INACTIVE) {
+
           Log.showDebug(TAG,'Recent MainAbility onWindowStageInactive');
-          Window.find(windowManager.RECENT_WINDOW_NAME).then((win) => {
+          try {
+            let wins: window.Window = window.findWindow(windowManager.RECENT_WINDOW_NAME);
             Log.showDebug(TAG,'Hide recent on inactive');
-            win.hide();
-          })
+            wins.hide();
+          } catch (err) {
+            let _err = err as BusinessError;
+            Log.showError(TAG, `Recent lifeCycleEvent findWindow errCode: ${_err.code}, errMsg: ${_err.message}`);
+          }
         }
       })
     };
-    Window.find(windowManager.RECENT_WINDOW_NAME).then(win => {
+    try {
+      let win: window.Window = window.findWindow(windowManager.RECENT_WINDOW_NAME);
       setWinMode(win);
-      void win.show().then(() => {
-        Log.showDebug(TAG, 'show launcher recent ability');
-      });
-    }).catch(error => {
-      Log.showDebug(TAG, `recent window is not created, because ${error}`);
+      win.showWindow()
+        .then(() => {
+          Log.showDebug(TAG, 'show launcher recent ability');
+        });
+    } catch (err) {
+      Log.showDebug(TAG, `recent window is not created, because ${JSON.stringify(err)}`);
       let callback = (win) => {
         Log.showDebug(TAG, 'Post recent window created');
         registerWinEvent(win);
@@ -329,12 +356,12 @@ class WindowManager {
       }
       this.createWindow(globalThis.desktopContext, windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK,
         'pages/' + windowManager.RECENT_WINDOW_NAME, false, callback);
-    });
+    }
   }
 
   destroyRecentWindow() {
     this.findWindow(windowManager.RECENT_WINDOW_NAME, win => {
-      win.off('lifeCycleEvent', (win) => {
+      win.off('windowEvent', (win) => {
         win.destroy().then(() => {
           Log.showDebug(TAG, 'destroyRecentWindow');
         });
@@ -384,7 +411,6 @@ class WindowManager {
     switch (data.event) {
       case commonEventManager.RECENT_FULL_SCREEN:
         // full screen recent window
-        windowManager.minimizeAllApps();
         windowManager.createRecentWindow();
         break;
       case commonEventManager.RECENT_SPLIT_SCREEN:
@@ -417,18 +443,15 @@ class WindowManager {
       Log.showInfo(TAG, 'screen change to portrait');
       AppStorage.setOrCreate('isPortrait', true);
     }
-    display.getDefaultDisplay()
-      .then((dis: {
-        id: number,
-        width: number,
-        height: number,
-        refreshRate: number
-      }) => {
-        Log.showInfo(TAG, `change to display: ${JSON.stringify(dis)}`);
-        AppStorage.setOrCreate('screenWidth', px2vp(dis.width));
-        AppStorage.setOrCreate('screenHeight', px2vp(dis.height));
-        Log.showDebug(TAG, `screenWidth and screenHeight: ${AppStorage.get('screenWidth')},${AppStorage.get('screenHeight')}`);
-      });
+    try {
+      let dis: display.Display = display.getDefaultDisplaySync();
+      Log.showInfo(TAG, `change to display: ${JSON.stringify(dis)}`);
+      AppStorage.setOrCreate('screenWidth', px2vp(dis.width));
+      AppStorage.setOrCreate('screenHeight', px2vp(dis.height));
+      Log.showDebug(TAG, `screenWidth and screenHeight: ${AppStorage.get('screenWidth')},${AppStorage.get('screenHeight')}`);
+    } catch (err) {
+      Log.showError(TAG, `onPortrait error: ${JSON.stringify(err)}`);
+    }
   }
 
   createWindowWithName = ((windowName: string, windowRank: number): void => {
