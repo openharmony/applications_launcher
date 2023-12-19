@@ -512,8 +512,8 @@ export default class SmartDockModel {
 
   onMissionClosedCallback(missionId: number): void {
     Log.showInfo(TAG, 'onMissionClosedCallback, missionId=' + missionId);
-    this.getRecentDataList().then(() => {}, () => { });
-    this.getRecentViewDataList(missionId).then(() => {}, () => {});
+    amsMissionManager.clearMission(missionId);
+    this.getRecentDataList();
   }
 
   onMissionLabelUpdatedCallback(missionId: number): void {
