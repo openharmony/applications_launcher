@@ -42,6 +42,7 @@ import { FormDetailLayoutConfig } from '@ohos/form';
 import PageDesktopConstants from '../common/constants/PageDesktopConstants';
 import { PageDesktopGridStyleConfig } from '../common/PageDesktopGridStyleConfig';
 import formHost from '@ohos.app.form.formHost';
+import formInfoApi from '@ohos.app.form.formInfo';
 
 const TAG = 'PageDesktopViewModel';
 const KEY_APP_LIST = 'appListInfo';
@@ -377,22 +378,22 @@ export class PageDesktopViewModel extends BaseViewModel {
     Log.showInfo(TAG, 'addFormToDesktop');
     this.mBundleInfoList = this.mSettingsModel.getAppListInfo();
     switch(formInfo.dimension) {
-      case FormDimension.Dimension_1_2:
+      case formInfoApi.FormDimension.Dimension_1_2:
         formInfo.row = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension1X2.row;
         formInfo.column = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension1X2.column;
         formInfo.area = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension1X2.area;
         break;
-      case FormDimension.Dimension_2_2:
+      case formInfoApi.FormDimension.Dimension_2_2:
         formInfo.row = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension2X2.row;
         formInfo.column = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension2X2.column;
         formInfo.area = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension2X2.area;
         break;
-      case FormDimension.Dimension_2_4:
+      case formInfoApi.FormDimension.Dimension_2_4:
         formInfo.row = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension2X4.row;
         formInfo.column = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension2X4.column;
         formInfo.area = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension2X4.area;
         break;
-      case FormDimension.Dimension_4_4:
+      case formInfoApi.FormDimension.Dimension_4_4:
         formInfo.row = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension4X4.row;
         formInfo.column = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension4X4.column;
         formInfo.area = this.formDetailLayoutConfig.getFormLayoutInfo().formLayoutDimension4X4.area;

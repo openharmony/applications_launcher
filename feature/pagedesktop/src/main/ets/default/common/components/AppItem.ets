@@ -82,12 +82,12 @@ export default struct AppItem {
       cancel: () => {},
       confirm: () => {
         if (this.isPad) {
-          this.mPageDesktopViewModel?.deleteAppItem({
+          PageDesktopViewModel.getInstance().deleteAppItem({
             bundleName: undefined,
             keyName: this.appInfo.keyName
           });
         } else {
-          this.mPageDesktopViewModel?.uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
+          PageDesktopViewModel.getInstance().uninstallApp(this.appInfo.bundleName, this.appInfo.isUninstallAble);
         }
       },
       dialogName: this.dialogName,
@@ -112,7 +112,7 @@ export default struct AppItem {
       confirm: (formCardItem: CardItemInfo) => {
         // add form to desktop
         Log.showInfo(TAG, `createCardToDeskTop formCardItem: ${JSON.stringify(formCardItem)}`);
-        this.mPageDesktopViewModel?.createCardToDeskTop(formCardItem);
+        PageDesktopViewModel.getInstance().createCardToDeskTop(formCardItem);
         // delete other form
       },
       bundleName: this.formAppInfo.bundleName,
@@ -159,7 +159,7 @@ export default struct AppItem {
   }
 
   getMenuInfoList = (): MenuInfo[] => {
-    const menuInfo = this.mPageDesktopViewModel?.buildMenuInfoList(this.item,
+    const menuInfo = PageDesktopViewModel.getInstance().buildMenuInfoList(this.item,
       this.dialogController, this.formManagerDialogController) as MenuInfo[];
     return menuInfo;
   }
@@ -177,7 +177,7 @@ export default struct AppItem {
         iconSize: this.mIconSize,
         nameSize: this.mAppNameSize,
         nameHeight: this.mAppNameHeight,
-        nameFontColor: this.mPageDesktopViewModel?.getPageDesktopStyleConfig().mNameFontColor as string,
+        nameFontColor: PageDesktopViewModel.getInstance().getPageDesktopStyleConfig().mNameFontColor as string,
         appName: this.item.appName,
         bundleName: this.item.bundleName,
         abilityName: this.item.abilityName,
@@ -193,8 +193,8 @@ export default struct AppItem {
         dragStart: this.dragStart
       })
     }
-    .visibility(this.dragItemType === CommonConstants.DRAG_FROM_DESKTOP && this.pageDesktopDragItemInfo.keyName === this.item.keyName ?
-      Visibility.None : Visibility.Visible)
+    .visibility(this.dragItemType === CommonConstants.DRAG_FROM_DESKTOP &&
+      this.pageDesktopDragItemInfo.keyName === this.item.keyName ? Visibility.None : Visibility.Visible)
     .onMouse((event: MouseEvent) => {
       if (event.button == MouseButton.Right) {
         event.stopPropagation();
@@ -211,7 +211,8 @@ export default struct AppItem {
           this.mouseClick = 0;
           this.launchApp();
         } else {
-          this.mPageDesktopViewModel?.onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+          PageDesktopViewModel.getInstance()
+            .onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
           setTimeout(() => {
             this.mouseClick = 0;
           }, 300)
@@ -242,7 +243,8 @@ export default struct AppItem {
   private launchApp() {
     Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     this.setStartAppInfo();
-    this.mPageDesktopViewModel?.onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+    PageDesktopViewModel.getInstance()
+      .onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
   }
 
   dragStart = (event: DragEvent): CustomBuilder => {

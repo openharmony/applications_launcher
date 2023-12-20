@@ -107,16 +107,16 @@ export default struct GridSwiper {
     setting.menuText = $r('app.string.into_settings')
     setting.onMenuClick = () => {
       Trace.start(Trace.CORE_METHOD_START_SETTINGS);
-      this.mPageDesktopViewModel?.intoSetting();
+      PageDesktopViewModel.getInstance().intoSetting();
     }
     menuInfoList.push(setting);
 
     let addOrDeleteBlankPage = new MenuInfo();
     addOrDeleteBlankPage.menuType = CommonConstants.MENU_TYPE_FIXED
-    addOrDeleteBlankPage.menuImgSrc = this.mPageDesktopViewModel?.getBlankPageBtnIcon()
-    addOrDeleteBlankPage.menuText = this.mPageDesktopViewModel?.getBlankPageBtnStr()
+    addOrDeleteBlankPage.menuImgSrc = PageDesktopViewModel.getInstance().getBlankPageBtnIcon()
+    addOrDeleteBlankPage.menuText = PageDesktopViewModel.getInstance().getBlankPageBtnStr()
     addOrDeleteBlankPage.onMenuClick = () => {
-      this.mPageDesktopViewModel?.addOrDeleteBlankPage();
+      PageDesktopViewModel.getInstance().addOrDeleteBlankPage();
     }
     menuInfoList.push(addOrDeleteBlankPage);
     return menuInfoList;

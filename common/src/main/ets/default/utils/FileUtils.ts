@@ -16,7 +16,8 @@
 /**
  * An util that provides io functionality between file and JSON object.
  */
-import Fileio from '@ohos.fileio';
+
+import fs from '@ohos.file.fs';
 import util from '@ohos.util';
 import { Log } from './Log';
 
@@ -36,11 +37,11 @@ export default class FileUtils {
     Log.showDebug(TAG, 'readJsonFile start execution');
     let readStreamSync = null;
     try {
-      readStreamSync = Fileio.createStreamSync(filePath, 'r');
+      readStreamSync = fs.createStreamSync(filePath, 'r');
       const content = this.getContent(readStreamSync);
       return JSON.parse(content);
     } catch (e) {
-      Log.showError(TAG, `readJsonFile error: ${e.toString()}`);
+      Log.showError(TAG, `readJsonFile error: ${JSON.stringify(e)}`);
     } finally {
       readStreamSync.closeSync();
     }
@@ -56,11 +57,11 @@ export default class FileUtils {
     Log.showDebug(TAG, 'readStringFromFile start execution');
     let readStreamSync = null;
     try {
-      readStreamSync = Fileio.createStreamSync(filePath, 'r');
+      readStreamSync = fs.createStreamSync(filePath, 'r');
       const content = this.getContent(readStreamSync);
       return content;
     } catch (e) {
-      Log.showError(TAG, `readStringFromFile error: ${e.toString()}, filePath: ${filePath}`);
+      Log.showError(TAG, `readStringFromFile error: ${JSON.stringify(e)}, filePath: ${filePath}`);
     } finally {
       if (readStreamSync) {
         readStreamSync.closeSync();
@@ -78,11 +79,11 @@ export default class FileUtils {
     Log.showDebug(TAG, 'writeStringToFile start execution');
     let writeStreamSync = null;
     try {
-      writeStreamSync = Fileio.createStreamSync(filePath, 'w+');
+      writeStreamSync = fs.createStreamSync(filePath, 'w+');
       let number = writeStreamSync.writeSync(str);
       Log.showDebug(TAG, 'writeStringToFile number: ' + number);
     } catch (e) {
-      Log.showError(TAG, `writeStringToFile error: ${e.toString()}`);
+      Log.showError(TAG, `writeStringToFile error: ${JSON.stringify(e)}`);
     } finally {
       writeStreamSync.closeSync();
       Log.showDebug(TAG, 'writeStringToFile close sync');
@@ -122,8 +123,8 @@ export default class FileUtils {
       contentBuf.set(uInt8Arr, offset);
       offset += uInt8Arr.byteLength;
     }
-    let textDecoder = new util.TextDecoder('utf-8', {ignoreBOM: true});
-    const content = textDecoder.decode(contentBuf, {stream: false});
+    let textDecoder = util.TextDecoder.create('utf-8', {ignoreBOM: true});
+    const content = textDecoder.decodeWithStream(contentBuf, {stream: false});
     return content;
   }
 
@@ -134,14 +135,15 @@ export default class FileUtils {
    * @return {boolean} - boolean true(Exist)
    */
   static isExist(filePath: string): boolean {
+    let result: boolean = false;
     try {
-      Fileio.accessSync(filePath);
+      result = fs.accessSync(filePath);
       Log.showDebug(TAG, 'accessSync success.');
     } catch(e) {
-      Log.showError(TAG, `isExit error: ${e.toString()}`);
-      return false;
+      Log.showError(TAG, `isExit error: ${JSON.stringify(e)}`);
+      result = false;
     }
-    return true;
+    return result;
   }
 
   /**
@@ -151,9 +153,9 @@ export default class FileUtils {
    */
   static deleteConfigFile(filePath: string): void {
     try {
-      Fileio.unlinkSync(filePath);
+      fs.unlinkSync(filePath);
     } catch(e) {
-      Log.showError(TAG, `deleteFile error: ${e.toString()}`);
+      Log.showError(TAG, `deleteFile error: ${JSON.stringify(e)}`);
     }
   }
 }
