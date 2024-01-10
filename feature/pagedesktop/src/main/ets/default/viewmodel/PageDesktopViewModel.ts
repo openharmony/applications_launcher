@@ -273,6 +273,7 @@ export class PageDesktopViewModel extends BaseViewModel {
         for (const appInfo of totalAppInfoList) {
           if (item.keyName == appInfo.keyName) {
             item.appName = appInfo.appName;
+            item.appIconId = appInfo.appIconId;
             return true;
           }
         }
