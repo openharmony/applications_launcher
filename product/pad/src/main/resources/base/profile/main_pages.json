@@ -3,6 +3,7 @@
     "pages/AppCenterView",
     "pages/EmptyPage",
     "pages/EntryView",
-    "pages/RecentView"
+    "pages/RecentView",
+    "pages/SubDisplayWallpaperPage"
   ]
 }

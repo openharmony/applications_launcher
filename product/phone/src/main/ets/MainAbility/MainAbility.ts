@@ -27,7 +27,8 @@ import {
   launcherAbilityManager,
   navigationBarCommonEventManager,
   localEventManager,
-  EventConstants
+  EventConstants,
+  DisplayManager
 } from '@ohos/common';
 import { GestureNavigationManager } from '@ohos/gesturenavigation';
 import StyleConstants from '../common/constants/StyleConstants';
@@ -40,6 +41,8 @@ import window from '@ohos.window';
 const TAG = 'LauncherMainAbility';
 
 export default class MainAbility extends ServiceExtension {
+  private displayManager: DisplayManager = undefined
+
   onCreate(want: Want): void {
     Log.showInfo(TAG,'onCreate start');
     this.context.area = 0;
@@ -81,6 +84,7 @@ export default class MainAbility extends ServiceExtension {
     // load recent
     windowManager.createRecentWindow();
     this.registerInputConsumer();
+    this.displayManager = DisplayManager.getInstance()
   }
 
   private registerInputConsumer(): void {
@@ -156,6 +160,7 @@ export default class MainAbility extends ServiceExtension {
     navigationBarCommonEventManager.unregisterNavigationBarEvent();
     windowManager.destroyWindow(windowManager.DESKTOP_WINDOW_NAME);
     windowManager.destroyRecentWindow();
+    this.displayManager?.destroySubDisplayWindow();
     Log.showInfo(TAG, 'onDestroy success');
   }
 

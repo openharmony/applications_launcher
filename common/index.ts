@@ -61,7 +61,8 @@ export {
   settingsDataManager,
   launcherAbilityManager,
   navigationBarCommonEventManager,
-  CloseAppManager
+  CloseAppManager,
+  DisplayManager
 } from './src/main/ets/default/manager'
 
 export {
