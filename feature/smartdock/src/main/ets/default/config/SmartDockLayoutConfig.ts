@@ -15,7 +15,7 @@
 
 import { ILayoutConfig } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
-
+import { Log } from '@ohos/common';
 /**
  * Desktop Dock function layout configuration
  */
@@ -92,7 +92,11 @@ export class SmartDockLayoutConfig extends ILayoutConfig {
     let defaultConfig = super.loadPersistConfig();
     const configFromFile = this.loadPersistConfigFromFile();
     if (configFromFile) {
-      defaultConfig = JSON.parse(configFromFile);
+      try {
+        defaultConfig = JSON.parse(configFromFile);
+      } catch (err) {
+        Log.showInfo('SmartDockLayoutConfig', `configFromFile cannot use json: ${defaultConfig}`);
+      }
     }
     return defaultConfig;
   }

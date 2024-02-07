@@ -81,8 +81,8 @@ export struct PageDesktopLayout {
   }
 
   private updateDeskTopParams() {
-    this.mMargin = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig().mMargin;
-    this.mTop = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig().mDesktopMarginTop;
+    this.mMargin = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig()?.mMargin;
+    this.mTop = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig()?.mDesktopMarginTop;
     Log.showDebug(TAG, `updateDeskTopParams mMargin: ${this.mMargin}, this.mTop: ${this.mTop}`);
     if (this.mPageDesktopDragHandler != null) {
       this.mPageDesktopDragHandler.setDragEffectArea({
