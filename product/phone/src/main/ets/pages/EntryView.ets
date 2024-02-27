@@ -29,12 +29,22 @@ import StyleConstants from '../common/constants/StyleConstants';
 import { SmartDockStyleConfig } from '@ohos/smartdock';
 import PhonePageDesktopGridStyleConfig from '../common/PhonePageDesktopGridStyleConfig';
 import { FormStyleConfig } from '@ohos/form';
+import { GestureNavigationManager } from '../../../../../../feature/gesturenavigation/src/main/ets/default/common/GestureNavigationManager'
+import display from '@ohos.display';
+import mediaquery from '@ohos.mediaquery';
 
 const TAG = "EntryView";
 
 interface LocalEventListener {
   onReceiveEvent: (event: string, params: string) => void;
 }
+
+interface disPlay {
+  id: number,
+  width: number,
+  height: number,
+  refreshRate: number,
+};
 
 @Entry
 @Component
@@ -47,12 +57,15 @@ struct EntryView {
   @State dockHeight: number = 0;
   private mStage: PhoneStage = new PhoneStage();
   private navigationBarStatus: string | undefined;
+  private mOrientationListener = mediaquery.matchMediaSync('(orientation: landscape)');
 
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
   }
 
   onPageHide(): void {
+    // register orientation listener
+    this.mOrientationListener.on('change', this.onPortrait);
     Log.showInfo(TAG, 'onPageHide');
   }
 
@@ -64,11 +77,26 @@ struct EntryView {
     this.updateScreenSize();
 
     this.registerPageDesktopNavigatorStatusChangeEvent(this.mLocalEventListener);
-
+    //register orientation listener
+    this.mOrientationListener.on('change', this.onPortrait);
   }
 
   registerPageDesktopNavigatorStatusChangeEvent(listener: LocalEventListener): void {
     localEventManager.registerEventListener(listener, [EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE]);
+  }
+
+  private onPortrait(mediaQueryResult: mediaquery.MediaQueryResult) {
+    if (mediaQueryResult.matches) {
+      Log.showInfo(TAG, 'screen change to portrait');
+    } else {
+      Log.showInfo(TAG, 'screen change to landscape');
+    }
+    const gestureNavigationManager =GestureNavigationManager.getInstance();
+    display.getDefaultDisplay()
+      .then((dis:disPlay)=>{
+        Log.showInfo(TAG, `change to display: ${JSON.stringify(dis)}`);
+        gestureNavigationManager.updateWindowSize(dis);
+      });
   }
 
   private readonly mLocalEventListener: LocalEventListener = {
@@ -82,6 +110,7 @@ struct EntryView {
   };
 
   aboutToDisappear(): void {
+    this.mOrientationListener.off('change', this.onPortrait);
     this.mStage.onDestroy();
     Log.showInfo(TAG, 'aboutToDisappear');
   }
