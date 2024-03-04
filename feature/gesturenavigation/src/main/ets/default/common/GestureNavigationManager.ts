@@ -67,6 +67,13 @@ export class GestureNavigationManager {
     }
   }
 
+  updateWindowSize(display:any) {
+    if (globalThis.sGestureNavigationExecutors) {
+      globalThis.sGestureNavigationExecutors.setScreenWidth(display.width);
+      globalThis.sGestureNavigationExecutors.setScreenHeight(display.height);
+    }
+  }
+
   private getGestureNavigationStatus() {
     Log.showDebug(TAG, 'getGestureNavigationStatus enter');
     let gestureNavigationStatus = null;
