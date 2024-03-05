@@ -21,7 +21,7 @@
  * @property {Boolean} [checkPolyphone=false] Whether to check for polyphonic words.
  * @property {Number} [charCase=0] Output pinyin case mode, 0- first letter capitalization; 1- All lowercase; 2 - all uppercase.
  */
-import { dict } from './dict';
+import { PinyinDict } from './PinyinDict';
 
 class Pinyin {
   private options;
@@ -54,9 +54,9 @@ class Pinyin {
    *
    */
   initialize() {
-    this.char_dict = dict.char_dict;
-    this.full_dict = dict.full_dict;
-    this.polyphone = dict.polyphone;
+    this.char_dict = PinyinDict.char_dict;
+    this.full_dict = PinyinDict.full_dict;
+    this.polyphone = PinyinDict.polyphone;
   }
 
   /**
