@@ -94,7 +94,7 @@ export struct FolderOpenComponent {
     isPad = mBigFolderViewModel.getIsPad();
     mBigFolderStyleConfig = mBigFolderViewModel.getFolderStyleConfig();
     if (mBigFolderStyleConfig == null) {
-      return
+      return;
     }
     mAppItemWidth = mBigFolderStyleConfig.mOpenFolderAppSize;
     mAppIconSize = mBigFolderStyleConfig.mOpenFolderIconSize;
