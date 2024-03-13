@@ -50,6 +50,33 @@ const formLayoutInfo = {
     row: 4,
     column: 4,
     checked: false
+  },
+  formLayoutDimension2X1:
+  {
+    id: 4,
+    layout: '2X1',
+    name: '2X1',
+    row: 2,
+    column: 1,
+    checked: false
+  },
+  formLayoutDimension1X1:
+  {
+    id: 5,
+    layout: '1X1',
+    name: '1X1',
+    row: 1,
+    column: 1,
+    checked: false
+  },
+  formLayoutDimension6X4:
+  {
+    id: 6,
+    layout: '6X4',
+    name: '6X4',
+    row: 6,
+    column: 4,
+    checked: false
   }
 };
 

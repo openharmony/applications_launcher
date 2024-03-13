@@ -39,16 +39,24 @@ export struct FormManagerComponent {
   @State enabledDomEventResponse: boolean = true;
   @State chooseCardId: number = -1;
   private mFormIdList: number[] = [];
-  private mFormComponentWidth: number[] =
-    [StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO / 2,
-    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO / 2,
-    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO,
-    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO];
-  private mFormComponentHeight: number[] =
-    [StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO / 4,
-    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO / 2,
-    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO / 2,
-    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO];
+  private mFormComponentWidth: number[] = [
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 2,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 2,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 4,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 4,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 1,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 1,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 4,
+  ];
+  private mFormComponentHeight: number[] = [
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 1,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 2,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 2,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 4,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 2,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 1,
+    StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 6,
+  ];
 
   aboutToAppear(): void {
     this.chooseCardId = -1;

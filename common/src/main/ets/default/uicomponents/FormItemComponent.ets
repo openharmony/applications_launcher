@@ -51,9 +51,11 @@ export struct FormItemComponent {
 
   aboutToAppear(): void  {
     this.mFormModel = FormModel.getInstance();
+    Log.showInfo(TAG, `aboutToAppear begin height: ${this.formItemHeight}, width: ${this.formItemWidth}`);
   }
 
   aboutToDisappear(): void {
+    Log.showInfo(TAG, `aboutToDisappear begin`);
   }
 
   @Builder MenuBuilder() {

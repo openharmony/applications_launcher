@@ -108,12 +108,25 @@ export class FormStyleConfig extends AppListStyleConfig {
     const result = LayoutViewModel.getInstance().calculateForm();
     this.mFormWidth.set(CommonConstants.CARD_DIMENSION_1x2.toString(), result.widthDimension1);
     this.mFormHeight.set(CommonConstants.CARD_DIMENSION_1x2.toString(), result.heightDimension1);
+
     this.mFormWidth.set(CommonConstants.CARD_DIMENSION_2x2.toString(), result.widthDimension2);
     this.mFormHeight.set(CommonConstants.CARD_DIMENSION_2x2.toString(), result.heightDimension2);
+
     this.mFormWidth.set(CommonConstants.CARD_DIMENSION_2x4.toString(), result.widthDimension3);
     this.mFormHeight.set(CommonConstants.CARD_DIMENSION_2x4.toString(), result.heightDimension3);
+
     this.mFormWidth.set(CommonConstants.CARD_DIMENSION_4x4.toString(), result.widthDimension4);
     this.mFormHeight.set(CommonConstants.CARD_DIMENSION_4x4.toString(), result.heightDimension4);
+
+    this.mFormWidth.set(CommonConstants.CARD_DIMENSION_2x1.toString(), result.widthDimension5);
+    this.mFormHeight.set(CommonConstants.CARD_DIMENSION_2x1.toString(), result.heightDimension5);
+
+    this.mFormWidth.set(CommonConstants.CARD_DIMENSION_1x1.toString(), result.widthDimension6);
+    this.mFormHeight.set(CommonConstants.CARD_DIMENSION_1x1.toString(), result.heightDimension6);
+
+    this.mFormWidth.set(CommonConstants.CARD_DIMENSION_6x4.toString(), result.widthDimension7);
+    this.mFormHeight.set(CommonConstants.CARD_DIMENSION_6x4.toString(), result.heightDimension7);
+
     this.mIconNameMargin = result.mIconNameMargin;
   }
 

@@ -93,6 +93,7 @@ export default struct FormItem {
     if (this.formItem.cardDimension) {
       this.mFormItemWidth = this.mFormStyleConfig.mFormWidth.get(this.formItem.cardDimension.toString()) as number;
       this.mFormItemHeight = this.mFormStyleConfig.mFormHeight.get(this.formItem.cardDimension.toString()) as number;
+      Log.showInfo(TAG, `aboutToAppear height: ${this.mFormItemHeight}, width: ${this.mFormItemWidth}`);
     }
     const resourceManager = ResourceManager.getInstance();
     resourceManager.getStringById($r('app.string.is_delete_form').id, this.getDialogNamePre);

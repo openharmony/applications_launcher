@@ -30,6 +30,7 @@ export class FormManager {
   private readonly CARD_SIZE_2x2: number[] = [2, 2];
   private readonly CARD_SIZE_2x4: number[] = [4, 2];
   private readonly CARD_SIZE_4x4: number[] = [4, 4];
+  private readonly CARD_SIZE_6x4: number[] = [6, 4];
 
   private constructor() {
   }
@@ -76,6 +77,8 @@ export class FormManager {
       return this.CARD_SIZE_2x2;
     } else if (dimension == CommonConstants.CARD_DIMENSION_2x4) {
       return this.CARD_SIZE_2x4;
+    } else if (dimension == CommonConstants.CARD_DIMENSION_6x4) {
+      return this.CARD_SIZE_6x4;
     } else {
       return this.CARD_SIZE_4x4;
     }
