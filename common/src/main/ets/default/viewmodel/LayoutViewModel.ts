@@ -413,15 +413,12 @@ export class LayoutViewModel {
     let widthDimension4 = widthDimension3;
     let heightDimension4 = (itemSize + gap) * 4 - gap - 2 * iconMarginVertical -
     nameHeight - this.mDesktopIconNameMargin;
-
     // 2x1
     let widthDimension5 = iconSize;
     let heightDimension5 = folderSize;
-
     // 1x1
     let widthDimension6 = iconSize;
     let heightDimension6 = iconSize;
-
     // 6x4
     let widthDimension7 = widthDimension3;
     let heightDimension7 = (itemSize + gap) * 6 - gap - 2 * iconMarginVertical -
