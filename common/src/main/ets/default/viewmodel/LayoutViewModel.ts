@@ -400,15 +400,30 @@ export class LayoutViewModel {
     let iconMarginHorizontal = this.mDesktopIconMarginLeft;
     let iconMarginVertical = this.mDesktopIconMarginTop;
     let nameHeight = this.mDesktopNameHeight;
+    // 1x2
     let widthDimension1: number = folderSize;
     let heightDimension1: number = iconSize;
+    // 2x2
     let widthDimension2 = folderSize;
     let heightDimension2 = folderSize;
+    // 2x4
     let widthDimension3 = (itemSize + gap) * 4 - gap - iconMarginHorizontal * 2;
     let heightDimension3 = folderSize;
+    // 4x4
     let widthDimension4 = widthDimension3;
     let heightDimension4 = (itemSize + gap) * 4 - gap - 2 * iconMarginVertical -
     nameHeight - this.mDesktopIconNameMargin;
+    // 2x1
+    let widthDimension5 = iconSize;
+    let heightDimension5 = folderSize;
+    // 1x1
+    let widthDimension6 = iconSize;
+    let heightDimension6 = iconSize;
+    // 6x4
+    let widthDimension7 = widthDimension3;
+    let heightDimension7 = (itemSize + gap) * 6 - gap - 2 * iconMarginVertical -
+      nameHeight - this.mDesktopIconNameMargin;
+
     let result = {
       widthDimension1: widthDimension1,
       heightDimension1: heightDimension1,
@@ -418,6 +433,12 @@ export class LayoutViewModel {
       heightDimension3: heightDimension3,
       widthDimension4: widthDimension4,
       heightDimension4: heightDimension4,
+      widthDimension5: widthDimension5,
+      heightDimension5: heightDimension5,
+      widthDimension6: widthDimension6,
+      heightDimension6: heightDimension6,
+      widthDimension7: widthDimension7,
+      heightDimension7: heightDimension7,
       mIconNameMargin: this.mDesktopIconNameMargin
     };
     return result;

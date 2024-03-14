@@ -124,6 +124,21 @@ export class CommonConstants {
   static CARD_DIMENSION_4x4 = 4;
 
   /**
+   * Card dimension constants for 2 rows 1 columns.
+   */
+  static CARD_DIMENSION_2x1 = 5;
+
+  /**
+   * Card dimension constants for 1 rows 1 columns.
+   */
+  static CARD_DIMENSION_1x1 = 6;
+
+  /**
+   * Card dimension constants for 6 rows 4 columns.
+   */
+  static CARD_DIMENSION_6x4 = 7;
+
+  /**
    * Common level layout config. Default config for common components.
    */
   static LAYOUT_CONFIG_LEVEL_COMMON = 'common';

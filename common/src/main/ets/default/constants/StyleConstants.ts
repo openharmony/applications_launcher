@@ -133,8 +133,8 @@ export class StyleConstants {
 
   // style
   static readonly DEFAULT_FORM_MARGIN = 10;
-  static readonly FORM_MANAGER_VIEW_CARD_WIDTH = 300;
-  static readonly FORM_MANAGER_VIEW_CARD_HEIGHT = 300;
+  static readonly FORM_MANAGER_VIEW_CARD_WIDTH = 75;
+  static readonly FORM_MANAGER_VIEW_CARD_HEIGHT = 75;
   static readonly FORM_MANAGER_VIEW_WIDTH = 402;
   static readonly FORM_MANAGER_VIEW_HEIGHT = 528;
   static readonly FORM_MANAGER_VIEW_FORM_NAME_HEIGHT = 28;
@@ -165,7 +165,7 @@ export class StyleConstants {
   static readonly FORM_MGR_ADD_TO_DESKTOP_BUTTON_LEFT_MARGIN = 27;
   static readonly FORM_MGR_ADD_TO_DESKTOP_BUTTON_RIGHT_MARGIN = 27;
   static readonly FORM_MGR_ADD_TO_DESKTOP_BUTTON_BOTTOM_MARGIN = 48;
-  static readonly FORM_MGR_FORM_SIZE = 270;
+  static readonly FORM_MGR_FORM_SIZE = 67.5;
   static readonly FORM_MGR_ADD_TO_DESKTOP_TEXT_SIZE = 18;
   static readonly FORM_MGR_APP_LABEL_TEXT_SIZE = 20;
   static readonly FORM_MGR_DESCRIPTION_TEXT_SIZE = 16;

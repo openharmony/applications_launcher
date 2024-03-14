@@ -30,16 +30,24 @@ export struct FormManagerDialog {
   private mFormModel: FormModel = FormModel.getInstance();
   private mSwiperIndex: number = 0;
   private mFormIdList: number[] = [];
-  private mFormComponentWidth: number[] =
-    [StyleConstants.FORM_MANAGER_VIEW_CARD_WIDTH / 2,
-    StyleConstants.FORM_MANAGER_VIEW_CARD_WIDTH / 2,
-    StyleConstants.FORM_MANAGER_VIEW_CARD_WIDTH,
-    StyleConstants.FORM_MANAGER_VIEW_CARD_WIDTH];
-  private mFormComponentHeight: number[] =
-    [StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT / 4,
-    StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT / 2,
-    StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT / 2,
-    StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT];
+  private mFormComponentWidth: number[] = [
+    StyleConstants.FORM_MANAGER_VIEW_CARD_WIDTH * 2,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_WIDTH * 2,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_WIDTH * 4,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_WIDTH * 4,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_WIDTH * 1,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_WIDTH * 1,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_WIDTH * 4,
+  ];
+  private mFormComponentHeight: number[] = [
+    StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT * 1,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT * 2,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT * 2,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT * 4,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT * 2,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT * 1,
+    StyleConstants.FORM_MANAGER_VIEW_CARD_HEIGHT * 6,
+  ];
 
   mFormDialogController?: CustomDialogController;
   cancel = (callback?: Function) => {};
