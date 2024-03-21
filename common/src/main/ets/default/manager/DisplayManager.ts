@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2024 Archermind Technology (Nanjing) Co. Ltd.
+ * Copyright (c) 2024-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -49,7 +49,7 @@ export class DisplayManager {
 
   private async loadAllDisplays() {
     let displays: Array<display.Display> = await display.getAllDisplays()
-    for await (let display of displays) {
+    for (let display of displays) {
       if (this.displayDevices.findIndex(item => item.id === display.id) < 0) {
         Log.showInfo(TAG, 'new display added. detail: ' + JSON.stringify(display))
         this.displayDevices.push(display)
@@ -78,7 +78,7 @@ export class DisplayManager {
    * 在指定屏幕上创建主window(新屏幕插入时，默认桌面窗口，不支持隐藏;屏幕拔出时，隐藏销毁本窗口)
    * @param display
    */
-  private async createMainWindow(display: display.Display) {
+  private createMainWindow(display: display.Display) {
     if (display.id === this.defaultDisplay?.id) {
       //主屏不需要创建主窗口
       return
@@ -100,7 +100,7 @@ export class DisplayManager {
     })
   }
 
-  private async findWindow(displayId: number): Promise<window.Window> {
+  private findWindow(displayId: number): window.Window {
     let resultWindow = undefined
     try {
       resultWindow = window.findWindow(this.MAIN_WINDOW_PREFIX + displayId)
@@ -115,13 +115,12 @@ export class DisplayManager {
     if (displayId === this.defaultDisplay?.id) {
       return
     }
-    this.findWindow(displayId).then((resultWindow: window.Window) => {
-      if (resultWindow?.isWindowShowing()) {
-        resultWindow.hideWithAnimation()
-      }
-      resultWindow?.destroyWindow()
-      Log.showInfo(TAG, `destroy main window ${displayId} success.`)
-    })
+    let resultWindow = this.findWindow(displayId)
+    if (resultWindow?.isWindowShowing()) {
+      resultWindow.hideWithAnimation()
+    }
+    resultWindow?.destroyWindow()
+    Log.showInfo(TAG, `destroy main window ${displayId} success.`)
   }
 
   public destroySubDisplayWindow() {
