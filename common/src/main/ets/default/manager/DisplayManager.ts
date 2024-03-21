@@ -38,7 +38,7 @@ export class DisplayManager {
     return globalThis.DisplayManager ??= new DisplayManager()
   }
 
-  private async loadDefaultDisplay() {
+  private loadDefaultDisplay() {
     try {
       this.defaultDisplay = display.getDefaultDisplaySync()
       Log.showInfo(TAG, 'loadDefaultDisplay. defaultDisplay id: ' + this.defaultDisplay?.id)
