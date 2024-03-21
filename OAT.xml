@@ -51,6 +51,7 @@
             <policy name="projectPolicy" desc="">
                 <policyitem type="license" name="Apache-2.0" path=".*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc=""/>
                 <policyitem type="copyright" name="Huawei Device Co., Ltd." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc=""/>
+                <policyitem type="copyright" name="Archermind Technology (Nanjing) Co. Ltd." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc="Developed by Nanjing Archermind"/>
                 <policyitem type="filetype" name="!binary" path=".*" rule="must" group="defaultGroup" filefilter="binaryFileTypePolicyFilter" desc=""/>
             </policy>
         </policylist>
