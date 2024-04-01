@@ -4,6 +4,7 @@
     "pages/FormServiceView",
     "pages/EmptyPage",
     "pages/EntryView",
-    "pages/RecentView"
+    "pages/RecentView",
+    "pages/SubDisplayWallpaperPage"
   ]
 }

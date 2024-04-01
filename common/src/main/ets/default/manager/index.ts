@@ -36,3 +36,5 @@ export { launcherAbilityManager } from './LauncherAbilityManager'
 export { navigationBarCommonEventManager } from './NavigationBarCommonEventManager'
 
 export { CloseAppManager } from './CloseAppManager'
+
+export { DisplayManager } from './DisplayManager'
