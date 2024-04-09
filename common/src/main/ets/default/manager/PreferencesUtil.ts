@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2024-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,13 +19,22 @@ import { Log } from '../utils/Log';
 
 
 const TAG = 'PreferencesUtil';
-let preference:DataPreferences.Preferences;
 
-class PreferencesUtil {
+export class PreferencesUtil {
   private static PREFERENCES_NAME = 'hicar';
+  private static sInstance:PreferencesUtil | undefined =undefined;
+  private preference:DataPreferences.Preferences;
+
+  static getInstance(){
+    if (!PreferencesUtil.sInstance) {
+      PreferencesUtil.sInstance = new PreferencesUtil();
+    }
+    return PreferencesUtil.sInstance;
+  }
+
   async getPreferencesFromStorage(context:Context):Promise<void>{
     try {
-      preference = await DataPreferences.getPreferences(context, PreferencesUtil.PREFERENCES_NAME);
+      this.preference = await DataPreferences.getPreferences(context, PreferencesUtil.PREFERENCES_NAME);
     } catch (err) {
       Log.showError(TAG, `Failed to get getPreferences, Cause:${err.message || err?.code}`);
     }
@@ -34,16 +43,16 @@ class PreferencesUtil {
 
   async put(key:string, value):Promise<void>{
     try {
-      await preference?.put(key,value);
+      await this.preference?.put(key,value);
     } catch (err) {
       Log.showError(TAG, `Failed to put value, Cause:${err.message || err?.code}`);
     }
-    await preference?.flush();
+    await this.preference?.flush();
   }
 
   async get(key:string, defValue):Promise<DataPreferences.ValueType>{
     try {
-      return await preference?.get(key,defValue).then((data)=>{
+      return await this.preference?.get(key,defValue).then((data)=>{
         Log.showInfo(TAG, `The last value obtained data:${data}`);
         return data;
       })
@@ -53,6 +62,3 @@ class PreferencesUtil {
     return defValue;
   }
 }
-
-
-export default  new PreferencesUtil();

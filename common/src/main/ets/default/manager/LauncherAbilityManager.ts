@@ -25,7 +25,7 @@ import { CommonConstants } from '../constants/CommonConstants';
 import { ResourceManager } from './ResourceManager';
 import { EventConstants } from '../constants/EventConstants';
 import { BadgeManager } from '../manager/BadgeManager';
-import PreferencesUtil from './PreferencesUtil';
+import { PreferencesUtil } from './PreferencesUtil';
 import { BusinessError } from '@ohos.base';
 
 const TAG = 'LauncherAbilityManager';
@@ -94,7 +94,7 @@ class LauncherAbilityManager {
     if (listener != null) {
       if (this.mLauncherAbilityChangeListeners.length == 0) {
         try {
-          let isFirstPowerOn = await PreferencesUtil.get('isFirstPowerOn','');
+          let isFirstPowerOn = await PreferencesUtil.getInstance().get('isFirstPowerOn','');
           if (isFirstPowerOn){
             bundleMonitor.on('add', (bundleChangeInfo) => {
               Log.showInfo(TAG, `add bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
