@@ -14,15 +14,13 @@
  */
 
 import DataPreferences from '@ohos.data.preferences';
-import type { Context } from '@ohos.abilityAccessCtrl';
 import { Log } from '../utils/Log';
 
 
 const TAG = 'PreferencesUtil';
 
 export class PreferencesUtil {
-  private static PREFERENCES_NAME = 'hicar';
-  private static sInstance:PreferencesUtil | undefined =undefined;
+  private static sInstance:PreferencesUtil | undefined = undefined;
   private preference:DataPreferences.Preferences;
 
   static getInstance(){
@@ -31,15 +29,6 @@ export class PreferencesUtil {
     }
     return PreferencesUtil.sInstance;
   }
-
-  async getPreferencesFromStorage(context:Context):Promise<void>{
-    try {
-      this.preference = await DataPreferences.getPreferences(context, PreferencesUtil.PREFERENCES_NAME);
-    } catch (err) {
-      Log.showError(TAG, `Failed to get getPreferences, Cause:${err.message || err?.code}`);
-    }
-  }
-
 
   async put(key:string, value):Promise<void>{
     try {
