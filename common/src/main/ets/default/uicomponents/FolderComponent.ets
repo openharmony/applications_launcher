@@ -113,11 +113,11 @@ export struct FolderComponent {
     }
 
     let length = this.mSuperposeAppList.length;
-    let mSuperposeApp = new SuperposeApp();
     if (length > CommonConstants.FOLDER_STATIC_SUPERPOSEAPP_LENGTH) {
       this.mSuperposeAppList = this.mSuperposeAppList.slice(0, CommonConstants.FOLDER_STATIC_SUPERPOSEAPP_LENGTH);
     } else {
       for (let i = 0; i < (CommonConstants.FOLDER_STATIC_SUPERPOSEAPP_LENGTH - length); i++) {
+        let mSuperposeApp = new SuperposeApp();
         mSuperposeApp.isEmpty = true;
         this.mSuperposeAppList.push(mSuperposeApp);
       }
