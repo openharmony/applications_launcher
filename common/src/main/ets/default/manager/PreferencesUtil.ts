@@ -44,8 +44,8 @@ class PreferencesUtil {
   async get(key:string, defValue):Promise<DataPreferences.ValueType>{
     try {
       return await preference?.get(key,defValue).then((data)=>{
-         Log.showInfo(TAG, `The last value obtained data:${data}`);
-         return data;
+        Log.showInfo(TAG, `The last value obtained data:${data}`);
+        return data;
       })
     } catch (err) {
       Log.showError(TAG, `Failed to get getPreferences, Cause:${err.message || err?.code}`);

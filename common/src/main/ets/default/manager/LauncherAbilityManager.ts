@@ -85,39 +85,32 @@ class LauncherAbilityManager {
     return this.mUserId;
   }
 
-  bundleMonitorOn(){
-    bundleMonitor.on('add', (bundleChangeInfo) => {
-      Log.showInfo(TAG, `add bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
-      this.mBundleStatusCallback.add(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
-    });
-    bundleMonitor.on('update', (bundleChangeInfo) => {
-      Log.showInfo(TAG, `update bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
-      this.mBundleStatusCallback.update(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
-    });
-    bundleMonitor.on('remove', (bundleChangeInfo) => {
-      Log.showInfo(TAG, `remove bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
-      this.mBundleStatusCallback.remove(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
-    });
-  }
-
   /**
    * Monitor system application status.
    *
    * @params listener: listening object
    */
- async registerLauncherAbilityChangeListener(listener: any):Promise<void> {
+  async registerLauncherAbilityChangeListener(listener: any):Promise<void> {
     if (listener != null) {
       if (this.mLauncherAbilityChangeListeners.length == 0) {
         try {
           let isFirstPowerOn = await PreferencesUtil.get('isFirstPowerOn','');
           if (isFirstPowerOn){
-           setTimeout(()=>{
-              this.bundleMonitorOn();
-            }, 20000);
+            bundleMonitor.on('add', (bundleChangeInfo) => {
+              Log.showInfo(TAG, `add bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
+              this.mBundleStatusCallback.add(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
+            });
+            bundleMonitor.on('update', (bundleChangeInfo) => {
+              Log.showInfo(TAG, `update bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
+              this.mBundleStatusCallback.update(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
+            });
+            bundleMonitor.on('remove', (bundleChangeInfo) => {
+              Log.showInfo(TAG, `remove bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
+              this.mBundleStatusCallback.remove(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
+            });
             Log.showInfo(TAG, `registerCallback success, isFirstPowerOn:${isFirstPowerOn}`);
           }else {
-            this.bundleMonitorOn();
-            Log.showInfo(TAG, `registerCallback fail, isFirstPowerOff:${isFirstPowerOn}`);
+            Log.showInfo(TAG, `registerCallback fail, isFirstPowerOn:${isFirstPowerOn}`);
           }
         } catch (errData) {
           let message = (errData as BusinessError).message;
