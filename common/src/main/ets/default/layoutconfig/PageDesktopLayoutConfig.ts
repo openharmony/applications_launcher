@@ -18,7 +18,6 @@ import { ILayoutConfig } from './ILayoutConfig';
 import { CommonConstants } from '../constants/CommonConstants';
 import FileUtils from '../utils/FileUtils';
 import { GridLayoutInfo } from '../interface';
-import { PreferencesUtil } from '../manager/PreferencesUtil';
 
 const TAG = 'PageDesktopLayoutConfig';
 
@@ -134,10 +133,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
     }
     const configFromRdb = await globalThis.RdbStoreManagerInstance.queryGridLayoutInfo();
     if (configFromRdb) {
-      PreferencesUtil.getInstance().put('isFirstPowerOn', false);
       defaultConfig.layoutInfo = configFromRdb;
-    }else {
-      PreferencesUtil.getInstance().put('isFirstPowerOn', true);
     }
     this.mGridLayoutInfo = defaultConfig;
   }
