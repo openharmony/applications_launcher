@@ -37,6 +37,7 @@ import Window from '@ohos.window';
 import inputConsumer from '@ohos.multimodalInput.inputConsumer';
 import { KeyCode } from '@ohos.multimodalInput.keyCode';
 import window from '@ohos.window';
+import { PreferencesHelper } from '@ohos/common/src/main/ets/default/manager/PreferencesHelper';
 
 const TAG = 'LauncherMainAbility';
 
@@ -52,7 +53,7 @@ export default class MainAbility extends ServiceExtension {
   async initLauncher(): Promise<void> {
     // init Launcher context
     globalThis.desktopContext = this.context;
-
+    PreferencesHelper.getInstance().initPreference(this.context);
     // init global const
     this.initGlobalConst();
 
@@ -68,6 +69,7 @@ export default class MainAbility extends ServiceExtension {
       win.on('windowEvent', (stageEventType) => {
         // 桌面获焦或失焦时，通知桌面的卡片变为可见状态
         if (stageEventType === window.WindowEventType.WINDOW_ACTIVE) {
+          launcherAbilityManager.checkBundleMonitor();
           localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
           Log.showInfo(TAG, `lifeCycleEvent change: ${stageEventType}`);
         }
