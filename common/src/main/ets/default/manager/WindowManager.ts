@@ -410,6 +410,7 @@ class WindowManager {
     switch (data.event) {
       case commonEventManager.RECENT_FULL_SCREEN:
         // full screen recent window
+        windowManager.minimizeAllApps();
         windowManager.createRecentWindow();
         break;
       case commonEventManager.RECENT_SPLIT_SCREEN:
