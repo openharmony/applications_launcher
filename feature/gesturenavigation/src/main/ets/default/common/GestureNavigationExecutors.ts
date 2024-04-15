@@ -199,6 +199,7 @@ export default class GestureNavigationExecutors {
 
   private recentEventCall() {
     Log.showInfo(TAG, 'recentEventCall recentEvent start');
+    windowManager.minimizeAllApps();
     windowManager.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
   }
 
