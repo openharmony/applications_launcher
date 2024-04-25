@@ -27,6 +27,7 @@ import { EventConstants } from '../constants/EventConstants';
 import { BadgeManager } from '../manager/BadgeManager';
 import { PreferencesHelper } from './PreferencesHelper';
 import { BusinessError } from '@ohos.base';
+import performanceMonitor from '@ohos.arkui.performanceMonitor';
 
 const TAG = 'LauncherAbilityManager';
 
@@ -330,6 +331,8 @@ class LauncherAbilityManager {
       moduleName: paramModuleName
     }).then(() => {
       Log.showDebug(TAG, 'startApplication promise success');
+      performanceMonitor.end("LAUNCHER_APP_LAUNCH_FROM_ICON");
+      Log.showDebug(TAG, 'performanceMonitor end');
     }, (err) => {
       Log.showError(TAG, `startApplication promise error: ${JSON.stringify(err)}`);
     });
@@ -351,7 +354,10 @@ class LauncherAbilityManager {
         } else {
           Log.showDebug(TAG, `startApplication hiSysEvent write success: ${value}`);
         }
-    })
+    });
+    Log.showDebug(TAG, 'performanceMonitor begin');
+    performanceMonitor.begin("LAUNCHER_APP_LAUNCH_FROM_ICON", performanceMonitor.ActionType.LAST_UP,
+      paramBundleName);
   }
 
   /**
