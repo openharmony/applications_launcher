@@ -101,7 +101,7 @@ export default struct GridSwiper {
   }
 
   private getMenu(): MenuInfo[] {
-    let menuInfoList: Array<MenuInfo> = [];
+    let menuInfoList: MenuInfo[] = [];
     let setting = new MenuInfo();
     setting.menuType = CommonConstants.MENU_TYPE_FIXED
     setting.menuImgSrc = '/common/pics/ic_public_settings.svg'

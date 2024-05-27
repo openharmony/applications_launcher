@@ -92,7 +92,7 @@ export struct AppGridLayout {
   }
 
   public buildMenuInfoList(appInfo: AppItemInfo) {
-    let menuInfoList: Array<MenuInfo> = [];
+    let menuInfoList: MenuInfo[] = [];
     let shortcutInfo = this.mAppGridViewModel.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
       let menu: MenuInfo | null = null;
