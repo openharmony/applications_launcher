@@ -36,14 +36,14 @@ interface FolderAnimateData {
 }
 
 class FolderItem {
-  layoutInfo: AppItemInfo[][] = [];
-  folderId: string = '';
-  folderName: string = '';
+  public layoutInfo: AppItemInfo[][] = [];
+  public folderId: string = '';
+  public folderName: string = '';
 }
 
 class SuperposeApp extends AppItemInfo {
-  isEmpty?: boolean;
-  alignContent?: Alignment;
+  public isEmpty?: boolean;
+  public alignContent?: Alignment;
 }
 
 @Component
@@ -85,7 +85,7 @@ export struct FolderComponent {
   isSelect: boolean = false;
   dragStart: Function = (event: DragEvent) => {};
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear start');
     this.updateShowList();
     this.mSettingsModel = SettingsModel.getInstance();
@@ -98,7 +98,9 @@ export struct FolderComponent {
   }
 
   updateShowList(): void {
-    if (typeof this.mFolderItem.layoutInfo === 'undefined') return;
+    if (typeof this.mFolderItem.layoutInfo === 'undefined') {
+      return;
+    };
     if (this.mFolderItem.layoutInfo[0].length > CommonConstants.FOLDER_STATIC_SHOW_LENGTH) {
       this.mShowAppList = this.mFolderItem.layoutInfo[0].slice(0, CommonConstants.FOLDER_STATIC_SHOW_LENGTH);
     } else {
@@ -226,7 +228,9 @@ export struct FolderComponent {
                   AppIcon({
                     iconSize: this.appIconSize,
                     iconId: item.appIconId,
-                    icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
+                    icon: ResourceManager.getInstance().getCachedAppIcon(
+                      item.appIconId, item.bundleName, item.moduleName
+                    ),
                     bundleName: item.bundleName,
                     moduleName: item.moduleName,
                     badgeNumber: item.badgeNumber
@@ -264,7 +268,9 @@ export struct FolderComponent {
                             AppIcon({
                               iconSize: this.appIconSize * StyleConstants.PERCENTAGE_80_number,
                               iconId: item.appIconId,
-                              icon: ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName),
+                              icon: ResourceManager.getInstance().getCachedAppIcon(
+                                item.appIconId, item.bundleName, item.moduleName
+                              ),
                               bundleName: item.bundleName,
                               moduleName: item.moduleName,
                               badgeNumber: item.badgeNumber
@@ -365,7 +371,12 @@ export struct FolderComponent {
     .height(this.isSelect ? this.folderGridSize + StyleConstants.DEFAULT_40 : StyleConstants.PERCENTAGE_100)
     .backgroundColor(this.isSelect ? StyleConstants.DEFAULT_BROAD_COLOR : StyleConstants.DEFAULT_TRANSPARENT_COLOR)
     .borderRadius(this.isSelect ? StyleConstants.DEFAULT_15 : StyleConstants.DEFAULT_0)
-    .padding(this.isSelect ? { left: StyleConstants.DEFAULT_20,
-                               right: StyleConstants.DEFAULT_20, top: this.mPaddingTop + StyleConstants.DEFAULT_10 } : { top: this.mPaddingTop })
+    .padding(this.isSelect ? {
+      left: StyleConstants.DEFAULT_20,
+      right: StyleConstants.DEFAULT_20,
+      top: this.mPaddingTop +
+      StyleConstants.DEFAULT_10 } :
+      { top: this.mPaddingTop }
+    )
   }
 }

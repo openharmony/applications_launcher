@@ -51,7 +51,7 @@ export struct SmartDock {
   private dialogName = '';
   @State mSmartDockStyleConfig: SmartDockStyleConfig | undefined = undefined;
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear start!');
     this.deviceType = AppStorage.get('deviceType') as string;
     try {
@@ -66,7 +66,7 @@ export struct SmartDock {
     });
   }
 
-  aboutToDisappear(): void  {
+  aboutToDisappear(): void {
     Log.showInfo(TAG, 'aboutToDisappear!');
     this.mDialogController = null;
   }
@@ -105,7 +105,7 @@ export struct SmartDock {
   }
 
   showDialog = () => {
-    this.mSelectedItem = this.mSmartDockViewModel?.getSelectedItem() as DockItemInfo|null;
+    this.mSelectedItem = this.mSmartDockViewModel?.getSelectedItem() as DockItemInfo | null;
     this.mSelectedDockType = this.mSmartDockViewModel?.getSelectedDockType() as number;
     this.mDialogController?.open();
   }
@@ -142,7 +142,8 @@ export struct SmartDock {
 
   build() {
     List({
-      space: this.deviceType == CommonConstants.DEFAULT_DEVICE_TYPE || this.recentList.length == 0 ? CommonConstants.DOCK_SPACE :
+      space: this.deviceType ==
+      CommonConstants.DEFAULT_DEVICE_TYPE || this.recentList.length == 0 ? CommonConstants.DOCK_SPACE :
         (this.mSmartDockViewModel?.getStyleConfig().mDockGap as number)
     }) {
       if (this.buildLog()) {

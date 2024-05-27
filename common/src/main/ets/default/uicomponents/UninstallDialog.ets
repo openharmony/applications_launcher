@@ -44,7 +44,7 @@ export struct UninstallDialog {
     }
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mLayoutViewModel = LayoutViewModel.getInstance();
     this.updateScreenSize();
     this.mResourceManager = ResourceManager.getInstance();

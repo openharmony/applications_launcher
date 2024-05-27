@@ -33,7 +33,7 @@ import { windowManager } from '@ohos/common';
 const TAG = 'AppGridLayout';
 
 class StartAppInfo extends AppItemInfo {
-  icon?: ResourceStr;
+  public icon?: ResourceStr;
 }
 
 @Component
@@ -92,7 +92,7 @@ export struct AppGridLayout {
   }
 
   public buildMenuInfoList(appInfo: AppItemInfo) {
-    let menuInfoList = new Array<MenuInfo>();
+    let menuInfoList: MenuInfo[] = [];
     let shortcutInfo = this.mAppGridViewModel.getShortcutInfo(appInfo.bundleName);
     if (shortcutInfo) {
       let menu: MenuInfo | null = null;
@@ -102,11 +102,13 @@ export struct AppGridLayout {
         menu.menuImgSrc = value.icon;
         menu.menuText = value.label;
         menu.shortcutIconId = value.iconId;
-        menu.shortcutLabelId =  value.labelId;
+        menu.shortcutLabelId = value.labelId;
         menu.bundleName = value.bundleName;
         menu.moduleName = value.moduleName;
         menu.onMenuClick = () => {
-          this.mAppGridViewModel.jumpTo(value.wants[0].targetAbility, value.wants[0].targetBundle, value.wants[0].targetModule);
+          this.mAppGridViewModel.jumpTo(
+            value.wants[0].targetAbility, value.wants[0].targetBundle, value.wants[0].targetModule
+          );
         };
         value.bundleName == appInfo.bundleName && value.moduleName == appInfo.moduleName && menuInfoList.push(menu);
       });

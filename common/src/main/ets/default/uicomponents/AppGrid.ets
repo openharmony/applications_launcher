@@ -27,7 +27,7 @@ export struct AppGrid {
   @Link appGridList: Array<AppItemInfo>;
   @Link appGridStyleConfig: AppGridStyleConfig;
   onItemClick: Function = (event: ClickEvent, item: AppItemInfo) => {};
-  buildMenu: Function = (item: AppItemInfo):  MenuInfo[] => [];
+  buildMenu: Function = (item: AppItemInfo): MenuInfo[] => [];
   @State isScroll: boolean = false;
 
   aboutToDisappear(): void {

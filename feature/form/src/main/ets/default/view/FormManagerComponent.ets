@@ -92,7 +92,9 @@ export struct FormManagerComponent {
     let count = 0;
     let isStop = false;
     for (let i = 0; i < this.formItem.length; i++) {
-      if (isStop) break;
+      if (isStop) {
+        break;
+      }
       for (let j = 0; j < this.formItem[i].supportDimensions.length; j++) {
         if (count === this.mSwiperIndex) {
           formCardItem.cardName = this.formItem[i].cardName;
@@ -240,7 +242,9 @@ export struct FormManagerComponent {
         right: StyleConstants.FORM_MGR_ADD_TO_DESKTOP_BUTTON_RIGHT_MARGIN * StyleConstants.DPI_RATIO})
       .onClick(() => {
         Log.showDebug(TAG, 'form add to desktop');
-        localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD, this.getChooseCard());
+        localEventManager.sendLocalEventSticky(
+          EventConstants.EVENT_REQUEST_PAGEDESK_FORM_ITEM_ADD, this.getChooseCard()
+        );
         this.clearNoUseFormById();
         windowManager.destroyWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
         windowManager.destroyWindow(windowManager.FORM_SERVICE_WINDOW_NAME);

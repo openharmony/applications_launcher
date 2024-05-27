@@ -30,7 +30,7 @@ interface DataList {
 export struct ScrollerComponent {
   @StorageLink('snapshotList') dataList: DataList[] = [];
   @StorageLink('snapShotWidth') listWidth: number = 0;
-  scroller: Scroller= new Scroller() ;
+  scroller: Scroller = new Scroller();
   private screenWidth = 800;
   popupHide: Function = () => {};
   updateData: Function = (isUpdate: boolean, bundleName: string, callback: () => void) => {};

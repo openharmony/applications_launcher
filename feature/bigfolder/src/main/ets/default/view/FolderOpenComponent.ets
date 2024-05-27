@@ -262,7 +262,8 @@ export struct FolderOpenComponent {
     }
     .width(BigFolderStyleConstants.PERCENTAGE_100)
     .height(BigFolderStyleConstants.PERCENTAGE_100)
-    .visibility(this.openFolderStatus == BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE ? Visibility.Hidden : Visibility.Visible)
+    .visibility(this.openFolderStatus ==
+    BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE ? Visibility.Hidden : Visibility.Visible)
     .opacity(this.overLayAlpha)
     .backgroundColor('rgba(0,0,0,0.25)')
     .onClick(() => {
@@ -280,7 +281,7 @@ export struct FolderOpenComponent {
   private saveText() {
     if (this.isRenaming) {
       this.isRenaming = false;
-      if (this.newFolderName.trim().length !=0 && this.newFolderName) {
+      if (this.newFolderName.trim().length != 0 && this.newFolderName) {
         this.mFolderInfo.folderName = this.newFolderName;
         mBigFolderViewModel.modifyFolderName(this.mFolderInfo)
       }
@@ -463,7 +464,7 @@ struct FolderAppItem {
   private dialogName: string = "";
   private clearForm: Function = () => {};
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     mFolderModel = BigFolderModel.getInstance();
     ResourceManager.getInstance().getStringByResource(isPad
       ? $r('app.string.is_delete_form') : $r('app.string.isUninstall')).then((resName) => {
@@ -550,7 +551,9 @@ struct FolderAppItem {
   private launchApp() {
     Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
     this.setStartAppInfo();
-    PageDesktopViewModel.getInstance().onAppDoubleClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+    PageDesktopViewModel.getInstance().onAppDoubleClick(
+      this.item.abilityName, this.item.bundleName, this.item.moduleName
+    );
   }
 
   build() {
@@ -584,7 +587,9 @@ struct FolderAppItem {
       .onClick(() => {
         Log.showDebug(TAG, 'App click');
         this.setStartAppInfo();
-        PageDesktopViewModel.getInstance().openApplication(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+        PageDesktopViewModel.getInstance().openApplication(
+          this.item.abilityName, this.item.bundleName, this.item.moduleName
+        );
       })
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
@@ -606,7 +611,9 @@ struct FolderAppItem {
               this.launchApp();
             } else {
               this.setStartAppInfo();
-              PageDesktopViewModel.getInstance().onAppClick(this.item.abilityName, this.item.bundleName, this.item.moduleName);
+              PageDesktopViewModel.getInstance().onAppClick(
+                this.item.abilityName, this.item.bundleName, this.item.moduleName
+              );
               setTimeout(() => {
                 this.mouseClick = 0;
               }, 300)

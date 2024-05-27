@@ -37,6 +37,7 @@ const APP_INFO_REFRESH_DELAY = 1000;
 interface AppListInfo {
   appGridInfo: LauncherDragItemInfo[][]
 }
+
 interface GridLayout {
   id: number;
   layout: string;
@@ -65,10 +66,10 @@ export default struct SwiperPage {
   @State mAppListInfo: LauncherDragItemInfo[] = this.appListInfo.appGridInfo[this.swiperPage];
   private mPageDesktopViewModel?: PageDesktopViewModel;
   private mPageDesktopStyleConfig = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig();
-  private mGridWidth : number = 0;
+  private mGridWidth: number = 0;
   private mGridHeight: number = 0;
   private mIconSize: number = 0;
-  private mGridSpaceWidth : number = 0;
+  private mGridSpaceWidth: number = 0;
   private mGridSpaceHeight: number = 0;
 
   private updateAppListInfo(): void {
@@ -96,7 +97,8 @@ export default struct SwiperPage {
 
   updateDeskTopScreen(): void {
     Log.showInfo(TAG, 'updateDeskTopScreen');
-    this.mPageDesktopStyleConfig = this.mPageDesktopViewModel?.getPageDesktopStyleConfig() as PageDesktopGridStyleConfig;
+    this.mPageDesktopStyleConfig =
+      this.mPageDesktopViewModel?.getPageDesktopStyleConfig() as PageDesktopGridStyleConfig;
     this.mMargin = this.mPageDesktopStyleConfig.mMargin;
     this.mColumnsGap = this.mPageDesktopStyleConfig.mColumnsGap;
     this.mRowsGap = this.mPageDesktopStyleConfig.mRowsGap;
@@ -122,10 +124,10 @@ export default struct SwiperPage {
     let row = mGridConfig.row as number;
     this.columnsTemplate = '';
     this.rowsTemplate = '';
-    for (let i = 0;i < column; i++) {
+    for (let i = 0; i < column; i++) {
       this.columnsTemplate += '1fr '
     }
-    for (let i = 0;i < row; i++) {
+    for (let i = 0; i < row; i++) {
       this.rowsTemplate += '1fr '
     }
   }
@@ -245,7 +247,9 @@ export default struct SwiperPage {
     .onDragMove((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragMove event: [${event.getWindowX()}, ${event.getWindowY()}]`);
       const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo') as LauncherDragItemInfo;
-      if (!dragItemInfo.isDragging) return;
+      if (!dragItemInfo.isDragging) {
+        return;
+      }
       if (AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE ||
         (AppStorage.get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE &&
           AppStorage.get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP)) {

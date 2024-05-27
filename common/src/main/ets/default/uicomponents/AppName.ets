@@ -31,7 +31,7 @@ export struct AppName {
   marginLeft: number = PresetStyleConstants.DEFAULT_DESKTOP_NAME_MARGIN;
   private mResourceManager = ResourceManager.getInstance();
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateName();
   }

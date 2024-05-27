@@ -78,7 +78,7 @@ struct EntryView {
     }
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear');
     this.mStage.onCreate();
     this.navigationBarStatus = SettingsModel.getInstance().getValue();
@@ -216,7 +216,9 @@ struct EntryView {
         .height(this.workSpaceHeight)
         .onAreaChange((oldValue: Area, newValue: Area) => {
           Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
-          if (JSON.stringify(oldValue) == JSON.stringify(newValue)) return;
+          if (JSON.stringify(oldValue) == JSON.stringify(newValue)) {
+            return;
+          }
           if (this.navigationBarStatus == '1') {
             setTimeout(() => {
               SettingsModel.getInstance().setValue(this.navigationBarStatus);

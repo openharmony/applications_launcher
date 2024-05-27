@@ -72,7 +72,7 @@ export default struct FolderItem {
   private mFolderStyleConfig: BigFolderStyleConfig = BigFolderViewModel.getInstance().getFolderStyleConfig();
   mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mPageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
     this.mBigFolderViewModel = BigFolderViewModel.getInstance();
@@ -94,7 +94,9 @@ export default struct FolderItem {
    * format FolderInfo
    */
   private formatFolderInfo() {
-    if (typeof this.folderItem.layoutInfo === 'undefined') return;
+    if (typeof this.folderItem.layoutInfo === 'undefined') {
+      return;
+    }
     let column = this.mBigFolderViewModel?.getFolderLayoutConfig().column as number;
     let row = this.mBigFolderViewModel?.getFolderLayoutConfig().row as number;
     const allCount = column * row;
@@ -106,7 +108,9 @@ export default struct FolderItem {
         folderLayoutInfoList.push(this.folderItem.layoutInfo[0].slice(i * allCount, (i + 1) * allCount));
       }
       if (remainder != 0) {
-        folderLayoutInfoList.push(this.folderItem.layoutInfo[0].slice(integer * allCount, integer * allCount + remainder));
+        folderLayoutInfoList.push(
+          this.folderItem.layoutInfo[0].slice(integer * allCount, integer * allCount + remainder)
+        );
       }
       this.folderItem.layoutInfo.splice(0, 1);
       this.folderItem.layoutInfo = folderLayoutInfoList;
@@ -175,7 +179,8 @@ export default struct FolderItem {
           },
           onFolderTouch: (event: TouchEvent, folderItem: FolderData) => {
             if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
-              let mIsDragEffectArea = PageDesktopDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
+              let mIsDragEffectArea =
+              PageDesktopDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
               Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
               if (!mIsDragEffectArea) {
                 PageDesktopDragHandler.getInstance().deleteBlankPageOutsideEffect();
@@ -203,7 +208,9 @@ export default struct FolderItem {
           dragStart: this.dragStart
         })
       }
-      .visibility((this.pageDesktopDragItemInfo.folderId === this.folderItem.folderId || (this.openFolderStatus != 0 && this.getOpenFolder() == this.folderItem.folderId)) ? Visibility.Hidden : Visibility.Visible)
+      .visibility((this.pageDesktopDragItemInfo.folderId ===
+      this.folderItem.folderId || (this.openFolderStatus != 0 && this.getOpenFolder() ==
+      this.folderItem.folderId)) ? Visibility.Hidden : Visibility.Visible)
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
           event.stopPropagation();

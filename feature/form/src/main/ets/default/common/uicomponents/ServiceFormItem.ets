@@ -152,7 +152,7 @@ struct ServiceFormName {
   private mResourceManager = ResourceManager.getInstance();
   private idIndex: number = 0;
 
-  public aboutToAppear(): void  {
+  public aboutToAppear(): void {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateName();
   }

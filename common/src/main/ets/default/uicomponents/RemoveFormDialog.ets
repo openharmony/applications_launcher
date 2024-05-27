@@ -35,7 +35,7 @@ export struct RemoveFormDialog {
     }
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mLayoutViewModel = LayoutViewModel.getInstance();
     this.updateScreenSize();
   }
