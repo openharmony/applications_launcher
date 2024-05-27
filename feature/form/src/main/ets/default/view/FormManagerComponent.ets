@@ -148,7 +148,7 @@ export struct FormManagerComponent {
         Blank()
       }
       .margin({top: StyleConstants.FORM_MGR_STATUS_BAR_HEIGHT * StyleConstants.DPI_RATIO})
-      .width("100%")
+      .width('100%')
       .height(StyleConstants.FORM_MGR_APP_BAR_HEIGHT * StyleConstants.DPI_RATIO)
       Text(this.formAppInfo.appName)
         .fontColor(StyleConstants.DEFAULT_FORM_MGR_FONT_COLOR)

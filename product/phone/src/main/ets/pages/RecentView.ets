@@ -23,7 +23,7 @@ import { RecentMissionsViewModel } from '@ohos/recents';
 import { RecentMissionsSingleLayout } from '@ohos/recents/component';
 import { RecentMissionsDoubleLayout } from '@ohos/recents/component';
 
-const TAG = "RecentView";
+const TAG = 'RecentView';
 
 @Entry
 @Component
@@ -47,7 +47,7 @@ struct RecentView {
   }
 
   onPageHide(): void {
-    Log.showInfo(TAG, `onPageHide`);
+    Log.showInfo(TAG, 'onPageHide');
     this.recentLoadedCompleted = false;
     this.isClickSubComponent = false;
     this.mRecentMissionsStage.onDestroy();

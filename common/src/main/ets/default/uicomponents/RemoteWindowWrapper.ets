@@ -168,17 +168,17 @@ class RemoteVo {
     Log.showInfo(TAG, `calculateStartAppProperty appIconSize: ${this.iconInfo?.appIconSize}, windowBounds: ${JSON.stringify(this.target?.windowBounds)},
     appIconPosition: [${this.iconInfo?.appIconPositionX}, ${this.iconInfo?.appIconPositionY}], appIconPositionY: ${this.startAppTypeFromPageDesktop}`);
     startAppCalculate.startAppCalculateScaleX = this.iconInfo?.appIconSize / px2vp(this.target?.windowBounds.width);
-    startAppCalculate.startAppCalculateTranslateX = this.iconInfo?.appIconPositionX + this.iconInfo?.appIconSize / 2
-    - (px2vp(this.target?.windowBounds.left) + px2vp(this.target?.windowBounds.width) / 2);
+    startAppCalculate.startAppCalculateTranslateX = this.iconInfo?.appIconPositionX + this.iconInfo?.appIconSize / 2 -
+      (px2vp(this.target?.windowBounds.left) + px2vp(this.target?.windowBounds.width) / 2);
 
     if (this.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
       startAppCalculate.startAppCalculateScaleY = this.iconInfo?.appIconHeight / px2vp(this.target?.windowBounds.height);
-      startAppCalculate.startAppCalculateTranslateY = this.iconInfo?.appIconPositionY + this.iconInfo?.appIconHeight / 2
-      - (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
+      startAppCalculate.startAppCalculateTranslateY = this.iconInfo?.appIconPositionY + this.iconInfo?.appIconHeight / 2 -
+        (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
     } else {
       startAppCalculate.startAppCalculateScaleY = this.iconInfo?.appIconSize / px2vp(this.target?.windowBounds.height);
-      startAppCalculate.startAppCalculateTranslateY = this.iconInfo?.appIconPositionY + this.iconInfo?.appIconSize / 2
-      - (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
+      startAppCalculate.startAppCalculateTranslateY = this.iconInfo?.appIconPositionY + this.iconInfo?.appIconSize / 2 -
+        (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
     }
     return startAppCalculate;
   }
@@ -186,16 +186,16 @@ class RemoteVo {
   calculateCloseAppProperty() {
     let closeAppCalculate = new CloseAppCalculate();
     closeAppCalculate.closeAppCalculateScaleX = px2vp(this.target?.windowBounds.width) / this.iconInfo?.appIconSize;
-    closeAppCalculate.closeAppCalculateTranslateX = this.iconInfo?.appIconPositionX + this.iconInfo?.appIconSize / 2
-    - (px2vp(this.target?.windowBounds.left) + px2vp(this.target?.windowBounds.width) / 2);
+    closeAppCalculate.closeAppCalculateTranslateX = this.iconInfo?.appIconPositionX + this.iconInfo?.appIconSize / 2 -
+      (px2vp(this.target?.windowBounds.left) + px2vp(this.target?.windowBounds.width) / 2);
     if (this.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
       closeAppCalculate.closeAppCalculateScaleY = px2vp(this.target?.windowBounds.height) / this.iconInfo?.appIconHeight;
-      closeAppCalculate.closeAppCalculateTranslateY = this.iconInfo?.appIconPositionY + this.iconInfo?.appIconHeight / 2
-      - (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
+      closeAppCalculate.closeAppCalculateTranslateY = this.iconInfo?.appIconPositionY + this.iconInfo?.appIconHeight / 2 -
+        (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
     } else {
       closeAppCalculate.closeAppCalculateScaleY = px2vp(this.target?.windowBounds.height) / this.iconInfo?.appIconSize;
-      closeAppCalculate.closeAppCalculateTranslateY = this.iconInfo?.appIconPositionY + this.iconInfo?.appIconSize / 2
-      - (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
+      closeAppCalculate.closeAppCalculateTranslateY = this.iconInfo?.appIconPositionY + this.iconInfo?.appIconSize / 2 -
+        (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
     }
     return closeAppCalculate;
   }

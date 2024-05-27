@@ -60,7 +60,7 @@ export default struct ResidentLayout {
   getListWidth(): number {
     let residentMaxNum = this.mSmartDockStyleConfig.mMaxDockNum;
     let width = 0.0;
-    if (AppStorage.get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
       Log.showDebug(TAG, `getListWidth mDockPadding: ${this.mSmartDockStyleConfig.mDockPadding}, mMaxNum: ${residentMaxNum}`);
       width = this.mSmartDockStyleConfig.mDockPadding * 2 + residentMaxNum * (this.mSmartDockStyleConfig.mListItemWidth) + (residentMaxNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
       Log.showDebug(TAG, `getListWidth width: ${width}`);
@@ -245,7 +245,7 @@ struct AppItem {
       }
     })
     .onDragStart((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `DragStart`);
+      Log.showInfo(TAG, 'DragStart');
       this.dragItemType = CommonConstants.DRAG_FROM_DOCK;
       this.appInfo.isDragging = true;
       this.smartDragItemInfo = this.appInfo as LauncherDragItemInfo;

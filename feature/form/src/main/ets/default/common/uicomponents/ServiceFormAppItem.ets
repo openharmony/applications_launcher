@@ -60,8 +60,8 @@ export default struct ServiceFormAppItem {
 
   private iconLoadCallback = (image: string): void => {
     Log.showInfo(TAG, `iconLoadCallback  ${this.bundleName}   ${this.abilityName}`);
-    if (SettingsModel.getInstance().getDevice() == CommonConstants.PAD_DEVICE_TYPE
-    && this.bundleName == CommonConstants.LAUNCHER_BUNDLE) {
+    if (SettingsModel.getInstance().getDevice() ==
+    CommonConstants.PAD_DEVICE_TYPE && this.bundleName == CommonConstants.LAUNCHER_BUNDLE) {
       this.icon = this.getDefaultAppIcon();
     } else {
       this.icon = image;

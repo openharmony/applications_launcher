@@ -126,16 +126,16 @@ struct top_bar {
 
 @Component
 struct SettingPage {
-  @State SettingList: SettingItemInfo[] = [];
+  @State settingList: SettingItemInfo[] = [];
 
   aboutToAppear(): void  {
-    this.SettingList = SettingsPresenter.getInstance().getSettingList();
-    Log.showInfo(TAG, `aboutToAppear SettingList length: ${this.SettingList.length}`);
+    this.settingList = SettingsPresenter.getInstance().getSettingList();
+    Log.showInfo(TAG, `aboutToAppear SettingList length: ${this.settingList.length}`);
   }
 
   build() {
     Column() {
-      ForEach(this.SettingList, (item: SettingItemInfo) => {
+      ForEach(this.settingList, (item: SettingItemInfo) => {
         SettingItem({
           ida: item.ida,
           settingName: item.settingName,

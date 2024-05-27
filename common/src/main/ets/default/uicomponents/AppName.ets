@@ -24,7 +24,7 @@ export struct AppName {
   moduleName: string = '';
   labelId: number = 0;
   nameFontColor: string = '#ffffff';
-  @State @Watch("updateName") appName: string = '';
+  @State @Watch('updateName') appName: string = '';
   useCache: boolean = true;
   nameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
   marginTop: number = PresetStyleConstants.DEFAULT_ICON_NAME_GAP;

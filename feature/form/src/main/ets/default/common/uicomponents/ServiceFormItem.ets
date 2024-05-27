@@ -146,7 +146,7 @@ struct ServiceFormName {
   bundleName: string = '';
   moduleName: string = '';
   labelId: number = 0;
-  @State @Watch("updateName") appName: string = '';
+  @State @Watch('updateName') appName: string = '';
   formNum: number = 0;
   useCache: boolean = true;
   private mResourceManager = ResourceManager.getInstance();

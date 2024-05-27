@@ -86,10 +86,10 @@ export struct FolderComponent {
   dragStart: Function = (event: DragEvent) => {};
 
   aboutToAppear(): void  {
-    Log.showInfo(TAG, `aboutToAppear start`);
+    Log.showInfo(TAG, 'aboutToAppear start');
     this.updateShowList();
     this.mSettingsModel = SettingsModel.getInstance();
-    if (this.mSettingsModel.getDevice() != "phone") {
+    if (this.mSettingsModel.getDevice() != 'phone') {
       this.isPad = true;
     }
   }
@@ -144,7 +144,7 @@ export struct FolderComponent {
   }
 
   private updateFolderAnimate() {
-    Log.showInfo(TAG, `updateFolderAnimate start`);
+    Log.showInfo(TAG, 'updateFolderAnimate start');
     if (this.openFolderStatus == 0) {
       this.folderAnimateData = AppStorage.get('folderAnimateData') as FolderAnimateData;
       if (this.mFolderItem.folderId === this.folderAnimateData.folderId &&
@@ -290,7 +290,7 @@ export struct FolderComponent {
                 .width(StyleConstants.PERCENTAGE_100)
                 .height(StyleConstants.PERCENTAGE_100)
                 .onClick((event: ClickEvent) => {
-                  Log.showInfo(TAG, `last item onClick`);
+                  Log.showInfo(TAG, 'last item onClick');
                   this.showAnimate(1.5, 0, true);
                   if (this.onOpenFolderClick) {
                     this.folderAnimateData.folderId = this.mFolderItem.folderId;
@@ -307,7 +307,7 @@ export struct FolderComponent {
             .columnsGap(this.gridGap)
             .rowsGap(this.gridGap)
             .onClick((event: ClickEvent) => {
-              Log.showInfo(TAG, `grid onClick`);
+              Log.showInfo(TAG, 'grid onClick');
               this.showAnimate(1.5, 0, true);
               if (this.onOpenFolderClick) {
                 this.folderAnimateData.folderId = this.mFolderItem.folderId;
@@ -317,11 +317,11 @@ export struct FolderComponent {
               }
             })
             .onTouch((event: TouchEvent) => {
-              Log.showInfo(TAG, "onTouch start");
+              Log.showInfo(TAG, 'onTouch start');
               if (this.onFolderTouch) {
                 this.onFolderTouch(event, this.mFolderItem);
               }
-              Log.showInfo(TAG, "onTouch end");
+              Log.showInfo(TAG, 'onTouch end');
             })
           }
           .height(StyleConstants.PERCENTAGE_100)
