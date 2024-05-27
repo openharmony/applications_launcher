@@ -47,13 +47,13 @@ export default struct ServiceFormAppItem {
   private mAppItemHeight: number = ThisStyleConstants.FORM_SERVICE_APP_ITEM_HEIGHT;
   private idIndex: number = 0;
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateIcon();
     this.updateName();
   }
 
-  private updateIcon(): void  {
+  private updateIcon(): void {
     this.mResourceManager.getAppIconWithCache(this.iconId, this.bundleName, this.moduleName,
     this.iconLoadCallback, this.mDefaultAppIcon);
   }
@@ -68,7 +68,7 @@ export default struct ServiceFormAppItem {
     }
   }
 
-  private updateName(): void  {
+  private updateName(): void {
     if (CheckEmptyUtils.isEmpty(this.appName)) {
       this.mResourceManager.getAppNameWithCache(this.appLabelId, this.bundleName, this.moduleName,
       this.appName, this.appNameLoadCallback);

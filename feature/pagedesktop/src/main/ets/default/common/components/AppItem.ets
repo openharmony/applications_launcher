@@ -132,7 +132,7 @@ export default struct AppItem {
     this.clearForm();
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mPageDesktopViewModel = PageDesktopViewModel.getInstance();
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mPageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
@@ -193,7 +193,8 @@ export default struct AppItem {
         dragStart: this.dragStart
       })
     }
-    .visibility(this.dragItemType === CommonConstants.DRAG_FROM_DESKTOP && this.pageDesktopDragItemInfo.keyName === this.item.keyName ?
+    .visibility(this.dragItemType ===
+      CommonConstants.DRAG_FROM_DESKTOP && this.pageDesktopDragItemInfo.keyName === this.item.keyName ?
       Visibility.None : Visibility.Visible)
     .onMouse((event: MouseEvent) => {
       if (event.button == MouseButton.Right) {
@@ -224,7 +225,8 @@ export default struct AppItem {
     .onTouch((event: TouchEvent) => {
       Log.showDebug(TAG, `onTouch event type: ${event.type}, x: ${event.touches[0].windowX}, y: ${event.touches[0].windowY}`);
       if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
-        let mIsDragEffectArea = PageDesktopDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
+        let mIsDragEffectArea =
+        PageDesktopDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
         Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
         if (!mIsDragEffectArea) {
           this.pageDesktopDragItemInfo = new LauncherDragItemInfo();

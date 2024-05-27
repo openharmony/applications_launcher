@@ -31,17 +31,17 @@ import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 const TAG = 'RemoteWindowWrapper';
 
 class StartAppCalculate {
-  startAppCalculateScaleX: number = 0;
-  startAppCalculateScaleY: number = 0;
-  startAppCalculateTranslateX: number = 0;
-  startAppCalculateTranslateY: number = 0;
+  public startAppCalculateScaleX: number = 0;
+  public startAppCalculateScaleY: number = 0;
+  public startAppCalculateTranslateX: number = 0;
+  public startAppCalculateTranslateY: number = 0;
 }
 
 class CloseAppCalculate {
-  closeAppCalculateScaleX: number = 0;
-  closeAppCalculateScaleY: number = 0;
-  closeAppCalculateTranslateX: number = 0;
-  closeAppCalculateTranslateY: number = 0;
+  public closeAppCalculateScaleX: number = 0;
+  public closeAppCalculateScaleY: number = 0;
+  public closeAppCalculateTranslateX: number = 0;
+  public closeAppCalculateTranslateY: number = 0;
 }
 
 @Observed
@@ -55,29 +55,29 @@ class RemoteVo {
   public appItemInfo: StartAppItemInfo;
   public count: number = 0;
 
-  mScreenWidth: number;
-  mScreenHeight: number;
+  public mScreenWidth: number;
+  public mScreenHeight: number;
 
-  startAppTypeFromPageDesktop: number;
+  public startAppTypeFromPageDesktop: number;
 
-  remoteWindowScaleX: number = 0;
-  remoteWindowScaleY: number = 0;
-  remoteWindowTranslateX: number = 0;
-  remoteWindowTranslateY: number = 0;
-  remoteWindowWindowAlpha: number = 0;
-  remoteWindowRadius: number = 0;
+  public remoteWindowScaleX: number = 0;
+  public remoteWindowScaleY: number = 0;
+  public remoteWindowTranslateX: number = 0;
+  public remoteWindowTranslateY: number = 0;
+  public remoteWindowWindowAlpha: number = 0;
+  public remoteWindowRadius: number = 0;
 
-  fromRemoteWindowScaleX: number = 1.0;
-  fromRemoteWindowScaleY: number = 1.0;
-  fromRemoteWindowTranslateX: number = 0;
-  fromRemoteWindowTranslateY: number = 0;
-  fromRemoteWindowWindowAlpha: number = 1.0;
+  public fromRemoteWindowScaleX: number = 1.0;
+  public fromRemoteWindowScaleY: number = 1.0;
+  public fromRemoteWindowTranslateX: number = 0;
+  public fromRemoteWindowTranslateY: number = 0;
+  public fromRemoteWindowWindowAlpha: number = 1.0;
 
-  startAppIconScaleX: number = 0;
-  startAppIconScaleY: number = 0;
-  startAppIconTranslateX: number = 0;
-  startAppIconTranslateY: number = 0;
-  startAppIconWindowAlpha: number = 0;
+  public startAppIconScaleX: number = 0;
+  public startAppIconScaleY: number = 0;
+  public startAppIconTranslateX: number = 0;
+  public startAppIconTranslateY: number = 0;
+  public startAppIconWindowAlpha: number = 0;
 
   constructor(
     remoteAnimationType: number,
@@ -172,7 +172,8 @@ class RemoteVo {
       (px2vp(this.target?.windowBounds.left) + px2vp(this.target?.windowBounds.width) / 2);
 
     if (this.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
-      startAppCalculate.startAppCalculateScaleY = this.iconInfo?.appIconHeight / px2vp(this.target?.windowBounds.height);
+      startAppCalculate.startAppCalculateScaleY =
+        this.iconInfo?.appIconHeight / px2vp(this.target?.windowBounds.height);
       startAppCalculate.startAppCalculateTranslateY = this.iconInfo?.appIconPositionY + this.iconInfo?.appIconHeight / 2 -
         (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
     } else {
@@ -189,7 +190,8 @@ class RemoteVo {
     closeAppCalculate.closeAppCalculateTranslateX = this.iconInfo?.appIconPositionX + this.iconInfo?.appIconSize / 2 -
       (px2vp(this.target?.windowBounds.left) + px2vp(this.target?.windowBounds.width) / 2);
     if (this.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
-      closeAppCalculate.closeAppCalculateScaleY = px2vp(this.target?.windowBounds.height) / this.iconInfo?.appIconHeight;
+      closeAppCalculate.closeAppCalculateScaleY =
+        px2vp(this.target?.windowBounds.height) / this.iconInfo?.appIconHeight;
       closeAppCalculate.closeAppCalculateTranslateY = this.iconInfo?.appIconPositionY + this.iconInfo?.appIconHeight / 2 -
         (px2vp(this.target?.windowBounds.top) + px2vp(this.target?.windowBounds.height) / 2);
     } else {
@@ -202,11 +204,13 @@ class RemoteVo {
 }
 
 class SelfWindowAnimationController extends WindowAnimationControllerImpl {
-  mCloseAppManager: CloseAppManager;
-  mLastRemoteVo: RemoteVo;
-  calculateAppProperty: (remoteVo: RemoteVo, finishCallback: windowAnimationManager.WindowAnimationFinishedCallback) => void
-  getRemoteWindowVo: (remoteWindowKey: string) => RemoteVo | null;
-  pushRemoteVoIntoList: (remoteVo: RemoteVo) => void;
+  public mCloseAppManager: CloseAppManager;
+  public mLastRemoteVo: RemoteVo;
+  public calculateAppProperty: (
+    remoteVo: RemoteVo, finishCallback: windowAnimationManager.WindowAnimationFinishedCallback
+  ) => void
+  public getRemoteWindowVo: (remoteWindowKey: string) => RemoteVo | null;
+  public pushRemoteVoIntoList: (remoteVo: RemoteVo) => void;
 
   constructor(mCloseAppManager: CloseAppManager, mLastRemoteVo: RemoteVo,
               getRemoteWindowVo: (remoteWindowKey: string) => RemoteVo | null,
@@ -223,7 +227,8 @@ class SelfWindowAnimationController extends WindowAnimationControllerImpl {
   onStartAppFromLauncher(startingWindowTarget: windowAnimationManager.WindowAnimationTarget,
                          finishCallback: windowAnimationManager.WindowAnimationFinishedCallback) {
     Log.showInfo(TAG, `remote window animaion onStartAppFromLauncher`);
-    const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
+    const remoteWindowKey =
+      startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
     const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
     const appItemInfo: StartAppItemInfo = AppStorage.get('startAppItemInfo') as StartAppItemInfo;
     const startAppIconInfo: StartAppIconInfo = AppStorage.get('startAppIconInfo') as StartAppIconInfo;
@@ -256,7 +261,8 @@ class SelfWindowAnimationController extends WindowAnimationControllerImpl {
   onStartAppFromRecent(startingWindowTarget: windowAnimationManager.WindowAnimationTarget,
                        finishCallback: windowAnimationManager.WindowAnimationFinishedCallback) {
     Log.showInfo(TAG, `remote window animaion onStartAppFromRecent`);
-    const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
+    const remoteWindowKey =
+      startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
     const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
     const appItemInfo: StartAppItemInfo = AppStorage.get('startAppItemInfo') as StartAppItemInfo;
     const startAppIconInfo: StartAppIconInfo = AppStorage.get('startAppIconInfo') as StartAppIconInfo;
@@ -289,7 +295,8 @@ class SelfWindowAnimationController extends WindowAnimationControllerImpl {
   onStartAppFromOther(startingWindowTarget: windowAnimationManager.WindowAnimationTarget,
                       finishCallback: windowAnimationManager.WindowAnimationFinishedCallback) {
     Log.showInfo(TAG, `remote window animaion onStartAppFromOther`);
-    const remoteWindowKey = startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
+    const remoteWindowKey =
+      startingWindowTarget.bundleName + startingWindowTarget.abilityName + startingWindowTarget.missionId;
     const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
     AppStorage.setOrCreate('startAppItemInfo', {} as StartAppItemInfo);
     AppStorage.setOrCreate('startAppIconInfo', {} as StartAppIconInfo);
@@ -347,7 +354,8 @@ class SelfWindowAnimationController extends WindowAnimationControllerImpl {
     Log.showInfo(TAG, `remote window animaion onMinimizeWindow`);
     const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
     const appInfo: StartAppInfo = this.mCloseAppManager.getAppInfo(minimizingWindowTarget);
-    const remoteWindowKey = minimizingWindowTarget.bundleName + minimizingWindowTarget.abilityName + minimizingWindowTarget.missionId;
+    const remoteWindowKey =
+      minimizingWindowTarget.bundleName + minimizingWindowTarget.abilityName + minimizingWindowTarget.missionId;
     let remoteVo: RemoteVo | null = this.getRemoteWindowVo(remoteWindowKey);
     if (appInfo.appItemInfo?.page) {
       AppStorage.setOrCreate('pageIndex', appInfo.appItemInfo?.page);
@@ -382,7 +390,8 @@ class SelfWindowAnimationController extends WindowAnimationControllerImpl {
     Log.showInfo(TAG, `remote window animaion onCloseWindow`);
     const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
     const appInfo: StartAppInfo = this.mCloseAppManager.getAppInfo(closingWindowTarget);
-    const remoteWindowKey = closingWindowTarget.bundleName + closingWindowTarget.abilityName + closingWindowTarget.missionId;
+    const remoteWindowKey =
+      closingWindowTarget.bundleName + closingWindowTarget.abilityName + closingWindowTarget.missionId;
     let remoteVo: RemoteVo | null = this.getRemoteWindowVo(remoteWindowKey);
     if (remoteVo) {
       remoteVo.remoteAnimationType = RemoteConstants.TYPE_MINIMIZE_WINDOW;
@@ -492,17 +501,22 @@ export struct RemoteWindowWrapper {
         remoteVo.remoteWindowTranslateX = 0.0;
         remoteVo.remoteWindowTranslateY = 0.0;
         remoteVo.startAppIconScaleX = remoteVo.mScreenWidth / remoteVo.iconInfo?.appIconSize;
-        remoteVo.startAppIconTranslateX = remoteVo.mScreenWidth / 2 - remoteVo.iconInfo?.appIconPositionX - remoteVo.iconInfo?.appIconSize / 2;
+        remoteVo.startAppIconTranslateX =
+          remoteVo.mScreenWidth / 2 - remoteVo.iconInfo?.appIconPositionX - remoteVo.iconInfo?.appIconSize / 2;
         remoteVo.remoteWindowRadius = 0;
         if (remoteVo.startAppTypeFromPageDesktop === CommonConstants.OVERLAY_TYPE_CARD) {
           remoteVo.startAppIconScaleY = remoteVo.mScreenHeight / remoteVo.iconInfo?.appIconHeight;
-          remoteVo.startAppIconTranslateY = remoteVo.mScreenHeight / 2 + px2vp(remoteVo.target.windowBounds.top) - remoteVo.iconInfo?.appIconPositionY - remoteVo.iconInfo?.appIconHeight / 2;
+          remoteVo.startAppIconTranslateY =
+            remoteVo.mScreenHeight / 2 + px2vp(remoteVo.target.windowBounds.top) -
+            remoteVo.iconInfo?.appIconPositionY - remoteVo.iconInfo?.appIconHeight / 2;
         } else {
           remoteVo.startAppIconScaleY = remoteVo.mScreenHeight / remoteVo.iconInfo?.appIconSize;
-          remoteVo.startAppIconTranslateY = remoteVo.mScreenHeight / 2 + px2vp(remoteVo.target.windowBounds.top) - remoteVo.iconInfo?.appIconPositionY - remoteVo.iconInfo?.appIconSize / 2;
+          remoteVo.startAppIconTranslateY =
+          remoteVo.mScreenHeight / 2 + px2vp(remoteVo.target.windowBounds.top) -
+          remoteVo.iconInfo?.appIconPositionY - remoteVo.iconInfo?.appIconSize / 2;
         }
       })
-    } else if (remoteVo.remoteAnimationType  == RemoteConstants.TYPE_MINIMIZE_WINDOW) {
+    } else if (remoteVo.remoteAnimationType == RemoteConstants.TYPE_MINIMIZE_WINDOW) {
       Trace.start(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
       const res = remoteVo.calculateCloseAppProperty();
       const callback = finishCallback;
@@ -544,8 +558,8 @@ export struct RemoteWindowWrapper {
         remoteVo.startAppIconWindowAlpha = 1.0;
         remoteVo.remoteWindowWindowAlpha = 0;
       })
-    } else if (remoteVo.remoteAnimationType  == RemoteConstants.TYPE_CLOSE_WINDOW) {
-    } else if (remoteVo.remoteAnimationType  == RemoteConstants.TYPE_APP_TRANSITION) {
+    } else if (remoteVo.remoteAnimationType == RemoteConstants.TYPE_CLOSE_WINDOW) {
+    } else if (remoteVo.remoteAnimationType == RemoteConstants.TYPE_APP_TRANSITION) {
       const callback = finishCallback;
       animateTo({
         duration: 300,
@@ -556,7 +570,8 @@ export struct RemoteWindowWrapper {
       }, () => {
         remoteVo.remoteWindowRadius = 0;
         remoteVo.remoteWindowTranslateX = 0;
-        remoteVo.fromRemoteWindowTranslateX = px2vp(remoteVo.fromWindowTarget?.windowBounds.left - remoteVo.fromWindowTarget?.windowBounds.width);
+        remoteVo.fromRemoteWindowTranslateX =
+        px2vp(remoteVo.fromWindowTarget?.windowBounds.left - remoteVo.fromWindowTarget?.windowBounds.width);
       })
 
       animateTo({
@@ -662,7 +677,9 @@ export struct StartAppFromLauncherRemoteWindow {
         .translate({ x: this.targetInfo.remoteWindowTranslateX, y: this.targetInfo.remoteWindowTranslateY })
         .scale({ x: this.targetInfo.remoteWindowScaleX, y: this.targetInfo.remoteWindowScaleY })
         .opacity(this.targetInfo.remoteWindowWindowAlpha)
-        .position({ x: px2vp(this.targetInfo.target?.windowBounds.left), y: px2vp(this.targetInfo.target?.windowBounds.top) })
+        .position({
+          x: px2vp(this.targetInfo.target?.windowBounds.left), y: px2vp(this.targetInfo.target?.windowBounds.top)
+        })
         .width(px2vp(this.targetInfo.target?.windowBounds.width))
         .height(px2vp(this.targetInfo.target?.windowBounds.height))
         .borderRadius(this.targetInfo.remoteWindowRadius)
@@ -675,7 +692,7 @@ export struct StartAppFromLauncherRemoteWindow {
 }
 
 class StartAppItemInfo extends LauncherDragItemInfo {
-  icon?: ResourceStr;
+  public icon?: ResourceStr;
 }
 
 interface StartAppIconInfo {
@@ -708,7 +725,7 @@ export struct StartAppTransitionRemoteWindow {
   private mFinishCallback?: windowAnimationManager.WindowAnimationFinishedCallback;
   private remoteWindowKey?: string;
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.target = this.targetInfo.target;
     this.mFromWindowTarget = this.targetInfo.fromWindowTarget;
     this.mFinishCallback = this.targetInfo.finishCallback;

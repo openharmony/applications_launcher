@@ -31,7 +31,7 @@ export default struct RecentMissionAppName {
   @Prop labelId: number;
   private mResourceManager = ResourceManager.getInstance();
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateName();
   }

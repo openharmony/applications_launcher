@@ -80,9 +80,9 @@ export struct RecentMissionsDoubleLayout {
       .width(RecentsStyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
       .height(RecentsStyleConstants.DOUBLE_LIST_GRID_HEIGHT_PERCENTAGE)
 
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center }){
-        Stack(){
-          Column(){
+      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center }) {
+        Stack() {
+          Column() {
           }
           .width(RecentsStyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)
           .height(RecentsStyleConstants.RECENT_DELETE_IMAGE_COLUMN_SIZE)

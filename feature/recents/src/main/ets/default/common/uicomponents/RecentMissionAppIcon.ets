@@ -36,7 +36,7 @@ export default struct RecentMissionAppIcon {
   private mDefaultAppIcon?: ResourceStr;
   private mRecentMissionsViewModel: RecentMissionsViewModel = RecentMissionsViewModel.getInstance();
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mDefaultAppIcon = RecentsStyleConstants.DEFAULT_APP_ICON_IMAGE;
     this.updateIcon();
     this.mIsSingleLayout = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ? true : false;

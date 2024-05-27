@@ -23,7 +23,7 @@ const TAG = 'AppMenu';
 
 @Component
 export struct AppMenu {
-  menuInfoList: Array<MenuInfo> = new Array<MenuInfo>();
+  menuInfoList: Array<MenuInfo> = [];
   getMenuInfoList?: Function;
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
   fixedMenuList: Array<MenuInfo> = [];
@@ -36,8 +36,8 @@ export struct AppMenu {
     if (this.getMenuInfoList) {
       this.menuInfoList = this.getMenuInfoList();
     }
-    this.fixedMenuList = new Array<MenuInfo>();
-    this.dynamicMenuList = new Array<MenuInfo>();
+    this.fixedMenuList = [];
+    this.dynamicMenuList = [];
     for (let menuInfo of this.menuInfoList) {
       if (menuInfo.menuType == CommonConstants.MENU_TYPE_FIXED) {
         this.fixedMenuList.push(menuInfo);
@@ -48,7 +48,7 @@ export struct AppMenu {
     this.isBothTypeMenuExist = this.fixedMenuList.length > 0 && this.dynamicMenuList.length > 0;
   }
 
-  aboutToDisappear(): void  {
+  aboutToDisappear(): void {
     Log.showInfo(TAG, 'aboutToDisappear start');
     this.fixedMenuList = [];
     this.dynamicMenuList = [];
@@ -108,7 +108,7 @@ struct HorizontalMenuItem {
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
   closeMenu: Function = () => {};
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateIcon();
     this.updateName();
