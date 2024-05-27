@@ -37,7 +37,7 @@ import { PageDesktopStartAppHandler } from '../PageDesktopStartAppHandler';
 
 const DOUBLE_CLICK_COUNT = 2
 
-const TAG = "AppItem";
+const TAG = 'AppItem';
 
 interface StartAppItemInfo {
   bundleName?: string;
@@ -259,7 +259,7 @@ export default struct AppItem {
    */
   private setStartAppInfo() {
     Log.showInfo(TAG, `app setStartAppInfo ${this.mIconSize}`);
-    Trace.start("setStartAppInfo");
+    Trace.start('setStartAppInfo');
     const appInfo: StartAppItemInfo = {
       bundleName: this.item.bundleName,
       abilityName: this.item.abilityName,
@@ -275,6 +275,6 @@ export default struct AppItem {
     AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);
     this.mPageDesktopStartAppHandler.setAppIconSize(this.mIconSize);
     this.mPageDesktopStartAppHandler.setAppIconInfo();
-    Trace.end("setStartAppInfo");
+    Trace.end('setStartAppInfo');
   }
 }

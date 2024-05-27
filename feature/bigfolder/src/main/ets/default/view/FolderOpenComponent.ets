@@ -71,7 +71,7 @@ let mBigFolderStartAppHandler: BigFolderStartAppHandler;
 @Component
 export struct FolderOpenComponent {
   @State withBlur: boolean = true;
-  @StorageLink('openFolderPageIndex') PageIndex: number = 0;
+  @StorageLink('openFolderPageIndex') pageIndex: number = 0;
   @StorageLink('openFolderStatus') @Watch('updateFolderData') openFolderStatus: number = BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
   @State overLayAlpha: number = 0.3;
   @State isRenaming: boolean = false;
@@ -79,7 +79,7 @@ export struct FolderOpenComponent {
   @State newFolderName: string = '';
 
   aboutToAppear(): void {
-    Log.showInfo(TAG, `aboutToAppear start`);
+    Log.showInfo(TAG, 'aboutToAppear start');
     mBigFolderViewModel = BigFolderViewModel.getInstance();
     mBigFolderStartAppHandler = BigFolderStartAppHandler.getInstance();
     this.updateStyle();
@@ -87,7 +87,7 @@ export struct FolderOpenComponent {
     mBigFolderViewModel.getFolderAddAppList(this.mFolderInfo.folderId);
     mBigFolderViewModel.getFolderAppList(this.mFolderInfo.folderId);
     this.newFolderName = this.mFolderInfo.folderName;
-    Log.showInfo(TAG, `aboutToAppear end`);
+    Log.showInfo(TAG, 'aboutToAppear end');
   }
 
   private updateStyle() {
@@ -113,7 +113,7 @@ export struct FolderOpenComponent {
   }
 
   private updateFolderData() {
-    Log.showDebug(TAG, `updateFolderData start`);
+    Log.showDebug(TAG, 'updateFolderData start');
     if (this.openFolderStatus == BigFolderConstants.OPEN_FOLDER_STATUS_STATIC) {
       return;
     }
@@ -131,16 +131,16 @@ export struct FolderOpenComponent {
     }
     AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_STATIC);
     AppStorage.setOrCreate('isDraging', false);
-    Log.showDebug(TAG, `updateFolderData end`);
+    Log.showDebug(TAG, 'updateFolderData end');
   }
 
   private hideOpenFolder() {
-    Log.showDebug(TAG, `hideOpenFolder start`);
+    Log.showDebug(TAG, 'hideOpenFolder start');
     this.isRenaming = false;
     this.withBlur = false;
     this.openFolderStatus = BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE;
     this.showAnimate(0.3, Curve.EaseOut);
-    Log.showDebug(TAG, `hideOpenFolder end`);
+    Log.showDebug(TAG, 'hideOpenFolder end');
   }
 
   private showOpenFolder() {
@@ -241,19 +241,19 @@ export struct FolderOpenComponent {
           }
           .indicator(Indicator.dot().selectedColor(StyleConstants.DEFAULT_FONT_COLOR))
           .onClick(() => {
-            Log.showDebug(TAG, `Swiper click`);
+            Log.showDebug(TAG, 'Swiper click');
             this.saveText();
           })
           .height(mSwiperHeight)
           .width(mGridWidth)
           .duration(80)
-          .index(this.PageIndex)
+          .index(this.pageIndex)
           .loop(false)
           .onChange((index) => {
             Log.showDebug(TAG, `onChange :${index}`);
-            if (this.PageIndex !== index) {
+            if (this.pageIndex !== index) {
               this.mFolderInfo = mBigFolderViewModel.addAddIcon(this.mFolderInfo);
-              this.PageIndex = index;
+              this.pageIndex = index;
             }
           })
         }
@@ -304,7 +304,7 @@ struct FolderSwiperPage {
   @Prop newFolderName: string;
   private mFolderInfo: FolderData = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
   private mAppInfo: AppItemInfo[] = [];
-  private ColumnsTemplate: string = '';
+  private columnsTemplate: string = '';
   private RowsTemplate: string = '';
   private mGridGap = BigFolderStyleConfig.getInstance().mOpenFolderGridGap;
   @State mBigFolderViewModel: BigFolderViewModel = mBigFolderViewModel;
@@ -329,10 +329,10 @@ struct FolderSwiperPage {
 
     let column = openFolderConfig.column as number;
     let row = openFolderConfig.row as number;
-    this.ColumnsTemplate = '';
+    this.columnsTemplate = '';
     this.RowsTemplate = '';
     for (let i = 0; i < column; i++) {
-      this.ColumnsTemplate += '1fr '
+      this.columnsTemplate += '1fr '
     }
     for (let i = 0; i < row; i++) {
       this.RowsTemplate += '1fr '
@@ -393,7 +393,7 @@ struct FolderSwiperPage {
               .width(BigFolderStyleConstants.PERCENTAGE_100)
               .height(BigFolderStyleConstants.PERCENTAGE_100)
               .onClick(() => {
-                Log.showDebug(TAG, `add app to this folder`);
+                Log.showDebug(TAG, 'add app to this folder');
                 this.folderDialogController?.open();
               })
             } else {
@@ -413,7 +413,7 @@ struct FolderSwiperPage {
         Log.showDebug(TAG, 'Grid click');
         this.saveText();
       })
-      .columnsTemplate(this.ColumnsTemplate)
+      .columnsTemplate(this.columnsTemplate)
       .rowsTemplate(this.RowsTemplate)
     }
     .width(mGridWidth)
@@ -454,8 +454,8 @@ struct FolderAppItem {
   @StorageLink('uninstallAppInfo') appInfo: AppItemInfo = new AppItemInfo();
   @StorageLink('selectDesktopAppItem') selectDesktopAppItem: string = '';
   @State item: AppItemInfo = new AppItemInfo();
-  private ColumnsTemplate: string = '';
-  private RowsTemplate: string = '';
+  private columnsTemplate: string = '';
+  private rowsTemplate: string = '';
   private isSwappingPage = false;
   private willCloseFolder: boolean = false;
   private mFolderInfo: FolderData = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
@@ -628,10 +628,10 @@ struct FolderAppItem {
    */
   setStartAppInfo() {
     if (CheckEmptyUtils.isEmpty(this.item)) {
-      Log.showError(TAG, `setStartAppInfo with item`)
+      Log.showError(TAG, 'setStartAppInfo with item')
       return;
     }
-    Log.showInfo(TAG, `app setStartAppInfo`);
+    Log.showInfo(TAG, 'app setStartAppInfo');
     if (AppStorage.get('deviceType') === CommonConstants.PAD_DEVICE_TYPE) {
       AppStorage.setOrCreate('openFolderStatus', BigFolderConstants.OPEN_FOLDER_STATUS_CLOSE);
     }

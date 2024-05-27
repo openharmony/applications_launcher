@@ -30,7 +30,7 @@ import { SmartDockStyleConfig } from '@ohos/smartdock';
 import PhonePageDesktopGridStyleConfig from '../common/PhonePageDesktopGridStyleConfig';
 import { FormStyleConfig } from '@ohos/form';
 
-const TAG = "EntryView";
+const TAG = 'EntryView';
 
 interface LocalEventListener {
   onReceiveEvent: (event: string, params: string) => void;
@@ -138,7 +138,7 @@ struct EntryView {
         .onAreaChange((oldValue: Area, newValue: Area) => {
           Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
           if (JSON.stringify(oldValue) == JSON.stringify(newValue)) return;
-          if (this.navigationBarStatus == "1") {
+          if (this.navigationBarStatus == '1') {
             setTimeout(() => {
               SettingsModel.getInstance().setValue(this.navigationBarStatus);
             }, 50)

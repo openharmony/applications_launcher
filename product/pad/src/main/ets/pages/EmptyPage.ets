@@ -15,7 +15,7 @@
 
 import { Log } from '@ohos/common';
 
-const TAG = "EmptyPage";
+const TAG = 'EmptyPage';
 
 @Entry
 @Component

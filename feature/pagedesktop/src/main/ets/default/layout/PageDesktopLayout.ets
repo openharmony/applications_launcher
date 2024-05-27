@@ -25,7 +25,7 @@ import { PageDesktopViewModel } from '../viewmodel/PageDesktopViewModel';
 import { PageDesktopCloseAppHandler } from '../common/PageDesktopCloseAppHandler';
 
 let mPageDesktopViewModel: PageDesktopViewModel | undefined = undefined;
-const TAG = "PageDesktopLayout";
+const TAG = 'PageDesktopLayout';
 
 @Component
 export struct PageDesktopLayout {

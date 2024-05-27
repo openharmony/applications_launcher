@@ -22,7 +22,7 @@ const TAG = 'Recent-RecentMissionAppName';
  */
 @Component
 export default struct RecentMissionAppName {
-  @Prop @Watch("updateName") appName: string;
+  @Prop @Watch('updateName') appName: string;
   @State nameSize: number = RecentsStyleConstants.DEFAULT_FONT_SIZE;
   @State nameMargin: number = RecentsStyleConstants.APP_NAME_MARGIN;
   @State name: string = ''

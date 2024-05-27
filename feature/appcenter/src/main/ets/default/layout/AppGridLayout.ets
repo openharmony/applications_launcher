@@ -73,7 +73,7 @@ export struct AppGridLayout {
   }
 
   aboutToDisappear(): void {
-    Log.showInfo(TAG, "aboutToDisappear");
+    Log.showInfo(TAG, 'aboutToDisappear');
     this.mDialogController = null;
   }
 
@@ -81,7 +81,7 @@ export struct AppGridLayout {
     this.updateAppCenterScreen();
   }
   updateAppCenterScreen(): void {
-    Log.showInfo(TAG, "aboutToAppear")
+    Log.showInfo(TAG, 'aboutToAppear')
     this.mAppGridViewModel = AppGridViewModel.getInstance();
     this.mAppGridViewModel.getAppList();
     this.mAppCenterGridStyleConfig = this.mAppGridViewModel.getAppGridStyleConfig();
@@ -114,7 +114,7 @@ export struct AppGridLayout {
 
     let open = new MenuInfo();
     open.menuType = CommonConstants.MENU_TYPE_FIXED;
-    open.menuImgSrc = "/common/pics/ic_public_add_norm.svg";
+    open.menuImgSrc = '/common/pics/ic_public_add_norm.svg';
     open.menuText = $r('app.string.app_menu_open');
     open.onMenuClick = () => {
       Log.showInfo(TAG,`open.OnMenuClick--:${JSON.stringify(appInfo)}`);
@@ -127,17 +127,17 @@ export struct AppGridLayout {
 
     let addToDockMenu = new MenuInfo();
     addToDockMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
-    addToDockMenu.menuImgSrc = "/common/pics/ic_public_copy.svg";
+    addToDockMenu.menuImgSrc = '/common/pics/ic_public_copy.svg';
     addToDockMenu.menuText = $r('app.string.app_center_menu_add_dock');
     addToDockMenu.onMenuClick = () => {
-      Log.showDebug(TAG, "Launcher click menu item add to smartDock entry");
+      Log.showDebug(TAG, 'Launcher click menu item add to smartDock entry');
       localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_DOCK_ITEM_ADD, appInfo);
     };
     menuInfoList.push(addToDockMenu);
 
     let addToDeskMenu = new MenuInfo();
     addToDeskMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
-    addToDeskMenu.menuImgSrc = "/common/pics/ic_public_copy.svg";
+    addToDeskMenu.menuImgSrc = '/common/pics/ic_public_copy.svg';
     addToDeskMenu.menuText = $r('app.string.app_center_menu_add_desktop');
     addToDeskMenu.onMenuClick = () => {
       Log.showDebug(TAG, 'click menu item add to pageDesk entry');
@@ -147,7 +147,7 @@ export struct AppGridLayout {
 
     let uninstallMenu = new MenuInfo();
     uninstallMenu.menuType = CommonConstants.MENU_TYPE_FIXED;
-    uninstallMenu.menuImgSrc = "/common/pics/ic_public_delete.svg";
+    uninstallMenu.menuImgSrc = '/common/pics/ic_public_delete.svg';
     uninstallMenu.menuText = $r('app.string.uninstall');
     uninstallMenu.onMenuClick = () => {
       Log.showDebug(TAG, `click menu item uninstall: ${JSON.stringify(appInfo)}`);
@@ -213,7 +213,7 @@ export struct AppGridLayout {
   private setStartAppInfo(item: StartAppInfo) {
     Log.showInfo(TAG, `appcenter StartAppInfo:${JSON.stringify(item)}`);
     if (CheckEmptyUtils.isEmpty(item)) {
-      Log.showError(TAG, `setStartAppInfo with item`)
+      Log.showError(TAG, 'setStartAppInfo with item')
       return;
     }
     AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_APP_ICON);

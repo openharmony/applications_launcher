@@ -25,7 +25,7 @@ const TAG = 'Recent-RecentMissionAppIcon';
 @Component
 export default struct RecentMissionAppIcon {
   @State iconSize: number = 0;
-  @State @Watch("updateIcon") appIcon: number = 0;
+  @State @Watch('updateIcon') appIcon: number = 0;
   @State bundleName: string = '';
   @State moduleName: string = '';
   @State labelId: number = 0;
@@ -38,7 +38,6 @@ export default struct RecentMissionAppIcon {
 
   aboutToAppear(): void  {
     this.mDefaultAppIcon = RecentsStyleConstants.DEFAULT_APP_ICON_IMAGE;
-    // this.icon = this.mDefaultAppIcon;
     this.updateIcon();
     this.mIsSingleLayout = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ? true : false;
   }

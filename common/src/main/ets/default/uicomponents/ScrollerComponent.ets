@@ -14,7 +14,7 @@
  */
 
 import { StyleConstants } from '../constants/StyleConstants';
-import { amsMissionManager }from '../manager/AmsMissionManager'
+import { amsMissionManager } from '../manager/AmsMissionManager'
 
 interface DataList {
   name: string;
@@ -82,7 +82,7 @@ export struct ScrollerComponent {
                   .margin({ right: StyleConstants.DEFAULT_4 })
                   .onClick((event: ClickEvent) => {
                     if (this.dataList.length <= 1) {
-                      this.updateData(false, "", () => amsMissionManager.clearMission(item.missionId));
+                      this.updateData(false, '', () => amsMissionManager.clearMission(item.missionId));
                       return
                     }
                     this.updateData(true, item.bundleName, () => amsMissionManager.clearMission(item.missionId));

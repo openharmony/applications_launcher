@@ -72,7 +72,7 @@ export struct AppMenu {
       if (this.isBothTypeMenuExist) {
         Divider()
           .vertical(false)
-          .color((this.menuMode == CommonConstants.MENU_UI_MODE_LIGHT) ? "#33000000" : "#33ffffff")
+          .color((this.menuMode == CommonConstants.MENU_UI_MODE_LIGHT) ? '#33000000' : '#33ffffff')
           .strokeWidth(1)
       }
 
@@ -102,7 +102,7 @@ export struct AppMenu {
 @Component
 struct HorizontalMenuItem {
   @State shortcutIcon: string = StyleConstants.DEFAULT_ICON;
-  @State shortcutName: string = "";
+  @State shortcutName: string = '';
   private mResourceManager = ResourceManager.getInstance();
   menuInfo: MenuInfo = new MenuInfo();
   menuMode: number = CommonConstants.MENU_UI_MODE_LIGHT;
@@ -126,7 +126,7 @@ struct HorizontalMenuItem {
   }
 
   public updateIcon() {
-    if (this.menuInfo.shortcutIconId != -1 && this.menuInfo.menuImgSrc != "" && this.menuInfo.menuImgSrc != null) {
+    if (this.menuInfo.shortcutIconId != -1 && this.menuInfo.menuImgSrc != '' && this.menuInfo.menuImgSrc != null) {
       this.mResourceManager.getAppIconWithCache(this.menuInfo.shortcutIconId, this.menuInfo.bundleName,
         this.menuInfo.moduleName, this.shortcutIconLoadCallback, StyleConstants.DEFAULT_ICON);
     } else {
@@ -135,7 +135,7 @@ struct HorizontalMenuItem {
   }
 
   public updateName() {
-    if (this.menuInfo.shortcutLabelId != -1 && this.menuInfo.menuText != "" && this.menuInfo.menuText != null && this.mResourceManager) {
+    if (this.menuInfo.shortcutLabelId != -1 && this.menuInfo.menuText != '' && this.menuInfo.menuText != null && this.mResourceManager) {
       this.mResourceManager.getAppNameWithCache(this.menuInfo.shortcutLabelId, this.menuInfo.bundleName,
         this.menuInfo.moduleName, this.shortcutName, this.shortcutNameLoadCallback);
     } else {
@@ -145,7 +145,7 @@ struct HorizontalMenuItem {
 
   build() {
     Row() {
-      if (this.shortcutIcon != null && this.shortcutIcon != "") {
+      if (this.shortcutIcon != null && this.shortcutIcon != '') {
         Image(this.shortcutIcon)
           .objectFit(ImageFit.Contain)
           .height(StyleConstants.DEFAULT_20)
@@ -154,7 +154,7 @@ struct HorizontalMenuItem {
             left: 12
           })
       } else {
-        Image("")
+        Image('')
           .objectFit(ImageFit.Contain)
           .height(StyleConstants.DEFAULT_20)
           .width(StyleConstants.DEFAULT_20)
@@ -164,7 +164,7 @@ struct HorizontalMenuItem {
           })
       }
       Text(this.shortcutName)
-        .fontColor((this.menuMode == CommonConstants.MENU_UI_MODE_LIGHT) ? "#e5000000" : "#e5ffffff")
+        .fontColor((this.menuMode == CommonConstants.MENU_UI_MODE_LIGHT) ? '#e5000000' : '#e5ffffff')
         .fontSize(14)
         .height(StyleConstants.DEFAULT_20)
         .margin({

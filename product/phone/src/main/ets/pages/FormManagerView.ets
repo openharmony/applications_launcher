@@ -18,7 +18,7 @@ import { windowManager } from '@ohos/common';
 import { FormManagerComponent } from '@ohos/form/component';
 import PhonePresetStyleConstants from '../common/constants/PhonePresetStyleConstants';
 
-const TAG = "FormManagerView";
+const TAG = 'FormManagerView';
 
 @Entry
 @Component
@@ -28,7 +28,7 @@ struct FormManagerView {
   }
 
   onPageHide(): void {
-    Log.showInfo(TAG, `onPageHide`);
+    Log.showInfo(TAG, 'onPageHide');
   }
 
   onBackPress(): boolean {
