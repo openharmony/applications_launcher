@@ -76,6 +76,12 @@
                <filteritem type="filepath" name="feature/settings/src/main/resources/base/media/.*.svg" desc="self developed image"/>
                <filteritem type="filepath" name="common/src/main/resources/base/media/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="AppScope/resources/base/media/.*.png" desc="self developed image"/>
+                <filteritem type="filepath" name="product/phone/src/main/ets/common/pics/.*.png" desc="self developed image"/>
+                <filteritem type="filepath" name="feature/smartdock/src/main/resources/base/media/.*.png" desc="self developed image"/>
+                <filteritem type="filepath" name="product/phone/src/main/ets/common/pics/.*.jpg" desc="self developed image"/>
+                <filteritem type="filepath" name="product/pad/src/main/ets/common/pics/.*.jpg" desc="self developed image"/>
+                <filteritem type="filepath" name="product/pad/src/main/ets/common/pics/.*.png" desc="self developed image"/>
+                <filteritem type="filepath" name="feature/form/src/main/ets/default/common/pics/.*.jpg" desc="self developed image"/>
             </filefilter>
             <filefilter name="copyrightPolicyFilter" desc="Filters for copyright header policies">
                 <filteritem type="filename" name="README|README_zh|.*.log|.*.json5|.*.json" desc=""/>
