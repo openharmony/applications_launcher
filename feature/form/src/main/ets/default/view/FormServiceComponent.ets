@@ -50,7 +50,7 @@ export struct FormServiceComponent {
   @StorageLink('screenWidth') @Watch('initPage') screenWidth: number = 0;
   @StorageLink('screenHeight') screenHeight: number = 0;
   @State formAppInfos: AppItemInfo[] = [];
-  @State showFormInfos: CardItemInfo[] = new Array();
+  @State showFormInfos: CardItemInfo[] = [];
   private readonly mServiceFormManager: ServiceFormManager = ServiceFormManager.getInstance();
   private mFormModel: FormModel = FormModel.getInstance();
   private mAppModel: AppModel = AppModel.getInstance();
@@ -98,8 +98,8 @@ export struct FormServiceComponent {
     this.sysUITopHeight = LayoutViewModel.getInstance().getSysUITopHeight();
     this.sysUIBottomHeight = LayoutViewModel.getInstance().getSysUIBottomHeight();
     Log.showDebug(TAG, `sysUITopHeight:${this.sysUITopHeight},sysUIBottomHeight:${this.sysUIBottomHeight}`);
-    this.scrollerWrapHeight = this.screenHeight - ThisStyleConstants.FORM_SERVICE_BAR_HEIGHT - this.sysUITopHeight
-      - this.sysUIBottomHeight;
+    this.scrollerWrapHeight =
+      this.screenHeight - ThisStyleConstants.FORM_SERVICE_BAR_HEIGHT - this.sysUITopHeight - this.sysUIBottomHeight;
     this.initPage();
     this.mAppModel.registerStateChangeListener(this.listener);
     this.onAppStateChanged();
@@ -203,8 +203,7 @@ export struct FormServiceComponent {
   }
 
   private getFormHeight(dimension?: number): number {
-    if (dimension == CommonConstants.CARD_DIMENSION_2x4
-      || dimension == CommonConstants.CARD_DIMENSION_2x2) {
+    if (dimension == CommonConstants.CARD_DIMENSION_2x4 || dimension == CommonConstants.CARD_DIMENSION_2x2) {
       return this.gridRowUtils.getSpanWidth(2);
     }
     return 0;
@@ -224,7 +223,7 @@ export struct FormServiceComponent {
    * @param formInfo 卡片信息
    */
   private createAddFormToDesktopMenuInfo(formItem: CardItemInfo): MenuInfo[] {
-    let menuInfoList: MenuInfo[] = new Array<MenuInfo>();
+    let menuInfoList: MenuInfo[] = [];
     let addFormToDesktopMenuInfo: MenuInfo = new MenuInfo();
     addFormToDesktopMenuInfo.menuType = CommonConstants.MENU_TYPE_FIXED;
     addFormToDesktopMenuInfo.menuImgSrc = '/common/pics/ic_form_addToDesktop.svg';

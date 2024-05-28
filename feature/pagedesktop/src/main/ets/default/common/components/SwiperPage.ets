@@ -31,12 +31,13 @@ import { PageDesktopGridStyleConfig } from '../PageDesktopGridStyleConfig';
 import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
 import { PageDesktopViewModel } from '../../viewmodel/PageDesktopViewModel';
 
-const TAG = "SwiperPage";
+const TAG = 'SwiperPage';
 const APP_INFO_REFRESH_DELAY = 1000;
 
 interface AppListInfo {
   appGridInfo: LauncherDragItemInfo[][]
 }
+
 interface GridLayout {
   id: number;
   layout: string;
@@ -51,8 +52,8 @@ interface GridLayout {
 export default struct SwiperPage {
   @StorageLink('workSpaceWidth') @Watch('updateDeskTopScreen') workSpaceWidth: number = 0;
   @StorageLink('formRefresh') formRefresh: string = '';
-  @State ColumnsTemplate: string = '';
-  @State RowsTemplate: string = ''
+  @State columnsTemplate: string = '';
+  @State rowsTemplate: string = ''
   @Prop @Watch('changeColumnAndRow') gridConfig: string;
   @State mMargin: number = 0;
   @State mColumnsGap: number = 0;
@@ -65,10 +66,10 @@ export default struct SwiperPage {
   @State mAppListInfo: LauncherDragItemInfo[] = this.appListInfo.appGridInfo[this.swiperPage];
   private mPageDesktopViewModel?: PageDesktopViewModel;
   private mPageDesktopStyleConfig = PageDesktopViewModel.getInstance().getPageDesktopStyleConfig();
-  private mGridWidth : number = 0;
+  private mGridWidth: number = 0;
   private mGridHeight: number = 0;
   private mIconSize: number = 0;
-  private mGridSpaceWidth : number = 0;
+  private mGridSpaceWidth: number = 0;
   private mGridSpaceHeight: number = 0;
 
   private updateAppListInfo(): void {
@@ -96,7 +97,8 @@ export default struct SwiperPage {
 
   updateDeskTopScreen(): void {
     Log.showInfo(TAG, 'updateDeskTopScreen');
-    this.mPageDesktopStyleConfig = this.mPageDesktopViewModel?.getPageDesktopStyleConfig() as PageDesktopGridStyleConfig;
+    this.mPageDesktopStyleConfig =
+      this.mPageDesktopViewModel?.getPageDesktopStyleConfig() as PageDesktopGridStyleConfig;
     this.mMargin = this.mPageDesktopStyleConfig.mMargin;
     this.mColumnsGap = this.mPageDesktopStyleConfig.mColumnsGap;
     this.mRowsGap = this.mPageDesktopStyleConfig.mRowsGap;
@@ -120,13 +122,13 @@ export default struct SwiperPage {
     let mGridConfig = this.mPageDesktopViewModel?.getGridConfig() as GridLayout;
     let column = mGridConfig.column as number;
     let row = mGridConfig.row as number;
-    this.ColumnsTemplate = '';
-    this.RowsTemplate = '';
-    for (let i = 0;i < column; i++) {
-      this.ColumnsTemplate += '1fr '
+    this.columnsTemplate = '';
+    this.rowsTemplate = '';
+    for (let i = 0; i < column; i++) {
+      this.columnsTemplate += '1fr '
     }
-    for (let i = 0;i < row; i++) {
-      this.RowsTemplate += '1fr '
+    for (let i = 0; i < row; i++) {
+      this.rowsTemplate += '1fr '
     }
   }
 
@@ -143,7 +145,7 @@ export default struct SwiperPage {
       let cachePageIndex = this.mPageDesktopViewModel?.getGridPageCount() as number;
       if (curPageIndex === cachePageIndex - 1 && !this.mPageDesktopViewModel?.isBlankPage()) {
         this.mPageDesktopViewModel?.addBlankPage(true);
-      } else if(curPageIndex < cachePageIndex - 1) {
+      } else if (curPageIndex < cachePageIndex - 1) {
         this.mPageDesktopViewModel?.showNext();
       }
       this.movingIconSwapPageDelay();
@@ -224,8 +226,8 @@ export default struct SwiperPage {
       })
     }
     .id(`${TAG}_Grid_${this.swiperPage}`)
-    .columnsTemplate(this.ColumnsTemplate)
-    .rowsTemplate(this.RowsTemplate)
+    .columnsTemplate(this.columnsTemplate)
+    .rowsTemplate(this.rowsTemplate)
     .columnsGap(this.mColumnsGap)
     .rowsGap(this.mRowsGap)
     .width(this.mGridWidth)
@@ -245,10 +247,12 @@ export default struct SwiperPage {
     .onDragMove((event: DragEvent, extraParams: string) => {
       Log.showInfo(TAG, `onDragMove event: [${event.getWindowX()}, ${event.getWindowY()}]`);
       const dragItemInfo: LauncherDragItemInfo = AppStorage.get<LauncherDragItemInfo>('dragItemInfo') as LauncherDragItemInfo;
-      if (!dragItemInfo.isDragging) return;
-      if (AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE
-      || (AppStorage.get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE
-      && AppStorage.get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP)) {
+      if (!dragItemInfo.isDragging) {
+        return;
+      }
+      if (AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE ||
+        (AppStorage.get('deviceType') !== CommonConstants.DEFAULT_DEVICE_TYPE &&
+          AppStorage.get('dragItemType') === CommonConstants.DRAG_FROM_DESKTOP)) {
         this.itemMove(event.getWindowX(), event.getWindowY());
       }
     })
@@ -258,8 +262,9 @@ export default struct SwiperPage {
     .onDrop((event: DragEvent, extraParams: string) => {
       const dragItemType: number = AppStorage.get('dragItemType') as number;
       Log.showInfo(TAG, `onDrop event: [${event.getWindowX()}, ${event.getWindowY()}]`);
-      if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP
-      || (dragItemType === CommonConstants.DRAG_FROM_DOCK && AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE)) {
+      if (dragItemType === CommonConstants.DRAG_FROM_DESKTOP ||
+        (dragItemType === CommonConstants.DRAG_FROM_DOCK &&
+          AppStorage.get('deviceType') === CommonConstants.DEFAULT_DEVICE_TYPE)) {
         const dragResult = PageDesktopDragHandler.getInstance().onDragDrop(event.getWindowX(), event.getWindowY());
         Log.showInfo(TAG, `onDrop dragResult: ${dragResult}`);
         AppStorage.setOrCreate('selectAppIndex', null);

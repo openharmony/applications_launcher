@@ -47,28 +47,28 @@ export default struct ServiceFormAppItem {
   private mAppItemHeight: number = ThisStyleConstants.FORM_SERVICE_APP_ITEM_HEIGHT;
   private idIndex: number = 0;
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mResourceManager = ResourceManager.getInstance();
     this.updateIcon();
     this.updateName();
   }
 
-  private updateIcon(): void  {
+  private updateIcon(): void {
     this.mResourceManager.getAppIconWithCache(this.iconId, this.bundleName, this.moduleName,
     this.iconLoadCallback, this.mDefaultAppIcon);
   }
 
   private iconLoadCallback = (image: string): void => {
     Log.showInfo(TAG, `iconLoadCallback  ${this.bundleName}   ${this.abilityName}`);
-    if (SettingsModel.getInstance().getDevice() == CommonConstants.PAD_DEVICE_TYPE
-    && this.bundleName == CommonConstants.LAUNCHER_BUNDLE) {
+    if (SettingsModel.getInstance().getDevice() ==
+    CommonConstants.PAD_DEVICE_TYPE && this.bundleName == CommonConstants.LAUNCHER_BUNDLE) {
       this.icon = this.getDefaultAppIcon();
     } else {
       this.icon = image;
     }
   }
 
-  private updateName(): void  {
+  private updateName(): void {
     if (CheckEmptyUtils.isEmpty(this.appName)) {
       this.mResourceManager.getAppNameWithCache(this.appLabelId, this.bundleName, this.moduleName,
       this.appName, this.appNameLoadCallback);

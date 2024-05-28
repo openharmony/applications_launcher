@@ -60,9 +60,10 @@ export default struct ResidentLayout {
   getListWidth(): number {
     let residentMaxNum = this.mSmartDockStyleConfig.mMaxDockNum;
     let width = 0.0;
-    if (AppStorage.get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
       Log.showDebug(TAG, `getListWidth mDockPadding: ${this.mSmartDockStyleConfig.mDockPadding}, mMaxNum: ${residentMaxNum}`);
-      width = this.mSmartDockStyleConfig.mDockPadding * 2 + residentMaxNum * (this.mSmartDockStyleConfig.mListItemWidth) + (residentMaxNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
+      width = this.mSmartDockStyleConfig.mDockPadding * 2 + residentMaxNum *
+        (this.mSmartDockStyleConfig.mListItemWidth) + (residentMaxNum - 1) * (this.mSmartDockStyleConfig.mListItemGap);
       Log.showDebug(TAG, `getListWidth width: ${width}`);
     } else {
       if (this.appList == null || this.appList.length === 0) {
@@ -71,7 +72,8 @@ export default struct ResidentLayout {
         if (num > residentMaxNum) {
           num = residentMaxNum;
         }
-        width = this.mSmartDockStyleConfig.mDockPadding * 2 + num * (this.mSmartDockStyleConfig.mListItemWidth) + (num - 1) * (this.mSmartDockStyleConfig.mListItemGap);
+        width = this.mSmartDockStyleConfig.mDockPadding * 2 + num *
+          (this.mSmartDockStyleConfig.mListItemWidth) + (num - 1) * (this.mSmartDockStyleConfig.mListItemGap);
       }
     }
     return width;
@@ -190,7 +192,8 @@ struct AppItem {
         badgeNumber: this.appInfo.badgeNumber
       })
     }
-    .visibility(this.dragItemType === CommonConstants.DRAG_FROM_DOCK && this.smartDragItemInfo.keyName === this.appInfo.keyName ?
+    .visibility(this.dragItemType === CommonConstants.DRAG_FROM_DOCK &&
+      this.smartDragItemInfo.keyName === this.appInfo.keyName ?
     Visibility.Hidden : Visibility.Visible)
     .width(mSmartDockStyleConfig?.mListItemWidth as number)
     .height(mSmartDockStyleConfig?.mListItemHeight as number)
@@ -209,8 +212,8 @@ struct AppItem {
       placement: Placement.Top,
       popupColor: Color.White,
       arrowOffset: AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE
-        ? null
-        : 3 * ((mSmartDockStyleConfig?.mIconSize as number) / 2) + (mSmartDockStyleConfig?.mListItemGap as number), // Avoid the popup offset problem in phone form
+        ? null : 3 * ((mSmartDockStyleConfig?.mIconSize as number) / 2) +
+          (mSmartDockStyleConfig?.mListItemGap as number), // Avoid the popup offset problem in phone form
       onStateChange: (e) => {
         if (!e.isVisible) {
           this.isShow = false;
@@ -222,7 +225,8 @@ struct AppItem {
     .onTouch((event: TouchEvent) => {
       Log.showInfo(TAG, `onTouch event type: ${event.type}`);
       if (event.type === CommonConstants.TOUCH_TYPE_UP && this.smartDragItemInfo.isDragging) {
-        let mIsDragEffectArea = SmartDockDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
+        let mIsDragEffectArea =
+        SmartDockDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
         if (!mIsDragEffectArea) {
           AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
           AppStorage.setOrCreate('selectAppIndex', null);
@@ -245,12 +249,13 @@ struct AppItem {
       }
     })
     .onDragStart((event: DragEvent, extraParams: string) => {
-      Log.showInfo(TAG, `DragStart`);
+      Log.showInfo(TAG, 'DragStart');
       this.dragItemType = CommonConstants.DRAG_FROM_DOCK;
       this.appInfo.isDragging = true;
       this.smartDragItemInfo = this.appInfo as LauncherDragItemInfo;
       Log.showInfo(TAG, `smartDragItemInfo: ${JSON.stringify(this.smartDragItemInfo)}`);
-      const selectAppIndex = SmartDockDragHandler.getInstance().getDragItemIndexByCoordinates(event.getWindowX(), event.getWindowY());
+      const selectAppIndex =
+      SmartDockDragHandler.getInstance().getDragItemIndexByCoordinates(event.getWindowX(), event.getWindowY());
       AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
     })
     .onDragEnd((event: DragEvent, extraParams: string) => {

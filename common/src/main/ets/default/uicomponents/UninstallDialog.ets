@@ -44,7 +44,7 @@ export struct UninstallDialog {
     }
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mLayoutViewModel = LayoutViewModel.getInstance();
     this.updateScreenSize();
     this.mResourceManager = ResourceManager.getInstance();
@@ -117,7 +117,7 @@ export struct UninstallDialog {
             })
           }
         }
-        .backgroundColor($r("app.color.default_dialog_background"))
+        .backgroundColor($r('app.color.default_dialog_background'))
         .backgroundBlurStyle(BlurStyle.Regular)
         .padding({
           top: StyleConstants.DEFAULT_24,

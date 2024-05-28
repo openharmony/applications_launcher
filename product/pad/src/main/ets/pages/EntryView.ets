@@ -57,7 +57,7 @@ struct EntryView {
   @State mAppScaleX: number = 1.0;
   @State mAppScaleY: number = 1.0;
   @State mAppAlpha: number = 1.0;
-  @StorageLink('IsSetImageRawDataCacheSize') IsSetImageRawDataCacheSize?: boolean = undefined;
+  @StorageLink('IsSetImageRawDataCacheSize') isSetImageRawDataCacheSize?: boolean = undefined;
   async onPortrait(mediaQueryResult: mediaquery.MediaQueryResult) {
     if (mediaQueryResult.matches) {
       Log.showInfo(TAG, 'screen change to landscape');
@@ -78,7 +78,7 @@ struct EntryView {
     }
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear');
     this.mStage.onCreate();
     this.navigationBarStatus = SettingsModel.getInstance().getValue();
@@ -147,14 +147,14 @@ struct EntryView {
 
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
-    if (typeof this.IsSetImageRawDataCacheSize === 'undefined') {
+    if (typeof this.isSetImageRawDataCacheSize === 'undefined') {
       Log.showInfo(TAG, 'onPageShow setImageRawDataCacheSize');
 
       // If cannot compile this, comment next line or add following code into Class App in "@system.app.d.ts":
       // static setImageRawDataCacheSize(value: number): void;
       app.setImageRawDataCacheSize(RAW_IMAGE_CACHE_SIZE);
       app.setImageCacheCount(100);
-      this.IsSetImageRawDataCacheSize = true;
+      this.isSetImageRawDataCacheSize = true;
     }
   }
 
@@ -216,8 +216,10 @@ struct EntryView {
         .height(this.workSpaceHeight)
         .onAreaChange((oldValue: Area, newValue: Area) => {
           Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
-          if (JSON.stringify(oldValue) == JSON.stringify(newValue)) return;
-          if (this.navigationBarStatus == "1") {
+          if (JSON.stringify(oldValue) == JSON.stringify(newValue)) {
+            return;
+          }
+          if (this.navigationBarStatus == '1') {
             setTimeout(() => {
               SettingsModel.getInstance().setValue(this.navigationBarStatus);
             }, 30);

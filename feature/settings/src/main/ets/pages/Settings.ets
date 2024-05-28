@@ -34,13 +34,13 @@ struct Index {
 
   onPageShow(): void { }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.getDeviceType();
     this.mSettingsStage.onCreate();
     this.mSettingsPresenter = SettingsPresenter.getInstance();
   }
 
-  aboutToDisappear(): void  {
+  aboutToDisappear(): void {
     this.mSettingsStage.onDestroy();
   }
 
@@ -84,7 +84,8 @@ struct Index {
         .alignItems(HorizontalAlign.Center)
         .width(SettingsStyleConstants.PERCENTAGE_100)
       }
-      .width(this.mDevice === SettingsStyleConstants.DEFAULT_DEVICE_TYPE_PHONE ? SettingsStyleConstants.PERCENTAGE_100 : 976)
+      .width(this.mDevice === SettingsStyleConstants.DEFAULT_DEVICE_TYPE_PHONE ?
+      SettingsStyleConstants.PERCENTAGE_100 : 976)
       .height(SettingsStyleConstants.PERCENTAGE_100)
 
       if (this.traceBuildEnd()) { }
@@ -126,16 +127,16 @@ struct top_bar {
 
 @Component
 struct SettingPage {
-  @State SettingList: SettingItemInfo[] = [];
+  @State settingList: SettingItemInfo[] = [];
 
-  aboutToAppear(): void  {
-    this.SettingList = SettingsPresenter.getInstance().getSettingList();
-    Log.showInfo(TAG, `aboutToAppear SettingList length: ${this.SettingList.length}`);
+  aboutToAppear(): void {
+    this.settingList = SettingsPresenter.getInstance().getSettingList();
+    Log.showInfo(TAG, `aboutToAppear SettingList length: ${this.settingList.length}`);
   }
 
   build() {
     Column() {
-      ForEach(this.SettingList, (item: SettingItemInfo) => {
+      ForEach(this.settingList, (item: SettingItemInfo) => {
         SettingItem({
           ida: item.ida,
           settingName: item.settingName,
@@ -173,7 +174,7 @@ struct SettingItem {
     Log.showDebug(TAG, 'cancelDialog');
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     SettingsPresenter.getInstance().initNavigationBarStatusValue();
     if (this.settingType == 1) {
       SettingsPresenter.getInstance().registerValueCallback(this.ida, this.callback);

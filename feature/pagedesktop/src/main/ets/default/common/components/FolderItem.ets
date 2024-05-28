@@ -72,7 +72,7 @@ export default struct FolderItem {
   private mFolderStyleConfig: BigFolderStyleConfig = BigFolderViewModel.getInstance().getFolderStyleConfig();
   mNameLines: number = PresetStyleConstants.DEFAULT_APP_NAME_LINES;
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mPageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
     this.mBigFolderViewModel = BigFolderViewModel.getInstance();
@@ -94,7 +94,9 @@ export default struct FolderItem {
    * format FolderInfo
    */
   private formatFolderInfo() {
-    if (typeof this.folderItem.layoutInfo === 'undefined') return;
+    if (typeof this.folderItem.layoutInfo === 'undefined') {
+      return;
+    }
     let column = this.mBigFolderViewModel?.getFolderLayoutConfig().column as number;
     let row = this.mBigFolderViewModel?.getFolderLayoutConfig().row as number;
     const allCount = column * row;
@@ -106,7 +108,9 @@ export default struct FolderItem {
         folderLayoutInfoList.push(this.folderItem.layoutInfo[0].slice(i * allCount, (i + 1) * allCount));
       }
       if (remainder != 0) {
-        folderLayoutInfoList.push(this.folderItem.layoutInfo[0].slice(integer * allCount, integer * allCount + remainder));
+        folderLayoutInfoList.push(
+          this.folderItem.layoutInfo[0].slice(integer * allCount, integer * allCount + remainder)
+        );
       }
       this.folderItem.layoutInfo.splice(0, 1);
       this.folderItem.layoutInfo = folderLayoutInfoList;
@@ -163,19 +167,20 @@ export default struct FolderItem {
           iconNameMargin: this.mFolderStyleConfig.mIconNameMargin,
           nameFontColor: this.mPageDesktopViewModel?.getPageDesktopStyleConfig().mNameFontColor as string,
           onAppIconClick: (event: ClickEvent, appItem: AppItemInfo) => {
-            Log.showInfo(TAG, "onAppIconClick");
+            Log.showInfo(TAG, 'onAppIconClick');
             Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
             this.setStartAppInfo(appItem);
             this.mPageDesktopViewModel?.openApplication(appItem.abilityName, appItem.bundleName, appItem.moduleName);
           },
           onOpenFolderClick: (event: ClickEvent, folderItem: FolderData) => {
-            Log.showInfo(TAG, "onOpenFolderClick");
+            Log.showInfo(TAG, 'onOpenFolderClick');
             Trace.start(Trace.CORE_METHOD_OPEN_FOLDER);
             this.mBigFolderViewModel?.openFolder(false, folderItem);
           },
           onFolderTouch: (event: TouchEvent, folderItem: FolderData) => {
             if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
-              let mIsDragEffectArea = PageDesktopDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
+              let mIsDragEffectArea =
+              PageDesktopDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
               Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
               if (!mIsDragEffectArea) {
                 PageDesktopDragHandler.getInstance().deleteBlankPageOutsideEffect();
@@ -185,15 +190,15 @@ export default struct FolderItem {
             }
           },
           onGetPosition: (getPosition: Function) => {
-            Log.showInfo(TAG, "onGetPosition");
+            Log.showInfo(TAG, 'onGetPosition');
             let styleConfig = this.mPageDesktopViewModel?.getPageDesktopStyleConfig() as PageDesktopGridStyleConfig;
             let row = this.folderItem.row as number;
             let column = this.folderItem.column as number;
             Log.showInfo(TAG, `onGetPosition currentFolderPosition row: ${row}, column: ${column}`);
-            let x = styleConfig.mAppItemSize * column
-            + styleConfig.mColumnsGap * column + styleConfig.mMargin + styleConfig.mIconMarginHorizontal;
-            let y = styleConfig.mAppItemSize * row
-            + styleConfig.mRowsGap * row + styleConfig.mDesktopMarginTop + styleConfig.mIconMarginVertical;
+            let x = styleConfig.mAppItemSize * column +
+              styleConfig.mColumnsGap * column + styleConfig.mMargin + styleConfig.mIconMarginHorizontal;
+            let y = styleConfig.mAppItemSize * row +
+              styleConfig.mRowsGap * row + styleConfig.mDesktopMarginTop + styleConfig.mIconMarginVertical;
             Log.showInfo(TAG, `onGetPosition currentFolderPosition x: ${x}, y: ${y}`);
             getPosition(x, y);
           },
@@ -203,7 +208,9 @@ export default struct FolderItem {
           dragStart: this.dragStart
         })
       }
-      .visibility((this.pageDesktopDragItemInfo.folderId === this.folderItem.folderId || (this.openFolderStatus != 0 && this.getOpenFolder() == this.folderItem.folderId)) ? Visibility.Hidden : Visibility.Visible)
+      .visibility((this.pageDesktopDragItemInfo.folderId ===
+      this.folderItem.folderId || (this.openFolderStatus != 0 && this.getOpenFolder() ==
+      this.folderItem.folderId)) ? Visibility.Hidden : Visibility.Visible)
       .onMouse((event: MouseEvent) => {
         if (event.button == MouseButton.Right) {
           event.stopPropagation();

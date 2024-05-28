@@ -23,7 +23,7 @@ import { AppGridLayout } from '@ohos/appcenter/component';
 import { AppGridViewModel } from '@ohos/appcenter';
 import PadStage from '../common/PadStage';
 
-const TAG = "AppCenterView";
+const TAG = 'AppCenterView';
 
 interface AnimationInfo {
   appScaleX: number;
@@ -75,14 +75,14 @@ struct AppCenterView {
   }
 
   onBackPress(): boolean {
-    Log.showInfo(TAG, `onBackPress`);
+    Log.showInfo(TAG, 'onBackPress');
     AppStorage.setOrCreate('selectDesktopAppItem', '');
     windowManager.destroyWindow(windowManager.APP_CENTER_WINDOW_NAME);
     return true;
   }
 
   private buildLog(): boolean {
-    Log.showDebug(TAG, `AppCenterView buildLog`);
+    Log.showDebug(TAG, 'AppCenterView buildLog');
     return true;
   }
 
@@ -119,7 +119,7 @@ struct AppCenterView {
       Log.showInfo(TAG, 'onClick contextFlag: ' + contextFlag);
       if (contextFlag && !ContextMenu.close()) {
         AppStorage.setOrCreate('contextMenuState', false);
-      }else {
+      } else {
         this.onBackPress();
       }
     })

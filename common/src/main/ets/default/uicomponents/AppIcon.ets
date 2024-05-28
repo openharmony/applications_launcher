@@ -44,7 +44,7 @@ export struct AppIcon {
     }
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mResourceManager = ResourceManager.getInstance();
     this.mBadgeManager = BadgeManager.getInstance();
     this.updateIcon();

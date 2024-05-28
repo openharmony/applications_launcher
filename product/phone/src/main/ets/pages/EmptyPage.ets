@@ -15,12 +15,12 @@
 
 import { Log } from '@ohos/common';
 
-const TAG = "EmptyPage";
+const TAG = 'EmptyPage';
 
 @Entry
 @Component
 struct EmptyPage {
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     Log.showInfo(TAG, 'aboutToAppear');
   }
 
