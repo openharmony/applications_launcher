@@ -83,7 +83,9 @@ export struct FormManagerDialog {
     let count = 0;
     let isStop = false;
     for (let i = 0; i < this.formItem.length; i++) {
-      if (isStop || !this.formItem[i]?.supportDimensions.length) break;
+      if (isStop || !this.formItem[i]?.supportDimensions.length) {
+        break;
+      }
       for (let j = 0; j < this.formItem[i].supportDimensions.length; j++) {
         if (count === this.mSwiperIndex) {
           formCardItem.cardName = this.formItem[i].cardName;

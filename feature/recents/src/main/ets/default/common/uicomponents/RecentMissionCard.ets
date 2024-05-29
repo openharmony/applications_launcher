@@ -75,9 +75,11 @@ export default struct RecentMissionCard {
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
     this.mIsSingleLayout = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ? true : false;
     this.cardMargin = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
-      RecentsStyleConstants.SINGLE_LIST_LAYOUT_MARGIN * RecentsStyleConstants.DPI_RATIO : RecentsStyleConstants.DOUBLE_LIST_LAYOUT_MARGIN;
+      RecentsStyleConstants.SINGLE_LIST_LAYOUT_MARGIN *
+      RecentsStyleConstants.DPI_RATIO : RecentsStyleConstants.DOUBLE_LIST_LAYOUT_MARGIN;
     this.cardLayoutWeight = this.mRecentMissionsViewModel.getRecentMissionsRowType() === 'single' ?
-      RecentsStyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT : RecentsStyleConstants.DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT;
+      RecentsStyleConstants.SINGLE_LIST_APP_INFO_LAYOUT_WEIGHT :
+    RecentsStyleConstants.DOUBLE_LIST_APP_INFO_LAYOUT_WEIGHT;
     this.mRecentMissionsViewModel.getMissionSnapShot(this.missionId, this.recentMissionsSnapshotCallback);
     this.mRecentMissionStartAppHandler = RecentMissionStartAppHandler.getInstance();
   }
@@ -157,7 +159,8 @@ export default struct RecentMissionCard {
               RecentsStyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE_NEW :
                 RecentsStyleConstants.DOUBLE_LIST_DEFAULT_APP_ICON_SIZE - 10)
               .margin({
-                right: this.mIsSingleLayout ? (RecentsStyleConstants.SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN) : (RecentsStyleConstants.DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN)
+                right: this.mIsSingleLayout ? (RecentsStyleConstants.SINGLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN) :
+                  (RecentsStyleConstants.DOUBLE_LIST_LOCKED_IMAGE_RIGHT_MARGIN)
               })
               .onClick((event) => {
                 this.isClickSubComponent = true;
@@ -170,8 +173,10 @@ export default struct RecentMissionCard {
         }
       }
       .margin({
-        top: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_INFO_TOP_MARGIN : RecentsStyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN,
-        bottom: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_INFO_BOTTOM_MARGIN : RecentsStyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN
+        top: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_INFO_TOP_MARGIN :
+        RecentsStyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN,
+        bottom: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_INFO_BOTTOM_MARGIN :
+        RecentsStyleConstants.DOUBLE_LIST_APP_INFO_BOTTOM_MARGIN
       })
 
       Image(this.recentImage)
@@ -230,8 +235,10 @@ export default struct RecentMissionCard {
       appIconId: this.appIconId,
       borderRadius: RecentsStyleConstants.RECENT_IMAGE_RADIUS,
       isSingleLayout: this.mIsSingleLayout,
-      appIconSize:this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH : RecentsStyleConstants.DOUBLE_LIST_APP_IMAGE_WIDTH,
-      appIconHeight: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_MISSION_HEIGHT : RecentsStyleConstants.DOUBLE_LIST_MISSION_HEIGHT,
+      appIconSize:this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_APP_IMAGE_WIDTH :
+      RecentsStyleConstants.DOUBLE_LIST_APP_IMAGE_WIDTH,
+      appIconHeight: this.mIsSingleLayout ? RecentsStyleConstants.SINGLE_LIST_MISSION_HEIGHT :
+      RecentsStyleConstants.DOUBLE_LIST_MISSION_HEIGHT,
       position: position
     }
     AppStorage.setOrCreate('startAppItemInfo', appParams);

@@ -35,7 +35,7 @@ export struct RemoveFormDialog {
     }
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mLayoutViewModel = LayoutViewModel.getInstance();
     this.updateScreenSize();
   }
@@ -97,7 +97,7 @@ export struct RemoveFormDialog {
             })
           }
         }
-        .backgroundColor($r("app.color.default_dialog_background"))
+        .backgroundColor($r('app.color.default_dialog_background'))
         .backgroundBlurStyle(BlurStyle.Regular)
         .padding({
           bottom: StyleConstants.DEFAULT_DIALOG_BOTTOM_MARGIN

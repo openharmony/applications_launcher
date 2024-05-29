@@ -29,7 +29,7 @@ import {
 import SwiperPage from './SwiperPage';
 import { PageDesktopViewModel } from '../../viewmodel/PageDesktopViewModel';
 
-const TAG = "GridSwiper";
+const TAG = 'GridSwiper';
 
 interface AppListInfo {
   appGridInfo: LauncherDragItemInfo[][]
@@ -47,7 +47,8 @@ export default struct GridSwiper {
   private swiperController: SwiperController = new SwiperController();
   dialogController?: CustomDialogController | null;
   @StorageLink('desktopEventResponse') desktopEventResponse: boolean = true;
-  @State desktopIndicator: DotIndicator | DigitIndicator = Indicator.dot().selectedColor(StyleConstants.DEFAULT_FONT_COLOR);
+  @State desktopIndicator: DotIndicator | DigitIndicator =
+  Indicator.dot().selectedColor(StyleConstants.DEFAULT_FONT_COLOR);
 
   updatePageList(): void {
     if (this.pageList.length !== this.appListInfo.appGridInfo.length) {
@@ -100,10 +101,10 @@ export default struct GridSwiper {
   }
 
   private getMenu(): MenuInfo[] {
-    let menuInfoList = new Array<MenuInfo>();
+    let menuInfoList: MenuInfo[] = [];
     let setting = new MenuInfo();
     setting.menuType = CommonConstants.MENU_TYPE_FIXED
-    setting.menuImgSrc = "/common/pics/ic_public_settings.svg"
+    setting.menuImgSrc = '/common/pics/ic_public_settings.svg'
     setting.menuText = $r('app.string.into_settings')
     setting.onMenuClick = () => {
       Trace.start(Trace.CORE_METHOD_START_SETTINGS);

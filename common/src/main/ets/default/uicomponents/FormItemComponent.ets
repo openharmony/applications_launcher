@@ -49,7 +49,7 @@ export struct FormItemComponent {
   clickForm: Function = () => {};
   dragStart: Function = () => {};
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mFormModel = FormModel.getInstance();
     Log.showInfo(TAG, `aboutToAppear begin height: ${this.formItemHeight}, width: ${this.formItemWidth}`);
   }

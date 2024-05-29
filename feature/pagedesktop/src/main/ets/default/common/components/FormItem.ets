@@ -76,7 +76,7 @@ export default struct FormItem {
   private mForm: string = '';
   private clearForm: Function = () => {};
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     this.mFormViewModel = FormViewModel.getInstance();
     this.mPageDesktopStartAppHandler = PageDesktopStartAppHandler.getInstance();
@@ -252,7 +252,9 @@ export default struct FormItem {
           },
         })
       }
-      .visibility(this.pageDesktopDragItemInfo.cardId === this.formItem.cardId && this.pageDesktopDragItemInfo.isDragging ? Visibility.None : Visibility.Visible)
+      .visibility(this.pageDesktopDragItemInfo.cardId ===
+      this.formItem.cardId && this.pageDesktopDragItemInfo.isDragging ?
+      Visibility.None : Visibility.Visible)
       .scale({ x: this.animateScale, y: this.animateScale })
       .opacity(this.animateOpacity)
       .onMouse((event: MouseEvent) => {
@@ -267,13 +269,17 @@ export default struct FormItem {
         .onAction((event: GestureEvent) => {
           Log.showInfo(TAG, 'mouse double click');
           this.setStartAppInfo();
-          this.mPageDesktopViewModel.onAppDoubleClick(this.formItem.abilityName, this.formItem.bundleName, this.formItem.moduleName);
+          this.mPageDesktopViewModel.onAppDoubleClick(
+            this.formItem.abilityName, this.formItem.bundleName, this.formItem.moduleName
+          );
         })
       )
       )
       .onTouch((event: TouchEvent) => {
         if (event.type === CommonConstants.TOUCH_TYPE_UP && this.pageDesktopDragItemInfo.isDragging) {
-          let mIsDragEffectArea = PageDesktopDragHandler.getInstance().isDragEffectArea(event.touches[0].windowX, event.touches[0].windowY);
+          let mIsDragEffectArea = PageDesktopDragHandler.getInstance().isDragEffectArea(
+            event.touches[0].windowX, event.touches[0].windowY
+          );
           Log.showInfo(TAG, `onTouch mIsDragEffectArea: ${mIsDragEffectArea}`);
           if (!mIsDragEffectArea) {
             PageDesktopDragHandler.getInstance().deleteBlankPageOutsideEffect();

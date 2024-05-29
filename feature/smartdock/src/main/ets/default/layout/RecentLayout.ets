@@ -203,7 +203,7 @@ export default struct RecentLayout {
   getListWidth(): number {
     let mRecentMaxNum = this.mSmartDockStyleConfig?.mMaxRecentNum as number;
     let width = 0;
-    if (AppStorage.get("deviceType") == CommonConstants.DEFAULT_DEVICE_TYPE) {
+    if (AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE) {
       return width;
     }
     if (typeof this.appList === 'undefined' || this.appList == null || this.appList.length === 0) {
@@ -213,9 +213,9 @@ export default struct RecentLayout {
     if (num > mRecentMaxNum) {
       num = mRecentMaxNum;
     }
-    width = (this.mSmartDockStyleConfig?.mDockPadding as number) * 2
-      + num * (this.mSmartDockStyleConfig?.mListItemWidth as number)
-      + (num - 1) * (this.mSmartDockStyleConfig?.mListItemGap as number);
+    width = (this.mSmartDockStyleConfig?.mDockPadding as number) * 2 +
+      num * (this.mSmartDockStyleConfig?.mListItemWidth as number) +
+      (num - 1) * (this.mSmartDockStyleConfig?.mListItemGap as number);
     return width;
   }
 
@@ -287,8 +287,8 @@ struct AppItem {
       builder: this.MenuBuilder,
       placement: Placement.Top,
       popupColor: Color.White,
-      arrowOffset: 3 * ((mSmartDockStyleConfig?.mIconSize as number) / 2)
-        + (mSmartDockStyleConfig?.mListItemGap as number),
+      arrowOffset: 3 * ((mSmartDockStyleConfig?.mIconSize as number) / 2) +
+        (mSmartDockStyleConfig?.mListItemGap as number),
       onStateChange: (e) => {
         if (!e.isVisible) {
           this.isShow = false;

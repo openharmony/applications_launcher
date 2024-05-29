@@ -25,7 +25,7 @@ import { PageDesktopViewModel } from '../viewmodel/PageDesktopViewModel';
 import { PageDesktopCloseAppHandler } from '../common/PageDesktopCloseAppHandler';
 
 let mPageDesktopViewModel: PageDesktopViewModel | undefined = undefined;
-const TAG = "PageDesktopLayout";
+const TAG = 'PageDesktopLayout';
 
 @Component
 export struct PageDesktopLayout {
@@ -58,7 +58,7 @@ export struct PageDesktopLayout {
     mPageDesktopViewModel?.intoSetting();
   }
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     this.deviceType = AppStorage.get('deviceType') as string;
     this.mPageDesktopDragHandler = PageDesktopDragHandler.getInstance();
     mPageDesktopViewModel = PageDesktopViewModel.getInstance();

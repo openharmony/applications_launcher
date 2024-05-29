@@ -52,7 +52,7 @@ export default struct FolderAppListDialog {
   folderItem: FolderData = { layoutInfo: [], folderName: '', folderId: '', enterEditing: false };
   addToString: string = '';
 
-  aboutToAppear(): void  {
+  aboutToAppear(): void {
     Log.showInfo(TAG, `aboutToAppear`);
     this.mBigFolderViewModel.getFolderAddAppList(this.folderItem.folderId);
     this.mBigFolderViewModel.getFolderAppList(this.folderItem.folderId);
@@ -106,7 +106,8 @@ export default struct FolderAppListDialog {
                         badgeNumber: CommonConstants.BADGE_DISPLAY_HIDE,
                       })
                       AppName({
-                        nameHeight: this.mFolderStyleConfig.mAddFolderTextSize * this.mFolderStyleConfig.mAddFolderTextLines,
+                        nameHeight: this.mFolderStyleConfig.mAddFolderTextSize *
+                        this.mFolderStyleConfig.mAddFolderTextLines,
                         nameSize: this.mFolderStyleConfig.mAddFolderTextSize,
                         nameFontColor: this.mNameFontColor,
                         bundleName: item.bundleName,
@@ -150,7 +151,8 @@ export default struct FolderAppListDialog {
                 }
               }
               .width(this.mFolderStyleConfig.mAddFolderItemSize)
-              .height(this.mFolderStyleConfig.mAddFolderIconSize + this.mFolderStyleConfig.mAddFolderTextLines + this.mFolderStyleConfig.mFolderToggleSize + this.mFolderStyleConfig.mAddFolderGridMargin)
+              .height(this.mFolderStyleConfig.mAddFolderIconSize + this.mFolderStyleConfig.mAddFolderTextLines +
+              this.mFolderStyleConfig.mFolderToggleSize + this.mFolderStyleConfig.mAddFolderGridMargin)
             }, (item: AppItemInfo) => JSON.stringify(item))
           }
           .columnsTemplate(this.getColumnsTemplate())
