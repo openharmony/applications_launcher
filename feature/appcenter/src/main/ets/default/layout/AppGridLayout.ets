@@ -43,8 +43,8 @@ export struct AppGridLayout {
   @State mRows: number = StyleConstants.DEFAULT_APP_GRID_ROW;
   @StorageLink('listInfo') appGridList: AppItemInfo[] = [];
   mAppGridViewModel: AppGridViewModel = AppGridViewModel.getInstance();
-  @StorageLink('appGridStyleConfig') mAppCenterGridStyleConfig: AppCenterGridStyleConfig
-    = this.mAppGridViewModel.getAppGridStyleConfig();
+  @StorageLink('appGridStyleConfig') mAppCenterGridStyleConfig: AppCenterGridStyleConfig =
+  this.mAppGridViewModel.getAppGridStyleConfig();
   mSelectItem: AppItemInfo = new AppItemInfo();
   private mAppCenterStartAppHandler: AppCenterStartAppHandler = AppCenterStartAppHandler.getInstance();
   private dialogName: string = '';

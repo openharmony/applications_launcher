@@ -306,7 +306,7 @@ struct FolderSwiperPage {
   private mFolderInfo: FolderData = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
   private mAppInfo: AppItemInfo[] = [];
   private columnsTemplate: string = '';
-  private RowsTemplate: string = '';
+  private rowsTemplate: string = '';
   private mGridGap = BigFolderStyleConfig.getInstance().mOpenFolderGridGap;
   @State mBigFolderViewModel: BigFolderViewModel = mBigFolderViewModel;
   @State appNameAdd: string = '';
@@ -331,12 +331,12 @@ struct FolderSwiperPage {
     let column = openFolderConfig.column as number;
     let row = openFolderConfig.row as number;
     this.columnsTemplate = '';
-    this.RowsTemplate = '';
+    this.rowsTemplate = '';
     for (let i = 0; i < column; i++) {
       this.columnsTemplate += '1fr '
     }
     for (let i = 0; i < row; i++) {
-      this.RowsTemplate += '1fr '
+      this.rowsTemplate += '1fr '
     }
   }
 
@@ -415,7 +415,7 @@ struct FolderSwiperPage {
         this.saveText();
       })
       .columnsTemplate(this.columnsTemplate)
-      .rowsTemplate(this.RowsTemplate)
+      .rowsTemplate(this.rowsTemplate)
     }
     .width(mGridWidth)
     .height(mGridHeight)
@@ -461,7 +461,7 @@ struct FolderAppItem {
   private willCloseFolder: boolean = false;
   private mFolderInfo: FolderData = { layoutInfo: [], enterEditing: false, folderName: '', folderId: '' };
   private mouseClick: number = 0;
-  private dialogName: string = "";
+  private dialogName: string = '';
   private clearForm: Function = () => {};
 
   aboutToAppear(): void {
