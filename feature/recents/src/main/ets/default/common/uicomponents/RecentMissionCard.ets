@@ -147,7 +147,17 @@ export default struct RecentMissionCard {
         .margin({ left: RecentsStyleConstants.SINGLE_LIST_APP_INFO_LEFT_MARGIN })
 
         .onClick((event) => {
+          this.isClickSubComponent = true;
+          Log.showDebug(TAG, 'onClick start launcher ability');
+          localEventManager.sendLocalEventSticky(EventConstants.EVENT_OPEN_FOLDER_TO_CLOSE, null);
+          windowManager.destroyWindow(windowManager.FORM_MANAGER_WINDOW_NAME);
+          windowManager.destroyWindow(windowManager.FORM_SERVICE_WINDOW_NAME);
+          if (!windowManager.recentMode || !windowManager.isSplitWindowMode(windowManager.recentMode)) {
+            windowManager.hideWindow(windowManager.RECENT_WINDOW_NAME);
+          }
+          Trace.start(Trace.CORE_METHOD_START_APP_ANIMATION);
           this.setStartAppInfo(event?.target?.area?.globalPosition);
+          RecentMissionsViewModel.getInstance().moveMissionToFront(this.missionId);
         })
         if (this.lockedState) {
           Column() {

@@ -192,7 +192,10 @@ export struct FolderOpenComponent {
                 })
                 .onChange((text: string) => {
                   Log.showDebug(TAG, `textinput: ` + text);
-                  this.newFolderName = text;
+                  let allSpace = new RegExp('/^\s+$/g');
+                  if (!allSpace.test(text)) {
+                    this.newFolderName = text;
+                  }
                 })
               Image(BigFolderStyleConstants.DEFAULT_CANCEL_APP_IMAGE)
                 .width(BigFolderStyleConstants.DEFAULT_OPEN_FOLDER_CANCEL_SIZE)
