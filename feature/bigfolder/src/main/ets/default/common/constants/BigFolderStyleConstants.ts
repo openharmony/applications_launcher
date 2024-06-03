@@ -44,7 +44,7 @@ export class BigFolderStyleConstants {
   static readonly DEFAULT_OPEN_FOLDER_TITLE_HEIGHT = 130;
 
   // Folder add app grid list
-  static readonly DEFAULT_OPEN_FOLDER_TEXTAREA_HEIGHT = 48;
+  static readonly DEFAULT_OPEN_FOLDER_TEXTAREA_HEIGHT = 60;
   static readonly DEFAULT_OPEN_FOLDER_CANCEL_SIZE = 24;
   static readonly DEFAULT_OPEN_FOLDER_TITLE_TOP = 90;
   static readonly DEFAULT_OPEN_FOLDER_NAVIGATION = 0;
