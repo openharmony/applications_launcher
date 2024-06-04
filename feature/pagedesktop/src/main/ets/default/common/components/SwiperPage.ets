@@ -22,7 +22,8 @@ import {
   EventConstants,
   CardItemInfo,
   FolderData,
-  BadgeManager
+  BadgeManager,
+  CheckEmptyUtils
 } from '@ohos/common';
 import AppItem from './AppItem';
 import FormItem from './FormItem';
@@ -83,7 +84,11 @@ export default struct SwiperPage {
    */
   updateOpenFolderData() {
     const openFolderData = AppStorage.get('openFolderData') as FolderData;
-    if (openFolderData?.folderId && this.mAppListInfo.length) {
+    if (CheckEmptyUtils.isEmptyArr(this.mAppListInfo)) {
+      Log.showError(TAG, 'mAppListInfo is empty');
+      return;
+    }
+    if (openFolderData?.folderId && this.mAppListInfo?.length) {
       let temp = this.mAppListInfo.find((item: LauncherDragItemInfo) => item?.folderId === openFolderData.folderId);
       AppStorage.setOrCreate('openFolderData', temp as FolderData);
     }
