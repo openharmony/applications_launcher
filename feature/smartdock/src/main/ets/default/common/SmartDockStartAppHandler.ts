@@ -66,6 +66,10 @@ export default class SmartDockStartAppHandler extends BaseStartAppHandler {
       * (this.mSmartDockStyleConfig.mListItemWidth + this.mSmartDockStyleConfig.mListItemGap);
       return;
     }else {
+      if (CheckEmptyUtils.isEmptyArr(residentList)) {
+        Log.showError(TAG, 'residentList is empty');
+        return;
+      }
       const indexInResidentList: number = this.getIndexInList(appItemInfo, residentList);
       this.mAppIconPositionX = smartDockStartPositionX + this.mSmartDockStyleConfig.mDockPadding + indexInResidentList
       * (this.mSmartDockStyleConfig.mListItemWidth + this.mSmartDockStyleConfig.mListItemGap)
@@ -82,7 +86,7 @@ export default class SmartDockStartAppHandler extends BaseStartAppHandler {
     }
 
     for (var i = 0; i < list.length; i++) {
-      if (appItemInfo?.bundleName === list[i].bundleName) {
+      if (appItemInfo?.bundleName === list[i]?.bundleName) {
         index = i;
         break;
       }
