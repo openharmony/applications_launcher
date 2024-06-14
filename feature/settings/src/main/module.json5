@@ -33,6 +33,9 @@
     ],
     "requestPermissions": [
       {
+        "name": "ohos.permission.INJECT_INPUT_EVENT"
+      },
+      {
         "name": "ohos.permission.GET_BUNDLE_INFO_PRIVILEGED"
       },
       {
