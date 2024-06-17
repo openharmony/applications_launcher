@@ -321,24 +321,6 @@ class WindowManager {
         Log.showDebug(TAG, `${this.RECENT_WINDOW_NAME} setFullScreen`);
       });
     };
-    let registerWinEvent = (win: window.Window) => {
-      Log.showDebug(TAG, 'registerWinEvent Begin');
-      win.on('windowEvent', (stageEventType) => {
-        Log.showDebug(TAG,`Recent lifeCycleEvent callback stageEventType=${stageEventType}`);
-        if (stageEventType === window.WindowEventType.WINDOW_INACTIVE) {
-
-          Log.showDebug(TAG,'Recent MainAbility onWindowStageInactive');
-          try {
-            let wins: window.Window = window.findWindow(windowManager.RECENT_WINDOW_NAME);
-            Log.showDebug(TAG,'Hide recent on inactive');
-            wins.hide();
-          } catch (err) {
-            let _err = err as BusinessError;
-            Log.showError(TAG, `Recent lifeCycleEvent findWindow errCode: ${_err.code}, errMsg: ${_err.message}`);
-          }
-        }
-      })
-    };
     try {
       let win: window.Window = window.findWindow(windowManager.RECENT_WINDOW_NAME);
       setWinMode(win);
@@ -350,7 +332,6 @@ class WindowManager {
       Log.showDebug(TAG, `recent window is not created, because ${JSON.stringify(err)}`);
       let callback = (win) => {
         Log.showDebug(TAG, 'Post recent window created');
-        registerWinEvent(win);
         setWinMode(win);
       }
       this.createWindow(globalThis.desktopContext, windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK,
