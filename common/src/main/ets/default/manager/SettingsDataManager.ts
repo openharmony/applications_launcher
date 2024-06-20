@@ -45,7 +45,7 @@ class SettingsDataManager {
     return globalThis.SettingsDataManagerInstance;
   }
 
-  private sleep (time: number) {
+  private sleep(time: number) {
     return new Promise(resolve => {
       setTimeout(resolve, time);
     })
