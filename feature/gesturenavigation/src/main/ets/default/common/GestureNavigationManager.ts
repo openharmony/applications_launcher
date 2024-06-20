@@ -31,6 +31,7 @@ const TAG = 'GestureNavigationManage';
 export class GestureNavigationManager {
   private readonly uri: string | null = null;
   private helper: dataShare.DataShareHelper;
+  private MAX_RETRY_TIME = 10;
   private readonly sGestureNavigationExecutors: GestureNavigationExecutors = GestureNavigationExecutors.getInstance();
   private touchEventCallback: inputMonitor.TouchEventReceiver | null = null;
 
@@ -63,7 +64,7 @@ export class GestureNavigationManager {
       globalThis.sGestureNavigationExecutors.setScreenHeight(display.height);
       this.touchEventCallback = globalThis.sGestureNavigationExecutors.touchEventCallback
         .bind(globalThis.sGestureNavigationExecutors);
-      settingsDataManager.createDataShareHelper();
+      settingsDataManager.createDataShareHelper(this.MAX_RETRY_TIME);
     }
   }
 
