@@ -52,12 +52,12 @@ class SettingsDataManager {
   }
 
   public async createDataShareHelper(retryTimes: number): Promise<void> {
-    Log.showError(TAG, 'createDataShareHelper');
+    Log.showInfo(TAG, 'createDataShareHelper');
     if (retryTimes < 1) {
       Log.showError(TAG, 'createDataShareHelper, retry too many times');
       return;
     }
-    Log.showError(TAG, 'createDataShareHelper in, retry times: %{public}d', this.MAX_RETRY_TIME - retryTimes + 1);
+    Log.showInfo(TAG, 'createDataShareHelper in, retry times: %{public}d', this.MAX_RETRY_TIME - retryTimes + 1);
     try {
       this.dataShareHelper = await dataShare.createDataShareHelper(globalThis.desktopContext, this.uriShare);
       if (this.dataShareHelper) {
