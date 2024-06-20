@@ -28,6 +28,8 @@ const TAG = 'SettingsDataManager'
 class SettingsDataManager {
   private readonly uriShare: string = 'datashare:///com.ohos.settingsdata/entry/settingsdata/SETTINGSDATA?Proxy=true&key=';
   private dataShareHelper: dataShare.DataShareHelper | null = null;
+  private RETRY_INTERVAL_MS = 2000;
+  private MAX_RETRY_TIME = 10;
   private constructor() {
   }
 
@@ -43,21 +45,30 @@ class SettingsDataManager {
     return globalThis.SettingsDataManagerInstance;
   }
 
-  public createDataShareHelper() {
-    Log.showInfo(TAG, 'createDataShareHelper context:' + globalThis.desktopContext);
-    const UPDATE_INTERVAL = 30;
-    const timer = setInterval(() => {
-      dataShare.createDataShareHelper(globalThis.desktopContext, this.uriShare)
-        .then((dataHelper) => {
-          Log.showInfo(TAG, `createDataShareHelper success.`);
-          this.dataShareHelper = dataHelper;
-          globalThis.sGestureNavigationManager.getGestureNavigationStatus();
-          clearInterval(timer);
-        })
-        .catch((err: BusinessError) => {
-          Log.showError(TAG, `createDataShareHelper fail. ${JSON.stringify(err)}`);
-        });
-    }, UPDATE_INTERVAL);
+  private sleep (time: number) {
+    return new Promise(resolve => {
+      setTimeout(resolve, time);
+    })
+  }
+
+  public async createDataShareHelper(retryTimes: number): Promise<void> {
+    Log.showError(TAG, 'createDataShareHelper');
+    if (retryTimes < 1) {
+      Log.showError(TAG, 'createDataShareHelper, retry too many times');
+      return;
+    }
+    Log.showError(TAG, 'createDataShareHelper in, retry times: %{public}d', this.MAX_RETRY_TIME - retryTimes + 1);
+    try {
+      this.dataShareHelper = await dataShare.createDataShareHelper(globalThis.desktopContext, this.uriShare);
+      if (this.dataShareHelper) {
+        Log.showInfo(TAG, 'createDataShareHelper success.');
+        globalThis.sGestureNavigationManager.getGestureNavigationStatus();
+      }
+    } catch (err) {
+      Log.showError(TAG, 'createDataShareHelper error, code: ' + err?.code + ', message: ' + err?.message);
+      await this.sleep(this.RETRY_INTERVAL_MS);
+      this.createDataShareHelper(retryTimes - 1);
+    }
   }
 
   /**
