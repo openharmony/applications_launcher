@@ -117,7 +117,7 @@ export class PageDesktopStartAppHandler extends BaseStartAppHandler {
     let index: number = 0;
     if (CheckEmptyUtils.isEmpty(appItem) || CheckEmptyUtils.isEmpty(folderItem)
       || CheckEmptyUtils.isEmpty(folderItem.layoutInfo[0])) {
-      Log.showError(TAG, `getIndexInFolderAppList with invalid appItem or folderItem`);
+      Log.showError(TAG, 'getIndexInFolderAppList with invalid appItem or folderItem');
     }
 
     for (var i = 0; i < folderItem.layoutInfo[0].length; i++) {

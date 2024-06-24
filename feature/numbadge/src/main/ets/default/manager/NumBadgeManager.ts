@@ -43,7 +43,7 @@ export class NumBadgeManager {
     }
 
     private onCancelCallback(data) {
-        Log.showInfo(TAG, "onCancelCallback called !!");
+        Log.showInfo(TAG, 'onCancelCallback called !!');
         this.handleSubscribeCallbackData(data, false);
     }
 
@@ -103,17 +103,17 @@ export class NumBadgeManager {
 
     private registerNumBadgeCallback(err, data) {
         if (err.code) {
-            Log.showInfo(TAG, "registerNumBadgeCallback faided " + JSON.stringify(err));
+            Log.showInfo(TAG, 'registerNumBadgeCallback faided ' + JSON.stringify(err));
         } else {
-            Log.showInfo(TAG, "registerNumBadgeCallback success ");
+            Log.showInfo(TAG, 'registerNumBadgeCallback success ');
         }
     }
 
     private unRegisterNumBadgeCallback(err, data) {
         if (err.code) {
-            Log.showInfo(TAG, "unRegisterNumBadgeCallback faided " + JSON.stringify(err));
+            Log.showInfo(TAG, 'unRegisterNumBadgeCallback faided ' + JSON.stringify(err));
         } else {
-            Log.showInfo(TAG, "unRegisterNumBadgeCallback success ");
+            Log.showInfo(TAG, 'unRegisterNumBadgeCallback success ');
         }
     }
 
@@ -125,12 +125,12 @@ export class NumBadgeManager {
     }
 
     registerNumBadge() {
-        Log.showInfo(TAG, "registerNumBadge called ");
+        Log.showInfo(TAG, 'registerNumBadge called ');
         Notification.subscribe(this.mSubscriber, this.mRegisterNumBadgeCallback);
     }
 
     unRegisterNumBadge() {
-        Log.showInfo(TAG, "unRegisterNumBadge called ");
+        Log.showInfo(TAG, 'unRegisterNumBadge called ');
         Notification.unsubscribe(this.mSubscriber, this.mUnRegisterNumBadgeCallback);
     }
 }

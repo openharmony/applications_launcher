@@ -136,7 +136,7 @@ export struct FormServiceComponent {
   formClick(event: ClickEvent, formItem: CardItemInfo): void {
     let clickedFormAppInfos: AppItemInfo[] = this.formAppInfos.filter(info => info.bundleName == formItem.bundleName);
     if (clickedFormAppInfos.length == 0) {
-      Log.showError(TAG, `The clicked card has no app information.`);
+      Log.showError(TAG, 'The clicked card has no app information.');
       return;
     }
     let formAppInfo: AppItemInfo = clickedFormAppInfos[0];
@@ -158,7 +158,7 @@ export struct FormServiceComponent {
         if (callback !== undefined) {
           this.clearForm = callback;
         } else {
-          Log.showError(TAG, `FormManagerDialog callback error`); // 维测日志
+          Log.showError(TAG, 'FormManagerDialog callback error'); // 维测日志
         }
       },
       confirm: (formCardItem: CardItemInfo) => {

@@ -25,7 +25,7 @@ export default struct RecentMissionAppName {
   @Prop @Watch('updateName') appName: string;
   @State nameSize: number = RecentsStyleConstants.DEFAULT_FONT_SIZE;
   @State nameMargin: number = RecentsStyleConstants.APP_NAME_MARGIN;
-  @State name: string = ''
+  @State name: string = '';
   @Prop bundleName: string;
   @Prop moduleName: string;
   @Prop labelId: number;

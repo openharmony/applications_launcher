@@ -337,7 +337,7 @@ class SelfWindowAnimationController extends WindowAnimationControllerImpl {
   onAppTransition(fromWindowTarget: windowAnimationManager.WindowAnimationTarget,
                   toWindowTarget: windowAnimationManager.WindowAnimationTarget,
                   finishCallback: windowAnimationManager.WindowAnimationFinishedCallback) {
-    Log.showInfo(TAG, `remote window animaion onAppTransition`);
+    Log.showInfo(TAG, 'remote window animaion onAppTransition');
     const remoteWindowKey = toWindowTarget.bundleName + toWindowTarget.abilityName + toWindowTarget.missionId;
     const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
     const remoteVo = new RemoteVo(
@@ -393,7 +393,7 @@ class SelfWindowAnimationController extends WindowAnimationControllerImpl {
 
   onCloseWindow(closingWindowTarget: windowAnimationManager.WindowAnimationTarget,
                 finishCallback: windowAnimationManager.WindowAnimationFinishedCallback) {
-    Log.showInfo(TAG, `remote window animaion onCloseWindow`);
+    Log.showInfo(TAG, 'remote window animaion onCloseWindow');
     const startAppTypeFromPageDesktop: number = AppStorage.get('startAppTypeFromPageDesktop') as number;
     const appInfo: StartAppInfo = this.mCloseAppManager.getAppInfo(closingWindowTarget);
     const remoteWindowKey =

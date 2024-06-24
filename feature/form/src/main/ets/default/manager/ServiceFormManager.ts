@@ -27,9 +27,6 @@ import RecommendManager from './RecommendFormManager';
 import HashSet from '@ohos.util.HashSet';
 
 const TAG = 'ServiceFormManager';
-const CARD_2X2_ROW_NUM_3 = 3;
-const CARD_2X2_ROW_NUM_2 = 2;
-const CARD_2X2_PAIRS = 2;
 
 /**
  * 服务卡片管理接口
@@ -46,6 +43,9 @@ export default class ServiceFormManager {
   private readonly mFormModel: FormModel;
   private readonly mAppModel: AppModel;
   private readonly mAtomicAppModel: AtomicServiceAppModel;
+  private CARD_2X2_PAIRS = 2;
+  private CARD_2X2_ROW_NUM_2 = 2;
+  private CARD_2X2_ROW_NUM_3 = 3;
 
   private constructor() {
     this.mRecommendManager = RecommendManager.getInstance();
@@ -92,7 +92,7 @@ export default class ServiceFormManager {
 
     // 再找其他2x2卡片
     let card2x2RowNum: number = first2x4CardIndex === CommonConstants.INVALID_VALUE ?
-      CARD_2X2_ROW_NUM_3 : CARD_2X2_ROW_NUM_2;
+      this.CARD_2X2_ROW_NUM_3 : this.CARD_2X2_ROW_NUM_2;
     let rowForms: CardItemInfo[] = [];
     for (let index = 0; index < recommendForms.length; index++) {
       if (index === first2x4CardIndex) {
@@ -103,7 +103,7 @@ export default class ServiceFormManager {
         continue;
       }
       rowForms.push(card2x2);
-      if (rowForms.length === CARD_2X2_PAIRS) {
+      if (rowForms.length === this.CARD_2X2_PAIRS) {
         formInfos.push(rowForms[0]);
         formInfos.push(rowForms[1]);
         rowForms = [];

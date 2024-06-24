@@ -54,7 +54,7 @@ export class GestureNavigationManager {
    */
   private registerListenForDataChanges(callback: AsyncCallback<void>) {
     this.helper = settingsDataManager.getHelper(globalThis.desktopContext, this.uri);
-    Log.showInfo(TAG, "helper:" + this.helper +  "  registerListenForDataChanges uri:" + this.uri);
+    Log.showInfo(TAG, 'helper:' + this.helper +  'registerListenForDataChanges uri:' + this.uri);
     this.helper.on('dataChange', this.uri, callback);
   }
 
@@ -86,7 +86,7 @@ export class GestureNavigationManager {
   }
 
   private dataChangesCallback(data: any) {
-    Log.showInfo(TAG, "dataChangesCallback data:" + data);
+    Log.showInfo(TAG, 'dataChangesCallback data:' + data);
     const getRetValue = this.getValue();
     this.handleEventSwitches(getRetValue);
     AppStorage.setOrCreate('NavigationBarStatusValue', getRetValue === '0' ? true : false);

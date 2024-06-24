@@ -38,7 +38,7 @@ export struct RecentMissionsDoubleLayout {
   }
 
   aboutToDisappear(): void {
-    Log.showInfo(TAG, `aboutToDisappear start`);
+    Log.showInfo(TAG, 'aboutToDisappear start');
   }
 
   itemChance(item: RecentMissionInfo): RecentMissionInfo {

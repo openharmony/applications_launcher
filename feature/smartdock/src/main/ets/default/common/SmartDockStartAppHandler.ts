@@ -46,7 +46,7 @@ export default class SmartDockStartAppHandler extends BaseStartAppHandler {
 
   protected calculateAppIconPosition(): void {
     if (CheckEmptyUtils.isEmpty(this.mSmartDockStyleConfig)) {
-      Log.showError(TAG, `calculateAppIconPosition with invalid config`)
+      Log.showError(TAG, 'calculateAppIconPosition with invalid config')
       return;
     }
     const appItemInfo = AppStorage.get('startAppItemInfo');
@@ -81,7 +81,7 @@ export default class SmartDockStartAppHandler extends BaseStartAppHandler {
   private getIndexInList(appItemInfo, list) : number {
     let index: number = CommonConstants.INVALID_VALUE;
     if (CheckEmptyUtils.isEmptyArr(list)) {
-      Log.showError(TAG, `getIndexInRecentList with invalid list`)
+      Log.showError(TAG, 'getIndexInRecentList with invalid list')
       return index;
     }
 

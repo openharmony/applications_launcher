@@ -404,7 +404,7 @@ export default class SmartDockModel {
 
     if (this.mDevice === CommonConstants.PAD_DEVICE_TYPE) {
       this.mRecentDataList = AppStorage.get('recentList');
-      Log.showDebug(TAG, `updateBadgeNum recent `);
+      Log.showDebug(TAG, 'updateBadgeNum recent ');
       if (!CheckEmptyUtils.isEmptyArr(this.mRecentDataList)) {
         for (var i = 0; i < this.mRecentDataList.length; i++) {
           let curRecentData: RecentBundleMissionInfo = this.mRecentDataList[i];

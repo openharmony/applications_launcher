@@ -26,42 +26,42 @@ export default class PadLauncherLayoutStyleConfig extends LauncherLayoutStyleCon
   /**
    * CommonDialog width
    */
-  mCommonDialogWidth = PadPresetStyleConstants.DEFAULT_COMMONDIALOG_WIDTH;
+  mCommonDialogWidth: string = PadPresetStyleConstants.DEFAULT_COMMONDIALOG_WIDTH;
 
   /**
    * systemUI top height
    */
-  mSysTopHeight = PadPresetStyleConstants.DEFAULT_SYS_TOP_HEIGHT;
+  mSysTopHeight: number = PadPresetStyleConstants.DEFAULT_SYS_TOP_HEIGHT;
 
   /**
    * systemUI bottom height
    */
-  mSysBottomHeight = PadPresetStyleConstants.DEFAULT_SYS_BOTTOM_HEIGHT;
+  mSysBottomHeight: number = PadPresetStyleConstants.DEFAULT_SYS_BOTTOM_HEIGHT;
 
   /**
    * systemUI height (top + bottom)
    */
-  mSystemUIHeight = PresetStyleConstants.DEFAULT_PAD_SYSTEM_UI;
+  mSystemUIHeight: number = PresetStyleConstants.DEFAULT_PAD_SYSTEM_UI;
 
   /**
    * indicator height
    */
-  mIndicatorHeight = PresetStyleConstants.DEFAULT_PAD_INDICATOR_HEIGHT;
+  mIndicatorHeight: number = PresetStyleConstants.DEFAULT_PAD_INDICATOR_HEIGHT;
 
   /**
    * desktop item Size
    */
-  mAppItemSize = PadPresetStyleConstants.DEFAULT_APP_LAYOUT_SIZE;
+  mAppItemSize: number = PadPresetStyleConstants.DEFAULT_APP_LAYOUT_SIZE;
 
   /**
    * desktop space margin
    */
-  mMargin = PadPresetStyleConstants.DEFAULT_LAYOUT_MARGIN;
+  mMargin: number = PadPresetStyleConstants.DEFAULT_LAYOUT_MARGIN;
 
   /**
    * desktop grid gap
    */
-  mGridGutter = PadPresetStyleConstants.DEFAULT_APP_LAYOUT_MIN_GUTTER;
+  mGridGutter: number = PadPresetStyleConstants.DEFAULT_APP_LAYOUT_MIN_GUTTER;
 
   /**
    * icon name lines

@@ -193,7 +193,7 @@ export default struct FolderAppListDialog {
           .height(BigFolderStyleConstants.DEFAULT_BUTTON_HEIGHT)
           .width(BigFolderStyleConstants.DEFAULT_BUTTON_WIDTH)
           .onClick(() => {
-            Log.showDebug(TAG, `Dialog confirm start`);
+            Log.showDebug(TAG, 'Dialog confirm start');
             this.mBigFolderViewModel?.updateFolderAppList(this.appListChecked, this.folderItem);
             let isDestory = false;
             if (this.folderItem.layoutInfo[0].length < 2) {
@@ -203,7 +203,7 @@ export default struct FolderAppListDialog {
             }
             this.controller?.close();
             this.confirm(isDestory);
-            Log.showDebug(TAG, `Dialog confirm end`);
+            Log.showDebug(TAG, 'Dialog confirm end');
           })
         }
       }
