@@ -93,7 +93,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
     const temp = gridLayoutInfo;
     FileUtils.writeStringToFile(JSON.stringify(temp), this.getConfigFileAbsPath());
     this.mGridLayoutInfo = gridLayoutInfo;
-    Log.showInfo(TAG, " srj updateGridLayoutInfo...");
+    Log.showInfo(TAG, 'srj updateGridLayoutInfo...');
 
     const UPDATE_RDB_GRID_LAYOUT_INFO_INTERVAL = 30;
     const timer = setInterval(() => {
@@ -125,7 +125,7 @@ export class PageDesktopLayoutConfig extends ILayoutConfig {
    * load configuration
    */
   async loadPersistConfig(): Promise<void> {
-    Log.showDebug(TAG, `loadPersistConfig start`);
+    Log.showDebug(TAG, 'loadPersistConfig start');
     let defaultConfig = super.loadPersistConfig();
     const configFromFile = FileUtils.readStringFromFile(this.getConfigFileAbsPath());
     if (configFromFile) {

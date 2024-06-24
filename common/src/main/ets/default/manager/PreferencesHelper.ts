@@ -34,7 +34,7 @@ export class PreferencesHelper {
 
   async initPreference(context: Context): Promise<void> {
     if (this.preference) {
-      Log.showInfo(TAG, `preference is inited`);
+      Log.showInfo(TAG, 'preference is inited');
       return;
     }
     try {

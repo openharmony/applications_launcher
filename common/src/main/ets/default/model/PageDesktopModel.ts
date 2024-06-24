@@ -118,7 +118,7 @@ export class PageDesktopModel {
    * @param {boolean} isAddByDragging
    */
   setAddByDragging(isAddByDragging: boolean): void {
-    this.isAddByDraggingFlag = isAddByDragging
+    this.isAddByDraggingFlag = isAddByDragging;
   }
 
   updateAppItemLayoutInfo(info, item): void {

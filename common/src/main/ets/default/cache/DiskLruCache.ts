@@ -13,9 +13,6 @@
  * limitations under the License.
  */
 
-import { Log } from '../utils/Log';
-
-const TAG = 'DiskLruCache';
 
 /**
  * A class provides persistent operation for memory cache.

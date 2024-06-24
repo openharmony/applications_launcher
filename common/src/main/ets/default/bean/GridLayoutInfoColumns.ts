@@ -19,13 +19,13 @@ import DesktopApplicationColumns from './DesktopApplicationColumns';
  * GridLayoutInfo  Columns
  */
 export default class GridLayoutInfoColumns extends DesktopApplicationColumns {
-    static readonly CARD_ID: string = "card_id";
-    static readonly FOLDER_ID: string = "folder_id";
-    static readonly CONTAINER: string = "container";
-    static readonly FOLDER_NAME: string = "folder_name";
-    static readonly TYPE_ID: string = "type_id";
-    static readonly AREA: string = "area";
-    static readonly PAGE: string = "page";
-    static readonly COLUMN: string = "column";
-    static readonly ROW: string = "row";
+    static readonly CARD_ID: string = 'card_id';
+    static readonly FOLDER_ID: string = 'folder_id';
+    static readonly CONTAINER: string = 'container';
+    static readonly FOLDER_NAME: string = 'folder_name';
+    static readonly TYPE_ID: string = 'type_id';
+    static readonly AREA: string = 'area';
+    static readonly PAGE: string = 'page';
+    static readonly COLUMN: string = 'column';
+    static readonly ROW: string = 'row';
 }

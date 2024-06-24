@@ -53,7 +53,7 @@ class NavigationBarCommonEventManager {
     };
     commonEventMgr.createSubscriber(subscribeInfo).then(
       (commonEventSubscriber: commonEventMgr.CommonEventSubscriber) => {
-        Log.showDebug(TAG, "init SPLIT_SCREEN subscriber success");
+        Log.showDebug(TAG, 'init SPLIT_SCREEN subscriber success');
         NavigationBarCommonEventManager.subscriber = commonEventSubscriber;
       }, (err) => {
       Log.showError(TAG, `Failed to createSubscriber ${err}`);

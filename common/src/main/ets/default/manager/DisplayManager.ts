@@ -20,30 +20,30 @@ import { Log } from '../utils/Log';
 const TAG = 'DisplayManager: ';
 
 export class DisplayManager {
-  private readonly MAIN_WINDOW_PREFIX = 'customMainWindow_'
-  private readonly DEFAULT_MAIN_WINDOW_PAGE = 'pages/SubDisplayWallpaperPage'
+  private readonly MAIN_WINDOW_PREFIX = 'customMainWindow_';
+  private readonly DEFAULT_MAIN_WINDOW_PAGE = 'pages/SubDisplayWallpaperPage';
 
-  public defaultDisplay: display.Display = undefined
-  private displayDevices: Array<display.Display> = []
+  public defaultDisplay: display.Display = undefined;
+  private displayDevices: Array<display.Display> = [];
 
   private constructor() {
-    Log.showInfo(TAG, 'constructor called.')
-    this.loadDefaultDisplay()
-    this.loadAllDisplays()
+    Log.showInfo(TAG, 'constructor called.');
+    this.loadDefaultDisplay();
+    this.loadAllDisplays();
 
-    this.initDisplayChangeListener()
+    this.initDisplayChangeListener();
   }
 
   public static getInstance(): DisplayManager {
-    return globalThis.DisplayManager ??= new DisplayManager()
+    return globalThis.DisplayManager ??= new DisplayManager();
   }
 
   private loadDefaultDisplay() {
     try {
-      this.defaultDisplay = display.getDefaultDisplaySync()
-      Log.showInfo(TAG, 'loadDefaultDisplay. defaultDisplay id: ' + this.defaultDisplay?.id)
+      this.defaultDisplay = display.getDefaultDisplaySync();
+      Log.showInfo(TAG, 'loadDefaultDisplay. defaultDisplay id: ' + this.defaultDisplay?.id);
     } catch (err) {
-      Log.showError(TAG, 'loadDefaultDisplay occur error. errInfo: ' + JSON.stringify(err))
+      Log.showError(TAG, 'loadDefaultDisplay occur error. errInfo: ' + JSON.stringify(err));
     }
   }
 
@@ -51,25 +51,25 @@ export class DisplayManager {
     let displays: Array<display.Display> = await display.getAllDisplays()
     for (let display of displays) {
       if (this.displayDevices.findIndex(item => item.id === display.id) < 0) {
-        Log.showInfo(TAG, 'new display added. detail: ' + JSON.stringify(display))
-        this.displayDevices.push(display)
-        this.createMainWindow(display)
+        Log.showInfo(TAG, 'new display added. detail: ' + JSON.stringify(display));
+        this.displayDevices.push(display);
+        this.createMainWindow(display);
       }
     }
   }
 
   private initDisplayChangeListener() {
     display.on('add', displayId => {
-      Log.showInfo(TAG, 'add new display. id: ' + JSON.stringify(displayId))
-      this.loadAllDisplays()
+      Log.showInfo(TAG, 'add new display. id: ' + JSON.stringify(displayId));
+      this.loadAllDisplays();
     })
 
     display.on('remove', displayId => {
-      Log.showInfo(TAG, 'remove display. id: ' + JSON.stringify(displayId))
-      let delIndex: number = this.displayDevices.findIndex(item => item.id === displayId)
+      Log.showInfo(TAG, 'remove display. id: ' + JSON.stringify(displayId));
+      let delIndex: number = this.displayDevices.findIndex(item => item.id === displayId);
       if (delIndex > 0) {
-        this.destroyMainWindow(displayId)
-        this.displayDevices.splice(delIndex, 1)
+        this.destroyMainWindow(displayId);
+        this.displayDevices.splice(delIndex, 1);
       }
     })
   }
@@ -81,7 +81,7 @@ export class DisplayManager {
   private createMainWindow(display: display.Display) {
     if (display.id === this.defaultDisplay?.id) {
       //主屏不需要创建主窗口
-      return
+      return;
     }
     window.createWindow({
       ctx: globalThis.desktopContext,
@@ -89,45 +89,45 @@ export class DisplayManager {
       windowType: window.WindowType.TYPE_DESKTOP,
       displayId: display.id
     }).then((resultWindow: window.Window) => {
-      resultWindow.resize(display.width, display.height)
-      resultWindow.setWindowMode(window.WindowMode.FULLSCREEN)
-      resultWindow.setUIContent(this.DEFAULT_MAIN_WINDOW_PAGE)
-      Log.showInfo(TAG, `create main window ${display.id} success.`)
+      resultWindow.resize(display.width, display.height);
+      resultWindow.setWindowMode(window.WindowMode.FULLSCREEN);
+      resultWindow.setUIContent(this.DEFAULT_MAIN_WINDOW_PAGE);
+      Log.showInfo(TAG, `create main window ${display.id} success.`);
 
-      resultWindow.showWithAnimation()
+      resultWindow.showWithAnimation();
     }).catch(err => {
-      Log.showError(TAG, 'create main window failed. reason: ' + JSON.stringify(err))
+      Log.showError(TAG, 'create main window failed. reason: ' + JSON.stringify(err));
     })
   }
 
   private findWindow(displayId: number): window.Window {
-    let resultWindow = undefined
+    let resultWindow = undefined;
     try {
-      resultWindow = window.findWindow(this.MAIN_WINDOW_PREFIX + displayId)
+      resultWindow = window.findWindow(this.MAIN_WINDOW_PREFIX + displayId);
     } catch (err) {
-      Log.showError(TAG, 'findWindow occur err. errInfo: ' + JSON.stringify(err))
+      Log.showError(TAG, 'findWindow occur err. errInfo: ' + JSON.stringify(err));
     }
-    return resultWindow
+    return resultWindow;
   }
 
 
   private destroyMainWindow(displayId: number) {
     if (displayId === this.defaultDisplay?.id) {
-      return
+      return;
     }
-    let resultWindow = this.findWindow(displayId)
+    let resultWindow = this.findWindow(displayId);
     if (resultWindow?.isWindowShowing()) {
-      resultWindow.hideWithAnimation()
+      resultWindow.hideWithAnimation();
     }
-    resultWindow?.destroyWindow()
-    Log.showInfo(TAG, `destroy main window ${displayId} success.`)
+    resultWindow?.destroyWindow();
+    Log.showInfo(TAG, `destroy main window ${displayId} success.`);
   }
 
   public destroySubDisplayWindow() {
     for (let display of this.displayDevices) {
-      this.destroyMainWindow(display.id)
+      this.destroyMainWindow(display.id);
     }
-    display.off('add')
-    display.off('remove')
+    display.off('add');
+    display.off('remove');
   }
 }

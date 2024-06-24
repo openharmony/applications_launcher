@@ -199,7 +199,7 @@ class AmsMissionManager {
   }
 
   private async lockCallback(): Promise<void> {
-    Log.showDebug(TAG, `lockCallback start`);
+    Log.showDebug(TAG, 'lockCallback start');
     // update mission recent card
     let mRecentMissionsList = await amsMissionManager.getRecentMissionsList();
     mRecentMissionsList.find(item => {

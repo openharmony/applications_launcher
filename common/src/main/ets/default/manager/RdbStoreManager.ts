@@ -341,7 +341,7 @@ export class RdbStoreManager {
         // update settings by key and value
         let sql = `UPDATE ${RdbStoreConfig.Settings.TABLE_NAME} SET ${key} = '${value}' WHERE id = 1`;
         await this.mRdbStore.executeSql(sql);
-        Log.showDebug(TAG, `updateSettings update successful.`);
+        Log.showDebug(TAG, 'updateSettings update successful.');
       }
     } catch (e) {
       Log.showError(TAG, 'updateSettings error:' + JSON.stringify(e));
@@ -690,7 +690,7 @@ export class RdbStoreManager {
     const resultList: AppItemInfo[] = [];
     try {
       let layoutPredicates = new relationalStore.RdbPredicates(RdbStoreConfig.GridLayoutInfo.TABLE_NAME);
-      layoutPredicates.equalTo("container", container);
+      layoutPredicates.equalTo('container', container);
       let columns = [GridLayoutInfoColumns.APP_NAME,
         GridLayoutInfoColumns.IS_SYSTEM_APP,
         GridLayoutInfoColumns.IS_UNINSTALLABLE,
