@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Prompt from '@ohos.promptAction';
 import windowAnimationManager from '@ohos.animation.windowAnimationManager';
 import { CheckEmptyUtils } from '../../utils/CheckEmptyUtils';
 import { Log } from '../../utils/Log';
@@ -24,7 +23,7 @@ class WindowAnimationControllerImpl implements windowAnimationManager.WindowAnim
   onStartAppFromLauncher(startingWindowTarget: windowAnimationManager.WindowAnimationTarget,
                          finishCallback: windowAnimationManager.WindowAnimationFinishedCallback): void
   {
-    Log.showInfo(TAG, `remote window animaion onStartAppFromLauncher`);
+    Log.showInfo(TAG, 'remote window animaion onStartAppFromLauncher');
     this.setRemoteAnimation(startingWindowTarget, null, finishCallback, RemoteConstants.TYPE_START_APP_FROM_LAUNCHER);
     this.printfTarget(startingWindowTarget);
     finishCallback.onAnimationFinish();
@@ -32,7 +31,7 @@ class WindowAnimationControllerImpl implements windowAnimationManager.WindowAnim
 
   onStartAppFromRecent(startingWindowTarget: windowAnimationManager.WindowAnimationTarget,
                        finishCallback: windowAnimationManager.WindowAnimationFinishedCallback): void {
-    Log.showInfo(TAG, `remote window animaion onStartAppFromRecent`);
+    Log.showInfo(TAG, 'remote window animaion onStartAppFromRecent');
     this.setRemoteAnimation(startingWindowTarget, null, finishCallback, RemoteConstants.TYPE_START_APP_FROM_RECENT);
     this.printfTarget(startingWindowTarget);
     finishCallback.onAnimationFinish();
@@ -40,7 +39,7 @@ class WindowAnimationControllerImpl implements windowAnimationManager.WindowAnim
 
   onStartAppFromOther(startingWindowTarget: windowAnimationManager.WindowAnimationTarget,
                       finishCallback: windowAnimationManager.WindowAnimationFinishedCallback): void {
-    Log.showInfo(TAG, `remote window animaion onStartAppFromOther`);
+    Log.showInfo(TAG, 'remote window animaion onStartAppFromOther');
     this.setRemoteAnimation(startingWindowTarget, null, finishCallback, RemoteConstants.TYPE_START_APP_FROM_OTHER);
     this.printfTarget(startingWindowTarget);
     finishCallback.onAnimationFinish();
@@ -49,7 +48,7 @@ class WindowAnimationControllerImpl implements windowAnimationManager.WindowAnim
   onAppTransition(fromWindowTarget: windowAnimationManager.WindowAnimationTarget,
                   toWindowTarget: windowAnimationManager.WindowAnimationTarget,
                   finishCallback: windowAnimationManager.WindowAnimationFinishedCallback): void{
-    Log.showInfo(TAG, `remote window animaion onAppTransition`);
+    Log.showInfo(TAG, 'remote window animaion onAppTransition');
     this.setRemoteAnimation(toWindowTarget, fromWindowTarget, finishCallback, RemoteConstants.TYPE_APP_TRANSITION);
     this.printfTarget(fromWindowTarget);
     this.printfTarget(toWindowTarget);
@@ -58,7 +57,7 @@ class WindowAnimationControllerImpl implements windowAnimationManager.WindowAnim
 
   onMinimizeWindow(minimizingWindowTarget: windowAnimationManager.WindowAnimationTarget,
                    finishCallback: windowAnimationManager.WindowAnimationFinishedCallback): void {
-    Log.showInfo(TAG, `remote window animaion onMinimizeWindow`);
+    Log.showInfo(TAG, 'remote window animaion onMinimizeWindow');
     this.setRemoteAnimation(null, minimizingWindowTarget, finishCallback, RemoteConstants.TYPE_MINIMIZE_WINDOW);
     this.printfTarget(minimizingWindowTarget);
     finishCallback.onAnimationFinish();
@@ -66,14 +65,14 @@ class WindowAnimationControllerImpl implements windowAnimationManager.WindowAnim
 
   onCloseWindow(closingWindowTarget: windowAnimationManager.WindowAnimationTarget,
                 finishCallback: windowAnimationManager.WindowAnimationFinishedCallback): void {
-    Log.showInfo(TAG, `remote window animaion onCloseWindow`);
+    Log.showInfo(TAG, 'remote window animaion onCloseWindow');
     this.setRemoteAnimation(null, closingWindowTarget, finishCallback, RemoteConstants.TYPE_CLOSE_WINDOW);
     this.printfTarget(closingWindowTarget);
     finishCallback.onAnimationFinish();
   }
 
   onScreenUnlock(finishCallback: windowAnimationManager.WindowAnimationFinishedCallback): void {
-    Log.showInfo(TAG, `remote window animaion onScreenUnlock`);
+    Log.showInfo(TAG, 'remote window animaion onScreenUnlock');
     this.setRemoteAnimation(null, null, finishCallback, RemoteConstants.TYPE_SCREEN_UNLOCK);
     finishCallback.onAnimationFinish();
   }
@@ -82,7 +81,7 @@ class WindowAnimationControllerImpl implements windowAnimationManager.WindowAnim
 
   printfTarget(target: windowAnimationManager.WindowAnimationTarget): void {
     if (CheckEmptyUtils.isEmpty(target) || CheckEmptyUtils.isEmpty(target.windowBounds)) {
-      Log.showInfo(TAG, `remote window animaion with invalid target`);
+      Log.showInfo(TAG, 'remote window animaion with invalid target');
       return;
     }
     Log.showInfo(TAG, `remote window animaion bundleName: ${target.bundleName} abilityName: ${target.abilityName}`);
@@ -110,4 +109,4 @@ class WindowAnimationControllerImpl implements windowAnimationManager.WindowAnim
   }
 }
 
-export default WindowAnimationControllerImpl
+export default WindowAnimationControllerImpl;

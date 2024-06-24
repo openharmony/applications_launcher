@@ -18,14 +18,14 @@
  */
 export const FormConstants = {
     // publish form action
-    ACTION_PUBLISH_FORM: "action.form.publish",
+    ACTION_PUBLISH_FORM: 'action.form.publish',
 
     // publish card parameters
-    ID_PARAM: "ohos.extra.param.key.form_identity",
-    NAME_PARAM: "ohos.extra.param.key.form_name",
-    BUNDLE_PARAM: "ohos.extra.param.key.bundle_name",
-    ABILITY_PARAM: "ohos.extra.param.key.ability_name",
-    MODULE_PARAM: "ohos.extra.param.key.module_name",
-    DIMENSION_PARAM: "ohos.extra.param.key.form_dimension",
-    TEMPORARY_PARAM:"ohos.extra.param.key.form_temporary"
+    ID_PARAM: 'ohos.extra.param.key.form_identity',
+    NAME_PARAM: 'ohos.extra.param.key.form_name',
+    BUNDLE_PARAM: 'ohos.extra.param.key.bundle_name',
+    ABILITY_PARAM: 'ohos.extra.param.key.ability_name',
+    MODULE_PARAM: 'ohos.extra.param.key.module_name',
+    DIMENSION_PARAM: 'ohos.extra.param.key.form_dimension',
+    TEMPORARY_PARAM:'ohos.extra.param.key.form_temporary'
 };

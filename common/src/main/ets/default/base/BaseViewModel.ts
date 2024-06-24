@@ -19,7 +19,6 @@ import { AppModel } from '../model/AppModel';
 import { ResourceManager } from '../manager/ResourceManager';
 import { CommonConstants } from '../constants/CommonConstants';
 import { launcherAbilityManager } from '../manager/LauncherAbilityManager';
-import { AsyncCallback } from '@ohos.base';
 
 const TAG = 'BaseViewModel';
 

@@ -75,7 +75,7 @@ class SettingsDataManager {
    * Update settingData by settingDataKey.
    */
   setValue(helper: dataShare.DataShareHelper | null, settingDataKey: string, value: string): void {
-    Log.showInfo(TAG, "setValue:" + value)
+    Log.showInfo(TAG, 'setValue:' + value)
     if (typeof globalThis.desktopContext === 'undefined') {
       settings.setValueSync(globalThis.settingsContext as Context, settingDataKey, value);
     } else {
@@ -95,7 +95,7 @@ class SettingsDataManager {
     } else {
       value = settings.getValueSync(globalThis.desktopContext as Context, settingDataKey, defaultValue);
     }
-    Log.showInfo(TAG, "getValue:" + value);
+    Log.showInfo(TAG, 'getValue:' + value);
     return value;
   }
 

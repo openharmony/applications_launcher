@@ -62,7 +62,7 @@ export class CloseAppManager {
    */
   public registerCloseAppHandler(baseCloseAppHandler: BaseCloseAppHandler): void {
     if (CheckEmptyUtils.isEmpty(baseCloseAppHandler)) {
-      Log.showError(TAG, `registerCloseAppHandler with invalid baseCloseAppHandler`)
+      Log.showError(TAG, 'registerCloseAppHandler with invalid baseCloseAppHandler')
       return;
     }
 
@@ -77,7 +77,7 @@ export class CloseAppManager {
    */
   public unregisterCloseAppHandler(baseCloseAppHandler: BaseCloseAppHandler): void {
     if (CheckEmptyUtils.isEmpty(baseCloseAppHandler)) {
-      Log.showError(TAG, `unregisterCloseAppHandler with invalid baseCloseAppHandler`)
+      Log.showError(TAG, 'unregisterCloseAppHandler with invalid baseCloseAppHandler')
       return;
     }
 
@@ -100,7 +100,7 @@ export class CloseAppManager {
    */
   public getAppIconInfo(windowTarget): void {
     if (CheckEmptyUtils.isEmptyArr(this.mBaseCloseAppHandlerList)) {
-      Log.showError(TAG, `getAppIconInfo with invalid mBaseCloseAppHandlerList`);
+      Log.showError(TAG, 'getAppIconInfo with invalid mBaseCloseAppHandlerList');
       return;
     }
 
@@ -116,7 +116,7 @@ export class CloseAppManager {
    */
   public getAppInfo(windowTarget): any {
     if (CheckEmptyUtils.isEmptyArr(this.mBaseCloseAppHandlerList)) {
-      Log.showError(TAG, `getAppIconInfo with invalid mBaseCloseAppHandlerList`);
+      Log.showError(TAG, 'getAppIconInfo with invalid mBaseCloseAppHandlerList');
       return {};
     }
 
@@ -139,7 +139,7 @@ export class CloseAppManager {
     this.mSmartdockCloseItemInfo = smartdockCloseItemInfo;
   }
 
-  public getAppCloseIconInfo(): any{
+  public getAppCloseIconInfo(): any {
     if (CheckEmptyUtils.isEmpty(this.mPagedesktopClosePosition)) {
       Log.showDebug(TAG, `getAppCloseIconInfo return mSmartdockClosePosition is ${JSON.stringify(this.mSmartdockClosePosition)}`)
       return this.mSmartdockClosePosition;
@@ -149,7 +149,7 @@ export class CloseAppManager {
     }
   }
 
-  public getAppCloseItemInfo(): any{
+  public getAppCloseItemInfo(): any {
     if (CheckEmptyUtils.isEmpty(this.mPagedesktopClosePosition)) {
       Log.showDebug(TAG, `getAppCloseIconInfo return mSmartdockClosePosition is ${JSON.stringify(this.mSmartdockClosePosition)}`)
       return this.mSmartdockCloseItemInfo;

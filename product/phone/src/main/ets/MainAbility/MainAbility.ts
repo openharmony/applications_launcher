@@ -86,7 +86,7 @@ export default class MainAbility extends ServiceExtension {
     // load recent
     windowManager.createRecentWindow();
     this.registerInputConsumer();
-    this.displayManager = DisplayManager.getInstance()
+    this.displayManager = DisplayManager.getInstance();
   }
 
   private registerInputConsumer(): void {

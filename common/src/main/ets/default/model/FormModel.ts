@@ -26,7 +26,6 @@ import { GridLayoutInfo } from '../interface';
 
 
 const TAG = 'FormModel';
-const KEY_FORM_LIST = 'formListInfo';
 
 /**
  * form model.
@@ -38,6 +37,7 @@ export class FormModel {
   private readonly mAppItemFormInfoMap = new Map<string, CardItemInfo[]>();
   private readonly mPageDesktopModel: PageDesktopModel;
   private readonly mAtomicServiceAppItemFormInfoMap = new Map<string, CardItemInfo[]>();
+  private readonly KEY_FORM_LIST: string = 'formListInfo';
 
   private constructor() {
     this.mRdbStoreManager = RdbStoreManager.getInstance();
@@ -209,7 +209,7 @@ export class FormModel {
   deleteFormByBundleName(bundleName: string): void {
     const settingsModel = SettingsModel.getInstance();
     this.mRdbStoreManager.deleteFormInfoByBundle(bundleName);
-    const formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
+    const formInfoList: any = this.mFormListInfoCacheManager.getCache(this.KEY_FORM_LIST);
     if (formInfoList === CommonConstants.INVALID_VALUE) {
       return;
     }
@@ -239,9 +239,9 @@ export class FormModel {
       }
     }
     if (tempFormInfoList.length === 0) {
-      this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, null);
+      this.mFormListInfoCacheManager.setCache(this.KEY_FORM_LIST, null);
     } else {
-      this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, tempFormInfoList);
+      this.mFormListInfoCacheManager.setCache(this.KEY_FORM_LIST, tempFormInfoList);
     }
 
     this.updateBlankPage(pageItemMap, layoutInfo);
@@ -275,7 +275,7 @@ export class FormModel {
         this.mPageDesktopModel.setPageIndex(curPageIndex - 1);
       }
     }
-    const formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
+    const formInfoList: any = this.mFormListInfoCacheManager.getCache(this.KEY_FORM_LIST);
     if (formInfoList === CommonConstants.INVALID_VALUE) {
       return;
     }
@@ -286,9 +286,9 @@ export class FormModel {
       }
     }
     if (formInfoList.length === 0) {
-      this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, null);
+      this.mFormListInfoCacheManager.setCache(this.KEY_FORM_LIST, null);
     } else {
-      this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, formInfoList);
+      this.mFormListInfoCacheManager.setCache(this.KEY_FORM_LIST, formInfoList);
     }
   }
 

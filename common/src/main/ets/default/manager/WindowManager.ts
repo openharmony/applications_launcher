@@ -160,7 +160,7 @@ class WindowManager {
   private setWindowSystemBar(windowName: string, names: Array<'status'|'navigation'>) {
     this.findWindow(windowName, win => {
       win.setWindowSystemBarEnable(names).then(() => {
-        Log.showInfo(TAG, `set statusBar success`);
+        Log.showInfo(TAG, 'set statusBar success');
       }).catch(err => {
         Log.showInfo(TAG, `set statusBar failed, Cause: ${JSON.stringify(err)}`);
       })
@@ -357,7 +357,7 @@ class WindowManager {
       events: [commonEventManager.RECENT_FULL_SCREEN, commonEventManager.RECENT_SPLIT_SCREEN]
     };
     commonEventMgr.createSubscriber(subscribeInfo).then((commonEventSubscriber: commonEventMgr.CommonEventSubscriber) => {
-      Log.showDebug(TAG, "init SPLIT_SCREEN subscriber success");
+      Log.showDebug(TAG, 'init SPLIT_SCREEN subscriber success');
       WindowManager.subscriber = commonEventSubscriber;
     }, (err) => {
       Log.showError(TAG, `Failed to createSubscriber ${err}`)
