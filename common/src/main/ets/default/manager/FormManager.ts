@@ -143,7 +143,7 @@ export class FormManager {
    */
   async getFormConfigAbility(bundle: string, moduleName: string, abilityName: string, cardName: string): Promise<string> {
     const formList = await formManagerAbility.getFormsInfo(bundle);
-    let formConfigAbility = '';
+    let formConfigAbility = "";
     for (const formItem of formList) {
       if (formItem.moduleName === moduleName && formItem.abilityName === abilityName && formItem.name === cardName ) {
         formConfigAbility = formItem.formConfigAbility;
@@ -184,7 +184,6 @@ export class FormManager {
    * @param formId
    */
   async deleteCard(formId: string): Promise<void> {
-    Log.showInfo(TAG, `delete form info by formId, formId:${formId}`);
     return await formManagerAbility.deleteForm(formId);
   }
 
