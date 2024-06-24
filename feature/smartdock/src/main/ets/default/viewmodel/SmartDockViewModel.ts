@@ -309,7 +309,7 @@ export default class SmartDockViewModel extends BaseViewModel {
    */
   private setStartAppInfo(item: StartAppItemInfo) {
     if (CheckEmptyUtils.isEmpty(item)) {
-      Log.showError(TAG, `setStartAppInfo with item`)
+      Log.showError(TAG, 'setStartAppInfo with item')
       return;
     }
     item.icon = ResourceManager.getInstance().getCachedAppIcon(item.appIconId, item.bundleName, item.moduleName)

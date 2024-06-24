@@ -95,7 +95,7 @@ export struct UninstallDialog {
             .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
             .onClick(() => {
               this.controller?.close();
-              this.cancel()
+              this.cancel();
             })
 
             Divider()
@@ -113,7 +113,7 @@ export struct UninstallDialog {
             .width(StyleConstants.DEFAULT_BUTTON_WIDTH)
             .onClick(() => {
               this.controller?.close();
-              this.confirm()
+              this.confirm();
             })
           }
         }

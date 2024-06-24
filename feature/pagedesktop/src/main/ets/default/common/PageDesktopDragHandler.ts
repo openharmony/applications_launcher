@@ -220,7 +220,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
 
   onDragStart(x: number, y: number): void {
     this.mStartPosition = null;
-    Log.showInfo(TAG, `onDragStart start`);
+    Log.showInfo(TAG, 'onDragStart start');
     const selectAppIndex = this.getItemIndex(x, y);
     AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
     this.mStartPosition = this.getTouchPosition(x, y);
@@ -359,7 +359,7 @@ export class PageDesktopDragHandler extends BaseDragHandler {
 
   deleteBlankPageOutsideEffect() {
     // delete Blank Page because of drag outside effect area
-    Log.showInfo(TAG, "deleteBlankPageOutsideEffect" );
+    Log.showInfo(TAG, 'deleteBlankPageOutsideEffect' );
     const startPosition: DragItemPosition = this.copyPosition(this.mStartPosition);
     this.deleteBlankPageAfterDragging(startPosition, startPosition);
   }

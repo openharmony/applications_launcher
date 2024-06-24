@@ -26,42 +26,42 @@ export default class PhoneLauncherLayoutStyleConfig extends LauncherLayoutStyleC
   /**
    * CommonDialog width
    */
-  mCommonDialogWidth = PhonePresetStyleConstants.DEFAULT_COMMONDIALOG_WIDTH;
+  mCommonDialogWidth: string = PhonePresetStyleConstants.DEFAULT_COMMONDIALOG_WIDTH;
 
   /**
    * systemUI top height
    */
-  mSysTopHeight = PhonePresetStyleConstants.DEFAULT_SYS_TOP_HEIGHT;
+  mSysTopHeight: number = PhonePresetStyleConstants.DEFAULT_SYS_TOP_HEIGHT;
 
   /**
    * systemUI bottom height
    */
-  mSysBottomHeight = PhonePresetStyleConstants.DEFAULT_SYS_BOTTOM_HEIGHT;
+  mSysBottomHeight: number = PhonePresetStyleConstants.DEFAULT_SYS_BOTTOM_HEIGHT;
 
   /**
    * systemUI height (top + bottom)
    */
-  mSystemUIHeight = PresetStyleConstants.DEFAULT_PHONE_SYSTEM_UI;
+  mSystemUIHeight: number = PresetStyleConstants.DEFAULT_PHONE_SYSTEM_UI;
 
   /**
    * indicator height
    */
-  mIndicatorHeight = PresetStyleConstants.DEFAULT_PHONE_INDICATOR_HEIGHT;
+  mIndicatorHeight: number = PresetStyleConstants.DEFAULT_PHONE_INDICATOR_HEIGHT;
 
   /**
    * desktop item Size
    */
-  mAppItemSize = PhonePresetStyleConstants.DEFAULT_APP_LAYOUT_SIZE;
+  mAppItemSize: number = PhonePresetStyleConstants.DEFAULT_APP_LAYOUT_SIZE;
 
   /**
    * desktop space margin
    */
-  mMargin = PhonePresetStyleConstants.DEFAULT_LAYOUT_MARGIN;
+  mMargin: number = PhonePresetStyleConstants.DEFAULT_LAYOUT_MARGIN;
 
   /**
    * desktop grid gap
    */
-  mGridGutter = PhonePresetStyleConstants.DEFAULT_APP_LAYOUT_MIN_GUTTER;
+  mGridGutter: number = PhonePresetStyleConstants.DEFAULT_APP_LAYOUT_MIN_GUTTER;
 
   /**
    * icon name lines

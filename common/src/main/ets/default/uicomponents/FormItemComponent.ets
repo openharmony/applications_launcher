@@ -55,7 +55,7 @@ export struct FormItemComponent {
   }
 
   aboutToDisappear(): void {
-    Log.showInfo(TAG, `aboutToDisappear begin`);
+    Log.showInfo(TAG, 'aboutToDisappear begin');
   }
 
   @Builder MenuBuilder() {
@@ -91,7 +91,7 @@ export struct FormItemComponent {
           }
         })
         .onClick((event: ClickEvent) => {
-          Log.showInfo(TAG, `FormComponent onClick`);
+          Log.showInfo(TAG, 'FormComponent onClick');
         })
         .onError((error) => {
           Log.showInfo(TAG, `FormComponent error msg: ${error.msg}`);

@@ -34,7 +34,7 @@ export default class GridRowManager {
    *
    * @param span span
    */
-  getSpanWidth(span: number) : number {
+  getSpanWidth(span: number): number {
     if (span < 1) {
       return 0;
     }
@@ -50,21 +50,21 @@ export default class GridRowManager {
   /**
    * getSingleColumnWidth
    */
-  getSingleColumnWidth() : number {
+  getSingleColumnWidth(): number {
     return (this.gridWidth - (this.columns - 1) * this.gutterX) / this.columns;
   }
 
   /**
    * getColumns
    */
-  getColumns() : number {
+  getColumns(): number {
     return this.columns;
   }
 
   /**
    * getGutterX
    */
-  getGutterX() : number {
+  getGutterX(): number {
     return this.gutterX;
   }
 }

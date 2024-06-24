@@ -110,7 +110,7 @@ export default struct FormItem {
    * Animation effect when card is removed.
    */
   private removeFormAnimate() {
-    Log.showInfo(TAG, `removeFormAnimate start`);
+    Log.showInfo(TAG, 'removeFormAnimate start');
     if (this.isRemoveForm &&
             this.formAnimateData.isOpenRemoveFormDialog &&
             this.formAnimateData.cardId === this.formItem.cardId) {
@@ -122,7 +122,7 @@ export default struct FormItem {
           iterations: 1,
           playMode: PlayMode.Normal,
           onFinish: () => {
-            Log.showInfo(TAG, `showAnimate onFinish`);
+            Log.showInfo(TAG, 'showAnimate onFinish');
             AppStorage.setOrCreate('isRemoveForm', false);
             this.formAnimateData.cardId = 0;
             this.formAnimateData.isOpenRemoveFormDialog = false;
@@ -300,7 +300,7 @@ export default struct FormItem {
    * set start app info
    */
   private setStartAppInfo() {
-    Log.showInfo(TAG, `app setStartAppInfo`);
+    Log.showInfo(TAG, 'app setStartAppInfo');
     AppStorage.setOrCreate('startAppItemInfo', this.formItem);
     AppStorage.setOrCreate('startAppTypeFromPageDesktop', CommonConstants.OVERLAY_TYPE_CARD);
     this.mPageDesktopStartAppHandler.setAppIconSize(this.mFormItemWidth, this.mFormItemHeight);

@@ -37,18 +37,18 @@ export default class BigFolderStartAppHandler extends BaseStartAppHandler {
     }
 
     static getInstance(): BigFolderStartAppHandler {
-        Log.showInfo(TAG, `BigFolderStartAppHandler getInstance called!!`);
+        Log.showInfo(TAG, 'BigFolderStartAppHandler getInstance called!');
         if (globalThis.BigFolderStartAppHandler == null) {
-            Log.showInfo(TAG, `BigFolderStartAppHandler constructor`);
+            Log.showInfo(TAG, 'BigFolderStartAppHandler constructor');
             globalThis.BigFolderStartAppHandler = new BigFolderStartAppHandler();
         }
         return globalThis.BigFolderStartAppHandler;
     }
 
     protected calculateAppIconPosition(): void {
-        Log.showInfo(TAG, `calculateAppIconPosition called`);
+        Log.showInfo(TAG, 'calculateAppIconPosition called');
         if (CheckEmptyUtils.isEmpty(this.mBigFolderStyleConfig)) {
-            Log.showError(TAG, `calculateAppIconPosition with invalid config`);
+            Log.showError(TAG, 'calculateAppIconPosition with invalid config');
             return;
         }
 

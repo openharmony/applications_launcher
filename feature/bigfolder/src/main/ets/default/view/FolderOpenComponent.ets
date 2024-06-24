@@ -191,7 +191,7 @@ export struct FolderOpenComponent {
                   this.saveText();
                 })
                 .onChange((text: string) => {
-                  Log.showDebug(TAG, `textinput: ` + text);
+                  Log.showDebug(TAG, 'textInput: ' + text);
                   let allSpace = new RegExp('/^\s+$/g');
                   if (!allSpace.test(text)) {
                     this.newFolderName = text;

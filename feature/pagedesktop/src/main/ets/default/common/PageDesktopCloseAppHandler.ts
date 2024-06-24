@@ -77,7 +77,7 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
 
   protected calculateAppIconPosition(): void {
     if (CheckEmptyUtils.isEmpty(this.mGridConfig) || CheckEmptyUtils.isEmpty(this.mPageDesktopStyleConfig)) {
-      Log.showError(TAG, `calculateAppIconPosition with invalid config`);
+      Log.showError(TAG, 'calculateAppIconPosition with invalid config');
       return;
     }
 
@@ -92,7 +92,7 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
     const paddingTop: number = this.mPageDesktopStyleConfig.mPaddingTop;
     let appItem: any = this.getCloseAppItemInfo();
     if (CheckEmptyUtils.isEmpty(appItem)) {
-      Log.showError(TAG, `calculateAppIconPosition pagedesktop not has close app`);
+      Log.showError(TAG, 'calculateAppIconPosition pagedesktop not has close app');
       this.mFindPagedesktopPosition = false;
       return;
     }
@@ -145,7 +145,7 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
     let index: number = 0;
     if (CheckEmptyUtils.isEmpty(appItem) || CheckEmptyUtils.isEmpty(folderItem)
     || CheckEmptyUtils.isEmpty(folderItem.layoutInfo[0])) {
-      Log.showError(TAG, `getIndexInFolderAppList with invalid appItem or folderItem`);
+      Log.showError(TAG, 'getIndexInFolderAppList with invalid appItem or folderItem');
     }
 
     for (var i = 0; i < folderItem.layoutInfo[0].length; i++) {
@@ -159,13 +159,13 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
   }
 
   private getCloseAppItemInfo(): any {
-    Log.showDebug(TAG, `getCloseAppItemInfo called!`);
+    Log.showDebug(TAG, 'getCloseAppItemInfo called!');
     let appListInfo: {
       appGridInfo: [[]]
     } = AppStorage.get('appListInfo')
     let appGridInfo = appListInfo.appGridInfo;
     if (CheckEmptyUtils.isEmptyArr(appGridInfo)) {
-      Log.showError(TAG, `getCloseAppItemInfo appGridInfo is null`);
+      Log.showError(TAG, 'getCloseAppItemInfo appGridInfo is null');
       return null;
     } else {
       for (var i = 0; i < appGridInfo.length; i++) {
@@ -196,7 +196,7 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
                 Log.showDebug(TAG, `getCloseAppItemInfo foldItem case ${item.layoutInfo}`);
                 let foldItem = this.getFolderItem(item.layoutInfo);
                 if (CheckEmptyUtils.isEmpty(foldItem)) {
-                  Log.showError(TAG, `getCloseAppItemInfo foldItem is null`);
+                  Log.showError(TAG, 'getCloseAppItemInfo foldItem is null');
                   break;
                 } else {
                   this.mCloseAppType = false;
@@ -215,7 +215,7 @@ export class PageDesktopCloseAppHandler extends BaseCloseAppHandler {
 
   private getFolderItem(layoutInfo: [[]]): any{
     if (CheckEmptyUtils.isEmptyArr(layoutInfo)) {
-      Log.showError(TAG, `getFolderItem layoutInfo is null`);
+      Log.showError(TAG, 'getFolderItem layoutInfo is null');
       return null;
     } else {
       let foldPage: [] = layoutInfo[0];
