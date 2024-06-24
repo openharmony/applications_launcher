@@ -43,10 +43,10 @@ export default class SmartDockCloseAppHandler extends BaseCloseAppHandler {
     }
 
     static getInstance(): SmartDockCloseAppHandler {
-        Log.showInfo(TAG, 'SmartDockCloseAppHandler getInstance called!')
+        Log.showInfo(TAG, `SmartDockCloseAppHandler getInstance called!`)
         if (globalThis.SmartDockCloseAppHandler == null) {
             globalThis.SmartDockCloseAppHandler = new SmartDockCloseAppHandler();
-            Log.showInfo(TAG, 'SmartDockCloseAppHandler getInstance constructor');
+            Log.showInfo(TAG, `SmartDockCloseAppHandler getInstance constructor`);
         }
         return globalThis.SmartDockCloseAppHandler;
     }
@@ -76,7 +76,7 @@ export default class SmartDockCloseAppHandler extends BaseCloseAppHandler {
 
     protected calculateAppIconPosition(): void {
         if (CheckEmptyUtils.isEmpty(this.mSmartDockStyleConfig)) {
-            Log.showError(TAG, 'calculateAppIconPosition with invalid config')
+            Log.showError(TAG, `calculateAppIconPosition with invalid config`)
             return;
         }
 
@@ -112,7 +112,7 @@ export default class SmartDockCloseAppHandler extends BaseCloseAppHandler {
     private getIndexInList(list): number {
         let index: number = CommonConstants.INVALID_VALUE;
         if (CheckEmptyUtils.isEmptyArr(list)) {
-            Log.showError(TAG, 'getIndexInRecentList with invalid list')
+            Log.showError(TAG, `getIndexInRecentList with invalid list`)
             return index;
         }
 
