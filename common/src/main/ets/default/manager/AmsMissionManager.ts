@@ -232,7 +232,7 @@ class AmsMissionManager {
       snapShotInfo.snapShotImageWidth = imageInfo.size.width;
       snapShotInfo.snapShotImageHeight = imageInfo.size.height;
     } catch (err) {
-      Log.showError(TAG, `missionManager.getMissionSnapShot err: ${JSON.stringify(err)}`);
+      Log.showError(TAG, `missionManager.getMissionSnapShot, missionId:${missionId} err: ${JSON.stringify(err)}`);
     }
     return snapShotInfo;
   }
