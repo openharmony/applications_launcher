@@ -48,7 +48,7 @@ export class DisplayManager {
   }
 
   private async loadAllDisplays() {
-    let displays: Array<display.Display> = await display.getAllDisplays()
+    let displays: Array<display.Display> = await display.getAllDisplays();
     for (let display of displays) {
       if (this.displayDevices.findIndex(item => item.id === display.id) < 0) {
         Log.showInfo(TAG, 'new display added. detail: ' + JSON.stringify(display));

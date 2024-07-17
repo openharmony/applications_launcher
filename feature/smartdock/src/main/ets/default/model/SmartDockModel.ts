@@ -295,7 +295,7 @@ export default class SmartDockModel {
    */
   addToPageDesk(appInfo: DockItemInfo): void {
     if (appInfo.itemType == CommonConstants.TYPE_APP) {
-      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, appInfo).then(()=>{}, ()=>{});
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, appInfo);
     } else {
       Prompt.showToast({
         message: $r('app.string.disable_add_to_dock')
