@@ -29,7 +29,6 @@ import StyleConstants from '../common/constants/StyleConstants';
 import { SmartDockStyleConfig } from '@ohos/smartdock';
 import PhonePageDesktopGridStyleConfig from '../common/PhonePageDesktopGridStyleConfig';
 import { FormStyleConfig } from '@ohos/form';
-import systemParameter from '@ohos.systemparameter';
 
 const TAG = 'EntryView';
 
@@ -164,10 +163,5 @@ struct EntryView {
     .backgroundImagePosition(Alignment.Center)
     .width('100%')
     .height('100%')
-    .onAppear(()=>{
-      Log.showDebug(TAG, 'launcher is loaded');
-      AppStorage.setOrCreate('loaded', true);
-      systemParameter.set('bootevent.launcher.ready', 'true');
-    })
   }
 }

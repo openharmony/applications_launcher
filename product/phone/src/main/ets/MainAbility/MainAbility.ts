@@ -38,6 +38,7 @@ import inputConsumer from '@ohos.multimodalInput.inputConsumer';
 import { KeyCode } from '@ohos.multimodalInput.keyCode';
 import window from '@ohos.window';
 import { PreferencesHelper } from '@ohos/common/src/main/ets/default/manager/PreferencesHelper';
+import systemParameter from '@ohos.systemparameter';
 
 const TAG = 'LauncherMainAbility';
 
@@ -89,6 +90,9 @@ export default class MainAbility extends ServiceExtension {
     windowManager.createRecentWindow();
     this.registerInputConsumer();
     this.displayManager = DisplayManager.getInstance();
+
+    AppStorage.setOrCreate('loaded', true);
+    systemParameter.set('bootevent.launcher.ready', 'true');
   }
 
   private registerInputConsumer(): void {
