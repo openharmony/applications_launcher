@@ -53,17 +53,6 @@ export default class MainAbility extends ServiceExtension {
   async initLauncher(): Promise<void> {
     // init Launcher context
     globalThis.desktopContext = this.context;
-    PreferencesHelper.getInstance().initPreference(this.context);
-    // init global const
-    this.initGlobalConst();
-
-    // init Gesture navigation
-    this.startGestureNavigation();
-
-    // init rdb
-    let dbStore = RdbStoreManager.getInstance();
-    await dbStore.initRdbConfig();
-    await dbStore.createTable();
 
     let registerWinEvent = (win: window.Window) => {
       win.on('windowEvent', (stageEventType) => {
@@ -76,13 +65,26 @@ export default class MainAbility extends ServiceExtension {
       })
     };
 
-    windowManager.registerWindowEvent();
-    navigationBarCommonEventManager.registerNavigationBarEvent();
-
     // create Launcher entry view
     windowManager.createWindow(globalThis.desktopContext, windowManager.DESKTOP_WINDOW_NAME,
       windowManager.DESKTOP_RANK, 'pages/' + windowManager.DESKTOP_WINDOW_NAME, true, registerWinEvent);
 
+    await PreferencesHelper.getInstance().initPreference(globalThis.desktopContext);
+
+    // init global const
+    this.initGlobalConst();
+
+    // init rdb
+    let dbStore = RdbStoreManager.getInstance();
+
+    await dbStore.initRdbConfig();
+    await dbStore.createTable();
+
+    // init Gesture navigation
+    this.startGestureNavigation();
+
+    windowManager.registerWindowEvent();
+    navigationBarCommonEventManager.registerNavigationBarEvent();
     // load recent
     windowManager.createRecentWindow();
     this.registerInputConsumer();
