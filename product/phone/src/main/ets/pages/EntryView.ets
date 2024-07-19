@@ -42,6 +42,7 @@ struct EntryView {
   @StorageLink('screenWidth') screenWidth: number = 0;
   @StorageLink('screenHeight') @Watch('updateScreenInfo') screenHeight: number = 0;
   @StorageLink('deviceType') deviceType: string = CommonConstants.DEFAULT_DEVICE_TYPE;
+  @StorageLink('loaded') loaded: boolean = false;
   @State workSpaceWidth: number = 0;
   @State workSpaceHeight: number = 0;
   @State dockHeight: number = 0;
@@ -130,30 +131,32 @@ struct EntryView {
 
   build() {
     Stack() {
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
-        Column() {
-          PageDesktopLayout();
-        }
-        .height(this.workSpaceHeight)
-        .onAreaChange((oldValue: Area, newValue: Area) => {
-          Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
-          if (JSON.stringify(oldValue) == JSON.stringify(newValue)) {
-            return;
+      if (this.loaded) {
+        Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
+          Column() {
+            PageDesktopLayout();
           }
-          if (this.navigationBarStatus == '1') {
-            setTimeout(() => {
-              SettingsModel.getInstance().setValue(this.navigationBarStatus);
-            }, 50)
-          }
-        })
+          .height(this.workSpaceHeight)
+          .onAreaChange((oldValue: Area, newValue: Area) => {
+            Log.showDebug(TAG, `onAreaChange navigationBarStatus: ${this.navigationBarStatus}`);
+            if (JSON.stringify(oldValue) == JSON.stringify(newValue)) {
+              return;
+            }
+            if (this.navigationBarStatus == '1') {
+              setTimeout(() => {
+                SettingsModel.getInstance().setValue(this.navigationBarStatus);
+              }, 50)
+            }
+          })
 
-        Column() {
-          SmartDock();
+          Column() {
+            SmartDock();
+          }
+          .height(this.dockHeight)
         }
-        .height(this.dockHeight)
+
+        FolderOpenComponent();
       }
-
-      FolderOpenComponent();
     }
     .backgroundImage(StyleConstants.DEFAULT_BACKGROUND_IMAGE)
     .backgroundImageSize(ImageSize.Cover)
