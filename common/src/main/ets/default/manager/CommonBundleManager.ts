@@ -72,9 +72,14 @@ class CommonBundleManager {
       entities : ['entity.system.home']
     };
     try {
-      let abilityFlags = bundleManager.AbilityFlag.GET_ABILITY_INFO_WITH_APPLICATION;
-      abilityList = await bundleManager.queryAbilityInfo(want, abilityFlags, this.mUserId);
-      Log.showInfo(TAG, `getAllAbilityList success, abilityList length: ${abilityList.length}`);
+      await bundleManager.queryAbilityInfo(want, bundleManager.AbilityFlag.GET_ABILITY_INFO_WITH_APPLICATION, this.mUserId)
+        .then((res: Array<bundleManager.AbilityInfo>) => {
+          Log.showInfo(TAG, `getAllAbilityList res length: ${res.length}`);
+          abilityList = res;
+        })
+        .catch((err) => {
+          Log.showError(TAG, `getAllAbilityList error: ${JSON.stringify(err)}`);
+        });
     } catch (err) {
       Log.showError(TAG, `getAllAbilityList bundleManager.queryAbilityInfo error: ${JSON.stringify(err)}`);
     }
@@ -102,12 +107,18 @@ class CommonBundleManager {
     }
     let bundleInfo: bundleManager.BundleInfo = undefined;
     try {
-      bundleInfo = await bundleManager.getBundleInfo(bundleName,
+      await bundleManager.getBundleInfo(bundleName,
         bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION |
         bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_HAP_MODULE |
         bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_ABILITY,
-        this.mUserId);
-      Log.showInfo(TAG, `getBundleInfoByBundleName success, bundleInfo length:${bundleInfo?.hapModulesInfo.length}`);
+        this.mUserId)
+        .then((res: bundleManager.BundleInfo) => {
+          Log.showInfo(TAG, `getBundleInfoByBundleName res:${JSON.stringify(res.hapModulesInfo.length)}`);
+          bundleInfo = res;
+        })
+        .catch((err) => {
+          Log.showError(TAG, `getBundleInfoByBundleName error: ${JSON.stringify(err)}, bundleName:${bundleName}`);
+        });
     } catch (err) {
       Log.showError(TAG, `getBundleInfoByBundleName bundleManager.getBundleInfo error: ${JSON.stringify(err)}, bundleName:${bundleName}`);
     }
@@ -129,7 +140,7 @@ class CommonBundleManager {
    * @returns ability信息
    */
   async getAbilityInfoByAbilityName(bundleName: string, abilityName: string,
-    bundleType?: bundleManager.BundleType): Promise<bundleManager.AbilityInfo | undefined> {
+                                    bundleType?: bundleManager.BundleType): Promise<bundleManager.AbilityInfo | undefined> {
     if (CheckEmptyUtils.checkStrIsEmpty(bundleName) || CheckEmptyUtils.checkStrIsEmpty(abilityName)) {
       Log.showError(TAG, 'getAbilityInfoByAbilityName reqParam bundleName or abilityName is empty');
       return undefined;
@@ -141,13 +152,16 @@ class CommonBundleManager {
       abilityName: abilityName
     };
     try {
-      let res: Array<bundleManager.AbilityInfo>;
-      let abilityFlags: bundleManager.AbilityFlag = bundleManager.AbilityFlag.GET_ABILITY_INFO_WITH_APPLICATION;
-      res = await bundleManager.queryAbilityInfo(want, abilityFlags, this.mUserId);
-        if (res !== undefined) {
-          Log.showInfo(TAG, `getAbilityInfoByAbilityName success, res length: ${res.length}`);
-          abilityList = res;
-        }
+      await bundleManager.queryAbilityInfo(want, bundleManager.AbilityFlag.GET_ABILITY_INFO_WITH_APPLICATION, this.mUserId)
+        .then((res: Array<bundleManager.AbilityInfo>)=>{
+          if (res !== undefined) {
+            Log.showInfo(TAG, `getAbilityInfoByAbilityName res length: ${res.length}`);
+            abilityList = res;
+          }
+        })
+        .catch((err)=>{
+          Log.showError(TAG, `getAbilityInfoByAbilityName error: ${JSON.stringify(err)}`);
+        });
     } catch (err) {
       Log.showError(TAG, `getAbilityInfoByAbilityName bundleManager.queryAbilityInfo error: ${JSON.stringify(err)}`);
     }

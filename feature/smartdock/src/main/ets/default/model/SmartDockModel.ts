@@ -132,7 +132,7 @@ export default class SmartDockModel {
           dockItemInfo.isSystemApp = typeof (dockDataList[i].isSystemApp) === 'undefined' ? true : dockDataList[i].isSystemApp;
           dockItemInfo.isUninstallAble = typeof (dockDataList[i].isUninstallAble) === 'undefined' ? true : dockDataList[i].isUninstallAble;
           dockItemInfo.badgeNumber = typeof (dockDataList[i].badgeNumber) === 'undefined' ?
-            CommonConstants.BADGE_DISPLAY_HIDE : dockDataList[i].badgeNumber;
+          CommonConstants.BADGE_DISPLAY_HIDE : dockDataList[i].badgeNumber;
           const loadAppName = await this.mResourceManager
             .getAppNameSync(dockItemInfo.appLabelId, dockItemInfo.bundleName, dockItemInfo.moduleName, '');
           dockItemInfo.appName = loadAppName;
@@ -295,7 +295,7 @@ export default class SmartDockModel {
    */
   addToPageDesk(appInfo: DockItemInfo): void {
     if (appInfo.itemType == CommonConstants.TYPE_APP) {
-      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, appInfo);
+      localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_ADD, appInfo).then(()=>{}, ()=>{});
     } else {
       Prompt.showToast({
         message: $r('app.string.disable_add_to_dock')

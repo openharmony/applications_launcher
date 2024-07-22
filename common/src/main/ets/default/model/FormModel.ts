@@ -83,17 +83,19 @@ export class FormModel {
    */
   async getFormsInfoByBundleName(bundleName: string, callback?) {
     Log.showDebug(TAG, `getFormsInfoByBundleName bundleName: ${bundleName}`);
-    let currentBundleFormsInfo: CardItemInfo[];
-    try {
-      currentBundleFormsInfo = await this.mFormManager.getFormsInfoByApp(bundleName);
-      if (callback != undefined) {
-        callback(bundleName, currentBundleFormsInfo);
-      }
-      AppStorage.setOrCreate('formMgrItem', currentBundleFormsInfo);
-      return currentBundleFormsInfo;
-    } catch (err) {
-      Log.showError(TAG, `getFormsInfoByBundleName bundleName:${bundleName} err: ${JSON.stringify(err)}`);
-    }
+    let currentBundleFormsInfo: any;
+    await this.mFormManager.getFormsInfoByApp(bundleName)
+      .then(bundleFormsInfo => {
+        currentBundleFormsInfo = bundleFormsInfo;
+        if (callback != undefined) {
+          callback(bundleName, bundleFormsInfo);
+        }
+      })
+      .catch(err => {
+        Log.showError(TAG, `getFormsInfoByBundleName err: ${JSON.stringify(err)}`);
+      });
+    AppStorage.setOrCreate('formMgrItem', currentBundleFormsInfo);
+    return currentBundleFormsInfo;
   }
 
   /**
