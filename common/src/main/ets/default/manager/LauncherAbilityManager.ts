@@ -116,7 +116,7 @@ class LauncherAbilityManager {
    *
    * @params listener: listening object
    */
- async registerLauncherAbilityChangeListener(listener: any):Promise<void> {
+  async registerLauncherAbilityChangeListener(listener: any):Promise<void> {
     if (listener != null) {
       if (this.mLauncherAbilityChangeListeners.length == 0) {
         try {
@@ -178,11 +178,13 @@ class LauncherAbilityManager {
    */
   async getLauncherAbilityList(): Promise<AppItemInfo[]> {
     let abilityList = null;
-    try {
-      abilityList = await launcherBundleManager.getAllLauncherAbilityInfo(LauncherAbilityManager.CURRENT_USER_ID);
-    } catch (err) {
-      Log.showError(TAG, `getLauncherAbilityList error: ${JSON.stringify(err)}`);
-    }
+    await launcherBundleManager.getAllLauncherAbilityInfo(LauncherAbilityManager.CURRENT_USER_ID)
+      .then((res) => {
+        abilityList = res;
+      })
+      .catch((err) => {
+        Log.showError(TAG, `getLauncherAbilityList error: ${JSON.stringify(err)}`);
+      });
     const appItemInfoList = new Array<AppItemInfo>();
     if (CheckEmptyUtils.isEmpty(abilityList)) {
       Log.showDebug(TAG, 'getLauncherAbilityList Empty');
@@ -203,11 +205,13 @@ class LauncherAbilityManager {
    */
   async getLauncherAbilityInfo(bundleName: string): Promise<AppItemInfo[]> {
     let abilityInfos: launcherBundleManager.LauncherAbilityInfo[];
-    try {
-      abilityInfos = await launcherBundleManager.getLauncherAbilityInfo(bundleName, this.mUserId);
-    } catch (err) {
-      Log.showError(TAG, `getLauncherAbilityInfo error: ${JSON.stringify(err)}`);
-    }
+    await launcherBundleManager.getLauncherAbilityInfo(bundleName, this.mUserId)
+      .then((res) => {
+        abilityInfos = res;
+      })
+      .catch((err) => {
+        Log.showError(TAG, `getLauncherAbilityInfo error: ${JSON.stringify(err)}`);
+      });
     const appItemInfoList = new Array<AppItemInfo>();
     if (CheckEmptyUtils.isEmpty(abilityInfos) || abilityInfos.length === 0) {
       Log.showDebug(TAG, 'getLauncherAbilityInfo Empty');
@@ -236,15 +240,15 @@ class LauncherAbilityManager {
     }
     // get from system
     let abilityInfos = new Array<launcherBundleManager.LauncherAbilityInfo>();
-    try {
-      let res: launcherBundleManager.LauncherAbilityInfo[];
-      res = await launcherBundleManager.getLauncherAbilityInfo(bundleName, LauncherAbilityManager.CURRENT_USER_ID);
-      if (res && res.length) {
-        abilityInfos = res;
-      }
-    } catch (err) {
-      Log.showError(TAG, `getAppInfoByBundleName getLauncherAbilityInfo error: ${JSON.stringify(err)}`);
-    }
+    await launcherBundleManager.getLauncherAbilityInfo(bundleName, LauncherAbilityManager.CURRENT_USER_ID)
+      .then((res)=>{
+        if (res && res.length) {
+          abilityInfos = res;
+        }
+      })
+      .catch((err)=>{
+        Log.showError(TAG, `getAppInfoByBundleName getLauncherAbilityInfo error: ${JSON.stringify(err)}`);
+      });
     if (!abilityInfos || abilityInfos.length === 0) {
       Log.showDebug(TAG, `${bundleName} has no launcher ability`);
       return undefined;
@@ -350,7 +354,7 @@ class LauncherAbilityManager {
         } else {
           Log.showDebug(TAG, `startApplication hiSysEvent write success: ${value}`);
         }
-    });
+      });
     Log.showDebug(TAG, 'performanceMonitor begin');
     performanceMonitor.begin('LAUNCHER_APP_LAUNCH_FROM_ICON', performanceMonitor.ActionType.LAST_UP,
       paramBundleName);
@@ -369,9 +373,9 @@ class LauncherAbilityManager {
       abilityName: paramAbilityName,
       moduleName: paramModuleName,
       parameters:
-        {
-          formId: paramCardId.toString()
-        }
+      {
+        formId: paramCardId.toString()
+      }
     }).then((ret) => {
       Log.showDebug(TAG, `startAbility ret: ${JSON.stringify(ret)}`);
     }, (err) => {

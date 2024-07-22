@@ -35,13 +35,13 @@ export default class FileManager {
 
   private async getBaseDir(): Promise<void> {
     const context = featureAbility.getContext();
-    try {
-      let data: string = await context.getFilesDir();
-      Log.showDebug(TAG, `getFilesDir File directory obtained. Data: ${JSON.stringify(data)}`);
-      this.baseDir = data + '/';
-    } catch (err) {
-      Log.showError(TAG, `getFilesDir Failed to obtain the file directory. Cause: ${JSON.stringify(err)}`);
-    }
+    await context.getFilesDir()
+      .then((data) => {
+        Log.showDebug(TAG, `getFilesDir File directory obtained. Data: ${JSON.stringify(data)}`);
+        this.baseDir = data + '/';
+      }).catch((error) => {
+        Log.showError(TAG, `getFilesDir Failed to obtain the file directory. Cause: ${JSON.stringify(error)}`);
+      });
   }
 
   async getFileContent(fpath: string): Promise<string> {

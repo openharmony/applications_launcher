@@ -50,17 +50,18 @@ class AmsMissionManager {
    * @return {Array} missions
    */
   async getOriginRecentMissionsList(): Promise<Array<missionManager.MissionInfo>> {
-    try {
-      let arrayMissionInfo = new Array<missionManager.MissionInfo>();
-      let res = await missionManager.getMissionInfos('', AmsMissionManager.RECENT_MISSIONS_LIMIT_NUM);
-      if (!CheckEmptyUtils.isEmptyArr(res)) {
-        Log.showDebug(TAG, `getOriginRecentMissionsList res.length: ${res.length}`);
-        arrayMissionInfo = res;
-        return arrayMissionInfo;
-      }
-    } catch (err) {
-      Log.showError(TAG, `getOriginRecentMissionsList error: ${JSON.stringify(err)}`);
-    }
+    let missionInfos = new Array<missionManager.MissionInfo>();
+    await missionManager.getMissionInfos('', AmsMissionManager.RECENT_MISSIONS_LIMIT_NUM)
+      .then((res) => {
+        if (!CheckEmptyUtils.isEmptyArr(res)) {
+          Log.showDebug(TAG, `getOriginRecentMissionsList res.length: ${res.length}`);
+          missionInfos = res;
+        }
+      })
+      .catch((err) => {
+        Log.showError(TAG, `getOriginRecentMissionsList error: ${JSON.stringify(err)}`);
+      });
+    return missionInfos;
   }
 
   /**
@@ -148,12 +149,13 @@ class AmsMissionManager {
    */
   async clearMission(missionId: number): Promise<void> {
     Log.showInfo(TAG, `clearMission Id:${missionId}`);
-    try {
-      await missionManager.clearMission(missionId);
-      Log.showDebug(TAG, 'clearMission success');
-    } catch (err) {
-      Log.showError(TAG, `clearMission err:${JSON.stringify(err)}`);
-    }
+    await missionManager.clearMission(missionId)
+      .then((data) => {
+        Log.showDebug(TAG, `clearMission data:${JSON.stringify(data)}`);
+      })
+      .catch((err) => {
+        Log.showError(TAG, `clearMission err:${JSON.stringify(err)}`);
+      });
   }
 
   /**
@@ -163,12 +165,13 @@ class AmsMissionManager {
    * @return nothing.
    */
   async clearAllMissions(): Promise<void> {
-    try {
-      await missionManager.clearAllMissions();
-      Log.showDebug(TAG, 'clearAllMissions success');
-    } catch (err) {
-      Log.showError(TAG, `clearAllMissions err: ${JSON.stringify(err)}`);
-    }
+    await missionManager.clearAllMissions()
+      .then((data) => {
+        Log.showDebug(TAG, `clearAllMissions data: ${JSON.stringify(data)}`);
+      })
+      .catch((err) => {
+        Log.showError(TAG, `clearAllMissions err: ${JSON.stringify(err)}`);
+      });
   }
 
   /**
@@ -224,15 +227,22 @@ class AmsMissionManager {
     Log.showInfo(TAG, `getMissionSnapShot start! missionId: ${missionId}`);
     try {
       let missionSnapshot: missionManager.MissionSnapshot = null;
-      missionSnapshot = await missionManager.getMissionSnapShot('', missionId);
+      await missionManager.getMissionSnapShot('', missionId)
+        .then((res) => {
+          Log.showDebug(TAG, `getMissionSnapShot ${missionId} success ${JSON.stringify(res)}`);
+          missionSnapshot = res;
+        })
+        .catch((err) => {
+          Log.showError(TAG, `getMissionSnapShot error: ${JSON.stringify(err)}`);
+        });
       const imageInfo = await missionSnapshot.snapshot.getImageInfo();
-      Log.showDebug(TAG, `getMissionSnapShot ${missionId} success ${JSON.stringify(imageInfo)}`);
+      Log.showDebug(TAG, `getMissionSnapShot success ${JSON.stringify(imageInfo)}`);
       snapShotInfo.missionId = missionId;
       snapShotInfo.snapShotImage = missionSnapshot.snapshot;
       snapShotInfo.snapShotImageWidth = imageInfo.size.width;
       snapShotInfo.snapShotImageHeight = imageInfo.size.height;
     } catch (err) {
-      Log.showError(TAG, `missionManager.getMissionSnapShot, missionId:${missionId} err: ${JSON.stringify(err)}`);
+      Log.showError(TAG, `missionManager.getMissionSnapShot err: ${err}`);
     }
     return snapShotInfo;
   }
@@ -244,13 +254,13 @@ class AmsMissionManager {
    */
   async moveMissionToFront(missionId: number, winMode?: number) {
     Log.showInfo(TAG, `moveMissionToFront missionId:  ${missionId}`);
-    try {
-      winMode ? await missionManager.moveMissionToFront(missionId, { windowMode: winMode }) :
-        await missionManager.moveMissionToFront(missionId);
-      Log.showDebug(TAG, 'moveMissionToFront missionId end success');
-    } catch (err) {
+    let promise = winMode ? missionManager.moveMissionToFront(missionId, { windowMode: winMode }) :
+    missionManager.moveMissionToFront(missionId);
+    const res = await promise.catch(err => {
       Log.showError(TAG, `moveMissionToFront err: ${JSON.stringify(err)}`);
-    }
+    });
+    Log.showDebug(TAG, `moveMissionToFront missionId end: ${JSON.stringify(res)}`);
+    return res;
   }
 }
 
