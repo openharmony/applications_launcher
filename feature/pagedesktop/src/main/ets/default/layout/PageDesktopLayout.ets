@@ -89,7 +89,7 @@ export struct PageDesktopLayout {
         left: this.mMargin,
         top: this.mTop,
         right: this.workSpaceWidth - this.mMargin,
-        bottom: PageDesktopViewModel.getInstance().getPageDesktopStyleConfig().mGridHeight + this.mTop
+        bottom: PageDesktopViewModel.getInstance().getPageDesktopStyleConfig()?.mGridHeight + this.mTop
       });
     }
   }
