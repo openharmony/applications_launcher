@@ -38,7 +38,6 @@ import inputConsumer from '@ohos.multimodalInput.inputConsumer';
 import { KeyCode } from '@ohos.multimodalInput.keyCode';
 import window from '@ohos.window';
 import { PreferencesHelper } from '@ohos/common/src/main/ets/default/manager/PreferencesHelper';
-import systemParameter from '@ohos.systemparameter';
 
 const TAG = 'LauncherMainAbility';
 
@@ -54,6 +53,10 @@ export default class MainAbility extends ServiceExtension {
   async initLauncher(): Promise<void> {
     // init Launcher context
     globalThis.desktopContext = this.context;
+    // init rdb
+    let dbStore = RdbStoreManager.getInstance();
+    await dbStore.initRdbConfig();
+    await dbStore.createTable();
 
     let registerWinEvent = (win: window.Window) => {
       win.on('windowEvent', (stageEventType) => {
@@ -65,34 +68,24 @@ export default class MainAbility extends ServiceExtension {
         }
       })
     };
-
     // create Launcher entry view
     windowManager.createWindow(globalThis.desktopContext, windowManager.DESKTOP_WINDOW_NAME,
       windowManager.DESKTOP_RANK, 'pages/' + windowManager.DESKTOP_WINDOW_NAME, true, registerWinEvent);
 
-    await PreferencesHelper.getInstance().initPreference(globalThis.desktopContext);
-
+    await PreferencesHelper.getInstance().initPreference(this.context);
+    AppStorage.setOrCreate('firstActivate', true);
     // init global const
     this.initGlobalConst();
-
-    // init rdb
-    let dbStore = RdbStoreManager.getInstance();
-
-    await dbStore.initRdbConfig();
-    await dbStore.createTable();
+    this.displayManager = DisplayManager.getInstance();
 
     // init Gesture navigation
     this.startGestureNavigation();
-
     windowManager.registerWindowEvent();
     navigationBarCommonEventManager.registerNavigationBarEvent();
+
     // load recent
     windowManager.createRecentWindow();
     this.registerInputConsumer();
-    this.displayManager = DisplayManager.getInstance();
-
-    AppStorage.setOrCreate('loaded', true);
-    systemParameter.set('bootevent.launcher.ready', 'true');
   }
 
   private registerInputConsumer(): void {

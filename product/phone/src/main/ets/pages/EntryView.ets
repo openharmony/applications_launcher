@@ -29,6 +29,7 @@ import StyleConstants from '../common/constants/StyleConstants';
 import { SmartDockStyleConfig } from '@ohos/smartdock';
 import PhonePageDesktopGridStyleConfig from '../common/PhonePageDesktopGridStyleConfig';
 import { FormStyleConfig } from '@ohos/form';
+import systemParameter from '@ohos.systemparameter';
 
 const TAG = 'EntryView';
 
@@ -51,6 +52,10 @@ struct EntryView {
 
   onPageShow(): void {
     Log.showInfo(TAG, 'onPageShow');
+    let firstActivate:boolean | undefined = AppStorage.get('firstActivate');
+    if (firstActivate) {
+      this.voteBootEvent();
+    }
   }
 
   onPageHide(): void {
@@ -70,6 +75,18 @@ struct EntryView {
 
   registerPageDesktopNavigatorStatusChangeEvent(listener: LocalEventListener): void {
     localEventManager.registerEventListener(listener, [EventConstants.EVENT_NAVIGATOR_BAR_STATUS_CHANGE]);
+  }
+
+  private voteBootEvent(): void {
+    Log.showInfo(TAG, 'voteBootEvent for launcher begin');
+    try {
+      AppStorage.setOrCreate('firstActivate', false);
+      AppStorage.setOrCreate('loaded', true);
+      systemParameter.set('bootevent.launcher.ready', 'true');
+    } catch (err) {
+      Log.showError(TAG, `set voteBootEvent err, ${JSON.stringify(err)}`);
+    }
+    Log.showInfo(TAG, 'voteBootEvent for launcher end');
   }
 
   private readonly mLocalEventListener: LocalEventListener = {
