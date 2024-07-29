@@ -15,7 +15,6 @@
 
 import { Log } from '@ohos/common';
 import { PinyinSort } from '@ohos/common';
-import { CommonConstants } from '@ohos/common';
 import { BaseViewModel } from '@ohos/common';
 import { layoutConfigManager, localEventManager, EventConstants } from '@ohos/common';
 import AppcenterConstants from '../common/constants/AppcenterConstants';

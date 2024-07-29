@@ -14,8 +14,6 @@
  */
 
 import { Log } from '@ohos/common';
-import { EventConstants } from '@ohos/common';
-import { localEventManager } from '@ohos/common';
 import { SettingsModel } from '@ohos/common';
 import { SettingItemInfo } from '@ohos/common';
 import { SettingItemsConfig } from '@ohos/common';

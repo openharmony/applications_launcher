@@ -21,7 +21,6 @@ import { LayoutViewModel } from '@ohos/common';
 import { SmartDock } from '@ohos/smartdock/component';
 import { AppGridLayout } from '@ohos/appcenter/component';
 import { AppGridViewModel } from '@ohos/appcenter';
-import PadStage from '../common/PadStage';
 
 const TAG = 'AppCenterView';
 

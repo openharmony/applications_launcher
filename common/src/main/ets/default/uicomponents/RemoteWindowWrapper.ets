@@ -25,7 +25,6 @@ import { localEventManager } from '../manager/LocalEventManager';
 import { EventConstants } from '../constants/EventConstants';
 import { CloseAppManager } from '../manager/CloseAppManager';
 import WindowAnimationControllerImpl from '../animation/remoteanimation/WindowAnimationControllerImpl';
-import { AppItemInfo } from '../bean/AppItemInfo';
 import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 
 const TAG = 'RemoteWindowWrapper';

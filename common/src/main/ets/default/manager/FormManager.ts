@@ -184,6 +184,7 @@ export class FormManager {
    * @param formId
    */
   async deleteCard(formId: string): Promise<void> {
+    Log.showInfo(TAG, `delete form info by formId:${formId}`);
     return await formManagerAbility.deleteForm(formId);
   }
 

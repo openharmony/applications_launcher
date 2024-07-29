@@ -15,10 +15,7 @@
 
 import systemTime from '@ohos.systemTime';
 import usageStatistics from '@ohos.resourceschedule.usageStatistics';
-import {
-  NumberConstants,
-  Log
-} from '@ohos/common';
+import { NumberConstants, Log } from '@ohos/common';
 
 const TAG = 'AppFormWeightManager';
 

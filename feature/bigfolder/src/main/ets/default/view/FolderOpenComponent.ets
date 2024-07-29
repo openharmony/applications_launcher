@@ -13,7 +13,13 @@
  * limitations under the License.
  */
 
-import { Log , CheckEmptyUtils, AppItemInfo, FolderItemInfo, CardItemInfo, FolderData } from '@ohos/common';
+import {
+  Log,
+  AppItemInfo,
+  CardItemInfo,
+  FolderData,
+  CheckEmptyUtils
+} from '@ohos/common';
 import { Trace } from '@ohos/common';
 import { EventConstants } from '@ohos/common';
 import { StyleConstants } from '@ohos/common';

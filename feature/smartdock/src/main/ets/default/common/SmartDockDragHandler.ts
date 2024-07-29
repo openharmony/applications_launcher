@@ -19,7 +19,6 @@ import { localEventManager } from '@ohos/common';
 import { BaseDragHandler } from '@ohos/common';
 import { CommonConstants } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
-import { CheckEmptyUtils } from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 import SmartDockModel from '../model/SmartDockModel';
 import SmartDockConstants from '../common/constants/SmartDockConstants';

@@ -16,7 +16,6 @@
 import { Log } from '../utils/Log';
 import { AppBubble } from './AppBubble';
 import { AppItemInfo } from '../bean/AppItemInfo';
-import { CommonConstants } from '../constants/CommonConstants';
 import { AppGridStyleConfig } from '../layoutconfig/AppGridStyleConfig';
 import { MenuInfo } from '../bean';
 

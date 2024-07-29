@@ -16,8 +16,7 @@
 import {
   AppBubble,
   UninstallDialog,
-  FormManagerDialog,
-  AppIcon,
+  FormManagerDialog
 } from '@ohos/common/component'
 import {
   AppItemInfo,

@@ -21,8 +21,7 @@ import {
   CheckEmptyUtils,
   windowManager,
   SnapShotInfo,
-  CommonConstants,
-  LauncherDragItemInfo
+  CommonConstants
 } from '@ohos/common';
 import RecentMissionAppIcon from './RecentMissionAppIcon';
 import RecentMissionAppName from './RecentMissionAppName';

@@ -20,7 +20,6 @@ import {
   PresetStyleConstants,
   localEventManager,
   EventConstants,
-  CardItemInfo,
   FolderData,
   BadgeManager,
   CheckEmptyUtils

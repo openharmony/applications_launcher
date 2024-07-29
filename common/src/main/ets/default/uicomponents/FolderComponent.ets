@@ -24,7 +24,6 @@ import { AppName } from './AppName';
 import { AppMenu } from './AppMenu';
 import { LauncherDragItemInfo } from '../bean/LauncherDragItemInfo';
 import { AppItemInfo } from '../bean/AppItemInfo';
-import { FolderItemInfo } from '../bean/FolderItemInfo';
 import { MenuInfo } from '../bean';
 import { FolderData } from '../interface/FolderData';
 

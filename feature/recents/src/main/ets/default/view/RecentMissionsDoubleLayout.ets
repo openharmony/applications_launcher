@@ -19,7 +19,6 @@ import { CommonConstants } from '@ohos/common';
 import RecentMissionCard from '../common/uicomponents/RecentMissionCard';
 import { RecentMissionsViewModel } from '../viewmodel/RecentMissionsViewModel';
 import { RecentsStyleConstants } from '../common/constants/RecentsStyleConstants';
-import { windowManager } from '@ohos/common';
 
 const TAG = 'RecentMissionsDoubleLayout';
 
