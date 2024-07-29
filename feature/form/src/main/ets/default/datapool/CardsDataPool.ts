@@ -25,7 +25,6 @@ import List from '@ohos.util.List';
 import FormConstants from '../common/constants/FormConstants';
 
 const TAG = 'CardsDataPool';
-const SEPARATOR = '&';
 
 /**
  * card resource pool
@@ -35,6 +34,7 @@ export default abstract class CardsDataPool {
   private mLastStartIndex: number = 0;
   private mLastEndIndex: number = 0;
   private mDataSize: number = 0;
+  private SEPARATOR: string = '&';
   private mPoolDataMap: Map<string, ArrayList<CardItemInfo>> = new Map();
   mFormModel: FormModel = FormModel.getInstance();
 
@@ -156,8 +156,8 @@ export default abstract class CardsDataPool {
     if (formInfo === null) {
       return '';
     }
-    return formInfo.moduleName + SEPARATOR + formInfo.bundleName + SEPARATOR +
-    formInfo.abilityName + SEPARATOR + formInfo.cardName + SEPARATOR + formInfo.cardDimension;
+    return formInfo.moduleName + this.SEPARATOR + formInfo.bundleName + this.SEPARATOR +
+    formInfo.abilityName + this.SEPARATOR + formInfo.cardName + this.SEPARATOR + formInfo.cardDimension;
   }
 
   private async getTransMediumFormIndex(startIndex: number, smallList: ArrayList<CardItemInfo>,

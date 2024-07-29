@@ -39,7 +39,6 @@ import { RecentMissionInfo } from '@ohos/common';
 import launcherBundleManager from '@ohos.bundle.launcherBundleManager';
 
 const TAG = 'SmartDockModel';
-const KEY_NAME = 'name';
 
 /**
  * SmartDock Model
@@ -54,6 +53,7 @@ export default class SmartDockModel {
   private readonly mDevice = CommonConstants.DEFAULT_DEVICE_TYPE;
   private readonly mResourceManager: ResourceManager;
   protected mAppModel: AppModel;
+  private KEY_NAME: string = 'name';
 
   private constructor() {
     this.mSmartDockLayoutConfig = layoutConfigManager.getFunctionConfig(SmartDockLayoutConfig.SMART_DOCK_LAYOUT_INFO);
@@ -536,7 +536,7 @@ export default class SmartDockModel {
    * @return cache
    */
   getAppName(cacheKey: string): string {
-    return this.mResourceManager.getAppResourceCache(cacheKey, KEY_NAME);
+    return this.mResourceManager.getAppResourceCache(cacheKey, this.KEY_NAME);
   }
 
   async getSnapshot(missionIds: MissionInfo[], name: string): Promise<any> {

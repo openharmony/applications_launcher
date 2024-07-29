@@ -44,8 +44,6 @@ import { PageDesktopGridStyleConfig } from '../common/PageDesktopGridStyleConfig
 import formHost from '@ohos.app.form.formHost';
 
 const TAG = 'PageDesktopViewModel';
-const KEY_APP_LIST = 'appListInfo';
-const KEY_FORM_LIST = 'formListInfo';
 
 export class PageDesktopViewModel extends BaseViewModel {
   private readonly pageDesktopStyleConfig: PageDesktopGridStyleConfig = null;
@@ -56,6 +54,8 @@ export class PageDesktopViewModel extends BaseViewModel {
   private readonly mPageDesktopModel: PageDesktopModel;
   private readonly mBadgeManager: BadgeManager;
   private readonly mFormListInfoCacheManager: FormListInfoCacheManager;
+  private KEY_APP_LIST: string = 'appListInfo';
+  private KEY_FORM_LIST: string = 'formListInfo';
   private mBundleInfoList;
   private mHideBundleInfoList = new Array<any>();
   private mGridConfig;
@@ -208,11 +208,11 @@ export class PageDesktopViewModel extends BaseViewModel {
     const folderInfoList = await this.mFolderModel.getFolderList();
     Log.showDebug(TAG, 'getAppList folderInfoList length: ' + folderInfoList.length);
     this.appendFolderData(folderInfoList, bundleInfoListTemp);
-    let formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
+    let formInfoList: any = this.mFormListInfoCacheManager.getCache(this.KEY_FORM_LIST);
     if (formInfoList == CommonConstants.INVALID_VALUE) {
       formInfoList = await this.mFormModel.getAllFormsInfoFromRdb();
       if (formInfoList && formInfoList.length > 0) {
-        this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, formInfoList);
+        this.mFormListInfoCacheManager.setCache(this.KEY_FORM_LIST, formInfoList);
       }
     }
     this.appendFormData(formInfoList, bundleInfoListTemp);
@@ -588,7 +588,7 @@ export class PageDesktopViewModel extends BaseViewModel {
     appInfo.appGridInfo = this.integrateSwiper(appListInfo);
     Log.showInfo(TAG, 'pagingFiltering appListInfo length:' + appListInfo.length);
     AppStorage.setOrCreate('selectDesktopAppItem', '');
-    AppStorage.setOrCreate(KEY_APP_LIST, appInfo);
+    AppStorage.setOrCreate(this.KEY_APP_LIST, appInfo);
   }
 
   private integrateSwiper(list) {
@@ -1317,12 +1317,12 @@ export class PageDesktopViewModel extends BaseViewModel {
     Log.showDebug(TAG, `createCardToDeskTop formCardItem id: ${formCardItem.cardId}`);
     const cardItemInfo = this.createNewCardItemInfo(formCardItem);
 
-    let formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
+    let formInfoList: any = this.mFormListInfoCacheManager.getCache(this.KEY_FORM_LIST);
     if (formInfoList == CommonConstants.INVALID_VALUE) {
       formInfoList = new Array<CardItemInfo>();
     }
     formInfoList.push(cardItemInfo);
-    this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, formInfoList);
+    this.mFormListInfoCacheManager.setCache(this.KEY_FORM_LIST, formInfoList);
 
     const result = await this.mFormModel.updateFormInfoById(cardItemInfo);
     if (result) {

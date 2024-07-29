@@ -20,12 +20,13 @@ import { Log } from '@ohos/common';
 import dataSourceListCfg from '../../../resources/rawfile/service_form_config.json';
 
 const TAG = 'BigDataDataSource';
-const CONFIG_NAME = 'big_data_source_list';
 
 /**
  * 推荐卡片资源池数据源：大数据预置卡片列表
  */
 export default class BigDataDataSource extends BaseDataSource {
+  private CONFIG_NAME: string = 'big_data_source_list';
+
   constructor() {
     super();
   }
@@ -45,7 +46,7 @@ export default class BigDataDataSource extends BaseDataSource {
   public getSourceDataList(): string[] {
     let obj = JSON.parse(JSON.stringify(dataSourceListCfg));
     for (let key in obj) {
-      if (key === CONFIG_NAME) {
+      if (key === this.CONFIG_NAME) {
         let bigDataSourceList: string[] = obj[key];
         Log.showInfo(TAG, 'get bigDataSourceList len: ' + bigDataSourceList.length);
         Log.showInfo(TAG, 'get bigDataSourceList: ' + JSON.stringify(bigDataSourceList));

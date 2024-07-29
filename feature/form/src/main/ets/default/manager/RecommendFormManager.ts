@@ -32,8 +32,6 @@ import ArrayList from '@ohos.util.ArrayList';
 import AppFormWeightManager from './AppFormWeightManager';
 
 const TAG = 'RecommendManager';
-const REFRESH_INTERVAL_TIME = 3;
-const ENTER_RECOMMEND_INTERVAL_DAYS = 1;
 
 /**
  * 推荐服务卡片管理接口
@@ -56,6 +54,9 @@ export default class RecommendManager implements IRecommendManager {
   private readonly mAppUpdateDataSource: AppUpdateDataSource;
   private readonly mAppInstallDataSource: AppInstallDataSource;
   private mEnterNum: number = 0;
+  private REFRESH_INTERVAL_TIME: number = 3;
+  private ENTER_RECOMMEND_INTERVAL_DAYS: number = 1;
+
   private mRefreshTime: number;
 
   private constructor() {
@@ -139,10 +140,10 @@ export default class RecommendManager implements IRecommendManager {
     let current: number = await systemTime.getCurrentTime();
     let isNeedRefresh: boolean = false;
     let isIntervalDaysExceedsThreshold: boolean =
-      (current - this.mRefreshTime) > NumberConstants.CONSTANT_DAY_TIME_MILLIS * ENTER_RECOMMEND_INTERVAL_DAYS;
+      (current - this.mRefreshTime) > NumberConstants.CONSTANT_DAY_TIME_MILLIS * this.ENTER_RECOMMEND_INTERVAL_DAYS;
     Log.showInfo(TAG, `enter serviceCardSheet ${this.mEnterNum} times, ` +
       `Whether the last time is more than one day: ${isIntervalDaysExceedsThreshold}.`);
-    if (this.mEnterNum >= REFRESH_INTERVAL_TIME && isIntervalDaysExceedsThreshold) {
+    if (this.mEnterNum >= this.REFRESH_INTERVAL_TIME && isIntervalDaysExceedsThreshold) {
       this.mEnterNum = 0;
       this.mRefreshTime = current;
       isNeedRefresh = true;

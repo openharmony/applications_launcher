@@ -33,7 +33,6 @@ import { PageDesktopDragHandler } from '../PageDesktopDragHandler';
 import { PageDesktopViewModel } from '../../viewmodel/PageDesktopViewModel';
 
 const TAG = 'SwiperPage';
-const APP_INFO_REFRESH_DELAY = 1000;
 
 interface AppListInfo {
   appGridInfo: LauncherDragItemInfo[][]
@@ -72,6 +71,7 @@ export default struct SwiperPage {
   private mIconSize: number = 0;
   private mGridSpaceWidth: number = 0;
   private mGridSpaceHeight: number = 0;
+  private APP_INFO_REFRESH_DELAY: number = 1000;
 
   private updateAppListInfo(): void {
     this.mAppListInfo = this.appListInfo.appGridInfo[this.swiperPage];
@@ -164,7 +164,7 @@ export default struct SwiperPage {
     AppStorage.setOrCreate('isSwappingPage', true);
     setTimeout(() => {
       AppStorage.setOrCreate('isSwappingPage', false);
-    }, APP_INFO_REFRESH_DELAY);
+    }, this.APP_INFO_REFRESH_DELAY);
   }
 
   private buildLog(item: LauncherDragItemInfo): boolean {
