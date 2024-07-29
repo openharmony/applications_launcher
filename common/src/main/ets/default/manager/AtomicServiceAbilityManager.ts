@@ -16,7 +16,6 @@
 import bundleManager from '@ohos.bundle.bundleManager';
 import { AppItemInfo } from '../bean/AppItemInfo';
 import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
-import { CommonConstants } from '../constants/CommonConstants';
 import { ResourceManager } from './ResourceManager';
 import commonBundleManager from './CommonBundleManager';
 import { Log } from '../utils/Log';

@@ -24,7 +24,6 @@ import {
   CommonConstants,
   PresetStyleConstants,
   AppItemInfo,
-  FolderItemInfo,
   MenuInfo,
   FolderData
 } from '@ohos/common';

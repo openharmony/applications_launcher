@@ -14,10 +14,6 @@
  */
 
 import {
-  AppMenu,
-  FormManagerDialog,
-} from '@ohos/common/component'
-import {
   CommonConstants,
   StyleConstants,
   LayoutViewModel,
@@ -33,6 +29,7 @@ import {
   localEventManager,
   EventConstants
 } from '@ohos/common';
+import { AppMenu, FormManagerDialog } from '@ohos/common/component'
 import ServiceFormAppItem from '../common/uicomponents/ServiceFormAppItem';
 import ServiceFormItem from '../common/uicomponents/ServiceFormItem';
 import ThisStyleConstants from '../common/constants/StyleConstants';

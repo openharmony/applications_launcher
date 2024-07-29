@@ -14,7 +14,7 @@
  */
 
 import { BaseStartAppHandler } from '@ohos/common';
-import { CommonConstants, StyleConstants } from '@ohos/common';
+import { StyleConstants } from '@ohos/common';
 import { AppItemInfo } from '@ohos/common';
 import { layoutConfigManager } from '@ohos/common';
 import { Log } from '@ohos/common';

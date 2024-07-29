@@ -14,10 +14,7 @@
  */
 
 import CardsDataPool from './CardsDataPool';
-import {
-  CardItemInfo,
-  Log
-} from '@ohos/common';
+import { CardItemInfo, Log } from '@ohos/common';
 import FormConstants from '../common/constants/FormConstants';
 
 const TAG = 'RecommendCardsDataPool';

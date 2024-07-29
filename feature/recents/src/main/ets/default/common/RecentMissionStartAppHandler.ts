@@ -14,7 +14,6 @@
  */
 
 import { BaseStartAppHandler , Log } from '@ohos/common';
-import { RecentsStyleConstants } from './constants/RecentsStyleConstants';
 
 
 const TAG = 'RecentMissionStartAppHandler';
@@ -37,8 +36,6 @@ export class RecentMissionStartAppHandler extends BaseStartAppHandler {
   protected calculateAppIconPosition(): void {
     const RecentMissionInfo = AppStorage.get('startAppItemInfo');
     Log.showInfo(TAG, `recentMission_CalculateAppIconPosition:${JSON.stringify(RecentMissionInfo)} `);
-    const isSingleLayout = RecentMissionInfo['isSingleLayout'];
-//    this.mAppIconSize = RecentsStyleConstants.SINGLE_LIST_DEFAULT_APP_ICON_SIZE_NEW ;
     const position = RecentMissionInfo['position'];
     this.mAppIconPositionX = position.x;
     this.mAppIconPositionY = position.y;

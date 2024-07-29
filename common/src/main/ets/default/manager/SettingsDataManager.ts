@@ -19,9 +19,8 @@ import settings from '@ohos.settings';
 import dataShare from '@ohos.data.dataShare';
 import common from '@ohos.app.ability.common';
 import { Context } from '@ohos.abilityAccessCtrl';
-import { BusinessError } from '@ohos.base';
 
-const TAG = 'SettingsDataManager'
+const TAG = 'SettingsDataManager';
 /**
  * Wrapper class for settings interfaces.
  */

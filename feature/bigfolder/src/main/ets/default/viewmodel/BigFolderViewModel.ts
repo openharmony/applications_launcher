@@ -35,11 +35,8 @@ import { BigFolderModel } from '../model/BigFolderModel';
 import { BigFolderStyleConfig } from '../common/BigFolderStyleConfig';
 import { BigFolderConstants } from '../common/constants/BigFolderConstants';
 import { BigFolderStyleConstants } from '../common/constants/BigFolderStyleConstants';
-import GridLayoutItemInfo from '@ohos/common/src/main/ets/default/bean/GridLayoutItemInfo';
-import GridLayoutItemBuilder from '@ohos/common/src/main/ets/default/bean/GridLayoutItemBuilder';
 
 const TAG = 'BigFolderViewModel';
-const HEXADECIMAL_VALUE = 36;
 
 export class BigFolderViewModel extends BaseViewModel {
   private readonly mSettingsModel: SettingsModel;
@@ -47,7 +44,8 @@ export class BigFolderViewModel extends BaseViewModel {
   private readonly mPageDesktopModel: PageDesktopModel;
   private readonly mPinyinSort: PinyinSort;
   private readonly mGridConfig;
-  private mPageIndex = 0;
+  private HEXADECIMAL_VALUE: number = 36;
+  private mPageIndex: number = 0;
   private readonly mFolderStyleConfig: BigFolderStyleConfig;
   private readonly mFolderLayoutConfig: FolderLayoutConfig;
   private readonly mLocalEventListener = {
@@ -949,8 +947,8 @@ export class BigFolderViewModel extends BaseViewModel {
    */
   private getUUID(): string {
     Log.showDebug(TAG, 'getUUID start');
-    let id = Date.now().toString(HEXADECIMAL_VALUE);
-    id += Math.random().toString(HEXADECIMAL_VALUE).substr(2);
+    let id = Date.now().toString(this.HEXADECIMAL_VALUE);
+    id += Math.random().toString(this.HEXADECIMAL_VALUE).substr(2);
     return id;
   }
 

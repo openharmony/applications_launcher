@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SettingItemOption from './SettingItemOption';
 
 /**
  * Item info for launcher settings db data.
