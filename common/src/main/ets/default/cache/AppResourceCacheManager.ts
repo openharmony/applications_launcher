@@ -18,8 +18,6 @@ import LruCache from './LruCache';
 import DiskLruCache from './DiskLruCache';
 
 const TAG = 'AppResourceCacheManager';
-const KEY_ICON = 'icon';
-const DISK_CACHE_MISS = -1;
 
 /**
  * A Manager class that provides get/set/clear cache methods for app image data.
@@ -27,6 +25,8 @@ const DISK_CACHE_MISS = -1;
 export default class AppResourceCacheManager {
   private readonly memoryCache;
   private readonly diskCache;
+  private KEY_ICON: string = 'icon';
+  private DISK_CACHE_MISS: number = -1;
 
   constructor() {
     this.memoryCache = new LruCache();
@@ -42,7 +42,7 @@ export default class AppResourceCacheManager {
   getCache(cacheKey: string, cacheType: string) {
     const cache = this.getCacheFromMemory(cacheKey, cacheType);
     if (cache == undefined || cache == null || cache == '') {
-      if (cacheType === KEY_ICON) {
+      if (cacheType === this.KEY_ICON) {
         const cacheFromDisk = this.getCacheFromDisk(cacheKey, cacheType);
         this.setCacheToMemory(cacheKey, cacheType, cacheFromDisk);
         return cacheFromDisk;
@@ -62,7 +62,7 @@ export default class AppResourceCacheManager {
   setCache(cacheKey: string, cacheType: string, value: object | string) {
     Log.showDebug(TAG, `setCache cacheKey: ${cacheKey}, cacheType: ${cacheType}`);
     this.setCacheToMemory(cacheKey, cacheType, value);
-    if (cacheType === KEY_ICON) {
+    if (cacheType === this.KEY_ICON) {
       this.setCacheToDisk(cacheKey, cacheType, value);
     }
   }
@@ -77,7 +77,7 @@ export default class AppResourceCacheManager {
 
   deleteCache(cacheKey: string, cacheType: string): void {
     this.memoryCache.remove(cacheKey);
-    if (cacheType === KEY_ICON) {
+    if (cacheType === this.KEY_ICON) {
       this.diskCache.remove(cacheKey);
     }
   }
@@ -106,7 +106,7 @@ export default class AppResourceCacheManager {
 
   private getCacheFromDisk(cacheKey: string, cacheType: string) {
     const data = this.diskCache.getCache(cacheKey);
-    return data !== DISK_CACHE_MISS ? data : null;
+    return data !== this.DISK_CACHE_MISS ? data : null;
   }
 
   private setCacheToDisk(cacheKey: string, cacheType: string, value: object | string): void {

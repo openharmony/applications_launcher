@@ -28,7 +28,6 @@ import { FormStyleConfig } from '../common/FormStyleConfig';
 import FeatureConstants from '../common/constants/FeatureConstants';
 
 const TAG = 'FormViewModel';
-const KEY_FORM_LIST = 'formListInfo';
 
 /**
  * Class FormViewModel.
@@ -40,6 +39,7 @@ export class FormViewModel {
   private readonly mFormStyleConfig: FormStyleConfig;
   private readonly mFormListInfoCacheManager: FormListInfoCacheManager;
   private mAllFormsInfo?: CardItemInfo[];
+  private KEY_FORM_LIST:string = 'formListInfo';
 
   private constructor() {
     Log.showInfo(TAG, 'constructor start');
@@ -127,7 +127,7 @@ export class FormViewModel {
         this.mPageDesktopModel.setPageIndex(curPageIndex - 1);
       }
     }
-    const formInfoList: any = this.mFormListInfoCacheManager.getCache(KEY_FORM_LIST);
+    const formInfoList: any = this.mFormListInfoCacheManager.getCache(this.KEY_FORM_LIST);
     if (formInfoList === CommonConstants.INVALID_VALUE) {
       return;
     }
@@ -138,9 +138,9 @@ export class FormViewModel {
       }
     }
     if (formInfoList.length === 0) {
-      this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, null);
+      this.mFormListInfoCacheManager.setCache(this.KEY_FORM_LIST, null);
     } else {
-      this.mFormListInfoCacheManager.setCache(KEY_FORM_LIST, formInfoList);
+      this.mFormListInfoCacheManager.setCache(this.KEY_FORM_LIST, formInfoList);
     }
   }
 }

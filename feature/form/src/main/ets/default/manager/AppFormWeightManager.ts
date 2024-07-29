@@ -22,7 +22,6 @@ import {
 
 const TAG = 'AppFormWeightManager';
 
-const ENTER_RECOMMEND_INTERVAL_DAYS = 1;
 
 /**
  * FA卡片属性的APP权重管理接口
@@ -38,6 +37,7 @@ export interface IAppFormWeightManager {
 export default class AppFormWeightManager implements IAppFormWeightManager {
   private mAppUsageWeight: Map<string, number> = new Map();
   private mRefreshTime: number = 0;
+  private ENTER_RECOMMEND_INTERVAL_DAYS: number = 1;
 
   private constructor() {
   }
@@ -81,7 +81,7 @@ export default class AppFormWeightManager implements IAppFormWeightManager {
     let current: number = await systemTime.getCurrentTime();
     let isNeedRefresh: boolean = false;
     let isIntervalDaysExceedsThreshold: boolean = (current - this.mRefreshTime) >
-      NumberConstants.CONSTANT_DAY_TIME_MILLIS * ENTER_RECOMMEND_INTERVAL_DAYS;
+      NumberConstants.CONSTANT_DAY_TIME_MILLIS * this.ENTER_RECOMMEND_INTERVAL_DAYS;
     if (isIntervalDaysExceedsThreshold) {
       this.mRefreshTime = current;
       isNeedRefresh = true;
