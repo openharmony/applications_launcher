@@ -276,7 +276,7 @@ export class LayoutViewModel {
     let folderGutter = this.mLauncherLayoutStyleConfig.mFolderGutterRatio * folderSize;
     let folderMargin = this.mLauncherLayoutStyleConfig.mFolderMarginRatio * folderSize;
 
-    let column = layoutInfo.column;
+    let column = layoutInfo?.column;
     let iconSize = (folderSize - folderGutter * 2 - folderMargin * 2) / column;
     let nameHeight = this.mDesktopNameHeight;
     let nameLines = this.mDesktopNameLines;
@@ -302,8 +302,8 @@ export class LayoutViewModel {
    */
   calculateOpenFolder(openFolderConfig: any): any {
     Log.showInfo(TAG, 'calculateOpenFolder start');
-    let row = openFolderConfig.row;
-    let column = openFolderConfig.column;
+    let row = openFolderConfig?.row;
+    let column = openFolderConfig?.column;
     let gutter = this.mLauncherLayoutStyleConfig.mFolderOpenGutter;
     let padding = this.mLauncherLayoutStyleConfig.mFolderOpenPADDING;
     let margin = this.mLauncherLayoutStyleConfig.mFolderOpenMargin;
@@ -339,7 +339,7 @@ export class LayoutViewModel {
    */
   calculateFolderAddList(addFolderConfig: any): any {
     Log.showInfo(TAG, 'calculateFolderAddList start');
-    let column: number = addFolderConfig.column;
+    let column: number = addFolderConfig?.column;
     let margin: number = this.mLauncherLayoutStyleConfig.mFolderAddGridMargin;
     let saveMargin: number = PresetStyleConstants.DEFAULT_SCREEN_GRID_GAP_AND_MARGIN;
     let screenGap: number = PresetStyleConstants.DEFAULT_SCREEN_GRID_GAP_AND_MARGIN;
