@@ -74,11 +74,11 @@ class SettingsDataManager {
    * Update settingData by settingDataKey.
    */
   setValue(helper: dataShare.DataShareHelper | null, settingDataKey: string, value: string): void {
-    Log.showInfo(TAG, 'setValue:' + value)
-    if (typeof globalThis.desktopContext === 'undefined') {
-      settings.setValueSync(globalThis.settingsContext as Context, settingDataKey, value);
-    } else {
+    Log.showInfo(TAG, 'setValue:' + value);
+    try {
       settings.setValueSync(globalThis.desktopContext as Context, settingDataKey, value);
+    } catch (err) {
+      Log.showError(TAG, `Update settingData by settingDataKey err: ${err.message || err?.code}`);
     }
   }
 
@@ -89,10 +89,10 @@ class SettingsDataManager {
    */
   getValue(helper: dataShare.DataShareHelper | null, settingDataKey: string, defaultValue: string): string {
     let value: string = '1';
-    if (typeof globalThis.desktopContext === 'undefined') {
-      value = settings.getValueSync(globalThis.settingsContext as Context, settingDataKey, defaultValue);
-    } else {
+    try {
       value = settings.getValueSync(globalThis.desktopContext as Context, settingDataKey, defaultValue);
+    } catch (err) {
+      Log.showError(TAG, `get settingDataValue by settingDataKey err: ${err.message || err?.code}`);
     }
     Log.showInfo(TAG, 'getValue:' + value);
     return value;

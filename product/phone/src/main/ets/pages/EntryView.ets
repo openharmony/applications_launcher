@@ -82,7 +82,7 @@ struct EntryView {
     try {
       AppStorage.setOrCreate('firstActivate', false);
       AppStorage.setOrCreate('loaded', true);
-      systemParameter.set('bootevent.launcher.ready', 'true');
+      systemParameter.setSync('bootevent.launcher.ready', 'true');
     } catch (err) {
       Log.showError(TAG, `set voteBootEvent err, ${JSON.stringify(err)}`);
     }

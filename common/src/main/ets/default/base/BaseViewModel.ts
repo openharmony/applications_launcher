@@ -22,7 +22,6 @@ import { launcherAbilityManager } from '../manager/LauncherAbilityManager';
 
 const TAG = 'BaseViewModel';
 
-const KEY_NAME = 'name';
 
 /**
  * Base class for view models.
@@ -31,6 +30,7 @@ export class BaseViewModel {
   protected mAppModel: AppModel;
   protected mResourceManager: ResourceManager;
   private readonly listener;
+  private KEY_NAME = 'name';
 
   protected constructor() {
     this.mAppModel = AppModel.getInstance();
@@ -118,6 +118,6 @@ export class BaseViewModel {
   }
 
   getAppName(cacheKey: string): string {
-    return this.mResourceManager.getAppResourceCache(cacheKey, KEY_NAME);
+    return this.mResourceManager.getAppResourceCache(cacheKey, this.KEY_NAME);
   }
 }

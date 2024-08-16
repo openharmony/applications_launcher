@@ -55,7 +55,11 @@ export class GestureNavigationManager {
   private registerListenForDataChanges(callback: AsyncCallback<void>) {
     this.helper = settingsDataManager.getHelper(globalThis.desktopContext, this.uri);
     Log.showInfo(TAG, 'helper:' + this.helper +  'registerListenForDataChanges uri:' + this.uri);
-    this.helper.on('dataChange', this.uri, callback);
+    try {
+      this.helper.on('dataChange', this.uri, callback);
+    } catch (err) {
+      Log.showError(TAG, `Monitor data changes by dataShare err: ${err.message || err?.code}`);
+    }
   }
 
   initWindowSize(display: display.Display) {
