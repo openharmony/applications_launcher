@@ -244,12 +244,12 @@ class AmsMissionManager {
    */
   async moveMissionToFront(missionId: number, winMode?: number) {
     Log.showInfo(TAG, `moveMissionToFront missionId:  ${missionId}`);
-      try {
-        winMode ? await missionManager.moveMissionToFront(missionId, { windowMode: winMode }) :
-          await missionManager.moveMissionToFront(missionId);
-        Log.showDebug(TAG, 'moveMissionToFront missionId end success');
-      } catch (err) {
-        Log.showError(TAG, `moveMissionToFront fail, err: ${JSON.stringify(err)}`);
+    try {
+      winMode ? await missionManager.moveMissionToFront(missionId, { windowMode: winMode }):
+        await missionManager.moveMissionToFront(missionId);
+      Log.showDebug(TAG, 'moveMissionToFront missionId end success');
+    } catch (err) {
+      Log.showError(TAG, `moveMissionToFront fail, err: ${JSON.stringify(err)}`);
     }
   }
 }
