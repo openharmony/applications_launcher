@@ -37,8 +37,8 @@ export struct FormManagerComponent {
   private mFormModel: FormModel = FormModel.getInstance();
   private mSwiperIndex: number = 0;
   @State enabledDomEventResponse: boolean = true;
-  @State chooseCardId: number = -1;
-  private mFormIdList: number[] = [];
+  @State chooseCardId: number | undefined = -1;
+  private mFormIdMap: Map<number, number> = new Map<number, number>();
   private mFormComponentWidth: number[] = [
     StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 2,
     StyleConstants.FORM_MGR_FORM_SIZE * StyleConstants.DPI_RATIO * 2,
@@ -86,9 +86,9 @@ export struct FormManagerComponent {
    * @return {any} formCardItem
    */
   private getChooseCard() {
-    this.chooseCardId = this.mFormIdList[this.mSwiperIndex];
+    this.chooseCardId = this.mFormIdMap.get(this.mSwiperIndex);
     let formCardItem: CardItemInfo = new CardItemInfo();
-    formCardItem.cardId = this.mFormIdList[this.mSwiperIndex];
+    formCardItem.cardId = this.mFormIdMap.get(this.mSwiperIndex);
     let count = 0;
     let isStop = false;
     for (let i = 0; i < this.formItem.length; i++) {
@@ -117,10 +117,9 @@ export struct FormManagerComponent {
    * Keep the form which be added to the desktop, and delete the remaining forms.
    */
   private clearNoUseFormById(): void {
-    let id = this.mFormIdList[this.mSwiperIndex];
-    for (let i = 0; i < this.mFormIdList.length; i++) {
+    for (let i = 0; i < this.mFormIdMap.size; i++) {
       if (i != this.mSwiperIndex) {
-        this.mFormModel.deleteFormByFormID(this.mFormIdList[i]);
+        this.mFormModel.deleteFormByFormID(this.mFormIdMap.get(i));
       }
     }
   }
@@ -129,8 +128,8 @@ export struct FormManagerComponent {
    * Delete all form by id.
    */
   private clearAllFormById(): void {
-    for (let i = 0; i < this.mFormIdList.length; i++) {
-      this.mFormModel.deleteFormByFormID(this.mFormIdList[i]);
+    for (let i = 0; i < this.mFormIdMap.size; i++) {
+      this.mFormModel.deleteFormByFormID(this.mFormIdMap.get(i));
     }
   }
 
@@ -192,8 +191,11 @@ export struct FormManagerComponent {
                         .allowUpdate(this.allowUpdate)
                         .visibility(Visibility.Visible)
                         .onAcquired((form) => {
-                          Log.showDebug(TAG, `FormComponent card id is: ${form.id}`);
-                          this.mFormIdList.push(form.id);
+                          let currentIndex = this.calculateIndex(formItem, dimensionItem);
+                          Log.showInfo(TAG, `FormComponent card id is: ${form.id}, currentIndex: ${currentIndex}`);
+                          if (currentIndex >= 0) {
+                            this.mFormIdMap.set(currentIndex, form.id);
+                          }
                         })
                         .onError((error) => {
                           Log.showDebug(TAG, `FormComponent error msg: ${error.msg}`);
@@ -254,5 +256,26 @@ export struct FormManagerComponent {
     .width(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
     .height(StyleConstants.DEFAULT_LAYOUT_PERCENTAGE)
     .backgroundImage(StyleConstants.DEFAULT_FORM_MGR_BACKGROUND_IMAGE)
+  }
+
+  private calculateIndex(formInfo: CardItemInfo, dimension: number): number {
+    let count = 0;
+    for (let i = 0; i < this.formItem.length; i++) {
+      let tempItem = this.formItem[i];
+      if (formInfo.cardName != tempItem.cardName ||
+        formInfo.bundleName != tempItem.bundleName ||
+        formInfo.abilityName != tempItem.abilityName ||
+        formInfo.moduleName != tempItem.moduleName) {
+        count += tempItem.supportDimensions.length;
+        continue;
+      }
+      for (let j = 0; j < formInfo.supportDimensions.length; j++) {
+        if (dimension === formInfo.supportDimensions[j]) {
+          return count;
+        }
+        count++;
+      }
+    }
+    return -1;
   }
 }
