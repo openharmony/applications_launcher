@@ -262,10 +262,10 @@ export struct FormManagerComponent {
     let count = 0;
     for (let i = 0; i < this.formItem.length; i++) {
       let tempItem = this.formItem[i];
-      if (formInfo.cardName != tempItem.cardName ||
-        formInfo.bundleName != tempItem.bundleName ||
-        formInfo.abilityName != tempItem.abilityName ||
-        formInfo.moduleName != tempItem.moduleName) {
+      if (formInfo.cardName !== tempItem.cardName ||
+        formInfo.bundleName !== tempItem.bundleName ||
+        formInfo.abilityName !== tempItem.abilityName ||
+        formInfo.moduleName !== tempItem.moduleName) {
         count += tempItem.supportDimensions.length;
         continue;
       }
