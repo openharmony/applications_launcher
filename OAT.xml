@@ -79,6 +79,8 @@
                <filteritem type="filepath" name="product/pad/src/main/ets/common/pics/.*.jpg" desc="self developed image"/>
                <filteritem type="filepath" name="product/pad/src/main/ets/common/pics/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="feature/smartdock/src/main/resources/base/media/.*.png" desc="self developed image"/>
+               <filteritem type="filepath" name="feature/form/src/main/ets/default/common/pics/.*.png" desc="self developed image"/>
+               <filteritem type="filepath" name="feature/form/src/main/ets/default/common/pics/.*.jpg" desc="self developed image"/>
                <filteritem type="filepath" name="product/phone/src/main/ets/common/pics/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="product/phone/src/main/ets/common/pics/.*.jpg" desc="self developed image"/>
             </filefilter>
