@@ -115,8 +115,8 @@ export class FormManager {
   async updateFormDescription(description: string, descriptionId: number, labelId: number,
                               bundleName: string, moduleName: string, appName: string): Promise<string> {
     if (description.match(/\d+/)) {
-      let number = parseInt(description.match(/\d+/)[0], 10);
-      if (descriptionId === number) {
+      let matchId = parseInt(description.match(/\d+/)[0], 10);
+      if (descriptionId === matchId) {
         let resourceManager: ResourceManager = ResourceManager.getInstance();
         let value = await resourceManager.getAppNameSync(labelId, bundleName, moduleName, appName);
         return value;
