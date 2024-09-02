@@ -19,6 +19,7 @@ import { Log } from '../utils/Log';
 import { CardItemInfo } from '../bean/CardItemInfo';
 import { CommonConstants } from '../constants/CommonConstants';
 import { launcherAbilityManager } from './LauncherAbilityManager';
+import { ResourceManager } from './ResourceManager';
 
 const TAG = 'FormManager';
 
@@ -31,6 +32,7 @@ export class FormManager {
   private readonly CARD_SIZE_2x4: number[] = [4, 2];
   private readonly CARD_SIZE_4x4: number[] = [4, 4];
   private readonly CARD_SIZE_6x4: number[] = [6, 4];
+  private resourceManager: ResourceManager = ResourceManager.getInstance();
 
   private constructor() {
   }
@@ -56,13 +58,15 @@ export class FormManager {
     const cardItemInfoList = new Array<CardItemInfo>();
     for (const formItem of formList) {
       const cardItemInfo = new CardItemInfo();
+      let description = await this.resourceManager.getAppNameSync(formItem.descriptionId, formItem.bundleName,
+        formItem.moduleName, formItem.name);
       cardItemInfo.bundleName = formItem.bundleName;
       cardItemInfo.abilityName = formItem.abilityName;
       cardItemInfo.moduleName = formItem.moduleName;
       cardItemInfo.cardName = formItem.name;
       cardItemInfo.cardDimension = formItem.defaultDimension;
       cardItemInfo.area = this.getCardSize(cardItemInfo.cardDimension);
-      cardItemInfo.description = formItem.description;
+      cardItemInfo.description = description;
       cardItemInfo.formConfigAbility = formItem.formConfigAbility;
       cardItemInfo.supportDimensions = formItem.supportDimensions;
       cardItemInfoList.push(cardItemInfo);
@@ -94,6 +98,8 @@ export class FormManager {
     const formList = await formManagerAbility.getFormsInfo(bundle);
     const cardItemInfoList = new Array<CardItemInfo>();
     for (const formItem of formList) {
+      let description = await this.resourceManager.getAppNameSync(formItem.descriptionId, formItem.bundleName,
+        formItem.moduleName, formItem.name);
       const cardItemInfo = new CardItemInfo();
       cardItemInfo.bundleName = formItem.bundleName;
       cardItemInfo.abilityName = formItem.abilityName;
@@ -101,7 +107,7 @@ export class FormManager {
       cardItemInfo.cardName = formItem.name;
       cardItemInfo.cardDimension = formItem.defaultDimension;
       cardItemInfo.area = this.getCardSize(cardItemInfo.cardDimension);
-      cardItemInfo.description = formItem.description;
+      cardItemInfo.description = description;
       cardItemInfo.formConfigAbility = formItem.formConfigAbility;
       cardItemInfo.supportDimensions = formItem.supportDimensions;
       cardItemInfoList.push(cardItemInfo);
@@ -163,6 +169,8 @@ export class FormManager {
     const formList = await formManagerAbility.getFormsInfo(bundle, moduleName);
     const cardItemInfoList = new Array<CardItemInfo>();
     for (const formItem of formList) {
+      let description = await this.resourceManager.getAppNameSync(formItem.descriptionId, formItem.bundleName,
+        formItem.moduleName, formItem.name);
       const cardItemInfo = new CardItemInfo();
       cardItemInfo.bundleName = formItem.bundleName;
       cardItemInfo.abilityName = formItem.abilityName;
@@ -170,7 +178,7 @@ export class FormManager {
       cardItemInfo.cardName = formItem.name;
       cardItemInfo.cardDimension = formItem.defaultDimension;
       cardItemInfo.area = this.getCardSize(cardItemInfo.cardDimension);
-      cardItemInfo.description = formItem.description;
+      cardItemInfo.description = description;
       cardItemInfo.formConfigAbility = formItem.formConfigAbility;
       cardItemInfo.supportDimensions = formItem.supportDimensions;
       cardItemInfoList.push(cardItemInfo);
@@ -187,6 +195,5 @@ export class FormManager {
     Log.showInfo(TAG, `delete form info by formId:${formId}`);
     return await formManagerAbility.deleteForm(formId);
   }
-
 }
 
