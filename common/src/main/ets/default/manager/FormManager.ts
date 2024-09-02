@@ -19,6 +19,7 @@ import { Log } from '../utils/Log';
 import { CardItemInfo } from '../bean/CardItemInfo';
 import { CommonConstants } from '../constants/CommonConstants';
 import { launcherAbilityManager } from './LauncherAbilityManager';
+import { ResourceManager } from './ResourceManager';
 
 const TAG = 'FormManager';
 
@@ -94,6 +95,8 @@ export class FormManager {
     const formList = await formManagerAbility.getFormsInfo(bundle);
     const cardItemInfoList = new Array<CardItemInfo>();
     for (const formItem of formList) {
+      let value: string = await this.updateFormDescription(formItem.description,
+        formItem.descriptionId, formItem.descriptionId, formItem.bundleName, formItem.moduleName, formItem.name);
       const cardItemInfo = new CardItemInfo();
       cardItemInfo.bundleName = formItem.bundleName;
       cardItemInfo.abilityName = formItem.abilityName;
@@ -101,12 +104,26 @@ export class FormManager {
       cardItemInfo.cardName = formItem.name;
       cardItemInfo.cardDimension = formItem.defaultDimension;
       cardItemInfo.area = this.getCardSize(cardItemInfo.cardDimension);
-      cardItemInfo.description = formItem.description;
+      cardItemInfo.description = value;
       cardItemInfo.formConfigAbility = formItem.formConfigAbility;
       cardItemInfo.supportDimensions = formItem.supportDimensions;
       cardItemInfoList.push(cardItemInfo);
     }
     return cardItemInfoList;
+  }
+
+  async updateFormDescription(description: string, descriptionId: number, labelId: number,
+                              bundleName: string, moduleName: string, appName: string): Promise<string> {
+    if (description.match(/\d+/)) {
+      let number = parseInt(description.match(/\d+/)[0], 10);
+      if (descriptionId === number) {
+        let resourceManager: ResourceManager = ResourceManager.getInstance();
+        let value = await resourceManager.getAppNameSync(labelId, bundleName, moduleName, appName);
+        return value;
+      }
+    } else {
+      return description;
+    }
   }
 
   /**
@@ -187,6 +204,5 @@ export class FormManager {
     Log.showInfo(TAG, `delete form info by formId:${formId}`);
     return await formManagerAbility.deleteForm(formId);
   }
-
 }
 
