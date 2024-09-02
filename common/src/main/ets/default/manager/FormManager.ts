@@ -32,6 +32,7 @@ export class FormManager {
   private readonly CARD_SIZE_2x4: number[] = [4, 2];
   private readonly CARD_SIZE_4x4: number[] = [4, 4];
   private readonly CARD_SIZE_6x4: number[] = [6, 4];
+  private resourceManager: ResourceManager = ResourceManager.getInstance();
 
   private constructor() {
   }
@@ -57,13 +58,15 @@ export class FormManager {
     const cardItemInfoList = new Array<CardItemInfo>();
     for (const formItem of formList) {
       const cardItemInfo = new CardItemInfo();
+      let description = await this.resourceManager.getAppNameSync(formItem.descriptionId, formItem.bundleName,
+        formItem.moduleName, formItem.name);
       cardItemInfo.bundleName = formItem.bundleName;
       cardItemInfo.abilityName = formItem.abilityName;
       cardItemInfo.moduleName = formItem.moduleName;
       cardItemInfo.cardName = formItem.name;
       cardItemInfo.cardDimension = formItem.defaultDimension;
       cardItemInfo.area = this.getCardSize(cardItemInfo.cardDimension);
-      cardItemInfo.description = formItem.description;
+      cardItemInfo.description = description;
       cardItemInfo.formConfigAbility = formItem.formConfigAbility;
       cardItemInfo.supportDimensions = formItem.supportDimensions;
       cardItemInfoList.push(cardItemInfo);
@@ -95,8 +98,8 @@ export class FormManager {
     const formList = await formManagerAbility.getFormsInfo(bundle);
     const cardItemInfoList = new Array<CardItemInfo>();
     for (const formItem of formList) {
-      let value: string = await this.updateFormDescription(formItem.description,
-        formItem.descriptionId, formItem.descriptionId, formItem.bundleName, formItem.moduleName, formItem.name);
+      let description = await this.resourceManager.getAppNameSync(formItem.descriptionId, formItem.bundleName,
+        formItem.moduleName, formItem.name);
       const cardItemInfo = new CardItemInfo();
       cardItemInfo.bundleName = formItem.bundleName;
       cardItemInfo.abilityName = formItem.abilityName;
@@ -104,26 +107,12 @@ export class FormManager {
       cardItemInfo.cardName = formItem.name;
       cardItemInfo.cardDimension = formItem.defaultDimension;
       cardItemInfo.area = this.getCardSize(cardItemInfo.cardDimension);
-      cardItemInfo.description = value;
+      cardItemInfo.description = description;
       cardItemInfo.formConfigAbility = formItem.formConfigAbility;
       cardItemInfo.supportDimensions = formItem.supportDimensions;
       cardItemInfoList.push(cardItemInfo);
     }
     return cardItemInfoList;
-  }
-
-  async updateFormDescription(description: string, descriptionId: number, labelId: number,
-                              bundleName: string, moduleName: string, appName: string): Promise<string> {
-    if (description.match(/\d+/)) {
-      let matchId = parseInt(description.match(/\d+/)[0], 10);
-      if (descriptionId === matchId) {
-        let resourceManager: ResourceManager = ResourceManager.getInstance();
-        let value = await resourceManager.getAppNameSync(labelId, bundleName, moduleName, appName);
-        return value;
-      }
-    } else {
-      return description;
-    }
   }
 
   /**
@@ -180,6 +169,8 @@ export class FormManager {
     const formList = await formManagerAbility.getFormsInfo(bundle, moduleName);
     const cardItemInfoList = new Array<CardItemInfo>();
     for (const formItem of formList) {
+      let description = await this.resourceManager.getAppNameSync(formItem.descriptionId, formItem.bundleName,
+        formItem.moduleName, formItem.name);
       const cardItemInfo = new CardItemInfo();
       cardItemInfo.bundleName = formItem.bundleName;
       cardItemInfo.abilityName = formItem.abilityName;
@@ -187,7 +178,7 @@ export class FormManager {
       cardItemInfo.cardName = formItem.name;
       cardItemInfo.cardDimension = formItem.defaultDimension;
       cardItemInfo.area = this.getCardSize(cardItemInfo.cardDimension);
-      cardItemInfo.description = formItem.description;
+      cardItemInfo.description = description;
       cardItemInfo.formConfigAbility = formItem.formConfigAbility;
       cardItemInfo.supportDimensions = formItem.supportDimensions;
       cardItemInfoList.push(cardItemInfo);
