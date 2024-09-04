@@ -199,20 +199,6 @@ export struct FolderComponent {
     Log.showInfo(TAG, `getPosition animatePosition x: ${this.animateFolderPositionX}, y: ${this.animateFolderPositionY}`);
   }
 
-
-  // dragStart = (event: DragEvent): CustomBuilder => {
-  //   ContextMenu.close();
-  //   this.dragItemType = CommonConstants.DRAG_FROM_DESKTOP;
-  //   this.folderItem.isDragging = true;
-  //   this.pageDesktopDragItemInfo = this.folderItem;
-  //   const selectAppIndex = PageDesktopDragHandler.getInstance().getItemIndex(event.getWindowX(), event.getWindowY());
-  //   const startPosition = PageDesktopDragHandler.getInstance().getTouchPosition(event.getWindowX(), event.getWindowY())
-  //   PageDesktopDragHandler.getInstance().mStartPosition = startPosition;
-  //   AppStorage.setOrCreate('selectAppIndex', selectAppIndex);
-  //   Log.showInfo(TAG, `onDragStart event: [${event.getWindowX()}, ${event.getWindowY()}], selectAppIndex: ${selectAppIndex}`);
-  // }
-
-
   build() {
     Column() {
       Column() {
