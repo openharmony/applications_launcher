@@ -103,10 +103,10 @@ export struct FormItemComponent {
             this.clickForm(event, this.formItem);
           }
         })
-        .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
         .onDragStart((event: DragEvent, extraParams: string) => {
           return this.dragStart(event);
         })
+        .bindContextMenu(this.MenuBuilder, ResponseType.LongPress)
         .onDragEnd((event: DragEvent, extraParams: string) => {
           Log.showInfo(TAG, `onDragEnd event: [${event.getWindowX()}, ${event.getWindowY()}]` + event.getResult());
           AppStorage.setOrCreate<LauncherDragItemInfo>('dragItemInfo', new LauncherDragItemInfo());
