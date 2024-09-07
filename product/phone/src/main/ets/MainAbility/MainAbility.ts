@@ -89,13 +89,14 @@ export default class MainAbility extends ServiceExtension {
   }
 
   private registerInputConsumer(): void {
-    // register/unregister HOME inputConsumer
-    inputConsumer.on('key', {
+    let onKeyCodeHome = {
       preKeys: [],
       finalKey: KeyCode.KEYCODE_HOME,
       finalKeyDownDuration: 0,
       isFinalKeyDown: true
-    }, () => {
+    }
+    // register/unregister HOME inputConsumer
+    inputConsumer.on('key', onKeyCodeHome, () => {
       Log.showInfo(TAG, 'HOME inputConsumer homeEvent start');
       globalThis.desktopContext.startAbility({
         bundleName: CommonConstants.LAUNCHER_BUNDLE,
@@ -108,33 +109,36 @@ export default class MainAbility extends ServiceExtension {
           Log.showDebug(TAG, 'HOME inputConsumer startAbility Promise in service failed.');
         });
     });
-    // register/unregister RECENT inputConsumer
-    inputConsumer.on('key', {
+    let onKeyCodeFunction = {
       preKeys: [],
       finalKey: KeyCode.KEYCODE_FUNCTION,
       finalKeyDownDuration: 0,
       isFinalKeyDown: true
-    }, () => {
+    }
+    // register/unregister RECENT inputConsumer
+    inputConsumer.on('key', onKeyCodeFunction, () => {
       Log.showInfo(TAG, 'RECENT inputConsumer recentEvent start');
       windowManager.createWindowWithName(windowManager.RECENT_WINDOW_NAME, windowManager.RECENT_RANK);
     });
   }
 
   private unregisterInputConsumer(): void {
-    // unregister HOME inputConsumer
-    inputConsumer.off('key', {
+    let offKeyCodeHome = {
       preKeys: [],
       finalKey: KeyCode.KEYCODE_HOME,
       finalKeyDownDuration: 0,
       isFinalKeyDown: true
-    });
-    // unregister RECENT inputConsumer
-    inputConsumer.off('key', {
+    }
+    // unregister HOME inputConsumer
+    inputConsumer.off('key', offKeyCodeHome);
+    let offKeyCodeFunction = {
       preKeys: [],
       finalKey: KeyCode.KEYCODE_FUNCTION,
       finalKeyDownDuration: 0,
       isFinalKeyDown: true
-    });
+    }
+    // unregister RECENT inputConsumer
+    inputConsumer.off('key', offKeyCodeFunction);
   }
 
   private initGlobalConst(): void {
