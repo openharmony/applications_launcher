@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { AppItemInfo, FolderData, Log } from '@ohos/common';
+import { AppItemInfo, CheckEmptyUtils, FolderData, LauncherDragItemInfo, Log } from '@ohos/common';
 import { AppIcon } from '@ohos/common/component';
 import { AppName } from '@ohos/common/component';
 import { CommonConstants } from '@ohos/common';
@@ -46,6 +46,7 @@ export default struct FolderAppListDialog {
   private mFolderStyleConfig: BigFolderStyleConfig = this.mBigFolderViewModel.getFolderStyleConfig();
   private mDialogHeight: number = 0;
   private mGridHeight: number = 0;
+  private addCheckedList: Array<AppItemInfo> = [];
   controller?: CustomDialogController;
   cancel = () => {};
   confirm = (isDestory: boolean) => {};
@@ -140,13 +141,16 @@ export default struct FolderAppListDialog {
                         appItem = item;
                         appItem.area = [1, 1];
                         appItem.typeId = CommonConstants.TYPE_APP;
+                        this.addCheckedList.push(appItem);
                         this.appListChecked.push(appItem);
                       } else {
                         item.checked = false;
+                        this.addCheckedList = this.addCheckedList.filter(value => value.bundleName !== item.bundleName);
                         let index = this.appListChecked.indexOf(item);
                         this.appListChecked.splice(index, 1);
                       }
                       AppStorage.setOrCreate('appListChecked', this.appListChecked);
+                      AppStorage.setOrCreate('selectAppItemList', this.addCheckedList);
                     })
                 }
               }

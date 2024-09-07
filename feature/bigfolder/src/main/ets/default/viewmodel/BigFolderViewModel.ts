@@ -38,6 +38,10 @@ import { BigFolderStyleConstants } from '../common/constants/BigFolderStyleConst
 
 const TAG = 'BigFolderViewModel';
 
+interface AppListInfo {
+  appGridInfo: LauncherDragItemInfo[][]
+}
+
 export class BigFolderViewModel extends BaseViewModel {
   private readonly mSettingsModel: SettingsModel;
   private readonly mBigFolderModel: BigFolderModel;
@@ -415,19 +419,46 @@ export class BigFolderViewModel extends BaseViewModel {
     for (let i = 0; i < layoutInfo.layoutDescription.pageCount; i++) {
       pageItemMap.set(i.toString(), 0);
     }
-
     for (let i = 0; i < layoutInfo.layoutInfo.length; i++) {
-      const tmpPage = layoutInfo.layoutInfo[i].page.toString();
+     const tmpPage = layoutInfo.layoutInfo[i].page.toString();
       pageItemMap.set(tmpPage, pageItemMap.get(tmpPage) + 1);
     }
 
+    let appListInfo: AppListInfo | undefined = AppStorage.get('appListInfo');
+    let addCheckedList: LauncherDragItemInfo[] = AppStorage.get('selectAppItemList');
     const blankPages = [];
-    for (let [page, count] of pageItemMap) {
-      if (count === 0) {
-        layoutInfo.layoutDescription.pageCount--;
-        blankPages.push(page);
+    appListInfo?.appGridInfo.forEach((item: LauncherDragItemInfo[], index) => {
+      if (CheckEmptyUtils.isEmptyArr(item)) {
+        return;
       }
-    }
+      // Each page of apps can be found in the list of apps added
+      let isEvery = item.every((itemEvery) => {
+        return addCheckedList.find((itemFind) => {
+          return itemEvery.bundleName === itemFind.bundleName;
+        });
+      })
+      if (!isEvery) {
+        return;
+      }
+      layoutInfo.layoutDescription.pageCount--;
+      let page = pageItemMap.get(index.toString());
+      blankPages.push(page);
+    })
+
+    // Dissolve Delete separate large folders
+    appListInfo?.appGridInfo.forEach((item: LauncherDragItemInfo[], index)=> {
+      if (item.length == 1 && item[0].folderId) {
+        let isFolder = layoutInfo.layoutInfo.find((value)=> {
+          return value.folderId === item[0].folderId;
+        })
+        if (!isFolder) {
+          let page = pageItemMap.get(index.toString());
+          blankPages.push(page);
+          layoutInfo.layoutDescription.pageCount = layoutInfo.layoutDescription.pageCount - 1;
+        }
+      }
+    })
+
     for (let m = 0; m < layoutInfo.layoutInfo.length; m++) {
       let pageMinus = 0;
       for (let n = 0; n < blankPages.length; n++) {
@@ -435,10 +466,15 @@ export class BigFolderViewModel extends BaseViewModel {
           pageMinus++;
         }
       }
-      if (pageMinus != 0) {
+      let isSome: LauncherDragItemInfo = addCheckedList.find((itemFind) => {
+        return itemFind.bundleName !== layoutInfo.layoutInfo[m].bundleName;
+      })
+      let isSomePage: boolean = layoutInfo.layoutInfo[m].page > isSome.page;
+      if (isSome && pageMinus !=0 && isSomePage) {
         layoutInfo.layoutInfo[m].page = layoutInfo.layoutInfo[m].page - pageMinus;
       }
     }
+    AppStorage.setOrCreate('selectAppItemList', []);
     this.mSettingsModel.setLayoutInfo(layoutInfo);
     localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_PAGEDESK_ITEM_UPDATE, null);
   }
