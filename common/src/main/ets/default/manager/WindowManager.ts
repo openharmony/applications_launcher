@@ -312,6 +312,7 @@ class WindowManager {
 
   createRecentWindow(mode?: number) {
     Log.showDebug(TAG, 'createRecentWindow Begin, mode=' + mode);
+    globalThis.recentMode = mode;
     let setWinMode = (mode && this.isSplitWindowMode(mode)) ? (win) => {
       windowManager.recentMode = mode;
       win.setWindowMode(mode).then();
