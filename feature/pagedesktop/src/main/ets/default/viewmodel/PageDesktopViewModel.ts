@@ -998,8 +998,8 @@ export class PageDesktopViewModel extends BaseViewModel {
   /**
    * Delete the chosen blank page.
    */
-  private deleteBlankPage(): void {
-    const curPageIndex = this.mPageDesktopModel.getPageIndex();
+   deleteBlankPage(pageIndex?:number): void {
+    const curPageIndex = pageIndex!== undefined? pageIndex : this.mPageDesktopModel.getPageIndex();
     this.deleteGridPage(curPageIndex);
     if (curPageIndex === 0) {
       this.mPageDesktopModel.setPageIndex(curPageIndex);
