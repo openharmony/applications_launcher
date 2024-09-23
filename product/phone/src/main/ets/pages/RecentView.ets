@@ -51,6 +51,9 @@ struct RecentView {
     this.recentLoadedCompleted = false;
     this.isClickSubComponent = false;
     this.mRecentMissionsStage.onDestroy();
+    if (windowManager.recentDisplayTimer) {
+      clearTimeout(windowManager.recentDisplayTimer);
+    }
   }
 
   onBackPress(): boolean {
