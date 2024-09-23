@@ -85,6 +85,7 @@ export default struct GridSwiper {
   }
 
   private buildLog(): boolean {
+    AppStorage.setOrCreate('dockAddedPage', this.pageList);
     let isDesktopLoadFinished = AppStorage.get('isDesktopLoadFinished') as boolean;
     Log.showDebug(TAG, `build start ${isDesktopLoadFinished} page ${this.pageIndex}`);
     return isDesktopLoadFinished == true;

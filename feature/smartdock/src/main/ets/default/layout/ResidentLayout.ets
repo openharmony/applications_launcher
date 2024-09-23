@@ -29,6 +29,9 @@ import {
 } from '@ohos/common';
 import { SmartDockStyleConfig } from '../config/SmartDockStyleConfig';
 import SmartDockDragHandler from '../common/SmartDockDragHandler';
+import {
+  PageDesktopViewModel
+} from '../../../../../../pagedesktop/src/main/ets/default/viewmodel/PageDesktopViewModel';
 
 let mSmartDockStyleConfig: SmartDockStyleConfig | null = null;
 const TAG = 'ResidentLayout';
@@ -48,6 +51,7 @@ export default struct ResidentLayout {
   onItemClick: (event: ClickEvent, item: DockItemInfo) => void = (event: ClickEvent, item: DockItemInfo) => {};
   buildMenu: (item: DockItemInfo) => MenuInfo[] = (item: DockItemInfo): MenuInfo[] => [];
   onDockListChangeFunc: () => void = () => {};
+  oldPageList:number[] = [0];
 
   aboutToAppear(): void {
     mSmartDockStyleConfig = this.mSmartDockStyleConfig;
@@ -120,9 +124,17 @@ export default struct ResidentLayout {
       })
       .onDragLeave((event: DragEvent, extraParams: string) => {
         Log.showDebug(TAG, `onDragLeave event: [${event.getWindowX()}, ${event.getWindowY()}]`);
+        let oldPageList: number[] | undefined = AppStorage.get('dockAddedPage');
+        if (oldPageList) {
+          this.oldPageList = [...oldPageList];
+        }
       })
       .onDrop((event: DragEvent, extraParams: string) => {
         Log.showInfo(TAG, `onDrop event: [${event.getWindowX()}, ${event.getWindowY()}]`);
+        let newPageList: number[] | undefined = AppStorage.get('dockAddedPage');
+        if (newPageList && newPageList?.length !== this.oldPageList?.length) {
+          PageDesktopViewModel.getInstance().deleteBlankPage(newPageList[newPageList.length - 1]);
+        }
         const dragResult = SmartDockDragHandler.getInstance().onDragDrop(event.getWindowX(), event.getWindowY());
         AppStorage.setOrCreate('selectAppIndex', null);
         const dragItemInfo: LauncherDragItemInfo = AppStorage.get('dragItemInfo') as LauncherDragItemInfo;
