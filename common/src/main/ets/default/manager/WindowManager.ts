@@ -53,8 +53,6 @@ class WindowManager {
 
   recentMode?: number;
 
-  recentDisplayTimer?: number;
-
   /**
    * get WindowManager instance
    *
@@ -336,10 +334,9 @@ class WindowManager {
           try {
             let wins: window.Window = window.findWindow(windowManager.RECENT_WINDOW_NAME);
             Log.showError(TAG,'Hide recent on inactive');
-            wins.hide();
-            this.recentDisplayTimer = setTimeout(() => {
+            wins.hide().then(() => {
               globalThis.recentDisplay = null;
-            }, 50)
+            })
           } catch (err) {
             let _err = err as BusinessError;
             Log.showError(TAG, `Recent lifeCycleEvent findWindow errCode: ${_err.code}, errMsg: ${_err.message}`);
