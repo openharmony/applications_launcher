@@ -124,7 +124,7 @@ export default struct ResidentLayout {
       })
       .onDragLeave((event: DragEvent, extraParams: string) => {
         Log.showDebug(TAG, `onDragLeave event: [${event.getWindowX()}, ${event.getWindowY()}]`);
-        let oldPageList: number[]| undefined = AppStorage.get('dockAddedPage');
+        let oldPageList: number[] | undefined = AppStorage.get('dockAddedPage');
         if (oldPageList) {
           this.oldPageList = [...oldPageList];
         }
