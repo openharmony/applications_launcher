@@ -51,7 +51,7 @@ export default struct ResidentLayout {
   onItemClick: (event: ClickEvent, item: DockItemInfo) => void = (event: ClickEvent, item: DockItemInfo) => {};
   buildMenu: (item: DockItemInfo) => MenuInfo[] = (item: DockItemInfo): MenuInfo[] => [];
   onDockListChangeFunc: () => void = () => {};
-  oldPageList:number[] | undefined = [0];
+  oldPageList:number[] = [0];
 
   aboutToAppear(): void {
     mSmartDockStyleConfig = this.mSmartDockStyleConfig;
