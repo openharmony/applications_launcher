@@ -171,6 +171,7 @@ export class RecentMissionsViewModel {
    */
   async moveMissionToFront(missionId: number): Promise<void> {
     if (globalThis.recentMode && windowManager.isSplitWindowMode(globalThis.recentMode)) {
+      globalThis.recentDisplay = globalThis.recentMode;
       await amsMissionManager.moveMissionToFront(missionId, globalThis.recentMode);
     } else {
       await amsMissionManager.moveMissionToFront(missionId);
