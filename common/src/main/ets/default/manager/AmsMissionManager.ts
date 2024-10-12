@@ -225,6 +225,7 @@ class AmsMissionManager {
     try {
       let missionSnapshot: missionManager.MissionSnapshot = null;
       missionSnapshot = await missionManager.getMissionSnapShot('', missionId);
+      Log.showInfo(TAG, 'getMissionSnapShot end');
       const imageInfo = await missionSnapshot.snapshot.getImageInfo();
       Log.showDebug(TAG, `getMissionSnapShot ${missionId} success ${JSON.stringify(imageInfo)}`);
       snapShotInfo.missionId = missionId;
