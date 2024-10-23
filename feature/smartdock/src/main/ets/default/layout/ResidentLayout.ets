@@ -209,7 +209,7 @@ struct AppItem {
       placement: Placement.Top,
       popupColor: Color.White,
       arrowOffset: AppStorage.get('deviceType') == CommonConstants.DEFAULT_DEVICE_TYPE
-        ? null
+        ? undefined
         : 3 * ((mSmartDockStyleConfig?.mIconSize as number) / 2) + (mSmartDockStyleConfig?.mListItemGap as number), // Avoid the popup offset problem in phone form
       onStateChange: (e) => {
         if (!e.isVisible) {
