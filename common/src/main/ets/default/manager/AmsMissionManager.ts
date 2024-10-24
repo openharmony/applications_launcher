@@ -230,7 +230,7 @@ class AmsMissionManager {
       missionSnapshot = await missionManager.getMissionSnapShot('', missionId);
       Log.showInfo(TAG, 'getMissionSnapShot end');
       const imageInfo = await missionSnapshot.snapshot.getImageInfo();
-      Log.showDebug(TAG, `getMissionSnapShot ${missionId} success ${JSON.stringify(imageInfo)}`);
+      Log.showDebug(TAG, `getMissionSnapShot ${missionId} success`);
       snapShotInfo.missionId = missionId;
       snapShotInfo.snapShotImage = missionSnapshot.snapshot;
       snapShotInfo.snapShotImageWidth = imageInfo.size.width;
