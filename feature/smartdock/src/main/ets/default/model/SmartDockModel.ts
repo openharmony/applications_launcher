@@ -88,7 +88,6 @@ export default class SmartDockModel {
   async getResidentList(): Promise<void> {
     let residentList = new Array<DockItemInfo>();
 
-    /*
     // query rdb data
     let rdbResidentList: DockItemInfo[] = [];
     rdbResidentList = await globalThis.RdbStoreManagerInstance.querySmartDock();
@@ -148,57 +147,7 @@ export default class SmartDockModel {
     } else {
       residentList = rdbResidentList;
       Log.showDebug(TAG, 'getResidentList from rdb!');
-    }*/
-
-    const dockDataList = this.mSmartDockLayoutConfig.getDockLayoutInfo();
-    Log.showDebug(TAG, `getResidentList from config length: ${dockDataList.length}`);
-    for (let i = 0; i < dockDataList.length; i++) {
-      if (dockDataList[i].itemType == CommonConstants.TYPE_APP) {
-        Log.showDebug(TAG, `getResidentList dockDataList[i].bundleName: ${dockDataList[i].bundleName}`);
-        const appData = await launcherAbilityManager.getAppInfoByBundleName(dockDataList[i].bundleName);
-        if (appData == undefined) {
-          continue;
-        }
-        const dockItemInfo = new DockItemInfo();
-        dockItemInfo.itemType = dockDataList[i].itemType;
-        dockItemInfo.editable = dockDataList[i].editable;
-        dockItemInfo.appName = typeof (appData) === 'undefined' ? dockDataList[i].appName : appData.appName;
-        dockItemInfo.bundleName = typeof (appData) === 'undefined' ? dockDataList[i].bundleName : appData.bundleName;
-        dockItemInfo.moduleName = typeof (appData) === 'undefined' ? dockDataList[i].bundleName : appData.moduleName;
-        dockItemInfo.abilityName = typeof (appData) === 'undefined' ? dockItemInfo.abilityName : appData.abilityName;
-        dockItemInfo.keyName = `${dockItemInfo.bundleName}${dockItemInfo.abilityName}${dockItemInfo.moduleName}`;
-        dockItemInfo.appIconId = typeof (appData) === 'undefined' ? dockItemInfo.appIconId : appData.appIconId;
-        dockItemInfo.appLabelId = typeof (appData) === 'undefined' ? dockItemInfo.appLabelId : appData.appLabelId;
-        dockItemInfo.isSystemApp = typeof (appData) === 'undefined' ? dockItemInfo.isSystemApp : appData.isSystemApp;
-        dockItemInfo.isUninstallAble = typeof (appData) === 'undefined' ? dockItemInfo.isUninstallAble : appData.isUninstallAble;
-        dockItemInfo.installTime = typeof (appData) === 'undefined' ? dockItemInfo.installTime : appData.installTime;
-        dockItemInfo.badgeNumber = typeof (appData) === 'undefined' ? dockItemInfo.badgeNumber : appData.badgeNumber;
-        residentList.push(dockItemInfo);
-      } else if (dockDataList[i].itemType == CommonConstants.TYPE_CARD) {
-      } else {
-        const dockItemInfo = new DockItemInfo();
-        dockItemInfo.itemType = dockDataList[i].itemType;
-        dockItemInfo.editable = dockDataList[i].editable;
-        dockItemInfo.bundleName = dockDataList[i].bundleName;
-        dockItemInfo.abilityName = dockDataList[i].abilityName;
-        dockItemInfo.moduleName = dockDataList[i].moduleName;
-        dockItemInfo.keyName = `${dockItemInfo.bundleName}${dockItemInfo.abilityName}${dockItemInfo.moduleName}`;
-        dockItemInfo.appIconId = typeof (dockDataList[i].appIconId) != 'undefined' ? dockDataList[i].appIconId : dockDataList[i].iconId.id;
-        dockItemInfo.appLabelId = typeof (dockDataList[i].appLabelId) != 'undefined' ? dockDataList[i].appLabelId : dockDataList[i].labelId.id;
-        dockItemInfo.isSystemApp = typeof (dockDataList[i].isSystemApp) === 'undefined' ? true : dockDataList[i].isSystemApp;
-        dockItemInfo.isUninstallAble = typeof (dockDataList[i].isUninstallAble) === 'undefined' ? true : dockDataList[i].isUninstallAble;
-        dockItemInfo.badgeNumber = typeof (dockDataList[i].badgeNumber) === 'undefined' ?
-        CommonConstants.BADGE_DISPLAY_HIDE : dockDataList[i].badgeNumber;
-        const loadAppName = await this.mResourceManager
-          .getAppNameSync(dockItemInfo.appLabelId, dockItemInfo.bundleName, dockItemInfo.moduleName, '');
-        dockItemInfo.appName = loadAppName;
-        residentList.push(dockItemInfo);
-      }
     }
-
-    // update persistent data
-    globalThis.RdbStoreManagerInstance.insertIntoSmartdock(residentList);
-    this.mSmartDockLayoutConfig.updateDockLayoutInfo(residentList);
 
     // trigger component update
     AppStorage.setOrCreate('residentList', residentList);
