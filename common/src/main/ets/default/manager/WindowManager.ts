@@ -177,7 +177,7 @@ class WindowManager {
     try {
       window.createWindow(cfg)
         .then((win: window.Window) => {
-          win.setPreferredOrientation(window.Orientation.AUTO_ROTATION_RESTRICTED);
+          win.setPreferredOrientation(window.Orientation.PORTRAIT);
           win.setUIContent(loadContent)
             .then(() => {
               win.setWindowSystemBarProperties({

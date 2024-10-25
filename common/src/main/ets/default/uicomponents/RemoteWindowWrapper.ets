@@ -479,7 +479,7 @@ export struct RemoteWindowWrapper {
         onFinish: () => {
           callback.onAnimationFinish();
           Trace.end(Trace.CORE_METHOD_START_APP_ANIMATION);
-          const startCount: number = AppStorage.get(remoteVo.remoteWindowKey);
+          const startCount: number = AppStorage.get(remoteVo.remoteWindowKey) as number;
           Log.showDebug(TAG, `calculateAppProperty ${remoteVo.remoteAnimationType}, count: ${count}, startCount: ${startCount}`);
           if (startCount === count) {
             this.removeRemoteWindowFromList(remoteVo.remoteWindowKey);
@@ -514,7 +514,7 @@ export struct RemoteWindowWrapper {
         onFinish: () => {
           callback.onAnimationFinish();
           Trace.end(Trace.CORE_METHOD_CLOSE_APP_ANIMATION);
-          const startCount: number = AppStorage.get(remoteVo.remoteWindowKey);
+          const startCount: number = AppStorage.get(remoteVo.remoteWindowKey) as number;
           Log.showDebug(TAG, `calculateAppProperty ${remoteVo.remoteAnimationType}, count: ${count}, startCount: ${startCount}`);
           if (startCount === count) {
             this.removeRemoteWindowFromList(remoteVo.remoteWindowKey);

@@ -48,21 +48,23 @@ export struct RemoveFormDialog {
         Column() {
           Row() {
             Text(this.dialogName)
-              .width(StyleConstants.PERCENTAGE_70)
+              .width(StyleConstants.PERCENTAGE_100)
               .fontSize(StyleConstants.DEFAULT_FORM_FONT_CONTENT_SIZE)
               .fontWeight(StyleConstants.DEFAULT_FORM_FONT_TITLE_WEIGHT)
+              .textAlign(TextAlign.Center)
           }
           .alignItems(VerticalAlign.Center)
           .margin({ top: StyleConstants.DEFAULT_20 })
 
           Row() {
             Text($r('app.string.remove_form_dialog_content'))
-              .width(StyleConstants.PERCENTAGE_70)
+              .width(StyleConstants.PERCENTAGE_100)
               .fontSize(StyleConstants.DEFAULT_FORM_FONT_TITLE_SIZE)
               .fontWeight(StyleConstants.DEFAULT_FORM_FONT_CONTENT_WEIGHT)
+              .textAlign(TextAlign.Center)
           }
           .alignItems(VerticalAlign.Center)
-          .margin({ top: StyleConstants.DEFAULT_20 })
+          .margin({ top: StyleConstants.DEFAULT_20, bottom: StyleConstants.DEFAULT_20 })
 
           Flex({ justifyContent: FlexAlign.SpaceEvenly }) {
             Button() {
