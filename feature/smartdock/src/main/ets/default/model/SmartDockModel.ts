@@ -94,6 +94,7 @@ export default class SmartDockModel {
 
     if (CheckEmptyUtils.isEmptyArr(rdbResidentList) && !this.mSmartDockLayoutConfig.isConfigExist()) {
       // init preset dock data
+
       const dockDataList = this.mSmartDockLayoutConfig.getDockLayoutInfo();
       Log.showDebug(TAG, `getResidentList from config length: ${dockDataList.length}`);
       for (let i = 0; i < dockDataList.length; i++) {

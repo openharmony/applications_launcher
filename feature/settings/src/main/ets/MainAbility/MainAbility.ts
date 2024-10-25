@@ -19,7 +19,9 @@ import { Log } from '@ohos/common';
 const TAG = 'Launcher Settings MainAbility';
 
 export default class MainAbility extends Ability {
+  private abilityWant;
   onCreate(want, launchParam) {
+    this.abilityWant = want;
     Log.showInfo(TAG, 'onCreate is called');
   }
 
@@ -29,6 +31,11 @@ export default class MainAbility extends Ability {
 
   onWindowStageCreate(windowStage) {
     Log.showInfo(TAG, 'onWindowStageCreate is called');
+    if (this.abilityWant?.parameters?.router === 'settings') {
+      globalThis.router = 'settings';
+    } else {
+      globalThis.router = '';
+    }
     globalThis.settingsContext = this.context;
     windowStage.setUIContent(this.context, 'pages/Settings', null);
   }

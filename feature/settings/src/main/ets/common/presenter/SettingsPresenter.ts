@@ -133,10 +133,18 @@ export default class SettingsPresenter {
    */
   settingUpdate() {
     Log.showDebug(TAG, 'settingUpdate start');
-    globalThis.settingsContext.terminateSelf()
-      .then(data => Log.showDebug(TAG, 'terminateSelf promise::then : ' + data))
-      .catch(error => Log.showError(TAG, 'terminateSelf promise::catch : ' + error));
-    Log.showDebug(TAG, 'terminateSelf end');
+    if (globalThis.router === 'settings') {
+      globalThis.settingsContext.startAbility({
+        deviceId: '',
+        bundleName: 'com.ohos.settings',
+        abilityName: 'com.ohos.settings.MainAbility',
+      });
+    } else {
+      globalThis.settingsContext.terminateSelf()
+        .then(data => Log.showDebug(TAG, 'terminateSelf promise::then : ' + data))
+        .catch(error => Log.showError(TAG, 'terminateSelf promise::catch : ' + error));
+      Log.showDebug(TAG, 'terminateSelf end');
+    }
   }
 
   /**
