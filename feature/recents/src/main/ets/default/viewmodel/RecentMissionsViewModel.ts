@@ -114,6 +114,7 @@ export class RecentMissionsViewModel {
       if (this.mRecentMissionsList && this.mRecentMissionsList.length) {
         windowManager.minimizeAllApps();
       }
+      AppStorage.setOrCreate('recentMissionsList', this.mRecentMissionsList);
       return;
     }
     animateTo({
