@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { Log } from '../utils/Log';
 import { ILayoutConfig } from './ILayoutConfig';
 import { CommonConstants } from '../constants/CommonConstants';
 
@@ -27,6 +27,7 @@ import { CommonConstants } from '../constants/CommonConstants';
  * 2.Ability to query configuration values at three tiers (Product > Features > Public).
  * 3.the ability to persist certain configuration values.
  */
+const TAG = 'LayoutConfigManager';
 class LayoutConfigManager {
   private readonly mCommonConfig: ILayoutConfig[][] = new Array<ILayoutConfig[]>();
 
@@ -133,6 +134,7 @@ class LayoutConfigManager {
         }
       }
     }
+    Log.showError(TAG, 'getConfigByName is null');
     return null;
   }
 
