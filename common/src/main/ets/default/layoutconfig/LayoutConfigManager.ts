@@ -140,9 +140,11 @@ class LayoutConfigManager {
 
   private getTargetTypeConfigs(configType: number) {
     let configArr = new Array<ILayoutConfig>();
-    configArr = configArr.concat(this.mProductConfig[configType]);
-    configArr = configArr.concat(this.mFeatureConfig[configType]);
-    configArr = configArr.concat(this.mCommonConfig[configType]);
+    if (this.mProductConfig[configType] && this.mFeatureConfig[configType] && this.mCommonConfig[configType]) {
+      configArr = configArr.concat(this.mProductConfig[configType]);
+      configArr = configArr.concat(this.mFeatureConfig[configType]);
+      configArr = configArr.concat(this.mCommonConfig[configType]);
+    }
     return configArr;
   }
 }
