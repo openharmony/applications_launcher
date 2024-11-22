@@ -80,7 +80,7 @@ export class ResourceManager {
       let imageDescriptor: DrawableDescriptor = (resMgr.getDrawableDescriptor(Number(iconId), undefined));
       let value: image.PixelMap = imageDescriptor.getPixelMap();
       if (imageDescriptor instanceof LayeredDrawableDescriptor) {
-        Log.showDebug(TAG, `updateIconCache layered iconValue:${JSON.stringify(value)}`);
+        Log.showDebug(TAG, 'updateIconCache layered iconValue');
         this.setAppResourceCache(cacheKey, KEY_ICON, value);
       } else {
         let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
