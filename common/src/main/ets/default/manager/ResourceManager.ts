@@ -17,6 +17,8 @@ import resourceManager from '@ohos.resourceManager';
 import { Log } from '../utils/Log';
 import { CheckEmptyUtils } from '../utils/CheckEmptyUtils';
 import AppResourceCacheManager from '../cache/AppResourceCacheManager';
+import { DrawableDescriptor, LayeredDrawableDescriptor } from '@ohos.arkui.drawableDescriptor';
+import image from '@ohos.multimedia.image';
 
 const KEY_ICON = 'icon';
 const KEY_NAME = 'name';
@@ -66,27 +68,36 @@ export class ResourceManager {
   }
 
   async updateIconCache(iconId, bundleName: string, moduleName: string): Promise<void> {
+    let cacheKey = `${iconId}${bundleName}${moduleName}`;
+    const iconBase64 = this.getAppResourceCache(cacheKey, KEY_ICON);
+    if (!CheckEmptyUtils.isEmpty(iconBase64)) {
+      return;
+    }
+    Log.showDebug(TAG, `updateIconCache bundleName:${bundleName}, moduleName:${moduleName}, iconId: ${iconId}`);
     try {
-      let cacheKey = `${iconId}${bundleName}${moduleName}`;
-      const iconBase64 = this.getAppResourceCache(cacheKey, KEY_ICON);
-      if (!CheckEmptyUtils.isEmpty(iconBase64)) {
-        return;
+      // 先拿分层图标，拿不到再取普通图标
+      let resMgr: resourceManager.ResourceManager = globalThis.desktopContext.createModuleResourceManager(bundleName, moduleName);
+      let imageDescriptor: DrawableDescriptor = (resMgr.getDrawableDescriptor(Number(iconId), undefined));
+      let value: image.PixelMap = imageDescriptor.getPixelMap();
+      if (imageDescriptor instanceof LayeredDrawableDescriptor) {
+        Log.showDebug(TAG, `updateIconCache iconValue 22222:${JSON.stringify(value)}`);
+        this.setAppResourceCache(cacheKey, KEY_ICON, value);
+      } else {
+        let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
+        if (moduleContext == null) {
+          return;
+        }
+        await moduleContext.resourceManager
+          .getMediaBase64(iconId)
+          .then((value) => {
+            Log.showDebug(TAG, `updateIconCache iconValue:${value}`);
+            if (value != null) {
+              this.setAppResourceCache(cacheKey, KEY_ICON, value);
+            }
+          }).finally(() => {
+            moduleContext = null;
+          });
       }
-      Log.showDebug(TAG, `updateIconCache bundleName:${bundleName}, moduleName:${moduleName}, iconId: ${iconId}`);
-      let moduleContext = globalThis.desktopContext.createModuleContext(bundleName, moduleName);
-      if (moduleContext == null) {
-        return;
-      }
-      await moduleContext.resourceManager
-        .getMediaBase64(iconId)
-        .then((value)=> {
-          if (value != null) {
-            this.setAppResourceCache(cacheKey, KEY_ICON, value);
-          }
-        })
-        .finally(() => {
-          moduleContext = null;
-        });
     } catch (error) {
       Log.showError(TAG, `updateIconCache error ${error}`);
     }
