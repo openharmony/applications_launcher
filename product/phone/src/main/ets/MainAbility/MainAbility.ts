@@ -65,6 +65,7 @@ export default class MainAbility extends ServiceExtension {
       win.on('windowEvent', (stageEventType) => {
         // 桌面获焦或失焦时，通知桌面的卡片变为可见状态
         if (stageEventType === window.WindowEventType.WINDOW_ACTIVE) {
+          launcherAbilityManager.checkBundleMonitor();
           localEventManager.sendLocalEventSticky(EventConstants.EVENT_REQUEST_FORM_ITEM_VISIBLE, null);
           Log.showInfo(TAG, `lifeCycleEvent change: ${stageEventType}`);
         }

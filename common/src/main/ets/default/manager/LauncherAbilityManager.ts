@@ -25,7 +25,9 @@ import { CommonConstants } from '../constants/CommonConstants';
 import { ResourceManager } from './ResourceManager';
 import { EventConstants } from '../constants/EventConstants';
 import { BadgeManager } from '../manager/BadgeManager';
+import { PreferencesHelper } from './PreferencesHelper';
 import { BusinessError } from '@ohos.base';
+import performanceMonitor from '@ohos.arkui.performanceMonitor';
 
 const TAG = 'LauncherAbilityManager';
 
@@ -42,7 +44,7 @@ class LauncherAbilityManager {
   private static readonly CURRENT_USER_ID = -2;
   private readonly mAppMap = new Map<string, AppItemInfo>();
   private mUserId: number = 100;
-
+  private mIsNeedRegisterBundleCallback = false;
   private readonly mBundleStatusCallback: BundleStatusCallback = {
     add: (bundleName, userId) => {
       Log.showDebug(TAG, `PACKAGE_ADDED bundleName: ${bundleName}, userId: ${userId}, mUserId ${this.mUserId}`);
@@ -84,28 +86,48 @@ class LauncherAbilityManager {
     return this.mUserId;
   }
 
+  checkBundleMonitor(): void {
+    if (!this.mIsNeedRegisterBundleCallback) {
+      return;
+    }
+    Log.showInfo(TAG, 'checkBundleMonitor need to register bundle callback');
+    this.bundleMonitorOn();
+  }
+
+  bundleMonitorOn(): void  {
+    this.mIsNeedRegisterBundleCallback = false;
+    bundleMonitor.on('add', (bundleChangeInfo) => {
+      Log.showInfo(TAG, `add bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
+      this.mBundleStatusCallback.add(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
+    });
+    bundleMonitor.on('update', (bundleChangeInfo) => {
+      Log.showInfo(TAG, `update bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
+      this.mBundleStatusCallback.update(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
+    });
+    bundleMonitor.on('remove', (bundleChangeInfo) => {
+      Log.showInfo(TAG, `remove bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
+      this.mBundleStatusCallback.remove(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
+    });
+    Log.showInfo(TAG, 'bundleMonitorOn register bundle callback finished');
+  }
+
   /**
    * Monitor system application status.
    *
    * @params listener: listening object
    */
-  registerLauncherAbilityChangeListener(listener: any): void {
+  async registerLauncherAbilityChangeListener(listener: any):Promise<void> {
     if (listener != null) {
       if (this.mLauncherAbilityChangeListeners.length == 0) {
         try {
-          bundleMonitor.on('add', (bundleChangeInfo) => {
-            Log.showInfo(TAG, `add bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
-            this.mBundleStatusCallback.add(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
-          });
-          bundleMonitor.on('update', (bundleChangeInfo) => {
-            Log.showInfo(TAG, `update bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
-            this.mBundleStatusCallback.update(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
-          });
-          bundleMonitor.on('remove', (bundleChangeInfo) => {
-            Log.showInfo(TAG, `remove bundleName: ${bundleChangeInfo.bundleName} userId: ${bundleChangeInfo.userId}`);
-            this.mBundleStatusCallback.remove(bundleChangeInfo.bundleName, bundleChangeInfo.userId);
-          });
-          Log.showInfo(TAG, `registerCallback success`);
+          let isBmsHasInit = await PreferencesHelper.getInstance().get('isBmsHasInit', false);
+          Log.showInfo(TAG, `registerCallback success, isBmsHasInit:${isBmsHasInit}`);
+          if (isBmsHasInit) {
+            this.bundleMonitorOn();
+          } else {
+            PreferencesHelper.getInstance().put('isBmsHasInit', true);
+            this.mIsNeedRegisterBundleCallback = true;
+          }
         } catch (errData) {
           let message = (errData as BusinessError).message;
           let errCode = (errData as BusinessError).code;
@@ -309,6 +331,8 @@ class LauncherAbilityManager {
       moduleName: paramModuleName
     }).then(() => {
       Log.showDebug(TAG, 'startApplication promise success');
+      performanceMonitor.end('LAUNCHER_APP_LAUNCH_FROM_ICON');
+      Log.showDebug(TAG, 'performanceMonitor end');
     }, (err) => {
       Log.showError(TAG, `startApplication promise error: ${JSON.stringify(err)}`);
     });
@@ -330,7 +354,10 @@ class LauncherAbilityManager {
         } else {
           Log.showDebug(TAG, `startApplication hiSysEvent write success: ${value}`);
         }
-    })
+      });
+    Log.showDebug(TAG, 'performanceMonitor begin');
+    performanceMonitor.begin('LAUNCHER_APP_LAUNCH_FROM_ICON', performanceMonitor.ActionType.LAST_UP,
+      paramBundleName);
   }
 
   /**
@@ -346,9 +373,9 @@ class LauncherAbilityManager {
       abilityName: paramAbilityName,
       moduleName: paramModuleName,
       parameters:
-        {
-          formId: paramCardId.toString()
-        }
+      {
+        formId: paramCardId.toString()
+      }
     }).then((ret) => {
       Log.showDebug(TAG, `startAbility ret: ${JSON.stringify(ret)}`);
     }, (err) => {
