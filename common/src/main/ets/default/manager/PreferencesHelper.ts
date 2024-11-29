@@ -22,10 +22,10 @@ const TAG = 'PreferencesHelper';
 
 export class PreferencesHelper {
   private static PREFERENCE_NAME = 'launcher_pref';
-  private static sInstance:PreferencesHelper | undefined = undefined;
-  private preference:DataPreferences.Preferences;
+  private static sInstance: PreferencesHelper | undefined = undefined;
+  private preference: DataPreferences.Preferences;
 
-  static getInstance() {
+  static getInstance(): PreferencesHelper {
     if (!PreferencesHelper.sInstance) {
       PreferencesHelper.sInstance = new PreferencesHelper();
     }
@@ -44,18 +44,18 @@ export class PreferencesHelper {
     }
   }
 
-  async put(key:string, value):Promise<void>{
+  async put(key: string, value): Promise<void> {
     try {
-      await this.preference?.put(key,value);
+      await this.preference?.put(key, value);
     } catch (err) {
       Log.showError(TAG, `Failed to put value, Cause:${err.message || err?.code}`);
     }
     await this.preference?.flush();
   }
 
-  async get(key:string, defValue):Promise<DataPreferences.ValueType>{
+  async get(key: string, defValue): Promise<DataPreferences.ValueType> {
     try {
-      let result = await this.preference?.get(key,defValue);
+      let result = await this.preference?.get(key, defValue);
       return result;
     } catch (err) {
       Log.showError(TAG, `Failed to get initPreferences, Cause:${err.message || err?.code}`);
