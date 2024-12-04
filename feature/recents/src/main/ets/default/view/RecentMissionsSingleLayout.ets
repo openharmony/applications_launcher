@@ -24,10 +24,15 @@ const TAG = 'RecentMissionsSingleLayout';
  */
 @Component
 export struct RecentMissionsSingleLayout {
-  @Link recentMissionsSingleList: RecentMissionInfo[];
+  @Link @Watch('refreshList') recentMissionsSingleList: RecentMissionInfo[];
   @Link isClickSubComponent: boolean;
   @StorageLink('recentIdx') recentIdx: number = 0;
   private mRecentMissionsViewModel?: RecentMissionsViewModel;
+  scroller: Scroller = new Scroller()
+
+  refreshList() {
+    this.scroller.scrollEdge(Edge.Start)
+  }
 
   aboutToAppear(): void {
     this.mRecentMissionsViewModel = RecentMissionsViewModel.getInstance();
@@ -37,7 +42,7 @@ export struct RecentMissionsSingleLayout {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceBetween }) {
       // middle area, mission list
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-        List({ space: RecentsStyleConstants.SINGLE_LIST_MIDDLE_AREA_SPACE, initialIndex: this.recentIdx}) {
+        List({ space: RecentsStyleConstants.SINGLE_LIST_MIDDLE_AREA_SPACE, initialIndex: this.recentIdx, scroller: this.scroller}) {
           ForEach(this.recentMissionsSingleList, (item: RecentMissionInfo) => {
             ListItem() {
               RecentMissionCard({
