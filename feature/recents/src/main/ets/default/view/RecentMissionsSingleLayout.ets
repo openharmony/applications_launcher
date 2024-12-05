@@ -42,7 +42,11 @@ export struct RecentMissionsSingleLayout {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceBetween }) {
       // middle area, mission list
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
-        List({ space: RecentsStyleConstants.SINGLE_LIST_MIDDLE_AREA_SPACE, initialIndex: this.recentIdx, scroller: this.scroller}) {
+        List({
+          space: RecentsStyleConstants.SINGLE_LIST_MIDDLE_AREA_SPACE,
+          initialIndex: this.recentIdx,
+          scroller: this.scroller
+        }) {
           ForEach(this.recentMissionsSingleList, (item: RecentMissionInfo) => {
             ListItem() {
               RecentMissionCard({
