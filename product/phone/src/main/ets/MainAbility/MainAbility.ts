@@ -185,7 +185,7 @@ export default class MainAbility extends ServiceExtension {
   onConfigurationUpdate(config): void {
     Log.showInfo(TAG, 'onConfigurationUpdated, config:' + JSON.stringify(config));
     const systemLanguage = AppStorage.get('systemLanguage');
-    if(systemLanguage !== config.language) {
+    if(systemLanguage && systemLanguage !== config.language) {
       this.clearCacheWhenLanguageChange();
     }
     AppStorage.setOrCreate('systemLanguage', config.language);
