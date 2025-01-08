@@ -47,12 +47,12 @@ export class MenuInfo {
   /**
    * shortcut icon Id
    */
-  shortcutIconId = CommonConstants.INVALID_VALUE;
+  shortcutIconId: number | undefined = CommonConstants.INVALID_VALUE;
 
   /**
    * shortcut label Id
    */
-  shortcutLabelId = CommonConstants.INVALID_VALUE;
+  shortcutLabelId: number | undefined = CommonConstants.INVALID_VALUE;
 
   /**
    * bundleName
