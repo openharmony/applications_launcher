@@ -106,9 +106,13 @@ export struct AppGridLayout {
         menu.bundleName = value.bundleName;
         menu.moduleName = value.moduleName;
         menu.onMenuClick = () => {
-          this.mAppGridViewModel.jumpTo(
-            value.wants[0].targetAbility, value.wants[0].targetBundle, value.wants[0].targetModule
-          );
+          if (value.wants) {
+            this.mAppGridViewModel.jumpTo(
+              value.wants[0].targetAbility, value.wants[0].targetBundle, value.wants[0].targetModule
+            );
+          } else {
+            Log.showError(TAG, 'value.wants is undefined or empty');
+          }
         };
         value.bundleName == appInfo.bundleName && value.moduleName == appInfo.moduleName && menuInfoList.push(menu);
       });
