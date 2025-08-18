@@ -49,15 +49,15 @@ export class BigFolderModel {
   }
 
   getFolderLayout(): any {
-    return this.mFolderLayoutConfig.getFolderLayoutInfo()?.folderLayoutTable;
+    return this.mFolderLayoutConfig?.getFolderLayoutInfo()?.folderLayoutTable;
   }
 
   getFolderOpenLayout(): any {
-    return this.mFolderLayoutConfig.getFolderLayoutInfo()?.folderOpenLayoutTable;
+    return this.mFolderLayoutConfig?.getFolderLayoutInfo()?.folderOpenLayoutTable;
   }
 
   getFolderAddAppLayout(): any {
-    return this.mFolderLayoutConfig.getFolderLayoutInfo()?.folderAddAppLayoutTable;
+    return this.mFolderLayoutConfig?.getFolderLayoutInfo()?.folderAddAppLayoutTable;
   }
 
   /**
