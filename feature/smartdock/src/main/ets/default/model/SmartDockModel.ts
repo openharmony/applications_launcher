@@ -134,8 +134,8 @@ export default class SmartDockModel {
         dockItemInfo.abilityName = dockDataList[i].abilityName;
         dockItemInfo.moduleName = dockDataList[i].moduleName;
         dockItemInfo.keyName = `${dockItemInfo.bundleName}${dockItemInfo.abilityName}${dockItemInfo.moduleName}`;
-        dockItemInfo.appIconId = typeof (dockDataList[i].appIconId) != 'undefined' ? dockDataList[i].appIconId : dockDataList[i].iconId.id;
-        dockItemInfo.appLabelId = typeof (dockDataList[i].appLabelId) != 'undefined' ? dockDataList[i].appLabelId : dockDataList[i].labelId.id;
+        dockItemInfo.appIconId = dockDataList[i].appIconId;
+        dockItemInfo.appLabelId = dockDataList[i].appLabelId;
         dockItemInfo.isSystemApp = typeof (dockDataList[i].isSystemApp) === 'undefined' ? true : dockDataList[i].isSystemApp;
         dockItemInfo.isUninstallAble = typeof (dockDataList[i].isUninstallAble) === 'undefined' ? true : dockDataList[i].isUninstallAble;
         dockItemInfo.badgeNumber = typeof (dockDataList[i].badgeNumber) === 'undefined' ?
