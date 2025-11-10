@@ -48,19 +48,6 @@
 <configuration>
     <oatconfig>
         </filefilterlist>
-            <filefilter name="defaultFilter" desc="Files not to check">
-             </filefilter>
-                <filefilter name="binaryFileTypePolicyFilter" desc="Filters for binary file policies">
-                <filteritem type="filepath" name="product/phone/src/main/ets/common/pics/ic_form_mgr_back.png"
-                            desc="png for ets test"/>
-                <filteritem type="filepath" name="product/phone/src/main/ets/common/pics/ic_wallpaper_form_manager.jpg"
-                            desc="png for ets test"/>
-                <filteritem type="filepath" name="product/phone/src/main/ets/common/pics/img_wallpaper_default.jpg"
-                            desc="png for ets test"/>
-                <filteritem type="filepath" name="product/phone/src/main/ets/common/pics/ic_wallpaper_recent.jpg"
-                            desc="png for ets test"/>
-                <filteritem type="filepath" name="product/phone/src/main/ets/common/pics/icon.png"
-                            desc="png for ets test"/>
         <policylist>
             <policy name="projectPolicy" desc="">
                 <policyitem type="license" name="Apache-2.0" path=".*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc=""/>
@@ -71,10 +58,13 @@
         <filefilterlist>
             <filefilter name="binaryFileTypePolicyFilter" desc="Filters for binary file policies">
                <filteritem type="filepath" name="product/phone/src/main/resources/base/media/.*.png" desc="self developed image"/>
+               <filteritem type="filepath" name="product/phone/src/main/ets/common/pics/.*.png" desc="self developed image"/>
+               <filteritem type="filepath" name="product/phone/src/main/ets/common/pics/.*.jpg" desc="self developed image"/>
                <filteritem type="filepath" name="product/phone/src/main/ets/default/common/pics/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="product/phone/src/main/ets/default/common/pics/.*.jpg" desc="self developed image"/>
                <filteritem type="filepath" name="product/phone/src/main/ets/default/common/pics/.*.svg" desc="self developed image"/>
                <filteritem type="filepath" name="product/pad/src/main/resources/base/media/.*.png" desc="self developed image"/>
+               <filteritem type="filepath" name="product/pad/src/main/ets/common/pics/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="product/pad/src/main/ets/default/common/pics/.*.jpg" desc="self developed image"/>
                <filteritem type="filepath" name="product/pad/src/main/ets/default/common/pics/.*.svg" desc="self developed image"/>
                <filteritem type="filepath" name="feature/recents/src/main/ets/default/common/pics/.*.png" desc="self developed image"/>
@@ -82,6 +72,7 @@
                <filteritem type="filepath" name="feature/recents/src/main/resources/base/media/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="feature/recents/src/main/resources/base/media/.*.jpg" desc="self developed image"/>
                <filteritem type="filepath" name="feature/settings/src/main/resources/base/media/.*.png" desc="self developed image"/>
+               <filteritem type="filepath" name="feature/smartdock/src/main/resources/base/media/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="feature/appcenter/src/main/ets/default/common/pics/.*.jpg" desc="self developed image"/>
                <filteritem type="filepath" name="feature/bigfolder/src/main/resources/base/media/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="feature/form/src/main/resources/base/media/.*.png" desc="self developed image"/>
