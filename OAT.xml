@@ -76,6 +76,7 @@
                <filteritem type="filepath" name="feature/appcenter/src/main/ets/default/common/pics/.*.jpg" desc="self developed image"/>
                <filteritem type="filepath" name="feature/bigfolder/src/main/resources/base/media/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="feature/form/src/main/resources/base/media/.*.png" desc="self developed image"/>
+               <filteritem type="filepath" name="feature/form/src/main/ets/default/common/pics/.*.jpg" desc="self developed image"/>
                <filteritem type="filepath" name="figures/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="feature/pagedesktop/src/main/resources/base/media/.*.png" desc="self developed image"/>
                <filteritem type="filepath" name="feature/settings/src/main/resources/base/media/.*.svg" desc="self developed image"/>
